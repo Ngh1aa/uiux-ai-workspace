@@ -5,6 +5,7 @@
   "description": "Canonical pipeline with stronger benchmark, audience-intent and domain-evidence pressure before design.",
   "plugins": [
     "session-events",
+    "artifact-evidence",
     "skill-composition",
     "web-research",
     "browser-evidence",
