@@ -69,13 +69,16 @@ class VisualCriticGate(BaseModel):
 
     semantic_visual_review_attempted: bool = False
     semantic_visual_review_passed: bool = False
+    semantic_route_coverage_complete: bool = False
+    semantic_evidence_grounded: bool = False
     domain_page_roles_reviewed: bool = False
+    domain_policy_applied: bool = False
     no_blocking_generic_pattern: bool = False
     proxy_only_mode: bool = True
 
 
 class VisualCriticResult(BaseModel):
-    schema_version: str = "0.2.0"
+    schema_version: str = "0.3.0"
 
     status: Literal[
         "passed",
@@ -102,6 +105,7 @@ class VisualCriticResult(BaseModel):
 
     semantic_review: SemanticVisualReview | None = None
     review_mode: Literal["vision", "proxy"] = "proxy"
+    domain_policy_id: str = "generic-web"
 
     notes: list[str] = Field(
         default_factory=list
