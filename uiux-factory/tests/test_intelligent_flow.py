@@ -39,9 +39,11 @@ def test_factory_default_delivery_policy_is_pinned_to_upstream_source() -> None:
     config = json.loads((ROOT / "config" / "default-website-delivery.json").read_text(encoding="utf-8"))
     assert config["policy_id"] == "adaptive-prompt-os-v4"
     assert config["factory_lane"] == "full_prompt_os"
-    assert config["skills_source"] == {
+    assert config["policy_source"] == {
         "repository": "Ngh1aa/skills_UIUX",
         "commit": "e8ed8c9212d20edb2cf4c8c0881fff34add7076e",
+        "path": "policies/adaptive-prompt-os-v4.json",
+        "blob_sha": "c98521827e9bc242c3594a315739809c5574a800",
     }
     assert config["behavior"]["representative_first"] is True
     assert config["behavior"]["human_visual_veto"] is True
