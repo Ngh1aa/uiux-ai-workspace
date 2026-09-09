@@ -44,7 +44,13 @@ def test_routing_preview_uses_the_five_visual_skills() -> None:
     assert "real-estate" in router
 
 
-def test_factory_entrypoint_uses_visual_brain_manager() -> None:
+def test_factory_entrypoint_keeps_visual_brain_under_creative_director_manager() -> None:
     run_py = (ROOT / "run.py").read_text(encoding="utf-8")
-    assert "VisualBrainDevelopmentManager" in run_py
+    creative_manager = (
+        ROOT / "core" / "manager" / "creative_director_manager.py"
+    ).read_text(encoding="utf-8")
+
+    assert "CreativeDirectorDevelopmentManager" in run_py
+    assert "VisualBrainDevelopmentManager" in creative_manager
+    assert "class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager)" in creative_manager
     assert "ProviderIntelligentDevelopmentManager(root=ROOT)" not in run_py
