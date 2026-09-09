@@ -12,12 +12,13 @@
   // Mặc định dùng relative /api/ để qua console proxy → không cần CORS.
   // Đặt window.UIUX_BRIDGE_URL = "http://127.0.0.1:8788" nếu muốn gọi thẳng bridge.
   function detectApiBase() {
-    if (window.UIUX_BRIDGE_URL) return window.UIUX_BRIDGE_URL.replace(/\/$/, "") + "/api";
-    // Nếu đang chạy qua console (cùng origin), dùng relative path
+    if (window.UIUX_BRIDGE_URL) return window.UIUX_BRIDGE_URL.replace(/\/$/, "");
+    // Nếu đang chạy qua console (cùng origin), dùng relative path.
     if (location.protocol === "http:" || location.protocol === "https:") {
       return "/api";
     }
-    return "http://127.0.0.1:8788/api";
+    // file:// fallback gọi thẳng bridge; bridge không có tiền tố /api.
+    return "http://127.0.0.1:8788";
   }
   const BRIDGE = detectApiBase();
   const DRAFT_KEY = "uiux-console-draft-v1";
@@ -55,7 +56,6 @@
     logsWrap: document.getElementById("logs-wrap"),
     logs: document.getElementById("job-logs"),
     previewWrap: document.getElementById("preview-wrap"),
-    previewLink: document.getElementById("preview-link"),
     previewFrame: document.getElementById("preview-frame"),
     refreshPreview: document.getElementById("refresh-preview-btn"),
     brandName: document.getElementById("brand-name"),
@@ -483,7 +483,6 @@
     if (!slug) return;
     const url = `${BRIDGE}/preview/${slug}/`;
     els.previewWrap.removeAttribute("hidden");
-    els.previewLink.href = url;
     els.previewFrame.src = url;
   }
 
@@ -491,7 +490,6 @@
     if (currentProjectSlug) {
       const url = `${BRIDGE}/preview/${currentProjectSlug}/?t=${Date.now()}`;
       els.previewFrame.src = url;
-      els.previewLink.href = url;
     }
   });
 
