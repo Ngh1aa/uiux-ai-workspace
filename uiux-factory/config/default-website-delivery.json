@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "policy_id": "adaptive-prompt-os-v4",
+  "factory_lane": "full_prompt_os",
+  "policy_path": "../skills_UIUX/policies/adaptive-prompt-os-v4.json",
+  "policy_doc": "../skills_UIUX/DEFAULT-WEBSITE-DELIVERY-POLICY.md",
+  "skills_source": {
+    "repository": "Ngh1aa/skills_UIUX",
+    "commit": "e8ed8c9212d20edb2cf4c8c0881fff34add7076e"
+  },
+  "behavior": {
+    "substantial_website_work": "Prompt OS 0→4",
+    "bounded_local_work": "smallest safe lane outside the A→Z DevelopmentManager",
+    "representative_first": true,
+    "human_visual_veto": true,
+    "production_smoke_when_deployed": true
+  }
+}
