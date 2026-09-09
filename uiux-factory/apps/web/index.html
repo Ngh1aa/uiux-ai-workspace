@@ -1,18 +1,14 @@
 <!doctype html>
-<html lang="vi" data-theme="light">
+<html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>UIUX Factory · Studio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>UIUX Factory · Visual Intelligence Workbench</title>
   <link rel="stylesheet" href="./styles.css" />
-  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='8' y='8' width='48' height='48' rx='14' fill='black'/><path d='M22 22h20v5H22zm0 9h20v5H22zm0 9h14v5H22z' fill='white'/></svg>" />
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b1a18'/><path d='M18 17h28v5H18zm0 12h18v5H18zm0 12h28v5H18z' fill='%23f3eee5'/><circle cx='43' cy='31.5' r='4.5' fill='%23d45f32'/></svg>" />
 </head>
 <body>
-  <!-- Topbar Header -->
   <header class="topbar">
     <a class="brand" href="./" aria-label="UIUX Factory — Workbench">
       <span class="brand-mark" aria-hidden="true"><i></i><i></i><b></b></span>
@@ -43,10 +39,9 @@
       </div>
 
       <form id="prompt-form" class="prompt-form" autocomplete="off">
+        <label class="field field-primary">
+          <span class="field-label">Product brief</span>
           <textarea
-            id="prompt"
-            name="prompt"
-            rows="6"
             id="prompt"
             name="prompt"
             rows="6"
@@ -68,15 +63,130 @@
           </div>
         </div>
 
-        <input type="radio" name="engine" value="template" checked style="display:none;" />
+        <details class="config-section" open>
+          <summary>
+            <span><b>Brand signal</b><small>Cho Visual Brain biết điều gì phải giữ và điều gì phải tránh.</small></span>
+          </summary>
+          <div class="config-body grid-2">
+            <label class="field">
+              <span class="field-label">Tên thương hiệu</span>
+              <input id="brand-name" type="text" placeholder="VD: Maison An" />
+            </label>
+            <label class="field">
+              <span class="field-label">Tính cách</span>
+              <input id="brand-personality" type="text" placeholder="tĩnh, thủ công, tinh tế" />
+            </label>
+            <label class="field field-wide">
+              <span class="field-label">Điều tuyệt đối tránh</span>
+              <input id="brand-avoid" type="text" placeholder="gradient trend, glassmorphism, hero giống SaaS" />
+            </label>
+            <label class="field field-wide">
+              <span class="field-label">Design tokens · JSON tùy chọn</span>
+              <textarea id="tokens-json" rows="3" placeholder='{"colors":{"primary":"#1b1a18"},"typography":{"tone":"editorial"}}'></textarea>
+            </label>
+          </div>
+        </details>
 
-        <div class="submit-row">
-          <button type="submit" class="primary-btn" id="submit-btn">
-            <span class="btn-label">Generate Website</span>
-          </button>
-        </div>
+        <details class="config-section" open>
+          <summary>
+            <span><b>Reference intelligence</b><small>Production references được đo để lấy principle, không clone giao diện.</small></span>
+          </summary>
+          <div class="config-body">
+            <div class="inspiration-control">
+              <label class="switch-row" for="auto-inspiration">
+                <span>
+                  <b>Tự chọn benchmark phù hợp domain</b>
+                  <small>User reference luôn được ưu tiên; Factory chỉ bổ sung khi còn thiếu.</small>
+                </span>
+                <input id="auto-inspiration" type="checkbox" checked />
+              </label>
+              <label class="compact-select" for="inspiration-target">
+                <span>Số reference mục tiêu</span>
+                <select id="inspiration-target">
+                  <option value="1">1</option>
+                  <option value="2" selected>2</option>
+                </select>
+              </label>
+            </div>
+            <div class="refs">
+              <div id="ref-urls" class="ref-list"></div>
+              <button type="button" class="ghost-btn" id="add-ref-url">+ Thêm reference URL</button>
+            </div>
+          </div>
+        </details>
+
+        <fieldset class="engine-fieldset">
+          <legend>Execution engine</legend>
+          <div class="engine-pick">
+            <label class="radio">
+              <input type="radio" name="engine" value="template" checked />
+              <span><strong>Deterministic Studio</strong><small>Không cần cloud · contracts + skills + rendered QA.</small></span>
+            </label>
+            <label class="radio" id="ai-radio-wrap">
+              <input type="radio" name="engine" value="ai" />
+              <span><strong>AI Studio</strong><small id="ai-status">Cần cấu hình Groq / Gemini trong <code>.env.local</code>.</small></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="primary-btn" id="submit-btn">
+          <span class="btn-label">Build with Visual Brain</span>
+          <span class="btn-sub" id="submit-sub">Research → Direction → Composition → QA</span>
+          <span class="btn-arrow" aria-hidden="true">↗</span>
+        </button>
       </form>
-    </section>
+    </aside>
+
+    <section class="studio-canvas" aria-label="Visual intelligence và kết quả">
+      <section class="intelligence-board" aria-labelledby="intelligence-title">
+        <div class="section-kicker">
+          <div>
+            <p class="eyebrow">02 · Think</p>
+            <h2 id="intelligence-title">Visual intelligence</h2>
+          </div>
+          <span class="skill-proof">5 visual skills · gated</span>
+        </div>
+
+        <div class="intelligence-grid">
+          <article class="signal-block">
+            <span class="signal-index">A</span>
+            <span class="signal-label">Domain</span>
+            <strong id="smart-domain">—</strong>
+            <small id="smart-domain-reason">Đợi brief…</small>
+          </article>
+          <article class="signal-block">
+            <span class="signal-index">B</span>
+            <span class="signal-label">Brief clarity</span>
+            <strong id="smart-clarity">—</strong>
+            <small id="smart-clarity-tips">Đợi brief…</small>
+          </article>
+          <article class="signal-block signal-wide">
+            <span class="signal-index">C</span>
+            <span class="signal-label">Skill routing</span>
+            <strong id="smart-skill-count">—</strong>
+            <small id="smart-skill-meta">Đợi brief…</small>
+          </article>
+        </div>
+
+        <details class="pipeline-disclosure" open>
+          <summary>
+            <span>Flow &amp; skill evidence</span>
+            <small>Progressive disclosure · xem đúng skill được route ở từng stage.</small>
+          </summary>
+          <ol id="stage-plan" class="stage-plan">
+            <li class="muted">Nhập brief để Visual Brain dựng flow…</li>
+          </ol>
+        </details>
+      </section>
+
+      <section class="run-stage" aria-labelledby="run-title">
+        <div class="section-kicker run-heading">
+          <div>
+            <p class="eyebrow">03 · Make &amp; verify</p>
+            <h2 id="run-title">Live run</h2>
+          </div>
+          <div class="quality-legend" aria-label="Quality gates">
+            <span>Visual Brain</span><span>Responsive</span><span>A11y smoke</span><span>Rendered QA</span>
           </div>
         </div>
 
@@ -133,18 +243,6 @@
       </section>
     </section>
   </main>
-
-  <div class="modal-backdrop" id="artifact-modal" hidden>
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3 class="modal-title" id="modal-filename">artifact.json</h3>
-        <div class="modal-header-actions">
-          <button type="button" class="modal-close-btn" id="modal-close-btn">×</button>
-        </div>
-      </div>
-      <div class="modal-body" id="modal-content"></div>
-    </div>
-  </div>
 
   <footer class="footer">
     <span>UIUX Factory · <code id="bridge-info">127.0.0.1:8788</code></span>
