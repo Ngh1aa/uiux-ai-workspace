@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "visual-first",
+  "name": "Visual First",
+  "description": "Canonical pipeline with extra visual-direction, signature-moment and prototype-quality skill pressure.",
+  "plugins": [
+    "session-events",
+    "skill-composition",
+    "web-research",
+    "browser-evidence",
+    "semantic-visual-qa"
+  ],
+  "stage_skills": {
+    "art_direction": [
+      "experience-principles-and-signature-moments/SKILL.md",
+      "asset-media-and-art-direction/SKILL.md",
+      "upstream/anthropic-skills/skills/frontend-design/SKILL.md"
+    ],
+    "visual_composition": [
+      "prototype-visual-experience-qa/SKILL.md",
+      "upstream/anthropic-skills/skills/frontend-design/SKILL.md"
+    ],
+    "visual_qa": [
+      "prototype-visual-experience-qa/SKILL.md",
+      "visual-taste-calibration/SKILL.md",
+      "upstream/anthropic-skills/skills/frontend-design/SKILL.md"
+    ]
+  }
+}
