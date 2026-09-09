@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from core.orchestration.intelligent_flow import GoalInterpreter, ProfessionalWebsiteFlow
+from core.orchestration.intelligent_flow import (
+    DEFAULT_DELIVERY_POLICY_ID,
+    DEFAULT_FACTORY_DELIVERY_LANE,
+    GoalInterpreter,
+    ProfessionalWebsiteFlow,
+)
 from core.skills.router import AdaptiveSkillRouter
 
 
@@ -19,7 +24,24 @@ def test_goal_interpreter_supports_professional_website_domains() -> None:
         "Website tin tức và tạp chí": "news",
     }
     for goal, expected in cases.items():
-        assert interpreter.interpret(goal).website_type == expected
+        profile = interpreter.interpret(goal)
+        assert profile.website_type == expected
+        assert profile.delivery_policy == DEFAULT_DELIVERY_POLICY_ID
+        assert profile.delivery_lane == DEFAULT_FACTORY_DELIVERY_LANE
+        assert profile.to_dict()["delivery"] == {
+            "policy": "adaptive-prompt-os-v4",
+            "lane": "full_prompt_os",
+        }
+
+
+def test_flow_loads_default_prompt_os_v4_policy() -> None:
+    flow = ProfessionalWebsiteFlow(SKILLS)
+    assert flow.delivery_policy_path.is_file()
+    assert flow.delivery_policy["id"] == "adaptive-prompt-os-v4"
+    assert [phase["id"] for phase in flow.delivery_policy["full_prompt_os"]["phases"]] == [0, 1, 2, 3, 4]
+    assert flow.delivery_policy["full_prompt_os"]["representative_gate"]["requires_opened_rendered_evidence"] is True
+    assert flow.delivery_policy["full_prompt_os"]["human_visual_veto"]["required_for_substantial_visual_work"] is True
+    assert flow.delivery_policy["release"]["production_smoke_required_when_deployed"] is True
 
 
 def test_flow_routes_domain_skills_from_skills_uiux_manifest() -> None:
@@ -29,6 +51,7 @@ def test_flow_routes_domain_skills_from_skills_uiux_manifest() -> None:
         "Tạo website bán hàng ecommerce có checkout và tìm kiếm",
     )
     assert profile.website_type == "ecommerce"
+    assert profile.delivery_policy == "adaptive-prompt-os-v4"
     assert "ecommerce-website" in skills
     assert "conversion-and-content" in skills
     assert "site-search-and-findability" in skills
