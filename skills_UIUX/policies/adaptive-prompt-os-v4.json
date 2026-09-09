@@ -9,15 +9,49 @@
     "substantial_scopes": ["page", "multi-page", "journey", "whole-site", "system"],
     "substantial_types": ["build", "redesign", "rebuild"],
     "lightweight_scopes": ["local", "component"],
-    "escalation_triggers": ["shared_owner", "structural_change", "cross_route_risk", "art_direction_change", "new_design_contract_required", "production_or_high_risk", "material_regression_scope", "invalidated_assumption"]
+    "escalation_triggers": [
+      "shared_owner",
+      "structural_change",
+      "cross_route_risk",
+      "art_direction_change",
+      "new_design_contract_required",
+      "production_or_high_risk",
+      "material_regression_scope",
+      "invalidated_assumption"
+    ]
   },
   "full_prompt_os": {
     "phases": [
-      {"id": 0, "name": "project_config", "broad_code_allowed": false},
-      {"id": 1, "name": "research_audit_design_contract", "broad_code_allowed": false},
-      {"id": 2, "name": "structural_implementation", "broad_code_allowed": true},
-      {"id": 3, "name": "final_qa_remediation", "broad_code_allowed": true},
-      {"id": 4, "name": "release_production_smoke", "broad_code_allowed": false}
+      {
+        "id": 0,
+        "name": "project_config",
+        "broad_code_allowed": false,
+        "exit": "project truth, mode, scope, responsive scope, source of truth, system reality and release authority are resolved"
+      },
+      {
+        "id": 1,
+        "name": "research_audit_design_contract",
+        "broad_code_allowed": false,
+        "exit": "due-now BLOCKED=0 and UNACCOUNTED=0; structural Design Contract and verification plan are sufficient"
+      },
+      {
+        "id": 2,
+        "name": "structural_implementation",
+        "broad_code_allowed": true,
+        "exit": "representative surfaces pass rendered inspection before broad rollout; scoped implementation and regressions are verified"
+      },
+      {
+        "id": 3,
+        "name": "final_qa_remediation",
+        "broad_code_allowed": true,
+        "exit": "rendered cross-page/system QA passes; latest material visual change receives human KEEP/REVISE/REMOVE review and no due-now P0/P1 blocker remains"
+      },
+      {
+        "id": 4,
+        "name": "release_production_smoke",
+        "broad_code_allowed": false,
+        "exit": "release is N/A_JUSTIFIED or authorized release plus real production smoke passes"
+      }
     ],
     "representative_gate": {
       "required_for": ["multi-page", "journey", "whole-site", "system"],
@@ -32,7 +66,16 @@
     }
   },
   "lightweight": {
-    "sequence": ["project_truth", "scope_type_risk_mode", "smallest_applicable_skill_graph", "root_owner_inspection", "focused_implementation", "focused_rendered_or_browser_verification", "affected_shared_owner_regression", "authorized_release_if_requested"],
+    "sequence": [
+      "project_truth",
+      "scope_type_risk_mode",
+      "smallest_applicable_skill_graph",
+      "root_owner_inspection",
+      "focused_implementation",
+      "focused_rendered_or_browser_verification",
+      "affected_shared_owner_regression",
+      "authorized_release_if_requested"
+    ],
     "manufacture_full_phase_artifacts": false
   },
   "non_negotiable": {
@@ -50,5 +93,12 @@
     "deploy_success_is_not_production_verification": true,
     "verify_stale_assets_or_version": true
   },
-  "precedence": ["current_user_request", "project_profile_and_truth", "passed_project_design_contract", "default_delivery_policy", "routed_specialist_skills", "generic_model_prior"]
+  "precedence": [
+    "current_user_request",
+    "project_profile_and_truth",
+    "passed_project_design_contract",
+    "default_delivery_policy",
+    "routed_specialist_skills",
+    "generic_model_prior"
+  ]
 }
