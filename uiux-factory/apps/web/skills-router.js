@@ -6,16 +6,12 @@
 
   const BASE_BY_STAGE = {
     research: [
-    research: [
-      ["project-context/SKILL.md", "Giữ sự thật và ràng buộc của dự án"],
-      ["product-discovery/SKILL.md", "Xác định đối tượng, vấn đề, JTBD, phạm vi"],
+      ["project-context/SKILL.md", "Giữ project truth và uncertainty"],
       ["adaptive-skill-routing-and-context-budget/SKILL.md", "Route skill theo task/context"],
-      ["design-reference-research-and-benchmark/SKILL.md", "Nghiên cứu reference có bằng chứng"],
-      ["ux-benchmarking-and-metrics/SKILL.md", "Benchmarking đối thủ & tiêu chuẩn thiết kế"],
       ["website-audit-and-redesign/SKILL.md", "Audit preserve/change khi applicable"],
       ["audience-intent-and-top-tasks/SKILL.md", "Ưu tiên audience intent và top tasks"],
       ["information-architecture/SKILL.md", "Information architecture và findability"],
-    ],
+      ["design-reference-research-and-benchmark/SKILL.md", "Reference intelligence có provenance"],
     ],
     ux_ia: [
       ["project-context/SKILL.md", "Không biến inference thành project truth"],
@@ -25,15 +21,11 @@
       ["ux-research-and-journey/SKILL.md", "Journey evidence và assumptions"],
     ],
     art_direction: [
-    art_direction: [
       ["visual-design-direction/SKILL.md", "Visual grammar có rationale"],
       ["brand-distinctiveness-and-visual-signature/SKILL.md", "Digital signature ngoài logo/màu"],
       ["visual-taste-calibration/SKILL.md", "KEEP / REVISE / REMOVE anti-template"],
       ["design-system-and-components/SKILL.md", "Direction phải implementable"],
       ["asset-media-and-art-direction/SKILL.md", "Media/crop/icon direction"],
-      ["motion-and-microinteractions/SKILL.md", "Ngôn ngữ chuyển động & micro-interactions"],
-      ["experience-principles-and-signature-moments/SKILL.md", "Khoảnh khắc tạo ấn tượng thị giác"],
-    ],
     ],
     design_contract: [
       ["visual-design-direction/SKILL.md", "Khóa direction vào canonical contract"],
@@ -41,21 +33,17 @@
       ["design-system-and-components/SKILL.md", "Ràng buộc downstream"],
     ],
     design_system: [
-    design_system: [
       ["design-system-and-components/SKILL.md", "Tokens/components/states"],
       ["brand-distinctiveness-and-visual-signature/SKILL.md", "Brand behavior trong system"],
       ["responsive-and-device-strategy/SKILL.md", "Responsive contracts"],
       ["accessibility/SKILL.md", "Accessible component contracts"],
       ["interaction-patterns-and-form-ux/SKILL.md", "Interaction states và forms"],
-      ["brand-guidelines/SKILL.md", "Token gắn với brand truth"],
-    ],
     ],
     implementation_plan: [
       ["frontend-architecture-and-refactoring/SKILL.md", "Frontend boundaries"],
       ["frontend-implementation/SKILL.md", "Implementation strategy"],
       ["ai-agent-coding-guardrails/SKILL.md", "Bounded coding + verification"],
     ],
-    visual_composition: [
     visual_composition: [
       ["visual-design-direction/SKILL.md", "Page-role composition matrix"],
       ["brand-distinctiveness-and-visual-signature/SKILL.md", "Cross-page recognition"],
@@ -64,6 +52,19 @@
       ["ui-craft-and-visual-qa/SKILL.md", "Pre-code craft sanity"],
       ["responsive-and-device-strategy/SKILL.md", "Explicit mobile transformation"],
     ],
+    implementation: [
+      ["frontend-implementation/SKILL.md", "Semantic implementation"],
+      ["ai-agent-coding-guardrails/SKILL.md", "Workspace/code guardrails"],
+      ["design-system-and-components/SKILL.md", "Canonical tokens/components"],
+      ["interaction-patterns-and-form-ux/SKILL.md", "States/recovery/keyboard"],
+      ["responsive-and-device-strategy/SKILL.md", "Responsive implementation"],
+      ["accessibility/SKILL.md", "Focus/semantics/accessibility"],
+    ],
+    browser_qa: [
+      ["testing-strategy/SKILL.md", "Risk-based browser verification"],
+      ["ui-craft-and-visual-qa/SKILL.md", "Rendered evidence hard gate"],
+      ["accessibility/SKILL.md", "Accessibility smoke evidence"],
+      ["visual-regression-and-design-drift/SKILL.md", "Screenshot evidence"],
     ],
     visual_qa: [
       ["ui-craft-and-visual-qa/SKILL.md", "Macro → micro craft review"],
