@@ -88,10 +88,15 @@ def _screenshot_paths(run_dir: Path) -> list[Path]:
     except Exception:
         return []
 
+    run_root = run_dir.resolve()
     paths: list[Path] = []
     for item in report.evidence:
         path = Path(item.screenshot).resolve()
-        if path.is_file() and path not in paths:
+        if (
+            path.is_file()
+            and path.is_relative_to(run_root)
+            and path not in paths
+        ):
             paths.append(path)
     return paths
 
