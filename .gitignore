@@ -22,6 +22,9 @@ __pycache__/
 tmp/
 temp/
 
+# Creator-mode runtime presets are local deployment/user configuration.
+uiux-factory/.runtime-presets/
+
 *.bin
 *.pt
 *.pth
