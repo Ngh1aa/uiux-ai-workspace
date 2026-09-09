@@ -6,6 +6,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 
+DEFAULT_DELIVERY_POLICY_ID = "adaptive-prompt-os-v4"
+DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
+
+
 @dataclass(frozen=True)
 class GoalProfile:
     intent: str
@@ -15,6 +19,8 @@ class GoalProfile:
     features: tuple[str, ...] = field(default_factory=tuple)
     confidence: float = 0.0
     evidence: tuple[str, ...] = field(default_factory=tuple)
+    delivery_policy: str = DEFAULT_DELIVERY_POLICY_ID
+    delivery_lane: str = DEFAULT_FACTORY_DELIVERY_LANE
 
     def to_dict(self) -> dict:
         return {
@@ -23,6 +29,10 @@ class GoalProfile:
             "mode": self.mode,
             "risk": self.risk,
             "features": list(self.features),
+            "delivery": {
+                "policy": self.delivery_policy,
+                "lane": self.delivery_lane,
+            },
             "inference": {
                 "confidence": self.confidence,
                 "evidence": list(self.evidence),
@@ -102,6 +112,8 @@ class GoalInterpreter:
         elif mode == "production":
             risk = "production"
         evidence.append(f"risk:{risk}")
+        evidence.append(f"delivery_policy:{DEFAULT_DELIVERY_POLICY_ID}")
+        evidence.append(f"delivery_lane:{DEFAULT_FACTORY_DELIVERY_LANE}")
 
         return GoalProfile(
             intent=intent,
@@ -111,11 +123,13 @@ class GoalInterpreter:
             features=tuple(features),
             confidence=0.95 if website_type != "generic" else 0.65,
             evidence=tuple(evidence),
+            delivery_policy=DEFAULT_DELIVERY_POLICY_ID,
+            delivery_lane=DEFAULT_FACTORY_DELIVERY_LANE,
         )
 
 
 class ProfessionalWebsiteFlow:
-    """Read the declarative flow shipped by skills_UIUX and expose Factory-stage skills."""
+    """Read the declarative flow and default delivery policy shipped by skills_UIUX."""
 
     FACTORY_TO_FLOW_STAGE = {
         "reference_analysis": "research",
@@ -152,6 +166,19 @@ class ProfessionalWebsiteFlow:
             raise FileNotFoundError(f"Professional website flow missing: {self.flow_path}")
         self.document = json.loads(self.flow_path.read_text(encoding="utf-8"))
         self._stages = {stage["id"]: stage for stage in self.document.get("stages", [])}
+
+        self.delivery_policy_path = self.skills_root / "policies" / f"{DEFAULT_DELIVERY_POLICY_ID}.json"
+        if not self.delivery_policy_path.is_file():
+            raise FileNotFoundError(f"Default website delivery policy missing: {self.delivery_policy_path}")
+        self.delivery_policy = json.loads(self.delivery_policy_path.read_text(encoding="utf-8"))
+        if self.delivery_policy.get("id") != DEFAULT_DELIVERY_POLICY_ID:
+            raise ValueError(
+                f"Unexpected default delivery policy id: {self.delivery_policy.get('id')!r}; "
+                f"expected {DEFAULT_DELIVERY_POLICY_ID!r}"
+            )
+        phase_ids = [phase.get("id") for phase in self.delivery_policy.get("full_prompt_os", {}).get("phases", [])]
+        if phase_ids != [0, 1, 2, 3, 4]:
+            raise ValueError(f"Default delivery policy must define Prompt OS phases 0→4, got {phase_ids!r}")
         self.interpreter = GoalInterpreter()
 
     @staticmethod
