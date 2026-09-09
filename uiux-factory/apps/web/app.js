@@ -235,7 +235,7 @@
       els.bridgeStatus.dataset.state = "ok";
       els.bridgeStatus.querySelector(".status-text").textContent =
         `Bridge sẵn sàng · ${data.python ? "Python OK" : "OK"}`;
-      els.bridgeInfo.textContent = new URL(BRIDGE).host;
+      els.bridgeInfo.textContent = new URL(BRIDGE, location.origin).host;
       const radios = document.querySelectorAll('input[name="engine"]');
       if (!aiOk) {
         const aiRadio = document.querySelector('input[name="engine"][value="ai"]');
