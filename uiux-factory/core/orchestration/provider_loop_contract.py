@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, Iterable
 
 
 PROVIDER_STATUSES = {"CONTINUE", "PASS", "FAIL", "BLOCKED"}
@@ -93,11 +93,14 @@ class ProviderLoopResponse:
         return payload
 
 
-def response_contract_text() -> str:
+def response_contract_text(allowed_tools: Iterable[str] | None = None) -> str:
+    tools = sorted(READ_ONLY_TOOLS if allowed_tools is None else set(allowed_tools) & READ_ONLY_TOOLS)
+    tool_text = ", ".join(tools) if tools else "none"
     return (
         "Return ONLY JSON with keys status, requests, summary, evidence, artifact, replan_signal. "
-        "status is CONTINUE|PASS|FAIL|BLOCKED. requests may use only read_artifact, "
-        "read_skill_source, list_artifacts. Use CONTINUE when more evidence is needed. "
-        "PASS requires concrete evidence and the complete refined artifact. "
-        "FAIL/BLOCKED must identify a replan signal when appropriate."
+        "status is CONTINUE|PASS|FAIL|BLOCKED. Runtime-enabled read-only observation tools: "
+        f"{tool_text}. Do not request a tool outside that set. Use CONTINUE when more evidence "
+        "is needed and at least one runtime-enabled tool is available. PASS requires concrete "
+        "evidence and the complete refined artifact. FAIL/BLOCKED must identify a replan signal "
+        "when appropriate."
     )

@@ -43,19 +43,27 @@ class UIUXTeamRunner:
         self.compiler = SkillInstructionCompiler(skills_root=self.skills_root)
         self._event_buses: dict[str, RunEventBus] = {}
         self.provider = None
+        self.runtime = None
 
     def set_provider(self, provider) -> None:
         self.provider = provider
+
+    def set_runtime(self, runtime) -> None:
+        self.runtime = runtime
 
     def event_bus(self, context) -> RunEventBus:
         run_id = context.run_id
         if run_id in self._event_buses:
             return self._event_buses[run_id]
 
-        bus = RunEventBus(event_path=Path(context.run_dir) / "events.jsonl", run_id=run_id)
+        if hasattr(context, "event_bus"):
+            bus = context.event_bus()
+        else:
+            bus = RunEventBus(event_path=Path(context.run_dir) / "events.jsonl", run_id=run_id)
+            if hasattr(context, "add_artifact") and "events" not in getattr(context, "artifacts", {}):
+                context.add_artifact("events", bus.event_path)
+
         self._event_buses[run_id] = bus
-        if hasattr(context, "add_artifact") and "events" not in getattr(context, "artifacts", {}):
-            context.add_artifact("events", bus.event_path)
         bus.emit(
             "team.initialized",
             data={
@@ -63,6 +71,7 @@ class UIUXTeamRunner:
                 "use_mgx": False,
                 "skills_root": str(self.skills_root),
                 "provider_refinement": bool(self.provider),
+                "runtime_preset": getattr(context, "runtime_preset", "standard"),
             },
         )
         return bus
@@ -81,6 +90,21 @@ class UIUXTeamRunner:
             goal=context.goal,
             skills_root=self.skills_root,
         )
+
+        runtime_paths: tuple[str, ...] = ()
+        if (
+            self.runtime is not None
+            and hasattr(self.runtime, "has_active")
+            and self.runtime.has_active(context)
+        ):
+            runtime_paths = self.runtime.stage_skill_paths(context, stage)
+            for path in runtime_paths:
+                if path not in selection.relative_paths:
+                    selection.relative_paths.append(path)
+                selection.reasons[path] = (
+                    f"Runtime preset {context.runtime_preset!r} composed this stage capability."
+                )
+
         missing = AdaptiveSkillRouter.validate_declared_paths(self.skills_root)
         if missing:
             raise FileNotFoundError(
@@ -97,6 +121,15 @@ class UIUXTeamRunner:
         if hasattr(context, "add_artifact"):
             context.add_artifact(f"skill_context_{stage}", skill_artifact)
             context.add_artifact(f"skill_coverage_{stage}", coverage_artifact)
+        if runtime_paths:
+            self.event_bus(context).emit(
+                "runtime.skills_composed",
+                stage=stage,
+                data={
+                    "preset": context.runtime_preset,
+                    "skill_paths": list(runtime_paths),
+                },
+            )
         return selection, skill_context, skill_artifact
 
     @staticmethod
@@ -188,6 +221,7 @@ class UIUXTeamRunner:
                 "domain": domain,
                 "requested_paths": selection.relative_paths,
                 "mandatory_paths": selection.mandatory_paths,
+                "runtime_preset": getattr(context, "runtime_preset", "standard"),
             },
         )
         bus.emit(
@@ -234,7 +268,10 @@ class UIUXTeamRunner:
             stage=stage,
             run_id=context.run_id,
             skill_context=skill_context,
-            extra_metadata={"agent_class": f"{role_class.__module__}.{role_class.__name__}"},
+            extra_metadata={
+                "agent_class": f"{role_class.__module__}.{role_class.__name__}",
+                "runtime_preset": getattr(context, "runtime_preset", "standard"),
+            },
         )
         bus.emit(
             "agent.started",

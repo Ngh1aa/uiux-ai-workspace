@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "standard",
+  "name": "Standard",
+  "description": "Canonical UIUX Factory pipeline with live research, skills, browser evidence and semantic visual QA.",
+  "plugins": [
+    "session-events",
+    "artifact-evidence",
+    "skill-composition",
+    "web-research",
+    "browser-evidence",
+    "semantic-visual-qa"
+  ],
+  "stage_skills": {}
+}
