@@ -5,6 +5,12 @@
 (function (global) {
   "use strict";
 
+  const ANTHROPIC_ROOT = "upstream/anthropic-skills/skills";
+  const ANTHROPIC_FRONTEND = `${ANTHROPIC_ROOT}/frontend-design/SKILL.md`;
+  const ANTHROPIC_WEBAPP = `${ANTHROPIC_ROOT}/webapp-testing/SKILL.md`;
+  const ANTHROPIC_WEB_ARTIFACTS = `${ANTHROPIC_ROOT}/web-artifacts-builder/SKILL.md`;
+  const ANTHROPIC_SKILL_CREATOR = `${ANTHROPIC_ROOT}/skill-creator/SKILL.md`;
+
   const BASE_BY_STAGE = {
     research: [
       ["project-context/SKILL.md", "Giữ project truth và uncertainty"],
@@ -33,6 +39,7 @@
       ["asset-media-and-art-direction/SKILL.md", "Media/crop/icon direction"],
       ["visual-taste-calibration/SKILL.md", "KEEP / REVISE / REMOVE anti-template"],
       ["brand-guidelines/SKILL.md", "Brand rules và consistency"],
+      [ANTHROPIC_FRONTEND, "Anthropic visual distinctiveness + anti-template discipline"],
     ],
     design_contract: [
       ["ai-agent-coding-guardrails/SKILL.md", "Guardrails trước quyết định thiết kế"],
@@ -68,6 +75,7 @@
       ["asset-media-and-art-direction/SKILL.md", "Media/crop hierarchy"],
       ["visual-taste-calibration/SKILL.md", "Challenge generic composition"],
       ["responsive-and-device-strategy/SKILL.md", "Explicit mobile transformation"],
+      [ANTHROPIC_FRONTEND, "Anthropic rendered distinctiveness discipline"],
     ],
     implementation: [
       ["ai-agent-coding-guardrails/SKILL.md", "Workspace/code guardrails"],
@@ -75,6 +83,7 @@
       ["component-driven-development/SKILL.md", "Reusable components"],
       ["responsive-and-device-strategy/SKILL.md", "Responsive implementation"],
       ["accessibility/SKILL.md", "Focus/semantics/accessibility"],
+      [ANTHROPIC_FRONTEND, "Anthropic frontend craft + anti-slop rules"],
     ],
     browser_qa: [
       ["testing-strategy/SKILL.md", "Risk-based browser verification"],
@@ -86,6 +95,7 @@
       ["brand-recognition-and-consistency-qa/SKILL.md", "Brand recognition QA"],
       ["media-crop-and-layout-integrity/SKILL.md", "Media crop/layout integrity"],
       ["visual-regression-and-design-drift/SKILL.md", "Screenshot evidence"],
+      [ANTHROPIC_WEBAPP, "Anthropic Playwright reconnaissance → action discipline"],
     ],
     visual_qa: [
       ["testing-strategy/SKILL.md", "Risk-based verification"],
@@ -98,6 +108,8 @@
       ["media-crop-and-layout-integrity/SKILL.md", "Media crop/layout integrity"],
       ["visual-taste-calibration/SKILL.md", "Generic-AI feel calibration"],
       ["visual-regression-and-design-drift/SKILL.md", "Cross-route evidence"],
+      [ANTHROPIC_FRONTEND, "Anthropic anti-template visual critique"],
+      [ANTHROPIC_WEBAPP, "Anthropic screenshot/browser evidence discipline"],
     ],
     repair: [
       ["testing-strategy/SKILL.md", "Regression verification"],
@@ -112,6 +124,7 @@
       ["visual-taste-calibration/SKILL.md", "Repair interchangeable UI"],
       ["responsive-and-device-strategy/SKILL.md", "Repair by device"],
       ["state-feedback-and-error-recovery/SKILL.md", "Repair states/recovery"],
+      [ANTHROPIC_FRONTEND, "Anthropic anti-generic root-cause critique"],
     ],
   };
 
@@ -220,6 +233,7 @@
   };
 
   const PROTOTYPE_MODES = new Set(["visual-prototype", "interactive-prototype"]);
+  const COMPLEX_PROTOTYPE_FEATURES = new Set(["auth", "dashboard", "forms", "search"]);
   const PROTOTYPE_SKILL = [
     "prototype-visual-experience-qa/SKILL.md",
     "3-second impression, signature moment, anti-generic and 5-second/squint QA",
@@ -333,6 +347,13 @@
           ["data-visualization-and-dashboard-ux/SKILL.md", "Dashboard visualization UX"],
         ]],
       ], "feature");
+      if (
+        stage === "implementation" &&
+        profile.mode === "interactive-prototype" &&
+        profile.features.some(feature => COMPLEX_PROTOTYPE_FEATURES.has(feature))
+      ) {
+        addSkill(map, [ANTHROPIC_WEB_ARTIFACTS, "Complex React/state/routing artifact toolkit"], "mode");
+      }
     }
 
     if (flowStage === "qa") {
@@ -380,6 +401,7 @@
       features: first.features,
       clarity: clarityScore(goal),
       domainSkills: RESEARCH_DOMAIN_SKILLS[first.domain] || [],
+      metaSkills: [ANTHROPIC_SKILL_CREATOR],
       stages: stages.map(stage => {
         const resolved = route(stage, goal);
         return {
