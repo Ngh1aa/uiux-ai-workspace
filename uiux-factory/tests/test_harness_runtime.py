@@ -144,3 +144,31 @@ def test_runtime_preset_catalog_uses_copy_only_user_authoring(tmp_path: Path) ->
     catalog.delete_user_preset("my-preset")
     with pytest.raises(KeyError):
         catalog.get("my-preset")
+
+
+def test_runtime_compose_rejects_missing_skill_paths_before_activation(tmp_path: Path) -> None:
+    factory = tmp_path / "workspace" / "uiux-factory"
+    preset_root = factory / "config" / "runtime-presets"
+    skills = factory.parent / "skills_UIUX"
+    preset_root.mkdir(parents=True)
+    skills.mkdir(parents=True)
+
+    (preset_root / "broken.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "id": "broken",
+                "name": "Broken",
+                "description": "should fail before a run consumes it",
+                "plugins": ["session-events"],
+                "stage_skills": {
+                    "research": ["does-not-exist/SKILL.md"]
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    runtime = HarnessInspiredRuntime(factory)
+    with pytest.raises(FileNotFoundError, match="does-not-exist/SKILL.md"):
+        runtime.compose("broken")
