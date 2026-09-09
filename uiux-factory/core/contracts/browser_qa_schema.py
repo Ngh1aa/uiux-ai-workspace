@@ -27,6 +27,13 @@ class RouteViewportEvidence(BaseModel):
 
     broken_internal_links: list[str] = Field(default_factory=list)
 
+    # Automated smoke evidence only; these fields do not claim WCAG conformance.
+    missing_alt_count: int = 0
+    unlabeled_control_count: int = 0
+    small_control_target_count: int = 0
+    focus_obscured_count: int = 0
+    catastrophic_contrast_count: int = 0
+
 
 class BrowserQAGate(BaseModel):
     routes_discovered: bool = False
@@ -36,11 +43,18 @@ class BrowserQAGate(BaseModel):
     no_horizontal_overflow: bool = False
     internal_links_valid: bool = False
     semantic_smoke_passed: bool = False
+
+    image_alt_smoke_passed: bool = False
+    accessible_name_smoke_passed: bool = False
+    control_target_smoke_passed: bool = False
+    focus_visibility_smoke_passed: bool = False
+    elementary_visual_sanity_passed: bool = False
+
     ready_for_visual_critic: bool = False
 
 
 class BrowserQAResult(BaseModel):
-    schema_version: str = "0.1.0"
+    schema_version: str = "0.2.0"
     status: Literal["passed", "failed", "partial"]
 
     project_slug: str
