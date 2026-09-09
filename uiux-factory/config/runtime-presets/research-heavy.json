@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "research-heavy",
+  "name": "Research Heavy",
+  "description": "Canonical pipeline with stronger benchmark, audience-intent and domain-evidence pressure before design.",
+  "plugins": [
+    "session-events",
+    "skill-composition",
+    "web-research",
+    "browser-evidence",
+    "semantic-visual-qa"
+  ],
+  "stage_skills": {
+    "research": [
+      "design-reference-research-and-benchmark/SKILL.md",
+      "ux-benchmarking-and-metrics/SKILL.md",
+      "audience-intent-and-top-tasks/SKILL.md"
+    ],
+    "ux_ia": [
+      "ux-research-and-journey/SKILL.md",
+      "journey-driven-content-and-layout/SKILL.md"
+    ]
+  }
+}
