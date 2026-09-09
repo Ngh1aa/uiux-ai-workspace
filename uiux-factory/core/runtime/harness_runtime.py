@@ -124,27 +124,44 @@ class HarnessInspiredRuntime:
             metadata={"runtime_preset": preset.preset_id},
         )
 
-        merged: dict[str, list[str]] = {
-            stage: list(paths)
-            for stage, paths in base.stage_skills.items()
-        }
-        for stage, paths in preset.stage_skills.items():
-            bucket = merged.setdefault(stage, [])
-            for path in paths:
-                if path not in bucket:
-                    bucket.append(path)
+        try:
+            merged: dict[str, list[str]] = {
+                stage: list(paths)
+                for stage, paths in base.stage_skills.items()
+            }
+            for stage, paths in preset.stage_skills.items():
+                bucket = merged.setdefault(stage, [])
+                for path in paths:
+                    if path not in bucket:
+                        bucket.append(path)
 
-        composition = RuntimeComposition(
-            requested_plugins=base.requested_plugins,
-            mounted_plugins=base.mounted_plugins,
-            capabilities=base.capabilities,
-            tools=base.tools,
-            stage_skills={
-                stage: tuple(paths)
-                for stage, paths in merged.items()
-            },
-        )
-        return ActiveRuntime(preset=preset, registry=registry, composition=composition)
+            missing = sorted(
+                {
+                    path
+                    for paths in merged.values()
+                    for path in paths
+                    if not (self.skills_root / path).is_file()
+                }
+            )
+            if missing:
+                raise FileNotFoundError(
+                    "Runtime preset references missing skills: " + ", ".join(missing)
+                )
+
+            composition = RuntimeComposition(
+                requested_plugins=base.requested_plugins,
+                mounted_plugins=base.mounted_plugins,
+                capabilities=base.capabilities,
+                tools=base.tools,
+                stage_skills={
+                    stage: tuple(paths)
+                    for stage, paths in merged.items()
+                },
+            )
+            return ActiveRuntime(preset=preset, registry=registry, composition=composition)
+        except Exception:
+            registry.unmount_all()
+            raise
 
     def activate(self, context, preset_id: str | None = None) -> ActiveRuntime:
         selected = (preset_id or getattr(context, "runtime_preset", "standard")).strip()
@@ -186,13 +203,7 @@ class HarnessInspiredRuntime:
 
     def stage_skill_paths(self, context, stage: str) -> tuple[str, ...]:
         active = self.active(context)
-        paths = active.composition.stage_skills.get(stage, ())
-        missing = [path for path in paths if not (self.skills_root / path).is_file()]
-        if missing:
-            raise FileNotFoundError(
-                "Runtime composition references missing skills: " + ", ".join(missing)
-            )
-        return tuple(paths)
+        return tuple(active.composition.stage_skills.get(stage, ()))
 
     def snapshot(self, context) -> dict[str, Any]:
         return self.active(context).to_dict()
