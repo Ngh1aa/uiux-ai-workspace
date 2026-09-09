@@ -32,6 +32,33 @@ class RepairDirective(BaseModel):
     success_criteria: str
 
 
+class VisualRouteSemanticReview(BaseModel):
+    route: str
+    page_role: str = "unknown"
+    domain_fit: int = Field(ge=0, le=100)
+    page_role_fit: int = Field(ge=0, le=100)
+    decision_object_dominance: int = Field(ge=0, le=100)
+    media_relevance: int = Field(ge=0, le=100)
+    hierarchy: int = Field(ge=0, le=100)
+    distinctiveness: int = Field(ge=0, le=100)
+    generic_ai_feel: int = Field(ge=0, le=100)
+    blocking_generic: bool = False
+    generic_tells: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
+    recommendations: list[str] = Field(default_factory=list)
+
+
+class SemanticVisualReview(BaseModel):
+    reviewed: bool = True
+    site_summary: str = ""
+    website_type: str = "generic"
+    vertical: str = "generic"
+    blocking_generic: bool = False
+    cross_route_variety: int = Field(default=100, ge=0, le=100)
+    brand_distinctiveness: int = Field(default=70, ge=0, le=100)
+    routes: list[VisualRouteSemanticReview] = Field(default_factory=list)
+
+
 class VisualCriticGate(BaseModel):
     screenshots_consumed: bool = False
     browser_report_consumed: bool = False
@@ -40,9 +67,15 @@ class VisualCriticGate(BaseModel):
     repair_directives_generated: bool = False
     ready_for_repair_agent: bool = False
 
+    semantic_visual_review_attempted: bool = False
+    semantic_visual_review_passed: bool = False
+    domain_page_roles_reviewed: bool = False
+    no_blocking_generic_pattern: bool = False
+    proxy_only_mode: bool = True
+
 
 class VisualCriticResult(BaseModel):
-    schema_version: str = "0.1.0"
+    schema_version: str = "0.2.0"
 
     status: Literal[
         "passed",
@@ -66,6 +99,9 @@ class VisualCriticResult(BaseModel):
     )
 
     gates: VisualCriticGate
+
+    semantic_review: SemanticVisualReview | None = None
+    review_mode: Literal["vision", "proxy"] = "proxy"
 
     notes: list[str] = Field(
         default_factory=list
