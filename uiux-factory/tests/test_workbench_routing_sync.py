@@ -17,6 +17,13 @@ def test_workbench_router_mirrors_prototype_vertical_and_reference_contracts() -
     assert "interactive-prototype" in router
     assert "production-candidate" in router
 
+    assert "upstream/anthropic-skills/skills" in router
+    assert "frontend-design/SKILL.md" in router
+    assert "webapp-testing/SKILL.md" in router
+    assert "web-artifacts-builder/SKILL.md" in router
+    assert "skill-creator/SKILL.md" in router
+    assert "COMPLEX_PROTOTYPE_FEATURES" in router
+
     assert "Math.min(4" in router
     assert "[1, 2, 3, 4]" in router
     assert "Math.min(4" in app
@@ -24,10 +31,12 @@ def test_workbench_router_mirrors_prototype_vertical_and_reference_contracts() -
     assert '<option value="4" selected>4</option>' in html
 
 
-def test_workbench_client_does_not_embed_live_search_credentials() -> None:
+def test_workbench_client_does_not_embed_live_search_or_ai_credentials() -> None:
     client_source = "\n".join(
         (WEB / name).read_text(encoding="utf-8")
         for name in ("index.html", "app.js", "skills-router.js")
     )
     assert "BRAVE_SEARCH_API_KEY" not in client_source
     assert "X-Subscription-Token" not in client_source
+    assert "GROQ_API_KEY" not in client_source
+    assert "GEMINI_API_KEY" not in client_source
