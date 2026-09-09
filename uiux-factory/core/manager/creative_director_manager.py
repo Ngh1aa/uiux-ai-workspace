@@ -213,18 +213,19 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         )
         context.run_id = run_id
         context.initialize()
-        self.runtime.activate(context, runtime_preset)
-        self.runtime.require(context, "skills.compose")
         self.creative_directive = directive
 
-        provider = None
-        if engine == "ai":
-            from core.runtime.free_provider import FreeProvider
-
-            provider = FreeProvider.from_env(self.root)
-            self.team_runner.set_provider(provider)
-
         try:
+            self.runtime.activate(context, runtime_preset)
+            self.runtime.require(context, "skills.compose")
+
+            provider = None
+            if engine == "ai":
+                from core.runtime.free_provider import FreeProvider
+
+                provider = FreeProvider.from_env(self.root)
+                self.team_runner.set_provider(provider)
+
             context_path = context.run_dir / "design-context.json"
             context_path.write_text(
                 design_context.model_dump_json(indent=2),
