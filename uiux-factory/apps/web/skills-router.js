@@ -1,126 +1,159 @@
-/* ============================================================
-   skills-router.js — Mirror của core/skills/router.py để hiển thị
-   cho người dùng TRƯỚC khi chạy pipeline. Đây là "trí thông minh"
-   của console: biết được hệ thống sẽ làm gì với prompt hiện tại.
-   ============================================================ */
-
+/* Workbench-side preview of the canonical skills_UIUX flow.
+   Backend flow-plan.json remains authoritative; this file exists so the user
+   can see likely routing before a run starts. */
 (function (global) {
   "use strict";
 
-  // Trùng với core/skills/router.py — giữ đơn giản (chỉ phần dùng cho UI)
   const BASE_BY_STAGE = {
     research: [
-      ["project-context/SKILL.md", "Giữ sự thật và ràng buộc của dự án"],
-      ["product-discovery/SKILL.md", "Xác định đối tượng, vấn đề, JTBD, phạm vi"],
-      ["design-reference-research-and-benchmark/SKILL.md", "Nghiên cứu reference có bằng chứng"],
+      ["project-context/SKILL.md", "Giữ project truth và uncertainty"],
+      ["adaptive-skill-routing-and-context-budget/SKILL.md", "Route skill theo task/context"],
+      ["website-audit-and-redesign/SKILL.md", "Audit preserve/change khi applicable"],
+      ["audience-intent-and-top-tasks/SKILL.md", "Ưu tiên audience intent và top tasks"],
+      ["information-architecture/SKILL.md", "Information architecture và findability"],
+      ["design-reference-research-and-benchmark/SKILL.md", "Reference intelligence có provenance"],
     ],
     ux_ia: [
-      ["ux-research-and-journey/SKILL.md", "Nền tảng journey & task analysis"],
-      ["information-architecture/SKILL.md", "Phân cấp, taxonomy, điều hướng"],
-      ["audience-intent-and-top-tasks/SKILL.md", "Ưu tiên intent người dùng"],
-      ["journey-driven-content-and-layout/SKILL.md", "Map journey → cấu trúc nội dung"],
+      ["project-context/SKILL.md", "Không biến inference thành project truth"],
+      ["audience-intent-and-top-tasks/SKILL.md", "Map top tasks"],
+      ["information-architecture/SKILL.md", "Page roles, taxonomy, navigation"],
+      ["journey-driven-content-and-layout/SKILL.md", "Journey → content/layout"],
+      ["ux-research-and-journey/SKILL.md", "Journey evidence và assumptions"],
     ],
     art_direction: [
-      ["visual-design-direction/SKILL.md", "Ngữ pháp thị giác, hierarchy"],
-      ["visual-taste-calibration/SKILL.md", "Chống generic/template"],
-      ["brand-guidelines/SKILL.md", "Dịch brand truth thành quy tắc thị giác"],
-      ["asset-media-and-art-direction/SKILL.md", "Định hướng media/ảnh/icon"],
+      ["visual-design-direction/SKILL.md", "Visual grammar có rationale"],
+      ["brand-distinctiveness-and-visual-signature/SKILL.md", "Digital signature ngoài logo/màu"],
+      ["visual-taste-calibration/SKILL.md", "KEEP / REVISE / REMOVE anti-template"],
+      ["design-system-and-components/SKILL.md", "Direction phải implementable"],
+      ["asset-media-and-art-direction/SKILL.md", "Media/crop/icon direction"],
     ],
     design_contract: [
-      ["project-context/SKILL.md", "Giữ truth trong canonical contract"],
-      ["visual-design-direction/SKILL.md", "Mang direction đã duyệt vào ràng buộc"],
-      ["design-system-and-components/SKILL.md", "Định ràng buộc implementation"],
+      ["visual-design-direction/SKILL.md", "Khóa direction vào canonical contract"],
+      ["brand-distinctiveness-and-visual-signature/SKILL.md", "Khóa recognizable cues"],
+      ["design-system-and-components/SKILL.md", "Ràng buộc downstream"],
     ],
     design_system: [
-      ["design-system-and-components/SKILL.md", "Tokens, components, variants, states"],
-      ["brand-guidelines/SKILL.md", "Token gắn với brand truth"],
-      ["responsive-and-device-strategy/SKILL.md", "Quy tắc responsive"],
-      ["accessibility/SKILL.md", "Accessibility trong component contract"],
+      ["design-system-and-components/SKILL.md", "Tokens/components/states"],
+      ["brand-distinctiveness-and-visual-signature/SKILL.md", "Brand behavior trong system"],
+      ["responsive-and-device-strategy/SKILL.md", "Responsive contracts"],
+      ["accessibility/SKILL.md", "Accessible component contracts"],
+      ["interaction-patterns-and-form-ux/SKILL.md", "Interaction states và forms"],
     ],
     implementation_plan: [
-      ["frontend-architecture-and-refactoring/SKILL.md", "Quy hoạch ranh giới frontend"],
-      ["frontend-implementation/SKILL.md", "Triển khai theo design đã duyệt"],
-      ["ai-agent-coding-guardrails/SKILL.md", "Slice & verify trước khi ship"],
+      ["frontend-architecture-and-refactoring/SKILL.md", "Frontend boundaries"],
+      ["frontend-implementation/SKILL.md", "Implementation strategy"],
+      ["ai-agent-coding-guardrails/SKILL.md", "Bounded coding + verification"],
     ],
     visual_composition: [
-      ["visual-design-direction/SKILL.md", "Direction → composition cấp trang"],
-      ["visual-taste-calibration/SKILL.md", "Chống generic/interchangeable"],
-      ["responsive-and-device-strategy/SKILL.md", "Mobile/tablet transformation"],
-      ["asset-media-and-art-direction/SKILL.md", "Anchor thị giác cho trang"],
+      ["visual-design-direction/SKILL.md", "Page-role composition matrix"],
+      ["brand-distinctiveness-and-visual-signature/SKILL.md", "Cross-page recognition"],
+      ["visual-taste-calibration/SKILL.md", "Challenge generic composition"],
+      ["interaction-patterns-and-form-ux/SKILL.md", "Task/state behavior in composition"],
+      ["ui-craft-and-visual-qa/SKILL.md", "Pre-code craft sanity"],
+      ["responsive-and-device-strategy/SKILL.md", "Explicit mobile transformation"],
     ],
     implementation: [
-      ["frontend-implementation/SKILL.md", "Semantic + verify"],
-      ["ai-agent-coding-guardrails/SKILL.md", "Chống unsafe AI code"],
-      ["design-system-and-components/SKILL.md", "Dùng token canonical"],
-      ["responsive-and-device-strategy/SKILL.md", "Responsive tường minh"],
-      ["accessibility/SKILL.md", "Semantic/focus/keyboard baseline"],
+      ["frontend-implementation/SKILL.md", "Semantic implementation"],
+      ["ai-agent-coding-guardrails/SKILL.md", "Workspace/code guardrails"],
+      ["design-system-and-components/SKILL.md", "Canonical tokens/components"],
+      ["interaction-patterns-and-form-ux/SKILL.md", "States/recovery/keyboard"],
+      ["responsive-and-device-strategy/SKILL.md", "Responsive implementation"],
+      ["accessibility/SKILL.md", "Focus/semantics/accessibility"],
     ],
     browser_qa: [
-      ["testing-strategy/SKILL.md", "Risk-based verification"],
-      ["ui-craft-and-visual-qa/SKILL.md", "QA render thật, không tin build"],
-      ["accessibility/SKILL.md", "Accessibility baseline"],
-      ["visual-regression-and-design-drift/SKILL.md", "Screenshot = bằng chứng"],
+      ["testing-strategy/SKILL.md", "Risk-based browser verification"],
+      ["ui-craft-and-visual-qa/SKILL.md", "Rendered evidence hard gate"],
+      ["accessibility/SKILL.md", "Accessibility smoke evidence"],
+      ["visual-regression-and-design-drift/SKILL.md", "Screenshot evidence"],
     ],
     visual_qa: [
-      ["ui-craft-and-visual-qa/SKILL.md", "Đánh giá craft render"],
-      ["visual-taste-calibration/SKILL.md", "Phát hiện generic"],
-      ["visual-regression-and-design-drift/SKILL.md", "So sánh evidence"],
-      ["accessibility/SKILL.md", "Accessibility trong acceptance"],
+      ["ui-craft-and-visual-qa/SKILL.md", "Macro → micro craft review"],
+      ["visual-taste-calibration/SKILL.md", "Generic-AI feel calibration"],
+      ["brand-distinctiveness-and-visual-signature/SKILL.md", "Recognition QA"],
+      ["visual-regression-and-design-drift/SKILL.md", "Cross-route evidence"],
+      ["accessibility/SKILL.md", "Accessibility acceptance boundary"],
     ],
     repair: [
-      ["ui-improvement/SKILL.md", "Diagnose → preserve → route → repair"],
-      ["frontend-implementation/SKILL.md", "Sửa implementation có kiểm soát"],
-      ["ai-agent-coding-guardrails/SKILL.md", "Giữ repair bounded"],
-      ["visual-taste-calibration/SKILL.md", "Sửa visual generic"],
-      ["responsive-and-device-strategy/SKILL.md", "Sửa theo device"],
-      ["accessibility/SKILL.md", "Không regress accessibility"],
+      ["ui-improvement/SKILL.md", "Root-cause repair"],
+      ["web-ui-code-review/SKILL.md", "Review owner/code before patch"],
+      ["visual-taste-calibration/SKILL.md", "Repair interchangeable UI"],
+      ["interaction-patterns-and-form-ux/SKILL.md", "Repair states/recovery"],
+      ["responsive-and-device-strategy/SKILL.md", "Repair by device"],
+      ["accessibility/SKILL.md", "Prevent accessibility regression"],
     ],
   };
 
   const DOMAIN_SKILLS = {
-    ecommerce: [["ecommerce-website/SKILL.md", "Playbook ecommerce discover → checkout"]],
-    corporate: [["corporate-website/SKILL.md", "Playbook corporate/B2B"]],
-    education: [["education-website/SKILL.md", "Playbook giáo dục"]],
-    agency: [
-      ["corporate-website/SKILL.md", "Playbook corporate cho B2B credibility"],
-      ["conversion-and-content/SKILL.md", "Proof + CTA cho agency"],
+    ecommerce: [
+      ["ecommerce-website/SKILL.md", "Commerce discovery → evaluation → transaction"],
+      ["conversion-and-content/SKILL.md", "Content/conversion hierarchy"],
+      ["site-search-and-findability/SKILL.md", "Search/findability"],
     ],
+    education: [
+      ["education-website/SKILL.md", "Education journeys/trust"],
+      ["trust-credibility-and-transparency/SKILL.md", "Institutional credibility"],
+    ],
+    government: [
+      ["government-and-public-sector-website/SKILL.md", "Public-service task design"],
+      ["inclusive-design-and-cognitive-accessibility/SKILL.md", "Broad-audience inclusion"],
+    ],
+    hospitality: [
+      ["hospitality-website/SKILL.md", "Experience/booking journey"],
+      ["service-experience-to-digital-journey/SKILL.md", "Service → digital journey"],
+      ["conversion-and-content/SKILL.md", "Booking conversion"],
+    ],
+    news: [
+      ["news-and-media-website/SKILL.md", "Editorial hierarchy"],
+      ["site-search-and-findability/SKILL.md", "Archive/search discovery"],
+    ],
+    "real-estate": [
+      ["real-estate-and-building-website/SKILL.md", "Property decision objects"],
+      ["conversion-and-content/SKILL.md", "High-consideration conversion"],
+    ],
+    saas: [
+      ["saas-website/SKILL.md", "Product-led SaaS storytelling"],
+      ["product-discovery/SKILL.md", "Product problem/value"],
+      ["complex-workflow-and-progress-ux/SKILL.md", "Complex workflow UX"],
+    ],
+    startup: [
+      ["startup-and-incubator-website/SKILL.md", "Startup positioning"],
+      ["conversion-and-content/SKILL.md", "Focused conversion"],
+    ],
+    portfolio: [["portfolio-website/SKILL.md", "Work-first portfolio storytelling"]],
+    nonprofit: [
+      ["nonprofit-website/SKILL.md", "Mission/action journey"],
+      ["trust-credibility-and-transparency/SKILL.md", "Transparent proof"],
+    ],
+    landing: [
+      ["landing-page/SKILL.md", "Focused landing-page hierarchy"],
+      ["conversion-and-content/SKILL.md", "Conversion/content"],
+    ],
+    corporate: [["corporate-website/SKILL.md", "Corporate/B2B credibility and offering hierarchy"]],
+    generic: [],
   };
 
-  const OPTIONAL_BY_SIGNAL = [
-    {
-      signals: ["redesign", "thiết kế lại", "website cũ", "legacy"],
-      path: "website-audit-and-redesign/SKILL.md",
-      reason: "Audit website cũ trước khi redesign",
-      stages: ["research", "ux_ia"],
-    },
-    {
-      signals: ["search", "tìm kiếm", "findability"],
-      path: "site-search-and-findability/SKILL.md",
-      reason: "Search/findability quan trọng",
-      stages: ["ux_ia", "visual_composition", "implementation"],
-    },
-    {
-      signals: ["form", "lead", "đăng ký", "tuyển sinh", "checkout", "giỏ hàng"],
-      path: "interaction-patterns-and-form-ux/SKILL.md",
-      reason: "Form/transactional là trọng tâm",
-      stages: ["ux_ia", "design_system", "implementation"],
-    },
-  ];
+  const SIGNALS = {
+    ecommerce: ["ecommerce", "e-commerce", "shop", "store", "bán hàng", "giỏ hàng", "checkout", "sản phẩm"],
+    education: ["education", "school", "university", "academy", "trường", "giáo dục", "tuyển sinh"],
+    government: ["government", "public sector", "ministry", "dịch vụ công", "chính phủ", "cơ quan nhà nước"],
+    hospitality: ["hotel", "resort", "hospitality", "khách sạn", "khu nghỉ dưỡng", "đặt phòng", "nhà hàng"],
+    news: ["news", "magazine", "publisher", "tin tức", "tạp chí", "báo điện tử"],
+    "real-estate": ["real estate", "property", "apartment", "bất động sản", "căn hộ", "chung cư"],
+    saas: ["saas", "software platform", "web app", "dashboard", "phần mềm", "nền tảng"],
+    startup: ["startup", "incubator", "accelerator", "khởi nghiệp"],
+    portfolio: ["portfolio", "creative studio", "case study site", "showcase", "hồ sơ năng lực"],
+    nonprofit: ["nonprofit", "ngo", "charity", "foundation", "phi lợi nhuận", "từ thiện"],
+    landing: ["landing page", "campaign page", "microsite", "trang đích"],
+    corporate: ["corporate", "company website", "business website", "doanh nghiệp", "công ty", "b2b", "enterprise"],
+  };
 
   function inferDomain(goal) {
     const text = (goal || "").toLowerCase();
-    const signals = {
-      ecommerce: ["ecommerce", "e-commerce", "thương mại điện tử", "marketplace", "shop", "shopee", "giỏ hàng", "checkout", "sản phẩm", "bán"],
-      education: ["education", "school", "academy", "trường học", "trường", "học sinh", "tuyển sinh", "phụ huynh", "giáo dục"],
-      agency: ["agency", "digital agency", "marketing", "seo", "quảng cáo", "creative studio", "sáng tạo"],
-      corporate: ["corporate", "company", "doanh nghiệp", "công ty", "b2b", "enterprise", "technology", "công nghệ", "ngân hàng", "tài chính"],
-    };
-    let best = "corporate";
+    let best = "generic";
     let bestScore = 0;
-    for (const [domain, tokens] of Object.entries(signals)) {
+    for (const [domain, tokens] of Object.entries(SIGNALS)) {
       let score = 0;
-      for (const t of tokens) if (text.includes(t)) score++;
+      for (const token of tokens) if (text.includes(token)) score += 1;
       if (score > bestScore) { bestScore = score; best = domain; }
     }
     return { domain: best, score: bestScore };
@@ -132,30 +165,19 @@
     if (text.length > 30) score += 1;
     if (text.length > 80) score += 1;
     if (text.length > 200) score += 1;
-    const tokens = ["trang chủ", "sản phẩm", "dịch vụ", "liên hệ", "blog", "landing", "dashboard", "ecommerce", "saas", "portfolio", "checkout", "giỏ hàng", "tuyển sinh", "case study"];
-    let hits = 0;
-    for (const t of tokens) if (text.toLowerCase().includes(t)) hits++;
-    if (hits >= 1) score += 1;
-    if (hits >= 3) score += 1;
-    if (/(sang trọng|tối giản|hiện đại|trẻ trung|chuyên nghiệp|ấm áp|thân thiện|sáng tạo)/i.test(text)) score += 1;
+    if (/(trang|page|checkout|dashboard|portfolio|tuyển sinh|booking|search|form)/i.test(text)) score += 1;
+    if (/(sang trọng|tối giản|editorial|chuyên nghiệp|ấm áp|thân thiện|sáng tạo|luxury|minimal|precise|playful)/i.test(text)) score += 1;
+    if (/(không|avoid|do not|tránh|ưu tiên|priority|audience|đối tượng)/i.test(text)) score += 1;
     return Math.min(6, score);
   }
 
   function route(stage, goal, domain) {
-    const text = (goal || "").toLowerCase();
     const map = new Map();
-    for (const [path, reason] of BASE_BY_STAGE[stage] || []) {
-      map.set(path, { path, reason, source: "base" });
-    }
-    if (["research","ux_ia","art_direction","design_system","implementation_plan","visual_composition","implementation","visual_qa","repair"].includes(stage)) {
+    for (const [path, reason] of BASE_BY_STAGE[stage] || []) map.set(path, { path, reason, source: "base" });
+    const domainStages = new Set(["research", "ux_ia", "art_direction", "design_system", "visual_composition", "implementation", "visual_qa"]);
+    if (domainStages.has(stage)) {
       for (const [path, reason] of DOMAIN_SKILLS[domain] || []) {
         if (!map.has(path)) map.set(path, { path, reason, source: "domain" });
-      }
-    }
-    for (const rule of OPTIONAL_BY_SIGNAL) {
-      if (!rule.stages.includes(stage)) continue;
-      if (rule.signals.some(s => text.includes(s.toLowerCase()))) {
-        if (!map.has(rule.path)) map.set(rule.path, { path: rule.path, reason: rule.reason, source: "signal" });
       }
     }
     return Array.from(map.values());
@@ -165,55 +187,131 @@
     const { domain, score } = inferDomain(goal);
     const clarity = clarityScore(goal);
     const stages = [
-      "research","ux_ia","art_direction","design_contract","design_system",
-      "implementation_plan","visual_composition","implementation","browser_qa","visual_qa"
+      "research", "ux_ia", "art_direction", "design_contract", "design_system",
+      "implementation_plan", "visual_composition", "implementation", "browser_qa", "visual_qa",
     ];
     const result = {
-      domain, domainScore: score, clarity,
+      domain,
+      domainScore: score,
+      clarity,
       domainSkills: DOMAIN_SKILLS[domain] || [],
-      stages: stages.map(s => ({
-        stage: s,
-        skills: route(s, goal, domain),
-        applyDomain: ["research","ux_ia","art_direction","design_system","implementation_plan","visual_composition","implementation","visual_qa"].includes(s),
+      stages: stages.map(stage => ({
+        stage,
+        skills: route(stage, goal, domain),
+        applyDomain: (DOMAIN_SKILLS[domain] || []).length > 0,
       })),
     };
-    let total = 0;
-    for (const s of result.stages) total += s.skills.length;
-    result.totalSkills = total;
+    result.totalSkills = result.stages.reduce((sum, stage) => sum + stage.skills.length, 0);
     return result;
   }
 
-  // Pretty labels cho UI
   const STAGE_LABELS = {
-    research: "Nghiên cứu",
-    ux_ia: "UX & IA",
-    art_direction: "Đạo diễn thị giác",
-    design_contract: "Hợp đồng thiết kế",
-    design_system: "Hệ thống thiết kế",
-    implementation_plan: "Kế hoạch triển khai",
-    visual_composition: "Bố cục thị giác",
-    implementation: "Code frontend",
-    browser_qa: "QA trên trình duyệt",
-    visual_qa: "Phản biện thị giác",
-    repair: "Tự sửa",
+    research: "Nghiên cứu & reference intelligence",
+    ux_ia: "UX / IA & journey",
+    art_direction: "Visual direction & signature",
+    design_contract: "Canonical Design Contract",
+    design_system: "Design system & interactions",
+    implementation_plan: "Implementation plan",
+    visual_composition: "Visual Brain & page composition",
+    implementation: "Frontend implementation",
+    browser_qa: "Browser / accessibility smoke",
+    visual_qa: "Rendered visual critique",
+    repair: "Root-cause repair",
   };
 
-  function stageLabel(s) {
-    return STAGE_LABELS[s] || s;
-  }
+  function stageLabel(stage) { return STAGE_LABELS[stage] || stage; }
 
   function clarityTips(goal) {
-    const tips = [];
     const text = (goal || "").trim();
-    if (text.length < 30) tips.push("Prompt quá ngắn — bổ sung mục tiêu và phong cách");
-    if (text.length > 0 && text.length < 100) tips.push("Có thể nói rõ hơn về đối tượng hoặc ngành");
-    const hasPages = /trang|page|giao diện/i.test(text);
-    if (!hasPages) tips.push("Liệt kê các trang chính (trang chủ, sản phẩm, giỏ hàng…)");
-    const hasStyle = /(sang trọng|tối giản|hiện đại|trẻ trung|chuyên nghiệp|ấm áp|thân thiện|sáng tạo|cao cấp|luxury|minimal|modern)/i.test(text);
-    if (!hasStyle && text.length > 0) tips.push("Thêm phong cách thị giác (sang trọng, tối giản, hiện đại…)");
-    if (tips.length === 0 && text.length > 0) tips.push("Brief rõ ràng — hệ thống đủ thông tin để chạy");
+    const tips = [];
+    if (text.length < 45) tips.push("Bổ sung mục tiêu, audience và task chính");
+    if (!/(trang|page|checkout|dashboard|portfolio|booking|form|search|tuyển sinh)/i.test(text)) tips.push("Nêu page roles hoặc primary journey");
+    if (!/(sang trọng|tối giản|editorial|chuyên nghiệp|ấm áp|thân thiện|sáng tạo|luxury|minimal|precise|playful)/i.test(text)) tips.push("Nêu personality/visual direction mong muốn");
+    if (!/(không|avoid|do not|tránh)/i.test(text)) tips.push("Nêu ít nhất một điều cần tránh để giảm generic output");
+    if (!tips.length && text) tips.push("Brief đủ rõ để Visual Brain khóa direction và gate");
     return tips;
   }
 
   global.UiuxRouter = { plan, inferDomain, clarityScore, stageLabel, clarityTips };
 })(window);
+
+/* Workbench interaction bridge.
+   This lives in the already-loaded self-hosted script so the security policy
+   stays script-src 'self' and the existing app.js does not need a second API. */
+(function () {
+  "use strict";
+  const KEY = "uiux-workbench-visual-controls-v1";
+  const originalFetch = window.fetch.bind(window);
+
+  function controls() {
+    return {
+      auto: document.getElementById("auto-inspiration"),
+      target: document.getElementById("inspiration-target"),
+      refs: document.getElementById("ref-urls"),
+    };
+  }
+
+  function save() {
+    const { auto, target } = controls();
+    if (!auto || !target) return;
+    try {
+      localStorage.setItem(KEY, JSON.stringify({
+        auto: auto.checked,
+        target: Number(target.value) || 2,
+      }));
+    } catch {}
+  }
+
+  function restore() {
+    const { auto, target } = controls();
+    if (!auto || !target) return;
+    try {
+      const value = JSON.parse(localStorage.getItem(KEY) || "{}");
+      if (typeof value.auto === "boolean") auto.checked = value.auto;
+      if ([1, 2].includes(Number(value.target))) target.value = String(value.target);
+    } catch {}
+    target.disabled = !auto.checked;
+  }
+
+  function labelReferenceRows() {
+    const rows = Array.from(document.querySelectorAll(".ref-row"));
+    rows.forEach((row, index) => {
+      const input = row.querySelector("input");
+      const button = row.querySelector("button");
+      if (input) input.setAttribute("aria-label", `Reference URL ${index + 1}`);
+      if (button) {
+        button.setAttribute("aria-label", `Xoá reference ${index + 1}`);
+        button.removeAttribute("title");
+      }
+    });
+  }
+
+  window.fetch = function (input, init) {
+    try {
+      const url = typeof input === "string" ? input : (input && input.url) || "";
+      if (init && String(init.method || "GET").toUpperCase() === "POST" && /\/(run|intelligence)$/.test(url) && init.body) {
+        const payload = JSON.parse(init.body);
+        const { auto, target } = controls();
+        payload.design_context = payload.design_context || {};
+        if (auto) payload.design_context.auto_inspiration = Boolean(auto.checked);
+        if (target) payload.design_context.inspiration_target = Number(target.value) || 2;
+        init = { ...init, body: JSON.stringify(payload) };
+      }
+    } catch {}
+    return originalFetch(input, init);
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    restore();
+    const { auto, target, refs } = controls();
+    auto?.addEventListener("change", () => {
+      if (target) target.disabled = !auto.checked;
+      save();
+    });
+    target?.addEventListener("change", save);
+    if (refs) {
+      new MutationObserver(labelReferenceRows).observe(refs, { childList: true, subtree: true });
+      labelReferenceRows();
+    }
+  });
+})();
