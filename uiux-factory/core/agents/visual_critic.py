@@ -2,8 +2,8 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role
 from metagpt.schema import Message
 
-from core.actions.evaluate_visual_quality_v3 import (
-    EvaluateVisualQualityV3,
+from core.actions.evaluate_visual_quality_semantic import (
+    EvaluateVisualQualitySemantic,
 )
 
 
@@ -27,7 +27,7 @@ class VisualCritic(Role):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set_actions([EvaluateVisualQualityV3])
+        self.set_actions([EvaluateVisualQualitySemantic])
 
     async def _act(self) -> Message:
         todo = self.rc.todo
