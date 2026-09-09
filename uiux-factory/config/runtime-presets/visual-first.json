@@ -5,6 +5,7 @@
   "description": "Canonical pipeline with extra visual-direction, signature-moment and prototype-quality skill pressure.",
   "plugins": [
     "session-events",
+    "artifact-evidence",
     "skill-composition",
     "web-research",
     "browser-evidence",
