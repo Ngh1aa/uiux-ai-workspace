@@ -30,6 +30,10 @@ jobs:
 
       - name: Install Playwright
         run: |
+          # Playwright downloads its own Chromium. The hosted runner's optional
+          # Google Chrome apt source can transiently publish mismatched indexes,
+          # which otherwise makes `--with-deps` fail before visual QA can run.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list /etc/apt/sources.list.d/google-chrome.list.save
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
