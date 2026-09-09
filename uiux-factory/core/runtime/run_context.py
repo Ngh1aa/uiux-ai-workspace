@@ -7,6 +7,7 @@ from typing import Any
 from uuid import uuid4
 
 from core.contracts.design_context_schema import DesignContext
+from core.events.run_event_bus import RunEventBus
 
 
 @dataclass
@@ -21,6 +22,7 @@ class RunContext:
     )
 
     design_context: DesignContext = field(default_factory=DesignContext)
+    runtime_preset: str = "standard"
 
     status: str = "created"
     active_stage: str | None = None
@@ -37,6 +39,13 @@ class RunContext:
         default_factory=list
     )
 
+    _event_bus: RunEventBus | None = field(
+        default=None,
+        init=False,
+        repr=False,
+        compare=False,
+    )
+
     @property
     def run_dir(self) -> Path:
         return self.root / "runs" / self.run_id
@@ -44,6 +53,14 @@ class RunContext:
     @property
     def state_path(self) -> Path:
         return self.run_dir / "run.json"
+
+    def event_bus(self) -> RunEventBus:
+        if self._event_bus is None:
+            self._event_bus = RunEventBus(
+                event_path=self.run_dir / "events.jsonl",
+                run_id=self.run_id,
+            )
+        return self._event_bus
 
     def initialize(self) -> None:
         if self.state_path.exists():
@@ -54,14 +71,23 @@ class RunContext:
         )
 
         self.status = "running"
-
+        bus = self.event_bus()
+        self.artifacts["events"] = str(bus.event_path.resolve())
+        bus.emit(
+            "run.created",
+            data={
+                "runtime_preset": self.runtime_preset,
+            },
+        )
         self.save()
 
     def start_stage(self, stage: str) -> None:
+        self.event_bus().emit("stage.started", stage=stage)
         self.active_stage = stage
         self.save()
 
     def complete_stage(self, stage: str) -> None:
+        self.event_bus().emit("stage.completed", stage=stage)
         if stage not in self.completed_stages:
             self.completed_stages.append(stage)
 
@@ -73,29 +99,39 @@ class RunContext:
         name: str,
         path: Path,
     ) -> None:
-        self.artifacts[name] = str(
-            path.resolve()
+        resolved = str(path.resolve())
+        self.event_bus().emit(
+            "artifact.registered",
+            data={"name": name, "path": resolved},
         )
-
+        self.artifacts[name] = resolved
         self.save()
 
     def add_error(self, error: Exception) -> None:
-        self.errors.append(
-            f"{type(error).__name__}: {error}"
+        message = f"{type(error).__name__}: {error}"
+        self.event_bus().emit(
+            "run.failed",
+            data={"error": message},
         )
-
+        self.errors.append(message)
         self.status = "failed"
+        self.active_stage = None
         self.save()
 
     def complete(self) -> None:
+        self.event_bus().emit("run.completed")
         self.status = "completed"
         self.active_stage = None
         self.save()
+
+    def projected_state(self) -> dict[str, Any]:
+        return self.event_bus().project_run_state()
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "run_id": self.run_id,
             "goal": self.goal,
+            "runtime_preset": self.runtime_preset,
             "status": self.status,
             "active_stage": self.active_stage,
             "completed_stages": self.completed_stages,
@@ -104,7 +140,7 @@ class RunContext:
         }
 
     def save(self) -> None:
-        """Persist run state without exposing readers to a partially written JSON file."""
+        """Persist a fast run snapshot; the append-only event log remains the chronology."""
         self.run_dir.mkdir(
             parents=True,
             exist_ok=True,
@@ -131,7 +167,5 @@ class RunContext:
 
             os.replace(temp_path, self.state_path)
         finally:
-            # os.replace removes the temporary path on success. This cleanup
-            # only handles interrupted/failed writes.
             if temp_path.exists():
                 temp_path.unlink()
