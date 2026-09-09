@@ -1,0 +1,16 @@
+{
+  "brand_name": "Example Bank",
+  "personality": ["premium", "trustworthy", "modern"],
+  "avoid": ["Stock photos without approval", "Identical hero on every route"],
+  "guideline": "Primary: #006D6A\nAccent: #90321E\nHeading font: Inter\nBody font: Inter\nCard radius: 16px\nMotion: subtle-premium",
+  "existing_code": ":root { --brand-primary: #003B71; --font-body: Arial; }",
+  "tokens": {
+    "colors": {"primary": "#006D6A", "accent": "#90321E"},
+    "typography": {"heading": "Inter", "body": "Inter"},
+    "radius": {"card": "16px", "button": "8px"},
+    "motion": {"style": "subtle-premium", "duration": "180ms"}
+  },
+  "reference_urls": ["https://stripe.com"],
+  "existing_website": "",
+  "assets": []
+}

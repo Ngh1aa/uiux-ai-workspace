@@ -1,0 +1,12 @@
+{
+  "name": "dsh-uiux-designer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "description": "UIUX Factory job and artifact bridge for DeepSeek Harness",
+  "scripts": {"test": "node --test"},
+  "engines": {"node": ">=24.0.0"},
+  "peerDependencies": {"@deepseek-ai/dsh-tools": "0.0.1-rc.1"},
+  "devDependencies": {"@deepseek-ai/dsh-tools": "0.0.1-rc.1"}
+}
