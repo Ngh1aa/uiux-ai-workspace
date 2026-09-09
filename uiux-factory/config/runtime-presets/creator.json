@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "creator",
+  "name": "Creator",
+  "description": "Standard Factory capabilities plus runtime inspection and safe copy-only preset authoring.",
+  "plugins": [
+    "session-events",
+    "artifact-evidence",
+    "skill-composition",
+    "web-research",
+    "browser-evidence",
+    "semantic-visual-qa",
+    "creator-inspector"
+  ],
+  "stage_skills": {
+    "research": [
+      "upstream/anthropic-skills/skills/skill-creator/SKILL.md"
+    ]
+  }
+}

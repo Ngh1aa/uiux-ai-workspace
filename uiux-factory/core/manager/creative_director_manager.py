@@ -192,6 +192,7 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         source_goal = str(summary.get("goal", "")).strip()
         if not source_goal:
             raise RuntimeError("Source run is missing its product goal.")
+        runtime_preset = str(summary.get("runtime_preset") or "standard")
 
         source_context_path = source_dir / "design-context.json"
         source_context = (
@@ -208,19 +209,23 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             root=self.root,
             goal=review_goal,
             design_context=design_context,
+            runtime_preset=runtime_preset,
         )
         context.run_id = run_id
         context.initialize()
         self.creative_directive = directive
 
-        provider = None
-        if engine == "ai":
-            from core.runtime.free_provider import FreeProvider
-
-            provider = FreeProvider.from_env(self.root)
-            self.team_runner.set_provider(provider)
-
         try:
+            self.runtime.activate(context, runtime_preset)
+            self.runtime.require(context, "skills.compose")
+
+            provider = None
+            if engine == "ai":
+                from core.runtime.free_provider import FreeProvider
+
+                provider = FreeProvider.from_env(self.root)
+                self.team_runner.set_provider(provider)
+
             context_path = context.run_dir / "design-context.json"
             context_path.write_text(
                 design_context.model_dump_json(indent=2),
@@ -243,10 +248,11 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
                 "revision_run_id": context.run_id,
                 "earliest_invalidated_stage": target,
                 "engine": engine,
+                "runtime_preset": runtime_preset,
                 "policy": (
                     "Preserve accepted upstream evidence; invalidate from the earliest "
                     "creative-review owner; never mutate the source run; always rerun "
-                    "rendered quality gates."
+                    "rendered quality gates; keep the source run runtime preset fixed."
                 ),
             }
             provenance_path = context.run_dir / "creative-revision.json"
@@ -281,6 +287,8 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             for stage in self.REVISION_STAGES[start:]:
                 await self._run_revision_stage(context, stage, engine, provider)
 
+            self.runtime.require(context, "browser.qa")
+            self.runtime.require(context, "visual.qa")
             await self._run_quality_loop(context)
             context.complete()
             return context
@@ -288,4 +296,5 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             context.add_error(error)
             raise
         finally:
+            self.runtime.deactivate(context)
             self.creative_directive = None

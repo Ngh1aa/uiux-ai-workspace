@@ -42,6 +42,7 @@ async def main(
     engine: str = "template",
     source_run_id: str | None = None,
     creative_directive_path: str | None = None,
+    runtime_preset: str | None = None,
 ) -> None:
     print()
     print("=" * 64)
@@ -65,6 +66,11 @@ async def main(
             if not (source_run_id and creative_directive_path and run_id):
                 raise ValueError(
                     "Creative review revision requires --source-run-id, --creative-directive and --run-id."
+                )
+            if runtime_preset:
+                raise ValueError(
+                    "Creative review revisions inherit the source run runtime preset; "
+                    "do not supply --runtime-preset."
                 )
             directive = CreativeDirective.model_validate_json(
                 Path(creative_directive_path).read_text(encoding="utf-8-sig")
@@ -92,12 +98,14 @@ async def main(
                 run_id,
                 intelligence_only,
                 engine,
+                runtime_preset or "standard",
             )
 
         print()
         print("=" * 64)
         print(f"[Run] {run_context.run_id}")
         print(f"[Status] {run_context.status.upper()}")
+        print(f"[Runtime Preset] {run_context.runtime_preset}")
         print("[Completed Stages] " + ", ".join(run_context.completed_stages))
         print(f"[Run State] {run_context.state_path}")
         print("=" * 64)
@@ -139,6 +147,13 @@ if __name__ == "__main__":
         help="AI cloud generates custom static pages; requires explicit free-tier configuration",
     )
     parser.add_argument(
+        "--runtime-preset",
+        help=(
+            "Per-run plugin/tool/skill composition. Shipped presets: standard, "
+            "visual-first, research-heavy, creator. User presets may be created with creator.py."
+        ),
+    )
+    parser.add_argument(
         "--source-run-id",
         help="Completed source run to revise from an imported creative review",
     )
@@ -164,5 +179,6 @@ if __name__ == "__main__":
             args.engine,
             args.source_run_id,
             args.creative_directive,
+            args.runtime_preset,
         )
     )
