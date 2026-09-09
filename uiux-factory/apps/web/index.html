@@ -4,177 +4,249 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>UIUX Factory · Design Workbench</title>
+  <title>UIUX Factory · Visual Intelligence Workbench</title>
   <link rel="stylesheet" href="./styles.css" />
-  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0' stop-color='%23ff3b30'/><stop offset='0.5' stop-color='%23ff6b35'/><stop offset='1' stop-color='%23ff9500'/></linearGradient></defs><rect x='8' y='8' width='48' height='48' rx='12' fill='url(%23g)'/><path d='M22 22h20v6H22zm0 10h20v6H22z' fill='white' opacity='0.95'/></svg>" />
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b1a18'/><path d='M18 17h28v5H18zm0 12h18v5H18zm0 12h28v5H18z' fill='%23f3eee5'/><circle cx='43' cy='31.5' r='4.5' fill='%23d45f32'/></svg>" />
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true"></div>
-      <div>
-        <div class="brand-name">UIUX Factory</div>
-        <div class="brand-sub">Design Workbench · Multi-brain pipeline</div>
-      </div>
+    <a class="brand" href="./" aria-label="UIUX Factory — Workbench">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><b></b></span>
+      <span class="brand-copy">
+        <strong class="brand-name">UIUX Factory</strong>
+        <span class="brand-sub">Visual Intelligence Workbench</span>
+      </span>
+    </a>
+
+    <div class="topbar-center" aria-label="Năng lực đang hoạt động">
+      <span>Reference Intelligence</span>
+      <span>Visual Brain</span>
+      <span>Rendered QA</span>
     </div>
-    <div class="status-pill" id="bridge-status" data-state="checking">
-      <span class="dot"></span>
+
+    <div class="status-pill" id="bridge-status" data-state="checking" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span>
       <span class="status-text">Đang kết nối bridge…</span>
     </div>
   </header>
 
-  <main class="layout">
-    <!-- LEFT: prompt input + controls -->
-    <section class="panel prompt-panel" aria-label="Ô nhập yêu cầu">
-      <div class="panel-head">
-        <h1>Tạo bản thiết kế mới</h1>
-        <p class="muted">Nhập mục tiêu bằng tiếng Việt hoặc tiếng Anh. Hệ thống tự suy luận domain, route skill và chạy pipeline 10 bước.</p>
+  <main class="workspace-shell">
+    <aside class="composer-rail" aria-labelledby="new-project-title">
+      <div class="rail-intro">
+        <p class="eyebrow">01 · Define</p>
+        <h1 id="new-project-title">Thiết kế một website có lý do để đẹp.</h1>
+        <p class="intro-copy">Mô tả mục tiêu. Factory tự nghiên cứu reference, route skill, khóa visual direction và chỉ cho frontend đi tiếp sau các gate.</p>
       </div>
 
       <form id="prompt-form" class="prompt-form" autocomplete="off">
-        <label class="field">
-          <span class="field-label">Mục tiêu sản phẩm</span>
+        <label class="field field-primary">
+          <span class="field-label">Product brief</span>
           <textarea
             id="prompt"
             name="prompt"
-            rows="4"
-            placeholder="Ví dụ: Thiết kế website ecommerce bán hoa cao cấp, phong cách tối giản, nhấn mạnh typography và khoảng trắng, có trang chủ, sản phẩm, giỏ hàng và thanh toán."
+            rows="6"
+            placeholder="Ví dụ: Tạo website boutique hotel ở Hội An. Cảm giác tĩnh, thủ công và có chiều sâu địa phương; ưu tiên đặt phòng, trải nghiệm phòng và câu chuyện kiến trúc."
           ></textarea>
-          <div class="field-meta">
+          <span class="field-meta">
             <span id="prompt-counter" class="muted">0 ký tự</span>
-            <button type="button" id="clear-prompt" class="link-btn">Xoá nháp</button>
-          </div>
+            <button type="button" id="clear-prompt" class="link-btn">Xoá brief</button>
+          </span>
         </label>
 
-        <div class="chips" role="group" aria-label="Mẫu prompt nhanh">
-          <button type="button" class="chip" data-prompt="Thiết kế website ecommerce bán hoa cao cấp, phong cách tối giản, sang trọng, có trang chủ, danh sách sản phẩm, chi tiết, giỏ hàng và thanh toán.">Ecommerce · Hoa cao cấp</button>
-          <button type="button" class="chip" data-prompt="Thiết kế website doanh nghiệp B2B cho công ty công nghệ, phong cách chuyên nghiệp, có trang chủ, giới thiệu, dịch vụ, dự án và liên hệ.">Corporate · Công nghệ</button>
-          <button type="button" class="chip" data-prompt="Thiết kế website trường học quốc tế, phong cách thân thiện, có trang chủ, chương trình, tuyển sinh, tin tức và liên hệ phụ huynh.">Education · Trường học</button>
-          <button type="button" class="chip" data-prompt="Thiết kế website digital agency, phong cách sáng tạo, có trang chủ, dịch vụ, case study, blog và liên hệ.">Agency · Sáng tạo</button>
-          <button type="button" class="chip" data-prompt="Thiết kế lại website cũ của tiệm bánh nhỏ, phong cách thủ công, có trang chủ, sản phẩm, câu chuyện thương hiệu và liên hệ.">Redesign · Tiệm bánh</button>
+        <div class="prompt-presets" role="group" aria-label="Brief mẫu">
+          <span class="preset-label">Khởi đầu nhanh</span>
+          <div class="chips">
+            <button type="button" class="chip" data-prompt="Thiết kế website ecommerce bán hoa cao cấp, phong cách editorial sang trọng, ưu tiên khám phá bó hoa, chi tiết sản phẩm, giỏ hàng và checkout. Không dùng card grid lặp lại.">Luxury commerce</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website SaaS B2B cho nền tảng vận hành, cảm giác chính xác và tự tin, ưu tiên product storytelling, capability proof và demo conversion.">B2B SaaS</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website trường quốc tế thân thiện nhưng có uy tín, ưu tiên chương trình học, tuyển sinh, campus evidence và hành trình phụ huynh.">Education</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website creative studio tập trung vào case study, typography có cá tính và work-first composition; tránh SaaS aesthetic và card spam.">Creative studio</button>
+          </div>
         </div>
 
-        <details class="collapsible" open>
-          <summary>Brand &amp; Design Tokens <span class="muted">— tuỳ chọn</span></summary>
-          <div class="grid-2">
+        <details class="config-section" open>
+          <summary>
+            <span><b>Brand signal</b><small>Cho Visual Brain biết điều gì phải giữ và điều gì phải tránh.</small></span>
+          </summary>
+          <div class="config-body grid-2">
             <label class="field">
               <span class="field-label">Tên thương hiệu</span>
-              <input id="brand-name" type="text" placeholder="VD: LuxRoom" />
+              <input id="brand-name" type="text" placeholder="VD: Maison An" />
             </label>
             <label class="field">
               <span class="field-label">Tính cách</span>
-              <input id="brand-personality" type="text" placeholder="VD: sang trọng, tối giản, ấm áp" />
+              <input id="brand-personality" type="text" placeholder="tĩnh, thủ công, tinh tế" />
             </label>
             <label class="field field-wide">
-              <span class="field-label">JSON token gọn (màu / font / radius / motion)</span>
-              <textarea id="tokens-json" rows="3" placeholder='{"colors":{"primary":"#0a0a0a","accent":"#ff6b35"},"typography":{"heading":"Inter","body":"Inter"}}'></textarea>
+              <span class="field-label">Điều tuyệt đối tránh</span>
+              <input id="brand-avoid" type="text" placeholder="gradient trend, glassmorphism, hero giống SaaS" />
             </label>
             <label class="field field-wide">
-              <span class="field-label">Điều cần tránh</span>
-              <input id="brand-avoid" type="text" placeholder="VD: không dùng gradient rainbow, không phông Comic Sans" />
+              <span class="field-label">Design tokens · JSON tùy chọn</span>
+              <textarea id="tokens-json" rows="3" placeholder='{"colors":{"primary":"#1b1a18"},"typography":{"tone":"editorial"}}'></textarea>
             </label>
           </div>
         </details>
 
-        <details class="collapsible">
-          <summary>Reference <span class="muted">— URL tối đa 4 và ảnh tối đa 4</span></summary>
-          <div class="refs">
-            <div id="ref-urls" class="ref-list"></div>
-            <button type="button" class="ghost-btn" id="add-ref-url">+ Thêm URL</button>
+        <details class="config-section" open>
+          <summary>
+            <span><b>Reference intelligence</b><small>Production references được đo để lấy principle, không clone giao diện.</small></span>
+          </summary>
+          <div class="config-body">
+            <div class="inspiration-control">
+              <label class="switch-row" for="auto-inspiration">
+                <span>
+                  <b>Tự chọn benchmark phù hợp domain</b>
+                  <small>User reference luôn được ưu tiên; Factory chỉ bổ sung khi còn thiếu.</small>
+                </span>
+                <input id="auto-inspiration" type="checkbox" checked />
+              </label>
+              <label class="compact-select" for="inspiration-target">
+                <span>Số reference mục tiêu</span>
+                <select id="inspiration-target">
+                  <option value="1">1</option>
+                  <option value="2" selected>2</option>
+                </select>
+              </label>
+            </div>
+            <div class="refs">
+              <div id="ref-urls" class="ref-list"></div>
+              <button type="button" class="ghost-btn" id="add-ref-url">+ Thêm reference URL</button>
+            </div>
           </div>
         </details>
 
-        <div class="actions">
+        <fieldset class="engine-fieldset">
+          <legend>Execution engine</legend>
           <div class="engine-pick">
             <label class="radio">
               <input type="radio" name="engine" value="template" checked />
-              <span><strong>Chuẩn bị bản thiết kế</strong><br/><span class="muted">Chạy Design Intelligence → render từ preset template (miễn phí, không cần cloud).</span></span>
+              <span><strong>Deterministic Studio</strong><small>Không cần cloud · contracts + skills + rendered QA.</small></span>
             </label>
             <label class="radio" id="ai-radio-wrap">
               <input type="radio" name="engine" value="ai" />
-              <span><strong>AI tùy biến</strong><br/><span class="muted" id="ai-status">Cần cấu hình Groq / Gemini trong <code>.env.local</code>.</span></span>
+              <span><strong>AI Studio</strong><small id="ai-status">Cần cấu hình Groq / Gemini trong <code>.env.local</code>.</small></span>
             </label>
           </div>
-          <button type="submit" class="primary-btn" id="submit-btn">
-            <span class="btn-label">Chạy pipeline</span>
-            <span class="btn-sub muted" id="submit-sub">10 bước · tối đa ~90s/bước</span>
-          </button>
-        </div>
+        </fieldset>
+
+        <button type="submit" class="primary-btn" id="submit-btn">
+          <span class="btn-label">Build with Visual Brain</span>
+          <span class="btn-sub" id="submit-sub">Research → Direction → Composition → QA</span>
+          <span class="btn-arrow" aria-hidden="true">↗</span>
+        </button>
       </form>
+    </aside>
 
-      <!-- Smart routing preview - the "thông minh nhất có thể" part -->
-      <section class="smart-preview" aria-label="Hệ thống sẽ làm gì">
-        <h2>Hệ thống sẽ làm gì?</h2>
-        <div class="smart-grid">
-          <div class="smart-card">
-            <div class="smart-card-label">Domain suy luận</div>
-            <div class="smart-card-value" id="smart-domain">—</div>
-            <div class="smart-card-meta" id="smart-domain-reason">Đợi prompt…</div>
+    <section class="studio-canvas" aria-label="Visual intelligence và kết quả">
+      <section class="intelligence-board" aria-labelledby="intelligence-title">
+        <div class="section-kicker">
+          <div>
+            <p class="eyebrow">02 · Think</p>
+            <h2 id="intelligence-title">Visual intelligence</h2>
           </div>
-          <div class="smart-card">
-            <div class="smart-card-label">Độ rõ của brief</div>
-            <div class="smart-card-value" id="smart-clarity">—</div>
-            <div class="smart-card-meta" id="smart-clarity-tips">Đợi prompt…</div>
-          </div>
-          <div class="smart-card">
-            <div class="smart-card-label">Số skill sẽ route</div>
-            <div class="smart-card-value" id="smart-skill-count">—</div>
-            <div class="smart-card-meta" id="smart-skill-meta">Đợi prompt…</div>
-          </div>
+          <span class="skill-proof">5 visual skills · gated</span>
         </div>
 
-        <details class="routing-details" open>
-          <summary>10 bước pipeline + skill sẽ dùng</summary>
+        <div class="intelligence-grid">
+          <article class="signal-block">
+            <span class="signal-index">A</span>
+            <span class="signal-label">Domain</span>
+            <strong id="smart-domain">—</strong>
+            <small id="smart-domain-reason">Đợi brief…</small>
+          </article>
+          <article class="signal-block">
+            <span class="signal-index">B</span>
+            <span class="signal-label">Brief clarity</span>
+            <strong id="smart-clarity">—</strong>
+            <small id="smart-clarity-tips">Đợi brief…</small>
+          </article>
+          <article class="signal-block signal-wide">
+            <span class="signal-index">C</span>
+            <span class="signal-label">Skill routing</span>
+            <strong id="smart-skill-count">—</strong>
+            <small id="smart-skill-meta">Đợi brief…</small>
+          </article>
+        </div>
+
+        <details class="pipeline-disclosure" open>
+          <summary>
+            <span>Flow &amp; skill evidence</span>
+            <small>Progressive disclosure · xem đúng skill được route ở từng stage.</small>
+          </summary>
           <ol id="stage-plan" class="stage-plan">
-            <li class="muted">Đợi prompt để hệ thống lên kế hoạch…</li>
+            <li class="muted">Nhập brief để Visual Brain dựng flow…</li>
           </ol>
         </details>
       </section>
-    </section>
 
-    <!-- RIGHT: Live job tracker + outputs -->
-    <section class="panel tracker-panel" aria-label="Theo dõi job">
-      <div class="panel-head">
-        <h2>Job hiện tại</h2>
-        <p class="muted" id="job-empty">Chưa có job. Bấm <strong>Chạy pipeline</strong> ở bên trái.</p>
-      </div>
-
-      <div id="job-card" class="job-card hidden">
-        <div class="job-head">
+      <section class="run-stage" aria-labelledby="run-title">
+        <div class="section-kicker run-heading">
           <div>
-            <div class="job-id muted">ID: <span id="job-id">—</span></div>
-            <div class="job-prompt" id="job-prompt">—</div>
+            <p class="eyebrow">03 · Make &amp; verify</p>
+            <h2 id="run-title">Live run</h2>
           </div>
-          <span class="badge" id="job-status-badge">queued</span>
-        </div>
-
-        <ol id="stage-timeline" class="stage-timeline" aria-label="Tiến trình"></ol>
-
-        <div class="artifacts" id="artifacts" hidden>
-          <h3>Artifacts</h3>
-          <div id="artifact-list" class="artifact-list"></div>
-        </div>
-
-        <details class="collapsible" id="logs-wrap" hidden>
-          <summary>Logs (live)</summary>
-          <pre id="job-logs" class="logs"></pre>
-        </details>
-
-        <div class="preview-wrap" id="preview-wrap" hidden>
-          <h3>Preview dự án</h3>
-          <div class="preview-actions">
-            <span id="preview-link" class="muted">Preview được cô lập trong sandbox để bảo vệ Workbench.</span>
-            <button type="button" class="ghost-btn" id="refresh-preview-btn">Tải lại</button>
+          <div class="quality-legend" aria-label="Quality gates">
+            <span>Visual Brain</span><span>Responsive</span><span>A11y smoke</span><span>Rendered QA</span>
           </div>
-          <iframe id="preview-frame" title="Preview" sandbox="allow-scripts"></iframe>
         </div>
-      </div>
+
+        <div id="job-empty" class="empty-state">
+          <div class="empty-orbit" aria-hidden="true"><span></span></div>
+          <div>
+            <strong>Workspace sẵn sàng.</strong>
+            <p>Chạy một brief để xem pipeline, artifact evidence và website preview tại đây.</p>
+          </div>
+        </div>
+
+        <div id="job-card" class="job-card hidden">
+          <header class="job-head">
+            <div>
+              <span class="job-id">RUN · <span id="job-id">—</span></span>
+              <h3 class="job-prompt" id="job-prompt">—</h3>
+            </div>
+            <span class="badge" id="job-status-badge" role="status" aria-live="polite">queued</span>
+          </header>
+
+          <div class="run-grid">
+            <div class="timeline-column">
+              <p class="micro-heading">Pipeline</p>
+              <ol id="stage-timeline" class="stage-timeline" aria-label="Tiến trình"></ol>
+
+              <div class="artifacts" id="artifacts" hidden>
+                <p class="micro-heading">Evidence artifacts</p>
+                <div id="artifact-list" class="artifact-list"></div>
+              </div>
+
+              <details class="logs-panel" id="logs-wrap" hidden>
+                <summary>Runtime logs</summary>
+                <pre id="job-logs" class="logs"></pre>
+              </details>
+            </div>
+
+            <div class="preview-column">
+              <div class="preview-wrap" id="preview-wrap" hidden>
+                <div class="preview-toolbar">
+                  <div>
+                    <span class="micro-heading">Rendered website</span>
+                    <span id="preview-link" class="preview-note">Sandboxed preview</span>
+                  </div>
+                  <button type="button" class="ghost-btn compact" id="refresh-preview-btn">Tải lại</button>
+                </div>
+                <iframe id="preview-frame" title="Preview website được tạo" sandbox="allow-scripts"></iframe>
+              </div>
+              <div class="preview-placeholder" aria-hidden="true">
+                <span>Rendered evidence appears here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </section>
   </main>
 
   <footer class="footer">
-    <span class="muted">UIUX Factory · Bridge <code id="bridge-info">127.0.0.1:8788</code></span>
-    <span class="muted">Bản nháp được lưu cục bộ · Không gửi key ra ngoài</span>
+    <span>UIUX Factory · <code id="bridge-info">127.0.0.1:8788</code></span>
+    <span>Project truth → skills → evidence → gate → output</span>
   </footer>
 
   <script src="./skills-router.js"></script>
