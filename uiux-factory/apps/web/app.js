@@ -1,25 +1,21 @@
 /* ============================================================
    app.js — UIUX Factory Workbench Console (client)
    - Auto-save drafts
-   - Live smart routing (theo dõi prompt → kế hoạch 10 bước)
-   - Submit → POST /run | /intelligence
+   - Live smart routing
+   - Submit → Factory pipeline
    - Poll job + render stages, logs, artifacts, preview
+   - Export Review Pack → import Creative Directive → stage-aware revision
    ============================================================ */
 
 (() => {
   "use strict";
 
-  // Mặc định dùng relative /api/ để qua console proxy → không cần CORS.
-  // Đặt window.UIUX_BRIDGE_URL = "http://127.0.0.1:8788" nếu muốn gọi thẳng bridge.
   function detectApiBase() {
     if (window.UIUX_BRIDGE_URL) return window.UIUX_BRIDGE_URL.replace(/\/$/, "");
-    // Nếu đang chạy qua console (cùng origin), dùng relative path.
-    if (location.protocol === "http:" || location.protocol === "https:") {
-      return "/api";
-    }
-    // file:// fallback gọi thẳng bridge; bridge không có tiền tố /api.
+    if (location.protocol === "http:" || location.protocol === "https:") return "/api";
     return "http://127.0.0.1:8788";
   }
+
   const BRIDGE = detectApiBase();
   const DRAFT_KEY = "uiux-console-draft-v1";
   const JOB_HISTORY_KEY = "uiux-console-jobs-v1";
@@ -45,6 +41,8 @@
     stagePlan: document.getElementById("stage-plan"),
     refUrls: document.getElementById("ref-urls"),
     addRef: document.getElementById("add-ref-url"),
+    autoInspiration: document.getElementById("auto-inspiration"),
+    inspirationTarget: document.getElementById("inspiration-target"),
     jobEmpty: document.getElementById("job-empty"),
     jobCard: document.getElementById("job-card"),
     jobId: document.getElementById("job-id"),
@@ -64,14 +62,48 @@
     tokensJson: document.getElementById("tokens-json"),
   };
 
-  // -----------------------------------------------------------
-  // Draft + job history (localStorage)
-  // -----------------------------------------------------------
+  function installCreativeReviewPanel() {
+    if (!els.jobCard || document.getElementById("creative-review-panel")) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "./creative-review.css";
+    document.head.appendChild(link);
+
+    const panel = document.createElement("section");
+    panel.id = "creative-review-panel";
+    panel.className = "creative-review-panel";
+    panel.hidden = true;
+    panel.setAttribute("aria-labelledby", "creative-review-title");
+    panel.innerHTML = `
+      <div class="creative-review-copy">
+        <span class="creative-review-kicker">04 · Creative review</span>
+        <strong id="creative-review-title">Handoff cho Creative Director</strong>
+        <p>Xuất screenshot + design evidence, review cùng ChatGPT, rồi import directive để Factory chỉ rebuild từ stage cần sửa.</p>
+      </div>
+      <div class="creative-review-actions">
+        <button type="button" class="creative-review-export" id="export-review-pack">Export Review Pack</button>
+        <button type="button" class="creative-review-import" id="import-creative-directive">Import Creative Directive</button>
+        <input id="creative-directive-file" type="file" accept="application/json,.json" hidden />
+      </div>
+      <div class="creative-review-status" id="creative-review-status" role="status" aria-live="polite">
+        Upload Review Pack vào chat với Creative Director, rồi đưa file directive trở lại đây.
+      </div>`;
+    const jobHead = els.jobCard.querySelector(".job-head");
+    jobHead?.insertAdjacentElement("afterend", panel);
+
+    els.reviewPanel = panel;
+    els.reviewStatus = panel.querySelector("#creative-review-status");
+    els.exportReview = panel.querySelector("#export-review-pack");
+    els.importReview = panel.querySelector("#import-creative-directive");
+    els.directiveFile = panel.querySelector("#creative-directive-file");
+  }
+
+  installCreativeReviewPanel();
+
   function loadDraft() {
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
-      if (!raw) return {};
-      return JSON.parse(raw);
+      return raw ? JSON.parse(raw) : {};
     } catch { return {}; }
   }
 
@@ -83,6 +115,8 @@
         brandPersonality: els.brandPersonality.value,
         brandAvoid: els.brandAvoid.value,
         tokensJson: els.tokensJson.value,
+        autoInspiration: Boolean(els.autoInspiration?.checked),
+        inspirationTarget: Number(els.inspirationTarget?.value || 2),
         refUrls: Array.from(document.querySelectorAll(".ref-row input")).map(i => i.value),
         savedAt: Date.now(),
       };
@@ -98,6 +132,12 @@
     els.brandPersonality.value = d.brandPersonality || "";
     els.brandAvoid.value = d.brandAvoid || "";
     els.tokensJson.value = d.tokensJson || "";
+    if (els.autoInspiration && typeof d.autoInspiration === "boolean") {
+      els.autoInspiration.checked = d.autoInspiration;
+    }
+    if (els.inspirationTarget && [1, 2].includes(Number(d.inspirationTarget))) {
+      els.inspirationTarget.value = String(d.inspirationTarget);
+    }
     (d.refUrls || []).forEach(u => addRefRow(u));
     updateCounter();
   }
@@ -112,9 +152,6 @@
     } catch {}
   }
 
-  // -----------------------------------------------------------
-  // Smart routing preview (live)
-  // -----------------------------------------------------------
   function updateSmartPreview() {
     const goal = els.prompt.value.trim();
     if (!goal) {
@@ -137,7 +174,7 @@
     els.smartDomain.textContent = domainLabel;
     els.smartDomainReason.textContent = plan.domainScore
       ? `Phát hiện ${plan.domainScore} tín hiệu ngành trong prompt`
-      : "Không phát hiện tín hiệu rõ — mặc định corporate";
+      : "Không phát hiện tín hiệu rõ — dùng routing tổng quát";
     els.smartClarity.textContent = `${plan.clarity} / 6`;
     const tips = UiuxRouter.clarityTips(goal);
     els.smartClarityTips.innerHTML = tips.map(t => `• ${escapeHtml(t)}`).join("<br/>");
@@ -150,10 +187,7 @@
       const dot = s.applyDomain ? `<span style="color:var(--accent);font-weight:700;">●</span> ` : "";
       return `<li class="${domainCls}">
         <div class="stage-name">${escapeHtml(s.stage)}</div>
-        <div>
-          <strong>${dot}${escapeHtml(lbl)}</strong>
-          <div class="skill-paths">${escapeHtml(skillsText) || '<em>—</em>'}</div>
-        </div>
+        <div><strong>${dot}${escapeHtml(lbl)}</strong><div class="skill-paths">${escapeHtml(skillsText) || '<em>—</em>'}</div></div>
       </li>`;
     }).join("");
   }
@@ -164,9 +198,6 @@
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
-  // -----------------------------------------------------------
-  // Reference URL rows
-  // -----------------------------------------------------------
   function addRefRow(value = "") {
     const row = document.createElement("div");
     row.className = "ref-row";
@@ -174,11 +205,13 @@
     input.type = "url";
     input.placeholder = "https://example.com";
     input.value = value;
+    input.setAttribute("aria-label", "Reference URL");
     input.addEventListener("input", saveDraft);
     const btn = document.createElement("button");
     btn.type = "button";
     btn.textContent = "×";
-    btn.title = "Xoá";
+    btn.title = "Xoá reference";
+    btn.setAttribute("aria-label", "Xoá reference URL");
     btn.addEventListener("click", () => { row.remove(); saveDraft(); });
     row.append(input, btn);
     els.refUrls.appendChild(row);
@@ -186,13 +219,11 @@
 
   els.addRef.addEventListener("click", () => { addRefRow(); saveDraft(); });
 
-  // -----------------------------------------------------------
-  // Counter + autosave
-  // -----------------------------------------------------------
   function updateCounter() {
     const len = els.prompt.value.length;
     els.counter.textContent = `${len.toLocaleString("vi-VN")} ký tự`;
   }
+
   els.prompt.addEventListener("input", () => {
     updateCounter();
     updateSmartPreview();
@@ -211,9 +242,11 @@
     updateSmartPreview();
   });
 
-  ["brandName","brandPersonality","brandAvoid","tokensJson"].forEach(k => {
+  ["brandName", "brandPersonality", "brandAvoid", "tokensJson"].forEach(k => {
     els[k]?.addEventListener?.("input", saveDraft);
   });
+  els.autoInspiration?.addEventListener("change", saveDraft);
+  els.inspirationTarget?.addEventListener("change", saveDraft);
 
   els.chips.forEach(c => c.addEventListener("click", () => {
     els.prompt.value = c.dataset.prompt || "";
@@ -223,9 +256,6 @@
     els.prompt.focus();
   }));
 
-  // -----------------------------------------------------------
-  // Bridge health
-  // -----------------------------------------------------------
   async function checkHealth() {
     try {
       const res = await fetch(`${BRIDGE}/health`, { cache: "no-store" });
@@ -234,9 +264,8 @@
       const aiOk = data.ai && data.ai.configured;
       els.bridgeStatus.dataset.state = "ok";
       els.bridgeStatus.querySelector(".status-text").textContent =
-        `Bridge sẵn sàng · ${data.python ? "Python OK" : "OK"}`;
+        `Bridge sẵn sàng · ${data.creative_review?.stage_aware_revision ? "Creative Review ready" : "Python OK"}`;
       els.bridgeInfo.textContent = new URL(BRIDGE, location.origin).host;
-      const radios = document.querySelectorAll('input[name="engine"]');
       if (!aiOk) {
         const aiRadio = document.querySelector('input[name="engine"][value="ai"]');
         const wrap = document.getElementById("ai-radio-wrap");
@@ -254,27 +283,23 @@
     }
   }
 
-  // -----------------------------------------------------------
-  // Submit → POST /run or /intelligence
-  // -----------------------------------------------------------
   function buildDesignContext() {
     const ctx = {};
     const brandName = els.brandName.value.trim();
     if (brandName) ctx.brand_name = brandName;
     const personality = els.brandPersonality.value.trim();
-    if (personality) {
-      ctx.personality = personality.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
-    }
+    if (personality) ctx.personality = personality.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
     const avoid = els.brandAvoid.value.trim();
     if (avoid) ctx.avoid = avoid.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
     const tokensRaw = els.tokensJson.value.trim();
     if (tokensRaw) {
-      try { ctx.tokens = JSON.parse(tokensRaw); }
-      catch { /* ignore — không phải json hợp lệ */ }
+      try { ctx.tokens = JSON.parse(tokensRaw); } catch {}
     }
     const urls = Array.from(document.querySelectorAll(".ref-row input"))
       .map(i => i.value.trim()).filter(Boolean);
     if (urls.length) ctx.reference_urls = urls.slice(0, 4);
+    ctx.auto_inspiration = Boolean(els.autoInspiration?.checked);
+    ctx.inspiration_target = Math.max(0, Math.min(2, Number(els.inspirationTarget?.value || 2)));
     return ctx;
   }
 
@@ -283,16 +308,12 @@
     const prompt = els.prompt.value.trim();
     if (!prompt) { alert("Vui lòng nhập prompt."); els.prompt.focus(); return; }
     const engine = document.querySelector('input[name="engine"]:checked').value;
-    const mode = "build";
-
     const designContext = buildDesignContext();
-    const endpoint = mode === "intelligence" ? "/intelligence" : "/run";
 
     els.submitBtn.disabled = true;
     els.submitBtn.querySelector(".btn-label").textContent = "Đang khởi tạo job…";
-
     try {
-      const res = await fetch(`${BRIDGE}${endpoint}`, {
+      const res = await fetch(`${BRIDGE}/run`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt, engine, design_context: designContext }),
@@ -308,18 +329,21 @@
       alert("Không submit được: " + err.message);
     } finally {
       els.submitBtn.disabled = false;
-      els.submitBtn.querySelector(".btn-label").textContent = "Chạy pipeline";
+      els.submitBtn.querySelector(".btn-label").textContent = "Build with Visual Brain";
     }
   });
 
-  // -----------------------------------------------------------
-  // Job tracker (poll /jobs/<id>)
-  // -----------------------------------------------------------
   let pollTimer = null;
   let lastLogTail = "";
   let currentJobId = null;
   let currentProjectSlug = null;
   let pollDelay = 1500;
+
+  function setCreativeReviewVisible(visible, message = "") {
+    if (!els.reviewPanel) return;
+    els.reviewPanel.hidden = !visible;
+    if (message && els.reviewStatus) els.reviewStatus.textContent = message;
+  }
 
   function openJob(job) {
     currentJobId = job.id;
@@ -330,30 +354,27 @@
     els.jobPrompt.textContent = job.prompt;
     setJobStatus(job.status);
     renderTimeline([], job.status === "queued" ? null : "research");
-    els.stageTimeline.innerHTML = makeTimelineHtml([], job.status);
     els.artifacts.setAttribute("hidden", "");
     els.artifactList.innerHTML = "";
     els.logsWrap.setAttribute("hidden", "");
     els.logs.textContent = "";
     els.previewWrap.setAttribute("hidden", "");
+    setCreativeReviewVisible(false);
     currentProjectSlug = null;
     startPolling();
   }
 
   function setJobStatus(status) {
-    const b = els.jobStatus;
-    b.textContent = status || "queued";
-    b.dataset.status = status || "queued";
+    els.jobStatus.textContent = status || "queued";
+    els.jobStatus.dataset.status = status || "queued";
   }
 
   function makeTimelineHtml(stages, status) {
-    const known = ["research","ux_ia","art_direction","design_contract","design_system","implementation_plan","visual_composition","implementation","browser_qa","visual_qa","repair"];
+    const known = ["research", "ux_ia", "art_direction", "design_contract", "design_system", "implementation_plan", "visual_composition", "implementation", "browser_qa", "visual_qa", "repair"];
     const doneSet = new Set((stages || []).filter(s => s !== "repair"));
-    const labels = known.map(k => UiuxRouter.stageLabel(k));
     let html = "";
     for (let i = 0; i < known.length; i++) {
       const k = known[i];
-      const label = labels[i];
       const isDone = doneSet.has(k);
       const isActive = (i === doneSet.size) && status === "running";
       const isFailed = status === "failed" && i === doneSet.size;
@@ -362,11 +383,7 @@
       else if (isDone) { icon = "✓"; state = "done"; }
       else if (isActive) { icon = "◐"; state = "active"; }
       else { icon = "○"; state = "todo"; }
-      html += `<li data-state="${state}">
-        <span class="icon">${icon}</span>
-        <span class="name">${escapeHtml(k)} — ${escapeHtml(label)}</span>
-        <span class="meta">${escapeHtml(state)}</span>
-      </li>`;
+      html += `<li data-state="${state}"><span class="icon">${icon}</span><span class="name">${escapeHtml(k)} — ${escapeHtml(UiuxRouter.stageLabel(k))}</span><span class="meta">${escapeHtml(state)}</span></li>`;
     }
     return html;
   }
@@ -392,9 +409,8 @@
         els.logsWrap.removeAttribute("hidden");
         els.logs.scrollTop = els.logs.scrollHeight;
       }
-      if (job.artifacts && job.artifacts.length) {
-        renderArtifacts(job.artifacts);
-      }
+      if (job.artifacts?.length) renderArtifacts(job.artifacts);
+
       if (job.status === "completed" || job.status === "failed") {
         if (job.project_slug) {
           currentProjectSlug = job.project_slug;
@@ -405,6 +421,13 @@
         if (job.status === "failed") {
           els.jobStatus.title = (job.error || "").toString();
           els.logs.textContent += `\n\n[FAILED]\n${job.error || ""}`;
+        } else if (job.creative_review_ready) {
+          setCreativeReviewVisible(
+            true,
+            job.mode === "creative_revision"
+              ? "Revision đã PASS QA. Có thể export pack mới để mình review vòng tiếp theo."
+              : "Export pack này và gửi vào chat với mình; sau đó import creative-directive.json để sửa đúng stage."
+          );
         }
       }
     } catch (err) {
@@ -412,11 +435,17 @@
     }
   }
 
+  const ARTIFACT_ALLOWLIST = new Set([
+    "design-contract.json", "design-system.json", "implementation-plan.json",
+    "visual-composition.json", "visual-brain.json", "reference-dna.json",
+    "DESIGN.md", "tokens.css", "quality-loop.json", "browser-report.json",
+    "creative-directive.json", "creative-revision.json",
+  ]);
+
   function renderArtifacts(names) {
     els.artifacts.removeAttribute("hidden");
     els.artifactList.innerHTML = names.map(n => {
-      const allowed = ["design-system.json","reference-dna.json","DESIGN.md","tokens.css","quality-loop.json","browser-report.json"];
-      if (!allowed.includes(n) && !/^references\/reference-[a-f0-9]{12}-(desktop|mobile)\.png$/.test(n)) return "";
+      if (!ARTIFACT_ALLOWLIST.has(n) && !/^references\/reference-[a-f0-9]{12}-(desktop|mobile)\.png$/.test(n)) return "";
       const label = n.includes("/") ? n.split("/").pop() : n;
       return `<button class="artifact-item" data-name="${escapeHtml(n)}">${escapeHtml(label)}</button>`;
     }).join("");
@@ -435,14 +464,11 @@
       if (ct.includes("image/")) {
         window.open(url, "_blank");
       } else if (name.endsWith(".md")) {
-        const text = await res.text();
-        showArtifactModal(name, text, "markdown");
+        showArtifactModal(name, await res.text(), "markdown");
       } else if (name.endsWith(".css")) {
-        const text = await res.text();
-        showArtifactModal(name, text, "css");
+        showArtifactModal(name, await res.text(), "css");
       } else {
-        const text = await res.text();
-        showArtifactModal(name, text, "json");
+        showArtifactModal(name, await res.text(), "json");
       }
     } catch (err) {
       alert("Không đọc được artifact: " + err.message);
@@ -452,18 +478,9 @@
   function showArtifactModal(name, text, kind) {
     const win = window.open("", "_blank", "width=900,height=700");
     if (!win) { alert("Trình duyệt chặn popup — vui lòng cho phép."); return; }
-    const style = `
-      <style>
-        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#fafafa;color:#0a0a0a;}
-        header{padding:14px 20px;border-bottom:1px solid #e5e5e7;background:white;display:flex;justify-content:space-between;align-items:center;}
-        h1{font-size:14px;margin:0;font-family:monospace;color:#71717a;}
-        main{padding:20px;}
-        pre{background:#0a0a0a;color:#e4e4e7;padding:18px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-word;line-height:1.6;}
-        .md{background:white;padding:20px;border:1px solid #e5e5e7;border-radius:8px;font-size:14px;line-height:1.6;}
-        .md h1,.md h2,.md h3{margin-top:1.4em;font-family:inherit;}
-      </style>`;
+    const style = `<style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#fafafa;color:#0a0a0a}header{padding:14px 20px;border-bottom:1px solid #e5e5e7;background:white;display:flex;justify-content:space-between;align-items:center}h1{font-size:14px;margin:0;font-family:monospace;color:#71717a}main{padding:20px}pre{background:#0a0a0a;color:#e4e4e7;padding:18px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-word;line-height:1.6}.md{background:white;padding:20px;border:1px solid #e5e5e7;border-radius:8px;font-size:14px;line-height:1.6}</style>`;
     const bodyHtml = kind === "markdown" ? `<div class="md">${mdToHtml(text)}</div>` : `<pre>${escapeHtml(text)}</pre>`;
-    win.document.write(`<!doctype html><html><head><meta charset="utf-8"/><title>${escapeHtml(name)}</title>${style}</head><body><header><h1>${escapeHtml(name)}</h1><a href="${BRIDGE}/jobs/${currentJobId}/artifacts/${name}" target="_blank">Mở gốc ↗</a></header><main>${bodyHtml}</main></body></html>`);
+    win.document.write(`<!doctype html><html><head><meta charset="utf-8"/><title>${escapeHtml(name)}</title>${style}</head><body><header><h1>${escapeHtml(name)}</h1></header><main>${bodyHtml}</main></body></html>`);
     win.document.close();
   }
 
@@ -481,41 +498,107 @@
 
   function renderPreview(slug) {
     if (!slug) return;
-    const url = `${BRIDGE}/preview/${slug}/`;
     els.previewWrap.removeAttribute("hidden");
-    els.previewFrame.src = url;
+    els.previewFrame.src = `${BRIDGE}/preview/${slug}/`;
   }
 
   els.refreshPreview.addEventListener("click", () => {
-    if (currentProjectSlug) {
-      const url = `${BRIDGE}/preview/${currentProjectSlug}/?t=${Date.now()}`;
-      els.previewFrame.src = url;
-    }
+    if (currentProjectSlug) els.previewFrame.src = `${BRIDGE}/preview/${currentProjectSlug}/?t=${Date.now()}`;
   });
+
+  async function exportReviewPack() {
+    if (!currentJobId || !els.exportReview) return;
+    const button = els.exportReview;
+    const previous = button.textContent;
+    button.disabled = true;
+    button.textContent = "Đang đóng gói…";
+    try {
+      const res = await fetch(`${BRIDGE}/jobs/${currentJobId}/review-pack`, { cache: "no-store" });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const blob = await res.blob();
+      const href = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = href;
+      anchor.download = `uiux-review-pack-${currentJobId}.zip`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(href);
+      els.reviewStatus.textContent = "Review Pack đã xuất. Gửi ZIP này vào chat với mình để review visual thật.";
+    } catch (err) {
+      els.reviewStatus.textContent = `Không export được: ${err.message}`;
+    } finally {
+      button.disabled = false;
+      button.textContent = previous;
+    }
+  }
+
+  async function importCreativeDirective(file) {
+    if (!file || !currentJobId) return;
+    try {
+      const text = await file.text();
+      const directive = JSON.parse(text);
+      if (directive.source_run_id !== currentJobId) {
+        throw new Error(`Directive dành cho run ${directive.source_run_id || "không xác định"}, không phải ${currentJobId}.`);
+      }
+      if (directive.status === "approved") {
+        els.reviewStatus.textContent = "Creative Director đã APPROVE — không cần rebuild.";
+        return;
+      }
+      if (!Array.isArray(directive.revise) || directive.revise.length === 0) {
+        throw new Error("Directive revise nhưng không có hạng mục REVISE.");
+      }
+
+      els.importReview.disabled = true;
+      els.reviewStatus.textContent = "Đang route creative review về đúng owner stage…";
+      const res = await fetch(`${BRIDGE}/jobs/${currentJobId}/creative-directive`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(directive),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const revisionJob = await res.json();
+      appendJobHistory(revisionJob.id, "queued");
+      openJob(revisionJob);
+    } catch (err) {
+      els.reviewStatus.textContent = `Creative Directive không hợp lệ: ${err.message}`;
+    } finally {
+      els.importReview.disabled = false;
+      els.directiveFile.value = "";
+    }
+  }
+
+  els.exportReview?.addEventListener("click", exportReviewPack);
+  els.importReview?.addEventListener("click", () => els.directiveFile?.click());
+  els.directiveFile?.addEventListener("change", () => importCreativeDirective(els.directiveFile.files?.[0]));
 
   function startPolling() {
     stopPolling();
     pollDelay = 1500;
     const tick = async () => {
       await pollOnce();
-      if (currentJobId) {
+      if (pollTimer !== null) {
         pollDelay = Math.min(pollDelay * 1.2, 6000);
         pollTimer = setTimeout(tick, pollDelay);
       }
     };
     pollTimer = setTimeout(tick, 200);
   }
+
   function stopPolling() {
-    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+    if (pollTimer) clearTimeout(pollTimer);
+    pollTimer = null;
   }
 
-  // -----------------------------------------------------------
-  // Init
-  // -----------------------------------------------------------
   applyDraft();
   updateCounter();
   updateSmartPreview();
   checkHealth();
   setInterval(checkHealth, 30000);
-
 })();
