@@ -175,6 +175,7 @@ class RunAdvancedBrowserQA(RunBrowserQA):
                 (
                     item.missing_alt_count,
                     item.unlabeled_control_count,
+                    item.small_control_target_count,
                     item.focus_obscured_count,
                     item.catastrophic_contrast_count,
                 )
@@ -198,6 +199,7 @@ class RunAdvancedBrowserQA(RunBrowserQA):
             base.gates.ready_for_visual_critic
             and base.gates.image_alt_smoke_passed
             and base.gates.accessible_name_smoke_passed
+            and base.gates.control_target_smoke_passed
             and base.gates.focus_visibility_smoke_passed
             and base.gates.elementary_visual_sanity_passed
         )
