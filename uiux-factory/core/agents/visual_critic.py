@@ -2,9 +2,7 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role
 from metagpt.schema import Message
 
-from core.actions.evaluate_visual_quality_semantic import (
-    EvaluateVisualQualitySemantic,
-)
+from core.actions.evaluate_visual_quality_v4 import EvaluateVisualQualityV4
 
 
 class VisualCritic(Role):
@@ -20,6 +18,7 @@ class VisualCritic(Role):
     constraints: str = (
         "Use actual BrowserQA screenshots and project design evidence. "
         "Pixel/DOM proxies cannot prove aesthetic or domain quality on their own. "
+        "Every supplied representative route must receive one evidence-grounded semantic review. "
         "Do not hide failures behind a single aggregate score. "
         "When generic card-soup is visible, repair the owning art-direction/composition "
         "decision instead of defending it with cosmetic CSS."
@@ -27,7 +26,7 @@ class VisualCritic(Role):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set_actions([EvaluateVisualQualitySemantic])
+        self.set_actions([EvaluateVisualQualityV4])
 
     async def _act(self) -> Message:
         todo = self.rc.todo
