@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from core.orchestration.intelligent_flow import (
@@ -32,6 +33,19 @@ def test_goal_interpreter_supports_professional_website_domains() -> None:
             "policy": "adaptive-prompt-os-v4",
             "lane": "full_prompt_os",
         }
+
+
+def test_factory_default_delivery_policy_is_pinned_to_upstream_source() -> None:
+    config = json.loads((ROOT / "config" / "default-website-delivery.json").read_text(encoding="utf-8"))
+    assert config["policy_id"] == "adaptive-prompt-os-v4"
+    assert config["factory_lane"] == "full_prompt_os"
+    assert config["skills_source"] == {
+        "repository": "Ngh1aa/skills_UIUX",
+        "commit": "e8ed8c9212d20edb2cf4c8c0881fff34add7076e",
+    }
+    assert config["behavior"]["representative_first"] is True
+    assert config["behavior"]["human_visual_veto"] is True
+    assert config["behavior"]["production_smoke_when_deployed"] is True
 
 
 def test_flow_loads_default_prompt_os_v4_policy() -> None:
