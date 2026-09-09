@@ -10,7 +10,11 @@ from core.contracts.schema import (
     UXContract,
     VisualContract,
 )
-from core.manager.creative_director_manager import CreativeDirectorDevelopmentManager
+from core.orchestration.creative_revision_policy import (
+    context_with_review,
+    inject_review_constraints,
+    retarget_slug,
+)
 from core.runtime.run_context import RunContext
 
 
@@ -39,24 +43,19 @@ def _directive(owner: str = "visual_composition") -> CreativeDirective:
 
 
 def test_revision_project_slug_is_retargeted_without_mutating_base_name() -> None:
-    retarget = CreativeDirectorDevelopmentManager._retarget_slug
-
     assert (
-        retarget("maison-an-abcdef123456", "abcdef123456", "123456abcdef")
+        retarget_slug("maison-an-abcdef123456", "abcdef123456", "123456abcdef")
         == "maison-an-123456abcdef"
     )
     assert (
-        retarget("maison-an-deadbeefcafe", "abcdef123456", "123456abcdef")
+        retarget_slug("maison-an-deadbeefcafe", "abcdef123456", "123456abcdef")
         == "maison-an-123456abcdef"
     )
 
 
 def test_review_context_preserves_existing_guideline_and_adds_authoritative_review() -> None:
     source = DesignContext(guideline="Preserve the supplied wordmark.")
-    merged = CreativeDirectorDevelopmentManager._context_with_review(
-        source,
-        _directive(),
-    )
+    merged = context_with_review(source, _directive())
 
     assert "Preserve the supplied wordmark." in merged.guideline
     assert "EXTERNAL CREATIVE DIRECTOR REVIEW" in merged.guideline
@@ -87,9 +86,7 @@ def test_deterministic_visual_revision_injects_review_into_copied_design_contrac
     contract_path.write_text(contract.model_dump_json(indent=2), encoding="utf-8")
     context.add_artifact("design_contract", contract_path)
 
-    manager = object.__new__(CreativeDirectorDevelopmentManager)
-    manager.creative_directive = _directive()
-    manager._inject_review_constraints(context, "visual_composition")
+    inject_review_constraints(context, _directive(), "visual_composition")
 
     restored = DesignContract.model_validate_json(
         contract_path.read_text(encoding="utf-8")
