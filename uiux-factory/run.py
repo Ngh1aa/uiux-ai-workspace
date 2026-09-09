@@ -21,6 +21,18 @@ def _env_float(name: str, default: float) -> float:
         raise ValueError(f"{name} must be a number, got {raw!r}") from error
 
 
+def _resolve_goal(goal: str | None, goal_file: str | None) -> str:
+    if goal and goal_file:
+        raise ValueError("Provide either goal or --goal-file, not both.")
+    if goal_file:
+        resolved = Path(goal_file).read_text(encoding="utf-8-sig").strip()
+    else:
+        resolved = (goal or "").strip()
+    if not resolved:
+        raise ValueError("A non-empty product goal is required.")
+    return resolved
+
+
 async def main(
     goal: str,
     context_path: str | None = None,
@@ -81,8 +93,12 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "goal",
-        type=str,
+        nargs="?",
         help="Natural language product goal",
+    )
+    parser.add_argument(
+        "--goal-file",
+        help="Read the natural language product goal from a UTF-8 text file",
     )
     parser.add_argument(
         "--context",
@@ -105,9 +121,11 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    resolved_goal = _resolve_goal(args.goal, args.goal_file)
+
     asyncio.run(
         main(
-            args.goal,
+            resolved_goal,
             args.context,
             args.run_id,
             args.intelligence_only,
