@@ -1,30 +1,29 @@
 from __future__ import annotations
 
-import json
-from datetime import datetime, timezone
 from pathlib import Path
-from threading import Lock
-from typing import Any
+from typing import Any, Callable, TypeVar
+
+from core.events.run_session_log import RunSessionEvent, RunSessionLog
+
+
+T = TypeVar("T")
 
 
 class RunEventBus:
-    """Durable JSONL event stream for future FastAPI/SSE + Bolt.diy UI."""
+    """Durable append-only event stream for one Factory run.
+
+    This remains the small API used by orchestration code, while RunSessionLog
+    owns validation, replay, projection and fork semantics.
+    """
 
     def __init__(self, event_path: Path, run_id: str) -> None:
-        self.event_path = Path(event_path)
+        self.log = RunSessionLog(event_path=event_path, run_id=run_id)
+        self.event_path = self.log.event_path
         self.run_id = run_id
-        self.event_path.parent.mkdir(parents=True, exist_ok=True)
-        self._lock = Lock()
-        self._sequence = self._load_sequence()
 
-    def _load_sequence(self) -> int:
-        if not self.event_path.exists():
-            return 0
-        try:
-            with self.event_path.open("r", encoding="utf-8") as handle:
-                return sum(1 for line in handle if line.strip())
-        except OSError:
-            return 0
+    @property
+    def seq(self) -> int:
+        return self.log.seq
 
     def emit(
         self,
@@ -34,21 +33,25 @@ class RunEventBus:
         agent: str | None = None,
         data: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        with self._lock:
-            self._sequence += 1
-            event = {
-                "seq": self._sequence,
-                "type": event_type,
-                "run_id": self.run_id,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-                "stage": stage,
-                "agent": agent,
-                "data": data or {},
-            }
+        return self.log.append(
+            event_type,
+            stage=stage,
+            agent=agent,
+            data=data,
+        )
 
-            with self.event_path.open("a", encoding="utf-8") as handle:
-                handle.write(
-                    json.dumps(event, ensure_ascii=False) + "\n"
-                )
+    def snapshot(
+        self,
+        from_seq: int = 1,
+        to_seq_inclusive: int | None = None,
+    ) -> tuple[RunSessionEvent, ...]:
+        return self.log.snapshot(from_seq, to_seq_inclusive)
 
-            return event
+    def replay(self, consumer: Callable[[RunSessionEvent], None]) -> None:
+        self.log.replay(consumer)
+
+    def project(self, initial: T, reducer: Callable[[T, RunSessionEvent], T]) -> T:
+        return self.log.project(initial, reducer)
+
+    def project_run_state(self) -> dict[str, Any]:
+        return self.log.project_run_state()
