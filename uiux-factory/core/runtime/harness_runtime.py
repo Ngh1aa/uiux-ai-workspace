@@ -172,6 +172,9 @@ class HarnessInspiredRuntime:
         context.add_artifact("runtime_composition", artifact)
         return active
 
+    def has_active(self, context) -> bool:
+        return context.run_id in self._active
+
     def active(self, context) -> ActiveRuntime:
         active = self._active.get(context.run_id)
         if active is None:
