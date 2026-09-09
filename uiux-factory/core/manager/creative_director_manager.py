@@ -9,6 +9,7 @@ from shutil import copy2
 from core.contracts.creative_review_schema import CreativeDirective
 from core.contracts.design_context_schema import DesignContext
 from core.contracts.implementation_plan_schema import ImplementationPlan
+from core.contracts.schema import DesignContract
 from core.contracts.visual_composition_schema import VisualComposition
 from core.manager.visual_brain_manager import VisualBrainDevelopmentManager
 from core.runtime.run_context import RunContext
@@ -122,6 +123,90 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             path = Path(raw_visual)
             visual = VisualComposition.model_validate_json(path.read_text(encoding="utf-8"))
             visual.project_slug = self._retarget_slug(visual.project_slug, source_run_id, context.run_id)
+            path.write_text(visual.model_dump_json(indent=2), encoding="utf-8")
+            context.add_artifact("visual_composition", path)
+
+    @staticmethod
+    def _review_rules(directive: CreativeDirective) -> list[str]:
+        rules: list[str] = []
+        if directive.overall_direction:
+            rules.append(f"Creative Director direction: {directive.overall_direction}")
+        for item in directive.revise:
+            rules.append(
+                f"Creative review [{item.priority}] route={item.route} section={item.section} "
+                f"owner={item.owner}: {item.instruction}"
+            )
+        for item in directive.remove:
+            rules.append(f"Creative review REMOVE: {item}")
+        return rules
+
+    def _inject_review_constraints(self, context: RunContext, target: str) -> None:
+        """Make imported review visible to deterministic stages as canonical data.
+
+        AI stages also see the review through context.goal. This mutation is
+        limited to copied artifacts in the new revision run; the source run stays immutable.
+        """
+
+        directive = self.creative_directive
+        if not directive:
+            return
+        rules = self._review_rules(directive)
+
+        raw_contract = context.artifacts.get("design_contract")
+        if raw_contract and target in {
+            "design_system",
+            "implementation_plan",
+            "visual_composition",
+            "implementation",
+        }:
+            path = Path(raw_contract)
+            contract = DesignContract.model_validate_json(path.read_text(encoding="utf-8"))
+            if directive.overall_direction:
+                contract.visual.attributes = list(
+                    dict.fromkeys(contract.visual.attributes + [directive.overall_direction])
+                )
+            contract.visual.layout_rules = list(
+                dict.fromkeys(contract.visual.layout_rules + rules)
+            )
+            path.write_text(contract.model_dump_json(indent=2), encoding="utf-8")
+            context.add_artifact("design_contract", path)
+
+        raw_visual = context.artifacts.get("visual_composition")
+        if raw_visual and target == "implementation":
+            path = Path(raw_visual)
+            visual = VisualComposition.model_validate_json(path.read_text(encoding="utf-8"))
+            visual.composition_principles = list(
+                dict.fromkeys(visual.composition_principles + rules)
+            )
+            for revision in directive.revise:
+                if revision.owner != "implementation":
+                    continue
+                for page in visual.pages:
+                    if revision.route not in {"*", page.path}:
+                        continue
+                    matched = False
+                    for section in page.sections:
+                        if revision.section in {"global", "*", section.type}:
+                            section.notes = list(
+                                dict.fromkeys(
+                                    section.notes
+                                    + [
+                                        "Creative Director implementation directive: "
+                                        + revision.instruction
+                                    ]
+                                )
+                            )
+                            matched = True
+                    if not matched:
+                        page.anti_monotony_rules = list(
+                            dict.fromkeys(
+                                page.anti_monotony_rules
+                                + [
+                                    "Creative Director implementation directive: "
+                                    + revision.instruction
+                                ]
+                            )
+                        )
             path.write_text(visual.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("visual_composition", path)
 
@@ -250,11 +335,16 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
                 "implementation_plan",
                 "visual_composition",
             )
-            target_index = canonical_before_target.index(target) if target in canonical_before_target else len(canonical_before_target)
+            target_index = (
+                canonical_before_target.index(target)
+                if target in canonical_before_target
+                else len(canonical_before_target)
+            )
             for stage in canonical_before_target[:target_index]:
                 self._copy_stage(source_dir, context, stage)
 
             self._retarget_copied_project(context, source_run_id)
+            self._inject_review_constraints(context, target)
 
             start = self.REVISION_STAGES.index(target)
             for stage in self.REVISION_STAGES[start:]:
