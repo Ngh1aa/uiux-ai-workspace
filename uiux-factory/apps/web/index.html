@@ -19,8 +19,8 @@
     </a>
 
     <div class="topbar-center" aria-label="Năng lực đang hoạt động">
-      <span>Reference Intelligence</span>
-      <span>Visual Brain</span>
+      <span>Live Research</span>
+      <span>Vertical Intelligence</span>
       <span>Rendered QA</span>
     </div>
 
@@ -35,7 +35,7 @@
       <div class="rail-intro">
         <p class="eyebrow">01 · Define</p>
         <h1 id="new-project-title">Thiết kế một website có lý do để đẹp.</h1>
-        <p class="intro-copy">Mô tả mục tiêu. Factory tự nghiên cứu reference, route skill, khóa visual direction và chỉ cho frontend đi tiếp sau các gate.</p>
+        <p class="intro-copy">Mô tả mục tiêu. Factory xác định archetype + vertical, nghiên cứu reference theo page role, route skill, khóa visual direction và chỉ cho frontend đi tiếp sau các gate.</p>
       </div>
 
       <form id="prompt-form" class="prompt-form" autocomplete="off">
@@ -45,7 +45,7 @@
             id="prompt"
             name="prompt"
             rows="6"
-            placeholder="Ví dụ: Tạo website boutique hotel ở Hội An. Cảm giác tĩnh, thủ công và có chiều sâu địa phương; ưu tiên đặt phòng, trải nghiệm phòng và câu chuyện kiến trúc."
+            placeholder="Ví dụ: Tạo marketplace nước hoa niche cao cấp. Cảm giác tinh tế, cảm giác khứu giác và product-first; ưu tiên khám phá mùi, PLP, PDP, sample trước khi mua."
           ></textarea>
           <span class="field-meta">
             <span id="prompt-counter" class="muted">0 ký tự</span>
@@ -56,10 +56,10 @@
         <div class="prompt-presets" role="group" aria-label="Brief mẫu">
           <span class="preset-label">Khởi đầu nhanh</span>
           <div class="chips">
-            <button type="button" class="chip" data-prompt="Thiết kế website ecommerce bán hoa cao cấp, phong cách editorial sang trọng, ưu tiên khám phá bó hoa, chi tiết sản phẩm, giỏ hàng và checkout. Không dùng card grid lặp lại.">Luxury commerce</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website ecommerce bán nước hoa niche cao cấp, phong cách editorial sang trọng, ưu tiên product imagery, fragrance discovery, PLP, PDP, sample và checkout. Không dùng card grid lặp lại.">Fragrance commerce</button>
             <button type="button" class="chip" data-prompt="Thiết kế website SaaS B2B cho nền tảng vận hành, cảm giác chính xác và tự tin, ưu tiên product storytelling, capability proof và demo conversion.">B2B SaaS</button>
             <button type="button" class="chip" data-prompt="Thiết kế website trường quốc tế thân thiện nhưng có uy tín, ưu tiên chương trình học, tuyển sinh, campus evidence và hành trình phụ huynh.">Education</button>
-            <button type="button" class="chip" data-prompt="Thiết kế website creative studio tập trung vào case study, typography có cá tính và work-first composition; tránh SaaS aesthetic và card spam.">Creative studio</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website boutique hotel ở Hội An, ưu tiên trải nghiệm phòng, không gian, địa điểm và booking; dùng media có chủ đích thay vì card soup.">Hospitality</button>
           </div>
         </div>
 
@@ -78,7 +78,7 @@
             </label>
             <label class="field field-wide">
               <span class="field-label">Điều tuyệt đối tránh</span>
-              <input id="brand-avoid" type="text" placeholder="gradient trend, glassmorphism, hero giống SaaS" />
+              <input id="brand-avoid" type="text" placeholder="generic card soup, stock ảnh vô hồn, SaaS aesthetic" />
             </label>
             <label class="field field-wide">
               <span class="field-label">Design tokens · JSON tùy chọn</span>
@@ -89,22 +89,24 @@
 
         <details class="config-section" open>
           <summary>
-            <span><b>Reference intelligence</b><small>Production references được đo để lấy principle, không clone giao diện.</small></span>
+            <span><b>Reference intelligence</b><small>Research rộng trước; finalist production reference được đo sâu, không clone giao diện.</small></span>
           </summary>
           <div class="config-body">
             <div class="inspiration-control">
               <label class="switch-row" for="auto-inspiration">
                 <span>
-                  <b>Tự chọn benchmark phù hợp domain</b>
-                  <small>User reference luôn được ưu tiên; Factory chỉ bổ sung khi còn thiếu.</small>
+                  <b>Auto inspiration · benchmark theo domain</b>
+                  <small>User reference luôn được ưu tiên; Factory chỉ bổ sung finalist khi còn thiếu.</small>
                 </span>
                 <input id="auto-inspiration" type="checkbox" checked />
               </label>
               <label class="compact-select" for="inspiration-target">
-                <span>Số reference mục tiêu</span>
+                <span>Finalist đo sâu</span>
                 <select id="inspiration-target">
                   <option value="1">1</option>
-                  <option value="2" selected>2</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4" selected>4</option>
                 </select>
               </label>
             </div>
@@ -144,7 +146,7 @@
             <p class="eyebrow">02 · Think</p>
             <h2 id="intelligence-title">Visual intelligence</h2>
           </div>
-          <span class="skill-proof">5 visual skills · gated</span>
+          <span class="skill-proof">Research + domain + visual skills · gated</span>
         </div>
 
         <div class="intelligence-grid">
@@ -186,7 +188,7 @@
             <h2 id="run-title">Live run</h2>
           </div>
           <div class="quality-legend" aria-label="Quality gates">
-            <span>Visual Brain</span><span>Responsive</span><span>A11y smoke</span><span>Rendered QA</span>
+            <span>Research evidence</span><span>Visual Brain</span><span>Responsive</span><span>Rendered QA</span>
           </div>
         </div>
 
@@ -246,7 +248,7 @@
 
   <footer class="footer">
     <span>UIUX Factory · <code id="bridge-info">127.0.0.1:8788</code></span>
-    <span>Project truth → skills → evidence → gate → output</span>
+    <span>Project truth → live research → skills → evidence → gate → output</span>
   </footer>
 
   <script src="./skills-router.js"></script>
