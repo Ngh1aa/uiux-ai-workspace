@@ -10,9 +10,11 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from core.runtime.workspace_writer import WorkspaceWriter
 
 
-AI_PREVIEW_CSP = ("default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
-                  "font-src 'self'; script-src 'self'; connect-src 'none'; base-uri 'none'; "
-                  "form-action 'none'; frame-src 'none'; sandbox allow-scripts")
+AI_PREVIEW_CSP = (
+    "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+    "font-src 'self'; script-src 'self'; connect-src 'none'; base-uri 'none'; "
+    "form-action 'none'; frame-src 'none'; sandbox allow-scripts"
+)
 
 
 class DesignPage(BaseModel):
@@ -20,7 +22,7 @@ class DesignPage(BaseModel):
     path: str
     title: str = Field(min_length=1, max_length=160)
     purpose: str = Field(min_length=1, max_length=600)
-    sections: list[str] = Field(min_length=1, max_length=12)
+    sections: list[str] = Field(min_length=1, max_length=14)
 
     @field_validator("path")
     @classmethod
@@ -32,15 +34,15 @@ class DesignPage(BaseModel):
 
 class DesignBrief(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    direction: str = Field(min_length=1, max_length=1600)
-    pages: list[DesignPage] = Field(min_length=1, max_length=6)
-    unknowns: list[str] = Field(default_factory=list, max_length=20)
+    direction: str = Field(min_length=1, max_length=3000)
+    pages: list[DesignPage] = Field(min_length=1, max_length=10)
+    unknowns: list[str] = Field(default_factory=list, max_length=30)
     proposed_tokens: dict[str, str] = Field(default_factory=dict, max_length=3)
 
 
 class FileBundle(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    files: dict[str, str] = Field(min_length=2, max_length=8)
+    files: dict[str, str] = Field(min_length=2, max_length=13)
 
 
 class HTMLContract(HTMLParser):
@@ -81,8 +83,8 @@ def validate_bundle(raw: str, brief: DesignBrief) -> FileBundle:
     allowed = pages | {"styles.css", "app.js"}
     if set(bundle.files) - allowed or not pages.issubset(bundle.files) or "styles.css" not in bundle.files:
         raise ValueError("Generated files do not match the approved route plan")
-    if sum(len(value) for value in bundle.files.values()) > 600_000:
-        raise ValueError("Generated file bundle exceeds 400 KB")
+    if sum(len(value) for value in bundle.files.values()) > 650_000:
+        raise ValueError("Generated file bundle exceeds 650 KB")
     for path in pages:
         document = HTMLContract()
         document.feed(bundle.files[path])
@@ -107,26 +109,32 @@ def write_bundle(root: Path, slug: str, bundle: FileBundle, tokens: str) -> Path
     for name, content in bundle.files.items():
         if name.endswith("index.html"):
             prefix = "../" * (len(PurePosixPath(name).parts) - 1)
-            # Authoritative tokens load last; model layouts remain unrestricted.
             links = f'<link rel="stylesheet" href="{prefix}styles.css"><link rel="stylesheet" href="{prefix}tokens.css">'
             content = re.sub(r"</head>", lambda _: links + "</head>", content, count=1, flags=re.I)
         writer.write_text(slug, name, content)
     writer.write_text(slug, "tokens.css", tokens)
     if "app.js" not in bundle.files:
         writer.write_text(slug, "app.js", "// This draft does not require JavaScript.\n")
-    writer.write_text(slug, ".uiux-ai.json", json.dumps({"engine": "ai", "human_visual_review_required": True}))
+    writer.write_text(slug, ".uiux-ai.json", json.dumps({"engine": "ai", "quality_loop_required": True}))
     return writer.project_root(slug)
 
 
 CODER_CONTRACT = """
-Generate complete static HTML/CSS/JS pages for the supplied plan, not a generic commerce template.
+Generate a distinctive, premium, complete static HTML/CSS/JS website for the supplied approved plan. Do not fall back to a generic commerce/SaaS template.
 Return only JSON {"files":{"index.html":"...","styles.css":"...","app.js":"..."}}.
-Include every plan path exactly. Optional app.js; no other files, build tools or dependencies.
-Every page: html lang, title, viewport width=device-width, one main and one h1.
-Use relative navigation to planned route/index.html paths. No dead # links; use real section IDs.
-No remote assets, embeds, inline event handlers, inline scripts, forms that submit, or network requests.
-Scripts may load only relative app.js. Do not depend on localStorage or cookies.
+Include every approved plan path exactly. Optional app.js; no other files, build tools or dependencies.
+Every page: html lang, meaningful title, viewport width=device-width, exactly one main and one h1. Use semantic landmarks and logical heading order.
+Use relative navigation to approved route/index.html paths. No dead # links; section links require real IDs.
+No remote assets, embeds, inline event handlers, inline scripts, forms that submit, or network requests. Scripts may load only relative app.js.
 The host inserts relative links to styles.css and authoritative tokens.css for every page.
+CSS must use var(--color-brand-primary), visible :focus-visible states and substantial responsive @media rules. Respect reduced-motion preferences for non-essential motion.
+Do not redefine canonical tokens or use @import. Do not conceal overflow globally to hide layout bugs.
+Create page-role-specific compositions: vary hierarchy, density and visual rhythm by purpose instead of repeating one hero/card grid everywhere.
+Use editorial whitespace, deliberate typography, responsive grids, restrained motion and a recognizable visual signature appropriate to the supplied brand/personality.
+Never invent testimonials, ratings, customer counts, awards, client logos, guarantees, prices, delivery claims, certifications, statistics or business facts. If evidence is unknown, omit it or label neutral placeholder content honestly.
+Do not present fake controls or success states as functional backend behavior. Static prototype interactions must be truthful and accessible.
+Prioritize mobile hierarchy, keyboard usability, readable contrast, touch target spacing and content clarity over decorative effects.
+
 CSS must use var(--color-brand-primary), :focus-visible and responsive @media rules.
 Do not redefine tokens, use @import, conceal overflow globally or invent backend success states.
 Use supplied brand fonts, colors and constraints. CSS artwork is acceptable if the brief needs it.

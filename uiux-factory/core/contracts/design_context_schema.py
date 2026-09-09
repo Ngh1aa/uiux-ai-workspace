@@ -14,8 +14,13 @@ def public_web_url(value: str) -> str:
     if len(value) > 2000:
         raise ValueError("Reference URL must be at most 2000 characters.")
     parts = urlsplit(value)
-    if (parts.scheme not in {"https", "http"} or not parts.hostname
-            or parts.username or parts.password or parts.port not in {None, 80, 443}):
+    if (
+        parts.scheme not in {"https", "http"}
+        or not parts.hostname
+        or parts.username
+        or parts.password
+        or parts.port not in {None, 80, 443}
+    ):
         raise ValueError("Use an HTTP(S) URL without credentials on port 80 or 443.")
     return value
 
@@ -52,6 +57,10 @@ class DesignContext(BaseModel):
     reference_urls: list[str] = Field(default_factory=list, max_length=4)
     existing_website: str = Field(default="", max_length=2000)
     assets: list[ContextAsset] = Field(default_factory=list, max_length=4)
+    # When fewer than target references are supplied, Factory may add curated
+    # live production sites for measurable inspiration. User references win.
+    auto_inspiration: bool = True
+    inspiration_target: int = Field(default=2, ge=0, le=2)
 
     @field_validator("reference_urls")
     @classmethod
@@ -89,11 +98,13 @@ class ReferenceDNA(BaseModel):
     patterns: list[str] = Field(default_factory=list)
     screenshots: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
-    boundaries: list[str] = Field(default_factory=lambda: [
-        "Single-page evidence; unvisited pages and interaction states are unknown.",
-        "Reference colors, assets and copy are not the project's brand tokens.",
-        "Transfer principles only; do not copy proprietary assets or compositions.",
-    ])
+    boundaries: list[str] = Field(
+        default_factory=lambda: [
+            "Single-page evidence; unvisited pages and interaction states are unknown.",
+            "Reference colors, assets and copy are not the project's brand tokens.",
+            "Transfer principles only; do not copy proprietary assets or compositions.",
+        ]
+    )
 
 
 class ReferenceBoard(BaseModel):
@@ -111,4 +122,7 @@ class BrandDNA(BaseModel):
     conflicts: list[str] = Field(default_factory=list)
     source_context_sha256: str = ""
     reference_patterns: list[str] = Field(default_factory=list)
-    policy: str = "Explicit tokens > labeled guideline > existing CSS > existing website. References never override brand."
+    policy: str = (
+        "Explicit tokens > labeled guideline > existing CSS > existing website. "
+        "References never override brand."
+    )

@@ -8,6 +8,12 @@
   "properties": {
     "schema_version": {"enum": [1, 2]},
     "profile": {"type": "string", "minLength": 1},
+    "delivery_policy": {
+      "type": "string",
+      "enum": ["adaptive-prompt-os-v4", "custom"],
+      "default": "adaptive-prompt-os-v4",
+      "description": "Cross-project website delivery policy. adaptive-prompt-os-v4 uses the full Prompt 0→4 lane for substantial work and the smallest safe lane for bounded local work."
+    },
     "packs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true, "default": []},
     "additional_skills": {"type": "array", "items": {"type": "string"}, "uniqueItems": true, "default": []},
     "exclude_skills": {"type": "array", "items": {"type": "string"}, "uniqueItems": true, "default": []},

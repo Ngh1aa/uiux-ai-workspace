@@ -19,6 +19,7 @@ def default_profile(project: Path, profile: str) -> dict:
     return {
         "schema_version": 2,
         "profile": profile,
+        "delivery_policy": "adaptive-prompt-os-v4",
         "packs": [],
         "additional_skills": [],
         "exclude_skills": [],

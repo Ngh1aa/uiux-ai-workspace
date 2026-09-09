@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
   <title>UIUX Factory · Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,38 +14,60 @@
 <body>
   <!-- Topbar Header -->
   <header class="topbar">
-    <div class="brand">
-      <span class="brand-name">UIUX Factory</span>
+    <a class="brand" href="./" aria-label="UIUX Factory — Workbench">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><b></b></span>
+      <span class="brand-copy">
+        <strong class="brand-name">UIUX Factory</strong>
+        <span class="brand-sub">Visual Intelligence Workbench</span>
+      </span>
+    </a>
+
+    <div class="topbar-center" aria-label="Năng lực đang hoạt động">
+      <span>Reference Intelligence</span>
+      <span>Visual Brain</span>
+      <span>Rendered QA</span>
     </div>
-    <div class="status-pill" id="bridge-status" data-state="checking">
-      <span class="dot"></span>
-      <span class="status-text">Connecting...</span>
+
+    <div class="status-pill" id="bridge-status" data-state="checking" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="status-text">Đang kết nối bridge…</span>
     </div>
   </header>
 
-  <main class="layout">
-    <!-- LEFT PANEL -->
-    <section class="panel">
-      <div class="panel-head">
-        <h1>New Project</h1>
-        <p class="text-muted">Describe the website you want to generate.</p>
+  <main class="workspace-shell">
+    <aside class="composer-rail" aria-labelledby="new-project-title">
+      <div class="rail-intro">
+        <p class="eyebrow">01 · Define</p>
+        <h1 id="new-project-title">Thiết kế một website có lý do để đẹp.</h1>
+        <p class="intro-copy">Mô tả mục tiêu. Factory tự nghiên cứu reference, route skill, khóa visual direction và chỉ cho frontend đi tiếp sau các gate.</p>
       </div>
 
       <form id="prompt-form" class="prompt-form" autocomplete="off">
-        <label class="field">
-          <div class="field-label-row">
-            <span class="field-label">Requirements</span>
-            <span id="prompt-counter" class="text-muted counter-badge">0 chars</span>
-          </div>
           <textarea
             id="prompt"
             name="prompt"
             rows="6"
-            placeholder="A minimalist fashion e-commerce website..."
+            id="prompt"
+            name="prompt"
+            rows="6"
+            placeholder="Ví dụ: Tạo website boutique hotel ở Hội An. Cảm giác tĩnh, thủ công và có chiều sâu địa phương; ưu tiên đặt phòng, trải nghiệm phòng và câu chuyện kiến trúc."
           ></textarea>
+          <span class="field-meta">
+            <span id="prompt-counter" class="muted">0 ký tự</span>
+            <button type="button" id="clear-prompt" class="link-btn">Xoá brief</button>
+          </span>
         </label>
 
-        <!-- Hidden engine radio for app.js compatibility -->
+        <div class="prompt-presets" role="group" aria-label="Brief mẫu">
+          <span class="preset-label">Khởi đầu nhanh</span>
+          <div class="chips">
+            <button type="button" class="chip" data-prompt="Thiết kế website ecommerce bán hoa cao cấp, phong cách editorial sang trọng, ưu tiên khám phá bó hoa, chi tiết sản phẩm, giỏ hàng và checkout. Không dùng card grid lặp lại.">Luxury commerce</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website SaaS B2B cho nền tảng vận hành, cảm giác chính xác và tự tin, ưu tiên product storytelling, capability proof và demo conversion.">B2B SaaS</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website trường quốc tế thân thiện nhưng có uy tín, ưu tiên chương trình học, tuyển sinh, campus evidence và hành trình phụ huynh.">Education</button>
+            <button type="button" class="chip" data-prompt="Thiết kế website creative studio tập trung vào case study, typography có cá tính và work-first composition; tránh SaaS aesthetic và card spam.">Creative studio</button>
+          </div>
+        </div>
+
         <input type="radio" name="engine" value="template" checked style="display:none;" />
 
         <div class="submit-row">
@@ -54,69 +77,60 @@
         </div>
       </form>
     </section>
+          </div>
+        </div>
 
-    <!-- RIGHT PANEL -->
-    <section class="panel">
-      <!-- LIVE JOB TRACKER & PREVIEW -->
-      <div class="job-tracker-section">
-        <div class="panel-head">
-          <h2>Progress & Output</h2>
-          <p class="text-muted" id="job-empty">No active job. Enter a brief and click Generate.</p>
+        <div id="job-empty" class="empty-state">
+          <div class="empty-orbit" aria-hidden="true"><span></span></div>
+          <div>
+            <strong>Workspace sẵn sàng.</strong>
+            <p>Chạy một brief để xem pipeline, artifact evidence và website preview tại đây.</p>
+          </div>
         </div>
 
         <div id="job-card" class="job-card hidden">
-          <div class="job-card-header">
-            <div class="job-meta-left">
-              <span class="id-label">ID:</span>
-              <span id="job-id" class="id-val">—</span>
-              <div class="job-prompt-text text-muted" id="job-prompt">—</div>
+          <header class="job-head">
+            <div>
+              <span class="job-id">RUN · <span id="job-id">—</span></span>
+              <h3 class="job-prompt" id="job-prompt">—</h3>
             </div>
-            <span class="status-badge" id="job-status-badge" data-status="queued">queued</span>
-          </div>
+            <span class="badge" id="job-status-badge" role="status" aria-live="polite">queued</span>
+          </header>
 
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="pipeline-progress-fill" style="width: 0%;"></div>
-          </div>
+          <div class="run-grid">
+            <div class="timeline-column">
+              <p class="micro-heading">Pipeline</p>
+              <ol id="stage-timeline" class="stage-timeline" aria-label="Tiến trình"></ol>
 
-          <ol id="stage-timeline" class="stage-timeline"></ol>
-
-          <div class="artifacts" id="artifacts" hidden>
-            <h3>Artifacts</h3>
-            <div id="artifact-list" class="artifact-list"></div>
-          </div>
-
-          <details class="log-collapsible" id="logs-wrap" hidden>
-            <summary>Logs</summary>
-            <pre id="job-logs" class="logs"></pre>
-          </details>
-
-          <div class="preview-wrap" id="preview-wrap" hidden>
-            <div class="preview-header">
-              <div class="preview-title-group">
-                <h3>Preview</h3>
+              <div class="artifacts" id="artifacts" hidden>
+                <p class="micro-heading">Evidence artifacts</p>
+                <div id="artifact-list" class="artifact-list"></div>
               </div>
 
-              <div class="device-switcher" role="group">
-                <button type="button" class="device-btn active" data-viewport="desktop">Desktop</button>
-                <button type="button" class="device-btn" data-viewport="tablet">Tablet</button>
-                <button type="button" class="device-btn" data-viewport="mobile">Mobile</button>
-              </div>
-
-              <div class="preview-actions">
-                <button type="button" class="ghost-btn" id="refresh-preview-btn">Refresh</button>
-                <a id="preview-link" class="ghost-btn" target="_blank" rel="noopener">Open</a>
-              </div>
+              <details class="logs-panel" id="logs-wrap" hidden>
+                <summary>Runtime logs</summary>
+                <pre id="job-logs" class="logs"></pre>
+              </details>
             </div>
 
-            <div class="preview-viewport-container" id="preview-container" data-viewport="desktop">
-              <div class="preview-browser-chrome">
-                <div class="chrome-address" id="chrome-url">...</div>
+            <div class="preview-column">
+              <div class="preview-wrap" id="preview-wrap" hidden>
+                <div class="preview-toolbar">
+                  <div>
+                    <span class="micro-heading">Rendered website</span>
+                    <span id="preview-link" class="preview-note">Sandboxed preview</span>
+                  </div>
+                  <button type="button" class="ghost-btn compact" id="refresh-preview-btn">Tải lại</button>
+                </div>
+                <iframe id="preview-frame" title="Preview website được tạo" sandbox="allow-scripts"></iframe>
               </div>
-              <iframe id="preview-frame" title="Live Preview" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+              <div class="preview-placeholder" aria-hidden="true">
+                <span>Rendered evidence appears here</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </section>
   </main>
 
@@ -133,9 +147,8 @@
   </div>
 
   <footer class="footer">
-    <span>UIUX Factory</span>
-    <span class="separator">/</span>
-    <span>Bridge: <code id="bridge-info">127.0.0.1:8788</code></span>
+    <span>UIUX Factory · <code id="bridge-info">127.0.0.1:8788</code></span>
+    <span>Project truth → skills → evidence → gate → output</span>
   </footer>
 
   <script src="./skills-router.js"></script>

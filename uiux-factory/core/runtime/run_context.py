@@ -1,4 +1,5 @@
 import json
+import os
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -103,16 +104,34 @@ class RunContext:
         }
 
     def save(self) -> None:
+        """Persist run state without exposing readers to a partially written JSON file."""
         self.run_dir.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        self.state_path.write_text(
-            json.dumps(
-                self.to_dict(),
-                indent=2,
-                ensure_ascii=False,
-            ),
-            encoding="utf-8",
+        payload = json.dumps(
+            self.to_dict(),
+            indent=2,
+            ensure_ascii=False,
         )
+        temp_path = self.state_path.with_name(
+            f".{self.state_path.name}.{uuid4().hex}.tmp"
+        )
+
+        try:
+            with temp_path.open(
+                "w",
+                encoding="utf-8",
+                newline="\n",
+            ) as stream:
+                stream.write(payload)
+                stream.flush()
+                os.fsync(stream.fileno())
+
+            os.replace(temp_path, self.state_path)
+        finally:
+            # os.replace removes the temporary path on success. This cleanup
+            # only handles interrupted/failed writes.
+            if temp_path.exists():
+                temp_path.unlink()
