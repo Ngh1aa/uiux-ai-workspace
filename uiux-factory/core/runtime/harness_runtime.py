@@ -31,7 +31,7 @@ class HarnessInspiredRuntime:
 
     This is an adaptation, not a port. The Factory keeps MetaGPT roles and its
     Python pipeline while gaining stable capability dependencies, per-run
-    compositions, logical tool catalogs, skill overlays, lifecycle events and a
+    compositions, tool catalogs, skill overlays, lifecycle events and a
     creator-friendly preset surface.
     """
 
@@ -55,11 +55,18 @@ class HarnessInspiredRuntime:
                 tools=("session_inspect", "session_replay"),
             ),
             PluginSpec(
+                plugin_id="artifact-evidence",
+                description="Expose bounded run-artifact inventory and text reads to specialist observation loops.",
+                provides=("artifacts.read",),
+                requires=("events.session",),
+                tools=("list_artifacts", "read_artifact"),
+            ),
+            PluginSpec(
                 plugin_id="skill-composition",
                 description="Compose stage skills from the canonical router plus runtime overlays.",
                 provides=("skills.registry", "skills.compose"),
                 requires=("events.session",),
-                tools=("skill_catalog", "skill_load"),
+                tools=("read_skill_source", "skill_catalog", "skill_load"),
             ),
             PluginSpec(
                 plugin_id="web-research",
@@ -204,6 +211,16 @@ class HarnessInspiredRuntime:
     def stage_skill_paths(self, context, stage: str) -> tuple[str, ...]:
         active = self.active(context)
         return tuple(active.composition.stage_skills.get(stage, ()))
+
+    def observation_tools(self, context) -> tuple[str, ...]:
+        from core.orchestration.provider_loop_contract import READ_ONLY_TOOLS
+
+        active = self.active(context)
+        return tuple(
+            tool
+            for tool in active.composition.tools
+            if tool in READ_ONLY_TOOLS
+        )
 
     def snapshot(self, context) -> dict[str, Any]:
         return self.active(context).to_dict()
