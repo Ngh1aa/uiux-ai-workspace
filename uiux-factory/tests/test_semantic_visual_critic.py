@@ -1,9 +1,9 @@
-from core.actions.evaluate_visual_quality_v3 import EvaluateVisualQualityV3
 from core.contracts.visual_critic_schema import (
     SemanticVisualReview,
     VisualRouteSemanticReview,
     VisualScore,
 )
+from core.semantic_visual_policy import merge_semantic_score, semantic_issues
 
 
 def _base_score() -> VisualScore:
@@ -50,7 +50,7 @@ def test_luxury_fragrance_card_soup_creates_blocking_semantic_issues() -> None:
         ],
     )
 
-    issues = EvaluateVisualQualityV3._semantic_issues(review)
+    issues = semantic_issues(review)
     categories = {issue.category for issue in issues}
     assert "generic-ai" in categories
     assert "domain-fit" in categories
@@ -59,7 +59,7 @@ def test_luxury_fragrance_card_soup_creates_blocking_semantic_issues() -> None:
     assert "media" in categories
     assert any(issue.severity == "P1" for issue in issues)
 
-    score = EvaluateVisualQualityV3._merge_semantic_score(_base_score(), review, issues)
+    score = merge_semantic_score(_base_score(), review, issues)
     assert score.generic_ai_feel >= 70
     assert score.overall < _base_score().overall
 
@@ -115,9 +115,9 @@ def test_domain_specific_visual_review_can_pass_without_generic_false_positive()
         ],
     )
 
-    issues = EvaluateVisualQualityV3._semantic_issues(review)
+    issues = semantic_issues(review)
     assert issues == []
-    score = EvaluateVisualQualityV3._merge_semantic_score(_base_score(), review, issues)
+    score = merge_semantic_score(_base_score(), review, issues)
     assert score.generic_ai_feel <= 18
     assert score.visual >= 90
     assert score.hierarchy >= 90
