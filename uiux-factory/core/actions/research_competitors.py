@@ -77,7 +77,7 @@ class ResearchCompetitors(Action):
 
         researcher = LiveWebResearch()
         query_families = researcher.build_query_families(
-            website_type=goal_profile.website_type,
+            website_type=domain_profile.website_type,
             vertical=domain_profile.vertical,
         )
         candidates = researcher.discover(query_families, max_candidates=20)
@@ -127,7 +127,7 @@ class ResearchCompetitors(Action):
 ## Project interpretation
 
 - Goal: {instruction}
-- Website archetype: `{goal_profile.website_type}`
+- Website archetype: `{domain_profile.website_type}`
 - Vertical/sub-industry: `{domain_profile.vertical}`
 - Mode: `{goal_profile.mode}`
 - Features: {", ".join(goal_profile.features) if goal_profile.features else "none detected"}
