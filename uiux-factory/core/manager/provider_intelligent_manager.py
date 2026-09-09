@@ -70,23 +70,24 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
                 raise ValueError("Invalid run ID.")
             context.run_id = run_id
         context.initialize()
-        self.runtime.activate(context, runtime_preset)
-        self.runtime.require(context, "skills.compose")
-
-        provider = None
-        if engine == "ai":
-            from core.runtime.free_provider import FreeProvider
-
-            provider = FreeProvider.from_env(self.root)
-            self.team_runner.set_provider(provider)
-
-        print(f"\n[DevelopmentManager] Run ID: {context.run_id}")
-        print(f"[DevelopmentManager] Goal received: {goal}")
-        print(f"[DevelopmentManager] Engine: {engine}")
-        print(f"[DevelopmentManager] Runtime preset: {context.runtime_preset}")
-        self.print_flow()
 
         try:
+            self.runtime.activate(context, runtime_preset)
+            self.runtime.require(context, "skills.compose")
+
+            provider = None
+            if engine == "ai":
+                from core.runtime.free_provider import FreeProvider
+
+                provider = FreeProvider.from_env(self.root)
+                self.team_runner.set_provider(provider)
+
+            print(f"\n[DevelopmentManager] Run ID: {context.run_id}")
+            print(f"[DevelopmentManager] Goal received: {goal}")
+            print(f"[DevelopmentManager] Engine: {engine}")
+            print(f"[DevelopmentManager] Runtime preset: {context.runtime_preset}")
+            self.print_flow()
+
             input_path = context.run_dir / "design-context.json"
             input_path.write_text(context.design_context.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("design_context", input_path)
