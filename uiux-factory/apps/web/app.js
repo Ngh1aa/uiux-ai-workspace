@@ -116,7 +116,7 @@
         brandAvoid: els.brandAvoid.value,
         tokensJson: els.tokensJson.value,
         autoInspiration: Boolean(els.autoInspiration?.checked),
-        inspirationTarget: Number(els.inspirationTarget?.value || 2),
+        inspirationTarget: Number(els.inspirationTarget?.value || 4),
         refUrls: Array.from(document.querySelectorAll(".ref-row input")).map(i => i.value),
         savedAt: Date.now(),
       };
@@ -135,7 +135,7 @@
     if (els.autoInspiration && typeof d.autoInspiration === "boolean") {
       els.autoInspiration.checked = d.autoInspiration;
     }
-    if (els.inspirationTarget && [1, 2].includes(Number(d.inspirationTarget))) {
+    if (els.inspirationTarget && [1, 2, 3, 4].includes(Number(d.inspirationTarget))) {
       els.inspirationTarget.value = String(d.inspirationTarget);
     }
     (d.refUrls || []).forEach(u => addRefRow(u));
@@ -299,7 +299,7 @@
       .map(i => i.value.trim()).filter(Boolean);
     if (urls.length) ctx.reference_urls = urls.slice(0, 4);
     ctx.auto_inspiration = Boolean(els.autoInspiration?.checked);
-    ctx.inspiration_target = Math.max(0, Math.min(2, Number(els.inspirationTarget?.value || 2)));
+    ctx.inspiration_target = Math.max(0, Math.min(4, Number(els.inspirationTarget?.value || 4)));
     return ctx;
   }
 
@@ -436,7 +436,7 @@
   }
 
   const ARTIFACT_ALLOWLIST = new Set([
-    "design-contract.json", "design-system.json", "implementation-plan.json",
+    "research.md", "design-contract.json", "design-system.json", "implementation-plan.json",
     "visual-composition.json", "visual-brain.json", "reference-dna.json",
     "DESIGN.md", "tokens.css", "quality-loop.json", "browser-report.json",
     "creative-directive.json", "creative-revision.json",
