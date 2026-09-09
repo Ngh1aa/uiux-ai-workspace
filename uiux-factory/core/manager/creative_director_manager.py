@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import re
 from contextlib import contextmanager
 from pathlib import Path
 from shutil import copy2
@@ -9,9 +8,13 @@ from shutil import copy2
 from core.contracts.creative_review_schema import CreativeDirective
 from core.contracts.design_context_schema import DesignContext
 from core.contracts.implementation_plan_schema import ImplementationPlan
-from core.contracts.schema import DesignContract
 from core.contracts.visual_composition_schema import VisualComposition
 from core.manager.visual_brain_manager import VisualBrainDevelopmentManager
+from core.orchestration.creative_revision_policy import (
+    context_with_review,
+    inject_review_constraints,
+    retarget_slug,
+)
 from core.runtime.run_context import RunContext
 
 
@@ -62,13 +65,6 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             raise ValueError(f"Expected JSON object: {path}")
         return payload
 
-    @staticmethod
-    def _retarget_slug(slug: str, source_run_id: str, new_run_id: str) -> str:
-        suffix = f"-{source_run_id}"
-        if slug.endswith(suffix):
-            return slug[: -len(suffix)] + f"-{new_run_id}"
-        return re.sub(r"-[a-f0-9]{12}$", f"-{new_run_id}", slug) if slug else slug
-
     def _source_run(self, source_run_id: str) -> tuple[Path, dict]:
         source_dir = (self.root / "runs" / source_run_id).resolve()
         runs_root = (self.root / "runs").resolve()
@@ -81,20 +77,6 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         if summary.get("status") != "completed":
             raise RuntimeError("Creative review revisions require a completed source run.")
         return source_dir, summary
-
-    @staticmethod
-    def _context_with_review(source: DesignContext, directive: CreativeDirective) -> DesignContext:
-        block = directive.as_prompt_block()
-        existing = source.guideline.strip()
-        reserve = len(block) + 4
-        if reserve >= 30_000:
-            merged = block[:30_000]
-        else:
-            keep = 30_000 - reserve
-            merged = ((existing[:keep] + "\n\n") if existing else "") + block
-        payload = source.model_dump()
-        payload["guideline"] = merged
-        return DesignContext.model_validate(payload)
 
     def _copy_stage(self, source_dir: Path, context: RunContext, stage: str) -> None:
         specs = self.COPY_ARTIFACTS.get(stage, ())
@@ -114,7 +96,11 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         if raw_plan:
             path = Path(raw_plan)
             plan = ImplementationPlan.model_validate_json(path.read_text(encoding="utf-8"))
-            plan.project_slug = self._retarget_slug(plan.project_slug, source_run_id, context.run_id)
+            plan.project_slug = retarget_slug(
+                plan.project_slug,
+                source_run_id,
+                context.run_id,
+            )
             path.write_text(plan.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("implementation_plan", path)
 
@@ -122,91 +108,11 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         if raw_visual:
             path = Path(raw_visual)
             visual = VisualComposition.model_validate_json(path.read_text(encoding="utf-8"))
-            visual.project_slug = self._retarget_slug(visual.project_slug, source_run_id, context.run_id)
-            path.write_text(visual.model_dump_json(indent=2), encoding="utf-8")
-            context.add_artifact("visual_composition", path)
-
-    @staticmethod
-    def _review_rules(directive: CreativeDirective) -> list[str]:
-        rules: list[str] = []
-        if directive.overall_direction:
-            rules.append(f"Creative Director direction: {directive.overall_direction}")
-        for item in directive.revise:
-            rules.append(
-                f"Creative review [{item.priority}] route={item.route} section={item.section} "
-                f"owner={item.owner}: {item.instruction}"
+            visual.project_slug = retarget_slug(
+                visual.project_slug,
+                source_run_id,
+                context.run_id,
             )
-        for item in directive.remove:
-            rules.append(f"Creative review REMOVE: {item}")
-        return rules
-
-    def _inject_review_constraints(self, context: RunContext, target: str) -> None:
-        """Make imported review visible to deterministic stages as canonical data.
-
-        AI stages also see the review through context.goal. This mutation is
-        limited to copied artifacts in the new revision run; the source run stays immutable.
-        """
-
-        directive = self.creative_directive
-        if not directive:
-            return
-        rules = self._review_rules(directive)
-
-        raw_contract = context.artifacts.get("design_contract")
-        if raw_contract and target in {
-            "design_system",
-            "implementation_plan",
-            "visual_composition",
-            "implementation",
-        }:
-            path = Path(raw_contract)
-            contract = DesignContract.model_validate_json(path.read_text(encoding="utf-8"))
-            if directive.overall_direction:
-                contract.visual.attributes = list(
-                    dict.fromkeys(contract.visual.attributes + [directive.overall_direction])
-                )
-            contract.visual.layout_rules = list(
-                dict.fromkeys(contract.visual.layout_rules + rules)
-            )
-            path.write_text(contract.model_dump_json(indent=2), encoding="utf-8")
-            context.add_artifact("design_contract", path)
-
-        raw_visual = context.artifacts.get("visual_composition")
-        if raw_visual and target == "implementation":
-            path = Path(raw_visual)
-            visual = VisualComposition.model_validate_json(path.read_text(encoding="utf-8"))
-            visual.composition_principles = list(
-                dict.fromkeys(visual.composition_principles + rules)
-            )
-            for revision in directive.revise:
-                if revision.owner != "implementation":
-                    continue
-                for page in visual.pages:
-                    if revision.route not in {"*", page.path}:
-                        continue
-                    matched = False
-                    for section in page.sections:
-                        if revision.section in {"global", "*", section.type}:
-                            section.notes = list(
-                                dict.fromkeys(
-                                    section.notes
-                                    + [
-                                        "Creative Director implementation directive: "
-                                        + revision.instruction
-                                    ]
-                                )
-                            )
-                            matched = True
-                    if not matched:
-                        page.anti_monotony_rules = list(
-                            dict.fromkeys(
-                                page.anti_monotony_rules
-                                + [
-                                    "Creative Director implementation directive: "
-                                    + revision.instruction
-                                ]
-                            )
-                        )
             path.write_text(visual.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("visual_composition", path)
 
@@ -219,7 +125,8 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             return
 
         missing = [
-            name for name in extras
+            name
+            for name in extras
             if not (self.team_runner.skills_root / name / "SKILL.md").is_file()
         ]
         if missing:
@@ -235,7 +142,13 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         finally:
             mapping[stage] = previous
 
-    async def _run_revision_stage(self, context: RunContext, stage: str, engine: str, provider) -> None:
+    async def _run_revision_stage(
+        self,
+        context: RunContext,
+        stage: str,
+        engine: str,
+        provider,
+    ) -> None:
         with self._creative_stage_skills(stage):
             if stage == "ux_ia":
                 await self._run_ux_ia(context)
@@ -266,7 +179,9 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         engine: str,
     ) -> RunContext:
         if directive.source_run_id != source_run_id:
-            raise ValueError("Creative directive source_run_id does not match the requested source run.")
+            raise ValueError(
+                "Creative directive source_run_id does not match the requested source run."
+            )
         target = directive.earliest_owner()
         if directive.status == "approved" or target is None:
             raise ValueError("Approved creative reviews do not require a revision run.")
@@ -280,14 +195,20 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
 
         source_context_path = source_dir / "design-context.json"
         source_context = (
-            DesignContext.model_validate_json(source_context_path.read_text(encoding="utf-8"))
+            DesignContext.model_validate_json(
+                source_context_path.read_text(encoding="utf-8")
+            )
             if source_context_path.is_file()
             else DesignContext()
         )
-        design_context = self._context_with_review(source_context, directive)
+        design_context = context_with_review(source_context, directive)
         review_goal = source_goal + "\n\n" + directive.as_prompt_block()
 
-        context = RunContext(root=self.root, goal=review_goal, design_context=design_context)
+        context = RunContext(
+            root=self.root,
+            goal=review_goal,
+            design_context=design_context,
+        )
         context.run_id = run_id
         context.initialize()
         self.creative_directive = directive
@@ -301,13 +222,19 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
 
         try:
             context_path = context.run_dir / "design-context.json"
-            context_path.write_text(design_context.model_dump_json(indent=2), encoding="utf-8")
+            context_path.write_text(
+                design_context.model_dump_json(indent=2),
+                encoding="utf-8",
+            )
             context.add_artifact("design_context", context_path)
             self._save_flow_plan(context, engine)
             self._save_governance_snapshot(context)
 
             directive_path = context.run_dir / "creative-directive.json"
-            directive_path.write_text(directive.model_dump_json(indent=2), encoding="utf-8")
+            directive_path.write_text(
+                directive.model_dump_json(indent=2),
+                encoding="utf-8",
+            )
             context.add_artifact("creative_directive", directive_path)
 
             provenance = {
@@ -317,12 +244,16 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
                 "earliest_invalidated_stage": target,
                 "engine": engine,
                 "policy": (
-                    "Preserve accepted upstream evidence; invalidate from the earliest creative-review owner; "
-                    "never mutate the source run; always rerun rendered quality gates."
+                    "Preserve accepted upstream evidence; invalidate from the earliest "
+                    "creative-review owner; never mutate the source run; always rerun "
+                    "rendered quality gates."
                 ),
             }
             provenance_path = context.run_dir / "creative-revision.json"
-            provenance_path.write_text(json.dumps(provenance, indent=2), encoding="utf-8")
+            provenance_path.write_text(
+                json.dumps(provenance, indent=2),
+                encoding="utf-8",
+            )
             context.add_artifact("creative_revision", provenance_path)
 
             canonical_before_target = (
@@ -344,7 +275,7 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
                 self._copy_stage(source_dir, context, stage)
 
             self._retarget_copied_project(context, source_run_id)
-            self._inject_review_constraints(context, target)
+            inject_review_constraints(context, directive, target)
 
             start = self.REVISION_STAGES.index(target)
             for stage in self.REVISION_STAGES[start:]:
