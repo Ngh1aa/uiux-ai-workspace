@@ -100,21 +100,22 @@ class JobStore:
 
     def output_tail(self, job_id: str) -> str:
         path = self.log_path(job_id)
-        if not path.is_file():
-            return ""
-        try:
-            with path.open("rb") as stream:
-                stream.seek(0, os.SEEK_END)
-                size = stream.tell()
-                # UTF-8 can use multiple bytes per character. Reading a bounded
-                # multiple keeps payloads small while avoiding whole-log reads.
-                read_bytes = min(size, self.output_tail_chars * 4)
-                stream.seek(-read_bytes, os.SEEK_END)
-                raw = stream.read()
-            text = raw.decode("utf-8", errors="replace")
-            return text[-self.output_tail_chars :]
-        except OSError:
-            return ""
+        with self._lock:
+            if not path.is_file():
+                return ""
+            try:
+                with path.open("rb") as stream:
+                    stream.seek(0, os.SEEK_END)
+                    size = stream.tell()
+                    # UTF-8 can use multiple bytes per character. Reading a bounded
+                    # multiple keeps payloads small while avoiding whole-log reads.
+                    read_bytes = min(size, self.output_tail_chars * 4)
+                    stream.seek(-read_bytes, os.SEEK_END)
+                    raw = stream.read()
+                text = raw.decode("utf-8", errors="replace")
+                return text[-self.output_tail_chars :]
+            except OSError:
+                return ""
 
     def snapshot(self, job_id: str) -> dict | None:
         payload = self.load(job_id)
