@@ -164,6 +164,13 @@ class GenerateFrontendProjectV2(Action):
             ):
                 return page
 
+        # Fallback for auxiliary routes in non-ecommerce domains (B2B, SaaS, Agency, etc.)
+        if requested in {"/category", "/search", "/cart", "/checkout", "/products", "/services"} and composition.pages:
+            return composition.pages[0]
+
+        if requested == "/" and composition.pages:
+            return composition.pages[0]
+
         available = [
             {
                 "path": page.path,

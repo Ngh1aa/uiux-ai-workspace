@@ -620,6 +620,55 @@ class Handler(
             )
             return
 
+        if parsed.path in {"/inspiration", "/api/inspiration"}:
+            self.send_json(
+                {
+                    "patterns": [
+                        {
+                            "id": "bento-grid",
+                            "name": "Bento Grid Showcase",
+                            "category": "Layout & Composition",
+                            "description": "Linear / Apple-style asymmetric modular tiles with rounded borders and subtle glows.",
+                            "keywords": ["bento", "card grid", "modular", "feature showcase"],
+                            "preview_accent": "#6366f1"
+                        },
+                        {
+                            "id": "aurora-gradient",
+                            "name": "Aurora & Mesh Glow",
+                            "category": "Visual Craft",
+                            "description": "Deep obsidian canvas blended with organic, diffuse color meshes (violet, cyan, amber).",
+                            "keywords": ["mesh gradient", "glow", "dark luxury", "fintech"],
+                            "preview_accent": "#ec4899"
+                        },
+                        {
+                            "id": "glassmorphism",
+                            "name": "Frosted Glass & Depth",
+                            "category": "Surface & Depth",
+                            "description": "Layered cards with backdrop-blur, semi-transparent borders, and multi-elevation soft shadows.",
+                            "keywords": ["glassmorphism", "backdrop-blur", "translucent", "depth"],
+                            "preview_accent": "#06b6d4"
+                        },
+                        {
+                            "id": "micro-motion",
+                            "name": "Signature Micro-Interactions",
+                            "category": "Motion & Delight",
+                            "description": "Magnetic buttons, pill badges with hover shine, fluid accordion toggles, and state transitions.",
+                            "keywords": ["microinteractions", "smooth transitions", "hover shine", "interactive"],
+                            "preview_accent": "#10b981"
+                        },
+                        {
+                            "id": "fluid-typography",
+                            "name": "Editorial Fluid Typography",
+                            "category": "Typography",
+                            "description": "Dynamic clamp-scaled titles paired with clean high-contrast sans-serif body fonts.",
+                            "keywords": ["fluid typography", "clamp()", "editorial hierarchy", "contrast"],
+                            "preview_accent": "#f59e0b"
+                        }
+                    ]
+                }
+            )
+            return
+
         if parsed.path.startswith(
             "/jobs/"
         ):
@@ -627,7 +676,12 @@ class Handler(
             artifact_match = re.fullmatch(r"/jobs/([a-f0-9]{12})/artifacts/(.+)", parsed.path)
             if artifact_match:
                 job_id, filename = artifact_match.groups()
-                if filename not in {"design-system.json", "reference-dna.json", "DESIGN.md", "tokens.css", "quality-loop.json", "browser-report.json"} and not re.fullmatch(r"references/reference-[a-f0-9]{12}-(desktop|mobile)\.png", filename):
+                allowed_artifacts = {
+                    "design-system.json", "reference-dna.json", "DESIGN.md",
+                    "tokens.css", "quality-loop.json", "browser-report.json",
+                    "art-direction.md", "ux-ia.md", "research.md", "audit-report.md"
+                }
+                if filename not in allowed_artifacts and not re.fullmatch(r"references/reference-[a-f0-9]{12}-(desktop|mobile)\.png", filename):
                     self.send_json({"error": "Unknown artifact"}, status=404)
                     return
                 run_root = (RUNS / job_id).resolve()
@@ -680,8 +734,18 @@ class Handler(
             summary = read_run_summary(RUNS / job_id)
             payload["active_stage"] = summary.get("active_stage")
             payload["completed_stages"] = summary.get("completed_stages", [])
-            payload["artifacts"] = [Path(path).name for name, path in summary.get("artifacts", {}).items()
-                                    if name in {"design_system", "reference_analysis"}]
+            run_artifacts = []
+            for name, path in summary.get("artifacts", {}).items():
+                if path:
+                    artifact_path = Path(path)
+                    if artifact_path.name not in run_artifacts:
+                        run_artifacts.append(artifact_path.name)
+            # Also check run_root for any known deliverables
+            run_root = (RUNS / job_id).resolve()
+            for known in ["DESIGN.md", "tokens.css", "design-system.json", "art-direction.md", "ux-ia.md", "browser-report.json"]:
+                if (run_root / known).is_file() and known not in run_artifacts:
+                    run_artifacts.append(known)
+            payload["artifacts"] = run_artifacts
 
             self.send_json(
                 payload

@@ -5,7 +5,9 @@ Honor supplied brand tokens, selected direction, content and business goals firs
 Give each page a clear task, a primary action and a deliberate visual hierarchy.
 Choose composition, typography and imagery for that task. Explain decisions briefly.
 Vary section rhythm with content. Avoid repeating identical cards across every section.
-Use gradients, bento layouts or glass only when supported by the brief; never as defaults.
+Elevate visual craft with intentional modern patterns: Bento layouts for feature grids, subtle glassmorphism, mesh/aurora gradient accents, and thoughtful micro-interactions.
+Implement fluid typography with clamp() and harmonious spacing tokens for responsive elegance.
+Ensure high polish: smooth hover states, deliberate transitions, state feedback, and dark-mode-ready color systems.
 Preserve semantic HTML, keyboard focus, readable contrast and reduced-motion behavior.
 Use real supplied evidence; do not invent trust metrics, endorsements or financial claims.
 Mark product functions requiring a backend as unavailable; never simulate successful payment.
@@ -18,4 +20,6 @@ POLICY_SOURCES = [
     "https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md",
     "skills_UIUX/design-system-and-components/SKILL.md",
     "skills_UIUX/ui-craft-and-visual-qa/SKILL.md",
+    "skills_UIUX/motion-and-microinteractions/SKILL.md",
+    "skills_UIUX/ux-laws-and-heuristics/SKILL.md",
 ]

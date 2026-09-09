@@ -13,6 +13,7 @@
       ["project-context/SKILL.md", "Giữ sự thật và ràng buộc của dự án"],
       ["product-discovery/SKILL.md", "Xác định đối tượng, vấn đề, JTBD, phạm vi"],
       ["design-reference-research-and-benchmark/SKILL.md", "Nghiên cứu reference có bằng chứng"],
+      ["ux-benchmarking-and-metrics/SKILL.md", "Benchmarking đối thủ & tiêu chuẩn thiết kế"],
     ],
     ux_ia: [
       ["ux-research-and-journey/SKILL.md", "Nền tảng journey & task analysis"],
@@ -25,6 +26,8 @@
       ["visual-taste-calibration/SKILL.md", "Chống generic/template"],
       ["brand-guidelines/SKILL.md", "Dịch brand truth thành quy tắc thị giác"],
       ["asset-media-and-art-direction/SKILL.md", "Định hướng media/ảnh/icon"],
+      ["motion-and-microinteractions/SKILL.md", "Ngôn ngữ chuyển động & micro-interactions"],
+      ["experience-principles-and-signature-moments/SKILL.md", "Khoảnh khắc tạo ấn tượng thị giác"],
     ],
     design_contract: [
       ["project-context/SKILL.md", "Giữ truth trong canonical contract"],
@@ -36,6 +39,8 @@
       ["brand-guidelines/SKILL.md", "Token gắn với brand truth"],
       ["responsive-and-device-strategy/SKILL.md", "Quy tắc responsive"],
       ["accessibility/SKILL.md", "Accessibility trong component contract"],
+      ["component-driven-development/SKILL.md", "Kiến trúc component module"],
+      ["design-system-governance-and-adoption/SKILL.md", "Quy chuẩn token & consistency"],
     ],
     implementation_plan: [
       ["frontend-architecture-and-refactoring/SKILL.md", "Quy hoạch ranh giới frontend"],
@@ -47,6 +52,8 @@
       ["visual-taste-calibration/SKILL.md", "Chống generic/interchangeable"],
       ["responsive-and-device-strategy/SKILL.md", "Mobile/tablet transformation"],
       ["asset-media-and-art-direction/SKILL.md", "Anchor thị giác cho trang"],
+      ["trust-credibility-and-transparency/SKILL.md", "Bằng chứng & tín hiệu tin cậy"],
+      ["ux-laws-and-heuristics/SKILL.md", "Luật UX (Fitts, Hick, Miller, Jakob)"],
     ],
     implementation: [
       ["frontend-implementation/SKILL.md", "Semantic + verify"],
@@ -54,12 +61,15 @@
       ["design-system-and-components/SKILL.md", "Dùng token canonical"],
       ["responsive-and-device-strategy/SKILL.md", "Responsive tường minh"],
       ["accessibility/SKILL.md", "Semantic/focus/keyboard baseline"],
+      ["motion-and-microinteractions/SKILL.md", "Animation mượt & hover feedback"],
+      ["state-feedback-and-error-recovery/SKILL.md", "Phản hồi trạng thái (loading/empty/error)"],
     ],
     browser_qa: [
       ["testing-strategy/SKILL.md", "Risk-based verification"],
       ["ui-craft-and-visual-qa/SKILL.md", "QA render thật, không tin build"],
       ["accessibility/SKILL.md", "Accessibility baseline"],
       ["visual-regression-and-design-drift/SKILL.md", "Screenshot = bằng chứng"],
+      ["web-quality-and-performance/SKILL.md", "Hiệu năng web & visual polish"],
     ],
     visual_qa: [
       ["ui-craft-and-visual-qa/SKILL.md", "Đánh giá craft render"],

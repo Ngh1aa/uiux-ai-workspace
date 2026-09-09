@@ -81,7 +81,7 @@ def validate_bundle(raw: str, brief: DesignBrief) -> FileBundle:
     allowed = pages | {"styles.css", "app.js"}
     if set(bundle.files) - allowed or not pages.issubset(bundle.files) or "styles.css" not in bundle.files:
         raise ValueError("Generated files do not match the approved route plan")
-    if sum(len(value) for value in bundle.files.values()) > 400_000:
+    if sum(len(value) for value in bundle.files.values()) > 600_000:
         raise ValueError("Generated file bundle exceeds 400 KB")
     for path in pages:
         document = HTMLContract()
@@ -130,4 +130,17 @@ The host inserts relative links to styles.css and authoritative tokens.css for e
 CSS must use var(--color-brand-primary), :focus-visible and responsive @media rules.
 Do not redefine tokens, use @import, conceal overflow globally or invent backend success states.
 Use supplied brand fonts, colors and constraints. CSS artwork is acceptable if the brief needs it.
+
+DESIGN QUALITY REQUIREMENTS (mandatory):
+- Use fluid typography with clamp() for h1-h6 and body text.
+- Add smooth CSS transitions on interactive elements (buttons, cards, links): transform, opacity, box-shadow.
+- Use subtle hover effects: scale(1.02), translateY(-2px), shadow elevation changes.
+- Implement scroll-margin-top for anchor navigation.
+- Use modern CSS: gap in flex/grid, aspect-ratio for media, backdrop-filter for glass effects where appropriate.
+- Create visual hierarchy with spacing rhythm (consistent vertical rhythm using multiples of 8px).
+- Add :focus-visible outlines that match the brand color scheme.
+- Use CSS custom properties for all repeated values (spacing, shadows, radii).
+- Include at least one CSS animation (@keyframes) for hero or key section entrance.
+- Cards and elevated surfaces should have subtle borders + shadows, not flat colors.
+- Navigation should have backdrop-filter blur when sticky/fixed.
 """.strip()

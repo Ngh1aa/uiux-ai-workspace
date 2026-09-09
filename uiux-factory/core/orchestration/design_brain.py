@@ -38,7 +38,7 @@ class DesignBrain:
         self.context = context
         self.provider = provider
         self.team = team_runner
-        self.compiler = SkillInstructionCompiler(team_runner.skills_root, max_chars_per_skill=1800, max_total_chars=6500)
+        self.compiler = SkillInstructionCompiler(team_runner.skills_root, max_chars_per_skill=3000, max_total_chars=12000)
 
     def save(self, name: str, filename: str, content: str) -> Path:
         path = self.context.run_dir / filename
@@ -55,7 +55,7 @@ class DesignBrain:
         self.team.event_bus(self.context).emit("agent.started", stage=stage, agent="DesignBrain", data={"engine": "cloud", "skill_count": len(skills.sources)})
         try:
             result = await self.provider.complete(stage, FRONTEND_DESIGN_POLICY + "\n" + task,
-                prompt + "\n\nSelected skill guidance:\n" + skills.compiled_instruction[:6500], json_mode=json_mode)
+                prompt + "\n\nSelected skill guidance:\n" + skills.compiled_instruction[:12000], json_mode=json_mode)
         finally:
             self.save("provider_usage", "provider-usage.json", json.dumps(self.provider.history, indent=2))
         if stage in {"research", "art_direction"}:
@@ -72,7 +72,7 @@ class DesignBrain:
         input_data = {"brief": self.context.goal, "guideline": self.context.design_context.guideline,
                       "design_document": document, "references": references}
         inputs = json.dumps(input_data, ensure_ascii=False)
-        research = await self.ask("research", "Analyze only the supplied brief and measured reference data. List facts, inferences, unknowns, audience tasks and UX opportunities. No browsing claims or invented competitors. Keep under 500 words.", inputs)
+        research = await self.ask("research", "Analyze only the supplied brief and measured reference data. List facts, inferences, unknowns, audience tasks and UX opportunities. Include modern design inspiration: identify opportunities for micro-animations, glassmorphism, bento grid layouts, mesh gradients, or scroll-triggered effects that match the brand personality. No browsing claims or invented competitors. Keep under 600 words.", inputs)
         self.save("research", "research.md", research)
         inputs += "\nEvidence-based UX notes:\n" + research[:4000]
         task = ('Return only JSON with direction (string), pages (1-6 objects with path, title, purpose, sections array), '
@@ -90,7 +90,7 @@ class DesignBrain:
         export_design_package(self.context.run_dir, system, ReferenceBoard.model_validate(board), self.context.goal)
         input_data["design_document"] = Path(self.context.artifacts["design_document"]).read_text(encoding="utf-8")
         inputs = json.dumps(input_data, ensure_ascii=False) + "\nEvidence-based UX notes:\n" + research[:4000]
-        art = await self.ask("art_direction", "Write a concise implementable visual direction: hierarchy, type, spacing, composition, responsive and motion. No invented evidence.",
+        art = await self.ask("art_direction", "Write a concise implementable visual direction: hierarchy, type scale (clamp-based fluid), spacing rhythm, composition (consider bento grid, card-based, or magazine layouts), responsive breakpoints, motion (micro-interactions, smooth transitions, scroll-triggered reveals), and premium visual effects (glassmorphism, mesh gradients, luminous accents). Prioritize distinctive, non-generic aesthetics. No invented evidence.",
                              inputs + "\n" + brief.model_dump_json())
         self.save("art_direction", "art-direction.md", art)
         prompt = inputs + "\nPlan:\n" + brief.model_dump_json() + "\nArt direction:\n" + art[:4500]

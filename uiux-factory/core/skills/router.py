@@ -27,6 +27,7 @@ class AdaptiveSkillRouter:
                 "design-reference-research-and-benchmark/SKILL.md",
                 "Research relevant references without confusing popularity with evidence.",
             ),
+            RoutedSkill("ux-benchmarking-and-metrics/SKILL.md", "Establish measurable UX quality baselines."),
         ),
         "ux_ia": (
             RoutedSkill("ux-research-and-journey/SKILL.md", "Ground journeys and task analysis."),
@@ -39,6 +40,8 @@ class AdaptiveSkillRouter:
             RoutedSkill("visual-taste-calibration/SKILL.md", "Prevent generic/template-like visual output."),
             RoutedSkill("brand-guidelines/SKILL.md", "Translate brand truth into visual rules."),
             RoutedSkill("asset-media-and-art-direction/SKILL.md", "Define media/image/icon direction."),
+            RoutedSkill("motion-and-microinteractions/SKILL.md", "Define motion language, easing curves and micro-interactions."),
+            RoutedSkill("experience-principles-and-signature-moments/SKILL.md", "Define signature design moments that make the product memorable."),
         ),
         "design_contract": (
             RoutedSkill("project-context/SKILL.md", "Preserve project truth in the canonical contract."),
@@ -50,6 +53,7 @@ class AdaptiveSkillRouter:
             RoutedSkill("brand-guidelines/SKILL.md", "Keep tokens connected to brand truth."),
             RoutedSkill("responsive-and-device-strategy/SKILL.md", "Make device behavior part of the system."),
             RoutedSkill("accessibility/SKILL.md", "Make accessibility part of component contracts."),
+            RoutedSkill("component-driven-development/SKILL.md", "Structure components for composition and reuse."),
         ),
         "implementation_plan": (
             RoutedSkill("frontend-architecture-and-refactoring/SKILL.md", "Plan maintainable frontend ownership/boundaries."),
@@ -61,6 +65,8 @@ class AdaptiveSkillRouter:
             RoutedSkill("visual-taste-calibration/SKILL.md", "Check distinctiveness and anti-template quality."),
             RoutedSkill("responsive-and-device-strategy/SKILL.md", "Define mobile/tablet transformations."),
             RoutedSkill("asset-media-and-art-direction/SKILL.md", "Define page visual anchors/media role."),
+            RoutedSkill("trust-credibility-and-transparency/SKILL.md", "Ensure trust signals and credibility are designed into composition."),
+            RoutedSkill("ux-laws-and-heuristics/SKILL.md", "Apply proven UX laws to layout and interaction design."),
         ),
         "implementation": (
             RoutedSkill("frontend-implementation/SKILL.md", "Own semantic implementation and verification."),
@@ -68,12 +74,15 @@ class AdaptiveSkillRouter:
             RoutedSkill("design-system-and-components/SKILL.md", "Consume canonical tokens/components."),
             RoutedSkill("responsive-and-device-strategy/SKILL.md", "Implement explicit responsive behavior."),
             RoutedSkill("accessibility/SKILL.md", "Implement semantic/focus/keyboard baseline."),
+            RoutedSkill("motion-and-microinteractions/SKILL.md", "Implement CSS transitions, keyframes and scroll-triggered animations."),
+            RoutedSkill("state-feedback-and-error-recovery/SKILL.md", "Implement loading, empty, error and success states."),
         ),
         "browser_qa": (
             RoutedSkill("testing-strategy/SKILL.md", "Drive risk-based verification."),
             RoutedSkill("ui-craft-and-visual-qa/SKILL.md", "Inspect rendered UI rather than trusting build success."),
             RoutedSkill("accessibility/SKILL.md", "Verify semantic/focus accessibility baseline."),
             RoutedSkill("visual-regression-and-design-drift/SKILL.md", "Treat screenshots as regression evidence."),
+            RoutedSkill("web-quality-and-performance/SKILL.md", "Check Core Web Vitals and rendering performance."),
         ),
         "visual_qa": (
             RoutedSkill("ui-craft-and-visual-qa/SKILL.md", "Judge rendered craft and responsive quality."),

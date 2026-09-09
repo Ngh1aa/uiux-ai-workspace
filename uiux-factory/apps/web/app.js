@@ -1,29 +1,32 @@
 /* ============================================================
-   app.js — UIUX Factory Workbench Console (client)
-   - Auto-save drafts
-   - Live smart routing (theo dõi prompt → kế hoạch 10 bước)
-   - Submit → POST /run | /intelligence
-   - Poll job + render stages, logs, artifacts, preview
+   app.js — UIUX Factory Workbench Console 2.0 (Client Studio)
+   - Dark/Light theme switching & persistence
+   - Trending Web Inspiration patterns loader
+   - Live smart routing (mirrors router.py with 37+ skills)
+   - Auto-save drafts (localStorage)
+   - Pipeline job runner & real-time stage progress
+   - Device frame switcher (Desktop, Tablet, Mobile)
+   - Inline modal artifact viewer (Markdown, CSS, JSON)
    ============================================================ */
 
 (() => {
   "use strict";
 
-  // Mặc định dùng relative /api/ để qua console proxy → không cần CORS.
-  // Đặt window.UIUX_BRIDGE_URL = "http://127.0.0.1:8788" nếu muốn gọi thẳng bridge.
   function detectApiBase() {
     if (window.UIUX_BRIDGE_URL) return window.UIUX_BRIDGE_URL.replace(/\/$/, "") + "/api";
-    // Nếu đang chạy qua console (cùng origin), dùng relative path
     if (location.protocol === "http:" || location.protocol === "https:") {
       return "/api";
     }
     return "http://127.0.0.1:8788/api";
   }
+
   const BRIDGE = detectApiBase();
-  const DRAFT_KEY = "uiux-console-draft-v1";
-  const JOB_HISTORY_KEY = "uiux-console-jobs-v1";
+  const DRAFT_KEY = "uiux-console-draft-v2";
+  const JOB_HISTORY_KEY = "uiux-console-jobs-v2";
+  const THEME_KEY = "uiux-studio-theme";
 
   const els = {
+    themeToggle: document.getElementById("theme-toggle"),
     form: document.getElementById("prompt-form"),
     prompt: document.getElementById("prompt"),
     counter: document.getElementById("prompt-counter"),
@@ -50,6 +53,7 @@
     jobPrompt: document.getElementById("job-prompt"),
     jobStatus: document.getElementById("job-status-badge"),
     stageTimeline: document.getElementById("stage-timeline"),
+    progressFill: document.getElementById("pipeline-progress-fill"),
     artifacts: document.getElementById("artifacts"),
     artifactList: document.getElementById("artifact-list"),
     logsWrap: document.getElementById("logs-wrap"),
@@ -57,15 +61,103 @@
     previewWrap: document.getElementById("preview-wrap"),
     previewLink: document.getElementById("preview-link"),
     previewFrame: document.getElementById("preview-frame"),
+    previewContainer: document.getElementById("preview-container"),
+    chromeUrl: document.getElementById("chrome-url"),
     refreshPreview: document.getElementById("refresh-preview-btn"),
     brandName: document.getElementById("brand-name"),
     brandPersonality: document.getElementById("brand-personality"),
     brandAvoid: document.getElementById("brand-avoid"),
     tokensJson: document.getElementById("tokens-json"),
+    inspirePills: document.querySelectorAll(".inspire-pill"),
+    deviceBtns: document.querySelectorAll(".device-btn"),
+    artifactModal: document.getElementById("artifact-modal"),
+    modalFilename: document.getElementById("modal-filename"),
+    modalContent: document.getElementById("modal-content"),
+    modalOpenRaw: document.getElementById("modal-open-raw"),
+    modalCloseBtn: document.getElementById("modal-close-btn"),
   };
 
   // -----------------------------------------------------------
-  // Draft + job history (localStorage)
+  // Theme Management (Dark / Light)
+  // -----------------------------------------------------------
+  function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY) || "dark";
+    document.documentElement.setAttribute("data-theme", saved);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") || "dark";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem(THEME_KEY, next); } catch {}
+  }
+
+  if (els.themeToggle) {
+    els.themeToggle.addEventListener("click", toggleTheme);
+  }
+  initTheme();
+
+  // -----------------------------------------------------------
+  // Device Frame Viewport Switcher
+  // -----------------------------------------------------------
+  if (els.deviceBtns) {
+    els.deviceBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const vp = btn.dataset.viewport;
+        els.deviceBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (els.previewContainer) {
+          els.previewContainer.setAttribute("data-viewport", vp);
+        }
+      });
+    });
+  }
+
+  // -----------------------------------------------------------
+  // Trending Inspiration Patterns
+  // -----------------------------------------------------------
+  async function loadInspirationPatterns() {
+    try {
+      const res = await fetch(`${BRIDGE}/inspiration`, { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.patterns && data.patterns.length) {
+        const container = document.getElementById("inspiration-pills");
+        if (container) {
+          container.innerHTML = data.patterns.map(p => `
+            <button type="button" class="inspire-pill" data-pattern="${escapeHtml(p.id)}" data-tags="${escapeHtml(p.description)}">
+              <span class="pill-dot" style="background:${p.preview_accent || 'var(--accent)'};"></span>
+              <strong>${escapeHtml(p.name)}</strong> · ${escapeHtml(p.category)}
+            </button>
+          `).join("");
+          bindInspirationClicks();
+        }
+      }
+    } catch {}
+  }
+
+  function bindInspirationClicks() {
+    document.querySelectorAll(".inspire-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        const tags = pill.dataset.tags || "";
+        const name = pill.querySelector("strong")?.textContent || "";
+        const cur = els.prompt.value.trim();
+        const addition = `Áp dụng phong cách ${name} (${tags}).`;
+        if (!cur.includes(name)) {
+          els.prompt.value = cur ? `${cur}\n\n${addition}` : addition;
+          updateCounter();
+          updateSmartPreview();
+          saveDraft();
+          els.prompt.focus();
+        }
+      });
+    });
+  }
+  bindInspirationClicks();
+  loadInspirationPatterns();
+
+  // -----------------------------------------------------------
+  // Draft & Form Autosave
   // -----------------------------------------------------------
   function loadDraft() {
     try {
@@ -79,10 +171,10 @@
     try {
       const draft = {
         prompt: els.prompt.value,
-        brandName: els.brandName.value,
-        brandPersonality: els.brandPersonality.value,
-        brandAvoid: els.brandAvoid.value,
-        tokensJson: els.tokensJson.value,
+        brandName: els.brandName?.value || "",
+        brandPersonality: els.brandPersonality?.value || "",
+        brandAvoid: els.brandAvoid?.value || "",
+        tokensJson: els.tokensJson?.value || "",
         refUrls: Array.from(document.querySelectorAll(".ref-row input")).map(i => i.value),
         savedAt: Date.now(),
       };
@@ -93,11 +185,11 @@
   function applyDraft() {
     const d = loadDraft();
     if (!d || Object.keys(d).length === 0) return;
-    els.prompt.value = d.prompt || "";
-    els.brandName.value = d.brandName || "";
-    els.brandPersonality.value = d.brandPersonality || "";
-    els.brandAvoid.value = d.brandAvoid || "";
-    els.tokensJson.value = d.tokensJson || "";
+    if (els.prompt) els.prompt.value = d.prompt || "";
+    if (els.brandName) els.brandName.value = d.brandName || "";
+    if (els.brandPersonality) els.brandPersonality.value = d.brandPersonality || "";
+    if (els.brandAvoid) els.brandAvoid.value = d.brandAvoid || "";
+    if (els.tokensJson) els.tokensJson.value = d.tokensJson || "";
     (d.refUrls || []).forEach(u => addRefRow(u));
     updateCounter();
   }
@@ -108,41 +200,45 @@
       const item = { id: jobId, status, at: Date.now() };
       const idx = list.findIndex(j => j.id === jobId);
       if (idx >= 0) list[idx] = item; else list.unshift(item);
-      localStorage.setItem(JOB_HISTORY_KEY, JSON.stringify(list.slice(0, 10)));
+      localStorage.setItem(JOB_HISTORY_KEY, JSON.stringify(list.slice(0, 15)));
     } catch {}
   }
 
   // -----------------------------------------------------------
-  // Smart routing preview (live)
+  // Smart Routing Live Preview
   // -----------------------------------------------------------
   function updateSmartPreview() {
-    const goal = els.prompt.value.trim();
+    const goal = (els.prompt ? els.prompt.value : "").trim();
     if (!goal) {
       els.smartDomain.textContent = "—";
-      els.smartDomainReason.textContent = "Đợi prompt…";
+      els.smartDomainReason.textContent = "Nhập prompt để suy luận…";
       els.smartClarity.textContent = "—";
       els.smartClarityTips.textContent = "Đợi prompt…";
       els.smartSkillCount.textContent = "—";
-      els.smartSkillMeta.textContent = "Đợi prompt…";
-      els.stagePlan.innerHTML = '<li class="muted">Đợi prompt để hệ thống lên kế hoạch…</li>';
+      els.smartSkillMeta.textContent = "37+ skills sẵn sàng trong hệ thống";
+      els.stagePlan.innerHTML = '<li class="muted">Nhập brief để hệ thống lập kế hoạch quy trình…</li>';
       return;
     }
+
     const plan = UiuxRouter.plan(goal);
     const domainLabel = {
-      ecommerce: "Ecommerce",
+      ecommerce: "Ecommerce / Bán lẻ",
       corporate: "Corporate / B2B",
-      education: "Education",
-      agency: "Agency / Studio",
+      education: "Education / Học viện",
+      agency: "Agency / Studio Sáng tạo",
     }[plan.domain] || plan.domain;
+
     els.smartDomain.textContent = domainLabel;
     els.smartDomainReason.textContent = plan.domainScore
-      ? `Phát hiện ${plan.domainScore} tín hiệu ngành trong prompt`
-      : "Không phát hiện tín hiệu rõ — mặc định corporate";
+      ? `Phát hiện ${plan.domainScore} tín hiệu ngành chuyên biệt`
+      : "Mặc định chuẩn Corporate / B2B hiện đại";
+
     els.smartClarity.textContent = `${plan.clarity} / 6`;
     const tips = UiuxRouter.clarityTips(goal);
     els.smartClarityTips.innerHTML = tips.map(t => `• ${escapeHtml(t)}`).join("<br/>");
     els.smartSkillCount.textContent = `${plan.totalSkills}`;
-    els.smartSkillMeta.textContent = `trong ${plan.stages.length} bước · ${plan.domainSkills.length} skill domain`;
+    els.smartSkillMeta.textContent = `trong 10 bước · ${plan.domainSkills.length} skill chuyên biệt ngành`;
+
     els.stagePlan.innerHTML = plan.stages.map(s => {
       const lbl = UiuxRouter.stageLabel(s.stage);
       const skillsText = s.skills.map(k => k.path.replace("/SKILL.md", "")).join(", ");
@@ -165,66 +261,78 @@
   }
 
   // -----------------------------------------------------------
-  // Reference URL rows
+  // Reference URL inputs
   // -----------------------------------------------------------
   function addRefRow(value = "") {
+    if (!els.refUrls) return;
     const row = document.createElement("div");
     row.className = "ref-row";
     const input = document.createElement("input");
     input.type = "url";
-    input.placeholder = "https://example.com";
+    input.placeholder = "https://dribbble.com/shots/... hoặc https://site.com";
     input.value = value;
     input.addEventListener("input", saveDraft);
     const btn = document.createElement("button");
     btn.type = "button";
     btn.textContent = "×";
-    btn.title = "Xoá";
+    btn.title = "Xoá URL";
     btn.addEventListener("click", () => { row.remove(); saveDraft(); });
     row.append(input, btn);
     els.refUrls.appendChild(row);
   }
 
-  els.addRef.addEventListener("click", () => { addRefRow(); saveDraft(); });
+  if (els.addRef) {
+    els.addRef.addEventListener("click", () => { addRefRow(); saveDraft(); });
+  }
 
   // -----------------------------------------------------------
-  // Counter + autosave
+  // Inputs & Counter
   // -----------------------------------------------------------
   function updateCounter() {
+    if (!els.prompt || !els.counter) return;
     const len = els.prompt.value.length;
     els.counter.textContent = `${len.toLocaleString("vi-VN")} ký tự`;
   }
-  els.prompt.addEventListener("input", () => {
-    updateCounter();
-    updateSmartPreview();
-    saveDraft();
-  });
-  els.clearBtn.addEventListener("click", () => {
-    if (!confirm("Xoá toàn bộ bản nháp và form?")) return;
-    els.prompt.value = "";
-    els.brandName.value = "";
-    els.brandPersonality.value = "";
-    els.brandAvoid.value = "";
-    els.tokensJson.value = "";
-    els.refUrls.innerHTML = "";
-    localStorage.removeItem(DRAFT_KEY);
-    updateCounter();
-    updateSmartPreview();
-  });
 
-  ["brandName","brandPersonality","brandAvoid","tokensJson"].forEach(k => {
+  if (els.prompt) {
+    els.prompt.addEventListener("input", () => {
+      updateCounter();
+      updateSmartPreview();
+      saveDraft();
+    });
+  }
+
+  if (els.clearBtn) {
+    els.clearBtn.addEventListener("click", () => {
+      if (!confirm("Xoá toàn bộ nội dung đã nhập?")) return;
+      els.prompt.value = "";
+      if (els.brandName) els.brandName.value = "";
+      if (els.brandPersonality) els.brandPersonality.value = "";
+      if (els.brandAvoid) els.brandAvoid.value = "";
+      if (els.tokensJson) els.tokensJson.value = "";
+      if (els.refUrls) els.refUrls.innerHTML = "";
+      localStorage.removeItem(DRAFT_KEY);
+      updateCounter();
+      updateSmartPreview();
+    });
+  }
+
+  ["brandName", "brandPersonality", "brandAvoid", "tokensJson"].forEach(k => {
     els[k]?.addEventListener?.("input", saveDraft);
   });
 
-  els.chips.forEach(c => c.addEventListener("click", () => {
-    els.prompt.value = c.dataset.prompt || "";
-    updateCounter();
-    updateSmartPreview();
-    saveDraft();
-    els.prompt.focus();
-  }));
+  if (els.chips) {
+    els.chips.forEach(c => c.addEventListener("click", () => {
+      els.prompt.value = c.dataset.prompt || "";
+      updateCounter();
+      updateSmartPreview();
+      saveDraft();
+      els.prompt.focus();
+    }));
+  }
 
   // -----------------------------------------------------------
-  // Bridge health
+  // Bridge Health
   // -----------------------------------------------------------
   async function checkHealth() {
     try {
@@ -236,41 +344,42 @@
       els.bridgeStatus.querySelector(".status-text").textContent =
         `Bridge sẵn sàng · ${data.python ? "Python OK" : "OK"}`;
       els.bridgeInfo.textContent = new URL(BRIDGE, location.origin).host;
-      const radios = document.querySelectorAll('input[name="engine"]');
+
+      const aiRadio = document.querySelector('input[name="engine"][value="ai"]');
+      const wrap = document.getElementById("ai-radio-wrap");
       if (!aiOk) {
-        const aiRadio = document.querySelector('input[name="engine"][value="ai"]');
-        const wrap = document.getElementById("ai-radio-wrap");
-        aiRadio.disabled = true;
-        wrap.classList.add("disabled");
-        els.aiStatus.textContent = "Chưa cấu hình Groq/Gemini trong .env.local — chỉ dùng engine template.";
+        if (aiRadio) aiRadio.disabled = true;
+        if (wrap) wrap.classList.add("disabled");
+        if (els.aiStatus) els.aiStatus.innerHTML = "Chưa cấu hình API Key trong <code>.env.local</code> — sử dụng Deterministic Engine.";
       } else {
-        els.aiStatus.textContent = `AI sẵn sàng · ${data.ai.providers.join(", ")}`;
+        if (aiRadio) aiRadio.disabled = false;
+        if (wrap) wrap.classList.remove("disabled");
+        if (els.aiStatus) els.aiStatus.textContent = `AI sẵn sàng · Nhà cung cấp: ${data.ai.providers.join(", ")}`;
       }
     } catch (e) {
       els.bridgeStatus.dataset.state = "bad";
       els.bridgeStatus.querySelector(".status-text").textContent =
-        "Không kết nối được bridge. Hãy chạy apps/bridge/server.py trước.";
-      els.submitBtn.disabled = true;
+        "Không kết nối được bridge (port 8788).";
+      if (els.submitBtn) els.submitBtn.disabled = true;
     }
   }
 
   // -----------------------------------------------------------
-  // Submit → POST /run or /intelligence
+  // Submit Job
   // -----------------------------------------------------------
   function buildDesignContext() {
     const ctx = {};
-    const brandName = els.brandName.value.trim();
+    const brandName = els.brandName?.value?.trim?.();
     if (brandName) ctx.brand_name = brandName;
-    const personality = els.brandPersonality.value.trim();
+    const personality = els.brandPersonality?.value?.trim?.();
     if (personality) {
       ctx.personality = personality.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
     }
-    const avoid = els.brandAvoid.value.trim();
+    const avoid = els.brandAvoid?.value?.trim?.();
     if (avoid) ctx.avoid = avoid.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
-    const tokensRaw = els.tokensJson.value.trim();
+    const tokensRaw = els.tokensJson?.value?.trim?.();
     if (tokensRaw) {
-      try { ctx.tokens = JSON.parse(tokensRaw); }
-      catch { /* ignore — không phải json hợp lệ */ }
+      try { ctx.tokens = JSON.parse(tokensRaw); } catch {}
     }
     const urls = Array.from(document.querySelectorAll(".ref-row input"))
       .map(i => i.value.trim()).filter(Boolean);
@@ -278,82 +387,97 @@
     return ctx;
   }
 
-  els.form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const prompt = els.prompt.value.trim();
-    if (!prompt) { alert("Vui lòng nhập prompt."); els.prompt.focus(); return; }
-    const engine = document.querySelector('input[name="engine"]:checked').value;
-    const mode = "build";
-
-    const designContext = buildDesignContext();
-    const endpoint = mode === "intelligence" ? "/intelligence" : "/run";
-
-    els.submitBtn.disabled = true;
-    els.submitBtn.querySelector(".btn-label").textContent = "Đang khởi tạo job…";
-
-    try {
-      const res = await fetch(`${BRIDGE}${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, engine, design_context: designContext }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-        throw new Error(err.error || `HTTP ${res.status}`);
+  if (els.form) {
+    els.form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const prompt = els.prompt.value.trim();
+      if (!prompt) {
+        alert("Vui lòng nhập mục tiêu dự án.");
+        els.prompt.focus();
+        return;
       }
-      const job = await res.json();
-      openJob(job);
-      appendJobHistory(job.id, "queued");
-    } catch (err) {
-      alert("Không submit được: " + err.message);
-    } finally {
-      els.submitBtn.disabled = false;
-      els.submitBtn.querySelector(".btn-label").textContent = "Chạy pipeline";
-    }
-  });
+      const engine = document.querySelector('input[name="engine"]:checked')?.value || "template";
+      const designContext = buildDesignContext();
+
+      els.submitBtn.disabled = true;
+      els.submitBtn.querySelector(".btn-label").textContent = "Đang khởi động studio…";
+
+      try {
+        const res = await fetch(`${BRIDGE}/run`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt, engine, design_context: designContext }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+          throw new Error(err.error || `HTTP ${res.status}`);
+        }
+        const job = await res.json();
+        openJob(job);
+        appendJobHistory(job.id, "queued");
+      } catch (err) {
+        alert("Không thể chạy job: " + err.message);
+      } finally {
+        els.submitBtn.disabled = false;
+        els.submitBtn.querySelector(".btn-label").textContent = "Bắt đầu Pipeline Thiết kế";
+      }
+    });
+  }
 
   // -----------------------------------------------------------
-  // Job tracker (poll /jobs/<id>)
+  // Job Tracker & Timeline
   // -----------------------------------------------------------
   let pollTimer = null;
   let lastLogTail = "";
   let currentJobId = null;
   let currentProjectSlug = null;
-  let pollDelay = 1500;
+  let pollDelay = 1200;
+
+  const PIPELINE_STAGES = [
+    "research", "ux_ia", "art_direction", "design_contract", "design_system",
+    "implementation_plan", "visual_composition", "implementation", "browser_qa", "visual_qa", "repair"
+  ];
 
   function openJob(job) {
     currentJobId = job.id;
     lastLogTail = "";
-    els.jobEmpty.classList.add("hidden");
-    els.jobCard.classList.remove("hidden");
-    els.jobId.textContent = job.id;
-    els.jobPrompt.textContent = job.prompt;
+    if (els.jobEmpty) els.jobEmpty.classList.add("hidden");
+    if (els.jobCard) els.jobCard.classList.remove("hidden");
+    if (els.jobId) els.jobId.textContent = job.id;
+    if (els.jobPrompt) els.jobPrompt.textContent = job.prompt;
     setJobStatus(job.status);
     renderTimeline([], job.status === "queued" ? null : "research");
-    els.stageTimeline.innerHTML = makeTimelineHtml([], job.status);
-    els.artifacts.setAttribute("hidden", "");
-    els.artifactList.innerHTML = "";
-    els.logsWrap.setAttribute("hidden", "");
-    els.logs.textContent = "";
-    els.previewWrap.setAttribute("hidden", "");
+    updateProgressBar(0);
+    if (els.artifacts) els.artifacts.setAttribute("hidden", "");
+    if (els.artifactList) els.artifactList.innerHTML = "";
+    if (els.logsWrap) els.logsWrap.setAttribute("hidden", "");
+    if (els.logs) els.logs.textContent = "";
+    if (els.previewWrap) els.previewWrap.setAttribute("hidden", "");
     currentProjectSlug = null;
     startPolling();
   }
 
   function setJobStatus(status) {
-    const b = els.jobStatus;
-    b.textContent = status || "queued";
-    b.dataset.status = status || "queued";
+    if (!els.jobStatus) return;
+    const s = status || "queued";
+    els.jobStatus.textContent = s;
+    els.jobStatus.dataset.status = s;
+  }
+
+  function updateProgressBar(percent) {
+    if (els.progressFill) {
+      els.progressFill.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+    }
   }
 
   function makeTimelineHtml(stages, status) {
-    const known = ["research","ux_ia","art_direction","design_contract","design_system","implementation_plan","visual_composition","implementation","browser_qa","visual_qa","repair"];
     const doneSet = new Set((stages || []).filter(s => s !== "repair"));
-    const labels = known.map(k => UiuxRouter.stageLabel(k));
-    let html = "";
-    for (let i = 0; i < known.length; i++) {
-      const k = known[i];
-      const label = labels[i];
+    const totalCount = PIPELINE_STAGES.length - 1; // repair is conditional
+    const progressPercent = Math.round((doneSet.size / totalCount) * 100);
+    updateProgressBar(status === "completed" ? 100 : progressPercent);
+
+    return PIPELINE_STAGES.map((k, i) => {
+      const label = UiuxRouter.stageLabel(k);
       const isDone = doneSet.has(k);
       const isActive = (i === doneSet.size) && status === "running";
       const isFailed = status === "failed" && i === doneSet.size;
@@ -362,17 +486,19 @@
       else if (isDone) { icon = "✓"; state = "done"; }
       else if (isActive) { icon = "◐"; state = "active"; }
       else { icon = "○"; state = "todo"; }
-      html += `<li data-state="${state}">
+
+      return `<li data-state="${state}">
         <span class="icon">${icon}</span>
-        <span class="name">${escapeHtml(k)} — ${escapeHtml(label)}</span>
+        <span class="name"><strong>${escapeHtml(k)}</strong> — ${escapeHtml(label)}</span>
         <span class="meta">${escapeHtml(state)}</span>
       </li>`;
-    }
-    return html;
+    }).join("");
   }
 
   function renderTimeline(stages, status) {
-    els.stageTimeline.innerHTML = makeTimelineHtml(stages, status);
+    if (els.stageTimeline) {
+      els.stageTimeline.innerHTML = makeTimelineHtml(stages, status);
+    }
   }
 
   async function pollOnce() {
@@ -386,15 +512,20 @@
       const job = await res.json();
       setJobStatus(job.status);
       renderTimeline(job.completed_stages || [], job.status);
+
       if (job.output_tail && job.output_tail !== lastLogTail) {
         lastLogTail = job.output_tail;
-        els.logs.textContent = job.output_tail;
-        els.logsWrap.removeAttribute("hidden");
-        els.logs.scrollTop = els.logs.scrollHeight;
+        if (els.logs) {
+          els.logs.textContent = job.output_tail;
+          if (els.logsWrap) els.logsWrap.removeAttribute("hidden");
+          els.logs.scrollTop = els.logs.scrollHeight;
+        }
       }
+
       if (job.artifacts && job.artifacts.length) {
         renderArtifacts(job.artifacts);
       }
+
       if (job.status === "completed" || job.status === "failed") {
         if (job.project_slug) {
           currentProjectSlug = job.project_slug;
@@ -403,23 +534,24 @@
         appendJobHistory(currentJobId, job.status);
         stopPolling();
         if (job.status === "failed") {
-          els.jobStatus.title = (job.error || "").toString();
-          els.logs.textContent += `\n\n[FAILED]\n${job.error || ""}`;
+          if (els.logs) {
+            els.logs.textContent += `\n\n[JOB FAILED]\n${job.error || "Unknown failure"}`;
+          }
         }
       }
     } catch (err) {
-      console.warn("poll error", err);
+      console.warn("Poll status check:", err);
     }
   }
 
   function renderArtifacts(names) {
+    if (!els.artifacts || !els.artifactList) return;
     els.artifacts.removeAttribute("hidden");
     els.artifactList.innerHTML = names.map(n => {
-      const allowed = ["design-system.json","reference-dna.json","DESIGN.md","tokens.css","quality-loop.json","browser-report.json"];
-      if (!allowed.includes(n) && !/^references\/reference-[a-f0-9]{12}-(desktop|mobile)\.png$/.test(n)) return "";
       const label = n.includes("/") ? n.split("/").pop() : n;
-      return `<button class="artifact-item" data-name="${escapeHtml(n)}">${escapeHtml(label)}</button>`;
+      return `<button type="button" class="artifact-item" data-name="${escapeHtml(n)}">${escapeHtml(label)}</button>`;
     }).join("");
+
     els.artifactList.querySelectorAll(".artifact-item").forEach(btn => {
       btn.addEventListener("click", () => viewArtifact(btn.dataset.name));
     });
@@ -434,40 +566,53 @@
       const ct = res.headers.get("Content-Type") || "";
       if (ct.includes("image/")) {
         window.open(url, "_blank");
-      } else if (name.endsWith(".md")) {
-        const text = await res.text();
-        showArtifactModal(name, text, "markdown");
-      } else if (name.endsWith(".css")) {
-        const text = await res.text();
-        showArtifactModal(name, text, "css");
       } else {
         const text = await res.text();
-        showArtifactModal(name, text, "json");
+        const kind = name.endsWith(".md") ? "markdown" : (name.endsWith(".css") ? "css" : "json");
+        openArtifactModal(name, text, kind, url);
       }
     } catch (err) {
-      alert("Không đọc được artifact: " + err.message);
+      alert("Không tải được artifact: " + err.message);
     }
   }
 
-  function showArtifactModal(name, text, kind) {
-    const win = window.open("", "_blank", "width=900,height=700");
-    if (!win) { alert("Trình duyệt chặn popup — vui lòng cho phép."); return; }
-    const style = `
-      <style>
-        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#fafafa;color:#0a0a0a;}
-        header{padding:14px 20px;border-bottom:1px solid #e5e5e7;background:white;display:flex;justify-content:space-between;align-items:center;}
-        h1{font-size:14px;margin:0;font-family:monospace;color:#71717a;}
-        main{padding:20px;}
-        pre{background:#0a0a0a;color:#e4e4e7;padding:18px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-word;line-height:1.6;}
-        .md{background:white;padding:20px;border:1px solid #e5e5e7;border-radius:8px;font-size:14px;line-height:1.6;}
-        .md h1,.md h2,.md h3{margin-top:1.4em;font-family:inherit;}
-      </style>`;
-    const bodyHtml = kind === "markdown" ? `<div class="md">${mdToHtml(text)}</div>` : `<pre>${escapeHtml(text)}</pre>`;
-    win.document.write(`<!doctype html><html><head><meta charset="utf-8"/><title>${escapeHtml(name)}</title>${style}</head><body><header><h1>${escapeHtml(name)}</h1><a href="${BRIDGE}/jobs/${currentJobId}/artifacts/${name}" target="_blank">Mở gốc ↗</a></header><main>${bodyHtml}</main></body></html>`);
-    win.document.close();
+  // -----------------------------------------------------------
+  // Inline Artifact Viewer Modal
+  // -----------------------------------------------------------
+  function openArtifactModal(filename, text, kind, rawUrl) {
+    if (!els.artifactModal) return;
+    els.modalFilename.textContent = filename;
+    els.modalOpenRaw.href = rawUrl;
+
+    if (kind === "markdown") {
+      els.modalContent.innerHTML = `<div class="md-rendered">${renderMarkdownSimple(text)}</div>`;
+    } else {
+      els.modalContent.innerHTML = `<pre><code>${escapeHtml(text)}</code></pre>`;
+    }
+    els.artifactModal.removeAttribute("hidden");
   }
 
-  function mdToHtml(md) {
+  function closeArtifactModal() {
+    if (els.artifactModal) {
+      els.artifactModal.setAttribute("hidden", "");
+    }
+  }
+
+  if (els.modalCloseBtn) {
+    els.modalCloseBtn.addEventListener("click", closeArtifactModal);
+  }
+  if (els.artifactModal) {
+    els.artifactModal.addEventListener("click", (e) => {
+      if (e.target === els.artifactModal) closeArtifactModal();
+    });
+  }
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && els.artifactModal && !els.artifactModal.hasAttribute("hidden")) {
+      closeArtifactModal();
+    }
+  });
+
+  function renderMarkdownSimple(md) {
     return md
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/^### (.+)$/gm, "<h3>$1</h3>")
@@ -475,49 +620,83 @@
       .replace(/^# (.+)$/gm, "<h1>$1</h1>")
       .replace(/`([^`]+)`/g, "<code>$1</code>")
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
       .replace(/\n\n/g, "</p><p>")
       .replace(/^/, "<p>").replace(/$/, "</p>");
   }
 
+  // -----------------------------------------------------------
+  // Preview
+  // -----------------------------------------------------------
   function renderPreview(slug) {
     if (!slug) return;
     const url = `${BRIDGE}/preview/${slug}/`;
-    els.previewWrap.removeAttribute("hidden");
-    els.previewLink.href = url;
-    els.previewFrame.src = url;
+    if (els.previewWrap) els.previewWrap.removeAttribute("hidden");
+    if (els.previewLink) els.previewLink.href = url;
+    if (els.previewFrame) els.previewFrame.src = url;
+    if (els.chromeUrl) els.chromeUrl.textContent = url;
   }
 
-  els.refreshPreview.addEventListener("click", () => {
-    if (currentProjectSlug) {
-      const url = `${BRIDGE}/preview/${currentProjectSlug}/?t=${Date.now()}`;
-      els.previewFrame.src = url;
-      els.previewLink.href = url;
-    }
-  });
+  if (els.refreshPreview) {
+    els.refreshPreview.addEventListener("click", () => {
+      if (currentProjectSlug) {
+        const url = `${BRIDGE}/preview/${currentProjectSlug}/?t=${Date.now()}`;
+        if (els.previewFrame) els.previewFrame.src = url;
+      }
+    });
+  }
+
+  let isPolling = false;
 
   function startPolling() {
     stopPolling();
-    pollDelay = 1500;
+    pollDelay = 1200;
+    isPolling = true;
     const tick = async () => {
+      if (!isPolling) return;
       await pollOnce();
-      if (currentJobId) {
-        pollDelay = Math.min(pollDelay * 1.2, 6000);
+      if (isPolling && currentJobId) {
+        pollDelay = Math.min(pollDelay * 1.15, 5000);
         pollTimer = setTimeout(tick, pollDelay);
       }
     };
-    pollTimer = setTimeout(tick, 200);
+    pollTimer = setTimeout(tick, 100);
   }
+
   function stopPolling() {
+    isPolling = false;
     if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
   }
 
   // -----------------------------------------------------------
-  // Init
+  // Auto-resume Latest Job
+  // -----------------------------------------------------------
+  async function loadLatestJob() {
+    try {
+      const res = await fetch(`${BRIDGE}/latest`, { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.run_id) {
+        const job = {
+          id: data.run_id,
+          status: data.run.status || "queued",
+          prompt: data.run.goal || "",
+        };
+        openJob(job);
+      }
+    } catch (err) {
+      console.warn("Failed to load latest job:", err);
+    }
+  }
+
+  // -----------------------------------------------------------
+  // Initialization
   // -----------------------------------------------------------
   applyDraft();
   updateCounter();
   updateSmartPreview();
   checkHealth();
-  setInterval(checkHealth, 30000);
+  setInterval(checkHealth, 25000);
+  loadLatestJob();
 
 })();

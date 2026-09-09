@@ -17,15 +17,15 @@ class SkillInstructionCompiler:
     """Compile exact local SKILL.md sources into one stage context."""
 
     STAGE_FOCUS: dict[str, tuple[str, ...]] = {
-        "research": ("research", "evidence", "source", "benchmark", "discovery", "unknown"),
+        "research": ("research", "evidence", "source", "benchmark", "discovery", "unknown", "metric", "baseline"),
         "ux_ia": ("journey", "task", "architecture", "navigation", "hierarchy", "findability", "page"),
-        "art_direction": ("visual", "layout", "hierarchy", "brand", "type", "color", "media"),
+        "art_direction": ("visual", "layout", "hierarchy", "brand", "type", "color", "media", "motion", "animation", "easing", "transition", "signature", "moment"),
         "design_contract": ("contract", "truth", "constraint", "system", "component", "token"),
-        "design_system": ("token", "component", "state", "responsive", "accessibility", "pattern"),
+        "design_system": ("token", "component", "state", "responsive", "accessibility", "pattern", "composition", "variant", "reuse"),
         "implementation_plan": ("implementation", "architecture", "dependency", "file", "route", "verification"),
-        "visual_composition": ("composition", "layout", "hierarchy", "visual", "responsive", "media", "anti"),
-        "implementation": ("implementation", "semantic", "responsive", "focus", "component", "verify", "code"),
-        "browser_qa": ("test", "browser", "visual", "responsive", "accessibility", "evidence"),
+        "visual_composition": ("composition", "layout", "hierarchy", "visual", "responsive", "media", "anti", "trust", "credibility", "heuristic", "law"),
+        "implementation": ("implementation", "semantic", "responsive", "focus", "component", "verify", "code", "transition", "animation", "keyframe", "micro", "state", "feedback", "error", "loading"),
+        "browser_qa": ("test", "browser", "visual", "responsive", "accessibility", "evidence", "performance", "vitals", "render"),
         "visual_qa": ("visual", "craft", "regression", "drift", "responsive", "accessibility", "generic"),
         "repair": ("repair", "preserve", "diagnose", "verify", "responsive", "accessibility", "visual"),
     }
