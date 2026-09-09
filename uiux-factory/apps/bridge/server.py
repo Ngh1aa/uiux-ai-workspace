@@ -19,6 +19,7 @@ if str(ROOT) not in sys.path:
 
 from pydantic import ValidationError
 
+from apps.bridge.creative_review import build_review_pack
 from apps.bridge.job_runtime import (
     BoundedJobExecutor,
     JobStore,
@@ -26,6 +27,7 @@ from apps.bridge.job_runtime import (
     run_process_streaming,
     validate_job_id,
 )
+from core.contracts.creative_review_schema import CreativeDirective
 from core.contracts.design_context_schema import DesignContext
 
 
@@ -52,12 +54,18 @@ STORE = JobStore(RUNS)
 EXECUTOR = BoundedJobExecutor(max_workers=MAX_WORKERS, max_queue=MAX_QUEUE)
 
 ARTIFACT_NAMES = {
+    "design-contract.json",
     "design-system.json",
+    "implementation-plan.json",
+    "visual-composition.json",
+    "visual-brain.json",
     "reference-dna.json",
     "DESIGN.md",
     "tokens.css",
     "quality-loop.json",
     "browser-report.json",
+    "creative-directive.json",
+    "creative-revision.json",
 }
 REFERENCE_ARTIFACT_RE = re.compile(
     r"references/reference-[a-f0-9]{12}-(desktop|mobile)\.png"
@@ -164,15 +172,7 @@ def available_artifacts(job_id: str, summary: dict) -> list[str]:
     run_dir = RUNS / job_id
     names: list[str] = []
 
-    known = {
-        "design_system": "design-system.json",
-        "reference_analysis": "reference-dna.json",
-    }
-    for artifact_key, filename in known.items():
-        if artifact_key in (summary.get("artifacts") or {}) and (run_dir / filename).is_file():
-            names.append(filename)
-
-    for filename in ARTIFACT_NAMES - set(known.values()):
+    for filename in ARTIFACT_NAMES:
         if (run_dir / filename).is_file():
             names.append(filename)
 
@@ -191,6 +191,54 @@ def _job_error_from_summary(summary: dict, return_code: int) -> str:
     if isinstance(errors, list) and errors:
         return "; ".join(str(item) for item in errors)
     return f"Factory exited with code {return_code}"
+
+
+def _run_command(job_id: str, command: list[str], mode: str = "build") -> None:
+    run_dir = RUNS / job_id
+    result = run_process_streaming(
+        command,
+        cwd=ROOT,
+        env={
+            **os.environ,
+            "PYTHONIOENCODING": "utf-8",
+            "PYTHONUNBUFFERED": "1",
+        },
+        timeout_seconds=JOB_TIMEOUT_SECONDS,
+        on_output=lambda line: STORE.append_output(job_id, line),
+    )
+
+    summary = read_run_summary(run_dir)
+    project_slug = (
+        project_slug_from_run(run_dir)
+        if mode != "intelligence" and (summary.get("artifacts") or {}).get("implementation")
+        else None
+    )
+    common = {
+        "return_code": result.return_code,
+        "completed_at": time.time(),
+        "run_id": run_dir.name,
+        "project_slug": project_slug,
+    }
+
+    if result.timed_out:
+        STORE.update(
+            job_id,
+            status="failed",
+            error=f"Factory exceeded the {JOB_TIMEOUT_SECONDS:g}s job timeout.",
+            **common,
+        )
+        return
+
+    if result.return_code == 0 and summary.get("status") == "completed":
+        STORE.update(job_id, status="completed", **common)
+        return
+
+    STORE.update(
+        job_id,
+        status="failed",
+        error=_job_error_from_summary(summary, result.return_code),
+        **common,
+    )
 
 
 def run_factory_job(
@@ -233,52 +281,42 @@ def run_factory_job(
         if mode == "intelligence":
             command.append("--intelligence-only")
 
-        result = run_process_streaming(
-            command,
-            cwd=ROOT,
-            env={
-                **os.environ,
-                "PYTHONIOENCODING": "utf-8",
-                "PYTHONUNBUFFERED": "1",
-            },
-            timeout_seconds=JOB_TIMEOUT_SECONDS,
-            on_output=lambda line: STORE.append_output(job_id, line),
-        )
-
-        summary = read_run_summary(run_dir)
-        project_slug = (
-            project_slug_from_run(run_dir)
-            if mode == "build" and (summary.get("artifacts") or {}).get("implementation")
-            else None
-        )
-
-        common = {
-            "return_code": result.return_code,
-            "completed_at": time.time(),
-            "run_id": run_dir.name,
-            "project_slug": project_slug,
-        }
-
-        if result.timed_out:
-            STORE.update(
-                job_id,
-                status="failed",
-                error=f"Factory exceeded the {JOB_TIMEOUT_SECONDS:g}s job timeout.",
-                **common,
-            )
-            return
-
-        if result.return_code == 0 and summary.get("status") == "completed":
-            STORE.update(job_id, status="completed", **common)
-            return
-
+        _run_command(job_id, command, mode)
+    except Exception as error:
         STORE.update(
             job_id,
             status="failed",
-            error=_job_error_from_summary(summary, result.return_code),
-            **common,
+            completed_at=time.time(),
+            error=f"{type(error).__name__}: {error}",
         )
 
+
+def run_creative_revision_job(
+    job_id: str,
+    source_run_id: str,
+    directive: CreativeDirective,
+    engine: str,
+) -> None:
+    run_dir = RUNS / job_id
+    STORE.update(job_id, status="running", started_at=time.time())
+
+    try:
+        run_dir.mkdir(parents=True, exist_ok=True)
+        directive_path = run_dir / "creative-directive-input.json"
+        directive_path.write_text(directive.model_dump_json(indent=2), encoding="utf-8")
+        command = [
+            sys.executable,
+            str(ROOT / "run.py"),
+            "--run-id",
+            job_id,
+            "--engine",
+            engine,
+            "--source-run-id",
+            source_run_id,
+            "--creative-directive",
+            str(directive_path),
+        ]
+        _run_command(job_id, command, "creative_revision")
     except Exception as error:
         STORE.update(
             job_id,
@@ -341,7 +379,7 @@ def reconcile_interrupted_jobs() -> None:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "UIUXFactoryBridge/1.1"
+    server_version = "UIUXFactoryBridge/1.2"
 
     def log_message(self, fmt, *args):  # noqa: A003
         sys.stdout.write("[bridge] " + fmt % args + "\n")
@@ -365,6 +403,36 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def send_file(self, path: Path, content_type: str, download_name: str | None = None) -> None:
+        body = path.read_bytes()
+        self.send_response(200)
+        self.cors()
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        if download_name:
+            self.send_header("Content-Disposition", f'attachment; filename="{download_name}"')
+        self.end_headers()
+        self.wfile.write(body)
+
+    def read_json_body(self, max_bytes: int = 12_000_000) -> dict | None:
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if length <= 0 or length > max_bytes:
+                self.send_json(
+                    {"error": f"Request must contain JSON and be at most {max_bytes} bytes."},
+                    status=413,
+                )
+                return None
+            payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            if not isinstance(payload, dict):
+                raise ValueError("Expected a JSON object")
+            return payload
+        except Exception:
+            self.send_json({"error": "Invalid JSON body"}, status=400)
+            return None
+
     def do_OPTIONS(self) -> None:  # noqa: N802
         self.send_response(HTTPStatus.NO_CONTENT)
         self.cors()
@@ -380,23 +448,20 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         parsed = urlparse(self.path)
+        creative_match = re.fullmatch(
+            r"/jobs/([a-f0-9]{12})/creative-directive",
+            parsed.path,
+        )
+        if creative_match:
+            self.start_creative_revision(creative_match.group(1))
+            return
+
         if parsed.path not in {"/run", "/intelligence"}:
             self.send_json({"error": "Not found"}, status=404)
             return
 
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-            if length <= 0 or length > 12_000_000:
-                self.send_json(
-                    {"error": "Request must contain JSON and be at most 12 MB."},
-                    status=413,
-                )
-                return
-            payload = json.loads(self.rfile.read(length).decode("utf-8"))
-            if not isinstance(payload, dict):
-                raise ValueError("Expected a JSON object")
-        except Exception:
-            self.send_json({"error": "Invalid JSON body"}, status=400)
+        payload = self.read_json_body()
+        if payload is None:
             return
 
         prompt = str(payload.get("prompt", "")).strip()
@@ -429,14 +494,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({"error": "Unknown generation engine"}, status=400)
             return
 
-        if mode == "build" and engine == "ai":
-            from core.runtime.free_provider import FreeProvider, ProviderError
-
-            try:
-                FreeProvider.from_env(ROOT)
-            except ProviderError as error:
-                self.send_json({"error": str(error)}, status=400)
-                return
+        if mode == "build" and engine == "ai" and not self.ai_ready():
+            return
 
         job_id = uuid.uuid4().hex[:12]
         job = {
@@ -483,6 +542,92 @@ class Handler(BaseHTTPRequestHandler):
 
         self.send_json(response_job or job, status=202)
 
+    def ai_ready(self) -> bool:
+        from core.runtime.free_provider import FreeProvider, ProviderError
+
+        try:
+            FreeProvider.from_env(ROOT)
+            return True
+        except ProviderError as error:
+            self.send_json({"error": str(error)}, status=400)
+            return False
+
+    def start_creative_revision(self, source_run_id: str) -> None:
+        source_job = STORE.snapshot(source_run_id)
+        source_summary = read_run_summary(RUNS / source_run_id)
+        if not source_job or source_summary.get("status") != "completed":
+            self.send_json(
+                {"error": "Creative review can only revise a completed source run."},
+                status=409,
+            )
+            return
+
+        payload = self.read_json_body(max_bytes=2_000_000)
+        if payload is None:
+            return
+
+        try:
+            directive = CreativeDirective.model_validate(payload)
+        except ValidationError as error:
+            message = "; ".join(
+                f"{'.'.join(map(str, item['loc']))}: {item['msg']}"
+                for item in error.errors(include_input=False)
+            )
+            self.send_json({"error": message}, status=400)
+            return
+
+        if directive.source_run_id != source_run_id:
+            self.send_json({"error": "Directive source_run_id does not match this run."}, status=400)
+            return
+        if directive.status != "revise" or not directive.revise:
+            self.send_json(
+                {"error": "This directive contains no revision work. Approved reviews need no rebuild."},
+                status=409,
+            )
+            return
+
+        engine = str(source_job.get("engine", "template"))
+        if engine == "ai" and not self.ai_ready():
+            return
+
+        job_id = uuid.uuid4().hex[:12]
+        target = directive.earliest_owner()
+        job = {
+            "id": job_id,
+            "status": "queued",
+            "prompt": f"Creative revision of {source_run_id} from {target}",
+            "created_at": time.time(),
+            "mode": "creative_revision",
+            "engine": engine,
+            "source_run_id": source_run_id,
+            "revision_target": target,
+        }
+
+        try:
+            response_job = STORE.create(job)
+            EXECUTOR.submit(
+                run_creative_revision_job,
+                job_id,
+                source_run_id,
+                directive,
+                engine,
+            )
+        except QueueFullError as error:
+            STORE.update(job_id, status="failed", completed_at=time.time(), error=str(error))
+            self.send_json({"error": str(error), "job_id": job_id}, status=429)
+            return
+        except Exception as error:
+            STORE.update(
+                job_id,
+                status="failed",
+                completed_at=time.time(),
+                error=f"{type(error).__name__}: {error}",
+            )
+            self.send_json({"error": str(error)}, status=500)
+            return
+
+        self.send_json(response_job or job, status=202)
+
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
 
@@ -505,6 +650,10 @@ class Handler(BaseHTTPRequestHandler):
                     "root": str(ROOT),
                     "python": sys.executable,
                     "generated": str(GENERATED),
+                    "creative_review": {
+                        "review_pack": True,
+                        "stage_aware_revision": True,
+                    },
                     "jobs": {
                         "max_workers": MAX_WORKERS,
                         "max_queue": MAX_QUEUE,
@@ -537,6 +686,11 @@ class Handler(BaseHTTPRequestHandler):
         self.send_json({"error": "Not found"}, status=404)
 
     def _serve_job_request(self, path: str) -> bool:
+        review_match = re.fullmatch(r"/jobs/([a-f0-9]{12})/review-pack", path)
+        if review_match:
+            self.serve_review_pack(review_match.group(1))
+            return True
+
         artifact_match = re.fullmatch(
             r"/jobs/([a-f0-9]{12})/artifacts/(.+)",
             path,
@@ -560,8 +714,30 @@ class Handler(BaseHTTPRequestHandler):
         payload["active_stage"] = summary.get("active_stage")
         payload["completed_stages"] = summary.get("completed_stages", [])
         payload["artifacts"] = available_artifacts(job_id, summary)
+        payload["creative_review_ready"] = (
+            payload.get("status") == "completed"
+            and payload.get("mode") != "intelligence"
+            and bool(payload.get("project_slug"))
+        )
         self.send_json(payload)
         return True
+
+    def serve_review_pack(self, job_id: str) -> None:
+        job = STORE.snapshot(job_id)
+        summary = read_run_summary(RUNS / job_id)
+        if not job or job.get("status") != "completed" or summary.get("status") != "completed":
+            self.send_json({"error": "Review pack is available after a completed build."}, status=409)
+            return
+        try:
+            pack = build_review_pack(
+                RUNS / job_id,
+                job,
+                project_slug_from_run(RUNS / job_id),
+            )
+        except Exception as error:
+            self.send_json({"error": f"Could not build review pack: {error}"}, status=500)
+            return
+        self.send_file(pack, "application/zip", f"uiux-review-pack-{job_id}.zip")
 
     def serve_artifact(self, job_id: str, filename: str) -> None:
         if not is_allowed_artifact_name(filename):
@@ -574,21 +750,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({"error": "Artifact is not available yet"}, status=404)
             return
 
-        body = target.read_bytes()
         content_type = {
             ".png": "image/png",
             ".md": "text/plain; charset=utf-8",
             ".css": "text/css; charset=utf-8",
         }.get(target.suffix.lower(), "application/json; charset=utf-8")
-
-        self.send_response(200)
-        self.cors()
-        self.send_header("Content-Type", content_type)
-        self.send_header("Content-Length", str(len(body)))
-        self.send_header("Cache-Control", "no-store")
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.end_headers()
-        self.wfile.write(body)
+        self.send_file(target, content_type)
 
     def serve_preview(self, request_path: str) -> None:
         relative = unquote(request_path[len("/preview/") :])
@@ -665,6 +832,7 @@ def main() -> None:
     )
     print(
         "[Endpoints] /health /run /intelligence /jobs/<id> "
+        "/jobs/<id>/review-pack /jobs/<id>/creative-directive "
         "/jobs/<id>/artifacts/<file> /latest /preview/<project>/"
     )
     print("=" * 72)

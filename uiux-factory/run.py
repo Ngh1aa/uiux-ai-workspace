@@ -4,7 +4,8 @@ import json
 import os
 from pathlib import Path
 
-from core.manager.visual_brain_manager import VisualBrainDevelopmentManager
+from core.contracts.creative_review_schema import CreativeDirective
+from core.manager.creative_director_manager import CreativeDirectorDevelopmentManager
 from core.runtime.run_lock import RunLock
 
 
@@ -34,11 +35,13 @@ def _resolve_goal(goal: str | None, goal_file: str | None) -> str:
 
 
 async def main(
-    goal: str,
+    goal: str | None,
     context_path: str | None = None,
     run_id: str | None = None,
     intelligence_only: bool = False,
     engine: str = "template",
+    source_run_id: str | None = None,
+    creative_directive_path: str | None = None,
 ) -> None:
     print()
     print("=" * 64)
@@ -56,24 +59,40 @@ async def main(
     print("[Queue] Factory run slot acquired.")
 
     try:
-        manager = VisualBrainDevelopmentManager(root=ROOT)
+        manager = CreativeDirectorDevelopmentManager(root=ROOT)
 
-        from core.contracts.design_context_schema import DesignContext
-
-        design_context = (
-            DesignContext.model_validate(
-                json.loads(Path(context_path).read_text(encoding="utf-8-sig"))
+        if source_run_id or creative_directive_path:
+            if not (source_run_id and creative_directive_path and run_id):
+                raise ValueError(
+                    "Creative review revision requires --source-run-id, --creative-directive and --run-id."
+                )
+            directive = CreativeDirective.model_validate_json(
+                Path(creative_directive_path).read_text(encoding="utf-8-sig")
             )
-            if context_path
-            else DesignContext()
-        )
-        run_context = await manager.run(
-            goal,
-            design_context,
-            run_id,
-            intelligence_only,
-            engine,
-        )
+            run_context = await manager.run_revision(
+                source_run_id=source_run_id,
+                directive=directive,
+                run_id=run_id,
+                engine=engine,
+            )
+        else:
+            from core.contracts.design_context_schema import DesignContext
+
+            resolved_goal = _resolve_goal(goal, None)
+            design_context = (
+                DesignContext.model_validate(
+                    json.loads(Path(context_path).read_text(encoding="utf-8-sig"))
+                )
+                if context_path
+                else DesignContext()
+            )
+            run_context = await manager.run(
+                resolved_goal,
+                design_context,
+                run_id,
+                intelligence_only,
+                engine,
+            )
 
         print()
         print("=" * 64)
@@ -119,9 +138,22 @@ if __name__ == "__main__":
         default="template",
         help="AI cloud generates custom static pages; requires explicit free-tier configuration",
     )
+    parser.add_argument(
+        "--source-run-id",
+        help="Completed source run to revise from an imported creative review",
+    )
+    parser.add_argument(
+        "--creative-directive",
+        help="Path to a CreativeDirective JSON file used for stage-aware revision",
+    )
     args = parser.parse_args()
 
-    resolved_goal = _resolve_goal(args.goal, args.goal_file)
+    if args.source_run_id or args.creative_directive:
+        resolved_goal = None
+        if args.goal or args.goal_file:
+            raise ValueError("Creative review revision resumes the source goal; do not provide a new goal.")
+    else:
+        resolved_goal = _resolve_goal(args.goal, args.goal_file)
 
     asyncio.run(
         main(
@@ -130,5 +162,7 @@ if __name__ == "__main__":
             args.run_id,
             args.intelligence_only,
             args.engine,
+            args.source_run_id,
+            args.creative_directive,
         )
     )
