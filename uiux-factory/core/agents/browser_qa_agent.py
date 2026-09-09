@@ -2,7 +2,7 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role
 from metagpt.schema import Message
 
-from core.actions.run_browser_qa import RunBrowserQA
+from core.actions.run_advanced_browser_qa import RunAdvancedBrowserQA
 
 
 class BrowserQAAgent(Role):
@@ -12,20 +12,21 @@ class BrowserQAAgent(Role):
     goal: str = (
         "Verify the generated static website in a real Chromium "
         "browser across representative routes and viewports, then "
-        "produce screenshots and truthful runtime evidence."
+        "produce screenshots plus truthful runtime, elementary visual "
+        "sanity and accessibility smoke evidence."
     )
 
     constraints: str = (
-        "Do not claim visual quality. "
+        "Do not claim human-level visual quality or WCAG certification. "
         "Do not treat build success as UX proof. "
         "Do not fabricate browser evidence. "
-        "Keep screenshots and failures as durable run artifacts."
+        "Keep screenshots, accessibility smoke and failures as durable run artifacts."
     )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.set_actions([
-            RunBrowserQA
+            RunAdvancedBrowserQA
         ])
 
     async def _act(self) -> Message:
