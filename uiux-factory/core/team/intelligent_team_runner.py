@@ -25,6 +25,10 @@ class IntelligentTeamRunner(UIUXTeamRunner):
     MAX_TURNS = 2
     MAX_OBSERVATION_CHARS = 12000
     MAX_TOOL_RESULT_CHARS = 5000
+    # FreeProvider currently hard-stops at 12 calls/run. Once nine calls have
+    # been consumed, preserve the deterministic baseline so the AI frontend
+    # builder still has up to three attempts available.
+    PROVIDER_CALL_SOFT_LIMIT = 9
 
     @staticmethod
     def _bounded_text(path: Path, limit: int) -> str:
@@ -101,6 +105,12 @@ class IntelligentTeamRunner(UIUXTeamRunner):
         if hasattr(context, "add_artifact"):
             context.add_artifact(f"provider_loop_{stage}", path)
 
+    def _provider_budget_reserved(self) -> bool:
+        return bool(
+            self.provider
+            and int(getattr(self.provider, "calls", 0)) >= self.PROVIDER_CALL_SOFT_LIMIT
+        )
+
     async def _provider_refine(self, *, stage: str, role, instruction: str, baseline: str, skill_context, context) -> str:
         if (
             not self.provider
@@ -116,12 +126,25 @@ class IntelligentTeamRunner(UIUXTeamRunner):
                 context=context,
             )
 
+        bus = self.event_bus(context)
+        if self._provider_budget_reserved():
+            bus.emit(
+                "agent.observation_loop_deferred",
+                stage=stage,
+                agent=role.name,
+                data={
+                    "reason": "provider_budget_reserved_for_implementation",
+                    "provider_calls": int(getattr(self.provider, "calls", 0)),
+                    "baseline_preserved": True,
+                },
+            )
+            return baseline
+
         json_mode = stage in self.JSON_STAGES
         rules = self._skill_rule_digest(skill_context, max_chars=14000)
         selected_paths = [source.relative_path for source in skill_context.sources]
         observations: list[dict] = []
         trace: list[dict] = []
-        bus = self.event_bus(context)
 
         system = (
             f"You are {role.profile}. {role.goal}\nConstraints: {role.constraints}\n"
@@ -134,6 +157,23 @@ class IntelligentTeamRunner(UIUXTeamRunner):
         )
 
         for turn in range(1, self.MAX_TURNS + 1):
+            if self._provider_budget_reserved():
+                trace.append(
+                    {
+                        "status": "DEFERRED_TO_BASELINE",
+                        "reason": "provider budget reserved for implementation",
+                        "turn": turn,
+                    }
+                )
+                self._save_loop_trace(context, stage, trace)
+                bus.emit(
+                    "agent.observation_loop_deferred",
+                    stage=stage,
+                    agent=role.name,
+                    data={"reason": "provider_budget_reserved_for_implementation", "baseline_preserved": True},
+                )
+                return baseline
+
             observation_text = json.dumps(observations, ensure_ascii=False)[: self.MAX_OBSERVATION_CHARS]
             prompt = (
                 "# PROJECT GOAL\n" + context.goal[:5000]
