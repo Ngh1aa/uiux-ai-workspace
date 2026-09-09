@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -14,6 +15,8 @@ CreativeOwner = Literal[
     "visual_composition",
     "implementation",
 ]
+
+SKILL_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$")
 
 
 class CreativeRevision(BaseModel):
@@ -34,7 +37,13 @@ class CreativeRevision(BaseModel):
         cleaned = []
         for value in values:
             item = value.strip().removesuffix("/SKILL.md").strip("/")
-            if item and item not in cleaned:
+            if not item:
+                continue
+            if not SKILL_NAME_RE.fullmatch(item):
+                raise ValueError(
+                    "Creative review skills must be direct skills_UIUX directory names, not paths."
+                )
+            if item not in cleaned:
                 cleaned.append(item)
         return cleaned
 
