@@ -47,7 +47,7 @@ def test_all_factory_stages_have_declarative_skill_paths() -> None:
 def test_router_no_longer_defaults_every_unknown_goal_to_corporate() -> None:
     selection = AdaptiveSkillRouter.route(
         stage="research",
-        goal="Create an experimental interactive microsite for an art event",
+        goal="Create a distinctive interactive web experience for a new concept",
         skills_root=SKILLS,
     )
     assert selection.domain == "generic"
