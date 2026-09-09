@@ -123,10 +123,9 @@ class AIFrontendBuilder:
             + CODER_CONTRACT
         )
 
-        raw = ""
         issues: list[str] = []
         bundle = None
-        for attempt in range(3):
+        for _attempt in range(3):
             repair_note = (
                 "\n\n# PREVIOUS VALIDATION FINDINGS\n"
                 + "\n".join(f"- {issue}" for issue in issues)
@@ -157,6 +156,15 @@ class AIFrontendBuilder:
             bundle,
             tokens_path.read_text(encoding="utf-8"),
         )
+
+        evidence_files: list[tuple[Path, str, str]] = [
+            (contract_path, "design-contract.json", "design-contract"),
+            (system_path, "design-system.json", "design-system"),
+            (plan_path, "implementation-plan.json", "implementation-plan"),
+            (composition_path, "visual-composition.json", "visual-composition"),
+        ]
+        for source, name, _kind in evidence_files:
+            copy2(source, project / name)
         if self.context.artifacts.get("design_document"):
             copy2(self.context.artifacts["design_document"], project / "DESIGN.md")
 
@@ -170,6 +178,7 @@ class AIFrontendBuilder:
             for source in skill_context.sources
         ]
         files = [GeneratedFile(path=name, kind="static") for name in bundle.files]
+        files.extend(GeneratedFile(path=name, kind=kind) for _source, name, kind in evidence_files)
         files.extend(
             [
                 GeneratedFile(path="tokens.css", kind="design-system"),
@@ -189,6 +198,7 @@ class AIFrontendBuilder:
                 "fake_proof_forbidden": True,
                 "page_role_diversity_required": True,
                 "canonical_tokens_preserved": True,
+                "quality_evidence_copied": True,
             },
             commands=[],
             unresolved_items=brief.unknowns,
