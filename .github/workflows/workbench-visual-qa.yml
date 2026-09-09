@@ -1,0 +1,46 @@
+name: Workbench Visual QA
+
+on:
+  pull_request:
+    paths:
+      - "uiux-factory/apps/web/**"
+      - "uiux-factory/scripts/workbench_visual_qa.mjs"
+      - ".github/workflows/workbench-visual-qa.yml"
+      - "skills_UIUX/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-dogfood:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: uiux-factory
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Render and score Workbench
+        run: node scripts/workbench_visual_qa.mjs artifacts/workbench-visual-qa
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workbench-visual-qa
+          path: uiux-factory/artifacts/workbench-visual-qa/
+          if-no-files-found: error
+          retention-days: 14
