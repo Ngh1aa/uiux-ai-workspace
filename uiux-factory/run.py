@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from core.manager.development_manager import DevelopmentManager
+from core.manager.intelligent_manager import IntelligentDevelopmentManager
 from core.runtime.run_lock import RunLock
 
 
@@ -56,7 +56,7 @@ async def main(
     print("[Queue] Factory run slot acquired.")
 
     try:
-        manager = DevelopmentManager(root=ROOT)
+        manager = IntelligentDevelopmentManager(root=ROOT)
 
         from core.contracts.design_context_schema import DesignContext
 
