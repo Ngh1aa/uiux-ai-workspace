@@ -30,6 +30,15 @@ jobs:
 
       - name: Install Playwright
         run: |
+          # Playwright downloads its own Chromium. Hosted runners also ship an
+          # optional Google Chrome apt source; when that mirror is mid-publish it
+          # can return a hash mismatch and make `--with-deps` fail before QA.
+          sudo sed -i '\|dl.google.com/linux/chrome|d' /etc/apt/sources.list 2>/dev/null || true
+          for source in /etc/apt/sources.list.d/*; do
+            if [ -f "$source" ] && grep -q 'dl.google.com/linux/chrome' "$source"; then
+              sudo rm -f "$source"
+            fi
+          done
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
