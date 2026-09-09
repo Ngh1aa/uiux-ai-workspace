@@ -1,14 +1,14 @@
 {
-  "name": "bolt",
-  "description": "An AI Agent",
+  "name": "uiux-studio",
+  "description": "AI-Powered UI/UX Studio & Web Builder",
   "private": true,
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
   "version": "1.0.0",
   "author": {
-    "name": "bolt.diy team",
-    "email": "maintainers@bolt.diy"
+    "name": "Ngh1aa",
+    "url": "https://github.com/Ngh1aa"
   },
   "scripts": {
     "deploy": "npm run build && wrangler pages deploy",
