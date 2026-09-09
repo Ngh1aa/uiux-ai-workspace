@@ -181,13 +181,25 @@ Standard capabilities with extra benchmark, UX-metrics, audience-intent and jour
 
 Standard capabilities plus creator inspection/preset-authoring capability and Anthropic `skill-creator` guidance during research.
 
-Select one on a new run:
+Select one on a new CLI run:
 
 ```bash
 python run.py "Design a luxury fragrance ecommerce site" --runtime-preset visual-first
 ```
 
 Creative-review revisions inherit the source run's runtime preset. They cannot swap composition mid-history through the CLI.
+
+### Design Workbench
+
+The Bridge now exposes the validated preset catalog in `/health`. The Workbench runtime selector is populated from that catalog and injects the selected `runtime_preset` into each `/run` or `/intelligence` request. The Bridge validates the preset by composing it before a job is accepted and passes the exact id to `run.py --runtime-preset`.
+
+This closes the UI/backend contract: selecting `Visual First` in the Workbench cannot silently fall back to `standard`.
+
+The live run card also exposes the active preset and direct runtime evidence links for:
+
+- `runtime-composition.json`;
+- `flow-plan.json`;
+- `events.jsonl`.
 
 ## Evidence artifacts
 
