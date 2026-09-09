@@ -172,7 +172,7 @@ async function run() {
       page.on("pageerror", error => pageErrors.push(String(error)));
       await page.goto(base, { waitUntil: "networkidle", timeout: 30000 });
       await page.waitForTimeout(250);
-      const metrics = await page.evaluate(DOM_AUDIT);
+      const metrics = await page.evaluate(`(${DOM_AUDIT})()`);
       const screenshot = path.join(OUT, `workbench-${viewport.name}.png`);
       await page.screenshot({ path: screenshot, fullPage: true });
       evidence.push({ viewport, metrics, score: scoreViewport(viewport.name, metrics), consoleErrors, pageErrors, screenshot });
