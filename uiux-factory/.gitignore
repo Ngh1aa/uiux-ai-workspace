@@ -1,4 +1,4 @@
-﻿# Python
+# Python
 .venv/
 venv/
 __pycache__/
@@ -24,6 +24,7 @@ coverage/
 # UIUX Factory runtime artifacts
 runs/
 generated/
+.runtime/
 
 # Logs
 *.log
