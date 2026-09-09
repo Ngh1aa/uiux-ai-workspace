@@ -117,6 +117,24 @@
           </div>
         </details>
 
+        <details class="config-section" open>
+          <summary>
+            <span><b>Runtime composition</b><small>Preset cố định tools + skill overlays cho toàn bộ run; creative revision kế thừa preset này.</small></span>
+          </summary>
+          <div class="config-body">
+            <label class="compact-select" for="runtime-preset">
+              <span>Runtime preset</span>
+              <select id="runtime-preset">
+                <option value="standard" selected>Standard</option>
+                <option value="visual-first">Visual First</option>
+                <option value="research-heavy">Research Heavy</option>
+                <option value="creator">Creator</option>
+              </select>
+            </label>
+            <p id="runtime-preset-help" class="muted">Canonical pipeline với research, composed skills, browser evidence và semantic visual QA.</p>
+          </div>
+        </details>
+
         <fieldset class="engine-fieldset">
           <legend>Execution engine</legend>
           <div class="engine-pick">
@@ -252,6 +270,7 @@
   </footer>
 
   <script src="./skills-router.js"></script>
+  <script src="./runtime-presets.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

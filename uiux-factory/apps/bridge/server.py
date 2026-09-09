@@ -29,6 +29,7 @@ from apps.bridge.job_runtime import (
 )
 from core.contracts.creative_review_schema import CreativeDirective
 from core.contracts.design_context_schema import DesignContext
+from core.runtime.harness_runtime import HarnessInspiredRuntime
 
 
 GENERATED = ROOT / "generated"
@@ -52,6 +53,7 @@ if os.environ.get("UIUX_WORKBENCH_ORIGIN"):
 
 STORE = JobStore(RUNS)
 EXECUTOR = BoundedJobExecutor(max_workers=MAX_WORKERS, max_queue=MAX_QUEUE)
+RUNTIME = HarnessInspiredRuntime(ROOT)
 
 ARTIFACT_NAMES = {
     "design-contract.json",
@@ -66,6 +68,9 @@ ARTIFACT_NAMES = {
     "browser-report.json",
     "creative-directive.json",
     "creative-revision.json",
+    "runtime-composition.json",
+    "flow-plan.json",
+    "events.jsonl",
 }
 REFERENCE_ARTIFACT_RE = re.compile(
     r"references/reference-[a-f0-9]{12}-(desktop|mobile)\.png"
@@ -74,6 +79,27 @@ REFERENCE_ARTIFACT_RE = re.compile(
 
 def json_bytes(payload: dict) -> bytes:
     return json.dumps(payload, ensure_ascii=False).encode("utf-8")
+
+
+def runtime_preset_inventory() -> list[dict]:
+    return [
+        {
+            "id": preset.preset_id,
+            "name": preset.name,
+            "description": preset.description,
+            "trust": preset.trust,
+        }
+        for preset in RUNTIME.catalog.list()
+    ]
+
+
+def validate_runtime_preset(value: object) -> str:
+    preset_id = str(value or "standard").strip() or "standard"
+    active = RUNTIME.compose(preset_id)
+    try:
+        return active.preset.preset_id
+    finally:
+        active.registry.unmount_all()
 
 
 def read_run_summary(run_dir: Path | None) -> dict:
@@ -218,6 +244,7 @@ def _run_command(job_id: str, command: list[str], mode: str = "build") -> None:
         "completed_at": time.time(),
         "run_id": run_dir.name,
         "project_slug": project_slug,
+        "runtime_preset": summary.get("runtime_preset"),
     }
 
     if result.timed_out:
@@ -248,6 +275,7 @@ def run_factory_job(
     design_context: DesignContext | None = None,
     mode: str = "build",
     engine: str = "template",
+    runtime_preset: str = "standard",
 ) -> None:
     run_dir = RUNS / job_id
     enriched_prompt = prompt.strip() + format_research(search_results)
@@ -275,6 +303,8 @@ def run_factory_job(
             job_id,
             "--engine",
             engine,
+            "--runtime-preset",
+            runtime_preset,
             "--context",
             str(context_path),
         ]
@@ -350,6 +380,7 @@ def reconcile_interrupted_jobs() -> None:
                 completed_at=time.time(),
                 run_id=job_id,
                 project_slug=project_slug,
+                runtime_preset=summary.get("runtime_preset"),
                 recovered_after_restart=True,
             )
         elif summary.get("status") == "failed":
@@ -359,6 +390,7 @@ def reconcile_interrupted_jobs() -> None:
                 completed_at=time.time(),
                 run_id=job_id,
                 project_slug=project_slug,
+                runtime_preset=summary.get("runtime_preset"),
                 error="; ".join(str(item) for item in summary.get("errors", []))
                 or "Factory run failed before the bridge restarted.",
                 recovered_after_restart=True,
@@ -370,6 +402,7 @@ def reconcile_interrupted_jobs() -> None:
                 completed_at=time.time(),
                 run_id=job_id if run_dir.exists() else None,
                 project_slug=project_slug,
+                runtime_preset=summary.get("runtime_preset"),
                 error=(
                     "Bridge restarted while this job was queued or running. "
                     "Partial run artifacts, if any, remain under runs/<job-id>."
@@ -379,7 +412,7 @@ def reconcile_interrupted_jobs() -> None:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "UIUXFactoryBridge/1.2"
+    server_version = "UIUXFactoryBridge/1.3"
 
     def log_message(self, fmt, *args):  # noqa: A003
         sys.stdout.write("[bridge] " + fmt % args + "\n")
@@ -494,6 +527,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({"error": "Unknown generation engine"}, status=400)
             return
 
+        try:
+            runtime_preset = validate_runtime_preset(payload.get("runtime_preset", "standard"))
+        except (KeyError, ValueError, RuntimeError, FileNotFoundError) as error:
+            self.send_json({"error": f"Invalid runtime preset: {error}"}, status=400)
+            return
+
         if mode == "build" and engine == "ai" and not self.ai_ready():
             return
 
@@ -505,6 +544,7 @@ class Handler(BaseHTTPRequestHandler):
             "created_at": time.time(),
             "mode": mode,
             "engine": engine,
+            "runtime_preset": runtime_preset,
         }
 
         try:
@@ -517,6 +557,7 @@ class Handler(BaseHTTPRequestHandler):
                 design_context,
                 mode,
                 engine,
+                runtime_preset,
             )
         except QueueFullError as error:
             STORE.update(
@@ -592,6 +633,7 @@ class Handler(BaseHTTPRequestHandler):
 
         job_id = uuid.uuid4().hex[:12]
         target = directive.earliest_owner()
+        runtime_preset = str(source_summary.get("runtime_preset") or source_job.get("runtime_preset") or "standard")
         job = {
             "id": job_id,
             "status": "queued",
@@ -599,6 +641,7 @@ class Handler(BaseHTTPRequestHandler):
             "created_at": time.time(),
             "mode": "creative_revision",
             "engine": engine,
+            "runtime_preset": runtime_preset,
             "source_run_id": source_run_id,
             "revision_target": target,
         }
@@ -650,6 +693,7 @@ class Handler(BaseHTTPRequestHandler):
                     "root": str(ROOT),
                     "python": sys.executable,
                     "generated": str(GENERATED),
+                    "runtime_presets": runtime_preset_inventory(),
                     "creative_review": {
                         "review_pack": True,
                         "stage_aware_revision": True,
@@ -717,7 +761,6 @@ class Handler(BaseHTTPRequestHandler):
             if self._serve_job_request(parsed.path):
                 return
 
-
         if parsed.path == "/latest":
             run_dir = latest_run()
             self.send_json(
@@ -763,6 +806,7 @@ class Handler(BaseHTTPRequestHandler):
         summary = read_run_summary(RUNS / job_id)
         payload["active_stage"] = summary.get("active_stage")
         payload["completed_stages"] = summary.get("completed_stages", [])
+        payload["runtime_preset"] = summary.get("runtime_preset") or payload.get("runtime_preset") or "standard"
         payload["artifacts"] = available_artifacts(job_id, summary)
         payload["creative_review_ready"] = (
             payload.get("status") == "completed"
@@ -804,6 +848,7 @@ class Handler(BaseHTTPRequestHandler):
             ".png": "image/png",
             ".md": "text/plain; charset=utf-8",
             ".css": "text/css; charset=utf-8",
+            ".jsonl": "application/x-ndjson; charset=utf-8",
         }.get(target.suffix.lower(), "application/json; charset=utf-8")
         self.send_file(target, content_type)
 
