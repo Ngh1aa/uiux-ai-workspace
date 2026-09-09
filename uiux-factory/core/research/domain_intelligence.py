@@ -17,7 +17,8 @@ class DomainInterpreter:
 
     This layer intentionally stays separate from GoalInterpreter so existing
     orchestration contracts remain backward compatible while research gains
-    category-specific intelligence.
+    category-specific intelligence. When the broad archetype is still generic,
+    a strong vertical can also supply the most likely research archetype.
     """
 
     VERTICALS = (
@@ -37,6 +38,23 @@ class DomainInterpreter:
         ("news-publication", ("newspaper", "magazine", "publication", "báo điện tử", "tạp chí")),
     )
 
+    INFERRED_ARCHETYPE = {
+        "luxury-fragrance": "ecommerce",
+        "fashion": "ecommerce",
+        "beauty-skincare": "ecommerce",
+        "electronics": "ecommerce",
+        "furniture-home": "ecommerce",
+        "grocery-food": "ecommerce",
+        "jewelry-luxury": "ecommerce",
+        "hotel-resort": "hospitality",
+        "restaurant": "hospitality",
+        "higher-education": "education",
+        "school-k12": "education",
+        "fintech": "saas",
+        "developer-tools": "saas",
+        "news-publication": "news",
+    }
+
     @staticmethod
     def _contains(text: str, terms: tuple[str, ...]) -> bool:
         return any(term in text for term in terms)
@@ -45,11 +63,17 @@ class DomainInterpreter:
         text = re.sub(r"\s+", " ", goal.strip().lower())
         for vertical, terms in self.VERTICALS:
             if self._contains(text, terms):
+                resolved_type = website_type
+                evidence = [f"website_type:{website_type}", f"vertical:{vertical}"]
+                if website_type == "generic":
+                    resolved_type = self.INFERRED_ARCHETYPE.get(vertical, website_type)
+                    if resolved_type != website_type:
+                        evidence.append(f"research_archetype:{resolved_type}")
                 return DomainProfile(
-                    website_type=website_type,
+                    website_type=resolved_type,
                     vertical=vertical,
-                    confidence=0.92,
-                    evidence=(f"website_type:{website_type}", f"vertical:{vertical}"),
+                    confidence=0.92 if resolved_type == website_type else 0.84,
+                    evidence=tuple(evidence),
                 )
 
         return DomainProfile(
