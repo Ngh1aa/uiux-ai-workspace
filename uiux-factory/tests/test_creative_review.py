@@ -79,6 +79,24 @@ def test_creative_directive_rejects_non_job_source_ids() -> None:
         _directive(source_run_id="../secret")
 
 
+def test_creative_directive_rejects_skill_path_traversal() -> None:
+    with pytest.raises(ValidationError):
+        _directive(
+            revise=[
+                {
+                    "priority": "P1",
+                    "route": "/",
+                    "section": "hero",
+                    "owner": "visual_composition",
+                    "problem": "Needs revision.",
+                    "instruction": "Revise safely.",
+                    "skills": ["../../private-skill"],
+                    "success_criteria": "No traversal.",
+                }
+            ]
+        )
+
+
 def test_review_pack_only_includes_screenshots_inside_run_directory(tmp_path: Path) -> None:
     run_dir = tmp_path / "abcdef123456"
     evidence_dir = run_dir / "browser-evidence"
