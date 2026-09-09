@@ -49,7 +49,7 @@ jobs:
         run: python scripts/verify_anthropic_skills.py
 
       - name: Compile Python source tree
-        run: python -m compileall -q core apps run.py
+        run: python -m compileall -q core apps run.py creator.py
 
       - name: Check Workbench JavaScript syntax
         run: |
