@@ -92,7 +92,11 @@ class UIUXTeamRunner:
         )
 
         runtime_paths: tuple[str, ...] = ()
-        if self.runtime is not None:
+        if (
+            self.runtime is not None
+            and hasattr(self.runtime, "has_active")
+            and self.runtime.has_active(context)
+        ):
             runtime_paths = self.runtime.stage_skill_paths(context, stage)
             for path in runtime_paths:
                 if path not in selection.relative_paths:
