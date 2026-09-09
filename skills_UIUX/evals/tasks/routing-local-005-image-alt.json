@@ -1,0 +1,44 @@
+{
+  "id": "routing-local-005-image-alt",
+  "category": "regression",
+  "prompt": "The hero image on the About page has an empty alt attribute. Add a meaningful alt text based on the visible content.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "accessibility"
+    ],
+    "allowed_skills": [
+      "ui-improvement",
+      "frontend-implementation"
+    ],
+    "forbidden_without_trigger": [
+      "accessibility-conformance-evaluation",
+      "assistive-technology-testing",
+      "asset-media-and-art-direction",
+      "inclusive-design-and-cognitive-accessibility"
+    ],
+    "activation_budget": {
+      "soft_max": 3
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "accessibility",
+    "ui-improvement",
+    "frontend-implementation"
+  ],
+  "expected_outcomes": [
+    "Alt text added that describes image content",
+    "Not a generic placeholder alt"
+  ],
+  "must_not": [
+    "Start a full accessibility audit",
+    "Load assistive technology testing for one alt text"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

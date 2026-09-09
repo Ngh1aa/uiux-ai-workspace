@@ -1,0 +1,9 @@
+{
+  "id": "v4-omnichannel-continuity",
+  "category": "capability",
+  "prompt": "A building-leasing website considers a tour-request form successful once it shows 'Submitted'. Design the complete handoff from website to leasing staff to physical visit, including confirmation and failure recovery.",
+  "recommended_skills": ["omnichannel-experience-continuity", "real-estate-and-building-website", "state-feedback-and-error-recovery"],
+  "expected_outcomes": ["Maps channels and owners after submission", "Defines context/data that should travel with handoff", "Sets clear user expectations and preparation for visit", "Includes failure/retry/human-help paths"],
+  "must_not": ["Treat form submission as journey completion", "Force user to repeat already supplied context without reason", "Promise response times or operations not supported by evidence"],
+  "rubric": {"handoff_completeness": 30, "continuity": 25, "recovery": 25, "operational_honesty": 20}
+}

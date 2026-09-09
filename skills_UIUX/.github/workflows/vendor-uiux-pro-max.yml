@@ -1,0 +1,96 @@
+name: Vendor UI UX Pro Max
+
+on:
+  push:
+    branches:
+      - feat/vendor-uiux-pro-max-design-intelligence
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout skills_UIUX branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout pinned UI UX Pro Max upstream
+        uses: actions/checkout@v4
+        with:
+          repository: nextlevelbuilder/ui-ux-pro-max-skill
+          ref: 314307f156aeab0c6b567bbaa1ce4e7aabd5a636
+          path: .vendor-source/ui-ux-pro-max
+          persist-credentials: false
+
+      - name: Vendor upstream skills and design-intelligence engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf vendor/ui-ux-pro-max
+          mkdir -p vendor/ui-ux-pro-max
+          cp -R .vendor-source/ui-ux-pro-max/.claude/skills vendor/ui-ux-pro-max/skills
+          cp -R .vendor-source/ui-ux-pro-max/src/ui-ux-pro-max vendor/ui-ux-pro-max/engine
+          cp .vendor-source/ui-ux-pro-max/LICENSE vendor/ui-ux-pro-max/LICENSE
+          cat > vendor/ui-ux-pro-max/UPSTREAM.md <<'EOF'
+          # UI UX Pro Max vendored source
+
+          - Upstream: `nextlevelbuilder/ui-ux-pro-max-skill`
+          - Pinned commit: `314307f156aeab0c6b567bbaa1ce4e7aabd5a636`
+          - Imported: `2026-09-06`
+          - License: MIT (see `LICENSE`)
+          - Policy: upstream files in `skills/` and `engine/` are vendored verbatim. Local behavior belongs outside the vendor directory.
+
+          ## Included
+
+          - all upstream `.claude/skills/*` packages;
+          - full `src/ui-ux-pro-max` engine, including databases, stack guidance, templates, search and validation scripts;
+          - upstream MIT license.
+
+          ## Update rule
+
+          Do not float on upstream `main`. Review a new immutable commit, inspect license/provenance/data/search changes, update this lock, run target validators + vendor smoke, and record migration impact before promotion.
+          EOF
+
+      - name: Remove temporary checkout
+        run: rm -rf .vendor-source
+
+      - name: Validate imported snapshot before commit
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          test -f vendor/ui-ux-pro-max/skills/ui-ux-pro-max/SKILL.md
+          test -f vendor/ui-ux-pro-max/engine/scripts/search.py
+          test -f vendor/ui-ux-pro-max/engine/data/catalog-summary.json
+          test -f vendor/ui-ux-pro-max/engine/data/data-provenance.json
+          test -f vendor/ui-ux-pro-max/LICENSE
+          python -B vendor/ui-ux-pro-max/engine/scripts/search.py "education admissions mobile" --design-system > /tmp/uiuxpm-smoke.txt
+          test -s /tmp/uiuxpm-smoke.txt
+          python scripts/validate-skills.py
+          python scripts/validate-v2.py
+          python scripts/eval-harness.py smoke
+          find vendor/ui-ux-pro-max -type d -name __pycache__ -prune -exec rm -rf {} +
+          if find vendor/ui-ux-pro-max -type f \( -name '*.pyc' -o -name '*.pyo' \) | grep -q .; then
+            echo "Generated Python bytecode found in vendor snapshot" >&2
+            exit 1
+          fi
+
+      - name: Commit vendor snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A vendor/ui-ux-pro-max
+          if git diff --cached --quiet; then
+            echo "Vendor snapshot already current"
+          else
+            git commit -m "fix: clean generated cache from UI UX Pro Max vendor snapshot"
+            git push origin HEAD:feat/vendor-uiux-pro-max-design-intelligence
+          fi

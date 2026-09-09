@@ -1,0 +1,15 @@
+{
+  "id": "redesign-preservation-001",
+  "category": "regression",
+  "prompt": "Redesign một website doanh nghiệp cũ cho hiện đại hơn. Giữ nội dung và SEO tốt, cải thiện UX mobile, không backend-heavy.",
+  "recommended_skills": ["website-audit-and-redesign", "corporate-website", "website-delivery-pipeline"],
+  "expected_outcomes": [
+    "Audit trước khi xóa/merge page hoặc content",
+    "Có keep-improve-merge-remove rationale",
+    "Preserve hoặc plan redirect cho URL giá trị",
+    "Có primary journey và CTA logic",
+    "Có responsive/accessibility/visual QA evidence"
+  ],
+  "must_not": ["Xóa toàn bộ site cũ để làm landing page generic", "Đổi URL hàng loạt không migration plan", "Tuyên bố hoàn tất không verify"],
+  "rubric": {"alignment":20,"ux":20,"visual":20,"system":15,"inclusive":10,"web_quality":10,"verification":5}
+}

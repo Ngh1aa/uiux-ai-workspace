@@ -1,0 +1,49 @@
+{
+  "id": "visual-quality-006-hospitality",
+  "category": "capability",
+  "prompt": "Design a tranquil, cinematic resort experience for Sylvan Haven Eco-Resort & Spa using evals/fixtures/visual-quality/hospitality-brief.json. Deliver 4 pages (Home, Accommodations, Wellness & Dining, Booking Workflow). Achieve high visual craft with organic forest color palette, lyrical typography, sensory detail cards, and transparent reservation flow.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "brand-guidelines"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "brand-guidelines"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "Atmospheric cinematic compositions with warm cedar, moss, and copper tones",
+    "Accommodations page and Booking workflow have specialized, distinct functional silhouettes",
+    "High-quality imagery with natural forest lighting and authentic architectural details",
+    "Touch-friendly reservation date picker and room selection on mobile viewports",
+    "Deterministic visual gates pass with clean DOM and valid meta tags"
+  ],
+  "must_not": [
+    "Apply harsh corporate blue palettes or high-tech glassmorphism effects",
+    "Repeat the exact same hero-cards-cta layout on all 4 pages",
+    "Use stock photos of unrelated tropical palm trees or generic corporate hotels",
+    "Hide resort pricing breakdowns or taxes until after card entry"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "education",
+  "description": "School and education websites focused on parent/student journeys, trust and admissions conversion.",
+  "extends": "professional-core",
+  "skills": [
+    "education-website",
+    "asset-media-and-art-direction",
+    "localization-and-i18n",
+    "content-governance-and-cms"
+  ]
+}

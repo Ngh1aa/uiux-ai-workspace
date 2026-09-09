@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vanguard Architectural Partners — Sustainable Structural Innovation</title>
+  <style>
+    :root {
+      --bg: #F4F4F2;
+      --surface: #FFFFFF;
+      --text: #1A1D20;
+      --muted: #7D8287;
+      --accent: #C45B3A;
+      --font-display: "Playfair Display", Georgia, serif;
+      --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    header {
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .logo { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+    nav a { margin-left: 2rem; color: var(--text); text-decoration: none; font-size: 0.95rem; }
+    .hero {
+      padding: 6rem 4rem;
+      max-width: 1200px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1.1;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 650px;
+      margin-bottom: 3rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      padding: 0.9rem 2rem;
+      background: var(--text);
+      color: #FFF;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 2px;
+    }
+    .case-studies {
+      padding: 4rem;
+      background: var(--surface);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 3rem;
+    }
+    .case-card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: #DDD;
+    }
+    .case-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin: 1rem 0 0.5rem;
+    }
+    footer {
+      padding: 4rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Vanguard</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h1>Sustainable structural innovation for civic architecture.</h1>
+      <p>We engineer low-carbon, monumental public structures that harmonize advanced structural integrity with environmental responsibility.</p>
+      <a href="projects.html" class="cta-btn">Explore Portfolio</a>
+    </section>
+    <section class="case-studies">
+      <article class="case-card">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' fill='%237D8287'%3E%3Crect width='100%25' height='100%25' fill='%23333'/%3E%3Ctext x='50%25' y='50%25' fill='%23FFF' font-size='20' text-anchor='middle'%3EOslo Timber Pavilion%3C/text%3E%3C/svg%3E" alt="Oslo Timber Pavilion cross-laminated facade">
+        <h3>Oslo Timber Pavilion</h3>
+        <p>A mass-timber cultural forum operating on 100% geothermal radiant heating.</p>
+      </article>
+      <article class="case-card">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' fill='%237D8287'%3E%3Crect width='100%25' height='100%25' fill='%23444'/%3E%3Ctext x='50%25' y='50%25' fill='%23FFF' font-size='20' text-anchor='middle'%3EKyoto Biosphere Campus%3C/text%3E%3C/svg%3E" alt="Kyoto Biosphere Campus living atrium">
+        <h3>Kyoto Biosphere Campus</h3>
+        <p>Integrates gray-water natural filtration through internal botanical cascades.</p>
+      </article>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 Vanguard Architectural Partners. All rights reserved.</p>
+  </footer>
+</body>
+</html>

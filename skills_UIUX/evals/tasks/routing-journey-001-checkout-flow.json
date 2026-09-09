@@ -1,0 +1,62 @@
+{
+  "id": "routing-journey-001-checkout-flow",
+  "category": "capability",
+  "prompt": "Redesign the 5-step checkout flow for this e-commerce site. Current flow has high abandonment at the shipping step. Keep the existing payment integration but improve the UX.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "ux-research-and-journey",
+      "interaction-patterns-and-form-ux"
+    ],
+    "allowed_skills": [
+      "complex-forms-and-wizards",
+      "complex-workflow-and-progress-ux",
+      "state-feedback-and-error-recovery",
+      "responsive-and-device-strategy",
+      "content-design-and-question-design",
+      "system-reality-and-production-readiness",
+      "accessibility",
+      "conversion-and-content"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "website-audit-and-redesign",
+      "information-architecture",
+      "design-reference-research-and-benchmark",
+      "service-blueprinting"
+    ],
+    "activation_budget": {
+      "soft_max": 8
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ux-research-and-journey",
+    "interaction-patterns-and-form-ux",
+    "complex-forms-and-wizards",
+    "complex-workflow-and-progress-ux",
+    "state-feedback-and-error-recovery",
+    "responsive-and-device-strategy",
+    "content-design-and-question-design",
+    "system-reality-and-production-readiness",
+    "accessibility",
+    "conversion-and-content"
+  ],
+  "expected_outcomes": [
+    "Checkout steps simplified or reorganized",
+    "Shipping step friction reduced",
+    "Progress indication clear",
+    "Payment integration preserved",
+    "Mobile checkout viable"
+  ],
+  "must_not": [
+    "Audit entire site for a checkout-specific task",
+    "Load IA/site-architecture skills for a contained flow"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

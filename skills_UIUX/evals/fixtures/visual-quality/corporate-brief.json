@@ -1,0 +1,52 @@
+{
+  "website_type": "corporate",
+  "client_name": "Vanguard Architectural Partners",
+  "tagline": "Sustainable Structural Innovation & Urban Design",
+  "brand_attributes": ["authoritative", "monumental", "minimalist", "sustainable", "precision-engineered"],
+  "primary_audience": "Institutional property developers, municipal urban planners, and university expansion boards",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#1A1D20",
+      "secondary": "#7D8287",
+      "accent": "#C45B3A",
+      "surface": "#F4F4F2",
+      "surface_elevated": "#FFFFFF"
+    },
+    "typography": "Editorial serif headers (e.g. Playfair or Fraunces) paired with technical grotesque sans body (e.g. Space Grotesk or Inter)",
+    "composition": "Asymmetric editorial grids, generous whitespace (80-120px section padding), strong typographic hierarchy with high-contrast scale"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Overview & positioning",
+      "key_sections": ["monumental-hero-with-manifesto", "featured-case-studies-split-screen", "sustainability-metrics-grid", "leadership-quote-editorial", "inquiry-cta"],
+      "layout_family": "editorial-asymmetric"
+    },
+    {
+      "name": "projects",
+      "role": "Portfolio index",
+      "key_sections": ["project-filter-toolbar", "masonry-case-study-showcase", "typology-index", "project-inquiry-bar"],
+      "layout_family": "gallery-masonry"
+    },
+    {
+      "name": "project-detail",
+      "role": "In-depth case study",
+      "key_sections": ["full-bleed-hero-with-metadata-rail", "architectural-narrative-split", "blueprint-diagram-gallery", "sustainability-data-card", "next-project-teaser"],
+      "layout_family": "longform-narrative"
+    },
+    {
+      "name": "practice",
+      "role": "About & methodology",
+      "key_sections": ["studio-manifesto", "chronological-timeline", "partner-directory-with-credentials", "awards-tabular-list"],
+      "layout_family": "structured-tabular"
+    },
+    {
+      "name": "contact",
+      "role": "High-touch RFQ inquiry",
+      "key_sections": ["office-locations-multi-city", "structured-rfq-inquiry-form", "media-inquiries-accordion"],
+      "layout_family": "functional-utility"
+    }
+  ],
+  "media_guidelines": "High-contrast architectural photography with natural shadows and authentic concrete/timber textures. Zero generic stock business handshakes.",
+  "anti_patterns": ["Purple SaaS gradients", "Translucent glass cards with heavy blur", "Identical 3-card columns repeated across all pages", "Unreadable text over bright unbacked imagery"]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "routing-page-004-blog-article",
+  "category": "capability",
+  "prompt": "The blog article template has poor typography — everything is the same size, no visual hierarchy between headings, body text and pull quotes. Fix the article page typography and reading experience.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "ui-improvement"
+    ],
+    "allowed_skills": [
+      "design-system-and-components",
+      "visual-design-direction",
+      "frontend-implementation",
+      "responsive-and-device-strategy"
+    ],
+    "forbidden_without_trigger": [
+      "search-demand-and-content-briefing",
+      "seo-strategy",
+      "content-governance-and-cms",
+      "analytics-and-experimentation",
+      "ux-research-and-journey"
+    ],
+    "activation_budget": {
+      "soft_max": 5
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ui-improvement",
+    "design-system-and-components",
+    "visual-design-direction",
+    "frontend-implementation",
+    "responsive-and-device-strategy"
+  ],
+  "expected_outcomes": [
+    "Typography scale established",
+    "Heading hierarchy clear",
+    "Pull quotes styled distinctly",
+    "Readable on mobile"
+  ],
+  "must_not": [
+    "Load SEO/search demand for a typography fix",
+    "Start content strategy for a styling task"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

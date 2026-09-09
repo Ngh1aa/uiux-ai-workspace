@@ -1,34 +1,29 @@
-# Node
 node_modules/
 .next/
 dist/
 build/
 
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-# Environment
 .env
 .env.*
+!.env.example
 
-# IDE
+.venv/
+venv/
+__pycache__/
+*.pyc
+
 .vscode/
 .idea/
 
-# OS
-.DS_Store
-
-# Logs
 *.log
 
-# Large AI files
+.cache/
+
+tmp/
+temp/
+
 *.bin
 *.pt
 *.pth
 *.ckpt
-
-# Cache
-.cache/
+*.safetensors

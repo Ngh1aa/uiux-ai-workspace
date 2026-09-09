@@ -1,0 +1,49 @@
+{
+  "id": "visual-quality-004-portfolio",
+  "category": "capability",
+  "prompt": "Design a high-craft design portfolio for Studio Arcus / Maya Lin-Vance based on evals/fixtures/visual-quality/portfolio-brief.json. Provide 3 core pages (Home Showcase, In-depth Case Study, About Philosophy). Demonstrate avant-garde dark typography, interactive systems artifacts, and avoid generic Dribbble spheres or avatar clichés.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "brand-guidelines"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "brand-guidelines"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "Home showcase and Case Study have radically distinct compositions tailored to work preview vs deep rationale",
+    "Sophisticated dark aesthetic with sharp typographic contrast (neo-grotesque display + JetBrains Mono callouts)",
+    "Pixel-perfect UI mockups and interaction previews without cartoon avatars",
+    "Smooth responsive re-composition on mobile screens with accessible touch navigation",
+    "Deterministic visual gates pass with clean valid HTML"
+  ],
+  "must_not": [
+    "Use generic circular avatar headshots with floating emoji badges",
+    "Rely on pastel blurred background blobs or generic Dribbble 3D spheres",
+    "Make mobile a clumsy shrunken desktop screenshot",
+    "Duplicate section skeletons between Home and Case Study"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

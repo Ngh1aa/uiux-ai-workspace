@@ -1,0 +1,9 @@
+{
+  "id": "v5-design-drift",
+  "category": "capability",
+  "prompt": "After months of AI edits, a corporate site has visually similar but duplicated buttons, raw hex colors, slightly different spacing scales and inconsistent mobile sections. Propose a regression and design-drift protection plan.",
+  "recommended_skills": ["visual-regression-and-design-drift", "design-system-governance-and-adoption", "brand-recognition-and-consistency-qa"],
+  "expected_outcomes": ["Visual regression and design-system drift are treated as related but distinct", "Representative routes/viewports/states are selected", "Unstable screenshot inputs are controlled", "Token/component drift has actionable checks", "Intentional baseline updates require review"],
+  "must_not": ["Auto-accept every new screenshot baseline", "Treat every pixel difference as a defect", "Fix drift by adding more one-off CSS"],
+  "rubric": {"coverage": 25, "stability": 20, "system_drift_detection": 30, "governance": 25}
+}

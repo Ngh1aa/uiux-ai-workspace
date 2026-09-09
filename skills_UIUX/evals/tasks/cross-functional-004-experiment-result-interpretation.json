@@ -1,0 +1,19 @@
+{
+  "id": "cross-functional-004-experiment-result-interpretation",
+  "category": "capability",
+  "prompt": "A/B test CTA có point estimate +4%, 95% CI [-1%, +9%], p=0.08. Team còn thấy segment mobile +12% nhưng segment này được xem sau khi test kết thúc. Hãy quyết định ship/kill/iterate/rerun.",
+  "recommended_skills": ["experimentation-interpretation"],
+  "expected_outcomes": [
+    "Đọc CI rộng qua zero là inconclusive cho effects material, không gọi weak win",
+    "Không diễn giải p=0.08 thành xác suất treatment works",
+    "Nhận diện mobile segment là post-hoc exploratory finding",
+    "Đề xuất gather-more-data/rerun hoặc decision phù hợp với practical threshold",
+    "Nêu result không chứng minh design universally better"
+  ],
+  "must_not": [
+    "Ship because point estimate is positive",
+    "Ship mobile-only from one post-hoc slice without confirmation",
+    "Say p-value gives probability treatment works"
+  ],
+  "rubric": {"statistics":35,"decision":25,"evidence":20,"risk":10,"communication":10}
+}

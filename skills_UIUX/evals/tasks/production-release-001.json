@@ -1,0 +1,35 @@
+{
+  "id": "production-release-001",
+  "category": "capability",
+  "prompt": "Một redesign đã code xong và CI build pass. Team muốn merge/deploy ngay. Change đụng header shared, form lead, ảnh hero lớn và redirect URL cũ. Hãy review release readiness. Không được dùng Lighthouse score hoặc CI green làm bằng chứng duy nhất và không dùng force-push/reset làm rollback mặc định.",
+  "recommended_skills": [
+    "code-review-and-release",
+    "testing-strategy",
+    "web-quality-and-performance",
+    "system-reality-and-production-readiness",
+    "ai-agent-coding-guardrails"
+  ],
+  "expected_outcomes": [
+    "Tách review spec/intent compliance khỏi code/experience quality",
+    "Lập verification matrix cho header shared, form lead, hero performance và redirects",
+    "Kiểm system reality của form trước khi gọi conversion flow working",
+    "Dùng performance budget/conditions thay vì vanity score universal",
+    "Đề xuất safe rollback/revert và post-deploy smoke",
+    "Nêu rõ P0/P1 và unverified areas trước release"
+  ],
+  "must_not": [
+    "CI green = release success",
+    "One Lighthouse run = field performance proof",
+    "Force reset/push shared main as default rollback",
+    "Ignore old URL redirects because UI looks correct",
+    "Call form complete without integration evidence"
+  ],
+  "rubric": {
+    "release_scope": 15,
+    "verification_matrix": 25,
+    "system_reality": 15,
+    "performance_reasoning": 15,
+    "rollback_monitoring": 20,
+    "claim_discipline": 10
+  }
+}

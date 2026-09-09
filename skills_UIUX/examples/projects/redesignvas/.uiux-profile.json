@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "profile": "uiux-education",
+  "additional_skills": ["website-audit-and-redesign"],
+  "exclude_skills": [],
+  "project": {"name": "RedesignVAS", "mode": "interactive-prototype", "domain": "international-bilingual-school"},
+  "source_of_truth": [],
+  "constraints": ["Prioritize mobile journeys and admissions conversion without losing school credibility"]
+}

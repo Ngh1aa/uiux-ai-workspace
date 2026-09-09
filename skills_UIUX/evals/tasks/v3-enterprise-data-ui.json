@@ -1,0 +1,9 @@
+{
+  "id": "v3-enterprise-data-ui",
+  "category": "capability",
+  "prompt": "Design an admin dashboard containing a sortable/filterable lead table plus conversion KPIs. Define responsive behavior and accessibility, not just visual styling.",
+  "recommended_skills": ["data-tables-and-enterprise-ux", "data-visualization-and-dashboard-ux", "responsive-and-device-strategy", "accessibility"],
+  "expected_outcomes": ["Table columns follow user tasks", "Sort/filter/selection states are defined", "Charts answer named questions", "Units/timeframes are explicit", "Mobile preserves core tasks", "Keyboard/screen-reader behavior is considered"],
+  "must_not": ["Choose charts only for decoration", "Rely on color alone", "Turn the table into unreadable horizontal overflow without a strategy"],
+  "rubric": {"task_fit": 25, "data_clarity": 25, "interaction_quality": 25, "inclusive_responsive": 25}
+}

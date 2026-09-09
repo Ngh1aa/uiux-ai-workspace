@@ -1,0 +1,26 @@
+{
+  "id": "runtime-context-001-minimal-load",
+  "category": "regression",
+  "prompt": "Build a context manifest for a local UI fix. The project has many installed skills and several declared source-of-truth files, but only project-context and ui-improvement are relevant. Do not bulk-load unrelated skills or declared documents.",
+  "recommended_skills": [
+    "project-context",
+    "adaptive-skill-routing-and-context-budget",
+    "ui-improvement"
+  ],
+  "expected_outcomes": [
+    "Only explicitly selected skills enter active context",
+    "Declared source-of-truth remains discoverable without automatic bulk loading",
+    "Context telemetry reports characters and estimated tokens"
+  ],
+  "must_not": [
+    "Treat every installed skill as active context",
+    "Load all declared source documents just because they exist",
+    "Invent a universal context-window utilization threshold"
+  ],
+  "rubric": {
+    "minimal_context": 35,
+    "project_grounding": 25,
+    "telemetry": 20,
+    "truthfulness": 20
+  }
+}

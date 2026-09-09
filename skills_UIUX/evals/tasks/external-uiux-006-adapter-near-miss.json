@@ -1,0 +1,20 @@
+{
+  "id": "external-uiux-006-adapter-near-miss",
+  "category": "capability",
+  "prompt": "Header button đang lệch 2px so với spacing token đã có và text label đã rõ nghĩa. Project không phải React/Next và không yêu cầu redesign. Hãy sửa đúng scope.",
+  "recommended_skills": ["project-context", "ui-improvement"],
+  "expected_outcomes": [
+    "Inspect existing token/component owner",
+    "Không route visual-taste-calibration khi visual direction không phải vấn đề",
+    "Không route web-ui-code-review framework specialization",
+    "Không route reference extraction/ux-writing khi không liên quan",
+    "Sửa root cause tối thiểu và verify component/state"
+  ],
+  "must_not": [
+    "Load external specialist references just because they are installed",
+    "Đổi typography/palette/copy",
+    "Mở rộng thành redesign",
+    "Assume React/Next"
+  ],
+  "rubric": {"alignment":35,"ux":10,"visual":10,"system":20,"inclusive":5,"web_quality":5,"verification":15}
+}

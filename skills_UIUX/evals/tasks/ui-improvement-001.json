@@ -1,0 +1,9 @@
+{
+  "id": "ui-improvement-001",
+  "category": "capability",
+  "prompt": "Website corporate đã code đầy đủ nhưng UI còn thiếu chuyên nghiệp: hierarchy yếu, spacing lệch giữa section, button/card không đồng nhất và mobile giống desktop bị nén. Hãy sửa giao diện nhưng giữ nguyên brand, content chính và flow hiện tại.",
+  "recommended_skills": ["ui-improvement", "ui-craft-and-visual-qa", "frontend-implementation", "responsive-and-device-strategy"],
+  "expected_outcomes": ["Đọc project truth và preserve brand/content/flow trước khi sửa", "Chẩn đoán vấn đề từ rendered UI và source thay vì nhận xét cảm tính", "Sửa shared owner/token/component trước page-local patch khi phù hợp", "Cải thiện responsive theo content pressure", "Verify rendered result sau implementation"],
+  "must_not": ["Tự đổi brand direction", "Thêm glass/gradient/card pattern máy móc", "Chỉ viết recommendation mà không sửa khi user đã yêu cầu sửa", "Tuyên bố hoàn tất mà không inspect UI sau change"],
+  "rubric": {"alignment":15,"ux":20,"visual":25,"system":15,"inclusive":10,"web_quality":5,"verification":10}
+}

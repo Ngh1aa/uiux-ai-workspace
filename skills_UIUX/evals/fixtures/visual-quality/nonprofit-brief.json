@@ -1,0 +1,46 @@
+{
+  "website_type": "nonprofit",
+  "client_name": "Pelagic Reef Alliance",
+  "tagline": "Protecting Oceanic Biodiversity & Coral Nurseries Worldwide",
+  "brand_attributes": ["urgent", "scientifically-grounded", "inspiring", "transparent", "action-oriented"],
+  "primary_audience": "Conservation donors, marine biology researchers, coastal community partners, and volunteer advocates",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#042940",
+      "secondary": "#005C53",
+      "accent": "#DB5A42",
+      "surface": "#F4F7F6",
+      "surface_elevated": "#FFFFFF"
+    },
+    "typography": "Dynamic bold grotesque headlines (e.g. Syne or Cabinet Grotesk) paired with dependable editorial sans body (e.g. Plus Jakarta Sans)",
+    "composition": "Impact-first visual statistics, interactive ocean expedition maps, transparent annual audit figures, and seamless one-time/monthly donation forms"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Mission rallying cry & immediate donation action",
+      "key_sections": ["urgency-hero-with-direct-donation-pill", "hectares-restored-counter-grid", "active-expeditions-map", "scientific-breakthrough-story", "corporate-partners-wall"],
+      "layout_family": "campaign-urgency"
+    },
+    {
+      "name": "initiatives",
+      "role": "Deep dive into coral nurseries & policy campaigns",
+      "key_sections": ["regional-initiatives-tabs", "scientific-methodology-diagrams", "field-reports-listing", "get-involved-cta"],
+      "layout_family": "exploratory-taxonomy"
+    },
+    {
+      "name": "financial-transparency",
+      "role": "Accountability & fund allocation audits",
+      "key_sections": ["where-every-dollar-goes-piechart", "annual-financial-reports-download-table", "charity-navigator-rating-badges"],
+      "layout_family": "data-transparency"
+    },
+    {
+      "name": "donate",
+      "role": "High-converting donation and monthly patron onboarding",
+      "key_sections": ["monthly-vs-one-time-toggle", "preset-impact-amounts-with-real-world-equivalents", "dedication-honor-checkbox", "ssl-security-reassurance-pills"],
+      "layout_family": "donor-checkout"
+    }
+  ],
+  "media_guidelines": "High-resolution underwater marine life photography showing both healthy thriving ecosystems and vulnerable bleached reefs. Real scientist field portraits.",
+  "anti_patterns": ["Guilt-tripping low-quality blurry disaster imagery", "Hidden donation cancellation or recurring auto-renew traps", "Vague claims without verifiable scientific metrics"]
+}

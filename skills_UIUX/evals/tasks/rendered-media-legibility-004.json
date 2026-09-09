@@ -1,0 +1,24 @@
+{
+  "id": "rendered-media-legibility-004",
+  "category": "capability",
+  "prompt": "Website đã code xong. Screenshot cho thấy chữ đặt trên ảnh gần như không đọc được, một số label/pseudo-text chồng lên nhau trên mobile, và floor-plan raster nhỏ bị phóng lớn nên mờ. Hãy QA và sửa đúng root cause trước khi handoff.",
+  "recommended_skills": ["ui-craft-and-visual-qa", "asset-media-and-art-direction", "responsive-and-device-strategy", "visual-regression-and-design-drift", "design-system-and-components"],
+  "expected_outcomes": [
+    "Bắt đầu từ actual rendered screenshot/evidence thay vì chỉ grep CSS",
+    "Phân biệt text-color cascade/specificity defect với image-contrast defect",
+    "Dùng local backplate/scrim/directional gradient hoặc reposition thay vì làm tối toàn ảnh vô cớ",
+    "Kiểm mobile/intermediate widths để bắt overlap/clip của overlay labels hoặc pseudo-elements",
+    "So intrinsic raster quality với rendered box và không upscale thumbnail/low-resolution raster thành hero/large decision object",
+    "Ưu tiên higher-resolution/vector source; nếu chưa có thì giảm kích thước và label asset là preview",
+    "Fix owning component/media strategy rồi re-render cùng viewport để xác minh",
+    "Nếu không thể render after-state thì báo VISUAL QA BLOCKED/UNVERIFIED chứ không claim PASS"
+  ],
+  "must_not": [
+    "Chỉ tăng z-index hoặc thêm shadow mà không xử lý contrast/root cause",
+    "Dùng global dark overlay nặng làm ảnh mất chất lượng",
+    "Dùng CSS filter/sharpen như cách chữa asset thiếu resolution",
+    "Để text-on-image phụ thuộc may mắn của một crop desktop",
+    "Dùng build/CI/source assertion làm bằng chứng visual PASS"
+  ],
+  "rubric": {"alignment":15,"ux":15,"visual":35,"system":10,"inclusive":10,"web_quality":5,"verification":10}
+}

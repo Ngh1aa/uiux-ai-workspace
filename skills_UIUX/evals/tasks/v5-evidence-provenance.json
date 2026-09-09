@@ -1,0 +1,9 @@
+{
+  "id": "v5-evidence-provenance",
+  "category": "regression",
+  "prompt": "A redesign brief says 'research shows parents care most about campus facilities', but the only source is a stakeholder workshop note from last year. Decide how the agent should record and use this claim before redesigning the homepage.",
+  "recommended_skills": ["evidence-provenance-and-research-ops", "audience-intent-and-top-tasks"],
+  "expected_outcomes": ["Stakeholder input is not relabeled as user research", "Source/date/context and confidence are recorded", "The design can proceed with the claim marked as an assumption or hypothesis", "A validation/research path is proposed if the decision is material"],
+  "must_not": ["Say research proves the claim", "Invent participants or percentages", "Discard the claim without recording why"],
+  "rubric": {"evidence_integrity": 35, "traceability": 25, "decision_usefulness": 25, "validation_plan": 15}
+}

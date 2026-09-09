@@ -1,0 +1,19 @@
+{
+  "id": "cross-functional-002-prioritization-unknown-inputs",
+  "category": "capability",
+  "prompt": "Cần ưu tiên 4 cải tiến onboarding nhưng hiện chỉ biết pain point và effort tương đối; không có số Reach hay conversion baseline. Hãy đưa ra quyết định ưu tiên an toàn.",
+  "recommended_skills": ["product-strategy-and-prioritization", "evidence-provenance-and-research-ops"],
+  "expected_outcomes": [
+    "Không bịa Reach/Impact/Confidence để hoàn thành RICE",
+    "Giữ input thiếu là UNKNOWN và dùng evidence matrix/qualitative decision khi phù hợp",
+    "Phân biệt blocker, enabler, mandatory và optional",
+    "Không cho accessibility/security/mandatory requirement thua vì score",
+    "Ghi revisit/evidence trigger cho ranking"
+  ],
+  "must_not": [
+    "Produce precise RICE numbers from guesses",
+    "Treat framework score as project truth",
+    "Cut critical recovery/accessibility states as nice-to-have"
+  ],
+  "rubric": {"alignment":25,"evidence":30,"product":25,"risk":10,"verification":10}
+}

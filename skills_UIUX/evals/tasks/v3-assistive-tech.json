@@ -1,0 +1,9 @@
+{
+  "id": "v3-assistive-tech",
+  "category": "capability",
+  "prompt": "Create a manual accessibility verification plan for a new modal-based checkout flow after automated axe checks pass.",
+  "recommended_skills": ["assistive-technology-testing", "accessibility", "interaction-patterns-and-form-ux"],
+  "expected_outcomes": ["Keyboard and focus are tested", "Screen-reader names/states/errors are tested", "Zoom/reflow is included", "Automated checks are treated as insufficient", "Fixes require retest"],
+  "must_not": ["Declare accessibility solely from automated scan", "Ignore focus restoration after closing modal"],
+  "rubric": {"coverage": 30, "manual_at_quality": 30, "journey_focus": 20, "verification_loop": 20}
+}

@@ -1,0 +1,54 @@
+{
+  "id": "routing-production-003-perf-budget",
+  "category": "capability",
+  "prompt": "The e-commerce site loads in 8.2s on 3G mobile. Set up performance budgets for key routes (homepage, category, product detail, cart), identify the biggest bottlenecks, and implement fixes. Target: LCP < 2.5s on 4G.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "web-quality-and-performance"
+    ],
+    "allowed_skills": [
+      "frontend-architecture-and-refactoring",
+      "frontend-implementation",
+      "asset-media-and-art-direction",
+      "responsive-and-device-strategy",
+      "ai-agent-coding-guardrails"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "ux-research-and-journey",
+      "product-discovery",
+      "brand-guidelines",
+      "conversion-and-content",
+      "design-reference-research-and-benchmark"
+    ],
+    "activation_budget": {
+      "soft_max": 7
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "web-quality-and-performance",
+    "frontend-architecture-and-refactoring",
+    "frontend-implementation",
+    "asset-media-and-art-direction",
+    "responsive-and-device-strategy",
+    "ai-agent-coding-guardrails"
+  ],
+  "expected_outcomes": [
+    "Route-specific performance budgets",
+    "Bottleneck analysis (images, JS, fonts, third-party)",
+    "Lab vs field distinction noted",
+    "Fixes prioritized by impact"
+  ],
+  "must_not": [
+    "Load design direction for a performance task",
+    "Start user research for a known performance problem"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

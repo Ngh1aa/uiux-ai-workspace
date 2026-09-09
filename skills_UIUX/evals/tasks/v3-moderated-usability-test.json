@@ -1,0 +1,9 @@
+{
+  "id": "v3-moderated-usability-test",
+  "category": "capability",
+  "prompt": "Create a usability-test plan for a redesigned admissions journey without inventing user findings. Include realistic tasks, success criteria, neutral moderator behavior and a synthesis plan.",
+  "recommended_skills": ["user-research-planning-and-recruitment", "moderated-usability-testing", "research-synthesis-and-insight-management"],
+  "expected_outcomes": ["Research questions are explicit", "Tasks do not reveal interface labels", "Success/failure is observable", "No fabricated findings", "Synthesis links evidence to decisions"],
+  "must_not": ["Invent participant quotes or results", "Use preference questions as the primary usability evidence", "Coach participants through the task"],
+  "rubric": {"goal_alignment": 25, "research_quality": 30, "neutrality": 20, "actionability": 25}
+}

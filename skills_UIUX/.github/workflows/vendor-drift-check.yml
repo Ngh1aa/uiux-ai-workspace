@@ -1,0 +1,114 @@
+name: Vendor Drift Check
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday at 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout skills_UIUX
+        uses: actions/checkout@v4
+
+      - name: Checkout upstream for comparison
+        uses: actions/checkout@v4
+        with:
+          repository: nextlevelbuilder/ui-ux-pro-max-skill
+          path: .upstream-check
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Compare pinned vs upstream HEAD
+        id: drift
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          PYTHONIOENCODING: 'utf-8'
+        run: |
+          set -euo pipefail
+
+          UPSTREAM_HEAD=$(git -C .upstream-check rev-parse HEAD)
+          PINNED="314307f156aeab0c6b567bbaa1ce4e7aabd5a636"
+
+          echo "pinned=$PINNED" >> "$GITHUB_OUTPUT"
+          echo "upstream_head=$UPSTREAM_HEAD" >> "$GITHUB_OUTPUT"
+
+          if [ "$UPSTREAM_HEAD" = "$PINNED" ]; then
+            echo "Vendor pin is current with upstream HEAD"
+            echo "drifted=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Drift detected: pinned=$PINNED upstream=$UPSTREAM_HEAD"
+            echo "drifted=true" >> "$GITHUB_OUTPUT"
+
+            # Generate structured report. Missing/unresolvable pinned history is a hard error,
+            # never a LOW-risk drift result.
+            python scripts/vendor-drift-diff.py .upstream-check --json > /tmp/drift-report.json
+            python scripts/vendor-drift-diff.py .upstream-check --issue-body > /tmp/drift-issue-body.md
+
+            RISK=$(python -c "import json; print(json.load(open('/tmp/drift-report.json'))['overall_risk'])")
+            echo "risk=$RISK" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Find existing drift issue
+        if: steps.drift.outputs.drifted == 'true'
+        id: find_issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'vendor-drift',
+              state: 'open',
+              per_page: 5,
+            });
+            const existing = issues.data.find(i =>
+              i.title.includes('ui-ux-pro-max')
+            );
+            if (existing) {
+              core.setOutput('issue_number', existing.number);
+              core.setOutput('exists', 'true');
+            } else {
+              core.setOutput('exists', 'false');
+            }
+
+      - name: Create or update drift issue
+        if: steps.drift.outputs.drifted == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('/tmp/drift-issue-body.md', 'utf8');
+            const risk = '${{ steps.drift.outputs.risk }}';
+            const title = `[vendor-drift] ui-ux-pro-max: upstream ${risk} changes detected`;
+
+            if ('${{ steps.find_issue.outputs.exists }}' === 'true') {
+              const issueNumber = parseInt('${{ steps.find_issue.outputs.issue_number }}');
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                title: title,
+                body: body,
+              });
+              console.log(`Updated existing issue #${issueNumber}`);
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['vendor-drift'],
+              });
+              console.log('Created new vendor drift issue');
+            }
+
+      - name: Cleanup
+        if: always()
+        run: rm -rf .upstream-check

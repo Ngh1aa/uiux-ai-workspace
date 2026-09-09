@@ -1,0 +1,50 @@
+{
+  "id": "visual-quality-003-ecommerce",
+  "category": "capability",
+  "prompt": "Create an artisanal storefront for Komorebi Ceramic & Tea Studio using evals/fixtures/visual-quality/ecommerce-brief.json. Deliver 4 pages (Home, Shop Catalogue, Product Detail, About Craft). Emphasize tactile sensory aesthetics, wabi-sabi earth tones, spacious product presentation, and complete avoidance of cheap high-urgency ecommerce tropes.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "ecommerce-website"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "ecommerce-website",
+      "conversion-and-content"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "Storefront and Product Detail present calm, spacious compositions reflecting craft provenance",
+    "High-detail macro imagery of ceramic glaze crazing and wood-firing kiln textures",
+    "Sticky add-to-tote and decision spec table are refined and legible on mobile viewports",
+    "Zero high-urgency neon countdown timers or discount popup modals",
+    "Deterministic visual gates pass with no horizontal overflow and valid viewport meta"
+  ],
+  "must_not": [
+    "Use flashing discount banners, urgency timers, or neon badge spam",
+    "Produce generic 3-column card layouts for both catalogue and product detail views",
+    "Render low-contrast text on tactile background patterns",
+    "Use low-resolution or watermarked stock tea imagery"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

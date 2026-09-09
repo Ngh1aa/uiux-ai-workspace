@@ -1,0 +1,59 @@
+{
+  "id": "routing-system-004-brand-refresh",
+  "category": "capability",
+  "prompt": "The startup has pivoted from B2C to B2B enterprise. The current website brand (playful, bright, casual) needs to become professional and trustworthy. Update brand expression across all 5 pages without changing content or IA.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "brand-guidelines",
+      "visual-design-direction",
+      "brand-distinctiveness-and-visual-signature"
+    ],
+    "allowed_skills": [
+      "design-system-and-components",
+      "ui-craft-and-visual-qa",
+      "asset-media-and-art-direction",
+      "responsive-and-device-strategy",
+      "frontend-implementation",
+      "design-intelligence-retrieval"
+    ],
+    "forbidden_without_trigger": [
+      "information-architecture",
+      "product-discovery",
+      "ux-research-and-journey",
+      "website-audit-and-redesign",
+      "service-blueprinting"
+    ],
+    "activation_budget": {
+      "soft_max": 10
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "brand-guidelines",
+    "visual-design-direction",
+    "brand-distinctiveness-and-visual-signature",
+    "design-system-and-components",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "responsive-and-device-strategy",
+    "frontend-implementation",
+    "design-intelligence-retrieval"
+  ],
+  "expected_outcomes": [
+    "Brand expression updated to B2B professional",
+    "Design tokens reflect new direction",
+    "Content and IA preserved",
+    "Visual consistency across pages"
+  ],
+  "must_not": [
+    "Restructure IA for a brand-only change",
+    "Run product discovery for a known pivot direction"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 30,
+    "project_grounding": 30,
+    "escalation_logic": 15
+  }
+}

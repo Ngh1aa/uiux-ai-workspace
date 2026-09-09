@@ -1,0 +1,57 @@
+{
+  "id": "routing-journey-002-onboarding",
+  "category": "capability",
+  "prompt": "Design the first-run onboarding experience for this SaaS dashboard. New users need to: connect their data source, invite team members, and configure their first report. Currently there's no onboarding — users land on an empty dashboard.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "ux-research-and-journey",
+      "complex-workflow-and-progress-ux"
+    ],
+    "allowed_skills": [
+      "state-feedback-and-error-recovery",
+      "interaction-patterns-and-form-ux",
+      "human-ai-interaction-design",
+      "ux-writing-and-microcopy",
+      "design-system-and-components",
+      "responsive-and-device-strategy"
+    ],
+    "forbidden_without_trigger": [
+      "website-audit-and-redesign",
+      "seo-strategy",
+      "search-demand-and-content-briefing",
+      "conversion-and-content",
+      "brand-recognition-validation"
+    ],
+    "activation_budget": {
+      "soft_max": 8
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ux-research-and-journey",
+    "complex-workflow-and-progress-ux",
+    "state-feedback-and-error-recovery",
+    "interaction-patterns-and-form-ux",
+    "human-ai-interaction-design",
+    "ux-writing-and-microcopy",
+    "design-system-and-components",
+    "responsive-and-device-strategy"
+  ],
+  "expected_outcomes": [
+    "Multi-step onboarding with clear progress",
+    "Empty states handled",
+    "Skip/defer options for non-critical steps",
+    "Data source connection UX safe"
+  ],
+  "must_not": [
+    "Load SEO/search for an internal app flow",
+    "Run brand recognition audit for onboarding design"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

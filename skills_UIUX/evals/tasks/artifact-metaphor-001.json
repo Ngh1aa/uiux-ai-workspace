@@ -1,0 +1,24 @@
+{
+  "id": "artifact-metaphor-001",
+  "category": "capability",
+  "prompt": "Thiết kế lại website ngân hàng đang bị generic card soup. Tôi muốn mục mở thẻ trông giống thẻ ngân hàng thật, tin tức giống tờ báo và các section khác cũng lấy cảm hứng từ sản phẩm/vật thể thật trong ngành. Hãy tạo hướng thiết kế có tính hệ thống, không biến website thành skeuomorphism lỗi thời và không bịa sản phẩm thật.",
+  "recommended_skills": ["real-world-artifact-and-domain-metaphor-design", "brand-distinctiveness-and-visual-signature", "visual-design-direction", "design-system-and-components"],
+  "expected_outcomes": [
+    "Xác định design problem trước khi chọn artifact",
+    "Lập inventory vật thể/tài liệu/ritual thật của domain và phân biệt source reality",
+    "Phân biệt form, structural, information, behavioral và ritual metaphor",
+    "Chọn fidelity L0-L4 và ưu tiên lowest useful fidelity",
+    "Ghi rõ transferable vs non-transferable properties thay vì copy vật thể 1:1",
+    "Dùng official/current product asset khi artifact đại diện sản phẩm thật",
+    "Có mobile/accessibility/performance adaptation và semantic experience không phụ thuộc visual resemblance",
+    "Synthesize một domain grammar coherent thay vì collage nhiều metaphor"
+  ],
+  "must_not": [
+    "Dùng fake branded bank card hoặc official mark rồi trình bày như sản phẩm thật",
+    "Thêm leather/paper/3D texture chỉ để skeuomorphic",
+    "Đổi meaning của control quen thuộc theo metaphor",
+    "Ép cùng một artifact lên mọi page/section",
+    "Claim UX improved chỉ vì UI giống vật thật"
+  ],
+  "rubric": {"alignment":20,"ux":20,"visual":20,"system":15,"inclusive":10,"web_quality":5,"verification":10}
+}

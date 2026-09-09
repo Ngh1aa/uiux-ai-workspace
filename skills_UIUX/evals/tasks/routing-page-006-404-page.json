@@ -1,0 +1,50 @@
+{
+  "id": "routing-page-006-404-page",
+  "category": "capability",
+  "prompt": "Create a custom 404 page. The current site shows the default Next.js 404. Make it on-brand and helpful — include search, popular links, and a way back to the homepage.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "frontend-implementation",
+      "state-feedback-and-error-recovery",
+      "ux-writing-and-microcopy",
+      "brand-guidelines",
+      "site-search-and-findability"
+    ],
+    "forbidden_without_trigger": [
+      "website-audit-and-redesign",
+      "information-architecture",
+      "product-strategy-and-prioritization",
+      "design-reference-research-and-benchmark"
+    ],
+    "activation_budget": {
+      "soft_max": 5
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "frontend-implementation",
+    "state-feedback-and-error-recovery",
+    "ux-writing-and-microcopy",
+    "brand-guidelines",
+    "site-search-and-findability"
+  ],
+  "expected_outcomes": [
+    "On-brand 404 page",
+    "Helpful navigation options",
+    "Search or popular links",
+    "Appropriate tone"
+  ],
+  "must_not": [
+    "Audit the whole site for a 404 page",
+    "Load design reference research for a single error page"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 30,
+    "project_grounding": 30,
+    "escalation_logic": 15
+  }
+}

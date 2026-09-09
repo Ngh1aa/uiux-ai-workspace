@@ -1,0 +1,23 @@
+{
+  "id": "monotony-detection-bad-001",
+  "category": "regression",
+  "prompt": "Analyze 6 pages where every page follows the exact same pattern: full-width hero image → 3-column card grid → CTA banner → 3-column card grid → testimonial slider. Only text and images differ between pages.",
+  "expected_outcomes": [
+    "Verdict is HARD_FAIL or STRONG_WARN",
+    "All pages flagged as sharing same structure",
+    "Composition families count is 1 or 2"
+  ],
+  "must_not": [
+    "Report this as structurally diverse",
+    "Give OK verdict to identical structures"
+  ],
+  "rubric": {
+    "detection_accuracy": 50,
+    "family_counting": 25,
+    "false_positive_rate": 25
+  },
+  "recommended_skills": [
+    "visual-redesign-delta-gate",
+    "ui-craft-and-visual-qa"
+  ]
+}

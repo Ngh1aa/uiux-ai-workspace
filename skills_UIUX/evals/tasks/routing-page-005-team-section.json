@@ -1,0 +1,49 @@
+{
+  "id": "routing-page-005-team-section",
+  "category": "capability",
+  "prompt": "Add a team/staff section to the About page of this law firm website. Display 8 team members with photo, name, title, and specialization. The site uses a dark professional theme.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "frontend-implementation",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "asset-media-and-art-direction"
+    ],
+    "forbidden_without_trigger": [
+      "ux-research-and-journey",
+      "product-discovery",
+      "analytics-and-experimentation",
+      "service-blueprinting",
+      "card-sorting-and-tree-testing"
+    ],
+    "activation_budget": {
+      "soft_max": 5
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "frontend-implementation",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "asset-media-and-art-direction"
+  ],
+  "expected_outcomes": [
+    "Team grid/layout appropriate for 8 members",
+    "Uses existing theme tokens",
+    "Photos have consistent treatment",
+    "Responsive behavior"
+  ],
+  "must_not": [
+    "Research user journey for adding a team section",
+    "Run card sorting for a straightforward section"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 25,
+    "project_grounding": 30,
+    "escalation_logic": 15
+  }
+}

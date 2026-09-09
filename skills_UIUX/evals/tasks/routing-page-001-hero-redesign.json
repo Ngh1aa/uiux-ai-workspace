@@ -1,0 +1,52 @@
+{
+  "id": "routing-page-001-hero-redesign",
+  "category": "capability",
+  "prompt": "The homepage hero section looks generic and template-like. Redesign only the hero to feel more distinctive for this architecture firm, keeping the existing navigation and footer.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "ui-improvement"
+    ],
+    "allowed_skills": [
+      "visual-design-direction",
+      "brand-guidelines",
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy"
+    ],
+    "forbidden_without_trigger": [
+      "website-audit-and-redesign",
+      "information-architecture",
+      "ux-research-and-journey",
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": {
+      "soft_max": 6
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ui-improvement",
+    "visual-design-direction",
+    "brand-guidelines",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy"
+  ],
+  "expected_outcomes": [
+    "Hero composition visibly changed",
+    "Brand context considered",
+    "Rest of page untouched"
+  ],
+  "must_not": [
+    "Run full site audit for a hero section change",
+    "Load journey/IA skills for a single-section redesign"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

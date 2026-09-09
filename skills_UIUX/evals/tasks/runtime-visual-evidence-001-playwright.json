@@ -1,0 +1,26 @@
+{
+  "id": "runtime-visual-evidence-001-playwright",
+  "category": "capability",
+  "prompt": "Capture rendered UI evidence for multiple routes and viewports with the optional Playwright adapter, preserving rendered HTML, screenshots, console errors and failed request evidence for downstream grading.",
+  "recommended_skills": [
+    "testing-strategy",
+    "ui-craft-and-visual-qa",
+    "visual-regression-and-design-drift"
+  ],
+  "expected_outcomes": [
+    "Each route/viewport capture has screenshot and rendered HTML evidence",
+    "Console errors and failed requests are recorded separately from visual judgment",
+    "Rendered artifacts feed visual-quality/monotony evaluation instead of replacing it"
+  ],
+  "must_not": [
+    "Claim visual quality passed merely because a screenshot file exists",
+    "Use source JSX as a substitute for rendered DOM evidence",
+    "Make Playwright a mandatory dependency for every skills_UIUX consumer"
+  ],
+  "rubric": {
+    "rendered_evidence": 35,
+    "diagnostic_evidence": 25,
+    "visual_claim_discipline": 25,
+    "optional_integration_boundary": 15
+  }
+}

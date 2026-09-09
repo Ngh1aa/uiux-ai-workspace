@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "existing-ui-improvement",
+  "description": "Focused improvement flow for an implemented website/page where the goal is to modernize, fix or polish without forcing a whole-site redesign lifecycle.",
+  "match": {
+    "priority": 70,
+    "intents": ["improve", "fix", "polish"],
+    "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
+  },
+  "stages": [
+    {
+      "id": "research",
+      "agent": "research",
+      "purpose": "Inspect project truth, current UI owner and the smallest root cause before changing code.",
+      "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "ui-improvement"],
+      "conditional_skills": [
+        {"when": {"website_type": "ecommerce"}, "skills": ["ecommerce-website"]},
+        {"when": {"website_type": "education"}, "skills": ["education-website"]},
+        {"when": {"website_type": "corporate"}, "skills": ["corporate-website"]}
+      ],
+      "gates": [{"id": "scope-root-cause", "require": "affected owner, constraints and expected outcome are known"}]
+    },
+    {
+      "id": "implementation",
+      "agent": "implementation",
+      "purpose": "Apply the smallest reusable implementation change while preserving project design language and unrelated work.",
+      "required_skills": ["ai-agent-coding-guardrails", "ui-improvement", "frontend-implementation", "responsive-and-device-strategy"],
+      "conditional_skills": [
+        {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
+        {"when": {"features": ["forms"]}, "skills": ["interaction-patterns-and-form-ux", "state-feedback-and-error-recovery"]}
+      ],
+      "gates": [{"id": "focused-verification", "require": "changed behavior has a pass condition and focused verification"}]
+    },
+    {
+      "id": "qa",
+      "agent": "qa",
+      "purpose": "Verify the actual rendered change and prevent regression across affected shared owners.",
+      "required_skills": ["testing-strategy", "agent-evaluation-and-reliability", "ui-craft-and-visual-qa", "web-ui-code-review", "accessibility"],
+      "conditional_skills": [{"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance"]}],
+      "gates": [{"id": "rendered-check", "require": "changed UI is inspected in representative states/viewports"}]
+    }
+  ],
+  "replanning": {
+    "max_replans": 3,
+    "triggers": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"],
+    "policies": [
+      {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "Rendered QA failed; return to implementation with root-cause review.", "target_stage": "implementation", "add_skills": ["web-ui-code-review"]},
+      {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "The assumed UI owner/root cause was wrong; re-inspect current project truth.", "target_stage": "research", "add_skills": ["project-context"]},
+      {"when": {"signal": "NEW_RISK", "risk": ["production", "high"]}, "reason": "Risk escalated beyond a local polish task; add production reality/testing specialists.", "target_stage": "implementation", "add_skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]},
+      {"when": {"signal": "TOOL_FAILURE"}, "reason": "Diagnose repeated tool failure rather than blind retry.", "add_skills": ["agent-evaluation-and-reliability"]},
+      {"when": {"signal": "BLOCKED"}, "reason": "Blocked local improvement needs decision reframing before more edits.", "target_stage": "research", "add_skills": ["product-decision-and-stakeholder-framing"]}
+    ]
+  }
+}

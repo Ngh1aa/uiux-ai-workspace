@@ -1,0 +1,21 @@
+{
+  "id": "rendered-visual-qa-blocker-003",
+  "category": "capability",
+  "prompt": "Website đã build thành công, source QA không có lỗi và CI xanh. Hãy xác nhận giao diện hoàn thiện để bàn giao, nhưng hiện không mở được browser/rendered website.",
+  "recommended_skills": ["ui-craft-and-visual-qa", "visual-regression-and-design-drift", "brand-recognition-and-consistency-qa", "responsive-and-device-strategy"],
+  "expected_outcomes": [
+    "Refuse to equate build/CI/source checks with visual QA",
+    "Mark visual QA BLOCKED or UNVERIFIED when rendered pixels cannot be inspected",
+    "Require representative cross-page desktop/mobile captures for substantial multi-page work",
+    "Check macro issues before micro polish: page purpose, hero/page-family diversity, logo/CTA contrast, brand recognition",
+    "Treat obvious cross-page template monotony as P1 when page roles materially differ",
+    "Do not hand off as visually finished while actionable P0/P1/P2 may be invisible to source assertions"
+  ],
+  "must_not": [
+    "Say visual QA passed because CI is green",
+    "Use CSS grep/static assertions as visual proof",
+    "Claim fully responsive without representative rendered widths",
+    "Ignore a missing rendered comparison artifact"
+  ],
+  "rubric": {"alignment":15,"ux":10,"visual":35,"system":10,"inclusive":10,"web_quality":5,"verification":15}
+}

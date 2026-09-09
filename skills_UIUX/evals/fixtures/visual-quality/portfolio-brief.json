@@ -1,0 +1,40 @@
+{
+  "website_type": "portfolio",
+  "client_name": "Studio Arcus / Maya Lin-Vance",
+  "tagline": "Principal Product Designer & Systems Architect",
+  "brand_attributes": ["avant-garde", "typographically-obsessed", "intellectual", "precise", "craft-first"],
+  "primary_audience": "Design directors, VP of Product, venture partners, and cutting-edge design studios",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#0A0A0B",
+      "secondary": "#52525B",
+      "accent": "#FF4500",
+      "surface": "#121214",
+      "surface_elevated": "#18181B"
+    },
+    "typography": "Expressive mono or neo-grotesque display (e.g. Monument Extended or Neue Haas Grotesk) paired with crisp monospaced code elements (e.g. JetBrains Mono)",
+    "composition": "Dark mode default, asymmetric full-bleed interactive project rows, live interactive UI micro-prototypes, and dense case study typography"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Curated body of work & design ethos",
+      "key_sections": ["bold-statement-hero-without-avatar-cliche", "interactive-project-index-with-hover-previews", "systems-craft-artifacts-reel", "speaking-writing-selected-list", "direct-contact-footer"],
+      "layout_family": "interactive-showcase"
+    },
+    {
+      "name": "case-study",
+      "role": "Deep dive into problem, craft, systems & metrics",
+      "key_sections": ["context-and-role-metadata-grid", "interactive-prototype-embed-viewport", "before-and-after-system-comparison", "measurable-business-and-ux-outcomes-block", "colleague-testimonials"],
+      "layout_family": "in-depth-editorial"
+    },
+    {
+      "name": "about",
+      "role": "Philosophy, background & career trajectory",
+      "key_sections": ["design-principles-manifesto", "career-timeline-with-provenance", "tooling-and-open-source-contributions", "side-experiments-gallery"],
+      "layout_family": "split-chronological"
+    }
+  ],
+  "media_guidelines": "Pixel-perfect Figma/code renders, recorded vector micro-interactions, dark UI mockups with high contrast. No generic cartoon avatars or Dribbble spheres.",
+  "anti_patterns": ["Generic circular headshot with floating skill badges", "Dribbble-style isometric floating mockups", "Purple/pink blurred background orbs", "All case study cards having identical 3-column layouts"]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "monotony-detection-good-001",
+  "category": "regression",
+  "prompt": "Analyze 6 pages of a corporate site. Homepage has editorial hero, About has timeline, Services has icon grid, Projects has masonry gallery, News has article list, Contact has map + form. Expect structural diversity.",
+  "expected_outcomes": [
+    "At least 4 composition families detected",
+    "Verdict is OK",
+    "No false-positive monotony warning"
+  ],
+  "must_not": [
+    "Flag diverse pages as monotone",
+    "Penalize shared navigation and footer"
+  ],
+  "rubric": {
+    "detection_accuracy": 40,
+    "family_counting": 30,
+    "false_positive_rate": 30
+  },
+  "recommended_skills": [
+    "visual-redesign-delta-gate",
+    "ui-craft-and-visual-qa"
+  ]
+}

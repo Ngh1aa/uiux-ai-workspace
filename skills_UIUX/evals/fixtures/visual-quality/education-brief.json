@@ -1,0 +1,46 @@
+{
+  "website_type": "education",
+  "client_name": "Aetheria International Academy",
+  "tagline": "Cultivating Inquisitive Minds & Global Stewardship",
+  "brand_attributes": ["scholarly", "warm", "forward-looking", "rigorous", "community-centered"],
+  "primary_audience": "Prospective parents, gifted secondary students, and international baccalaureate applicants",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#0D2C54",
+      "secondary": "#33658A",
+      "accent": "#F6AE2D",
+      "surface": "#FAF9F6",
+      "surface_elevated": "#FFFFFF"
+    },
+    "typography": "Refined humanist serif headers (e.g. Garamond or EB Garamond) paired with approachable geometric sans (e.g. Plus Jakarta Sans)",
+    "composition": "Story-driven sections with clear academic calendar rails, multi-stage application pathways, and authentic student voice vignettes"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Campus life & admissions gateway",
+      "key_sections": ["video-backed-narrative-hero", "key-academic-pillars", "student-journey-interactive-map", "upcoming-events-rail", "admissions-step-bar"],
+      "layout_family": "immersive-narrative"
+    },
+    {
+      "name": "academics",
+      "role": "Curriculum & research programs",
+      "key_sections": ["curriculum-finder-filter", "grade-level-accordions", "faculty-spotlight-carousel", "stem-lab-facility-preview"],
+      "layout_family": "hierarchical-directory"
+    },
+    {
+      "name": "admissions",
+      "role": "Application pathway & requirements",
+      "key_sections": ["admissions-step-timeline", "tuition-and-aid-calculator-block", "application-deadlines-table", "campus-tour-booking-cta"],
+      "layout_family": "guided-workflow"
+    },
+    {
+      "name": "campus-experience",
+      "role": "Student life & boarding",
+      "key_sections": ["day-in-the-life-multimedia-strip", "dormitory-and-dining-walkthrough", "athletics-and-arts-showcase"],
+      "layout_family": "photo-editorial"
+    }
+  ],
+  "media_guidelines": "Candid documentary-style photography of real classroom engagement, lab experiments, and outdoor sports. Authentic expressions without posed smiles.",
+  "anti_patterns": ["Overly rigid corporate tables without context", "Stock photos of unrelated models in graduation gowns", "Unlabeled tuition costs hidden behind friction walls"]
+}

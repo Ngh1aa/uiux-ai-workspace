@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "id": "professional-website-redesign",
+  "description": "End-to-end professional website build/redesign flow with domain-aware skill routing, modern visual direction, implementation, rendered QA and bounded replanning.",
+  "match": {
+    "priority": 50,
+    "intents": ["build", "redesign", "rebuild"],
+    "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
+  },
+  "stages": [
+    {
+      "id": "research",
+      "agent": "research",
+      "purpose": "Establish project truth, audience intent, preserve/change rationale, information architecture and reference evidence before design.",
+      "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "website-audit-and-redesign", "audience-intent-and-top-tasks", "information-architecture", "design-reference-research-and-benchmark"],
+      "conditional_skills": [
+        {"when": {"website_type": "corporate"}, "skills": ["corporate-website"]},
+        {"when": {"website_type": "ecommerce"}, "skills": ["ecommerce-website", "conversion-and-content", "site-search-and-findability"]},
+        {"when": {"website_type": "education"}, "skills": ["education-website", "trust-credibility-and-transparency"]},
+        {"when": {"website_type": "government"}, "skills": ["government-and-public-sector-website", "inclusive-design-and-cognitive-accessibility"]},
+        {"when": {"website_type": "hospitality"}, "skills": ["hospitality-website", "service-experience-to-digital-journey", "conversion-and-content"]},
+        {"when": {"website_type": "news"}, "skills": ["news-and-media-website", "site-search-and-findability"]},
+        {"when": {"website_type": "real-estate"}, "skills": ["real-estate-and-building-website", "conversion-and-content"]},
+        {"when": {"website_type": "saas"}, "skills": ["saas-website", "product-discovery", "complex-workflow-and-progress-ux"]},
+        {"when": {"website_type": "startup"}, "skills": ["startup-and-incubator-website", "conversion-and-content"]},
+        {"when": {"website_type": "portfolio"}, "skills": ["portfolio-website"]},
+        {"when": {"website_type": "nonprofit"}, "skills": ["nonprofit-website", "trust-credibility-and-transparency"]},
+        {"when": {"website_type": "landing"}, "skills": ["landing-page", "conversion-and-content"]}
+      ],
+      "gates": [
+        {"id": "project-truth-known", "require": "owner goal, audience, scope, mode and source-of-truth are explicit"},
+        {"id": "design-input-ready", "require": "IA/reference evidence and preserve/change decisions are sufficient for a concrete Design Contract"}
+      ]
+    },
+    {
+      "id": "design",
+      "agent": "implementation",
+      "purpose": "Turn research into a distinctive modern Design Contract and reusable visual system without generic template repetition.",
+      "required_skills": ["ai-agent-coding-guardrails", "journey-driven-content-and-layout", "visual-design-direction", "brand-distinctiveness-and-visual-signature", "design-system-and-components", "asset-media-and-art-direction"],
+      "conditional_skills": [
+        {"when": {"website_type": ["ecommerce", "saas"]}, "skills": ["interaction-patterns-and-form-ux"]},
+        {"when": {"website_type": ["hospitality", "portfolio", "real-estate"]}, "skills": ["experience-principles-and-signature-moments"]},
+        {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
+        {"when": {"features": ["i18n"]}, "skills": ["localization-and-i18n"]}
+      ],
+      "gates": [
+        {"id": "design-contract", "approval": "human", "require": "page-role compositions, typography, imagery, interaction, mobile transformation and do/don't rules are concrete before broad implementation"}
+      ]
+    },
+    {
+      "id": "implementation",
+      "agent": "implementation",
+      "purpose": "Implement the approved design system and page roles as maintainable responsive code with truthful system behavior.",
+      "required_skills": ["ai-agent-coding-guardrails", "frontend-implementation", "component-driven-development", "responsive-and-device-strategy"],
+      "conditional_skills": [
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]},
+        {"when": {"features": ["auth"]}, "skills": ["authentication-account-and-recovery-ux", "security-and-privacy"]},
+        {"when": {"features": ["forms"]}, "skills": ["complex-forms-and-wizards", "state-feedback-and-error-recovery"]},
+        {"when": {"features": ["search"]}, "skills": ["site-search-and-findability"]},
+        {"when": {"features": ["dashboard"]}, "skills": ["data-tables-and-enterprise-ux", "data-visualization-and-dashboard-ux"]}
+      ],
+      "gates": [
+        {"id": "implementation-evidence", "require": "material changes have acceptance criteria and focused verification; build success is not treated as rendered UX proof"}
+      ]
+    },
+    {
+      "id": "qa",
+      "agent": "qa",
+      "purpose": "Independently verify rendered interface quality, responsive behavior, accessibility, brand integrity, media crops and code/experience regressions.",
+      "required_skills": ["testing-strategy", "agent-evaluation-and-reliability", "ui-craft-and-visual-qa", "web-ui-code-review", "accessibility", "web-quality-and-performance", "brand-recognition-and-consistency-qa", "media-crop-and-layout-integrity"],
+      "conditional_skills": [
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["system-reality-and-production-readiness", "code-review-and-release"]},
+        {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]}
+      ],
+      "gates": [
+        {"id": "rendered-qa", "require": "actual rendered pixels are inspected across representative routes/viewports and obvious shared-owner defects are checked across affected routes"},
+        {"id": "truthful-completion", "require": "verified versus unverified areas are explicit; no production/accessibility/UX improvement claim exceeds evidence"}
+      ]
+    }
+  ],
+  "replanning": {
+    "max_replans": 4,
+    "triggers": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"],
+    "policies": [
+      {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "QA found a material interface or implementation defect; return to implementation with root-cause review before re-verifying.", "target_stage": "implementation", "add_skills": ["ui-improvement", "web-ui-code-review"]},
+      {"when": {"signal": "GATE_FAIL", "current_stage": "design"}, "reason": "Design gate failed or direction remains generic; deepen critique before implementation.", "target_stage": "design", "add_skills": ["design-critique-and-rationale", "visual-taste-calibration"]},
+      {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "A project/research assumption was invalidated; return to evidence synthesis rather than patch downstream symptoms.", "target_stage": "research", "add_skills": ["research-synthesis-and-insight-management"]},
+      {"when": {"signal": "NEW_RISK", "risk": ["production", "high"]}, "reason": "A new production/high-consequence risk requires system reality and security review.", "target_stage": "implementation", "add_skills": ["system-reality-and-production-readiness", "security-and-privacy", "testing-strategy"]},
+      {"when": {"signal": "TOOL_FAILURE"}, "reason": "Repeated tool failure requires diagnosis and changed evidence, not blind retry.", "add_skills": ["agent-evaluation-and-reliability"]},
+      {"when": {"signal": "CONTEXT_DRIFT"}, "reason": "Project truth/context drift requires re-grounding before further design or code decisions.", "target_stage": "research", "add_skills": ["project-context"]},
+      {"when": {"signal": "BLOCKED"}, "reason": "A material blocker requires reframing the unresolved decision before downstream execution.", "target_stage": "research", "add_skills": ["product-decision-and-stakeholder-framing"]}
+    ]
+  }
+}

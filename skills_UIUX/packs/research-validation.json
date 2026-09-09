@@ -1,0 +1,13 @@
+{
+  "name": "research-validation",
+  "description": "Research planning, usability validation, IA validation, synthesis, benchmarking and prototype/service learning.",
+  "skills": [
+    "user-research-planning-and-recruitment",
+    "moderated-usability-testing",
+    "research-synthesis-and-insight-management",
+    "ux-benchmarking-and-metrics",
+    "card-sorting-and-tree-testing",
+    "service-blueprinting",
+    "prototype-strategy-and-concept-testing"
+  ]
+}

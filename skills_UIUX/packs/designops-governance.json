@@ -1,0 +1,8 @@
+{
+  "name": "designops-governance",
+  "description": "Structured critique plus design-system governance, contribution, deprecation and adoption.",
+  "skills": [
+    "design-critique-and-rationale",
+    "design-system-governance-and-adoption"
+  ]
+}
