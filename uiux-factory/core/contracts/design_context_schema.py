@@ -59,8 +59,10 @@ class DesignContext(BaseModel):
     assets: list[ContextAsset] = Field(default_factory=list, max_length=4)
     # When fewer than target references are supplied, Factory may add curated
     # live production sites for measurable inspiration. User references win.
+    # Four is the finalist cap for ReferenceAnalyzer; broader discovery belongs
+    # to ResearchAgent and should normally inspect 10–20 candidates.
     auto_inspiration: bool = True
-    inspiration_target: int = Field(default=2, ge=0, le=2)
+    inspiration_target: int = Field(default=4, ge=0, le=4)
 
     @field_validator("reference_urls")
     @classmethod

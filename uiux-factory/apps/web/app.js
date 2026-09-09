@@ -1,12 +1,7 @@
 /* ============================================================
-   app.js — UIUX Factory Workbench Console 2.0 (Client Studio)
-   - Dark/Light theme switching & persistence
-   - Trending Web Inspiration patterns loader
-   - Live smart routing (mirrors router.py with 37+ skills)
-   - Auto-save drafts (localStorage)
-   - Pipeline job runner & real-time stage progress
-   - Device frame switcher (Desktop, Tablet, Mobile)
-   - Inline modal artifact viewer (Markdown, CSS, JSON)
+   app.js — UIUX Factory Workbench Console (client)
+   - Auto-save drafts
+   - Live smart routing
    - Submit → Factory pipeline
    - Poll job + render stages, logs, artifacts, preview
    - Export Review Pack → import Creative Directive → stage-aware revision
@@ -16,20 +11,16 @@
   "use strict";
 
   function detectApiBase() {
-    if (window.UIUX_BRIDGE_URL) return window.UIUX_BRIDGE_URL.replace(/\/$/, "") + "/api";
-    if (location.protocol === "http:" || location.protocol === "https:") {
-      return "/api";
-    }
-    return "http://127.0.0.1:8788/api";
+    if (window.UIUX_BRIDGE_URL) return window.UIUX_BRIDGE_URL.replace(/\/$/, "");
+    if (location.protocol === "http:" || location.protocol === "https:") return "/api";
+    return "http://127.0.0.1:8788";
   }
 
   const BRIDGE = detectApiBase();
-  const DRAFT_KEY = "uiux-console-draft-v2";
-  const JOB_HISTORY_KEY = "uiux-console-jobs-v2";
-  const THEME_KEY = "uiux-studio-theme";
+  const DRAFT_KEY = "uiux-console-draft-v1";
+  const JOB_HISTORY_KEY = "uiux-console-jobs-v1";
 
   const els = {
-    themeToggle: document.getElementById("theme-toggle"),
     form: document.getElementById("prompt-form"),
     prompt: document.getElementById("prompt"),
     counter: document.getElementById("prompt-counter"),
@@ -58,107 +49,18 @@
     jobPrompt: document.getElementById("job-prompt"),
     jobStatus: document.getElementById("job-status-badge"),
     stageTimeline: document.getElementById("stage-timeline"),
-    progressFill: document.getElementById("pipeline-progress-fill"),
     artifacts: document.getElementById("artifacts"),
     artifactList: document.getElementById("artifact-list"),
     logsWrap: document.getElementById("logs-wrap"),
     logs: document.getElementById("job-logs"),
     previewWrap: document.getElementById("preview-wrap"),
     previewFrame: document.getElementById("preview-frame"),
-    previewContainer: document.getElementById("preview-container"),
-    chromeUrl: document.getElementById("chrome-url"),
     refreshPreview: document.getElementById("refresh-preview-btn"),
     brandName: document.getElementById("brand-name"),
     brandPersonality: document.getElementById("brand-personality"),
     brandAvoid: document.getElementById("brand-avoid"),
     tokensJson: document.getElementById("tokens-json"),
-    inspirePills: document.querySelectorAll(".inspire-pill"),
-    deviceBtns: document.querySelectorAll(".device-btn"),
-    artifactModal: document.getElementById("artifact-modal"),
-    modalFilename: document.getElementById("modal-filename"),
-    modalContent: document.getElementById("modal-content"),
-    modalOpenRaw: document.getElementById("modal-open-raw"),
-    modalCloseBtn: document.getElementById("modal-close-btn"),
   };
-
-  // -----------------------------------------------------------
-  // Theme Management (Dark / Light)
-  // -----------------------------------------------------------
-  function initTheme() {
-    const saved = localStorage.getItem(THEME_KEY) || "dark";
-    document.documentElement.setAttribute("data-theme", saved);
-  }
-
-  function toggleTheme() {
-    const current = document.documentElement.getAttribute("data-theme") || "dark";
-    const next = current === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
-    try { localStorage.setItem(THEME_KEY, next); } catch {}
-  }
-
-  if (els.themeToggle) {
-    els.themeToggle.addEventListener("click", toggleTheme);
-  }
-  initTheme();
-
-  // -----------------------------------------------------------
-  // Device Frame Viewport Switcher
-  // -----------------------------------------------------------
-  if (els.deviceBtns) {
-    els.deviceBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const vp = btn.dataset.viewport;
-        els.deviceBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        if (els.previewContainer) {
-          els.previewContainer.setAttribute("data-viewport", vp);
-        }
-      });
-    });
-  }
-
-  // -----------------------------------------------------------
-  // Trending Inspiration Patterns
-  // -----------------------------------------------------------
-  async function loadInspirationPatterns() {
-    try {
-      const res = await fetch(`${BRIDGE}/inspiration`, { cache: "no-store" });
-      if (!res.ok) return;
-      const data = await res.json();
-      if (data && data.patterns && data.patterns.length) {
-        const container = document.getElementById("inspiration-pills");
-        if (container) {
-          container.innerHTML = data.patterns.map(p => `
-            <button type="button" class="inspire-pill" data-pattern="${escapeHtml(p.id)}" data-tags="${escapeHtml(p.description)}">
-              <span class="pill-dot" style="background:${p.preview_accent || 'var(--accent)'};"></span>
-              <strong>${escapeHtml(p.name)}</strong> · ${escapeHtml(p.category)}
-            </button>
-          `).join("");
-          bindInspirationClicks();
-        }
-      }
-    } catch {}
-  }
-
-  function bindInspirationClicks() {
-    document.querySelectorAll(".inspire-pill").forEach(pill => {
-      pill.addEventListener("click", () => {
-        const tags = pill.dataset.tags || "";
-        const name = pill.querySelector("strong")?.textContent || "";
-        const cur = els.prompt.value.trim();
-        const addition = `Áp dụng phong cách ${name} (${tags}).`;
-        if (!cur.includes(name)) {
-          els.prompt.value = cur ? `${cur}\n\n${addition}` : addition;
-          updateCounter();
-          updateSmartPreview();
-          saveDraft();
-          els.prompt.focus();
-        }
-      });
-    });
-  }
-  bindInspirationClicks();
-  loadInspirationPatterns();
 
   function installCreativeReviewPanel() {
     if (!els.jobCard || document.getElementById("creative-review-panel")) return;
@@ -198,9 +100,6 @@
 
   installCreativeReviewPanel();
 
-  // -----------------------------------------------------------
-  // Draft & Form Autosave
-  // -----------------------------------------------------------
   function loadDraft() {
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
@@ -212,12 +111,12 @@
     try {
       const draft = {
         prompt: els.prompt.value,
-        brandName: els.brandName?.value || "",
-        brandPersonality: els.brandPersonality?.value || "",
-        brandAvoid: els.brandAvoid?.value || "",
-        tokensJson: els.tokensJson?.value || "",
+        brandName: els.brandName.value,
+        brandPersonality: els.brandPersonality.value,
+        brandAvoid: els.brandAvoid.value,
+        tokensJson: els.tokensJson.value,
         autoInspiration: Boolean(els.autoInspiration?.checked),
-        inspirationTarget: Number(els.inspirationTarget?.value || 2),
+        inspirationTarget: Number(els.inspirationTarget?.value || 4),
         refUrls: Array.from(document.querySelectorAll(".ref-row input")).map(i => i.value),
         savedAt: Date.now(),
       };
@@ -228,15 +127,15 @@
   function applyDraft() {
     const d = loadDraft();
     if (!d || Object.keys(d).length === 0) return;
-    if (els.prompt) els.prompt.value = d.prompt || "";
-    if (els.brandName) els.brandName.value = d.brandName || "";
-    if (els.brandPersonality) els.brandPersonality.value = d.brandPersonality || "";
-    if (els.brandAvoid) els.brandAvoid.value = d.brandAvoid || "";
-    if (els.tokensJson) els.tokensJson.value = d.tokensJson || "";
+    els.prompt.value = d.prompt || "";
+    els.brandName.value = d.brandName || "";
+    els.brandPersonality.value = d.brandPersonality || "";
+    els.brandAvoid.value = d.brandAvoid || "";
+    els.tokensJson.value = d.tokensJson || "";
     if (els.autoInspiration && typeof d.autoInspiration === "boolean") {
       els.autoInspiration.checked = d.autoInspiration;
     }
-    if (els.inspirationTarget && [1, 2].includes(Number(d.inspirationTarget))) {
+    if (els.inspirationTarget && [1, 2, 3, 4].includes(Number(d.inspirationTarget))) {
       els.inspirationTarget.value = String(d.inspirationTarget);
     }
     (d.refUrls || []).forEach(u => addRefRow(u));
@@ -249,44 +148,38 @@
       const item = { id: jobId, status, at: Date.now() };
       const idx = list.findIndex(j => j.id === jobId);
       if (idx >= 0) list[idx] = item; else list.unshift(item);
-      localStorage.setItem(JOB_HISTORY_KEY, JSON.stringify(list.slice(0, 15)));
+      localStorage.setItem(JOB_HISTORY_KEY, JSON.stringify(list.slice(0, 10)));
     } catch {}
   }
 
-  // -----------------------------------------------------------
-  // Smart Routing Live Preview
-  // -----------------------------------------------------------
   function updateSmartPreview() {
-    const goal = (els.prompt ? els.prompt.value : "").trim();
+    const goal = els.prompt.value.trim();
     if (!goal) {
       els.smartDomain.textContent = "—";
-      els.smartDomainReason.textContent = "Nhập prompt để suy luận…";
+      els.smartDomainReason.textContent = "Đợi prompt…";
       els.smartClarity.textContent = "—";
       els.smartClarityTips.textContent = "Đợi prompt…";
       els.smartSkillCount.textContent = "—";
-      els.smartSkillMeta.textContent = "37+ skills sẵn sàng trong hệ thống";
-      els.stagePlan.innerHTML = '<li class="muted">Nhập brief để hệ thống lập kế hoạch quy trình…</li>';
+      els.smartSkillMeta.textContent = "Đợi prompt…";
+      els.stagePlan.innerHTML = '<li class="muted">Đợi prompt để hệ thống lên kế hoạch…</li>';
       return;
     }
-
     const plan = UiuxRouter.plan(goal);
     const domainLabel = {
-      ecommerce: "Ecommerce / Bán lẻ",
+      ecommerce: "Ecommerce",
       corporate: "Corporate / B2B",
-      education: "Education / Học viện",
-      agency: "Agency / Studio Sáng tạo",
+      education: "Education",
+      agency: "Agency / Studio",
     }[plan.domain] || plan.domain;
-
     els.smartDomain.textContent = domainLabel;
     els.smartDomainReason.textContent = plan.domainScore
-      ? `Phát hiện ${plan.domainScore} tín hiệu ngành chuyên biệt trong prompt`
-      : "Mặc định chuẩn Corporate / B2B hiện đại";
+      ? `Phát hiện ${plan.domainScore} tín hiệu ngành trong prompt`
+      : "Không phát hiện tín hiệu rõ — dùng routing tổng quát";
     els.smartClarity.textContent = `${plan.clarity} / 6`;
     const tips = UiuxRouter.clarityTips(goal);
     els.smartClarityTips.innerHTML = tips.map(t => `• ${escapeHtml(t)}`).join("<br/>");
     els.smartSkillCount.textContent = `${plan.totalSkills}`;
-    els.smartSkillMeta.textContent = `trong 10 bước · ${plan.domainSkills.length} skill chuyên biệt ngành`;
-
+    els.smartSkillMeta.textContent = `trong ${plan.stages.length} bước · ${plan.domainSkills.length} skill domain`;
     els.stagePlan.innerHTML = plan.stages.map(s => {
       const lbl = UiuxRouter.stageLabel(s.stage);
       const skillsText = s.skills.map(k => k.path.replace("/SKILL.md", "")).join(", ");
@@ -305,82 +198,64 @@
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
-  // -----------------------------------------------------------
-  // Reference URL inputs
-  // -----------------------------------------------------------
   function addRefRow(value = "") {
-    if (!els.refUrls) return;
     const row = document.createElement("div");
     row.className = "ref-row";
     const input = document.createElement("input");
     input.type = "url";
-    input.placeholder = "https://dribbble.com/shots/... hoặc https://site.com";
+    input.placeholder = "https://example.com";
     input.value = value;
     input.setAttribute("aria-label", "Reference URL");
     input.addEventListener("input", saveDraft);
     const btn = document.createElement("button");
     btn.type = "button";
     btn.textContent = "×";
-    btn.title = "Xoá URL";
+    btn.title = "Xoá reference";
     btn.setAttribute("aria-label", "Xoá reference URL");
     btn.addEventListener("click", () => { row.remove(); saveDraft(); });
     row.append(input, btn);
     els.refUrls.appendChild(row);
   }
 
-  if (els.addRef) {
-    els.addRef.addEventListener("click", () => { addRefRow(); saveDraft(); });
-  }
+  els.addRef.addEventListener("click", () => { addRefRow(); saveDraft(); });
 
-  // -----------------------------------------------------------
-  // Inputs & Counter
-  // -----------------------------------------------------------
   function updateCounter() {
-    if (!els.prompt || !els.counter) return;
     const len = els.prompt.value.length;
     els.counter.textContent = `${len.toLocaleString("vi-VN")} ký tự`;
   }
-  if (els.prompt) {
-    els.prompt.addEventListener("input", () => {
-      updateCounter();
-      updateSmartPreview();
-      saveDraft();
-    });
-  }
 
-  if (els.clearBtn) {
-    els.clearBtn.addEventListener("click", () => {
-      if (!confirm("Xoá toàn bộ bản nháp và form?")) return;
-      if (els.prompt) els.prompt.value = "";
-      if (els.brandName) els.brandName.value = "";
-      if (els.brandPersonality) els.brandPersonality.value = "";
-      if (els.brandAvoid) els.brandAvoid.value = "";
-      if (els.tokensJson) els.tokensJson.value = "";
-      if (els.refUrls) els.refUrls.innerHTML = "";
-      localStorage.removeItem(DRAFT_KEY);
-      updateCounter();
-      updateSmartPreview();
-    });
-  }
+  els.prompt.addEventListener("input", () => {
+    updateCounter();
+    updateSmartPreview();
+    saveDraft();
+  });
+  els.clearBtn.addEventListener("click", () => {
+    if (!confirm("Xoá toàn bộ bản nháp và form?")) return;
+    els.prompt.value = "";
+    els.brandName.value = "";
+    els.brandPersonality.value = "";
+    els.brandAvoid.value = "";
+    els.tokensJson.value = "";
+    els.refUrls.innerHTML = "";
+    localStorage.removeItem(DRAFT_KEY);
+    updateCounter();
+    updateSmartPreview();
+  });
+
   ["brandName", "brandPersonality", "brandAvoid", "tokensJson"].forEach(k => {
     els[k]?.addEventListener?.("input", saveDraft);
   });
   els.autoInspiration?.addEventListener("change", saveDraft);
   els.inspirationTarget?.addEventListener("change", saveDraft);
 
-  if (els.chips) {
-    els.chips.forEach(c => c.addEventListener("click", () => {
-      els.prompt.value = c.dataset.prompt || "";
-      updateCounter();
-      updateSmartPreview();
-      saveDraft();
-      els.prompt.focus();
-    }));
-  }
+  els.chips.forEach(c => c.addEventListener("click", () => {
+    els.prompt.value = c.dataset.prompt || "";
+    updateCounter();
+    updateSmartPreview();
+    saveDraft();
+    els.prompt.focus();
+  }));
 
-  // -----------------------------------------------------------
-  // Bridge Health
-  // -----------------------------------------------------------
   async function checkHealth() {
     try {
       const res = await fetch(`${BRIDGE}/health`, { cache: "no-store" });
@@ -391,45 +266,32 @@
       els.bridgeStatus.querySelector(".status-text").textContent =
         `Bridge sẵn sàng · ${data.creative_review?.stage_aware_revision ? "Creative Review ready" : "Python OK"}`;
       els.bridgeInfo.textContent = new URL(BRIDGE, location.origin).host;
-      els.bridgeStatus.querySelector(".status-text").textContent =
-        `Bridge sẵn sàng · ${data.creative_review?.stage_aware_revision ? "Creative Review ready" : "Python OK"}`;
-      els.bridgeInfo.textContent = new URL(BRIDGE, location.origin).host;
-
-      const aiRadio = document.querySelector('input[name="engine"][value="ai"]');
-      const wrap = document.getElementById("ai-radio-wrap");
       if (!aiOk) {
-        if (aiRadio) aiRadio.disabled = true;
-        if (wrap) wrap.classList.add("disabled");
-        if (els.aiStatus) els.aiStatus.innerHTML = "Chưa cấu hình API Key trong <code>.env.local</code> — sử dụng Deterministic Engine.";
+        const aiRadio = document.querySelector('input[name="engine"][value="ai"]');
+        const wrap = document.getElementById("ai-radio-wrap");
+        aiRadio.disabled = true;
+        wrap.classList.add("disabled");
+        els.aiStatus.textContent = "Chưa cấu hình Groq/Gemini trong .env.local — chỉ dùng engine template.";
       } else {
-        if (aiRadio) aiRadio.disabled = false;
-        if (wrap) wrap.classList.remove("disabled");
-        if (els.aiStatus) els.aiStatus.textContent = `AI sẵn sàng · Nhà cung cấp: ${data.ai.providers.join(", ")}`;
+        els.aiStatus.textContent = `AI sẵn sàng · ${data.ai.providers.join(", ")}`;
       }
     } catch (e) {
       els.bridgeStatus.dataset.state = "bad";
       els.bridgeStatus.querySelector(".status-text").textContent =
-        "Không kết nối được bridge (port 8788).";
-      if (els.submitBtn) els.submitBtn.disabled = true;
+        "Không kết nối được bridge. Hãy chạy apps/bridge/server.py trước.";
+      els.submitBtn.disabled = true;
     }
   }
 
-  // -----------------------------------------------------------
-  // Submit Job
-  // -----------------------------------------------------------
   function buildDesignContext() {
     const ctx = {};
-    const brandName = els.brandName?.value?.trim?.();
+    const brandName = els.brandName.value.trim();
     if (brandName) ctx.brand_name = brandName;
-    const personality = els.brandPersonality?.value?.trim?.();
-    if (personality) {
-      ctx.personality = personality.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
-    }
-    const avoid = els.brandAvoid?.value?.trim?.();
+    const personality = els.brandPersonality.value.trim();
+    if (personality) ctx.personality = personality.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
+    const avoid = els.brandAvoid.value.trim();
     if (avoid) ctx.avoid = avoid.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
-    const tokensRaw = els.tokensJson?.value?.trim?.();
-    if (avoid) ctx.avoid = avoid.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
-    const tokensRaw = els.tokensJson?.value?.trim?.();
+    const tokensRaw = els.tokensJson.value.trim();
     if (tokensRaw) {
       try { ctx.tokens = JSON.parse(tokensRaw); } catch {}
     }
@@ -437,60 +299,45 @@
       .map(i => i.value.trim()).filter(Boolean);
     if (urls.length) ctx.reference_urls = urls.slice(0, 4);
     ctx.auto_inspiration = Boolean(els.autoInspiration?.checked);
-    ctx.inspiration_target = Math.max(0, Math.min(2, Number(els.inspirationTarget?.value || 2)));
+    ctx.inspiration_target = Math.max(0, Math.min(4, Number(els.inspirationTarget?.value || 4)));
     return ctx;
   }
 
-  if (els.form) {
-    els.form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const prompt = els.prompt.value.trim();
-      if (!prompt) {
-        alert("Vui lòng nhập mục tiêu dự án.");
-        els.prompt.focus();
-        return;
+  els.form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const prompt = els.prompt.value.trim();
+    if (!prompt) { alert("Vui lòng nhập prompt."); els.prompt.focus(); return; }
+    const engine = document.querySelector('input[name="engine"]:checked').value;
+    const designContext = buildDesignContext();
+
+    els.submitBtn.disabled = true;
+    els.submitBtn.querySelector(".btn-label").textContent = "Đang khởi tạo job…";
+    try {
+      const res = await fetch(`${BRIDGE}/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, engine, design_context: designContext }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(err.error || `HTTP ${res.status}`);
       }
-      const engine = document.querySelector('input[name="engine"]:checked')?.value || "template";
-      const designContext = buildDesignContext();
+      const job = await res.json();
+      openJob(job);
+      appendJobHistory(job.id, "queued");
+    } catch (err) {
+      alert("Không submit được: " + err.message);
+    } finally {
+      els.submitBtn.disabled = false;
+      els.submitBtn.querySelector(".btn-label").textContent = "Build with Visual Brain";
+    }
+  });
 
-      els.submitBtn.disabled = true;
-      els.submitBtn.querySelector(".btn-label").textContent = "Đang khởi động studio…";
-
-      try {
-        const res = await fetch(`${BRIDGE}/run`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, engine, design_context: designContext }),
-        });
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-          throw new Error(err.error || `HTTP ${res.status}`);
-        }
-        const job = await res.json();
-        openJob(job);
-        appendJobHistory(job.id, "queued");
-      } catch (err) {
-        alert("Không thể chạy job: " + err.message);
-      } finally {
-        els.submitBtn.disabled = false;
-        els.submitBtn.querySelector(".btn-label").textContent = "Bắt đầu Pipeline Thiết kế";
-      }
-    });
-  }
-
-  // -----------------------------------------------------------
-  // Job Tracker & Timeline
-  // -----------------------------------------------------------
   let pollTimer = null;
   let lastLogTail = "";
   let currentJobId = null;
   let currentProjectSlug = null;
-  let pollDelay = 1200;
-
-  const PIPELINE_STAGES = [
-    "research", "ux_ia", "art_direction", "design_contract", "design_system",
-    "implementation_plan", "visual_composition", "implementation", "browser_qa", "visual_qa", "repair"
-  ];
+  let pollDelay = 1500;
 
   function setCreativeReviewVisible(visible, message = "") {
     if (!els.reviewPanel) return;
@@ -501,46 +348,33 @@
   function openJob(job) {
     currentJobId = job.id;
     lastLogTail = "";
-    if (els.jobEmpty) els.jobEmpty.classList.add("hidden");
-    if (els.jobCard) els.jobCard.classList.remove("hidden");
-    if (els.jobId) els.jobId.textContent = job.id;
-    if (els.jobPrompt) els.jobPrompt.textContent = job.prompt;
+    els.jobEmpty.classList.add("hidden");
+    els.jobCard.classList.remove("hidden");
+    els.jobId.textContent = job.id;
+    els.jobPrompt.textContent = job.prompt;
     setJobStatus(job.status);
     renderTimeline([], job.status === "queued" ? null : "research");
-    updateProgressBar(0);
-    if (els.artifacts) els.artifacts.setAttribute("hidden", "");
-    if (els.artifactList) els.artifactList.innerHTML = "";
-    if (els.logsWrap) els.logsWrap.setAttribute("hidden", "");
-    if (els.logs) els.logs.textContent = "";
-    if (els.previewWrap) els.previewWrap.setAttribute("hidden", "");
+    els.artifacts.setAttribute("hidden", "");
+    els.artifactList.innerHTML = "";
+    els.logsWrap.setAttribute("hidden", "");
+    els.logs.textContent = "";
+    els.previewWrap.setAttribute("hidden", "");
     setCreativeReviewVisible(false);
     currentProjectSlug = null;
     startPolling();
   }
 
   function setJobStatus(status) {
-  function setJobStatus(status) {
-    if (!els.jobStatus) return;
-    const s = status || "queued";
-    els.jobStatus.textContent = s;
-    els.jobStatus.dataset.status = s;
-  }
-
-  function updateProgressBar(percent) {
-    if (els.progressFill) {
-      els.progressFill.style.width = `${Math.min(100, Math.max(0, percent))}%`;
-    }
+    els.jobStatus.textContent = status || "queued";
+    els.jobStatus.dataset.status = status || "queued";
   }
 
   function makeTimelineHtml(stages, status) {
+    const known = ["research", "ux_ia", "art_direction", "design_contract", "design_system", "implementation_plan", "visual_composition", "implementation", "browser_qa", "visual_qa", "repair"];
     const doneSet = new Set((stages || []).filter(s => s !== "repair"));
-    const totalCount = PIPELINE_STAGES.length - 1; // repair is conditional
-    const progressPercent = Math.round((doneSet.size / totalCount) * 100);
-    updateProgressBar(status === "completed" ? 100 : progressPercent);
-
-    return PIPELINE_STAGES.map((k, i) => {
-      const label = UiuxRouter.stageLabel(k);
-
+    let html = "";
+    for (let i = 0; i < known.length; i++) {
+      const k = known[i];
       const isDone = doneSet.has(k);
       const isActive = (i === doneSet.size) && status === "running";
       const isFailed = status === "failed" && i === doneSet.size;
@@ -549,18 +383,13 @@
       else if (isDone) { icon = "✓"; state = "done"; }
       else if (isActive) { icon = "◐"; state = "active"; }
       else { icon = "○"; state = "todo"; }
-      return `<li data-state="${state}">
-        <span class="icon">${icon}</span>
-        <span class="name"><strong>${escapeHtml(k)}</strong> — ${escapeHtml(label)}</span>
-        <span class="meta">${escapeHtml(state)}</span>
-      </li>`;
-    }).join("");
+      html += `<li data-state="${state}"><span class="icon">${icon}</span><span class="name">${escapeHtml(k)} — ${escapeHtml(UiuxRouter.stageLabel(k))}</span><span class="meta">${escapeHtml(state)}</span></li>`;
+    }
+    return html;
   }
 
   function renderTimeline(stages, status) {
-    if (els.stageTimeline) {
-      els.stageTimeline.innerHTML = makeTimelineHtml(stages, status);
-    }
+    els.stageTimeline.innerHTML = makeTimelineHtml(stages, status);
   }
 
   async function pollOnce() {
@@ -574,18 +403,13 @@
       const job = await res.json();
       setJobStatus(job.status);
       renderTimeline(job.completed_stages || [], job.status);
-
       if (job.output_tail && job.output_tail !== lastLogTail) {
         lastLogTail = job.output_tail;
-        if (els.logs) {
-          els.logs.textContent = job.output_tail;
-          if (els.logsWrap) els.logsWrap.removeAttribute("hidden");
-          els.logs.scrollTop = els.logs.scrollHeight;
-        }
+        els.logs.textContent = job.output_tail;
+        els.logsWrap.removeAttribute("hidden");
+        els.logs.scrollTop = els.logs.scrollHeight;
       }
-      if (job.artifacts && job.artifacts.length) {
-        renderArtifacts(job.artifacts);
-      }
+      if (job.artifacts?.length) renderArtifacts(job.artifacts);
 
       if (job.status === "completed" || job.status === "failed") {
         if (job.project_slug) {
@@ -595,11 +419,8 @@
         appendJobHistory(currentJobId, job.status);
         stopPolling();
         if (job.status === "failed") {
-        if (job.status === "failed") {
-          if (els.logs) {
-            els.logs.textContent += `\n\n[JOB FAILED]\n${job.error || "Unknown failure"}`;
-          }
           els.jobStatus.title = (job.error || "").toString();
+          els.logs.textContent += `\n\n[FAILED]\n${job.error || ""}`;
         } else if (job.creative_review_ready) {
           setCreativeReviewVisible(
             true,
@@ -608,35 +429,26 @@
               : "Export pack này và gửi vào chat với mình; sau đó import creative-directive.json để sửa đúng stage."
           );
         }
-        }
       }
     } catch (err) {
-      console.warn("Poll status check:", err);
+      console.warn("poll error", err);
     }
   }
 
   const ARTIFACT_ALLOWLIST = new Set([
-    "design-contract.json", "design-system.json", "implementation-plan.json",
+    "research.md", "design-contract.json", "design-system.json", "implementation-plan.json",
     "visual-composition.json", "visual-brain.json", "reference-dna.json",
     "DESIGN.md", "tokens.css", "quality-loop.json", "browser-report.json",
     "creative-directive.json", "creative-revision.json",
   ]);
 
   function renderArtifacts(names) {
-    if (!els.artifacts || !els.artifactList) return;
-    els.artifacts.removeAttribute("hidden");
-    els.artifactList.innerHTML = names.map(n => {
-    if (!els.artifacts || !els.artifactList) return;
     els.artifacts.removeAttribute("hidden");
     els.artifactList.innerHTML = names.map(n => {
       if (!ARTIFACT_ALLOWLIST.has(n) && !/^references\/reference-[a-f0-9]{12}-(desktop|mobile)\.png$/.test(n)) return "";
       const label = n.includes("/") ? n.split("/").pop() : n;
-      return `<button type="button" class="artifact-item" data-name="${escapeHtml(n)}">${escapeHtml(label)}</button>`;
+      return `<button class="artifact-item" data-name="${escapeHtml(n)}">${escapeHtml(label)}</button>`;
     }).join("");
-      const label = n.includes("/") ? n.split("/").pop() : n;
-      return `<button type="button" class="artifact-item" data-name="${escapeHtml(n)}">${escapeHtml(label)}</button>`;
-    }).join("");
-
     els.artifactList.querySelectorAll(".artifact-item").forEach(btn => {
       btn.addEventListener("click", () => viewArtifact(btn.dataset.name));
     });
@@ -651,54 +463,28 @@
       const ct = res.headers.get("Content-Type") || "";
       if (ct.includes("image/")) {
         window.open(url, "_blank");
+      } else if (name.endsWith(".md")) {
+        showArtifactModal(name, await res.text(), "markdown");
+      } else if (name.endsWith(".css")) {
+        showArtifactModal(name, await res.text(), "css");
       } else {
-        const text = await res.text();
-        const kind = name.endsWith(".md") ? "markdown" : (name.endsWith(".css") ? "css" : "json");
-        openArtifactModal(name, text, kind, url);
-      }
+        showArtifactModal(name, await res.text(), "json");
       }
     } catch (err) {
-      alert("Không tải được artifact: " + err.message);
+      alert("Không đọc được artifact: " + err.message);
     }
   }
 
-  // -----------------------------------------------------------
-  // Inline Artifact Viewer Modal
-  // -----------------------------------------------------------
-  function openArtifactModal(filename, text, kind, rawUrl) {
-    if (!els.artifactModal) return;
-    els.modalFilename.textContent = filename;
-    els.modalOpenRaw.href = rawUrl;
-
-    if (kind === "markdown") {
-      els.modalContent.innerHTML = `<div class="md-rendered">${renderMarkdownSimple(text)}</div>`;
-    } else {
-      els.modalContent.innerHTML = `<pre><code>${escapeHtml(text)}</code></pre>`;
-    }
-    els.artifactModal.removeAttribute("hidden");
+  function showArtifactModal(name, text, kind) {
+    const win = window.open("", "_blank", "width=900,height=700");
+    if (!win) { alert("Trình duyệt chặn popup — vui lòng cho phép."); return; }
+    const style = `<style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#fafafa;color:#0a0a0a}header{padding:14px 20px;border-bottom:1px solid #e5e5e7;background:white;display:flex;justify-content:space-between;align-items:center}h1{font-size:14px;margin:0;font-family:monospace;color:#71717a}main{padding:20px}pre{background:#0a0a0a;color:#e4e4e7;padding:18px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-word;line-height:1.6}.md{background:white;padding:20px;border:1px solid #e5e5e7;border-radius:8px;font-size:14px;line-height:1.6}</style>`;
+    const bodyHtml = kind === "markdown" ? `<div class="md">${mdToHtml(text)}</div>` : `<pre>${escapeHtml(text)}</pre>`;
+    win.document.write(`<!doctype html><html><head><meta charset="utf-8"/><title>${escapeHtml(name)}</title>${style}</head><body><header><h1>${escapeHtml(name)}</h1></header><main>${bodyHtml}</main></body></html>`);
+    win.document.close();
   }
 
-  function closeArtifactModal() {
-    if (els.artifactModal) {
-      els.artifactModal.setAttribute("hidden", "");
-    }
-  }
-
-  if (els.modalCloseBtn) {
-    els.modalCloseBtn.addEventListener("click", closeArtifactModal);
-  }
-  if (els.artifactModal) {
-    els.artifactModal.addEventListener("click", (e) => {
-      if (e.target === els.artifactModal) closeArtifactModal();
-    });
-  }
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && els.artifactModal && !els.artifactModal.hasAttribute("hidden")) {
-      closeArtifactModal();
-    }
-  });
-
-  function renderMarkdownSimple(md) {
+  function mdToHtml(md) {
     return md
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/^### (.+)$/gm, "<h3>$1</h3>")
@@ -706,33 +492,19 @@
       .replace(/^# (.+)$/gm, "<h1>$1</h1>")
       .replace(/`([^`]+)`/g, "<code>$1</code>")
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
       .replace(/\n\n/g, "</p><p>")
       .replace(/^/, "<p>").replace(/$/, "</p>");
   }
 
-  // -----------------------------------------------------------
-  // Preview
-  // -----------------------------------------------------------
   function renderPreview(slug) {
     if (!slug) return;
-  function renderPreview(slug) {
-    if (!slug) return;
-    const url = `${BRIDGE}/preview/${slug}/`;
-    if (els.previewWrap) els.previewWrap.removeAttribute("hidden");
-    if (els.previewLink) els.previewLink.href = url;
-    if (els.previewFrame) els.previewFrame.src = url;
-    if (els.chromeUrl) els.chromeUrl.textContent = url;
+    els.previewWrap.removeAttribute("hidden");
+    els.previewFrame.src = `${BRIDGE}/preview/${slug}/`;
   }
 
-  if (els.refreshPreview) {
-    els.refreshPreview.addEventListener("click", () => {
-      if (currentProjectSlug) {
-        const url = `${BRIDGE}/preview/${currentProjectSlug}/?t=${Date.now()}`;
-        if (els.previewFrame) els.previewFrame.src = url;
-      }
-    });
-  }
+  els.refreshPreview.addEventListener("click", () => {
+    if (currentProjectSlug) els.previewFrame.src = `${BRIDGE}/preview/${currentProjectSlug}/?t=${Date.now()}`;
+  });
 
   async function exportReviewPack() {
     if (!currentJobId || !els.exportReview) return;
@@ -808,54 +580,25 @@
 
   function startPolling() {
     stopPolling();
-    pollDelay = 1200;
-    isPolling = true;
+    pollDelay = 1500;
     const tick = async () => {
-      if (!isPolling) return;
       await pollOnce();
-      if (isPolling && currentJobId) {
-        pollDelay = Math.min(pollDelay * 1.15, 5000);
-      }
+      if (pollTimer !== null) {
+        pollDelay = Math.min(pollDelay * 1.2, 6000);
         pollTimer = setTimeout(tick, pollDelay);
       }
     };
-    pollTimer = setTimeout(tick, 100);
+    pollTimer = setTimeout(tick, 200);
   }
 
   function stopPolling() {
-  function stopPolling() {
-    isPolling = false;
-    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+    if (pollTimer) clearTimeout(pollTimer);
+    pollTimer = null;
   }
 
-  // -----------------------------------------------------------
-  // Auto-resume Latest Job
-  // -----------------------------------------------------------
-  async function loadLatestJob() {
-    try {
-      const res = await fetch(`${BRIDGE}/latest`, { cache: "no-store" });
-      if (!res.ok) return;
-      const data = await res.json();
-      if (data && data.run_id) {
-        const job = {
-          id: data.run_id,
-          status: data.run.status || "queued",
-          prompt: data.run.goal || "",
-        };
-        openJob(job);
-      }
-    } catch (err) {
-      console.warn("Failed to load latest job:", err);
-    }
-  }
-
-  // -----------------------------------------------------------
-  // Initialization
-  // -----------------------------------------------------------
   applyDraft();
   updateCounter();
   updateSmartPreview();
   checkHealth();
-  setInterval(checkHealth, 25000);
-  loadLatestJob();
+  setInterval(checkHealth, 30000);
 })();
