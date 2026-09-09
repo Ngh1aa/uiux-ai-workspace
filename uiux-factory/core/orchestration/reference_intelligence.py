@@ -8,427 +8,337 @@ from core.orchestration.intelligent_flow import GoalInterpreter
 from core.research.domain_intelligence import DomainInterpreter
 
 
-class ReferenceIntelligencePlanner:
-    """Select a small, public, production-site finalist set by archetype + vertical.
+def _reference(
+    url: str,
+    label: str,
+    domain: str,
+    role: str,
+    rationale: str,
+) -> BenchmarkReference:
+    return BenchmarkReference(
+        url=url,
+        label=label,
+        domain=domain,
+        role=role,
+        rationale=rationale,
+    )
 
-    These are not templates and are not the complete research pool. The ResearchAgent
-    is responsible for broader 10–20 candidate discovery. This planner only supplies
-    up to four high-signal references that can be measured by ReferenceAnalyzer.
-    User-provided references always take precedence.
-    """
+
+class ReferenceIntelligencePlanner:
+    """Choose up to four measurable finalists; broader discovery belongs to ResearchAgent."""
 
     CATALOG: dict[str, tuple[BenchmarkReference, ...]] = {
         "saas": (
-            BenchmarkReference(
-                url="https://linear.app/",
-                label="Linear",
-                domain="saas",
-                role="product-storytelling",
-                rationale=(
-                    "Product-led hierarchy, dense capability storytelling "
-                    "and polished interaction grammar."
-                ),
+            _reference(
+                "https://linear.app/",
+                "Linear",
+                "saas",
+                "product-storytelling",
+                "Product-led hierarchy, capability storytelling and polished interaction grammar.",
             ),
-            BenchmarkReference(
-                url="https://stripe.com/",
-                label="Stripe",
-                domain="saas",
-                role="visual-craft",
-                rationale=(
-                    "Strong product narrative, responsive information hierarchy "
-                    "and mature visual system."
-                ),
+            _reference(
+                "https://stripe.com/",
+                "Stripe",
+                "saas",
+                "visual-craft",
+                "Responsive product narrative, proof and a mature visual system.",
             ),
         ),
         "startup": (
-            BenchmarkReference(
-                url="https://linear.app/",
-                label="Linear",
-                domain="startup",
-                role="product-storytelling",
-                rationale=(
-                    "Focused product positioning, progressive disclosure "
-                    "and distinctive product visuals."
-                ),
+            _reference(
+                "https://linear.app/",
+                "Linear",
+                "startup",
+                "product-storytelling",
+                "Focused positioning, progressive disclosure and distinctive product visuals.",
             ),
-            BenchmarkReference(
-                url="https://stripe.com/",
-                label="Stripe",
-                domain="startup",
-                role="conversion",
-                rationale=(
-                    "High-trust product communication and layered conversion pathways."
-                ),
+            _reference(
+                "https://stripe.com/",
+                "Stripe",
+                "startup",
+                "conversion",
+                "High-trust product communication and layered conversion pathways.",
             ),
         ),
         "ecommerce": (
-            BenchmarkReference(
-                url="https://www.aesop.com/",
-                label="Aesop",
-                domain="ecommerce",
-                role="visual-craft",
-                rationale=(
-                    "Editorial commerce hierarchy, restrained brand language "
-                    "and product-first presentation."
-                ),
+            _reference(
+                "https://www.aesop.com/",
+                "Aesop",
+                "ecommerce",
+                "visual-craft",
+                "Editorial commerce hierarchy and restrained product-first presentation.",
             ),
-            BenchmarkReference(
-                url="https://www.apple.com/",
-                label="Apple",
-                domain="ecommerce",
-                role="product-storytelling",
-                rationale=(
-                    "Product-led visual hierarchy, controlled density "
-                    "and responsive storytelling."
-                ),
+            _reference(
+                "https://www.apple.com/",
+                "Apple",
+                "ecommerce",
+                "product-storytelling",
+                "Product-led hierarchy, controlled density and responsive storytelling.",
             ),
         ),
         "hospitality": (
-            BenchmarkReference(
-                url="https://www.aman.com/",
-                label="Aman",
-                domain="hospitality",
-                role="service-journey",
-                rationale=(
-                    "Luxury editorial pacing, destination storytelling "
-                    "and experience-led media hierarchy."
-                ),
+            _reference(
+                "https://www.aman.com/",
+                "Aman",
+                "hospitality",
+                "service-journey",
+                "Destination storytelling and experience-led media connected to booking.",
             ),
-            BenchmarkReference(
-                url="https://www.aman.com/destinations",
-                label="Aman Destinations",
-                domain="hospitality",
-                role="information-architecture",
-                rationale=(
-                    "Discovery architecture for a large destination portfolio "
-                    "without collapsing everything into cards."
-                ),
+            _reference(
+                "https://www.aman.com/destinations",
+                "Aman Destinations",
+                "hospitality",
+                "information-architecture",
+                "Portfolio discovery without collapsing the entire experience into cards.",
             ),
         ),
         "real-estate": (
-            BenchmarkReference(
-                url="https://www.aman.com/residences",
-                label="Aman Residences",
-                domain="real-estate",
-                role="product-storytelling",
-                rationale=(
-                    "Premium property storytelling, destination hierarchy "
-                    "and high-consideration enquiry flow."
-                ),
+            _reference(
+                "https://www.aman.com/residences",
+                "Aman Residences",
+                "real-estate",
+                "product-storytelling",
+                "Premium property storytelling and high-consideration enquiry hierarchy.",
             ),
-            BenchmarkReference(
-                url="https://www.aman.com/",
-                label="Aman",
-                domain="real-estate",
-                role="visual-craft",
-                rationale=(
-                    "Luxury brand restraint, whitespace rhythm "
-                    "and media treatment transferable to premium property."
-                ),
+            _reference(
+                "https://www.aman.com/",
+                "Aman",
+                "real-estate",
+                "visual-craft",
+                "Luxury brand restraint, whitespace rhythm and media treatment.",
             ),
         ),
         "government": (
-            BenchmarkReference(
-                url="https://www.gov.uk/",
-                label="GOV.UK",
-                domain="government",
-                role="trust-accessibility",
-                rationale=(
-                    "Task-first public-service information architecture, "
-                    "predictable navigation and accessibility discipline."
-                ),
+            _reference(
+                "https://www.gov.uk/",
+                "GOV.UK",
+                "government",
+                "trust-accessibility",
+                "Task-first public-service IA, predictable navigation and accessibility discipline.",
             ),
         ),
         "education": (
-            BenchmarkReference(
-                url="https://education.mit.edu/",
-                label="MIT Scheller Teacher Education Program",
-                domain="education",
-                role="information-architecture",
-                rationale=(
-                    "Mission-led academic storytelling with programme "
-                    "and research information hierarchy."
-                ),
+            _reference(
+                "https://education.mit.edu/",
+                "MIT Scheller Teacher Education Program",
+                "education",
+                "information-architecture",
+                "Mission-led academic storytelling with programme and research hierarchy.",
             ),
-            BenchmarkReference(
-                url="https://www.gov.uk/education",
-                label="GOV.UK Education",
-                domain="education",
-                role="trust-accessibility",
-                rationale=(
-                    "Task-oriented education navigation and plain-language "
-                    "information architecture."
-                ),
+            _reference(
+                "https://www.gov.uk/education",
+                "GOV.UK Education",
+                "education",
+                "trust-accessibility",
+                "Task-oriented education navigation and plain-language information architecture.",
             ),
         ),
         "news": (
-            BenchmarkReference(
-                url="https://www.theverge.com/",
-                label="The Verge",
-                domain="news",
-                role="editorial",
-                rationale=(
-                    "Editorial hierarchy, varied story density "
-                    "and recognizable publication rhythm."
-                ),
+            _reference(
+                "https://www.theverge.com/",
+                "The Verge",
+                "news",
+                "editorial",
+                "Editorial hierarchy, varied story density and recognizable publication rhythm.",
             ),
         ),
         "portfolio": (
-            BenchmarkReference(
-                url="https://selfaware.studio/",
-                label="Self Aware",
-                domain="portfolio",
-                role="visual-craft",
-                rationale=(
-                    "Distinctive studio identity, typography-led craft "
-                    "and project storytelling without generic SaaS grammar."
-                ),
+            _reference(
+                "https://selfaware.studio/",
+                "Self Aware",
+                "portfolio",
+                "visual-craft",
+                "Distinctive studio identity and project storytelling without generic SaaS grammar.",
             ),
         ),
         "nonprofit": (
-            BenchmarkReference(
-                url="https://www.charitywater.org/",
-                label="charity: water",
-                domain="nonprofit",
-                role="conversion",
-                rationale=(
-                    "Mission-to-action storytelling, transparent proof structure "
-                    "and donation-oriented journey design."
-                ),
+            _reference(
+                "https://www.charitywater.org/",
+                "charity: water",
+                "nonprofit",
+                "conversion",
+                "Mission-to-action storytelling, transparent proof and donation journey design.",
             ),
-            BenchmarkReference(
-                url="https://www.gov.uk/",
-                label="GOV.UK",
-                domain="nonprofit",
-                role="trust-accessibility",
-                rationale=(
-                    "Plain-language task hierarchy and accessibility calibration "
-                    "for broad audiences."
-                ),
+            _reference(
+                "https://www.gov.uk/",
+                "GOV.UK",
+                "nonprofit",
+                "trust-accessibility",
+                "Plain-language task hierarchy and accessibility calibration for broad audiences.",
             ),
         ),
         "corporate": (
-            BenchmarkReference(
-                url="https://stripe.com/",
-                label="Stripe",
-                domain="corporate",
-                role="product-storytelling",
-                rationale=(
-                    "Complex business offering communicated through structured "
-                    "hierarchy and a strong visual system."
-                ),
+            _reference(
+                "https://stripe.com/",
+                "Stripe",
+                "corporate",
+                "product-storytelling",
+                "Complex offering communicated through structured hierarchy and proof.",
             ),
-            BenchmarkReference(
-                url="https://www.apple.com/",
-                label="Apple",
-                domain="corporate",
-                role="visual-craft",
-                rationale=(
-                    "Brand-led restraint, page-role variation "
-                    "and strong product/brand storytelling."
-                ),
+            _reference(
+                "https://www.apple.com/",
+                "Apple",
+                "corporate",
+                "visual-craft",
+                "Brand-led restraint and strong page-role variation.",
             ),
         ),
         "landing": (
-            BenchmarkReference(
-                url="https://linear.app/",
-                label="Linear",
-                domain="landing",
-                role="conversion",
-                rationale=(
-                    "Focused proposition, progressive feature reveal "
-                    "and polished primary-action hierarchy."
-                ),
+            _reference(
+                "https://linear.app/",
+                "Linear",
+                "landing",
+                "conversion",
+                "Focused proposition, progressive reveal and polished primary-action hierarchy.",
             ),
-            BenchmarkReference(
-                url="https://stripe.com/",
-                label="Stripe",
-                domain="landing",
-                role="visual-craft",
-                rationale=(
-                    "High-craft landing-page rhythm with a mature "
-                    "responsive design language."
-                ),
+            _reference(
+                "https://stripe.com/",
+                "Stripe",
+                "landing",
+                "visual-craft",
+                "High-craft landing-page rhythm with a mature responsive design language.",
             ),
         ),
         "generic": (
-            BenchmarkReference(
-                url="https://stripe.com/",
-                label="Stripe",
-                domain="generic",
-                role="visual-craft",
-                rationale=(
-                    "General production benchmark for hierarchy, responsiveness "
-                    "and component-system maturity."
-                ),
+            _reference(
+                "https://stripe.com/",
+                "Stripe",
+                "generic",
+                "visual-craft",
+                "General production benchmark for hierarchy, responsiveness and system maturity.",
             ),
-            BenchmarkReference(
-                url="https://linear.app/",
-                label="Linear",
-                domain="generic",
-                role="product-storytelling",
-                rationale=(
-                    "General benchmark for modern product storytelling "
-                    "and recognizable visual identity."
-                ),
+            _reference(
+                "https://linear.app/",
+                "Linear",
+                "generic",
+                "product-storytelling",
+                "General benchmark for modern product storytelling and recognizable identity.",
             ),
         ),
     }
 
     VERTICAL_CATALOG: dict[str, tuple[BenchmarkReference, ...]] = {
         "luxury-fragrance": (
-            BenchmarkReference(
-                url="https://www.diptyqueparis.com/",
-                label="Diptyque",
-                domain="luxury-fragrance",
-                role="information-architecture",
-                rationale=(
-                    "Fragrance-native catalogue, discovery and olfactory education "
-                    "patterns rather than generic ecommerce taxonomy."
-                ),
+            _reference(
+                "https://www.diptyqueparis.com/",
+                "Diptyque",
+                "luxury-fragrance",
+                "information-architecture",
+                "Fragrance-native catalogue, discovery and olfactory education patterns.",
             ),
-            BenchmarkReference(
-                url="https://www.lelabofragrances.com/",
-                label="Le Labo",
-                domain="luxury-fragrance",
-                role="product-storytelling",
-                rationale=(
-                    "Strong fragrance-house identity, collection architecture "
-                    "and product storytelling."
-                ),
+            _reference(
+                "https://www.lelabofragrances.com/",
+                "Le Labo",
+                "luxury-fragrance",
+                "product-storytelling",
+                "Fragrance-house identity, collection architecture and product storytelling.",
             ),
-            BenchmarkReference(
-                url="https://www.byredo.com/",
-                label="Byredo",
-                domain="luxury-fragrance",
-                role="visual-craft",
-                rationale=(
-                    "Image-led luxury art direction and controlled editorial-commerce rhythm."
-                ),
+            _reference(
+                "https://www.byredo.com/",
+                "Byredo",
+                "luxury-fragrance",
+                "visual-craft",
+                "Image-led luxury art direction and controlled editorial-commerce rhythm.",
             ),
-            BenchmarkReference(
-                url="https://www.aesop.com/",
-                label="Aesop",
-                domain="luxury-fragrance",
-                role="conversion",
-                rationale=(
-                    "Restrained premium commerce with clear product and service pathways."
-                ),
+            _reference(
+                "https://www.aesop.com/",
+                "Aesop",
+                "luxury-fragrance",
+                "conversion",
+                "Restrained premium commerce with clear product and service pathways.",
             ),
         ),
         "fashion": (
-            BenchmarkReference(
-                url="https://www.cos.com/",
-                label="COS",
-                domain="fashion",
-                role="visual-craft",
-                rationale=(
-                    "Editorial fashion imagery with strong product-grid discipline."
-                ),
+            _reference(
+                "https://www.cos.com/",
+                "COS",
+                "fashion",
+                "visual-craft",
+                "Editorial fashion imagery with strong product-grid discipline.",
             ),
-            BenchmarkReference(
-                url="https://www.uniqlo.com/",
-                label="UNIQLO",
-                domain="fashion",
-                role="information-architecture",
-                rationale=(
-                    "Large apparel catalogue with category, fit, colour and product discovery patterns."
-                ),
+            _reference(
+                "https://www.uniqlo.com/",
+                "UNIQLO",
+                "fashion",
+                "information-architecture",
+                "Apparel discovery using category, fit, colour and product attributes.",
             ),
         ),
         "beauty-skincare": (
-            BenchmarkReference(
-                url="https://www.sephora.com/",
-                label="Sephora",
-                domain="beauty-skincare",
-                role="information-architecture",
-                rationale=(
-                    "Beauty-specific filtering, product proof, reviews and discovery architecture."
-                ),
+            _reference(
+                "https://www.sephora.com/",
+                "Sephora",
+                "beauty-skincare",
+                "information-architecture",
+                "Beauty-specific filtering, product proof, reviews and discovery architecture.",
             ),
-            BenchmarkReference(
-                url="https://www.aesop.com/",
-                label="Aesop",
-                domain="beauty-skincare",
-                role="visual-craft",
-                rationale=(
-                    "Premium product storytelling and restrained editorial presentation."
-                ),
+            _reference(
+                "https://www.aesop.com/",
+                "Aesop",
+                "beauty-skincare",
+                "visual-craft",
+                "Premium product storytelling and restrained editorial presentation.",
             ),
         ),
         "electronics": (
-            BenchmarkReference(
-                url="https://www.apple.com/",
-                label="Apple",
-                domain="electronics",
-                role="product-storytelling",
-                rationale=(
-                    "High-consideration hardware storytelling with controlled specification reveal."
-                ),
+            _reference(
+                "https://www.apple.com/",
+                "Apple",
+                "electronics",
+                "product-storytelling",
+                "Hardware storytelling with controlled specification reveal.",
             ),
-            BenchmarkReference(
-                url="https://www.samsung.com/",
-                label="Samsung",
-                domain="electronics",
-                role="information-architecture",
-                rationale=(
-                    "Broad device catalogue with comparison, specification and purchase pathways."
-                ),
+            _reference(
+                "https://www.samsung.com/",
+                "Samsung",
+                "electronics",
+                "information-architecture",
+                "Device catalogue with comparison, specification and purchase pathways.",
             ),
         ),
         "hotel-resort": (
-            BenchmarkReference(
-                url="https://www.aman.com/",
-                label="Aman",
-                domain="hotel-resort",
-                role="service-journey",
-                rationale=(
-                    "Experience-led destination storytelling connected to practical booking tasks."
-                ),
+            _reference(
+                "https://www.aman.com/",
+                "Aman",
+                "hotel-resort",
+                "service-journey",
+                "Experience-led storytelling connected to practical booking tasks.",
             ),
         ),
         "higher-education": (
-            BenchmarkReference(
-                url="https://www.mit.edu/",
-                label="MIT",
-                domain="higher-education",
-                role="information-architecture",
-                rationale=(
-                    "Institution-wide information architecture across audiences and academic content."
-                ),
+            _reference(
+                "https://www.mit.edu/",
+                "MIT",
+                "higher-education",
+                "information-architecture",
+                "Institution-wide information architecture across audiences and academic content.",
             ),
         ),
         "fintech": (
-            BenchmarkReference(
-                url="https://stripe.com/",
-                label="Stripe",
-                domain="fintech",
-                role="product-storytelling",
-                rationale=(
-                    "Complex financial infrastructure communicated with proof, trust and progressive detail."
-                ),
+            _reference(
+                "https://stripe.com/",
+                "Stripe",
+                "fintech",
+                "product-storytelling",
+                "Financial infrastructure communicated with proof, trust and progressive detail.",
             ),
         ),
         "developer-tools": (
-            BenchmarkReference(
-                url="https://linear.app/",
-                label="Linear",
-                domain="developer-tools",
-                role="product-storytelling",
-                rationale=(
-                    "Product proof, workflow narrative and interaction-led software communication."
-                ),
+            _reference(
+                "https://linear.app/",
+                "Linear",
+                "developer-tools",
+                "product-storytelling",
+                "Product proof, workflow narrative and interaction-led software communication.",
             ),
         ),
         "news-publication": (
-            BenchmarkReference(
-                url="https://www.theverge.com/",
-                label="The Verge",
-                domain="news-publication",
-                role="editorial",
-                rationale=(
-                    "Distinctive publication hierarchy and varied story density."
-                ),
+            _reference(
+                "https://www.theverge.com/",
+                "The Verge",
+                "news-publication",
+                "editorial",
+                "Distinctive publication hierarchy and varied story density.",
             ),
         ),
     }
@@ -437,18 +347,29 @@ class ReferenceIntelligencePlanner:
         self.interpreter = GoalInterpreter()
         self.domain_interpreter = DomainInterpreter()
 
+    def _profile(self, goal: str):
+        goal_profile = self.interpreter.interpret(goal)
+        return self.domain_interpreter.interpret(
+            goal,
+            goal_profile.website_type,
+        )
+
     def references_for(self, goal: str) -> tuple[BenchmarkReference, ...]:
-        profile = self.interpreter.interpret(goal)
-        domain = self.domain_interpreter.interpret(goal, profile.website_type)
-        vertical = self.VERTICAL_CATALOG.get(domain.vertical, ())
-        archetype = self.CATALOG.get(profile.website_type, self.CATALOG["generic"])
+        domain_profile = self._profile(goal)
+        vertical = self.VERTICAL_CATALOG.get(domain_profile.vertical, ())
+        archetype = self.CATALOG.get(
+            domain_profile.website_type,
+            self.CATALOG["generic"],
+        )
         merged: list[BenchmarkReference] = []
         seen: set[str] = set()
+
         for reference in (*vertical, *archetype):
             if reference.url in seen:
                 continue
             seen.add(reference.url)
             merged.append(reference)
+
         return tuple(merged)
 
     def plan(
@@ -459,8 +380,7 @@ class ReferenceIntelligencePlanner:
         auto_enabled: bool = True,
         target_reference_count: int = 4,
     ) -> BenchmarkPlan:
-        profile = self.interpreter.interpret(goal)
-        domain = self.domain_interpreter.interpret(goal, profile.website_type)
+        domain_profile = self._profile(goal)
         user_urls = list(dict.fromkeys(user_urls))
         target = max(0, min(4, int(target_reference_count)))
         selected: list[BenchmarkReference] = []
@@ -476,9 +396,10 @@ class ReferenceIntelligencePlanner:
         final_urls = list(
             dict.fromkeys(user_urls + [item.url for item in selected])
         )
+
         return BenchmarkPlan(
-            website_type=profile.website_type,
-            vertical=domain.vertical,
+            website_type=domain_profile.website_type,
+            vertical=domain_profile.vertical,
             auto_inspiration_enabled=auto_enabled,
             target_reference_count=target,
             user_reference_count=len(user_urls),
