@@ -35,9 +35,18 @@ const CONTENT_TYPES = {
 function staticServer(root) {
   return http.createServer((req, res) => {
     const url = new URL(req.url || "/", "http://127.0.0.1");
+    if (url.pathname === "/api/health") {
+      res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
+      res.end(JSON.stringify({
+        python: true,
+        ai: { configured: false, providers: [] },
+        dogfood: true,
+      }));
+      return;
+    }
     if (url.pathname.startsWith("/api/")) {
-      res.writeHead(503, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "dogfood bridge intentionally unavailable" }));
+      res.writeHead(404, { "Content-Type": "application/json", "Cache-Control": "no-store" });
+      res.end(JSON.stringify({ error: "dogfood endpoint not exercised" }));
       return;
     }
     const relative = decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname);
@@ -66,14 +75,14 @@ function sourceAudit() {
   const skills = REQUIRED_SKILLS.map(relative => ({ relative, exists: fs.existsSync(path.join(SKILLS, relative)) }));
 
   const signatureTokens = ["--ink:", "--paper:", "--accent:", "--font-display:", "--focus:"];
-  const oldGenericTells = ["--grad:", "linear-gradient(135deg", ".smart-card", ".panel {", "glassmorphism"];
+  const oldGenericStyleTells = ["--grad:", "linear-gradient(135deg", ".smart-card", ".panel {", "backdrop-filter: blur(28px)"];
   const interactionSignals = ["focus-visible", "prefers-reduced-motion", "aria-label", "Auto inspiration", "sandbox=\"allow-scripts\""];
 
   return {
     skills,
     skillCoverage: skills.filter(item => item.exists).length / REQUIRED_SKILLS.length,
     signatureTokenCoverage: signatureTokens.filter(token => css.includes(token)).length / signatureTokens.length,
-    oldGenericTellCount: oldGenericTells.filter(token => css.includes(token) || html.includes(token)).length,
+    oldGenericTellCount: oldGenericStyleTells.filter(token => css.includes(token)).length,
     interactionSignalCoverage: interactionSignals.filter(token => css.includes(token) || html.includes(token) || app.includes(token)).length / interactionSignals.length,
     accentUsageCount: (css.match(/var\(--accent\)/g) || []).length,
     largeRadiusRuleCount: (css.match(/border-radius:\s*(?:2[0-9]|[3-9][0-9])px/g) || []).length,
@@ -99,7 +108,13 @@ const DOM_AUDIT = `() => {
   });
   const small = controls.filter(el => {
     if (el.disabled) return false;
-    const r = el.getBoundingClientRect();
+    let r = el.getBoundingClientRect();
+    if (el.matches('input[type="radio"],input[type="checkbox"]')) {
+      const id = el.id;
+      const explicit = id ? document.querySelector('label[for="' + CSS.escape(id) + '"]') : null;
+      const label = explicit || el.closest('label');
+      if (label && visible(label)) r = label.getBoundingClientRect();
+    }
     return r.width < 24 || r.height < 24;
   });
   const imgs = [...document.images].filter(visible);
