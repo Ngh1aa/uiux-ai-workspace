@@ -3,7 +3,13 @@ from core.contracts.visual_critic_schema import (
     VisualRouteSemanticReview,
     VisualScore,
 )
-from core.semantic_visual_policy import merge_semantic_score, semantic_issues
+from core.domain_visual_profiles import resolve_visual_profile
+from core.semantic_visual_policy import (
+    merge_semantic_score,
+    semantic_blocking_generic,
+    semantic_coverage_issues,
+    semantic_issues,
+)
 
 
 def _base_score() -> VisualScore:
@@ -57,7 +63,10 @@ def test_luxury_fragrance_card_soup_creates_blocking_semantic_issues() -> None:
     assert "page-role" in categories
     assert "decision-object" in categories
     assert "media" in categories
+    assert "distinctiveness" in categories
+    assert "brand-distinctiveness" in categories
     assert any(issue.severity == "P1" for issue in issues)
+    assert semantic_blocking_generic(review) is True
 
     score = merge_semantic_score(_base_score(), review, issues)
     assert score.generic_ai_feel >= 70
@@ -117,7 +126,78 @@ def test_domain_specific_visual_review_can_pass_without_generic_false_positive()
 
     issues = semantic_issues(review)
     assert issues == []
+    assert semantic_blocking_generic(review) is False
     score = merge_semantic_score(_base_score(), review, issues)
     assert score.generic_ai_feel <= 18
     assert score.visual >= 90
     assert score.hierarchy >= 90
+
+
+def test_semantic_review_requires_complete_route_coverage_and_visible_evidence() -> None:
+    review = SemanticVisualReview(
+        website_type="ecommerce",
+        vertical="luxury-fragrance",
+        cross_route_variety=90,
+        brand_distinctiveness=90,
+        routes=[
+            VisualRouteSemanticReview(
+                route="/",
+                page_role="home",
+                domain_fit=90,
+                page_role_fit=90,
+                decision_object_dominance=90,
+                media_relevance=90,
+                hierarchy=90,
+                distinctiveness=90,
+                generic_ai_feel=5,
+                evidence=[],
+            )
+        ],
+    )
+
+    issues = semantic_coverage_issues(review, ["/", "/fragrances/"])
+    categories = {issue.category for issue in issues}
+    assert "semantic-coverage" in categories
+    assert "semantic-evidence" in categories
+    assert any("/fragrances/" in issue.evidence for issue in issues)
+
+
+def test_domain_profiles_do_not_apply_one_visual_recipe_to_every_site() -> None:
+    fragrance = resolve_visual_profile("ecommerce", "luxury-fragrance")
+    government = resolve_visual_profile("government", "generic")
+
+    assert fragrance["id"].endswith("luxury-fragrance")
+    assert fragrance["thresholds"]["media_relevance_min"] > government["thresholds"]["media_relevance_min"]
+    assert fragrance["thresholds"]["generic_ai_block"] < government["thresholds"]["generic_ai_block"]
+    assert "fragrance" in fragrance["decision_model"].lower()
+    assert "public-service" in government["decision_model"].lower()
+
+
+def test_domain_policy_can_derive_generic_block_even_when_model_flag_is_false() -> None:
+    route = VisualRouteSemanticReview(
+        route="/fragrances/",
+        page_role="product-listing",
+        domain_fit=80,
+        page_role_fit=80,
+        decision_object_dominance=75,
+        media_relevance=80,
+        hierarchy=80,
+        distinctiveness=70,
+        generic_ai_feel=38,
+        blocking_generic=False,
+        evidence=["Repeated equal rounded cards dominate the listing."],
+    )
+    fragrance = SemanticVisualReview(
+        website_type="ecommerce",
+        vertical="luxury-fragrance",
+        blocking_generic=False,
+        cross_route_variety=80,
+        brand_distinctiveness=80,
+        routes=[route],
+    )
+    government = fragrance.model_copy(deep=True)
+    government.website_type = "government"
+    government.vertical = "generic"
+
+    assert semantic_blocking_generic(fragrance) is True
+    assert semantic_blocking_generic(government) is False
