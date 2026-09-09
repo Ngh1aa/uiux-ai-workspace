@@ -262,13 +262,15 @@
     const brandName = els.brandName.value.trim();
     if (brandName) ctx.brand_name = brandName;
     const personality = els.brandPersonality.value.trim();
-    if (personality) ctx.personality = personality;
+    if (personality) {
+      ctx.personality = personality.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
+    }
     const avoid = els.brandAvoid.value.trim();
     if (avoid) ctx.avoid = avoid.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean);
     const tokensRaw = els.tokensJson.value.trim();
     if (tokensRaw) {
       try { ctx.tokens = JSON.parse(tokensRaw); }
-      catch { /* ignore — sẽ bị backend từ chối */ }
+      catch { /* ignore — không phải json hợp lệ */ }
     }
     const urls = Array.from(document.querySelectorAll(".ref-row input"))
       .map(i => i.value.trim()).filter(Boolean);
@@ -281,7 +283,7 @@
     const prompt = els.prompt.value.trim();
     if (!prompt) { alert("Vui lòng nhập prompt."); els.prompt.focus(); return; }
     const engine = document.querySelector('input[name="engine"]:checked').value;
-    const mode = engine === "ai" ? "build" : (confirm("Bấm OK để chạy Intelligence-only (chỉ phân tích, chưa tạo trang).\nBấm Cancel để chạy full Build.") ? "intelligence" : "build");
+    const mode = "build";
 
     const designContext = buildDesignContext();
     const endpoint = mode === "intelligence" ? "/intelligence" : "/run";
