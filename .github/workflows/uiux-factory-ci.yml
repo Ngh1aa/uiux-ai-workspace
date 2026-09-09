@@ -55,6 +55,7 @@ jobs:
         run: |
           node --check apps/web/app.js
           node --check apps/web/skills-router.js
+          node --check apps/web/runtime-presets.js
 
       - name: Run foundation tests
         run: python -m pytest -q tests
