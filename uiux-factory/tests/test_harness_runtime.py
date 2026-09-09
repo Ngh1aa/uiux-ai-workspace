@@ -84,10 +84,14 @@ def test_shipped_runtime_presets_resolve_required_factory_capabilities() -> None
         try:
             capabilities = set(active.composition.capabilities)
             assert "events.session" in capabilities
+            assert "artifacts.read" in capabilities
             assert "skills.compose" in capabilities
             assert "research.web" in capabilities
             assert "browser.qa" in capabilities
             assert "visual.qa" in capabilities
+            assert {"list_artifacts", "read_artifact", "read_skill_source"}.issubset(
+                set(active.composition.tools)
+            )
         finally:
             active.registry.unmount_all()
 
@@ -172,3 +176,35 @@ def test_runtime_compose_rejects_missing_skill_paths_before_activation(tmp_path:
     runtime = HarnessInspiredRuntime(factory)
     with pytest.raises(FileNotFoundError, match="does-not-exist/SKILL.md"):
         runtime.compose("broken")
+
+
+def test_runtime_plugin_selection_changes_model_observation_tool_surface(tmp_path: Path) -> None:
+    factory = tmp_path / "workspace" / "uiux-factory"
+    preset_root = factory / "config" / "runtime-presets"
+    skills = factory.parent / "skills_UIUX"
+    preset_root.mkdir(parents=True)
+    skills.mkdir(parents=True)
+
+    (preset_root / "skills-only.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "id": "skills-only",
+                "name": "Skills only",
+                "description": "No artifact reader plugin",
+                "plugins": ["session-events", "skill-composition"],
+                "stage_skills": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    runtime = HarnessInspiredRuntime(factory)
+    active = runtime.compose("skills-only")
+    try:
+        tools = set(active.composition.tools)
+        assert "read_skill_source" in tools
+        assert "list_artifacts" not in tools
+        assert "read_artifact" not in tools
+    finally:
+        active.registry.unmount_all()
