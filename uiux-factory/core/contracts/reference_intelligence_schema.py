@@ -27,10 +27,11 @@ class BenchmarkReference(BaseModel):
 
 
 class BenchmarkPlan(BaseModel):
-    schema_version: str = "1.0.0"
+    schema_version: str = "1.1.0"
     website_type: str
+    vertical: str = "generic"
     auto_inspiration_enabled: bool = True
-    target_reference_count: int = 2
+    target_reference_count: int = 4
     user_reference_count: int = 0
     selected: list[BenchmarkReference] = Field(default_factory=list)
     final_reference_urls: list[str] = Field(default_factory=list)
