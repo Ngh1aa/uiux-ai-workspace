@@ -29,16 +29,17 @@ Cordis treats a context as a service repository. Plugins declare stable service 
 
 `core/runtime/plugin_runtime.py` adds a deliberately small Python plugin kernel:
 
-- `PluginSpec` declares `provides`, `requires`, logical tools, and stage skill contributions.
+- `PluginSpec` declares `provides`, `requires`, tools, and stage skill contributions.
 - Dependencies are resolved through stable capability names rather than concrete imports.
 - Mount order is dependency-derived.
 - Activation may return a disposer; disposal runs in reverse order.
 - Duplicate/ambiguous capability providers and dependency cycles fail fast.
 - No model-authored Python is evaluated.
 
-The shipped Factory runtime plugins are logical capability owners:
+The shipped Factory runtime plugins are capability owners:
 
 - `session-events`
+- `artifact-evidence`
 - `skill-composition`
 - `web-research`
 - `browser-evidence`
@@ -89,7 +90,7 @@ The Factory adopts the useful introspection/authoring loop but deliberately narr
 
 - inspect plugin and preset inventory;
 - preview a resolved composition;
-- validate a preset;
+- validate a preset, including every composed skill path, before a run starts;
 - copy an existing preset into a user-writable root;
 - delete only user-authored presets;
 - never mutate shipped presets;
@@ -111,6 +112,8 @@ User-authored presets live under:
 uiux-factory/.runtime-presets/
 ```
 
+That directory is ignored by Git because it is local deployment/user configuration, not shipped product source.
+
 ## 4. Tool + skill composition
 
 ### DeepSeek lesson
@@ -131,7 +134,15 @@ runtime preset stage skills
 compiled stage skill context
 ```
 
-Logical tools are also recorded in `runtime-composition.json` so the run has an explicit capability/tool inventory. The current MetaGPT roles still own execution; the tool list describes the runtime composition and creates a stable seam for later tool adapters.
+Tool composition is enforced by the existing provider observation loop, not merely recorded as metadata:
+
+- `artifact-evidence` enables `list_artifacts` and `read_artifact`;
+- `skill-composition` enables `read_skill_source`;
+- the active runtime exposes only the intersection of its composed tools and the bounded read-only provider tool contract;
+- the specialist system prompt receives that exact runtime-enabled set;
+- a request for a tool not enabled by the active preset is not executed and is recorded as `runtime_tool_not_enabled`.
+
+Other tool names such as `web_search`, `browser_render`, `visual_review`, `session_inspect` and Creator operations remain capability inventory/seams for their owning deterministic subsystems; they are not silently exposed to the model observation loop.
 
 A runtime capability must be present before the stage that needs it:
 
@@ -140,7 +151,7 @@ A runtime capability must be present before the stage that needs it:
 - `browser.qa` before rendered QA;
 - `visual.qa` before semantic visual acceptance.
 
-A custom preset that removes a required capability fails explicitly instead of silently degrading.
+A custom preset that removes a required pipeline capability fails explicitly instead of silently degrading. Missing composed skill paths are rejected during preset composition, before the pipeline consumes the preset.
 
 ## 5. Runtime presets
 
@@ -156,7 +167,7 @@ Shipped presets:
 
 ### `standard`
 
-Canonical Factory capabilities: session events, skill composition, live research, browser evidence, semantic visual QA.
+Canonical Factory capabilities: session events, bounded artifact evidence, skill composition, live research, browser evidence and semantic visual QA.
 
 ### `visual-first`
 
@@ -183,7 +194,7 @@ Creative-review revisions inherit the source run's runtime preset. They cannot s
 A composed run now records:
 
 - `events.jsonl` — append-only run/session chronology;
-- `runtime-composition.json` — preset, mounted plugins, capabilities, logical tools and stage skill overlays;
+- `runtime-composition.json` — preset, mounted plugins, capabilities, tools and stage skill overlays;
 - `flow-plan.json` — canonical flow plus the runtime composition snapshot;
 - `run.json` — current run snapshot including `runtime_preset`.
 
