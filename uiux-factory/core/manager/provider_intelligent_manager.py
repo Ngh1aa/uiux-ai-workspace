@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -31,6 +32,20 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
 
         self.runtime = HarnessInspiredRuntime(self.root)
         self.team_runner.set_runtime(self.runtime)
+
+    def _save_flow_plan(self, context: RunContext, engine: str) -> None:
+        super()._save_flow_plan(context, engine)
+        raw = context.artifacts.get("flow_plan")
+        if not raw or not self.runtime.has_active(context):
+            return
+        path = Path(raw)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["runtime"] = self.runtime.snapshot(context)
+        path.write_text(
+            json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        context.add_artifact("flow_plan", path)
 
     async def run(
         self,
