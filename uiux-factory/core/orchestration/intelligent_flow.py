@@ -8,6 +8,11 @@ from pathlib import Path
 
 DEFAULT_DELIVERY_POLICY_ID = "adaptive-prompt-os-v4"
 DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
+ANTHROPIC_SKILL_ROOT = "upstream/anthropic-skills/skills"
+ANTHROPIC_FRONTEND_DESIGN = f"{ANTHROPIC_SKILL_ROOT}/frontend-design"
+ANTHROPIC_WEBAPP_TESTING = f"{ANTHROPIC_SKILL_ROOT}/webapp-testing"
+ANTHROPIC_SKILL_CREATOR = f"{ANTHROPIC_SKILL_ROOT}/skill-creator"
+ANTHROPIC_WEB_ARTIFACTS = f"{ANTHROPIC_SKILL_ROOT}/web-artifacts-builder"
 
 
 @dataclass(frozen=True)
@@ -149,15 +154,41 @@ class ProfessionalWebsiteFlow:
     EXTRA_BY_FACTORY_STAGE = {
         "reference_analysis": ("reference-extraction-and-design-audit",),
         "ux_ia": ("ux-research-and-journey", "journey-driven-content-and-layout"),
-        "art_direction": ("visual-taste-calibration", "brand-guidelines"),
+        "art_direction": (
+            "visual-taste-calibration",
+            "brand-guidelines",
+            ANTHROPIC_FRONTEND_DESIGN,
+        ),
         "design_system": ("responsive-and-device-strategy", "accessibility"),
         "implementation_plan": ("frontend-architecture-and-refactoring",),
-        "visual_composition": ("visual-taste-calibration", "responsive-and-device-strategy"),
-        "implementation": ("accessibility",),
-        "browser_qa": ("visual-regression-and-design-drift",),
-        "visual_qa": ("visual-taste-calibration", "visual-regression-and-design-drift"),
-        "repair": ("ui-improvement", "visual-taste-calibration", "responsive-and-device-strategy"),
+        "visual_composition": (
+            "visual-taste-calibration",
+            "responsive-and-device-strategy",
+            ANTHROPIC_FRONTEND_DESIGN,
+        ),
+        "implementation": (
+            "accessibility",
+            ANTHROPIC_FRONTEND_DESIGN,
+        ),
+        "browser_qa": (
+            "visual-regression-and-design-drift",
+            ANTHROPIC_WEBAPP_TESTING,
+        ),
+        "visual_qa": (
+            "visual-taste-calibration",
+            "visual-regression-and-design-drift",
+            ANTHROPIC_FRONTEND_DESIGN,
+            ANTHROPIC_WEBAPP_TESTING,
+        ),
+        "repair": (
+            "ui-improvement",
+            "visual-taste-calibration",
+            "responsive-and-device-strategy",
+            ANTHROPIC_FRONTEND_DESIGN,
+        ),
     }
+
+    COMPLEX_PROTOTYPE_FEATURES = frozenset({"auth", "dashboard", "forms", "search"})
 
     def __init__(self, skills_root: Path) -> None:
         self.skills_root = Path(skills_root).resolve()
@@ -211,6 +242,14 @@ class ProfessionalWebsiteFlow:
             if self._condition_matches(rule.get("when", {}), profile):
                 selected.extend(rule.get("skills", []))
         selected.extend(self.EXTRA_BY_FACTORY_STAGE.get(factory_stage, ()))
+
+        if (
+            factory_stage == "implementation"
+            and profile.mode == "interactive-prototype"
+            and self.COMPLEX_PROTOTYPE_FEATURES.intersection(profile.features)
+        ):
+            selected.append(ANTHROPIC_WEB_ARTIFACTS)
+
         if factory_stage == "repair":
             selected.extend(("web-ui-code-review", "state-feedback-and-error-recovery"))
         return profile, self._unique(selected), self._unique(mandatory)
@@ -219,7 +258,14 @@ class ProfessionalWebsiteFlow:
         profile, selected, mandatory = self.resolve_skill_names(factory_stage, goal)
         missing = [name for name in selected if not (self.skills_root / name / "SKILL.md").is_file()]
         if missing:
-            raise FileNotFoundError("Declarative flow references missing skills: " + ", ".join(missing))
+            submodule_hint = ""
+            if any(name.startswith("upstream/anthropic-skills/") for name in missing):
+                submodule_hint = " Run: git submodule update --init --recursive."
+            raise FileNotFoundError(
+                "Declarative flow references missing skills: "
+                + ", ".join(missing)
+                + submodule_hint
+            )
         return (
             profile,
             [f"{name}/SKILL.md" for name in selected],
