@@ -11,12 +11,12 @@ from core.contracts.quality_loop_schema import QualityIteration, QualityLoopResu
 from core.contracts.repair_result_schema import RepairResult
 from core.contracts.visual_critic_schema import VisualCriticResult
 from core.team.team_runner import UIUXTeamRunner
-from core.verification.evidence_contract import EvidenceContractEvaluator
-from core.verification.post_render_evaluators_wcag import PostRenderEvaluatorSuite
+from core.verification.evidence_contract_v1 import EvidenceContractEvaluatorV1
+from core.verification.post_render_evaluators_final import PostRenderEvaluatorSuite
 
 
 class QualityLoopRunner:
-    """BrowserQA -> VisualCritic -> post-render evidence -> 56-rule contract -> repair."""
+    """BrowserQA -> VisualCritic -> V1 post-render evidence -> 56-rule contract -> repair/replan."""
 
     def __init__(
         self,
@@ -32,7 +32,7 @@ class QualityLoopRunner:
         self.run_context = run_context
         self.max_iterations = max_iterations
         self.min_score_improvement = min_score_improvement
-        self.evidence_contract = EvidenceContractEvaluator()
+        self.evidence_contract = EvidenceContractEvaluatorV1()
 
     @staticmethod
     def fingerprint(critic: VisualCriticResult) -> str:
@@ -72,6 +72,79 @@ class QualityLoopRunner:
             },
         )
         return report, acceptance_path
+
+    def _write_evidence_remediation_plan(self, acceptance, output_dir: Path) -> Path:
+        definitions = {rule.id: rule for rule in self.evidence_contract.registry.rules}
+        blockers = []
+        stage_rank = {
+            "research": 0,
+            "ux_ia": 1,
+            "art_direction": 2,
+            "design_contract": 3,
+            "design_system": 4,
+            "implementation_plan": 5,
+            "visual_composition": 6,
+            "implementation": 7,
+            "browser_qa": 8,
+            "visual_qa": 9,
+            "repair": 10,
+        }
+        for result in acceptance.requirements:
+            definition = definitions.get(result.requirement_id)
+            if definition is None or not definition.machine_gate:
+                continue
+            if result.outcome.value not in {"failed", "cantTell", "untested"}:
+                continue
+            owner = definition.owner_stage
+            blockers.append(
+                {
+                    "requirement_id": result.requirement_id,
+                    "title": definition.title,
+                    "severity": definition.severity,
+                    "outcome": result.outcome.value,
+                    "owner_stage": owner,
+                    "evaluator": definition.evaluator,
+                    "rationale": result.rationale,
+                    "test_targets": result.test_targets,
+                    "recommended_action": (
+                        "repair_or_regenerate_implementation"
+                        if owner in {"implementation", "browser_qa", "visual_qa", "repair"}
+                        else f"invalidate_from_{owner}"
+                    ),
+                }
+            )
+        earliest = min(
+            (row["owner_stage"] for row in blockers),
+            key=lambda stage: stage_rank.get(stage, 999),
+            default="implementation",
+        )
+        payload = {
+            "schema_version": 1,
+            "run_id": self.run_context.run_id,
+            "project_digest": acceptance.project_digest,
+            "machine_status": acceptance.machine_status,
+            "earliest_owner_stage": earliest,
+            "blocker_count": len(blockers),
+            "blockers": blockers,
+            "strategy": (
+                "Use requirement ownership and rendered evidence to repair/replan from the earliest responsible stage; "
+                "do not convert cantTell/untested into PASS and do not blind-retry unchanged output."
+            ),
+        }
+        path = output_dir / "evidence-remediation-plan.json"
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+        if output_dir.resolve() == self.run_context.run_dir.resolve():
+            self.run_context.add_artifact("evidence_remediation_plan", path)
+        self.team_runner.event_bus(self.run_context).emit(
+            "verification.remediation_planned",
+            stage="visual_qa",
+            data={
+                "artifact": str(path.resolve()),
+                "blocker_count": len(blockers),
+                "earliest_owner_stage": earliest,
+            },
+        )
+        return path
 
     async def _run_post_render_evidence(
         self,
@@ -196,6 +269,7 @@ class QualityLoopRunner:
                     critic_path=critic_path,
                 )
                 if acceptance.machine_status != "passed":
+                    remediation_path = self._write_evidence_remediation_plan(acceptance, output_dir)
                     return QualityLoopResult(
                         status="blocked",
                         project_slug=project_slug,
@@ -203,7 +277,7 @@ class QualityLoopRunner:
                         max_iterations=self.max_iterations,
                         iterations=iterations,
                         final_score=critic.score.overall,
-                        stop_reason="prototype_evidence_contract_blocked",
+                        stop_reason=f"prototype_evidence_contract_requires_root_replan:{remediation_path.name}",
                         browser_report_path=str(browser_path),
                         visual_critic_path=str(critic_path),
                     )
