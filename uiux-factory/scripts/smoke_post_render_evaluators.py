@@ -7,6 +7,10 @@ import sys
 import types
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 # The smoke exercises the evaluator suite, not MetaGPT role orchestration.
 if "metagpt.actions" not in sys.modules:
     metagpt = types.ModuleType("metagpt")
@@ -53,8 +57,7 @@ document.querySelector('form').addEventListener('submit',e=>e.preventDefault());
 
 
 async def main() -> None:
-    root = Path(__file__).resolve().parents[1]
-    smoke_root = root / ".tmp" / "post-render-evaluator-smoke"
+    smoke_root = ROOT / ".tmp" / "post-render-evaluator-smoke"
     if smoke_root.exists():
         shutil.rmtree(smoke_root)
     project = smoke_root / "project"
