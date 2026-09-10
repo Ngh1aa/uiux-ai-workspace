@@ -36,14 +36,18 @@ class RequirementRegistry:
 
 
 class EvidenceContractEvaluator:
-    """Convert existing QA artifacts into truthful requirement outcomes.
+    """Convert QA artifacts into truthful, provenance-bound requirement outcomes."""
 
-    The evaluator is deliberately conservative. Artifact presence alone is never
-    treated as proof that a subjective requirement passed. Unsupported checks
-    remain ``cantTell`` or ``untested`` until a dedicated evaluator exists.
-    """
-
-    EVALUATOR_VERSION = "2.0.0"
+    EVALUATOR_VERSION = "2.1.0"
+    DEDICATED_REPORTS = {
+        "interaction_trace": "interaction-state-report.json",
+        "interaction_timing": "interaction-state-report.json",
+        "state_crawler": "interaction-state-report.json",
+        "preferred_touch_targets": "touch-target-metrics.json",
+        "content_stress": "content-stress-report.json",
+        "squint_critic": "squint-review.json",
+        "blind_five_second": "blind-five-second-review.json",
+    }
 
     def __init__(self, registry: RequirementRegistry | None = None) -> None:
         self.registry = registry or RequirementRegistry()
@@ -310,6 +314,103 @@ class EvidenceContractEvaluator:
             rationale=("Independent human review recorded approval." if approved else "Human review artifact exists but does not contain reviewer identity plus approved=true."),
         )
 
+    def _dedicated_report_result(
+        self,
+        rule: RequirementDefinition,
+        run_dir: Path,
+        *,
+        run_id: str,
+        project_digest: str,
+    ) -> RequirementResult:
+        filename = self.DEDICATED_REPORTS.get(str(rule.evaluator or ""))
+        if not filename:
+            return RequirementResult(
+                requirement_id=rule.id,
+                outcome=EvidenceOutcome.UNTESTED,
+                applicable=None,
+                rationale=f"No dedicated report mapping exists for evaluator {rule.evaluator!r}.",
+            )
+        path = run_dir / filename
+        if not path.is_file():
+            return RequirementResult(
+                requirement_id=rule.id,
+                outcome=EvidenceOutcome.UNTESTED,
+                applicable=None,
+                rationale=f"Dedicated evaluator report {filename} has not been generated.",
+            )
+        report_evidence = [self._evidence_ref(path, run_id=run_id, project_digest=project_digest, kind=str(rule.evaluator or "dedicated-evaluator"))]
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return RequirementResult(
+                requirement_id=rule.id,
+                outcome=EvidenceOutcome.FAILED,
+                applicable=True,
+                evidence=report_evidence,
+                rationale=f"Dedicated evaluator report {filename} is invalid JSON.",
+            )
+        bound_digest = str(payload.get("project_digest", ""))
+        if not bound_digest or bound_digest != project_digest:
+            return RequirementResult(
+                requirement_id=rule.id,
+                outcome=EvidenceOutcome.UNTESTED,
+                applicable=None,
+                evidence=report_evidence,
+                rationale="Dedicated evaluator evidence is stale or unbound to the current project digest.",
+            )
+        row = (payload.get("requirements") or {}).get(rule.id)
+        if not isinstance(row, dict):
+            return RequirementResult(
+                requirement_id=rule.id,
+                outcome=EvidenceOutcome.UNTESTED,
+                applicable=None,
+                evidence=report_evidence,
+                rationale=f"Dedicated evaluator report does not contain a result for {rule.id}.",
+            )
+        try:
+            outcome = EvidenceOutcome(str(row.get("outcome", "untested")))
+        except ValueError:
+            outcome = EvidenceOutcome.CANT_TELL
+        evidence = list(report_evidence)
+        for raw in row.get("evidence_files", []):
+            candidate = Path(str(raw))
+            if not candidate.is_absolute():
+                candidate = run_dir / candidate
+            candidate = candidate.resolve()
+            if candidate.is_file():
+                evidence.append(
+                    self._evidence_ref(
+                        candidate,
+                        run_id=run_id,
+                        project_digest=project_digest,
+                        kind=f"{rule.evaluator}-artifact",
+                    )
+                )
+        if outcome == EvidenceOutcome.PASSED and not evidence:
+            outcome = EvidenceOutcome.CANT_TELL
+        return RequirementResult(
+            requirement_id=rule.id,
+            outcome=outcome,
+            applicable=row.get("applicable"),
+            test_targets=[str(item) for item in row.get("test_targets", [])],
+            evidence=evidence,
+            rationale=str(row.get("rationale", "Dedicated evaluator returned no rationale.")),
+        )
+
+    def _stale_dedicated_report_count(self, run_dir: Path, project_digest: str) -> int:
+        stale = 0
+        for filename in set(self.DEDICATED_REPORTS.values()):
+            path = run_dir / filename
+            if not path.is_file():
+                continue
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if str(payload.get("project_digest", "")) != project_digest:
+                stale += 1
+        return stale
+
     def evaluate(
         self,
         *,
@@ -345,6 +446,8 @@ class EvidenceContractEvaluator:
                 result = self._artifact_claim_result(rule, run_dir, run_id=run_id, project_digest=digest)
             elif rule.evaluator == "human_review":
                 result = self._human_review_result(rule, run_dir, run_id=run_id, project_digest=digest)
+            elif rule.evaluator in self.DEDICATED_REPORTS:
+                result = self._dedicated_report_result(rule, run_dir, run_id=run_id, project_digest=digest)
             else:
                 result = RequirementResult(
                     requirement_id=rule.id,
@@ -389,6 +492,7 @@ class EvidenceContractEvaluator:
             if machine_status == "blocked"
             else ("human_review_required" if manual_pending else ("approved" if final_blockers == 0 else "blocked"))
         )
+        stale_count = self._stale_dedicated_report_count(run_dir, digest)
         return PrototypeAcceptanceReport(
             registry_version=self.registry.version,
             run_id=run_id,
@@ -399,9 +503,11 @@ class EvidenceContractEvaluator:
             summary=summary,
             machine_status=machine_status,
             final_status=final_status,
+            stale_evidence_count=stale_count,
             limitations=[
                 "Rules without dedicated evaluators remain untested; they are never auto-passed from prose or artifact presence.",
                 "Manual human review remains cantTell until human-review.json is supplied.",
-                "Existing BrowserQA target-size evidence is a 24 CSS px smoke check; the preferred 44 CSS px prototype rule requires its own evaluator.",
+                "WCAG 2.2 AA target-size smoke remains a separate 24 CSS px check; the 44 CSS px evaluator is a preferred prototype quality gate.",
+                "Blind five-second evidence is an AI screenshot-comprehension proxy, not participant usability research.",
             ],
         )
