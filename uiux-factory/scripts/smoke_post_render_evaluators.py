@@ -26,7 +26,7 @@ from core.contracts.browser_qa_schema import (
     ViewportSpec,
 )
 from core.verification.evidence_contract import EvidenceContractEvaluator
-from core.verification.post_render_evaluators import PostRenderEvaluatorSuite
+from core.verification.post_render_evaluators_wcag import PostRenderEvaluatorSuite
 
 
 HTML = """<!doctype html>
@@ -35,12 +35,23 @@ HTML = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{font-family:Arial,sans-serif;margin:0;padding:32px;max-width:900px}button,.toggle,select{min-width:48px;min-height:48px;padding:12px;border:2px solid #222;background:#fff}button:hover,.toggle:hover{background:#eee}button:focus-visible,.toggle:focus-visible,input:focus-visible{outline:3px solid #005fcc;outline-offset:2px}button:active,.toggle:active{transform:scale(.98)}.panel{display:none}.panel[data-open="true"]{display:block}.no-results{display:none}[data-empty="true"] .no-results{display:block}input{min-height:44px;padding:8px}form{display:grid;gap:12px;max-width:480px}
+body{font-family:Arial,sans-serif;margin:0;padding:32px;max-width:900px}
+button,.toggle,select{min-width:48px;min-height:48px;padding:12px;border:2px solid #222;background:#fff}
+button:hover,.toggle:hover{background:#eee}
+button:focus-visible,.toggle:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+button:active,.toggle:active{transform:scale(.98)}
+.panel{display:none}.panel[data-open="true"]{display:block}
+.no-results{display:none}[data-empty="true"] .no-results{display:block}
+input{min-height:44px;padding:8px}form{display:grid;gap:12px;max-width:480px}
+.tip{display:none;position:absolute;right:24px;top:24px;max-width:260px;padding:12px;background:#fff;border:2px solid #222;z-index:5}
+#help:hover + .tip,#help:focus + .tip,.tip:hover{display:block}
 </style>
 </head>
 <body>
 <main>
 <h1>Smoke evaluator</h1>
+<button id="help" aria-describedby="help-tip">Trợ giúp</button>
+<div id="help-tip" role="tooltip" class="tip"><button aria-label="Đóng">×</button> Nội dung trợ giúp có thể được rê chuột vào.</div>
 <button id="toggle" aria-expanded="false">Mở chi tiết</button>
 <div class="panel" id="panel">Nội dung chi tiết</div>
 <label class="toggle"><input type="checkbox"> Chọn tùy chọn</label>
@@ -114,11 +125,19 @@ async def main() -> None:
     assert interaction["project_digest"] == digest
     assert touch["project_digest"] == digest
     assert stress["project_digest"] == digest
+    assert "wcag_focus_hover_semantics" in interaction
+    assert interaction["wcag_focus_hover_semantics"]["focus_visible_and_not_obscured"]
+    assert interaction["wcag_focus_hover_semantics"]["content_on_hover_or_focus"]
     assert interaction["requirements"]["INTERACTION-002"]["outcome"] in {"passed", "failed", "cantTell"}
     assert touch["requirements"]["RESPONSIVE-003"]["outcome"] == "passed"
-    assert stress["requirements"]["RESPONSIVE-004"]["outcome"] in {"passed", "failed"}
+    assert "pseudo_localization" in stress
+    profiles = {row["id"] for row in stress["pseudo_localization"]["profiles"]}
+    assert profiles == {"expanded-accented-40", "vietnamese-heavy", "accented-density", "rtl-bidi"}
+    assert stress["requirements"]["RESPONSIVE-004"]["outcome"] in {"passed", "failed", "cantTell"}
     traces = list((output / "evidence" / "interaction").glob("*-trace.zip"))
     assert traces and all(path.stat().st_size > 0 for path in traces)
+    pseudo_screens = list((output / "evidence" / "pseudo-localization").glob("*.png"))
+    assert len(pseudo_screens) >= 12
     print("post-render evaluator Chromium smoke passed")
 
 
