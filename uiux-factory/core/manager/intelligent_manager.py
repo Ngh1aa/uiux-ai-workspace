@@ -20,6 +20,28 @@ class IntelligentDevelopmentManager(DevelopmentManager):
     evidence-driven replanning after final QA fails.
     """
 
+    REPLAN_STAGE_ORDER = (
+        "research",
+        "ux_ia",
+        "art_direction",
+        "design_contract",
+        "design_system",
+        "implementation_plan",
+        "visual_composition",
+        "implementation",
+    )
+    STAGE_ARTIFACT_KEYS = {
+        "research": ("research",),
+        "ux_ia": ("ux_ia",),
+        "art_direction": ("art_direction",),
+        "design_contract": ("design_contract",),
+        "design_system": ("design_system", "design_document", "design_tokens"),
+        "implementation_plan": ("implementation_plan",),
+        "visual_composition": ("visual_composition",),
+        "implementation": ("implementation",),
+    }
+    QA_OWNER_STAGES = {"browser_qa", "visual_qa", "repair", "quality_loop"}
+
     def __init__(self, root: Path):
         super().__init__(root)
         self.reference_planner = ReferenceIntelligencePlanner()
@@ -124,13 +146,67 @@ class IntelligentDevelopmentManager(DevelopmentManager):
         finally:
             mapping[stage] = previous
 
-    def _quality_replan_decision(self, context: RunContext) -> ReplanDecision:
+    @classmethod
+    def _canonical_replan_stage(cls, owner_stage: str | None) -> str | None:
+        if not owner_stage:
+            return None
+        stage = str(owner_stage).strip()
+        if stage in cls.REPLAN_STAGE_ORDER:
+            return stage
+        if stage == "reference_analysis":
+            return "research"
+        if stage in cls.QA_OWNER_STAGES:
+            return "implementation"
+        return None
+
+    @classmethod
+    def _stages_from(cls, target_stage: str) -> tuple[str, ...]:
+        target = cls._canonical_replan_stage(target_stage)
+        if target is None:
+            raise ValueError(f"Unsupported root-cause replan stage: {target_stage!r}")
+        index = cls.REPLAN_STAGE_ORDER.index(target)
+        return cls.REPLAN_STAGE_ORDER[index:]
+
+    @classmethod
+    def _evidence_replan_target(cls, quality_result, quality_output_dir: Path) -> str | None:
+        stop_reason = str(getattr(quality_result, "stop_reason", "") or "")
+        if not stop_reason.startswith("prototype_evidence_contract_requires_root_replan"):
+            return None
+        plan_path = Path(quality_output_dir) / "evidence-remediation-plan.json"
+        if not plan_path.is_file():
+            return None
+        try:
+            payload = json.loads(plan_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return cls._canonical_replan_stage(payload.get("earliest_owner_stage"))
+
+    def _quality_replan_decision(
+        self,
+        context: RunContext,
+        *,
+        evidence_target_stage: str | None = None,
+    ) -> ReplanDecision:
         task_context = self.flow.interpreter.interpret(context.goal).to_dict()
-        return self.replanner.decide(
+        policy_stage = "design" if evidence_target_stage and evidence_target_stage != "implementation" else "qa"
+        policy = self.replanner.decide(
             signal="GATE_FAIL",
-            current_stage="qa",
+            current_stage=policy_stage,
             task_context=task_context,
             replan_count=self._root_replan_count,
+        )
+        if not policy.accepted or not evidence_target_stage:
+            return policy
+        return ReplanDecision(
+            accepted=True,
+            signal=policy.signal,
+            reason=(
+                f"{policy.reason} Evidence ownership requires invalidation from "
+                f"{evidence_target_stage!r} rather than patching a downstream symptom."
+            ),
+            target_stage=evidence_target_stage,
+            add_skills=policy.add_skills,
+            drop_skills=policy.drop_skills,
         )
 
     async def _execute_quality(self, context: RunContext, frontend: FrontendResult, output_dir: Path):
@@ -148,20 +224,61 @@ class IntelligentDevelopmentManager(DevelopmentManager):
             output_dir=output_dir,
         )
 
-    async def _regenerate_after_replan(
+    def _invalidate_from_stage(self, context: RunContext, target_stage: str) -> tuple[str, ...]:
+        stages = self._stages_from(target_stage)
+        invalidated_keys: list[str] = []
+        for stage in stages:
+            for key in self.STAGE_ARTIFACT_KEYS.get(stage, ()):
+                if key in context.artifacts:
+                    context.artifacts.pop(key, None)
+                    invalidated_keys.append(key)
+
+        for key in ("prototype_acceptance", "evidence_remediation_plan", "quality_loop"):
+            if key in context.artifacts:
+                context.artifacts.pop(key, None)
+                invalidated_keys.append(key)
+        for key in tuple(context.artifacts):
+            if key.startswith("verification_"):
+                context.artifacts.pop(key, None)
+                invalidated_keys.append(key)
+
+        affected_stages = set(stages) | {"browser_qa", "visual_qa", "repair", "quality_loop"}
+        context.completed_stages = [
+            stage for stage in context.completed_stages if stage not in affected_stages
+        ]
+        context.save()
+        self.team_runner.event_bus(context).emit(
+            "flow.stages_invalidated",
+            stage="quality_loop",
+            data={
+                "target_stage": stages[0],
+                "rerun_stages": list(stages),
+                "artifact_keys": invalidated_keys,
+            },
+        )
+        return stages
+
+    async def _run_replan_stage(
         self,
         context: RunContext,
+        stage: str,
         frontend: FrontendResult,
-        decision: ReplanDecision,
-    ) -> FrontendResult:
-        if decision.target_stage != "implementation":
-            raise RuntimeError(
-                "Current Factory root-cause replan supports QA → implementation. "
-                f"Policy requested {decision.target_stage!r}; upstream design replans "
-                "must be handled by a dedicated stage invalidation pass."
-            )
-
-        with self._temporary_stage_skills("implementation", decision):
+    ) -> None:
+        if stage == "research":
+            await self._run_research(context)
+        elif stage == "ux_ia":
+            await self._run_ux_ia(context)
+        elif stage == "art_direction":
+            await self._run_art_direction(context)
+        elif stage == "design_contract":
+            await self._run_design_contract(context)
+        elif stage == "design_system":
+            await self._run_design_system(context)
+        elif stage == "implementation_plan":
+            await self._run_implementation_plan(context)
+        elif stage == "visual_composition":
+            await self._run_visual_composition(context)
+        elif stage == "implementation":
             if frontend.generated_by == "AIFrontendBuilder":
                 provider = self.team_runner.provider
                 if provider is None:
@@ -169,6 +286,28 @@ class IntelligentDevelopmentManager(DevelopmentManager):
                 await self._run_ai_implementation(context, provider)
             else:
                 await self._run_template_implementation(context)
+        else:
+            raise ValueError(f"Unsupported root-cause replan stage: {stage!r}")
+
+    async def _regenerate_after_replan(
+        self,
+        context: RunContext,
+        frontend: FrontendResult,
+        decision: ReplanDecision,
+    ) -> FrontendResult:
+        target_stage = self._canonical_replan_stage(decision.target_stage)
+        if target_stage is None:
+            raise RuntimeError(
+                f"Replanning policy requested unsupported stage {decision.target_stage!r}."
+            )
+
+        rerun_stages = self._invalidate_from_stage(context, target_stage)
+        for index, stage in enumerate(rerun_stages):
+            if index == 0:
+                with self._temporary_stage_skills(stage, decision):
+                    await self._run_replan_stage(context, stage, frontend)
+            else:
+                await self._run_replan_stage(context, stage, frontend)
 
         refreshed_path = self._require(context, "implementation")
         return FrontendResult.model_validate_json(refreshed_path.read_text(encoding="utf-8"))
@@ -182,17 +321,22 @@ class IntelligentDevelopmentManager(DevelopmentManager):
             raise RuntimeError(f"Generated project missing: {frontend.project_dir}")
 
         context.start_stage(stage)
-        first = await self._execute_quality(context, frontend, context.run_dir)
-        if first.status == "passed":
-            final = first
-        else:
+        quality_output_dir = context.run_dir
+        current = await self._execute_quality(context, frontend, quality_output_dir)
+        if current.status != "passed":
             self._write(
                 context,
                 "quality_loop_before_replan",
                 "quality-loop-before-replan.json",
-                first.model_dump_json(indent=2),
+                current.model_dump_json(indent=2),
             )
-            decision = self._quality_replan_decision(context)
+
+        while current.status != "passed":
+            evidence_target = self._evidence_replan_target(current, quality_output_dir)
+            decision = self._quality_replan_decision(
+                context,
+                evidence_target_stage=evidence_target,
+            )
             replan_payload = {
                 "schema_version": 1,
                 "replan_index": self._root_replan_count + 1,
@@ -200,9 +344,10 @@ class IntelligentDevelopmentManager(DevelopmentManager):
                 "trigger": {
                     "signal": "GATE_FAIL",
                     "current_stage": "qa",
-                    "quality_status": first.status,
-                    "stop_reason": first.stop_reason,
-                    "score": first.final_score,
+                    "quality_status": current.status,
+                    "stop_reason": current.stop_reason,
+                    "score": current.final_score,
+                    "evidence_owner_stage": evidence_target,
                 },
                 "decision": decision.to_dict(),
                 "principle": "replan from evidence and root cause; do not blind-retry the same repair loop",
@@ -220,23 +365,21 @@ class IntelligentDevelopmentManager(DevelopmentManager):
             )
 
             if not decision.accepted:
-                final = first
-            else:
-                self._root_replan_count += 1
-                frontend = await self._regenerate_after_replan(context, frontend, decision)
-                context.start_stage(stage)
-                final = await self._execute_quality(
-                    context,
-                    frontend,
-                    context.run_dir / f"root-replan-{self._root_replan_count:02d}",
-                )
-                self._write(
-                    context,
-                    f"quality_loop_replan_{self._root_replan_count}",
-                    f"quality-loop-replan-{self._root_replan_count:02d}.json",
-                    final.model_dump_json(indent=2),
-                )
+                break
 
+            self._root_replan_count += 1
+            frontend = await self._regenerate_after_replan(context, frontend, decision)
+            quality_output_dir = context.run_dir / f"root-replan-{self._root_replan_count:02d}"
+            context.start_stage(stage)
+            current = await self._execute_quality(context, frontend, quality_output_dir)
+            self._write(
+                context,
+                f"quality_loop_replan_{self._root_replan_count}",
+                f"quality-loop-replan-{self._root_replan_count:02d}.json",
+                current.model_dump_json(indent=2),
+            )
+
+        final = current
         artifact = self._write(
             context,
             "quality_loop",
