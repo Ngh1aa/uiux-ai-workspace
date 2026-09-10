@@ -1,0 +1,13 @@
+.project-card__body > div:last-child {
+  min-width: 0;
+}
+
+.project-card__body h3 {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 761px) and (max-width: 1200px) {
+  .project-card:not(.project-card--hero) .project-card__body h3 {
+    font-size: clamp(26px, 2.7vw, 40px);
+  }
+}
