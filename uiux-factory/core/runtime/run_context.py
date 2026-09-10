@@ -118,7 +118,68 @@ class RunContext:
         self.active_stage = None
         self.save()
 
+    def _finalize_prototype_acceptance(self) -> None:
+        """Create the 56-rule evidence ledger before a quality run can complete.
+
+        Intelligence-only runs intentionally have no quality-loop artifact and skip this
+        step. Full runs bind the acceptance report to the final BrowserQA/VisualCritic
+        evidence referenced by quality-loop.json. Only implemented machine requirements
+        can block completion in V1; planned/manual requirements remain explicit in the
+        ledger and therefore cannot be mistaken for final approval.
+        """
+        quality_raw = self.artifacts.get("quality_loop")
+        if not quality_raw:
+            return
+
+        quality_path = Path(quality_raw)
+        if not quality_path.is_file():
+            raise RuntimeError(f"Quality-loop artifact is missing: {quality_path}")
+
+        from core.contracts.quality_loop_schema import QualityLoopResult
+        from core.verification.prototype_acceptance import PrototypeAcceptanceEvaluator
+
+        quality = QualityLoopResult.model_validate_json(
+            quality_path.read_text(encoding="utf-8")
+        )
+        if not quality.browser_report_path or not quality.visual_critic_path:
+            raise RuntimeError(
+                "Completed full run has no final BrowserQA/VisualCritic evidence for prototype acceptance."
+            )
+
+        report = PrototypeAcceptanceEvaluator().evaluate(
+            run_id=self.run_id,
+            browser_report_path=Path(quality.browser_report_path),
+            visual_critic_path=Path(quality.visual_critic_path),
+        )
+        acceptance_path = self.run_dir / "prototype-acceptance.json"
+        acceptance_path.write_text(
+            report.model_dump_json(indent=2),
+            encoding="utf-8",
+        )
+        self.add_artifact("prototype_acceptance", acceptance_path)
+        self.event_bus().emit(
+            "verification.prototype_acceptance",
+            data={
+                "machine_status": report.machine_status,
+                "final_status": report.final_status,
+                "project_digest": report.project_digest,
+                "passed": report.summary.passed,
+                "failed": report.summary.failed,
+                "cantTell": report.summary.cantTell,
+                "untested": report.summary.untested,
+                "blocking_requirement_ids": report.blocking_requirement_ids,
+                "human_review_requirement_ids": report.human_review_requirement_ids,
+            },
+        )
+
+        if report.machine_status != "passed":
+            raise RuntimeError(
+                "Prototype machine acceptance blocked completion: "
+                + ", ".join(report.blocking_requirement_ids)
+            )
+
     def complete(self) -> None:
+        self._finalize_prototype_acceptance()
         self.event_bus().emit("run.completed")
         self.status = "completed"
         self.active_stage = None
