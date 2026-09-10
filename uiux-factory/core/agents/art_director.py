@@ -2,8 +2,8 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role
 from metagpt.schema import Message
 
-from core.actions.create_art_direction_v2 import (
-    CreateArtDirectionV2,
+from core.actions.create_art_direction_v3 import (
+    CreateArtDirectionV3,
 )
 
 
@@ -30,7 +30,7 @@ class ArtDirector(Role):
         super().__init__(**kwargs)
 
         self.set_actions([
-            CreateArtDirectionV2
+            CreateArtDirectionV3
         ])
 
     async def _act(self) -> Message:
