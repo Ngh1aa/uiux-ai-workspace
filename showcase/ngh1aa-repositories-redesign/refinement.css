@@ -6,8 +6,20 @@
   overflow-wrap: anywhere;
 }
 
+.project-card[data-accent="blue"],
+.project-card[data-accent="rose"] {
+  grid-column: span 6;
+}
+
 @media (min-width: 761px) and (max-width: 1200px) {
   .project-card:not(.project-card--hero) .project-card__body h3 {
     font-size: clamp(26px, 2.7vw, 40px);
+  }
+}
+
+@media (max-width: 760px) {
+  .project-card[data-accent="blue"],
+  .project-card[data-accent="rose"] {
+    grid-column: 1;
   }
 }
