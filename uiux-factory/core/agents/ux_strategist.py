@@ -2,8 +2,8 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role
 from metagpt.schema import Message
 
-from core.actions.create_ux_ia import (
-    CreateUXIA,
+from core.actions.create_ux_ia_v1 import (
+    CreateUXIAV1,
 )
 
 
@@ -27,7 +27,7 @@ class UXStrategist(Role):
         super().__init__(**kwargs)
 
         self.set_actions([
-            CreateUXIA
+            CreateUXIAV1
         ])
 
     async def _act(self) -> Message:
