@@ -8,6 +8,13 @@ from core.contracts.frontend_result_schema import FrontendResult
 from core.manager.development_manager import DevelopmentManager
 from core.orchestration.reference_intelligence import ReferenceIntelligencePlanner
 from core.orchestration.skill_governance import FlowReplanner, ReplanDecision, SkillGovernanceSnapshot
+from core.orchestration.stage_replan_v1 import (
+    REPLAN_STAGE_ORDER as V1_REPLAN_STAGE_ORDER,
+    STAGE_ARTIFACT_KEYS as V1_STAGE_ARTIFACT_KEYS,
+    canonical_replan_stage,
+    evidence_replan_target,
+    stages_from,
+)
 from core.runtime.run_context import RunContext
 
 
@@ -20,27 +27,8 @@ class IntelligentDevelopmentManager(DevelopmentManager):
     evidence-driven replanning after final QA fails.
     """
 
-    REPLAN_STAGE_ORDER = (
-        "research",
-        "ux_ia",
-        "art_direction",
-        "design_contract",
-        "design_system",
-        "implementation_plan",
-        "visual_composition",
-        "implementation",
-    )
-    STAGE_ARTIFACT_KEYS = {
-        "research": ("research",),
-        "ux_ia": ("ux_ia",),
-        "art_direction": ("art_direction",),
-        "design_contract": ("design_contract",),
-        "design_system": ("design_system", "design_document", "design_tokens"),
-        "implementation_plan": ("implementation_plan",),
-        "visual_composition": ("visual_composition",),
-        "implementation": ("implementation",),
-    }
-    QA_OWNER_STAGES = {"browser_qa", "visual_qa", "repair", "quality_loop"}
+    REPLAN_STAGE_ORDER = V1_REPLAN_STAGE_ORDER
+    STAGE_ARTIFACT_KEYS = V1_STAGE_ARTIFACT_KEYS
 
     def __init__(self, root: Path):
         super().__init__(root)
@@ -148,38 +136,15 @@ class IntelligentDevelopmentManager(DevelopmentManager):
 
     @classmethod
     def _canonical_replan_stage(cls, owner_stage: str | None) -> str | None:
-        if not owner_stage:
-            return None
-        stage = str(owner_stage).strip()
-        if stage in cls.REPLAN_STAGE_ORDER:
-            return stage
-        if stage == "reference_analysis":
-            return "research"
-        if stage in cls.QA_OWNER_STAGES:
-            return "implementation"
-        return None
+        return canonical_replan_stage(owner_stage)
 
     @classmethod
     def _stages_from(cls, target_stage: str) -> tuple[str, ...]:
-        target = cls._canonical_replan_stage(target_stage)
-        if target is None:
-            raise ValueError(f"Unsupported root-cause replan stage: {target_stage!r}")
-        index = cls.REPLAN_STAGE_ORDER.index(target)
-        return cls.REPLAN_STAGE_ORDER[index:]
+        return stages_from(target_stage)
 
     @classmethod
     def _evidence_replan_target(cls, quality_result, quality_output_dir: Path) -> str | None:
-        stop_reason = str(getattr(quality_result, "stop_reason", "") or "")
-        if not stop_reason.startswith("prototype_evidence_contract_requires_root_replan"):
-            return None
-        plan_path = Path(quality_output_dir) / "evidence-remediation-plan.json"
-        if not plan_path.is_file():
-            return None
-        try:
-            payload = json.loads(plan_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return None
-        return cls._canonical_replan_stage(payload.get("earliest_owner_stage"))
+        return evidence_replan_target(quality_result, quality_output_dir)
 
     def _quality_replan_decision(
         self,
@@ -188,7 +153,15 @@ class IntelligentDevelopmentManager(DevelopmentManager):
         evidence_target_stage: str | None = None,
     ) -> ReplanDecision:
         task_context = self.flow.interpreter.interpret(context.goal).to_dict()
-        policy_stage = "design" if evidence_target_stage and evidence_target_stage != "implementation" else "qa"
+        design_owned = {
+            "research",
+            "ux_ia",
+            "art_direction",
+            "design_contract",
+            "design_system",
+            "visual_composition",
+        }
+        policy_stage = "design" if evidence_target_stage in design_owned else "qa"
         policy = self.replanner.decide(
             signal="GATE_FAIL",
             current_stage=policy_stage,
@@ -333,6 +306,10 @@ class IntelligentDevelopmentManager(DevelopmentManager):
 
         while current.status != "passed":
             evidence_target = self._evidence_replan_target(current, quality_output_dir)
+            remediation_path = quality_output_dir / "evidence-remediation-plan.json"
+            if remediation_path.is_file():
+                context.add_artifact("evidence_remediation_plan", remediation_path)
+
             decision = self._quality_replan_decision(
                 context,
                 evidence_target_stage=evidence_target,
@@ -380,6 +357,10 @@ class IntelligentDevelopmentManager(DevelopmentManager):
             )
 
         final = current
+        acceptance_path = quality_output_dir / "prototype-acceptance.json"
+        if acceptance_path.is_file():
+            context.add_artifact("prototype_acceptance", acceptance_path)
+
         artifact = self._write(
             context,
             "quality_loop",
