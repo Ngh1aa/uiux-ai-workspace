@@ -3,10 +3,9 @@ import sys
 import types
 from pathlib import Path
 
-# Foundation CI intentionally avoids the full runtime/cloud dependency set.
-# These tests exercise pure evaluator helpers and evidence-contract semantics,
-# so provide import-time stubs for dependencies that are only used during real
-# browser/vision execution.
+# Foundation CI intentionally does not install the full MetaGPT runtime. The
+# base post-render module imports StaticServer through run_browser_qa, so stub
+# that boundary for pure evaluator contract tests.
 if "metagpt.actions" not in sys.modules:
     metagpt = types.ModuleType("metagpt")
     actions = types.ModuleType("metagpt.actions")
@@ -16,11 +15,14 @@ if "metagpt.actions" not in sys.modules:
     sys.modules.setdefault("metagpt.actions", actions)
 
 if "aiohttp" not in sys.modules:
-    sys.modules["aiohttp"] = types.ModuleType("aiohttp")
+    aiohttp = types.ModuleType("aiohttp")
+    aiohttp.ClientSession = object
+    aiohttp.ClientTimeout = object
+    sys.modules.setdefault("aiohttp", aiohttp)
 
 from core.contracts.evidence_contract_schema import EvidenceOutcome
 from core.verification.evidence_contract import EvidenceContractEvaluator, RequirementRegistry
-from core.verification.post_render_evaluators import PostRenderEvaluatorSuite
+from core.verification.post_render_evaluators_wcag import PostRenderEvaluatorSuite
 
 
 def test_timing_parser_and_token_overlap_are_conservative():
@@ -28,6 +30,28 @@ def test_timing_parser_and_token_overlap_are_conservative():
     assert PostRenderEvaluatorSuite._parse_ms_list("0s, garbage") == [0.0]
     assert PostRenderEvaluatorSuite._token_overlap("luxury fragrance ecommerce", "luxury fragrance store") >= 0.5
     assert PostRenderEvaluatorSuite._token_overlap("", "anything") == 0.0
+
+
+def test_wcag_upgrade_never_allows_weaker_evidence_to_mask_failure():
+    combined = PostRenderEvaluatorSuite._combine_result_rows(
+        {"outcome": "passed", "applicable": True, "rationale": "base", "test_targets": [], "evidence_files": []},
+        {"outcome": "failed", "applicable": True, "rationale": "wcag", "test_targets": ["focus"], "evidence_files": []},
+        label="WCAG",
+    )
+    assert combined["outcome"] == "failed"
+    assert combined["applicable"] is True
+    assert "focus" in combined["test_targets"]
+
+
+def test_pseudo_localization_profiles_cover_expansion_vi_accent_and_rtl():
+    profiles = PostRenderEvaluatorSuite.pseudo_localization_profiles()
+    assert {row["id"] for row in profiles} == {
+        "expanded-accented-40",
+        "vietnamese-heavy",
+        "accented-density",
+        "rtl-bidi",
+    }
+    assert next(row for row in profiles if row["id"] == "rtl-bidi")["direction"] == "rtl"
 
 
 def test_dedicated_report_is_bound_to_current_project_digest(tmp_path: Path):

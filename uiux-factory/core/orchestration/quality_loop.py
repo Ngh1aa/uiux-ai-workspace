@@ -12,7 +12,7 @@ from core.contracts.repair_result_schema import RepairResult
 from core.contracts.visual_critic_schema import VisualCriticResult
 from core.team.team_runner import UIUXTeamRunner
 from core.verification.evidence_contract import EvidenceContractEvaluator
-from core.verification.post_render_evaluators import PostRenderEvaluatorSuite
+from core.verification.post_render_evaluators_wcag import PostRenderEvaluatorSuite
 
 
 class QualityLoopRunner:
