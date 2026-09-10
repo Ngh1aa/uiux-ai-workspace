@@ -3,9 +3,10 @@ import sys
 import types
 from pathlib import Path
 
-# Foundation CI intentionally does not install the full MetaGPT runtime. The
-# post-render module only needs Action as an import-time base class through the
-# existing StaticServer module, so stub that boundary for pure evaluator tests.
+# Foundation CI intentionally avoids the full runtime/cloud dependency set.
+# These tests exercise pure evaluator helpers and evidence-contract semantics,
+# so provide import-time stubs for dependencies that are only used during real
+# browser/vision execution.
 if "metagpt.actions" not in sys.modules:
     metagpt = types.ModuleType("metagpt")
     actions = types.ModuleType("metagpt.actions")
@@ -13,6 +14,9 @@ if "metagpt.actions" not in sys.modules:
     metagpt.actions = actions
     sys.modules.setdefault("metagpt", metagpt)
     sys.modules.setdefault("metagpt.actions", actions)
+
+if "aiohttp" not in sys.modules:
+    sys.modules["aiohttp"] = types.ModuleType("aiohttp")
 
 from core.contracts.evidence_contract_schema import EvidenceOutcome
 from core.verification.evidence_contract import EvidenceContractEvaluator, RequirementRegistry
