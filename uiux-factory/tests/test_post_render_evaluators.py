@@ -1,5 +1,18 @@
 import json
+import sys
+import types
 from pathlib import Path
+
+# Foundation CI intentionally does not install the full MetaGPT runtime. The
+# post-render module only needs Action as an import-time base class through the
+# existing StaticServer module, so stub that boundary for pure evaluator tests.
+if "metagpt.actions" not in sys.modules:
+    metagpt = types.ModuleType("metagpt")
+    actions = types.ModuleType("metagpt.actions")
+    actions.Action = object
+    metagpt.actions = actions
+    sys.modules.setdefault("metagpt", metagpt)
+    sys.modules.setdefault("metagpt.actions", actions)
 
 from core.contracts.evidence_contract_schema import EvidenceOutcome
 from core.verification.evidence_contract import EvidenceContractEvaluator, RequirementRegistry
@@ -87,3 +100,16 @@ def test_blind_comparison_requires_real_overlap():
         "luxury fragrance ecommerce",
         "developer dashboard analytics",
     ) == 0.0
+
+
+def test_requested_evaluator_families_are_wired_to_dedicated_reports():
+    expected = {
+        "interaction_trace",
+        "interaction_timing",
+        "state_crawler",
+        "preferred_touch_targets",
+        "content_stress",
+        "squint_critic",
+        "blind_five_second",
+    }
+    assert expected.issubset(EvidenceContractEvaluator.DEDICATED_REPORTS)
