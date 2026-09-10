@@ -7,25 +7,16 @@ from core.agents.browser_qa_agent import BrowserQAAgent
 from core.agents.repair_agent import RepairAgent
 from core.agents.visual_critic import VisualCritic
 from core.contracts.browser_qa_schema import BrowserQAResult
-from core.contracts.quality_loop_schema import (
-    QualityIteration,
-    QualityLoopResult,
-)
+from core.contracts.quality_loop_schema import QualityIteration, QualityLoopResult
 from core.contracts.repair_result_schema import RepairResult
 from core.contracts.visual_critic_schema import VisualCriticResult
 from core.team.team_runner import UIUXTeamRunner
 from core.verification.evidence_contract import EvidenceContractEvaluator
+from core.verification.post_render_evaluators import PostRenderEvaluatorSuite
 
 
 class QualityLoopRunner:
-    """
-    BrowserQA -> VisualCritic -> Evidence Contract -> Repair/regression.
-
-    A high visual score is not sufficient for PASS. When VisualCritic passes,
-    the 56-rule prototype evidence contract is evaluated against current-run
-    artifacts. Any machine-gated failed/cantTell/untested requirement blocks
-    completion instead of being hidden by an aggregate score.
-    """
+    """BrowserQA -> VisualCritic -> post-render evidence -> 56-rule contract -> repair."""
 
     def __init__(
         self,
@@ -45,10 +36,7 @@ class QualityLoopRunner:
 
     @staticmethod
     def fingerprint(critic: VisualCriticResult) -> str:
-        rows = sorted(
-            (issue.severity, issue.category, issue.route)
-            for issue in critic.issues
-        )
+        rows = sorted((issue.severity, issue.category, issue.route) for issue in critic.issues)
         return json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
 
     def _evaluate_acceptance(
@@ -80,9 +68,44 @@ class QualityLoopRunner:
                 "final_status": report.final_status,
                 "summary": report.summary.model_dump(),
                 "project_digest": report.project_digest,
+                "stale_evidence_count": report.stale_evidence_count,
             },
         )
         return report, acceptance_path
+
+    async def _run_post_render_evidence(
+        self,
+        *,
+        project_dir: Path,
+        browser_path: Path,
+        iteration_dir: Path,
+    ) -> dict[str, str]:
+        suite = PostRenderEvaluatorSuite(
+            run_dir=self.run_context.run_dir,
+            project_dir=project_dir,
+            browser_report_path=browser_path,
+            evidence_dir=iteration_dir / "verification-evidence",
+        )
+        try:
+            outputs = await suite.run()
+        except Exception as exc:
+            self.team_runner.event_bus(self.run_context).emit(
+                "verification.post_render_evaluators_failed",
+                stage="visual_qa",
+                data={"error": f"{type(exc).__name__}: {exc}"},
+            )
+            return {}
+
+        for name, raw_path in outputs.items():
+            path = Path(raw_path)
+            if path.is_file():
+                self.run_context.add_artifact(f"verification_{name}", path)
+        self.team_runner.event_bus(self.run_context).emit(
+            "verification.post_render_evaluators_completed",
+            stage="visual_qa",
+            data={"artifacts": outputs},
+        )
+        return outputs
 
     async def run(
         self,
@@ -161,7 +184,12 @@ class QualityLoopRunner:
 
             if critic.status == "passed":
                 iterations.append(current)
-                acceptance, acceptance_path = self._evaluate_acceptance(
+                await self._run_post_render_evidence(
+                    project_dir=project_dir,
+                    browser_path=browser_path,
+                    iteration_dir=iteration_dir,
+                )
+                acceptance, _acceptance_path = self._evaluate_acceptance(
                     project_dir=project_dir,
                     output_dir=output_dir,
                     browser_path=browser_path,
