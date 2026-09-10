@@ -1,0 +1,52 @@
+name: Post-render Evaluator Smoke
+
+on:
+  push:
+    branches:
+      - main
+      - 'feat/**'
+    paths:
+      - 'uiux-factory/core/verification/**'
+      - 'uiux-factory/core/orchestration/quality_loop.py'
+      - 'uiux-factory/core/contracts/evidence_contract_schema.py'
+      - 'uiux-factory/config/verification/**'
+      - 'uiux-factory/scripts/smoke_post_render_evaluators.py'
+      - '.github/workflows/post-render-evaluator-smoke.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'uiux-factory/core/verification/**'
+      - 'uiux-factory/core/orchestration/quality_loop.py'
+      - 'uiux-factory/core/contracts/evidence_contract_schema.py'
+      - 'uiux-factory/config/verification/**'
+      - 'uiux-factory/scripts/smoke_post_render_evaluators.py'
+      - '.github/workflows/post-render-evaluator-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  chromium-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install evaluator runtime dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'pydantic>=2.5.3,<3' 'python-dotenv>=1,<2' aiohttp Pillow playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Run real Chromium evaluator smoke
+        working-directory: uiux-factory
+        env:
+          UIUX_FREE_TIER_CONFIRMED: '0'
+        run: python scripts/smoke_post_render_evaluators.py
