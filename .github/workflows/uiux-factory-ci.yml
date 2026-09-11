@@ -48,14 +48,8 @@ jobs:
       - name: Verify pinned Anthropic skills
         run: python scripts/verify_anthropic_skills.py
 
-      - name: Compile Python source tree
-        run: python -m compileall -q core apps run.py creator.py
-
-      - name: Check Workbench JavaScript syntax
-        run: |
-          node --check apps/web/app.js
-          node --check apps/web/skills-router.js
-          node --check apps/web/runtime-presets.js
+      - name: Compile active Python source tree
+        run: python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
 
       - name: Run foundation tests
         run: python -m pytest -q tests

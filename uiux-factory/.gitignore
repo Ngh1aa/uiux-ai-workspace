@@ -25,6 +25,7 @@ coverage/
 runs/
 generated/
 .runtime/
+.tmp/
 
 # Logs
 *.log
