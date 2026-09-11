@@ -9,19 +9,20 @@ from core.actions.generate_frontend_project_v2 import (
 
 class FrontendEngineer(Role):
     name: str = "Kai"
-    profile: str = "FrontendEngineerV2"
+    profile: str = "FrontendFixtureEngineerV2"
 
     goal: str = (
-        "Implement page-specific frontend compositions while "
-        "enforcing local skills_UIUX policies and workspace guardrails."
+        "Generate deterministic regression fixtures for Factory tests while enforcing "
+        "skills_UIUX policies and workspace guardrails. Production delivery should use "
+        "the AI engine or external-brain target-project workflow."
     )
 
     constraints: str = (
-        "Read Visual Composition before implementation. "
-        "Load required skills from the local skills_UIUX clone. "
-        "Write only inside generated/<project>/. "
-        "Preserve root index.html for GitHub Pages. "
-        "Do not claim build or visual verification until it actually runs."
+        "Fixture-only path: do not present this deterministic ecommerce output as a "
+        "production design. Read Visual Composition before generation. Load required "
+        "skills from the local skills_UIUX clone. Write only inside generated/<project>/. "
+        "Preserve root index.html for fixture QA. Do not claim build or visual verification "
+        "until it actually runs."
     )
 
     def __init__(self, **kwargs):
