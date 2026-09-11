@@ -11,16 +11,32 @@ on:
       - ".github/workflows/cloud-qa-toolchain.yml"
   workflow_dispatch:
     inputs:
+      target_repository:
+        description: "Target repository in owner/name form; blank uses this repository"
+        required: false
+        default: ""
+      target_ref:
+        description: "Target branch/tag/SHA; blank uses the checked-out ref or target default branch"
+        required: false
+        default: ""
       target_dir:
-        description: "Project directory to serve, relative to repository root"
+        description: "Project root inside the target repository"
         required: false
         default: "uiux-factory/qa"
       routes:
         description: "Comma-separated routes to inspect"
         required: false
         default: "/fixture/"
+      install_command:
+        description: "Optional dependency install command run from target_dir"
+        required: false
+        default: ""
+      build_command:
+        description: "Optional production build command run from target_dir"
+        required: false
+        default: ""
       serve_command:
-        description: "Optional command run from target_dir; leave empty for static HTTP serving"
+        description: "Optional preview command run from target_dir; blank uses static HTTP serving"
         required: false
         default: ""
 
@@ -35,8 +51,17 @@ jobs:
         working-directory: uiux-factory/qa
 
     steps:
-      - name: Checkout
+      - name: Checkout Factory
         uses: actions/checkout@v6
+
+      - name: Checkout target project
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_repository != '' }}
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.inputs.target_repository }}
+          ref: ${{ github.event.inputs.target_ref || 'main' }}
+          path: target-project
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN || github.token }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -49,19 +74,52 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run browser, axe, Lighthouse and media evidence
+      - name: Prepare, serve and audit target project
+        env:
+          INPUT_TARGET_REPOSITORY: ${{ github.event.inputs.target_repository || '' }}
+          INPUT_TARGET_DIR: ${{ github.event.inputs.target_dir || 'uiux-factory/qa' }}
+          QA_ROUTES: ${{ github.event.inputs.routes || '/fixture/' }}
+          QA_INSTALL_COMMAND: ${{ github.event.inputs.install_command || '' }}
+          QA_BUILD_COMMAND: ${{ github.event.inputs.build_command || '' }}
+          QA_SERVE_COMMAND: ${{ github.event.inputs.serve_command || '' }}
         run: |
-          export QA_TARGET_DIR="$GITHUB_WORKSPACE/${{ github.event.inputs.target_dir || 'uiux-factory/qa' }}"
-          export QA_ROUTES="${{ github.event.inputs.routes || '/fixture/' }}"
-          export QA_SERVE_COMMAND="${{ github.event.inputs.serve_command || '' }}"
+          if [ -n "$INPUT_TARGET_REPOSITORY" ]; then
+            QA_REPO_ROOT="$GITHUB_WORKSPACE/target-project"
+          else
+            QA_REPO_ROOT="$GITHUB_WORKSPACE"
+          fi
+
+          TARGET_RELATIVE="${INPUT_TARGET_DIR#/}"
+          if [ -z "$TARGET_RELATIVE" ]; then
+            TARGET_RELATIVE="."
+          fi
+          export QA_TARGET_DIR="$QA_REPO_ROOT/$TARGET_RELATIVE"
+          export QA_BASE_URL="http://127.0.0.1:4173"
+
+          if [ ! -d "$QA_TARGET_DIR" ]; then
+            echo "Target directory does not exist: $QA_TARGET_DIR" >&2
+            exit 1
+          fi
+
+          if [ -n "$QA_INSTALL_COMMAND" ]; then
+            (cd "$QA_TARGET_DIR" && bash -lc "$QA_INSTALL_COMMAND")
+          fi
+          if [ -n "$QA_BUILD_COMMAND" ]; then
+            (cd "$QA_TARGET_DIR" && bash -lc "$QA_BUILD_COMMAND")
+          fi
+
           node scripts/serve-target.mjs > /tmp/uiux-qa-server.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
-          sleep 1
+
+          node scripts/wait-ready.mjs
           npm test
-          LIGHTHOUSE_ROUTE="${QA_ROUTES%%,*}"
-          sed -i "s|http://127.0.0.1:4173/fixture/|http://127.0.0.1:4173${LIGHTHOUSE_ROUTE}|" lighthouserc.json
-          npx lhci autorun --config=lighthouserc.json
+          node scripts/write-lighthouse-config.mjs
+          npx lhci autorun --config=lighthouserc.runtime.json
+
+      - name: Print target server log on failure
+        if: failure()
+        run: cat /tmp/uiux-qa-server.log || true
 
       - name: Upload QA evidence
         if: always()
