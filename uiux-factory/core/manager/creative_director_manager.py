@@ -23,7 +23,9 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
 
     A revision never mutates the source run. It creates a new run, rehydrates
     accepted upstream artifacts, invalidates from the earliest review owner and
-    executes the canonical downstream pipeline and quality loop again.
+    executes the canonical downstream pipeline again. External-brain revisions
+    stop at a handoff artifact and never claim rendered QA until the target repo
+    is implemented and audited separately.
     """
 
     REVISION_STAGES = (
@@ -74,8 +76,10 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         if not state.is_file():
             raise FileNotFoundError(f"Source run not found: {source_run_id}")
         summary = self._read_json(state)
-        if summary.get("status") != "completed":
-            raise RuntimeError("Creative review revisions require a completed source run.")
+        if summary.get("status") not in {"completed", "handoff_ready"}:
+            raise RuntimeError(
+                "Creative review revisions require a completed run or an external handoff-ready run."
+            )
         return source_dir, summary
 
     def _copy_stage(self, source_dir: Path, context: RunContext, stage: str) -> None:
@@ -163,7 +167,9 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             elif stage == "visual_composition":
                 await self._run_visual_composition(context)
             elif stage == "implementation":
-                if engine == "ai":
+                if engine == "external":
+                    self._run_external_handoff(context)
+                elif engine == "ai":
                     await self._run_ai_implementation(context, provider)
                 else:
                     await self._run_template_implementation(context)
@@ -202,6 +208,7 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             if source_context_path.is_file()
             else DesignContext()
         )
+        self._validate_engine_context(engine, source_context)
         design_context = context_with_review(source_context, directive)
         review_goal = source_goal + "\n\n" + directive.as_prompt_block()
 
@@ -251,8 +258,8 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
                 "runtime_preset": runtime_preset,
                 "policy": (
                     "Preserve accepted upstream evidence; invalidate from the earliest "
-                    "creative-review owner; never mutate the source run; always rerun "
-                    "rendered quality gates; keep the source run runtime preset fixed."
+                    "creative-review owner; never mutate the source run; rerun rendered quality "
+                    "gates only after implementation exists; keep the source runtime preset fixed."
                 ),
             }
             provenance_path = context.run_dir / "creative-revision.json"
@@ -286,6 +293,9 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             start = self.REVISION_STAGES.index(target)
             for stage in self.REVISION_STAGES[start:]:
                 await self._run_revision_stage(context, stage, engine, provider)
+
+            if engine == "external":
+                return context
 
             self.runtime.require(context, "browser.qa")
             self.runtime.require(context, "visual.qa")
