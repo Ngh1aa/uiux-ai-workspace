@@ -47,22 +47,88 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
         )
         context.add_artifact("flow_plan", path)
 
+    @staticmethod
+    def _validate_engine_context(engine: str, design_context: DesignContext) -> None:
+        if engine not in {"template", "ai", "external"}:
+            raise ValueError("Unknown generation engine.")
+        if engine == "external" and design_context.brain != "external":
+            raise ValueError(
+                "External engine requires DesignContext.brain='external' and a target project."
+            )
+        if design_context.brain == "external" and engine != "external":
+            raise ValueError(
+                "DesignContext.brain='external' must use engine='external'; internal providers "
+                "must not silently replace the declared external brain."
+            )
+
+    def _run_external_handoff(self, context: RunContext) -> Path:
+        target = context.design_context.target
+        if target is None:
+            raise RuntimeError("External brain handoff requires a target project contract.")
+
+        context.start_stage("external_handoff")
+        payload = {
+            "schema_version": "1.0.0",
+            "status": "awaiting_external_implementation_and_qa",
+            "brain": "external",
+            "target": target.model_dump(),
+            "factory_artifacts": {
+                key: value
+                for key, value in context.artifacts.items()
+                if key
+                in {
+                    "research",
+                    "ux_ia",
+                    "art_direction",
+                    "design_contract",
+                    "design_system",
+                    "design_tokens",
+                    "implementation_plan",
+                    "visual_composition",
+                    "visual_brain",
+                    "skill_governance",
+                }
+            },
+            "policy": (
+                "The external brain owns implementation and creative judgment in the target "
+                "repository. Factory must not invoke an internal provider, generate the fixture "
+                "template, or claim BrowserQA/VisualCritic PASS in this handoff run. After the "
+                "external implementation is committed, run Cloud QA against the declared target "
+                "repository, ref, project root, commands and routes."
+            ),
+        }
+        path = self._write(
+            context,
+            "external_handoff",
+            "external-handoff.json",
+            json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+        )
+        context.complete_stage("external_handoff")
+        context.event_bus().emit(
+            "run.handoff_ready",
+            data={"artifact": str(path), "target": target.repository},
+        )
+        context.status = "handoff_ready"
+        context.active_stage = None
+        context.save()
+        return path
+
     async def run(
         self,
         goal: str,
         design_context: DesignContext | None = None,
         run_id: str | None = None,
         intelligence_only: bool = False,
-        engine: str = "template",
+        engine: str = "ai",
         runtime_preset: str = "standard",
     ) -> RunContext:
-        if engine not in {"template", "ai"}:
-            raise ValueError("Unknown generation engine.")
+        resolved_context = design_context or DesignContext()
+        self._validate_engine_context(engine, resolved_context)
 
         context = RunContext(
             root=self.root,
             goal=goal,
-            design_context=design_context or DesignContext(),
+            design_context=resolved_context,
             runtime_preset=runtime_preset,
         )
         if run_id:
@@ -108,6 +174,9 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             await self._run_implementation_plan(context)
             await self._run_visual_composition(context)
 
+            if engine == "external":
+                self._run_external_handoff(context)
+                return context
             if engine == "ai":
                 await self._run_ai_implementation(context, provider)
             else:

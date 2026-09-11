@@ -40,17 +40,21 @@ The old top-level `core/` prototype, standalone `showcase/`, local Workbench UI 
 The preferred operating model does not require a powerful local LLM or a local Workbench:
 
 ```text
-AI collaborator
+External AI collaborator / cloud model
+→ Factory skills + design contracts
+→ target GitHub repository
 → GitHub branch / pull request
 → GitHub Actions runner
 → browser / accessibility / performance / media evidence
-→ review and root-cause repair
+→ creative review and root-cause repair
 → merge
 ```
 
 GitHub Actions owns repeatable execution. `uiux-factory/qa/` provides the cloud-native browser evidence stack using Playwright, axe-core, Lighthouse CI and Sharp.
 
-The Factory can still run directly from the CLI for development and unattended automation. `engine=ai` remains an optional provider-backed mode; it is not required for ChatGPT + GitHub collaboration.
+The Factory can still run directly from the CLI for development and unattended automation. Provider-backed `engine=ai` remains available. For ChatGPT + GitHub collaboration, use `engine=external`: Factory generates governed research/design artifacts and an `external-handoff.json`, then stops without calling an internal provider, generating the deterministic ecommerce fixture, or claiming implementation/QA PASS.
+
+A run with status `handoff_ready` is **not** a completed website. It means the target repository is ready for an external implementation agent to consume the Factory artifacts. Rendered QA must run after the target implementation exists.
 
 ## Local development (optional)
 
@@ -60,7 +64,6 @@ From `uiux-factory/`:
 python -m pip install -r requirements-metagpt-core.txt
 python -m pip install -r requirements-dev.txt
 python -m pytest -q tests
-python run.py "Design a modern ecommerce website"
 ```
 
 For provider-backed visual work when an approved provider is configured:
@@ -69,7 +72,18 @@ For provider-backed visual work when an approved provider is configured:
 python run.py "Design a distinctive ecommerce website" --engine ai --runtime-preset visual-first
 ```
 
+For an external-brain handoff, provide a design-context JSON with `brain: "external"` plus a target repository contract, then run:
+
+```bash
+python run.py "Redesign the target project" \
+  --context ./design-context.json \
+  --engine external \
+  --runtime-preset visual-first
+```
+
 Local execution output is written under `uiux-factory/runs/` and `uiux-factory/generated/`, which are ignored by Git. The run lock remains because direct CLI/provider-backed runs may still execute outside GitHub Actions.
+
+The old deterministic ecommerce generator remains available only as an internal regression-fixture path used by existing tests; it is no longer exposed as a production CLI engine.
 
 ## Cloud QA
 
@@ -84,17 +98,35 @@ QA evidence is uploaded as GitHub Actions artifacts. Automated checks support, b
 
 ### Target-project QA
 
-Cloud QA is parameterized through a target-project contract instead of assuming that the Factory fixture is the product under test. For a local or checked-out project, set `QA_TARGET_DIR` to the project root, `QA_ROUTES` to a comma-separated list of real routes, and optionally `QA_SERVE_COMMAND` to the project's production preview command:
+`Cloud QA Toolchain` can audit the website that actually changed instead of treating the Factory fixture as product evidence.
+
+For `workflow_dispatch`, provide:
+
+- `target_repository` — `owner/name`; blank means this repository;
+- `target_ref` — branch/tag/SHA; blank uses the target repository default branch;
+- `target_dir` — project root inside that repository;
+- `routes` — comma-separated routes such as `/,/about.html,/contact.html`;
+- `install_command` — optional dependency install command;
+- `build_command` — optional production build command;
+- `serve_command` — optional preview command; blank uses static HTTP serving.
+
+When the target repository differs from `uiux-ai-workspace`, the workflow checks it out into an isolated `target-project/` directory before QA. Public repositories can use the workflow token; private cross-repository checkout may require the `UIUX_TARGET_REPO_TOKEN` Actions secret with read access to the target repository.
+
+The workflow executes install/build from the declared target root, starts the preview server, waits until the first declared route responds successfully, then runs Playwright and axe across all declared routes. Lighthouse CI receives all declared routes instead of auditing only the first page.
+
+For local/manual harness use:
 
 ```bash
 cd uiux-factory/qa
 QA_TARGET_DIR=/absolute/path/to/project \
 QA_ROUTES=/,/about.html,/contact.html \
-QA_SERVE_COMMAND='npm run preview -- --host 0.0.0.0' \
-npm test
+QA_INSTALL_COMMAND='npm ci' \
+QA_BUILD_COMMAND='npm run build' \
+QA_SERVE_COMMAND='npm run preview -- --host 0.0.0.0 --port 4173' \
+node scripts/serve-target.mjs
 ```
 
-When `QA_SERVE_COMMAND` is omitted, the harness serves the target directory as a static site. The `/fixture/` route remains available only as a toolchain smoke test and must not be reported as evidence that an unrelated target website passed QA. A `DesignContext` may declare the same source of truth with `brain: external` and a `target` object containing repository, branch, project root, build/serve commands and routes.
+The `/fixture/` route remains only a toolchain smoke test. A green fixture run proves the QA stack works; it must never be reported as evidence that an unrelated target website passed QA.
 
 ## Change policy
 
@@ -108,6 +140,8 @@ Before expanding the design pipeline, keep these invariants green:
 6. `run.json` and evidence artifacts remain truthful and inspectable.
 7. Changes to MetaGPT/vendor code are isolated and intentional.
 8. Removed local UI/server surfaces are not reintroduced merely to satisfy obsolete tests.
+9. External-brain runs never invoke an internal provider or claim rendered QA before target implementation exists.
+10. Toolchain-smoke fixtures are never used as acceptance evidence for a different project.
 
 ## Capability upgrades
 
