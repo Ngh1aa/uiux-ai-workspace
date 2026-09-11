@@ -6,7 +6,7 @@ import re
 from typing import Literal
 from urllib.parse import urlsplit
 
-from pydantic import BaseModel, ConfigDict, Field, JsonValue, field_validator
+from pydantic import BaseModel, ConfigDict, Field, JsonValue, field_validator, model_validator
 
 
 def public_web_url(value: str) -> str:
@@ -45,8 +45,50 @@ class ContextAsset(BaseModel):
         return value
 
 
+class TargetCommands(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    install: str = Field(default="", max_length=1000)
+    build: str = Field(default="", max_length=1000)
+    serve: str = Field(default="", max_length=1000)
+
+
+class TargetProject(BaseModel):
+    """The repository and commands that QA must inspect, not Factory fixtures."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    repository: str = Field(min_length=1, max_length=200)
+    branch: str = Field(default="main", min_length=1, max_length=120)
+    project_root: str = Field(default="/", min_length=1, max_length=500)
+    stack: str = Field(default="", max_length=120)
+    commands: TargetCommands = Field(default_factory=TargetCommands)
+    routes: list[str] = Field(default_factory=lambda: ["/"], max_length=32)
+
+    @field_validator("project_root")
+    @classmethod
+    def validate_project_root(cls, value: str) -> str:
+        value = value.strip()
+        if not value.startswith("/"):
+            raise ValueError("project_root must be repository-relative and start with '/'.")
+        return value.rstrip("/") or "/"
+
+    @field_validator("routes")
+    @classmethod
+    def validate_routes(cls, values: list[str]) -> list[str]:
+        normalized = []
+        for value in values:
+            route = value.strip()
+            if not route.startswith("/"):
+                raise ValueError("Each target route must start with '/'.")
+            normalized.append(route or "/")
+        return list(dict.fromkeys(normalized))
+
+
 class DesignContext(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    brain: Literal["internal", "external"] = "internal"
+    target: TargetProject | None = None
     brand_name: str = Field(default="", max_length=120)
     personality: list[str] = Field(default_factory=list, max_length=12)
     avoid: list[str] = Field(default_factory=list, max_length=20)
@@ -63,6 +105,12 @@ class DesignContext(BaseModel):
     # to ResearchAgent and should normally inspect 10–20 candidates.
     auto_inspiration: bool = True
     inspiration_target: int = Field(default=4, ge=0, le=4)
+
+    @model_validator(mode="after")
+    def validate_brain_target(self):
+        if self.brain == "external" and self.target is None:
+            raise ValueError("External brain mode requires a target project contract.")
+        return self
 
     @field_validator("reference_urls")
     @classmethod

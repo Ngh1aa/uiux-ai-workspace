@@ -39,7 +39,7 @@ async def main(
     context_path: str | None = None,
     run_id: str | None = None,
     intelligence_only: bool = False,
-    engine: str = "template",
+    engine: str = "ai",
     source_run_id: str | None = None,
     creative_directive_path: str | None = None,
     runtime_preset: str | None = None,
@@ -143,8 +143,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--engine",
         choices=["template", "ai"],
-        default="template",
-        help="AI cloud generates custom static pages; requires explicit free-tier configuration",
+        default="ai",
+        help=(
+            "Implementation engine. Defaults to provider-backed AI; use template only "
+            "for explicit fixture/regression runs."
+        ),
     )
     parser.add_argument(
         "--runtime-preset",

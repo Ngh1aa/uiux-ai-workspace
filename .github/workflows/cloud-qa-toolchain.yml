@@ -10,6 +10,19 @@ on:
       - "uiux-factory/qa/**"
       - ".github/workflows/cloud-qa-toolchain.yml"
   workflow_dispatch:
+    inputs:
+      target_dir:
+        description: "Project directory to serve, relative to repository root"
+        required: false
+        default: "uiux-factory/qa"
+      routes:
+        description: "Comma-separated routes to inspect"
+        required: false
+        default: "/fixture/"
+      serve_command:
+        description: "Optional command run from target_dir; leave empty for static HTTP serving"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -38,11 +51,16 @@ jobs:
 
       - name: Run browser, axe, Lighthouse and media evidence
         run: |
-          python3 -m http.server 4173 --directory . > /tmp/uiux-qa-server.log 2>&1 &
+          export QA_TARGET_DIR="$GITHUB_WORKSPACE/${{ github.event.inputs.target_dir || 'uiux-factory/qa' }}"
+          export QA_ROUTES="${{ github.event.inputs.routes || '/fixture/' }}"
+          export QA_SERVE_COMMAND="${{ github.event.inputs.serve_command || '' }}"
+          node scripts/serve-target.mjs > /tmp/uiux-qa-server.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
           sleep 1
           npm test
+          LIGHTHOUSE_ROUTE="${QA_ROUTES%%,*}"
+          sed -i "s|http://127.0.0.1:4173/fixture/|http://127.0.0.1:4173${LIGHTHOUSE_ROUTE}|" lighthouserc.json
           npx lhci autorun --config=lighthouserc.json
 
       - name: Upload QA evidence
