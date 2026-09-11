@@ -16,7 +16,7 @@ on:
         required: false
         default: ""
       target_ref:
-        description: "Target branch/tag/SHA; blank uses the checked-out ref or target default branch"
+        description: "Target branch/tag/SHA; blank uses the target repository default branch"
         required: false
         default: ""
       target_dir:
@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: ${{ github.event.inputs.target_repository }}
-          ref: ${{ github.event.inputs.target_ref || 'main' }}
+          ref: ${{ github.event.inputs.target_ref }}
           path: target-project
           token: ${{ secrets.UIUX_TARGET_REPO_TOKEN || github.token }}
 
