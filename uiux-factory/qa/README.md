@@ -20,3 +20,5 @@ npx lhci autorun --config=lighthouserc.json
 ```
 
 The canonical execution path is `.github/workflows/cloud-qa-toolchain.yml`, which uploads evidence artifacts for review. Automated checks do not replace creative/visual judgment.
+
+The harness is intentionally independent of `apps/web`, the removed localhost bridge, and ad-hoc migration/manual-test scripts. Foundation tests live under `uiux-factory/tests/`; browser/a11y/performance/media evidence lives here.
