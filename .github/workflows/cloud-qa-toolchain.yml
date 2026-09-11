@@ -1,0 +1,55 @@
+name: Cloud QA Toolchain
+
+on:
+  push:
+    paths:
+      - "uiux-factory/qa/**"
+      - ".github/workflows/cloud-qa-toolchain.yml"
+  pull_request:
+    paths:
+      - "uiux-factory/qa/**"
+      - ".github/workflows/cloud-qa-toolchain.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qa-toolchain:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: uiux-factory/qa
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install QA dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser, axe, Lighthouse and media evidence
+        run: |
+          python3 -m http.server 4173 --directory . > /tmp/uiux-qa-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 1
+          npm test
+          npx lhci autorun --config=lighthouserc.json
+
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloud-qa-evidence
+          path: uiux-factory/qa/artifacts/
+          if-no-files-found: warn
+          retention-days: 14
