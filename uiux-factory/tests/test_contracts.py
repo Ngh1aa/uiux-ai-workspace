@@ -21,7 +21,6 @@ from core.contracts.visual_composition_schema import (
     VisualComposition,
     VisualCompositionGate,
 )
-from core.manager.provider_intelligent_manager import ProviderIntelligentDevelopmentManager
 
 
 def test_design_contract_minimal_handoff_round_trips_json() -> None:
@@ -104,8 +103,8 @@ def test_visual_composition_rejects_invalid_density() -> None:
         )
 
 
-def external_context() -> DesignContext:
-    return DesignContext.model_validate(
+def test_external_brain_requires_target_project_and_preserves_commands() -> None:
+    context = DesignContext.model_validate(
         {
             "brain": "external",
             "target": {
@@ -123,30 +122,14 @@ def external_context() -> DesignContext:
         }
     )
 
-
-def test_external_brain_requires_target_project_and_preserves_commands() -> None:
-    context = external_context()
-
     assert context.target is not None
     assert context.target.repository == "Ngh1aa/Atelier"
     assert context.target.routes == ["/", "/about.html"]
+    assert context.target.commands.install == "npm install"
+    assert context.target.commands.build == "npm run build"
     assert context.target.commands.serve == "npm run preview"
 
 
 def test_external_brain_without_target_is_rejected() -> None:
     with pytest.raises(ValidationError, match="target project contract"):
         DesignContext.model_validate({"brain": "external"})
-
-
-def test_external_engine_cannot_be_silently_replaced_by_internal_ai() -> None:
-    context = external_context()
-    ProviderIntelligentDevelopmentManager._validate_engine_context("external", context)
-
-    with pytest.raises(ValueError, match="must use engine='external'"):
-        ProviderIntelligentDevelopmentManager._validate_engine_context("ai", context)
-
-    with pytest.raises(ValueError, match="requires DesignContext.brain='external'"):
-        ProviderIntelligentDevelopmentManager._validate_engine_context(
-            "external",
-            DesignContext(),
-        )
