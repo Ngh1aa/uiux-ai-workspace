@@ -55,7 +55,7 @@ async def main(
         stale_seconds=_env_float("UIUX_RUN_LOCK_STALE_SECONDS", 14400.0),
     )
 
-    print("[Queue] Waiting for local Factory run slot...")
+    print("[Queue] Waiting for exclusive Factory run slot...")
     lock.acquire()
     print("[Queue] Factory run slot acquired.")
 
@@ -133,20 +133,21 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--run-id",
-        help="Stable job/run ID used by the Workbench bridge",
+        help="Stable Factory run ID for provenance and revision workflows",
     )
     parser.add_argument(
         "--intelligence-only",
         action="store_true",
-        help="Analyze references and build design-system.json before frontend generation",
+        help="Analyze references and build design-system.json before implementation planning",
     )
     parser.add_argument(
         "--engine",
-        choices=["template", "ai"],
+        choices=["ai", "external"],
         default="ai",
         help=(
-            "Implementation engine. Defaults to provider-backed AI; use template only "
-            "for explicit fixture/regression runs."
+            "Implementation ownership. 'ai' uses the configured internal provider. "
+            "'external' never calls an internal provider or fixture generator; it emits an "
+            "external-handoff artifact for a target project declared in DesignContext."
         ),
     )
     parser.add_argument(
@@ -158,7 +159,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--source-run-id",
-        help="Completed source run to revise from an imported creative review",
+        help="Completed or handoff-ready source run to revise from an imported creative review",
     )
     parser.add_argument(
         "--creative-directive",

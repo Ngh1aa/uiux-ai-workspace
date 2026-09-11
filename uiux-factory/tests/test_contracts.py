@@ -125,6 +125,8 @@ def test_external_brain_requires_target_project_and_preserves_commands() -> None
     assert context.target is not None
     assert context.target.repository == "Ngh1aa/Atelier"
     assert context.target.routes == ["/", "/about.html"]
+    assert context.target.commands.install == "npm install"
+    assert context.target.commands.build == "npm run build"
     assert context.target.commands.serve == "npm run preview"
 
 
