@@ -1,6 +1,6 @@
 # UIUX AI Workspace
 
-This repository contains the active **UIUX Factory** application together with vendored/legacy code used during its development.
+This repository contains the active **UIUX Factory** application, its UI/UX skill library, and the vendored framework/runtime dependencies required by the Factory.
 
 ## Source of truth
 
@@ -21,14 +21,17 @@ uiux-factory/apps/bridge/server.py
 uiux-factory/apps/web/server.py
 ```
 
-## Other top-level directories
+## Active top-level surfaces
 
+- `uiux-factory/` — canonical application/runtime source.
+- `skills_UIUX/` — shared UI/UX skill knowledge and website-delivery policy used by the Factory.
 - `MetaGPT/` — vendored MetaGPT framework source. Treat it as framework/vendor code unless an integration change specifically requires modifying it.
-- `core/` — legacy/prototype implementation kept for historical reference. New product code must not depend on this top-level package.
-- `skills_UIUX/` — shared UI/UX skill knowledge used by the Factory integration.
 - `scripts/` — repository-level migration/utility scripts.
+- `docs/` — repository-level operating/prompt documentation.
+- `AGENTS.md` — repository operating contract.
+- `PROJECT-CONTEXT.template.md` — reusable project-context template.
 
-Because both the repository root and `uiux-factory/` contain a directory named `core`, always run application commands from `uiux-factory/` (or set the import path explicitly) to avoid importing the legacy package accidentally.
+The previous top-level `core/` prototype and standalone `showcase/` output were removed from the active repository surface. The only canonical `core` implementation is now `uiux-factory/core/`.
 
 ## Local runtime safety
 
@@ -58,6 +61,12 @@ python -m pytest -q tests
 python run.py "Design a modern ecommerce website"
 ```
 
+For visual-first website work, prefer the AI engine plus the visual runtime preset when a configured provider is available:
+
+```bash
+python run.py "Design a distinctive ecommerce website" --engine ai --runtime-preset visual-first
+```
+
 ## Change policy
 
 Before expanding the AI/design pipeline, keep these invariants green:
@@ -71,3 +80,7 @@ Before expanding the AI/design pipeline, keep these invariants green:
 7. Changes to MetaGPT/vendor code are isolated and intentional.
 
 GitHub Actions runs these foundation checks for changes under `uiux-factory/`.
+
+## Capability upgrades
+
+See `uiux-factory/docs/AI-CAPABILITY-UPGRADE-SOURCES.md` for the external capabilities and source material that would most improve the Factory's ability to use its routed skills, browser evidence and creative-review loop at full strength.
