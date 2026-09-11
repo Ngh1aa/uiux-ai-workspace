@@ -6,6 +6,7 @@ from core.contracts.design_system_schema import (
     DesignSystemGate,
     FoundationTokens,
 )
+from core.contracts.design_context_schema import DesignContext
 from core.contracts.schema import (
     DesignContract,
     EvidenceStatus,
@@ -100,3 +101,33 @@ def test_visual_composition_rejects_invalid_density() -> None:
             visual_anchor="x",
             density="extreme",
         )
+
+
+def test_external_brain_requires_target_project_and_preserves_commands() -> None:
+    context = DesignContext.model_validate(
+        {
+            "brain": "external",
+            "target": {
+                "repository": "Ngh1aa/Atelier",
+                "branch": "redesign/test",
+                "project_root": "/",
+                "stack": "html-css-js",
+                "commands": {
+                    "install": "npm install",
+                    "build": "npm run build",
+                    "serve": "npm run preview",
+                },
+                "routes": ["/", "/about.html", "/"],
+            },
+        }
+    )
+
+    assert context.target is not None
+    assert context.target.repository == "Ngh1aa/Atelier"
+    assert context.target.routes == ["/", "/about.html"]
+    assert context.target.commands.serve == "npm run preview"
+
+
+def test_external_brain_without_target_is_rejected() -> None:
+    with pytest.raises(ValidationError, match="target project contract"):
+        DesignContext.model_validate({"brain": "external"})

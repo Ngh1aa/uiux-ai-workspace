@@ -82,6 +82,20 @@ The cloud QA workflow installs and exercises:
 
 QA evidence is uploaded as GitHub Actions artifacts. Automated checks support, but do not replace, visual/creative review.
 
+### Target-project QA
+
+Cloud QA is parameterized through a target-project contract instead of assuming that the Factory fixture is the product under test. For a local or checked-out project, set `QA_TARGET_DIR` to the project root, `QA_ROUTES` to a comma-separated list of real routes, and optionally `QA_SERVE_COMMAND` to the project's production preview command:
+
+```bash
+cd uiux-factory/qa
+QA_TARGET_DIR=/absolute/path/to/project \
+QA_ROUTES=/,/about.html,/contact.html \
+QA_SERVE_COMMAND='npm run preview -- --host 0.0.0.0' \
+npm test
+```
+
+When `QA_SERVE_COMMAND` is omitted, the harness serves the target directory as a static site. The `/fixture/` route remains available only as a toolchain smoke test and must not be reported as evidence that an unrelated target website passed QA. A `DesignContext` may declare the same source of truth with `brain: external` and a `target` object containing repository, branch, project root, build/serve commands and routes.
+
 ## Change policy
 
 Before expanding the design pipeline, keep these invariants green:
