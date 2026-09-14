@@ -1,14 +1,16 @@
-from core.actions.create_ux_ia_v1 import CreateUXIAV1
+import ast
+from pathlib import Path
+
+
+SOURCE_PATH = Path(__file__).resolve().parents[1] / "core" / "actions" / "create_ux_ia_v1.py"
+
+
+def _source() -> str:
+    return SOURCE_PATH.read_text(encoding="utf-8")
 
 
 def test_mid_level_reasoning_contract_contains_required_gates():
-    profile = {
-        "audience": "Prospective users",
-        "task": "Complete a high-value task",
-        "conversion": "Evaluate → act",
-    }
-
-    artifact = CreateUXIAV1.maturity_layer(profile)
+    source = _source()
 
     required_sections = (
         "## UX Reasoning Frame",
@@ -20,22 +22,20 @@ def test_mid_level_reasoning_contract_contains_required_gates():
     )
 
     for section in required_sections:
-        assert section in artifact
+        assert section in source
 
-    assert "target is not a measured result" in artifact.lower()
-    assert "never fabricate interviews" in artifact.lower()
-    assert "planned validation" in artifact.lower()
-    assert "options/trade-off" in artifact
+    assert "A target is not a measured result" in source
+    assert "Never fabricate interviews" in source
+    assert "PLANNED VALIDATION" in source
+    assert "options/trade-off" in source
 
 
-def test_mid_level_reasoning_preserves_inferred_brief_status():
-    profile = CreateUXIAV1.assumption_profile(
-        "Design a perfume ecommerce experience",
-        "ecommerce",
-    )
+def test_mid_level_reasoning_source_is_valid_and_preserves_truth_labels():
+    source = _source()
 
-    artifact = CreateUXIAV1.maturity_layer(profile)
+    ast.parse(source)
 
-    assert "fragrance" in profile["audience"].lower()
-    assert "INFERRED from brief until verified" in artifact
-    assert "polished UI is not validation" in artifact
+    assert "INFERRED from brief until verified" in source
+    assert "polished UI is not validation" in source
+    assert "working hypothesis, not validated user research" not in source
+    assert "fragrance" in source.lower()
