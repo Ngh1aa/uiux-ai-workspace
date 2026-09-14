@@ -16,6 +16,45 @@ Use this file as the reusable project-level input packet for AI work. Copy it to
 - **Primary users:** [Who uses it]
 - **Main user problems:** [Problems being solved]
 
+## UX / product problem frame
+
+Fill what is known. Keep unsupported claims labeled with the evidence states at the end of this template.
+
+- **Priority user / role:** [WHOSE TASK HAS PRIORITY]
+- **Highest-value user task:** [JOB / TASK, NOT A FEATURE]
+- **Observed friction / unmet need:** [WHAT IS HARD, UNCLEAR, RISKY OR INEFFICIENT]
+- **Owner / business objective:** [WHAT THE ORGANIZATION NEEDS FROM THE SAME JOURNEY]
+- **Primary behavior / conversion:** [DESIRED NEXT ACTION OR BEHAVIOR]
+- **User value:** [WHAT BECOMES BETTER FOR THE USER]
+- **Owner value:** [WHAT LEGITIMATE BUSINESS / PRODUCT VALUE IS SUPPORTED]
+- **Critical journey:** [ENTRY → ORIENT → EVALUATE → ACT → CONFIRM / RECOVER]
+- **Important alternate / recovery paths:** [...]
+- **Evidence that could change the design:** [UNKNOWNS THAT MAY INVALIDATE THE CURRENT DIRECTION]
+
+## Product success and measurement
+
+A target is not a measured outcome. Do not invent baseline values or uplift.
+
+- **Primary success signal:** [OBSERVABLE BEHAVIOR OR METRIC]
+- **Secondary success signals:** [...]
+- **Current baseline:** [VALUE + SOURCE / UNKNOWN]
+- **Target:** [VALUE + RATIONALE / UNKNOWN]
+- **Available analytics / logs / funnel data:** [...]
+- **Business outcome evidence available:** [...]
+- **Claims that must not be made:** [...]
+
+## Research and validation access
+
+- **Existing user research:** [FILES / FINDINGS / UNKNOWN]
+- **Existing usability evidence:** [...]
+- **Available participants / user roles:** [...]
+- **Available stakeholder/domain experts:** [...]
+- **Available developer / feasibility review:** [...]
+- **Available accessibility review:** [...]
+- **Available production analytics:** [...]
+- **Validation methods that are feasible:** [USABILITY TEST / PROTOTYPE TEST / HEURISTIC / A11Y / ANALYTICS / A-B / OTHER]
+- **High-risk hypotheses to test:** [...]
+
 ## Source of truth
 
 - **Primary source of truth:** [Example: `src/`, `uiux-factory/`, `docs/spec.md`]
@@ -78,9 +117,35 @@ Use this file as the reusable project-level input packet for AI work. Copy it to
 
 - [...]
 
+### Content / legal / operational requirements
+
+- [...]
+
 ### Budget/time constraints
 
 - [...]
+
+## Design decision ledger
+
+Use one row for each consequential product/UX decision. Do not invent alternatives after the fact simply to make the process look sophisticated.
+
+| Decision | Evidence / hypothesis | User value | Owner value | Alternative(s) | Trade-off | Technical reality | Success signal | Risk / validation |
+|---|---|---|---|---|---|---|---|---|
+| [...] | [...] | [...] | [...] | [...] | [...] | [...] | [...] | [...] |
+
+## Validation plan
+
+For high-risk decisions, define validation before claiming an outcome.
+
+| Hypothesis | Method | Participant / evidence source | Task / scenario | Success criteria | Current state | Finding / design response |
+|---|---|---|---|---|---|---|
+| [...] | [...] | [...] | [...] | [...] | PLANNED / OBSERVED / MEASURED / UNKNOWN | [...] |
+
+Rules:
+
+- Never fabricate participant counts, quotes, analytics, A/B results, conversion uplift or stakeholder feedback.
+- If no real user validation exists, label the work `PLANNED VALIDATION`, `HEURISTIC REVIEW`, or another truthful method.
+- Automated QA can prove implementation properties; it does not by itself prove user comprehension or business impact.
 
 ## Quality standard
 
@@ -90,6 +155,7 @@ Use this file as the reusable project-level input packet for AI work. Copy it to
 - **Required visual verification:** [...]
 - **Required performance checks:** [...]
 - **Required accessibility checks:** [...]
+- **Required usability / product validation:** [...]
 
 ## Project preferences
 
@@ -130,6 +196,26 @@ Use this file as the reusable project-level input packet for AI work. Copy it to
 - **Research:** [...]
 - **Do not copy:** [...]
 
+## Portfolio / case-study capture
+
+Capture this during the project rather than reconstructing a fictional process later.
+
+- **Context / challenge:** [...]
+- **My actual role and scope:** [...]
+- **Important constraints:** [...]
+- **Evidence available:** [...]
+- **Important unknowns:** [...]
+- **Core hypothesis:** [...]
+- **Key decision and rationale:** [...]
+- **Alternative / trade-off:** [...]
+- **System / responsive / state behavior:** [...]
+- **Implementation proof:** [...]
+- **Validation performed:** [...]
+- **Iteration caused by evidence:** [...]
+- **Outcome that can be truthfully claimed:** [...]
+- **What cannot be claimed:** [...]
+- **Reflection / next validation:** [...]
+
 ## Definition of Done
 
 The project or current milestone is considered complete when:
@@ -138,6 +224,15 @@ The project or current milestone is considered complete when:
 2. [...]
 3. [...]
 4. [...]
+
+For UI/UX/product milestones, also confirm when relevant:
+
+- the user problem and owner objective are both explicit;
+- consequential decisions include rationale and trade-offs;
+- critical journeys include meaningful recovery/state behavior;
+- high-risk hypotheses map to validation methods;
+- outcome claims are proportional to evidence;
+- case-study capture preserves the real decision process.
 
 ## Evidence policy
 
@@ -148,4 +243,10 @@ Use these states consistently:
 - `ASSUMED` — temporary assumption required to proceed.
 - `UNKNOWN` — insufficient evidence.
 
-Do not silently convert `UNKNOWN` or `ASSUMED` into facts.
+For validation artifacts you may additionally use:
+
+- `PLANNED` — validation has been defined but not executed.
+- `OBSERVED` — directly seen in a real review/test session, with source recorded.
+- `MEASURED` — supported by recorded quantitative evidence.
+
+Do not silently convert `UNKNOWN`, `ASSUMED` or `PLANNED` into facts or results.
