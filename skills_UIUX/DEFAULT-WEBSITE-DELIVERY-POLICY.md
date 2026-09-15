@@ -131,6 +131,25 @@ For substantial visual work, rendered evidence must be inspected after the lates
 
 Factory/process owns repeatable orchestration and deterministic gates. Routed skills own specialist rules. Creative Director review owns final visual judgment.
 
+## Visible-prototype parity hard gate
+
+This gate exists to prevent a polished homepage from hiding weak secondary pages or broken shared chrome.
+
+For portfolio-grade UI/UX prototypes:
+
+- every visible navigation destination must open a deliberate, usable screen; no fake Settings/Security/Profile destinations, dead links, mislabeled links or placeholder screens;
+- shared chrome is a design-system owner: search, notification, profile, navigation rails, tabs and toolbars must use the same geometry, token family, spacing logic and interaction states on every route they appear on;
+- after redesigning shared chrome, inspect every affected primary route for obvious mismatch before declaring completion;
+- do not leave unexplained dead space inside a sidebar, dock or toolbar; group items intentionally or size the navigation container to its actual content/context;
+- do not stack a new card system inside a legacy outer panel/card frame; inspect the rendered surface tree and remove obsolete wrappers, borders, shadows and spacing owners that visually survive the redesign;
+- secondary pages must meet the same visual quality bar as the landing/home screen. A beautiful home page does not compensate for sparse, generic or legacy-looking Cards, Savings, Security, Settings, Profile, Checkout, Detail or other core destinations;
+- specialized real-world objects require domain realism before styling. Examples: bank cards, boarding passes, invoices, tickets, product spec sheets and medical records. Research the real object/product behavior first, then stylize without breaking recognizable anatomy;
+- content density must be intentional. If the chosen reference/product direction is information-dense, secondary pages need meaningful data, controls, states and supporting context rather than oversized headings plus empty canvas;
+- page-level headings, card radii, gutters, shadows, control heights and spacing must come from shared tokens instead of route-specific arbitrary values;
+- a user/reviewer catching any obvious defect in these categories promotes it to a regression rule for future projects, not a one-off patch.
+
+Automated QA can support this gate but cannot override obvious rendered defects. For prototype-first work, fast screenshot critique + repair of visible issues is higher priority than generating heavy QA artifacts that do not change the interface.
+
 ## Project override rules
 
 Precedence:
