@@ -13,6 +13,7 @@ ANTHROPIC_FRONTEND_DESIGN = f"{ANTHROPIC_SKILL_ROOT}/frontend-design"
 ANTHROPIC_WEBAPP_TESTING = f"{ANTHROPIC_SKILL_ROOT}/webapp-testing"
 ANTHROPIC_SKILL_CREATOR = f"{ANTHROPIC_SKILL_ROOT}/skill-creator"
 ANTHROPIC_WEB_ARTIFACTS = f"{ANTHROPIC_SKILL_ROOT}/web-artifacts-builder"
+MOTION_COMPONENT_INTELLIGENCE = "motion-component-intelligence"
 
 
 @dataclass(frozen=True)
@@ -157,6 +158,8 @@ class ProfessionalWebsiteFlow:
         "art_direction": (
             "visual-taste-calibration",
             "brand-guidelines",
+            "motion-and-microinteractions",
+            MOTION_COMPONENT_INTELLIGENCE,
             ANTHROPIC_FRONTEND_DESIGN,
         ),
         "design_system": ("responsive-and-device-strategy", "accessibility"),
@@ -164,10 +167,14 @@ class ProfessionalWebsiteFlow:
         "visual_composition": (
             "visual-taste-calibration",
             "responsive-and-device-strategy",
+            "motion-and-microinteractions",
+            MOTION_COMPONENT_INTELLIGENCE,
             ANTHROPIC_FRONTEND_DESIGN,
         ),
         "implementation": (
             "accessibility",
+            "motion-and-microinteractions",
+            MOTION_COMPONENT_INTELLIGENCE,
             ANTHROPIC_FRONTEND_DESIGN,
         ),
         "browser_qa": (
@@ -184,6 +191,8 @@ class ProfessionalWebsiteFlow:
             "ui-improvement",
             "visual-taste-calibration",
             "responsive-and-device-strategy",
+            "motion-and-microinteractions",
+            MOTION_COMPONENT_INTELLIGENCE,
             ANTHROPIC_FRONTEND_DESIGN,
         ),
     }
