@@ -48,6 +48,9 @@ jobs:
       - name: Verify pinned Anthropic skills
         run: python scripts/verify_anthropic_skills.py
 
+      - name: Verify pinned Motion Primitives corpus
+        run: python scripts/verify_motion_primitives.py
+
       - name: Compile active Python source tree
         run: python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
 
