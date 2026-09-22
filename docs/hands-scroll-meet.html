@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiệu Ứng 2 Bàn Tay Chạm Nhau Khi Cuộn Trang (Scroll-Scrubbed Hands)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: radial-gradient(circle at 50% 20%, #151F32 0%, #060911 100%);
+      color: #FFFFFF;
+      overflow-x: hidden;
+      min-height: 250vh; /* Tạo không gian cuộn */
+    }
+
+    /* Tiêu đề & Hướng dẫn */
+    .intro-section {
+      text-align: center;
+      padding: 80px 20px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(14, 165, 233, 0.15);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      color: #38BDF8;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #FFFFFF 30%, #38BDF8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    p.lead {
+      font-size: 18px;
+      color: #94A3B8;
+      line-height: 1.6;
+    }
+
+    .scroll-arrow {
+      margin-top: 30px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #38BDF8;
+      font-size: 13px;
+      font-weight: 600;
+      animation: bounceArrow 2s infinite;
+    }
+
+    @keyframes bounceArrow {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(8px); }
+      60% { transform: translateY(4px); }
+    }
+
+    /* ==========================================================================
+       AI AGENT NOTE: 
+       Container bao ngoài 2 bàn tay.
+       - Cần chiều cao lớn (100vh đến 120vh) và position relative.
+       - flexbox căn giữa 2 bàn tay theo chiều dọc & ngang.
+       - overflow: hidden để khi 2 bàn tay ở ngoài màn hình không tạo thanh cuộn ngang.
+       ========================================================================== */
+    .hands-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin-top: 40px;
+    }
+
+    /* Đốm sáng hào quang ở giữa khi 2 điện thoại gặp nhau */
+    .hands-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.3) 0%, rgba(99, 102, 241, 0.15) 50%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ==========================================================================
+       AI AGENT NOTE: 
+       Định vị cho từng bàn tay cầm điện thoại.
+       - position: absolute để có thể tự do dịch chuyển qua transform.
+       - will-change: transform giúp GPU tối ưu hóa mượt mà 60fps khi cuộn.
+       - filter drop-shadow tạo độ sâu cho ảnh tách nền PNG.
+       ========================================================================== */
+    .hand {
+      position: absolute;
+      width: clamp(300px, 40vw, 540px);
+      height: auto;
+      bottom: 2%;
+      will-change: transform;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.85));
+    }
+
+    /* AI AGENT NOTE: Bàn tay trái (bên cầm điện thoại Share My Card) */
+    .left-hand {
+      left: 50%;
+      /* Căn chỉnh để vị trí đích (transform: 0) nằm ngay giữa màn hình */
+      margin-left: clamp(-460px, -36vw, -260px);
+      z-index: 10;
+    }
+
+    /* AI AGENT NOTE: Bàn tay phải (bên cầm điện thoại Save Contact) */
+    .right-hand {
+      left: 50%;
+      /* Căn chỉnh để vị trí đích (transform: 0) chạm sát tay trái ở giữa */
+      margin-left: clamp(-80px, -6vw, -30px);
+      z-index: 12;
+    }
+
+    /* Điểm tiếp xúc thông điệp khi 2 tay gặp nhau */
+    .connect-signal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      box-shadow: 0 0 40px rgba(14, 165, 233, 0.4);
+      padding: 12px 24px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #38BDF8;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      backdrop-filter: blur(12px);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #38BDF8;
+      box-shadow: 0 0 10px #38BDF8;
+      animation: pulseAnim 1.5s infinite;
+    }
+
+    @keyframes pulseAnim {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Tối ưu hiển thị hoàn hảo trên điện thoại di động */
+    @media (max-width: 768px) {
+      .hands-container {
+        height: 75vh;
+      }
+      .hand {
+        width: clamp(220px, 58vw, 320px);
+        bottom: 5%;
+      }
+      .left-hand {
+        margin-left: clamp(-280px, -50vw, -180px);
+      }
+      .right-hand {
+        margin-left: clamp(-40px, -8vw, -10px);
+      }
+      .connect-signal {
+        font-size: 11px;
+        padding: 8px 16px;
+        white-space: nowrap;
+      }
+    }
+
+    /* Đoạn kết thúc sau khi cuộn qua */
+    .next-section {
+      text-align: center;
+      padding: 100px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Phần giới thiệu trước khi cuộn -->
+  <section class="intro-section">
+    <div class="badge">NFC Tap & Meet Effect</div>
+    <h1>Chạm Để Kết Nối Tức Thì</h1>
+    <p class="lead">Cuộn chuột xuống để quan sát 2 bàn tay cầm điện thoại di chuyển từ 2 cạnh màn hình xích lại gần nhau và kích hoạt chia sẻ danh bạ.</p>
+    <div class="scroll-arrow">
+      <span>Cuộn xuống</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- AI AGENT NOTE: Khu vực chứa hiệu ứng 2 bàn tay -->
+  <div class="hands-container">
+    <div class="hands-glow"></div>
+
+    <!-- AI AGENT NOTE: Ảnh tay trái (Share My Card) -->
+    <img src="../assets/images/hand-left.png" alt="Left Hand holding phone with Share Card" class="hand left-hand">
+
+    <!-- AI AGENT NOTE: Ảnh tay phải (Save Contact) -->
+    <img src="../assets/images/hand-right.png" alt="Right Hand holding phone with Save Contact" class="hand right-hand">
+
+    <!-- Thông điệp xuất hiện khi 2 máy chạm nhau -->
+    <div class="connect-signal">
+      <span class="pulse-dot"></span>
+      <span>NFC CONNECTED · CONTACT EXCHANGED</span>
+    </div>
+  </div>
+
+  <!-- Phần nối tiếp sau khi 2 tay gặp nhau -->
+  <section class="next-section">
+    <h2>Kết nối đã hoàn tất!</h2>
+    <p style="color: #94A3B8; margin-top: 10px;">Không cần cài app. Không cần quét máy ảnh. Chỉ 1 chạm là thông tin lập tức được lưu vào danh bạ.</p>
+  </section>
+
+  <!-- AI AGENT NOTE: Nhúng thư viện GSAP và ScrollTrigger từ CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    // AI AGENT NOTE: Đăng ký plugin ScrollTrigger với GSAP
+    gsap.registerPlugin(ScrollTrigger);
+
+    // AI AGENT NOTE: Tạo timeline animation liên kết với thanh cuộn chuột (scroll scrub)
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".hands-container", // Phần tử kích hoạt animation
+        start: "top 80%",            // Bắt đầu khi đỉnh container chạm 80% viewport
+        end: "bottom 40%",           // Kết thúc khi đáy container chạm 40% viewport
+        scrub: 1.2,                  // Độ mượt khi tua theo thanh cuộn (1.2s lag easing)
+      }
+    });
+
+    // AI AGENT NOTE:
+    // Di chuyển tay trái từ ngoài mép màn hình bên trái (xPercent: -150) vào tâm (xPercent: 0)
+    tl.fromTo(".left-hand", 
+      { 
+        xPercent: -160,
+        yPercent: 15,
+        rotation: -12
+      }, 
+      { 
+        xPercent: 0,
+        yPercent: 0,
+        rotation: 0,
+        ease: "power2.out" 
+      }
+    );
+
+    // AI AGENT NOTE:
+    // Di chuyển tay phải từ ngoài mép màn hình bên phải (xPercent: 160) vào tâm (xPercent: 0)
+    // Dấu "<" ở tham số thứ 3 giúp animation chạy ĐỒNG THỜI với tay trái
+    tl.fromTo(".right-hand", 
+      { 
+        xPercent: 160,
+        yPercent: 15,
+        rotation: 12
+      }, 
+      { 
+        xPercent: 0,
+        yPercent: 0,
+        rotation: 0,
+        ease: "power2.out" 
+      },
+      "<" 
+    );
+
+    // AI AGENT NOTE:
+    // Khi 2 tay gần chạm nhau, làm sáng đèn tín hiệu kết nối
+    tl.to(".connect-signal", {
+      opacity: 1,
+      scale: 1,
+      duration: 0.4,
+      ease: "back.out(1.7)"
+    }, "-=0.3");
+  </script>
+</body>
+</html>

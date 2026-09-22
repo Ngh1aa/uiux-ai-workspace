@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InstaCard — Say Goodbye to Business Cards | Digital Business Card Platform</title>
+  <meta name="description" content="Create and share your digital business card in seconds. No app download required. Share via link, QR or NFC. Join 10,000+ professionals on InstaCard.">
+  <meta property="og:title" content="InstaCard — Say Goodbye to Business Cards">
+  <meta property="og:description" content="Effortless contact exchange. Create your digital business card in 30 seconds.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 1: FLOATING PILL HEADER (CamCard Style)  -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 1: FLOATING PILL HEADER (InstaCard Brand) -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <header class="camcard-header" id="header">
+    <div class="camcard-header__container">
+      <a href="#" class="camcard-header__logo" aria-label="InstaCard Home">
+        <img src="Logo.svg" alt="Instacard" class="header__logo-img" width="132" height="23">
+      </a>
+
+      <nav class="camcard-header__nav" id="main-nav" aria-label="Main navigation">
+        <ul class="camcard-header__nav-list">
+          <li><a href="#interactive-wallet" class="camcard-nav-link">Interactive Wallet</a></li>
+          <li><a href="#benefits" class="camcard-nav-link">Benefits</a></li>
+          <li><a href="#how-it-works" class="camcard-nav-link">How it Works</a></li>
+          <li><a href="#ocr-scanner" class="camcard-nav-link">Smart Scanner</a></li>
+          <li><a href="#preview" class="camcard-nav-link">Preview</a></li>
+        </ul>
+      </nav>
+
+      <div class="camcard-header__right">
+        <a href="#footer-cta" class="camcard-login-btn">Get Early Access</a>
+      </div>
+
+      <button class="header__menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="header__menu-bar"></span>
+        <span class="header__menu-bar"></span>
+        <span class="header__menu-bar"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav class="mobile-menu__nav" aria-label="Mobile navigation">
+        <ul class="mobile-menu__list">
+          <li><a href="#interactive-wallet" class="mobile-menu__link">Interactive Wallet</a></li>
+          <li><a href="#benefits" class="mobile-menu__link">Benefits</a></li>
+          <li><a href="#how-it-works" class="mobile-menu__link">How it Works</a></li>
+          <li><a href="#ocr-scanner" class="mobile-menu__link">Smart Scanner</a></li>
+          <li><a href="#preview" class="mobile-menu__link">Preview</a></li>
+          <li><a href="#footer-cta" class="mobile-menu__link mobile-menu__link--cta">Get Early Access</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 2: HERO BANNER (InstaCard Copy & Layout) -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="camcard-hero" id="hero">
+      <!-- Background subtle dome arc -->
+      <div class="camcard-hero__dome-arc"></div>
+
+      <div class="camcard-hero__container">
+        <!-- Early access badge -->
+        <div class="hero__badge animate-on-scroll">
+          <span class="hero__badge-dot"></span>
+          Now in Early Access
+        </div>
+
+        <!-- Title -->
+        <h1 class="camcard-hero__title animate-on-scroll">
+          Say goodbye to<br>
+          <span class="hero__title-gradient">business cards</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="camcard-hero__subtitle animate-on-scroll">
+          Effortless contact exchange. Create your digital business card in 30 seconds.<br class="desktop-only">
+          Share via link, QR or NFC — no app download needed.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="camcard-hero__actions animate-on-scroll">
+          <a href="#footer-cta" class="camcard-btn camcard-btn--dark">Get Early Access</a>
+          <a href="#interactive-wallet" class="camcard-btn camcard-btn--white">Explore Wallet Demo</a>
+        </div>
+      </div>
+
+      <!-- AI AGENT NOTE: Khu vực chứa 2 bàn tay ngay dưới tiêu đề và 2 nút bấm -->
+      <div class="camcard-hands-stage" id="camcard-hands-stage">
+        <!-- Đốm sáng hào quang -->
+        <div class="camcard-hands-glow"></div>
+
+        <!-- Ảnh tay trái (Share My Card) -->
+        <img src="assets/images/hand-left.png" alt="Left Hand holding CamCard phone" class="camcard-hand camcard-hand--left" loading="eager">
+
+        <!-- Ảnh tay phải (Save Contact) -->
+        <img src="assets/images/hand-right.png" alt="Right Hand holding CamCard phone" class="camcard-hand camcard-hand--right" loading="eager">
+
+        <!-- Tín hiệu kết nối khi 2 máy chạm nhau -->
+        <div class="camcard-connect-badge" id="camcard-connect-badge">
+          <span class="pulse-dot"></span>
+          <span>NFC CONNECTED · CONTACT EXCHANGED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 2.5: PARTNER LOGO TICKER (CloudCard Style) -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="partner-ticker" aria-label="Trusted by industry innovators">
+      <div class="partner-ticker__container">
+        <p class="partner-ticker__label">POWERING CONNECTIVITY FOR TEAMS AT MODERN ENTERPRISES</p>
+        <div class="partner-ticker__slider">
+          <div class="partner-ticker__track">
+            <!-- Set 1 -->
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>STRIPE</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg><span>SHOPIFY</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a4 4 0 0 0-4 4v4h4a4 4 0 0 0 4-4 4 4 0 0 0-4-4zm0 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4h-4z"/></svg><span>FIGMA</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm16 16V5H5v14h14z"/></svg><span>LINEAR</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4v16h16V4H4zm14 14H6V6h12v12z"/></svg><span>NOTION</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 22.525H0l12-21.05 12 21.05z"/></svg><span>VERCEL</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 4.5l6.5 11.5h-13L12 6.5z"/></svg><span>SUPABASE</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg><span>SALESFORCE</span></div>
+
+            <!-- Set 2 (Duplicate for smooth infinite scroll) -->
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>STRIPE</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg><span>SHOPIFY</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a4 4 0 0 0-4 4v4h4a4 4 0 0 0 4-4 4 4 0 0 0-4-4zm0 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4h-4z"/></svg><span>FIGMA</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3V3zm16 16V5H5v14h14z"/></svg><span>LINEAR</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4v16h16V4H4zm14 14H6V6h12v12z"/></svg><span>NOTION</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 22.525H0l12-21.05 12 21.05z"/></svg><span>VERCEL</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 4.5l6.5 11.5h-13L12 6.5z"/></svg><span>SUPABASE</span></div>
+            <div class="partner-ticker__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg><span>SALESFORCE</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 2.6: INTERACTIVE NFC & DIGITAL WALLET    -->
+    <!-- (BOVAcard + CloudCard Style)                    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="interactive-wallet" id="interactive-wallet">
+      <div class="interactive-wallet__container">
+        <div class="interactive-wallet__header animate-on-scroll">
+          <div class="interactive-wallet__eyebrow-badge">
+            <span class="interactive-wallet__badge-pulse"></span>
+            Live Hardware-to-Software Demo
+          </div>
+          <h2 class="interactive-wallet__title">
+            One tap to connect.<br>
+            <span class="hero__title-gradient">Instant save to Apple & Google Wallet</span>
+          </h2>
+          <p class="interactive-wallet__subtitle">
+            Scroll down or click the steps below to experience how physical NFC transforms into an instant digital wallet profile.
+          </p>
+        </div>
+
+        <div class="wallet-stage" id="wallet-stage">
+          <!-- Left side: Interactive Step Cards -->
+          <div class="wallet-stage__controller">
+            <div class="wallet-step-card is-active" data-step="1" id="step-btn-1" role="button" tabindex="0" aria-label="Step 1: NFC Card Touches Phone">
+              <div class="wallet-step-card__header">
+                <span class="wallet-step-card__number">01</span>
+                <span class="wallet-step-card__badge">Tap Sensor</span>
+              </div>
+              <h3 class="wallet-step-card__title">NFC Card Touches Phone</h3>
+              <p class="wallet-step-card__desc">Bring the matte black InstaCard NFC close to the top of any modern smartphone. Zero battery or app needed.</p>
+              <div class="wallet-step-card__progress"><div class="wallet-step-card__progress-bar"></div></div>
+            </div>
+
+            <div class="wallet-step-card" data-step="2" id="step-btn-2" role="button" tabindex="0" aria-label="Step 2: Instant Dynamic Island Alert">
+              <div class="wallet-step-card__header">
+                <span class="wallet-step-card__number">02</span>
+                <span class="wallet-step-card__badge">Native Core NFC</span>
+              </div>
+              <h3 class="wallet-step-card__title">Instant Dynamic Island Alert</h3>
+              <p class="wallet-step-card__desc">The phone automatically detects the encrypted NFC chip and drops down an instant notification from the Dynamic Island.</p>
+              <div class="wallet-step-card__progress"><div class="wallet-step-card__progress-bar"></div></div>
+            </div>
+
+            <div class="wallet-step-card" data-step="3" id="step-btn-3" role="button" tabindex="0" aria-label="Step 3: Wallet Pass & Profile Opens">
+              <div class="wallet-step-card__header">
+                <span class="wallet-step-card__number">03</span>
+                <span class="wallet-step-card__badge">Full Digital Card</span>
+              </div>
+              <h3 class="wallet-step-card__title">Wallet Pass & Profile Opens</h3>
+              <p class="wallet-step-card__desc">Full contact card unlocks with 1-tap Save Contact, social channels, and official Add to Apple & Google Wallet passes.</p>
+              <div class="wallet-step-card__progress"><div class="wallet-step-card__progress-bar"></div></div>
+            </div>
+
+            <div class="wallet-stage__controls-hint">
+              <button class="wallet-auto-btn" id="wallet-auto-play" type="button" aria-label="Play animated demo cycle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <span id="wallet-auto-text">Play Demo Animation</span>
+              </button>
+              <span class="wallet-scroll-tip">💡 Or scroll page to control motion</span>
+            </div>
+          </div>
+
+          <!-- Right side: Phone Frame & Floating Card -->
+          <div class="wallet-stage__viewport">
+            <div class="wallet-stage__ambient-glow"></div>
+
+            <!-- Floating InstaCard NFC (Pure CSS / SVG 3D Card) -->
+            <div class="nfc-card" id="nfc-card" aria-label="InstaCard Black Edition NFC Card">
+              <div class="nfc-card__shimmer"></div>
+              <div class="nfc-card__chip">
+                <svg width="34" height="26" viewBox="0 0 34 26" fill="none">
+                  <rect x="1" y="1" width="32" height="24" rx="4" fill="url(#chip-metal)" stroke="#F59E0B" stroke-width="1.5"/>
+                  <path d="M1 9h10M1 17h10M23 9h10M23 17h10M11 1v24M23 1v24" stroke="#B45309" stroke-width="1.2"/>
+                  <circle cx="17" cy="13" r="3.5" fill="#D97706" stroke="#FEF3C7" stroke-width="0.8"/>
+                  <defs>
+                    <linearGradient id="chip-metal" x1="0" y1="0" x2="34" y2="26">
+                      <stop offset="0%" stop-color="#FDE68A"/>
+                      <stop offset="50%" stop-color="#F59E0B"/>
+                      <stop offset="100%" stop-color="#D97706"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="nfc-card__wireless">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                  <circle cx="12" cy="20" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="nfc-card__brand">
+                <span class="nfc-card__logo-text">InstaCard</span>
+                <span class="nfc-card__edition">BLACK EDITION · NFC 2.0</span>
+              </div>
+              <div class="nfc-card__holder">ALEXANDER VANCE</div>
+            </div>
+
+            <!-- NFC Contactless Waves Ripple -->
+            <div class="nfc-ripple" id="nfc-ripple">
+              <span class="nfc-ripple__ring nfc-ripple__ring--1"></span>
+              <span class="nfc-ripple__ring nfc-ripple__ring--2"></span>
+              <span class="nfc-ripple__ring nfc-ripple__ring--3"></span>
+            </div>
+
+            <!-- Smartphone Frame (iPhone 16 Pro Mockup) -->
+            <div class="phone-frame" id="phone-frame">
+              <div class="phone-frame__outer-bezel">
+                <div class="phone-frame__inner-screen">
+                  
+                  <!-- Dynamic Island -->
+                  <div class="phone-frame__dynamic-island" id="dynamic-island">
+                    <div class="dynamic-island__sensor"></div>
+                    <div class="dynamic-island__lens"></div>
+                    <div class="dynamic-island__wave-alert" id="dynamic-island-alert">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/></svg>
+                      <span>NFC Detected</span>
+                    </div>
+                  </div>
+
+                  <!-- Status Bar -->
+                  <div class="phone-frame__status-bar">
+                    <span class="phone-status__time">9:41</span>
+                    <div class="phone-status__icons">
+                      <svg width="14" height="10" viewBox="0 0 15 11" fill="currentColor"><path d="M0 8.5h2.5v2.5H0zm3.5-3h2.5v5.5h-2.5zm3.5-3h2.5v8.5H7zm3.5-2.5H13v11h-2.5z"/></svg>
+                      <svg width="14" height="10" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5C5.2 2.5 2.7 3.7 1 5.7L0 4.6C2 2.3 4.9 1 8 1s6 1.3 8 3.6l-1 1.1C13.3 3.7 10.8 2.5 8 2.5zm0 3.5c-1.8 0-3.5.8-4.6 2.1l-1-1.1c1.4-1.6 3.4-2.5 5.6-2.5s4.2.9 5.6 2.5l-1 1.1C11.5 6.8 9.8 6 8 6zm0 3.5c-.9 0-1.7.4-2.3 1L8 13l2.3-2.5c-.6-.6-1.4-1-2.3-1z"/></svg>
+                      <div class="phone-status__battery"><div class="phone-status__battery-level"></div></div>
+                    </div>
+                  </div>
+
+                  <!-- SCREEN STATE 1: Lock Screen -->
+                  <div class="screen-view screen-view--lock" id="screen-lock">
+                    <div class="lock-clock">
+                      <span class="lock-clock__date">Tuesday, September 23</span>
+                      <span class="lock-clock__time">9:41</span>
+                    </div>
+                    <div class="lock-sensor-target">
+                      <div class="lock-sensor-target__pulse"></div>
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/></svg>
+                      <span>Hold NFC card near top</span>
+                    </div>
+                  </div>
+
+                  <!-- SCREEN STATE 2: iOS Push Notification Card -->
+                  <div class="screen-notification" id="screen-notification">
+                    <div class="notification-card">
+                      <div class="notification-card__icon">
+                        <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="url(#notif-gradient)"/><path d="M10 8h12a2 2 0 012 2v12a2 2 0 01-2 2H10a2 2 0 01-2-2V10a2 2 0 012-2z" stroke="#fff" stroke-width="1.8"/><circle cx="16" cy="14" r="3" fill="#fff"/><defs><linearGradient id="notif-gradient" x1="0" y1="0" x2="32" y2="32"><stop offset="0%" stop-color="#0EA5E9"/><stop offset="100%" stop-color="#6366F1"/></linearGradient></defs></svg>
+                      </div>
+                      <div class="notification-card__content">
+                        <div class="notification-card__header">
+                          <span class="notification-card__app">INSTACARD NFC</span>
+                          <span class="notification-card__time">now</span>
+                        </div>
+                        <h4 class="notification-card__title">Alexander Vance</h4>
+                        <p class="notification-card__body">Tap to view verified business profile & add to Wallet</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- SCREEN STATE 3: Full Digital Business Card Profile + Apple/Google Wallet -->
+                  <div class="screen-view screen-view--profile" id="screen-profile">
+                    <div class="profile-card">
+                      <div class="profile-card__cover">
+                        <div class="profile-card__cover-gradient"></div>
+                        <div class="profile-card__badge-verified">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="#0EA5E9"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                          <span>Verified</span>
+                        </div>
+                      </div>
+
+                      <div class="profile-card__avatar-wrapper">
+                        <div class="profile-card__avatar">
+                          <span class="profile-card__avatar-initials">AV</span>
+                        </div>
+                      </div>
+
+                      <div class="profile-card__info">
+                        <h4 class="profile-card__name">Alexander Vance</h4>
+                        <p class="profile-card__role">VP of Strategic Growth</p>
+                        <p class="profile-card__company">InstaCard Technologies Inc.</p>
+                      </div>
+
+                      <div class="profile-card__actions">
+                        <button class="profile-btn profile-btn--primary" type="button">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                          Save Contact
+                        </button>
+                        <button class="profile-btn profile-btn--secondary" type="button">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                          Share
+                        </button>
+                      </div>
+
+                      <!-- OFFICIAL WALLET INTEGRATION BADGES (CloudCard Style) -->
+                      <div class="profile-card__wallet-group">
+                        <div class="wallet-badge wallet-badge--apple" role="button" tabindex="0" title="Add to Apple Wallet">
+                          <svg class="wallet-badge__icon" width="20" height="18" viewBox="0 0 170 170" fill="currentColor"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.08-7.77-8.08-12.24-15.01-6.19-9.66-11.05-20.67-14.58-33.02-3.53-12.35-5.3-23.78-5.3-34.31 0-14.53 3.53-26.69 10.59-36.49 7.06-9.8 16.03-14.81 26.93-15.03 4.35 0 9.28 1.15 14.78 3.46 5.51 2.3 9.4 3.52 11.68 3.65 1.8.08 5.75-.98 11.86-3.19 6.11-2.2 11.39-3.23 15.84-3.08 12.35.6 22.37 5.09 30.06 13.48-10.74 6.54-15.99 15.53-15.75 26.98.24 8.91 3.73 16.32 10.47 22.23 6.74 5.91 14.7 9.22 23.88 9.94-2.45 7.42-5.36 14.83-8.74 22.23zm-31.84-118.25c0 7.07-2.61 13.84-7.83 20.31-5.69 6.84-12.56 10.84-20.62 12-1.2-5.37-.5-11.83 2.1-19.38 2.6-7.55 6.74-13.62 12.43-18.21 4.58-3.76 9.5-6.08 14.75-6.95.83 4.12 1.17 8.2 1.17 12.23z"/></svg>
+                          <div class="wallet-badge__text">
+                            <span class="wallet-badge__sub">Add to</span>
+                            <span class="wallet-badge__main">Apple Wallet</span>
+                          </div>
+                        </div>
+
+                        <div class="wallet-badge wallet-badge--google" role="button" tabindex="0" title="Add to Google Wallet">
+                          <svg class="wallet-badge__icon" width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+                          <div class="wallet-badge__text">
+                            <span class="wallet-badge__sub">Add to</span>
+                            <span class="wallet-badge__main">Google Wallet</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="profile-card__socials">
+                        <span class="profile-social-link" title="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.65 1.65 0 0 0-1.66 1.66 1.66 1.66 0 0 0 1.66 1.66 1.66 1.66 0 0 0 1.66-1.66Z"/></svg></span>
+                        <span class="profile-social-link" title="Twitter/X"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+                        <span class="profile-social-link" title="Email"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                        <span class="profile-social-link" title="Website"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 3: SOCIAL PROOF BAR                    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="social-proof" id="social-proof">
+      <div class="social-proof__container">
+        <div class="social-proof__stats">
+          <div class="social-proof__stat animate-on-scroll">
+            <span class="social-proof__number" data-target="10000">0</span>
+            <span class="social-proof__plus">+</span>
+            <span class="social-proof__label">Professionals</span>
+          </div>
+          <div class="social-proof__divider"></div>
+          <div class="social-proof__stat animate-on-scroll">
+            <span class="social-proof__number" data-target="50">0</span>
+            <span class="social-proof__plus">+</span>
+            <span class="social-proof__label">Countries</span>
+          </div>
+          <div class="social-proof__divider"></div>
+          <div class="social-proof__stat animate-on-scroll">
+            <span class="social-proof__number" data-target="99">0</span>
+            <span class="social-proof__percent">%</span>
+            <span class="social-proof__label">Satisfaction</span>
+          </div>
+        </div>
+        <p class="social-proof__tagline animate-on-scroll">Trusted by professionals across industries worldwide</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 4: BENEFITS — 6 BULLET POINTS          -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="benefits" id="benefits">
+      <div class="benefits__container">
+        <div class="benefits__header animate-on-scroll">
+          <span class="benefits__eyebrow">Why InstaCard?</span>
+          <h2 class="benefits__title">Everything you need,<br>nothing you don't</h2>
+          <p class="benefits__subtitle">Six powerful reasons to switch from paper to digital</p>
+        </div>
+
+        <div class="benefits__grid">
+          <!-- Benefit 1: Simple -->
+          <div class="benefit-card animate-on-scroll" id="benefit-simple">
+            <div class="benefit-card__icon-wrapper benefit-card__icon-wrapper--blue">
+              <svg class="benefit-card__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+            </div>
+            <h3 class="benefit-card__title">Simple</h3>
+            <p class="benefit-card__headline">No app download required</p>
+            <p class="benefit-card__description">Recipients view your card in any browser. Zero friction, instant connection — works on every device.</p>
+          </div>
+
+          <!-- Benefit 2: Accurate -->
+          <div class="benefit-card animate-on-scroll" id="benefit-accurate">
+            <div class="benefit-card__icon-wrapper benefit-card__icon-wrapper--green">
+              <svg class="benefit-card__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <h3 class="benefit-card__title">Accurate</h3>
+            <p class="benefit-card__headline">No typos or OCR errors</p>
+            <p class="benefit-card__description">Share your exact info digitally. No more misread phone numbers or misspelled names.</p>
+          </div>
+
+          <!-- Benefit 3: Multilingual -->
+          <div class="benefit-card animate-on-scroll" id="benefit-multilingual">
+            <div class="benefit-card__icon-wrapper benefit-card__icon-wrapper--purple">
+              <svg class="benefit-card__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <h3 class="benefit-card__title">Multilingual</h3>
+            <p class="benefit-card__headline">Save cards in languages you can't type</p>
+            <p class="benefit-card__description">Japanese, Arabic, Korean — save contacts perfectly in any language without typing a character.</p>
+          </div>
+
+          <!-- Benefit 4: Integrated -->
+          <div class="benefit-card animate-on-scroll" id="benefit-integrated">
+            <div class="benefit-card__icon-wrapper benefit-card__icon-wrapper--orange">
+              <svg class="benefit-card__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 3 21 3 21 8"></polyline>
+                <line x1="4" y1="20" x2="21" y2="3"></line>
+                <polyline points="21 16 21 21 16 21"></polyline>
+                <line x1="15" y1="15" x2="21" y2="21"></line>
+                <line x1="4" y1="4" x2="9" y2="9"></line>
+              </svg>
+            </div>
+            <h3 class="benefit-card__title">Integrated</h3>
+            <p class="benefit-card__headline">Sync to Microsoft, Google or your phone</p>
+            <p class="benefit-card__description">Connect seamlessly with your existing tools. Export to Microsoft, Google contacts, or save directly to your phone.</p>
+          </div>
+
+          <!-- Benefit 5: Green -->
+          <div class="benefit-card animate-on-scroll" id="benefit-green">
+            <div class="benefit-card__icon-wrapper benefit-card__icon-wrapper--emerald">
+              <svg class="benefit-card__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22c4-4 8-7.582 8-12a8 8 0 10-16 0c0 4.418 4 8 8 12z"></path>
+                <path d="M12 11V7"></path>
+                <path d="M9.5 9l2.5 2 2.5-2"></path>
+              </svg>
+            </div>
+            <h3 class="benefit-card__title">Green</h3>
+            <p class="benefit-card__headline">Help save 173 trees a day</p>
+            <p class="benefit-card__description">Go paperless and join the movement toward sustainable networking. Every digital card saves the planet.</p>
+          </div>
+
+          <!-- Benefit 6: Customized -->
+          <div class="benefit-card animate-on-scroll" id="benefit-customized">
+            <div class="benefit-card__icon-wrapper benefit-card__icon-wrapper--pink">
+              <svg class="benefit-card__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+            </div>
+            <h3 class="benefit-card__title">Customized</h3>
+            <p class="benefit-card__headline">Use professional templates or design your own</p>
+            <p class="benefit-card__description">Make your card uniquely yours. Choose from stunning templates or design a fully custom card that matches your brand.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 5: HOW IT WORKS                        -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="how-it-works__container">
+        <div class="how-it-works__header animate-on-scroll">
+          <span class="how-it-works__eyebrow">Getting Started</span>
+          <h2 class="how-it-works__title">Ready in three simple steps</h2>
+          <p class="how-it-works__subtitle">From zero to networking hero in under a minute</p>
+        </div>
+
+        <div class="how-it-works__steps">
+          <!-- Step 1 -->
+          <div class="step-card animate-on-scroll" id="step-create">
+            <div class="step-card__number">01</div>
+            <div class="step-card__icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </div>
+            <h3 class="step-card__title">Create</h3>
+            <p class="step-card__description">Design your card in seconds with our beautiful professional templates. Add your photo, links and contact details.</p>
+            <div class="step-card__connector" aria-hidden="true">
+              <svg width="100" height="24" viewBox="0 0 100 24">
+                <path d="M0 12h90" stroke="url(#step-gradient)" stroke-width="2" stroke-dasharray="6 4"/>
+                <polygon points="90,6 100,12 90,18" fill="url(#step-gradient)"/>
+                <defs><linearGradient id="step-gradient" x1="0" y1="0" x2="100" y2="0"><stop offset="0%" stop-color="#0EA5E9"/><stop offset="100%" stop-color="#6366F1"/></linearGradient></defs>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card animate-on-scroll" id="step-share">
+            <div class="step-card__number">02</div>
+            <div class="step-card__icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+            </div>
+            <h3 class="step-card__title">Share</h3>
+            <p class="step-card__description">Send via unique link, QR code, or NFC tap. Works on any device — recipients don't need to download any app.</p>
+            <div class="step-card__connector" aria-hidden="true">
+              <svg width="100" height="24" viewBox="0 0 100 24">
+                <path d="M0 12h90" stroke="url(#step-gradient2)" stroke-width="2" stroke-dasharray="6 4"/>
+                <polygon points="90,6 100,12 90,18" fill="url(#step-gradient2)"/>
+                <defs><linearGradient id="step-gradient2" x1="0" y1="0" x2="100" y2="0"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#A855F7"/></linearGradient></defs>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card animate-on-scroll" id="step-connect">
+            <div class="step-card__number">03</div>
+            <div class="step-card__icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 010 7.75"></path>
+              </svg>
+            </div>
+            <h3 class="step-card__title">Connect</h3>
+            <p class="step-card__description">Recipients save your info instantly to their contacts. Stay connected across all your social platforms.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 5.5: SMART OCR SCANNER & MARQUEE        -->
+    <!-- (CamCard Optical Scan Automation Style)         -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="ocr-scanner" id="ocr-scanner">
+      <div class="ocr-scanner__container">
+        <div class="ocr-scanner__header animate-on-scroll">
+          <div class="ocr-scanner__eyebrow-badge">
+            <span class="ocr-scanner__badge-pulse"></span>
+            AI Optical Scanner & CRM Sync
+          </div>
+          <h2 class="ocr-scanner__title">
+            Turn every paper scan into<br>
+            <span class="hero__title-gradient">a verified sales lead</span>
+          </h2>
+          <p class="ocr-scanner__subtitle">
+            InstaCard's lightning-fast camera OCR reads 16+ languages, extracts contact details with 99.8% precision, and automatically syncs to your CRM.
+          </p>
+        </div>
+
+        <div class="ocr-scanner__viewport animate-on-scroll">
+          <!-- Background Moving Marquee of Multi-Style Business Cards -->
+          <div class="ocr-scanner__stream-container" aria-hidden="true">
+            <div class="ocr-scanner__cards-track">
+              <!-- Card 1: Elena Rostova (Creative Dark) -->
+              <div class="scannable-card scannable-card--dark">
+                <div class="scannable-card__badge-tag">DESIGN & MEDIA</div>
+                <div class="scannable-card__brand">STUDIO NINE</div>
+                <div class="scannable-card__person">
+                  <h4>Elena Rostova</h4>
+                  <p>Executive Creative Director · Berlin</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+49 30 8921 4401</span>
+                  <span>elena@studionine.de</span>
+                </div>
+              </div>
+
+              <!-- Card 2: Kenji Tanaka (Tech Minimal) -->
+              <div class="scannable-card scannable-card--tech">
+                <div class="scannable-card__badge-tag">AI SYSTEMS</div>
+                <div class="scannable-card__brand">NEXUS ROBOTICS</div>
+                <div class="scannable-card__person">
+                  <h4>Kenji Tanaka (田中 健二)</h4>
+                  <p>VP of Deep Learning · Tokyo</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+81 3 5550 1928</span>
+                  <span>kenji@nexusrobotics.jp</span>
+                </div>
+              </div>
+
+              <!-- Card 3: Sarah Jenkins (Meridian Capital) -->
+              <div class="scannable-card scannable-card--finance is-active-scan">
+                <div class="scannable-card__badge-tag">VENTURE CAPITAL</div>
+                <div class="scannable-card__brand">MERIDIAN PARTNERS</div>
+                <div class="scannable-card__person">
+                  <h4>Sarah Jenkins</h4>
+                  <p>Managing Director · New York</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+1 (212) 555-0198</span>
+                  <span>s.jenkins@meridiancap.com</span>
+                </div>
+              </div>
+
+              <!-- Card 4: Omar Al-Mansoor (Global Trade) -->
+              <div class="scannable-card scannable-card--gold">
+                <div class="scannable-card__badge-tag">GLOBAL LOGISTICS</div>
+                <div class="scannable-card__brand">AL-MANSOOR HOLDINGS</div>
+                <div class="scannable-card__person">
+                  <h4>Omar Al-Mansoor (عمر المنصور)</h4>
+                  <p>Head of Strategic Investments · Dubai</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+971 4 312 8890</span>
+                  <span>omar@almansoor.ae</span>
+                </div>
+              </div>
+
+              <!-- Card 5: Dr. David Chen (Biotech) -->
+              <div class="scannable-card scannable-card--clean">
+                <div class="scannable-card__badge-tag">LIFE SCIENCES</div>
+                <div class="scannable-card__brand">BIO-SYNTHESIS LABS</div>
+                <div class="scannable-card__person">
+                  <h4>Dr. David Chen</h4>
+                  <p>Chief Medical Officer · San Francisco</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+1 (415) 890-2341</span>
+                  <span>dchen@biosynthlabs.org</span>
+                </div>
+              </div>
+
+              <!-- DUPLICATE SET FOR SEAMLESS 100% INFINITE LOOP -->
+              <div class="scannable-card scannable-card--dark">
+                <div class="scannable-card__badge-tag">DESIGN & MEDIA</div>
+                <div class="scannable-card__brand">STUDIO NINE</div>
+                <div class="scannable-card__person">
+                  <h4>Elena Rostova</h4>
+                  <p>Executive Creative Director · Berlin</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+49 30 8921 4401</span>
+                  <span>elena@studionine.de</span>
+                </div>
+              </div>
+
+              <div class="scannable-card scannable-card--tech">
+                <div class="scannable-card__badge-tag">AI SYSTEMS</div>
+                <div class="scannable-card__brand">NEXUS ROBOTICS</div>
+                <div class="scannable-card__person">
+                  <h4>Kenji Tanaka (田中 健二)</h4>
+                  <p>VP of Deep Learning · Tokyo</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+81 3 5550 1928</span>
+                  <span>kenji@nexusrobotics.jp</span>
+                </div>
+              </div>
+
+              <div class="scannable-card scannable-card--finance is-active-scan">
+                <div class="scannable-card__badge-tag">VENTURE CAPITAL</div>
+                <div class="scannable-card__brand">MERIDIAN PARTNERS</div>
+                <div class="scannable-card__person">
+                  <h4>Sarah Jenkins</h4>
+                  <p>Managing Director · New York</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+1 (212) 555-0198</span>
+                  <span>s.jenkins@meridiancap.com</span>
+                </div>
+              </div>
+
+              <div class="scannable-card scannable-card--gold">
+                <div class="scannable-card__badge-tag">GLOBAL LOGISTICS</div>
+                <div class="scannable-card__brand">AL-MANSOOR HOLDINGS</div>
+                <div class="scannable-card__person">
+                  <h4>Omar Al-Mansoor (عمر المنصور)</h4>
+                  <p>Head of Strategic Investments · Dubai</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+971 4 312 8890</span>
+                  <span>omar@almansoor.ae</span>
+                </div>
+              </div>
+
+              <div class="scannable-card scannable-card--clean">
+                <div class="scannable-card__badge-tag">LIFE SCIENCES</div>
+                <div class="scannable-card__brand">BIO-SYNTHESIS LABS</div>
+                <div class="scannable-card__person">
+                  <h4>Dr. David Chen</h4>
+                  <p>Chief Medical Officer · San Francisco</p>
+                </div>
+                <div class="scannable-card__contact">
+                  <span>+1 (415) 890-2341</span>
+                  <span>dchen@biosynthlabs.org</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Central Scanner Device Overlay (CamCard Style Handheld Scanner) -->
+          <div class="scanner-rig">
+            <div class="scanner-device">
+              <div class="scanner-device__notch"></div>
+              <div class="scanner-camera-screen">
+                <!-- Reticle focus brackets -->
+                <div class="scanner-reticle">
+                  <span class="reticle-corner reticle-corner--tl"></span>
+                  <span class="reticle-corner reticle-corner--tr"></span>
+                  <span class="reticle-corner reticle-corner--bl"></span>
+                  <span class="reticle-corner reticle-corner--br"></span>
+                  
+                  <!-- Scanning Laser Line -->
+                  <div class="scanner-laser-beam"></div>
+
+                  <div class="scanner-target-pill">
+                    <span class="scanner-target-pulse"></span>
+                    <span>FOCUS LOCKED · 100% CONFIDENCE</span>
+                  </div>
+                </div>
+
+                <!-- Instant Captured Lead Overlay Card -->
+                <div class="scanner-lead-card">
+                  <div class="scanner-lead-card__header">
+                    <span class="scanner-lead-card__status">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      PARSED & AUTO-SAVED
+                    </span>
+                    <span class="scanner-lead-card__accuracy">99.8%</span>
+                  </div>
+                  <div class="scanner-lead-card__profile">
+                    <div class="scanner-lead-card__avatar">SJ</div>
+                    <div class="scanner-lead-card__info">
+                      <h5>Sarah Jenkins</h5>
+                      <p>Managing Director · Meridian Partners</p>
+                    </div>
+                  </div>
+                  <div class="scanner-lead-card__crm">
+                    <span class="scanner-lead-card__crm-label">Auto-Synced to:</span>
+                    <div class="scanner-lead-card__crm-tags">
+                      <span class="crm-tag crm-tag--salesforce">Salesforce</span>
+                      <span class="crm-tag crm-tag--hubspot">HubSpot</span>
+                      <span class="crm-tag crm-tag--google">Google Contacts</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 6: APP PREVIEW                         -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <section class="preview" id="preview">
+      <div class="preview__container">
+        <div class="preview__content animate-on-scroll">
+          <span class="preview__eyebrow">See It In Action</span>
+          <h2 class="preview__title">Your digital identity,<br>beautifully crafted</h2>
+          <p class="preview__description">
+            InstaCard brings together your professional profile, contact details, and social presence into one stunning, shareable card.
+          </p>
+          <ul class="preview__features">
+            <li class="preview__feature">
+              <svg class="preview__check" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.667 5L7.5 14.167 3.333 10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Professional templates for every industry
+            </li>
+            <li class="preview__feature">
+              <svg class="preview__check" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.667 5L7.5 14.167 3.333 10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              One-tap social media linking
+            </li>
+            <li class="preview__feature">
+              <svg class="preview__check" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.667 5L7.5 14.167 3.333 10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Instant QR code generation
+            </li>
+            <li class="preview__feature">
+              <svg class="preview__check" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.667 5L7.5 14.167 3.333 10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Real-time info updates
+            </li>
+          </ul>
+        </div>
+
+        <div class="preview__visual animate-on-scroll">
+          <div class="preview__phone-wrapper">
+            <div class="preview__phone-frame">
+              <img src="assets/images/app-preview.jpg" alt="InstaCard app interface showing digital business card with social links and QR code" class="preview__phone-image" width="360" height="640" loading="lazy">
+            </div>
+            <div class="preview__phone-glow"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 7: FOOTER                               -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <footer class="footer" id="footer-cta">
+    <div class="footer__cta-section">
+      <div class="footer__cta-container">
+        <h2 class="footer__cta-title animate-on-scroll">Ready to make every connection count?</h2>
+        <p class="footer__cta-subtitle animate-on-scroll">Join thousands of professionals already networking smarter.</p>
+        <form class="footer__form animate-on-scroll" id="footer-form" novalidate>
+          <div class="footer__input-wrapper">
+            <svg class="footer__input-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M2.5 6.667L9.025 11.05a1.667 1.667 0 001.95 0L17.5 6.667M4.167 15.833h11.666a1.667 1.667 0 001.667-1.666V5.833a1.667 1.667 0 00-1.667-1.666H4.167A1.667 1.667 0 002.5 5.833v8.334a1.667 1.667 0 001.667 1.666z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <input
+              type="email"
+              id="footer-email"
+              class="footer__input"
+              placeholder="Enter your email"
+              aria-label="Email address"
+              required
+            >
+          </div>
+          <button type="submit" class="footer__cta-btn" id="footer-submit">
+            Get Early Access
+            <svg class="footer__cta-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M4.167 10h11.666M10 4.167L15.833 10 10 15.833" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__bottom-container">
+        <div class="footer__brand">
+          <a href="#" class="footer__logo" aria-label="InstaCard Home">
+            <img src="Logo-white.svg" alt="Instacard" class="footer__logo-img" width="132" height="23">
+          </a>
+          <p class="footer__tagline">Your digital identity, one tap away.</p>
+        </div>
+
+        <div class="footer__links">
+          <div class="footer__link-group">
+            <h4 class="footer__link-heading">Product</h4>
+            <a href="#benefits" class="footer__link">Benefits</a>
+            <a href="#how-it-works" class="footer__link">How it Works</a>
+            <a href="#preview" class="footer__link">Preview</a>
+          </div>
+          <div class="footer__link-group">
+            <h4 class="footer__link-heading">Legal</h4>
+            <a href="#" class="footer__link">Privacy Policy</a>
+            <a href="#" class="footer__link">Terms of Service</a>
+            <a href="#" class="footer__link">Cookie Policy</a>
+          </div>
+        </div>
+
+        <div class="footer__social">
+          <a href="#" class="footer__social-link" aria-label="Facebook">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="LinkedIn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer__copyright">
+        <p>&copy; 2025 InstaCard. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- SVG Defs for logo gradient (shared) -->
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#0EA5E9"/>
+          <stop offset="100%" stop-color="#6366F1"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </footer>
+
+  <!-- AI AGENT NOTE: GSAP & ScrollTrigger libraries for scroll-driven animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

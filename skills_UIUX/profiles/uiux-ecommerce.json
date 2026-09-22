@@ -1,6 +1,0 @@
-{
-  "name": "uiux-ecommerce",
-  "description": "Interactive ecommerce/catalogue UIUX prototype with discovery, filtering, product detail and conversion flows.",
-  "extends": "prototype-uiux",
-  "skills": ["ecommerce-website"]
-}
