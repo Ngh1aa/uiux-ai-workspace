@@ -1,6 +1,0 @@
-{
-  "name": "uiux-startup",
-  "description": "Interactive startup/incubator ecosystem UIUX prototype for programs, founders, mentors, partners and applications.",
-  "extends": "prototype-uiux",
-  "skills": ["startup-and-incubator-website"]
-}

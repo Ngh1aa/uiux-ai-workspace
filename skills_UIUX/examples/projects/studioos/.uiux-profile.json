@@ -1,9 +1,0 @@
-{
-  "schema_version": 1,
-  "profile": "uiux-saas",
-  "additional_skills": [],
-  "exclude_skills": [],
-  "project": {"name": "StudioOS", "mode": "interactive-prototype", "domain": "creative-operations-software"},
-  "source_of_truth": [],
-  "constraints": ["Keep the interface minimal, usable and coherent across application states"]
-}
