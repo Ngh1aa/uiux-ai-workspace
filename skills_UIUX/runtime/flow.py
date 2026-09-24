@@ -297,13 +297,22 @@ class SkillResolver:
         if missing:
             raise ValueError(f"stage {stage['id']} references missing skills: {', '.join(missing)}")
 
+        gates: list[dict[str, Any]] = []
+        for gate in stage.get("gates", []):
+            condition = dict(gate.get("when", {}))
+            if condition and not _condition_matches(condition, context):
+                continue
+            resolved_gate = dict(gate)
+            resolved_gate.pop("when", None)
+            gates.append(resolved_gate)
+
         return ResolvedStage(
             id=str(stage["id"]),
             agent=agent,
             purpose=str(stage.get("purpose", "")),
             skills=skills,
             mandatory_skills=mandatory,
-            gates=list(stage.get("gates", [])),
+            gates=gates,
         )
 
 
