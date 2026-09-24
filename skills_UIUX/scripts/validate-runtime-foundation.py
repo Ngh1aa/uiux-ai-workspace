@@ -228,6 +228,27 @@ def main() -> int:
         if result.returncode != 0:
             errors.append("flow validator failed: " + (result.stderr.strip() or result.stdout.strip()))
 
+    if not errors:
+        cli = subprocess.run(
+            [sys.executable, "-B", str(ROOT / "scripts" / "uiux-agent.py"), "--help"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        if cli.returncode != 0:
+            errors.append("managed CLI help failed: " + (cli.stderr.strip() or cli.stdout.strip()))
+        else:
+            for flag in (
+                "--domain",
+                "--product-archetype",
+                "--validation-lane",
+                "--approval-mode",
+                "--managed-run-id",
+            ):
+                if flag not in cli.stdout:
+                    errors.append(f"managed CLI is missing documented option {flag}")
+
     try:
         node = subprocess.run(
             ["node", "--check", str(ROOT / "integrations" / "playwright" / "capture.mjs")],
@@ -294,7 +315,7 @@ def main() -> int:
         return 1
 
     print(
-        "Runtime foundation passed: goal-driven Flow OS + managed lifecycle/replanning + human approval gates + "
+        "Runtime foundation passed: goal-driven Flow OS + public managed CLI + managed lifecycle/replanning + human approval gates + "
         "enforced role defaults/handoffs + context/permissions/trace/checkpoint + adapter/discovery syntax"
     )
     print(
