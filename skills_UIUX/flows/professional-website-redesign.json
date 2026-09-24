@@ -213,11 +213,20 @@
         },
         {
           "id": "evidence-led-problem-validation",
-          "require": "for evidence-led or production-learning work, material user/problem claims distinguish direct user evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable"
+          "require": "for evidence-led or production-learning work, material user/problem claims distinguish direct user evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable",
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          }
         },
         {
           "id": "outcome-definition",
-          "require": "for production-learning work, intended user outcome, owner/business outcome, baseline or UNKNOWN, measurement source and instrumentation owner are explicit"
+          "require": "for production-learning work, intended user outcome, owner/business outcome, baseline or UNKNOWN, measurement source and instrumentation owner are explicit",
+          "when": {
+            "validation_lane": "production-learning"
+          }
         }
       ]
     },
@@ -335,7 +344,13 @@
         },
         {
           "id": "solution-validation",
-          "require": "for evidence-led or production-learning work, consequential solution hypotheses have direct validation evidence or are explicitly labeled PLANNED/UNVALIDATED before irreversible implementation"
+          "require": "for evidence-led or production-learning work, consequential solution hypotheses have direct validation evidence or are explicitly labeled PLANNED/UNVALIDATED before irreversible implementation",
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          }
         }
       ]
     },
@@ -454,7 +469,10 @@
         },
         {
           "id": "measurement-instrumentation",
-          "require": "for production-learning work, critical outcome metrics have event/data-source definitions, privacy/consent considerations, owners and verification before release"
+          "require": "for production-learning work, critical outcome metrics have event/data-source definitions, privacy/consent considerations, owners and verification before release",
+          "when": {
+            "validation_lane": "production-learning"
+          }
         }
       ]
     },
@@ -577,11 +595,17 @@
         {
           "id": "human-release-governance",
           "approval": "human",
-          "require": "for production/high-consequence releases when project policy requires it, an authorized human decision owner reviews unresolved risk, user evidence, outcome readiness and rollback/learning plan"
+          "require": "for production/high-consequence releases when project policy requires it, an authorized human decision owner reviews unresolved risk, user evidence, outcome readiness and rollback/learning plan",
+          "when": {
+            "validation_lane": "production-learning"
+          }
         },
         {
           "id": "live-learning-ready",
-          "require": "for production-learning work, post-launch signals, critical experiences, research/feedback sources, review cadence and experiment/rollout/rollback criteria are explicit"
+          "require": "for production-learning work, post-launch signals, critical experiences, research/feedback sources, review cadence and experiment/rollout/rollback criteria are explicit",
+          "when": {
+            "validation_lane": "production-learning"
+          }
         }
       ]
     }
