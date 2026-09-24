@@ -47,6 +47,21 @@ Use that reference only when there is an actual failure signal such as repeated 
 
 A recovered failure should feed back into the eval system when it reveals a stable capability/regression case. Recovery evidence is not itself proof of general reliability.
 
+
+## Outcome-grade-revise loop
+
+When the active problem is a repeated agent/pipeline delivery loop rather than a one-off UI defect, load
+[Outcome grade & revise](references/outcome-grade-revise.md).
+
+Use that reference for:
+- do → observe → fix loops tied to concrete evidence;
+- independent outcome grading against an explicit rubric;
+- CI/review recovery before merge;
+- human approval gates for irreversible or high-consequence actions;
+- prompt/skill version comparison and rollback when a new behavior regresses.
+
+Do not load it for ordinary visual critique or a single local implementation bug.
+
 ## Skill-change benchmarking
 
 When `skill-authoring-and-governance` materially changes a skill's behavior, prefer comparable runs:

@@ -20,6 +20,8 @@ MOTION_COMPONENT_INTELLIGENCE = "motion-component-intelligence"
 class GoalProfile:
     intent: str
     website_type: str
+    domain: str
+    product_archetype: str
     mode: str
     risk: str
     features: tuple[str, ...] = field(default_factory=tuple)
@@ -32,6 +34,8 @@ class GoalProfile:
         return {
             "intent": self.intent,
             "website_type": self.website_type,
+            "domain": self.domain,
+            "product_archetype": self.product_archetype,
             "mode": self.mode,
             "risk": self.risk,
             "features": list(self.features),
@@ -64,6 +68,37 @@ class GoalInterpreter:
         ("corporate", ("corporate", "company website", "business website", "doanh nghiệp", "công ty", "tập đoàn", "website giới thiệu")),
     )
 
+    DOMAINS = (
+        ("financial-services", (
+            "fintech", "financial", "banking", "bank", "payment", "payments", "settlement",
+            "treasury", "ledger", "payout", "remittance", "cross-border", "money movement",
+            "mto", "psp", "kyc", "aml", "sanctions", "reconciliation", "subledger",
+            "wealth", "brokerage", "investment", "card issuing", "acquiring"
+        )),
+    )
+
+    FINANCIAL_ARCHETYPES = (
+        ("payments-infrastructure", (
+            "settlement", "payment rail", "payment rails", "multi-rail", "payout", "remittance",
+            "cross-border", "money movement", "treasury", "clearing", "acquiring", "psp", "mto",
+            "payment orchestration", "ledger", "card issuing"
+        )),
+        ("compliance-operations", (
+            "kyc", "aml", "sanctions", "pep", "onboarding", "enhanced due diligence", "edd"
+        )),
+        ("financial-operations", (
+            "reconciliation", "reconcile", "general ledger", "gl ", "subledger", "month-end",
+            "fund admin", "fund accounting", "exception report"
+        )),
+        ("consumer-banking", (
+            "personal finance", "spending", "saving", "savings", "budget", "banking app",
+            "debit card", "credit card", "consumer bank", "money goals"
+        )),
+        ("investment-wealth", (
+            "wealth", "portfolio", "brokerage", "investment", "advisor", "asset management"
+        )),
+    )
+
     FEATURES = (
         ("search", ("search", "site search", "tìm kiếm")),
         ("forms", ("form", "contact form", "lead form", "checkout", "đăng ký", "liên hệ", "biểu mẫu", "thanh toán")),
@@ -71,6 +106,10 @@ class GoalInterpreter:
         ("dashboard", ("dashboard", "admin panel", "analytics", "bảng điều khiển", "trang quản trị")),
         ("motion", ("animation", "motion", "microinteraction", "hiệu ứng", "chuyển động")),
         ("i18n", ("multilingual", "multi-language", "bilingual", "đa ngôn ngữ", "song ngữ")),
+        ("agentic-workflow", (
+            "multi-agent", "multiagent", "subagent", "sub-agent", "agent workflow",
+            "agentic workflow", "autonomous agent", "orchestrator", "orchestration"
+        )),
     )
 
     @staticmethod
@@ -95,6 +134,21 @@ class GoalInterpreter:
                 website_type = candidate
                 evidence.append(f"website_type:{candidate}")
                 break
+
+        domain = "generic"
+        for candidate, terms in self.DOMAINS:
+            if self._contains(text, terms):
+                domain = candidate
+                evidence.append(f"domain:{candidate}")
+                break
+
+        product_archetype = "generic"
+        if domain == "financial-services":
+            for candidate, terms in self.FINANCIAL_ARCHETYPES:
+                if self._contains(text, terms):
+                    product_archetype = candidate
+                    evidence.append(f"product_archetype:{candidate}")
+                    break
 
         features: list[str] = []
         for name, terms in self.FEATURES:
@@ -124,6 +178,8 @@ class GoalInterpreter:
         return GoalProfile(
             intent=intent,
             website_type=website_type,
+            domain=domain,
+            product_archetype=product_archetype,
             mode=mode,
             risk=risk,
             features=tuple(features),
