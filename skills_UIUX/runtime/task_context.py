@@ -13,6 +13,9 @@ def _contains(text: str, terms: Iterable[str]) -> bool:
 class GoalInterpretation:
     intent: str
     website_type: str
+    domain: str
+    product_archetype: str
+    validation_lane: str
     mode: str
     risk: str
     features: list[str]
@@ -24,6 +27,9 @@ class GoalInterpretation:
         return {
             "intent": payload["intent"],
             "website_type": payload["website_type"],
+            "domain": payload["domain"],
+            "product_archetype": payload["product_archetype"],
+            "validation_lane": payload["validation_lane"],
             "mode": payload["mode"],
             "risk": payload["risk"],
             "features": payload["features"],
@@ -35,14 +41,9 @@ class GoalInterpretation:
 
 
 class GoalInterpreter:
-    """Deterministic first-pass task classifier for goal-driven Flow OS.
+    """Conservative first-pass classifier for goal-driven Flow OS."""
 
-    Explicit CLI/config values should override this interpretation. The interpreter
-    is deliberately conservative: when a domain cannot be inferred safely it uses
-    ``generic`` instead of pretending to know the business type.
-    """
-
-    WEBSITE_TYPES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    WEBSITE_TYPES = (
         ("ecommerce", ("ecommerce", "e-commerce", "online store", "shop", "store", "bán hàng", "giỏ hàng", "checkout", "sản phẩm")),
         ("education", ("school", "university", "college", "education", "academy", "trường học", "giáo dục", "tuyển sinh")),
         ("government", ("government", "public sector", "ministry", "municipal", "chính phủ", "cơ quan nhà nước", "dịch vụ công")),
@@ -57,13 +58,40 @@ class GoalInterpreter:
         ("corporate", ("corporate", "company website", "business website", "doanh nghiệp", "công ty", "tập đoàn", "website giới thiệu")),
     )
 
-    FEATURE_TERMS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    DOMAINS = (
+        ("financial-services", (
+            "fintech", "financial", "banking", "bank", "payment", "payments", "settlement",
+            "treasury", "ledger", "payout", "remittance", "cross-border", "money movement",
+            "mto", "psp", "kyc", "aml", "sanctions", "reconciliation", "subledger",
+            "wealth", "brokerage", "investment", "card issuing", "acquiring"
+        )),
+    )
+
+    FINANCIAL_ARCHETYPES = (
+        ("payments-infrastructure", (
+            "settlement", "payment rail", "payment rails", "multi-rail", "payout", "remittance",
+            "cross-border", "money movement", "treasury", "clearing", "acquiring", "psp", "mto",
+            "payment orchestration", "ledger", "card issuing"
+        )),
+        ("compliance-operations", ("kyc", "aml", "sanctions", "pep", "onboarding", "enhanced due diligence", "edd")),
+        ("financial-operations", ("reconciliation", "reconcile", "general ledger", "gl ", "subledger", "month-end", "fund admin", "fund accounting", "exception report")),
+        ("consumer-banking", ("personal finance", "spending", "saving", "savings", "budget", "banking app", "debit card", "credit card", "consumer bank", "money goals")),
+        ("investment-wealth", ("wealth", "portfolio", "brokerage", "investment", "advisor", "asset management")),
+    )
+
+    FEATURE_TERMS = (
         ("search", ("search", "site search", "tìm kiếm")),
         ("forms", ("form", "contact form", "lead form", "checkout", "đăng ký", "liên hệ", "biểu mẫu", "thanh toán")),
         ("auth", ("login", "sign in", "account", "authentication", "đăng nhập", "tài khoản", "đăng ký tài khoản")),
         ("dashboard", ("dashboard", "admin panel", "analytics", "bảng điều khiển", "trang quản trị")),
         ("motion", ("animation", "motion", "microinteraction", "hiệu ứng", "chuyển động")),
         ("i18n", ("multilingual", "multi-language", "bilingual", "đa ngôn ngữ", "song ngữ", "tiếng anh", "english version")),
+        ("agentic-workflow", ("multi-agent", "multiagent", "subagent", "sub-agent", "agent workflow", "agentic workflow", "autonomous agent", "orchestrator", "orchestration")),
+        ("user-validation", ("real users", "real user", "user research", "usability test", "usability testing", "moderated testing", "concept test", "concept testing", "user validation", "test with users", "research participants", "sponsor user", "interview users")),
+        ("outcome-measurement", ("outcome metric", "outcome metrics", "success metric", "success metrics", "kpi", "analytics instrumentation", "instrumentation", "measurement plan", "measure success", "baseline metric", "product analytics")),
+        ("stakeholder-governance", ("stakeholder", "playback", "governance", "decision owner", "approval gate", "cross-functional", "cross functional", "release approval")),
+        ("experimentation", ("a/b test", "a/b testing", "ab test", "split test", "experiment", "feature flag", "gradual rollout", "staged rollout")),
+        ("live-learning", ("post-launch", "post launch", "after launch", "live learning", "continuous research", "support tickets", "production analytics", "live monitoring", "product health")),
     )
 
     def interpret(self, goal: str) -> GoalInterpretation:
@@ -72,13 +100,11 @@ class GoalInterpreter:
 
         if _contains(normalized, ("redesign", "re-design", "thiết kế lại", "làm lại giao diện")):
             intent = "redesign"
-            evidence.append("intent:redesign")
         elif _contains(normalized, ("rebuild", "build lại", "xây lại")):
             intent = "rebuild"
-            evidence.append("intent:rebuild")
         else:
             intent = "build"
-            evidence.append("intent:build(default)")
+        evidence.append(f"intent:{intent}")
 
         website_type = "generic"
         for candidate, terms in self.WEBSITE_TYPES:
@@ -86,6 +112,21 @@ class GoalInterpreter:
                 website_type = candidate
                 evidence.append(f"website_type:{candidate}")
                 break
+
+        domain = "generic"
+        for candidate, terms in self.DOMAINS:
+            if _contains(normalized, terms):
+                domain = candidate
+                evidence.append(f"domain:{candidate}")
+                break
+
+        product_archetype = "generic"
+        if domain == "financial-services":
+            for candidate, terms in self.FINANCIAL_ARCHETYPES:
+                if _contains(normalized, terms):
+                    product_archetype = candidate
+                    evidence.append(f"product_archetype:{candidate}")
+                    break
 
         features: list[str] = []
         for feature, terms in self.FEATURE_TERMS:
@@ -95,29 +136,36 @@ class GoalInterpreter:
 
         if _contains(normalized, ("production", "go live", "deploy production", "lên production", "chạy thật")):
             mode = "production"
-            evidence.append("mode:production")
         elif _contains(normalized, ("production candidate", "staging", "pre-production", "tiền production")):
             mode = "production-candidate"
-            evidence.append("mode:production-candidate")
         elif _contains(normalized, ("mockup", "visual prototype", "prototype hình", "chỉ giao diện")):
             mode = "visual-prototype"
-            evidence.append("mode:visual-prototype")
         else:
             mode = "interactive-prototype"
-            evidence.append("mode:interactive-prototype(default)")
+        evidence.append(f"mode:{mode}")
 
         risk = "standard"
         if website_type == "government" or _contains(normalized, ("high risk", "critical", "compliance", "bảo mật cao", "tuân thủ")):
             risk = "high"
-            evidence.append("risk:high")
         elif mode == "production":
             risk = "production"
-            evidence.append("risk:production")
+        evidence.append(f"risk:{risk}")
+
+        validation_lane = "prototype"
+        lifecycle_features = {"user-validation", "outcome-measurement", "stakeholder-governance", "experimentation", "live-learning"}
+        if mode in {"production", "production-candidate"}:
+            validation_lane = "production-learning"
+        elif risk == "high" or lifecycle_features.intersection(features):
+            validation_lane = "evidence-led"
+        evidence.append(f"validation_lane:{validation_lane}")
 
         confidence = 0.95 if website_type != "generic" else 0.65
         return GoalInterpretation(
             intent=intent,
             website_type=website_type,
+            domain=domain,
+            product_archetype=product_archetype,
+            validation_lane=validation_lane,
             mode=mode,
             risk=risk,
             features=features,

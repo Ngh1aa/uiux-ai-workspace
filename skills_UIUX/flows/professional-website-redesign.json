@@ -32,6 +32,48 @@
       "conditional_skills": [
         {
           "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          },
+          "skills": [
+            "real-user-validation",
+            "user-research-planning-and-recruitment",
+            "research-synthesis-and-insight-management"
+          ]
+        },
+        {
+          "when": {
+            "validation_lane": "production-learning"
+          },
+          "skills": [
+            "outcome-metrics-and-instrumentation",
+            "human-governance-and-playbacks"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "outcome-measurement"
+            ]
+          },
+          "skills": [
+            "outcome-metrics-and-instrumentation"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "stakeholder-governance"
+            ]
+          },
+          "skills": [
+            "human-governance-and-playbacks"
+          ]
+        },
+        {
+          "when": {
             "domain": "financial-services"
           },
           "skills": [
@@ -168,6 +210,14 @@
         {
           "id": "design-input-ready",
           "require": "IA/reference evidence, vertical/page-role intelligence and preserve/change decisions are sufficient for a concrete Design Contract"
+        },
+        {
+          "id": "evidence-led-problem-validation",
+          "require": "for evidence-led or production-learning work, material user/problem claims distinguish direct user evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable"
+        },
+        {
+          "id": "outcome-definition",
+          "require": "for production-learning work, intended user outcome, owner/business outcome, baseline or UNKNOWN, measurement source and instrumentation owner are explicit"
         }
       ]
     },
@@ -184,6 +234,35 @@
         "asset-media-and-art-direction"
       ],
       "conditional_skills": [
+        {
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          },
+          "skills": [
+            "real-user-validation"
+          ]
+        },
+        {
+          "when": {
+            "validation_lane": "production-learning"
+          },
+          "skills": [
+            "human-governance-and-playbacks"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "stakeholder-governance"
+            ]
+          },
+          "skills": [
+            "human-governance-and-playbacks"
+          ]
+        },
         {
           "when": {
             "domain": "financial-services"
@@ -253,6 +332,10 @@
           "id": "design-contract",
           "approval": "human",
           "require": "page-role compositions, typography, imagery, interaction, mobile transformation, prototype signature moment when applicable, and do/don't rules are concrete before broad implementation"
+        },
+        {
+          "id": "solution-validation",
+          "require": "for evidence-led or production-learning work, consequential solution hypotheses have direct validation evidence or are explicitly labeled PLANNED/UNVALIDATED before irreversible implementation"
         }
       ]
     },
@@ -267,6 +350,25 @@
         "responsive-and-device-strategy"
       ],
       "conditional_skills": [
+        {
+          "when": {
+            "validation_lane": "production-learning"
+          },
+          "skills": [
+            "outcome-metrics-and-instrumentation"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "experimentation"
+            ]
+          },
+          "skills": [
+            "outcome-metrics-and-instrumentation",
+            "code-review-and-release"
+          ]
+        },
         {
           "when": {
             "features": [
@@ -349,6 +451,10 @@
         {
           "id": "implementation-evidence",
           "require": "material changes have acceptance criteria and focused verification; build success is not treated as rendered UX proof"
+        },
+        {
+          "id": "measurement-instrumentation",
+          "require": "for production-learning work, critical outcome metrics have event/data-source definitions, privacy/consent considerations, owners and verification before release"
         }
       ]
     },
@@ -367,6 +473,49 @@
         "media-crop-and-layout-integrity"
       ],
       "conditional_skills": [
+        {
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          },
+          "skills": [
+            "real-user-validation"
+          ]
+        },
+        {
+          "when": {
+            "validation_lane": "production-learning"
+          },
+          "skills": [
+            "outcome-metrics-and-instrumentation",
+            "human-governance-and-playbacks",
+            "post-launch-learning-loop"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "experimentation",
+              "live-learning"
+            ]
+          },
+          "skills": [
+            "post-launch-learning-loop",
+            "outcome-metrics-and-instrumentation"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "stakeholder-governance"
+            ]
+          },
+          "skills": [
+            "human-governance-and-playbacks"
+          ]
+        },
         {
           "when": {
             "features": [
@@ -424,6 +573,15 @@
         {
           "id": "truthful-completion",
           "require": "verified versus unverified areas are explicit; no production/accessibility/UX improvement claim exceeds evidence"
+        },
+        {
+          "id": "human-release-governance",
+          "approval": "human",
+          "require": "for production/high-consequence releases when project policy requires it, an authorized human decision owner reviews unresolved risk, user evidence, outcome readiness and rollback/learning plan"
+        },
+        {
+          "id": "live-learning-ready",
+          "require": "for production-learning work, post-launch signals, critical experiences, research/feedback sources, review cadence and experiment/rollout/rollback criteria are explicit"
         }
       ]
     }
