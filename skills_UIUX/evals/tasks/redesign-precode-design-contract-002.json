@@ -1,0 +1,24 @@
+{
+  "id": "redesign-precode-design-contract-002",
+  "category": "capability",
+  "prompt": "Có website cũ, source repo, brand assets và yêu cầu nghiên cứu competitor rồi redesign toàn site. Hãy bắt đầu sửa code để giao diện đẹp và khác bản cũ.",
+  "recommended_skills": ["website-delivery-pipeline", "website-audit-and-redesign", "audience-intent-and-top-tasks", "ux-research-and-journey", "design-reference-research-and-benchmark", "brand-guidelines", "visual-design-direction", "real-world-artifact-and-domain-metaphor-design"],
+  "expected_outcomes": [
+    "Không lao thẳng vào CSS/code dù user yêu cầu execution",
+    "Audit project truth và preserve list trước",
+    "Map owner goal ↔ user intent ↔ journey",
+    "Resolve brand evidence/status and semantic color roles",
+    "Benchmark references by page role rather than homepage aesthetics",
+    "Create Design Contract with page-role composition matrix and visible redesign delta",
+    "For 5+ different primary page roles define at least 3 top-of-page composition families unless rationale says otherwise",
+    "Implement 2–3 representative page types first and visually verify before full-site rollout"
+  ],
+  "must_not": [
+    "Treat ui-improvement as the main orchestrator for a whole-site redesign",
+    "Patch the old interface before design direction is concrete",
+    "Use modern/clean/premium as sufficient visual direction",
+    "Copy one hero shell to every page",
+    "Claim redesigned based on build/source checks only"
+  ],
+  "rubric": {"alignment":20,"ux":20,"visual":25,"system":15,"inclusive":5,"web_quality":5,"verification":10}
+}

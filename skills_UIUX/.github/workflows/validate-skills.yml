@@ -1,0 +1,52 @@
+name: Validate Skills
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate SKILL.md structure
+        run: python scripts/validate-skills.py
+      - name: Validate reusable visual integrity runner syntax
+        run: node --check ui-craft-and-visual-qa/scripts/elementary-visual-integrity.mjs
+      - name: Validate V5 profiles, packs, project configs, evals and resources
+        run: python scripts/validate-v2.py
+      - name: Validate agent runtime foundation
+        run: python -B scripts/validate-runtime-foundation.py
+      - name: Validate vendored design intelligence
+        run: python scripts/validate-vendor-uiux-pro-max.py
+      - name: Smoke source design-intelligence retrieval
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python -B design-intelligence-retrieval/scripts/query.py "education admissions mobile" --design-system > /tmp/design-intelligence-smoke.txt
+          test -s /tmp/design-intelligence-smoke.txt
+      - name: Dry-run core profile installer
+        run: python scripts/install-profile.py professional-core --target /tmp/skills-uiux-smoke --dry-run
+      - name: Smoke installed design-intelligence dependency
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          rm -rf /tmp/skills-uiux-installed
+          python scripts/install-profile.py professional-core --target /tmp/skills-uiux-installed
+          test -f /tmp/skills-uiux-installed/.claude/skills/design-intelligence-retrieval/SKILL.md
+          test -f /tmp/skills-uiux-installed/.claude/skills/vendor/ui-ux-pro-max/engine/scripts/search.py
+          python -B /tmp/skills-uiux-installed/.claude/skills/design-intelligence-retrieval/scripts/query.py "education admissions mobile" --design-system > /tmp/installed-design-intelligence-smoke.txt
+          test -s /tmp/installed-design-intelligence-smoke.txt
+      - name: Dry-run V5 project-aware installer with packs
+        run: python scripts/install-project.py examples/projects/qtsc --dry-run
+      - name: Smoke project bootstrap and sync template
+        run: |
+          python scripts/bootstrap-project.py /tmp/skills-uiux-bootstrap --dry-run
+          python scripts/bootstrap-project.py /tmp/skills-uiux-bootstrap
+          test -f /tmp/skills-uiux-bootstrap/.github/workflows/sync-uiux-skills.yml
+          python scripts/install-project.py /tmp/skills-uiux-bootstrap --dry-run
+      - name: Smoke V5 provider-neutral eval harness
+        run: python scripts/eval-harness.py smoke

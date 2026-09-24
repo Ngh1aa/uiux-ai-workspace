@@ -1,0 +1,22 @@
+{
+  "id": "external-uiux-005-ux-writing-high-stakes",
+  "category": "capability",
+  "prompt": "Checkout có nút 'Submit', payment failure báo 'Oops! Something went wrong 😅', và destructive saved-card removal confirm chỉ có OK/Cancel. Hãy sửa microcopy nhưng không giả định backend có undo nếu chưa có evidence.",
+  "recommended_skills": ["project-context", "ux-writing-and-microcopy", "system-reality-and-production-readiness", "interaction-patterns-and-form-ux"],
+  "expected_outcomes": [
+    "Map user task + payment/error/destructive states trước khi viết",
+    "CTA/action labels consequence-revealing phù hợp context",
+    "Loại playful tone khỏi payment failure/destructive stress state",
+    "Error dùng Avoid→Explain→Resolve với recovery thật",
+    "Không hứa undo/retry/alternative nếu system reality chưa support",
+    "Đề cập accessibility/localization implementation khi relevant"
+  ],
+  "must_not": [
+    "Tối ưu conversion bằng dark pattern",
+    "Xin lỗi/hài hước che mờ consequence",
+    "Invent backend recovery",
+    "Viết legal/payment claims không có source",
+    "Claim conversion improved không có data"
+  ],
+  "rubric": {"alignment":20,"ux":30,"visual":5,"system":20,"inclusive":10,"web_quality":5,"verification":10}
+}

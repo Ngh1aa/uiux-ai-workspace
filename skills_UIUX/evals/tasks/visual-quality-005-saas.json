@@ -1,0 +1,49 @@
+{
+  "id": "visual-quality-005-saas",
+  "category": "capability",
+  "prompt": "Build the product marketing and documentation website for NexusTelemetry based on evals/fixtures/visual-quality/saas-brief.json. Deliver 4 pages (Home, Features Deep Dive, Pricing Matrix, Docs Quickstart). Ensure technical credibility, high-density telemetry graphics, clear tier comparison, and strict avoidance of generic AI purple gradient cards.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "brand-guidelines"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "brand-guidelines",
+      "pricing-and-monetization"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "Information-dense engineering UI with terminal code blocks and crisp flamegraph SVG visualizations",
+    "Pricing matrix with billing toggle and distinct highlight for recommended tier",
+    "Developer ergonomics prioritized with legible monospace font and high code contrast",
+    "Pricing table and feature matrices reflow intelligibly on mobile without cut-off columns",
+    "Deterministic visual gates pass with no horizontal overflow and valid viewport meta"
+  ],
+  "must_not": [
+    "Overuse purple/violet gradient backgrounds and translucent glassmorphism everywhere",
+    "Present generic buzzwords without verifiable architectural diagrams or code samples",
+    "Fail mobile rendering on the wide pricing comparison table"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "monotony-detection-mobile-001",
+  "category": "capability",
+  "prompt": "Analyze a site where desktop versions have 4 distinct compositions across 6 pages, but all mobile versions collapse to the same single-column stack: hero image → text → cards vertically stacked → CTA → more text. No intentional mobile re-composition.",
+  "expected_outcomes": [
+    "Desktop diversity recognized",
+    "Mobile monotony flagged separately",
+    "Verdict notes mobile structural uniformity"
+  ],
+  "must_not": [
+    "Only analyze desktop and miss mobile monotony",
+    "Treat mobile column-stack as intentional re-composition"
+  ],
+  "rubric": {
+    "detection_accuracy": 35,
+    "viewport_awareness": 35,
+    "false_positive_rate": 30
+  },
+  "recommended_skills": [
+    "visual-redesign-delta-gate",
+    "ui-craft-and-visual-qa"
+  ]
+}

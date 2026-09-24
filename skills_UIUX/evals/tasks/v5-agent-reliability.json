@@ -1,0 +1,9 @@
+{
+  "id": "v5-agent-reliability",
+  "category": "capability",
+  "prompt": "Design an evaluation plan for an AI coding agent that redesigns a product-detail page. The team ran one beautiful successful attempt and wants to call the agent reliable.",
+  "recommended_skills": ["agent-evaluation-and-reliability", "testing-strategy", "ui-craft-and-visual-qa"],
+  "expected_outcomes": ["Task, trial and grader are distinguished", "Multiple independent trials are required for reliability", "Deterministic outcome graders and rubric/human visual graders are combined appropriately", "Capability vs regression suites are separated", "pass@k/pass^k are interpreted correctly"],
+  "must_not": ["Call one successful run reliable", "Grade only tool-call choreography", "Share state between trials", "Present estimated reliability without sample size"],
+  "rubric": {"eval_design": 30, "grader_quality": 25, "reliability_reasoning": 30, "environment_discipline": 15}
+}

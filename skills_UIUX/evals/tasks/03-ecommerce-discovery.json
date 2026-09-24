@@ -1,0 +1,9 @@
+{
+  "id": "ecommerce-discovery-001",
+  "category": "capability",
+  "prompt": "Xây website ecommerce nội thất có nhiều hệ sản phẩm. Người dùng phải tìm, lọc, so sánh và lưu sản phẩm dễ trên mobile.",
+  "recommended_skills": ["ecommerce-website", "interaction-patterns-and-form-ux", "component-driven-development"],
+  "expected_outcomes": ["Category/filter/search hierarchy hợp lý", "Filter state và clear/apply behavior rõ", "Comparison không làm mất context", "Wishlist/save state có feedback", "Product cards không overload"],
+  "must_not": ["Chỉ làm grid card + search box", "Desktop filter sidebar bê nguyên xuống mobile", "Không có zero-result state"],
+  "rubric": {"alignment":20,"ux":25,"visual":15,"system":15,"inclusive":10,"web_quality":10,"verification":5}
+}

@@ -1,0 +1,42 @@
+{
+  "id": "routing-local-002-color-token",
+  "category": "regression",
+  "prompt": "The secondary text color is using a hardcoded #666 instead of var(--text-secondary). Replace it across the services page.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "ui-improvement",
+      "design-system-and-components"
+    ],
+    "forbidden_without_trigger": [
+      "brand-guidelines",
+      "visual-design-direction",
+      "conversion-and-content",
+      "product-decision-and-stakeholder-framing"
+    ],
+    "activation_budget": {
+      "soft_max": 3
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ui-improvement",
+    "design-system-and-components"
+  ],
+  "expected_outcomes": [
+    "Hardcoded color replaced with token",
+    "Only services page affected"
+  ],
+  "must_not": [
+    "Start a brand audit",
+    "Load cross-functional product skills"
+  ],
+  "rubric": {
+    "minimality": 35,
+    "coverage": 25,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "v4-audience-top-tasks",
+  "category": "capability",
+  "prompt": "A corporate technology campus wants a new homepage but only provides stakeholder claims about 'enterprise customers'. Create an audience/top-task plan without inventing research findings and show how it should change homepage priorities.",
+  "recommended_skills": ["audience-intent-and-top-tasks", "journey-driven-content-and-layout"],
+  "expected_outcomes": ["Separates stakeholder assumptions from user evidence", "Defines behavioral audience groups and visit triggers", "Top tasks are actions/decisions rather than page labels", "Maps questions and proof to homepage implications"],
+  "must_not": ["Invent user quotes or research statistics", "Treat About Us as a top task by default", "Prioritize internal departments as navigation without rationale"],
+  "rubric": {"evidence_discipline": 30, "audience_quality": 25, "task_quality": 25, "design_implications": 20}
+}

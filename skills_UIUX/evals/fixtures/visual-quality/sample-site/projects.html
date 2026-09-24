@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Vanguard Architectural Partners</title>
+  <style>
+    :root {
+      --bg: #F4F4F2;
+      --surface: #FFFFFF;
+      --text: #1A1D20;
+      --muted: #7D8287;
+      --font-display: "Playfair Display", Georgia, serif;
+      --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.6; }
+    header { padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .logo { font-size: 1.25rem; font-weight: 700; }
+    nav a { margin-left: 2rem; color: var(--text); text-decoration: none; }
+    .archive-header { padding: 4rem; }
+    .archive-header h1 { font-family: var(--font-display); font-size: 3rem; margin-bottom: 1rem; }
+    .filter-bar { display: flex; gap: 1rem; margin-top: 2rem; }
+    .filter-btn { padding: 0.5rem 1rem; border: 1px solid var(--text); background: transparent; cursor: pointer; }
+    .filter-btn.active { background: var(--text); color: #FFF; }
+    .projects-grid { padding: 0 4rem 6rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .project-card img { width: 100%; height: 360px; object-fit: cover; }
+    .project-card h2 { font-family: var(--font-display); font-size: 1.75rem; margin-top: 1rem; }
+    footer { padding: 4rem; border-top: 1px solid rgba(0,0,0,0.08); color: var(--muted); font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Vanguard</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <div class="archive-header">
+      <h1>Selected Works (2018–2026)</h1>
+      <p>Typological exploration in civic, educational, and cultural infrastructure.</p>
+      <div class="filter-bar">
+        <button class="filter-btn active">All Typologies</button>
+        <button class="filter-btn">Mass Timber</button>
+        <button class="filter-btn">Adaptive Reuse</button>
+        <button class="filter-btn">Civic Infrastructure</button>
+      </div>
+    </div>
+    <div class="projects-grid">
+      <article class="project-card">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' fill='%23555'%3E%3Crect width='100%25' height='100%25' fill='%233a3a3a'/%3E%3Ctext x='50%25' y='50%25' fill='%23FFF' font-size='22' text-anchor='middle'%3EReykjavik Maritime Institute%3C/text%3E%3C/svg%3E" alt="Reykjavik Maritime Institute exterior">
+        <h2>Reykjavik Maritime Institute</h2>
+        <p>Civic marine research lab with passive geothermal facade venting.</p>
+      </article>
+      <article class="project-card">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' fill='%23555'%3E%3Crect width='100%25' height='100%25' fill='%234a4a4a'/%3E%3Ctext x='50%25' y='50%25' fill='%23FFF' font-size='22' text-anchor='middle'%3EZurich Canton Conservatory%3C/text%3E%3C/svg%3E" alt="Zurich Canton Conservatory vaulted ceiling">
+        <h2>Zurich Canton Conservatory</h2>
+        <p>Acoustic resonance hall constructed from salvaged Swiss alpine spruce.</p>
+      </article>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2026 Vanguard Architectural Partners. All rights reserved.</p>
+  </footer>
+</body>
+</html>

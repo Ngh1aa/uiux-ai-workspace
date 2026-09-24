@@ -1,0 +1,39 @@
+{
+  "id": "redesign-system-hero-diversity-001",
+  "category": "capability",
+  "prompt": "Tôi có website cũ và source code hiện tại. Hãy nghiên cứu website cũ, brand/brand guideline hoặc brand assets, user journey, mục tiêu của chủ website, nhu cầu người dùng và các website cùng ngành; sau đó redesign và sửa code toàn bộ website để khách hàng nhìn vào nhận ra đây là một thiết kế mới, đúng ngành và đúng brand.",
+  "recommended_skills": [
+    "website-delivery-pipeline",
+    "website-audit-and-redesign",
+    "project-context",
+    "design-reference-research-and-benchmark",
+    "visual-design-direction",
+    "real-world-artifact-and-domain-metaphor-design",
+    "design-system-and-components",
+    "frontend-implementation",
+    "responsive-and-device-strategy",
+    "ui-craft-and-visual-qa"
+  ],
+  "expected_outcomes": [
+    "Không route whole-site redesign thành preserve-style ui-improvement đơn thuần",
+    "Research owner goal, primary audiences, entry intents và journey trước khi code",
+    "Phân biệt brand evidence với inference; tạo color-role map thay vì chỉ lấy màu logo",
+    "Research production references theo role và extract principle, không clone surface",
+    "Tạo Design Contract trước implementation với page-role composition matrix",
+    "Primary page roles có first visual anchor/decision object phù hợp task",
+    "Site có nhiều page role phải có nhiều composition family; không dùng một hero shell rồi đổi copy/image",
+    "Render 2-3 representative page types sớm trước khi nhân rộng toàn site",
+    "Cross-page screenshot/montage visual QA được inspect trước handoff",
+    "Nếu không thể render/inspect actual UI thì visual result phải BLOCKED/UNVERIFIED thay vì PASS"
+  ],
+  "must_not": [
+    "Bắt đầu bằng vá CSS trên layout cũ khi visual direction chưa khóa",
+    "Dùng ui-improvement làm orchestrator chính cho whole-site redesign",
+    "Dùng cùng copy-left-image-right hoặc full-bleed hero cho mọi primary page chỉ vì dễ code",
+    "Gọi logo + primary color là đủ brand direction",
+    "Dùng build/lint/source assertions thay cho visual inspection",
+    "Đợi đến khi code toàn bộ site mới phát hiện template monotony",
+    "Báo hoàn tất visual khi chưa có rendered evidence"
+  ],
+  "rubric": {"alignment":20,"ux":20,"visual":25,"system":15,"inclusive":5,"web_quality":5,"verification":10}
+}

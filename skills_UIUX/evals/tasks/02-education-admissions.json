@@ -1,0 +1,9 @@
+{
+  "id": "education-admissions-001",
+  "category": "capability",
+  "prompt": "Thiết kế lại website trường quốc tế với mục tiêu phụ huynh hiểu chương trình nhanh và tăng đăng ký tham quan/tuyển sinh. Website phải nhiều hình, ít chữ nhưng vẫn đủ trust.",
+  "recommended_skills": ["education-website", "ux-research-and-journey", "conversion-and-content", "asset-media-and-art-direction"],
+  "expected_outcomes": ["Phân biệt parent/student journeys", "Admissions CTA hierarchy rõ", "Program/campus/proof content dễ scan", "Photography có art direction", "Không hy sinh trust vì ít chữ"],
+  "must_not": ["Dùng SaaS pricing/features layout", "Hero đẹp nhưng không có đường sang admissions", "Stock imagery không liên quan"],
+  "rubric": {"alignment":20,"ux":20,"visual":20,"system":15,"inclusive":10,"web_quality":10,"verification":5}
+}

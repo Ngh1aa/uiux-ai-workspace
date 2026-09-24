@@ -1,0 +1,9 @@
+{
+  "id": "design-intelligence-003-targeted-retry",
+  "category": "capability",
+  "prompt": "Trong dashboard React Native, chip trạng thái dài bị wrap và animation cập nhật nhanh bị giật. Dùng design intelligence nếu phù hợp; kết quả search đầu tiên bị lệch chủ đề.",
+  "recommended_skills": ["project-context", "design-intelligence-retrieval", "state-feedback-and-error-recovery", "responsive-and-device-strategy"],
+  "expected_outcomes": ["Tìm semantic UX outcome trước", "Retry đúng một lần với query hẹp hoặc domain explicit", "Sau đó dùng --stack react-native cho implementation detail", "Không assume stack ngoài project evidence", "Nếu retry vẫn không match thì ghi no verified match", "Không persist kết quả lệch", "Tách recommendation khỏi verification thực tế"],
+  "must_not": ["Lặp search vô hạn", "Dùng framework keyword thay semantic UX reasoning", "Fabricate database match", "Persist output chưa verify", "Coi recommendation là proof bug đã fix"],
+  "rubric": {"alignment":20,"ux":20,"visual":10,"system":20,"inclusive":10,"web_quality":5,"verification":15}
+}

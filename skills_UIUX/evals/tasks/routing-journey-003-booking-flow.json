@@ -1,0 +1,57 @@
+{
+  "id": "routing-journey-003-booking-flow",
+  "category": "capability",
+  "prompt": "Improve the hotel room booking flow. Users select dates, room type, add extras (breakfast, spa), provide guest details, and pay. The current flow loses users at the extras step. Mobile is 65% of traffic.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "ux-research-and-journey",
+      "interaction-patterns-and-form-ux"
+    ],
+    "allowed_skills": [
+      "complex-forms-and-wizards",
+      "responsive-and-device-strategy",
+      "state-feedback-and-error-recovery",
+      "conversion-and-content",
+      "system-reality-and-production-readiness",
+      "content-design-and-question-design"
+    ],
+    "forbidden_without_trigger": [
+      "service-blueprinting",
+      "omnichannel-experience-continuity",
+      "product-discovery",
+      "design-reference-research-and-benchmark",
+      "card-sorting-and-tree-testing"
+    ],
+    "activation_budget": {
+      "soft_max": 8
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ux-research-and-journey",
+    "interaction-patterns-and-form-ux",
+    "complex-forms-and-wizards",
+    "responsive-and-device-strategy",
+    "state-feedback-and-error-recovery",
+    "conversion-and-content",
+    "system-reality-and-production-readiness",
+    "content-design-and-question-design"
+  ],
+  "expected_outcomes": [
+    "Extras step simplified",
+    "Mobile-first approach",
+    "Clear pricing updates",
+    "Progress preserved on back navigation"
+  ],
+  "must_not": [
+    "Run full service blueprint for a focused flow improvement",
+    "Load card sorting for a sequential booking flow"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

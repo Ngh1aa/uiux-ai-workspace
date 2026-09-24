@@ -1,0 +1,6 @@
+{
+  "name": "uiux-news",
+  "description": "Interactive news/media UIUX prototype focused on content discovery, taxonomy, reading and recirculation.",
+  "extends": "prototype-uiux",
+  "skills": ["news-and-media-website"]
+}

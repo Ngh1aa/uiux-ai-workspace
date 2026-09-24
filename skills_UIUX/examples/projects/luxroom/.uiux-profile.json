@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "profile": "uiux-ecommerce",
+  "additional_skills": [],
+  "exclude_skills": [],
+  "project": {"name": "LuxRoom", "mode": "interactive-prototype", "domain": "furniture-ecommerce"},
+  "source_of_truth": [],
+  "constraints": ["Preserve the established visual style while improving ecommerce journeys"]
+}

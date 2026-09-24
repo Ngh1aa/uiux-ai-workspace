@@ -1,0 +1,14 @@
+{
+  "name": "advanced-interaction",
+  "description": "Advanced search, complex forms, system states, long workflows, enterprise data UI, account and preference UX.",
+  "skills": [
+    "site-search-and-findability",
+    "complex-forms-and-wizards",
+    "state-feedback-and-error-recovery",
+    "complex-workflow-and-progress-ux",
+    "data-tables-and-enterprise-ux",
+    "data-visualization-and-dashboard-ux",
+    "authentication-account-and-recovery-ux",
+    "personalization-and-preference-ux"
+  ]
+}

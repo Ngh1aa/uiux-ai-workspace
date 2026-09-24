@@ -1,0 +1,13 @@
+{
+  "name": "production-delivery",
+  "description": "Production-candidate and release hardening: system reality, coding guardrails, security/privacy, performance budgets, testing, release/rollback and post-release monitoring.",
+  "skills": [
+    "system-reality-and-production-readiness",
+    "ai-agent-coding-guardrails",
+    "security-and-privacy",
+    "web-quality-and-performance",
+    "testing-strategy",
+    "code-review-and-release",
+    "production-monitoring-and-maintenance"
+  ]
+}

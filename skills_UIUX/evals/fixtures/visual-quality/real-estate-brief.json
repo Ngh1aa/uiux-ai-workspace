@@ -1,0 +1,46 @@
+{
+  "website_type": "real-estate",
+  "client_name": "The Lumina Terraces",
+  "tagline": "Biophilic Luxury Residences Overlooking the Bay",
+  "brand_attributes": ["exclusive", "sculptural", "luminescent", "biophilic", "understated-luxury"],
+  "primary_audience": "High-net-worth buyers, international investors, and design-minded residential connoisseurs",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#1C1E21",
+      "secondary": "#585C63",
+      "accent": "#C9A063",
+      "surface": "#F9F8F6",
+      "surface_elevated": "#FFFFFF"
+    },
+    "typography": "High-fashion display serif (e.g. Italianno or Cormorant) paired with ultra-clean tracked-out sans (e.g. Montserrat or Neue Montreal)",
+    "composition": "Cinematic 16:9 renders, interactive floorplate level selector, neighborhood cultural curation, and discreet private preview inquiry forms"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Architectural statement & vision",
+      "key_sections": ["full-screen-architectural-film-hero", "biophilic-design-manifesto", "residence-typology-selector", "panoramic-viewpoint-slider", "private-viewing-inquiry-box"],
+      "layout_family": "luxury-cinematic"
+    },
+    {
+      "name": "residences",
+      "role": "Floor plans, specifications & finishes",
+      "key_sections": ["building-stack-level-interactive-selector", "floorplan-detail-card-with-dimensions", "material-palette-curation-slider", "request-complete-specification-cta"],
+      "layout_family": "technical-architectural"
+    },
+    {
+      "name": "amenities-neighborhood",
+      "role": "Wellness club, concierge & local cultural district",
+      "key_sections": ["private-amenities-photo-grid", "curated-neighborhood-map-with-cultural-hotspots", "concierge-service-bulletin"],
+      "layout_family": "editorial-lifestyle"
+    },
+    {
+      "name": "private-preview",
+      "role": "Exclusive consultation and showroom booking",
+      "key_sections": ["sales-gallery-address-and-hours", "buyer-profile-qualification-form", "architectural-model-preview-note"],
+      "layout_family": "concierge-inquiry"
+    }
+  ],
+  "media_guidelines": "High-end 3D architectural visualizer renders, golden hour terrace views, and physical swatch material photography (travertine, fluted oak, brass).",
+  "anti_patterns": ["Cheap neon 'Sale ends soon' countdowns", "Watermarked stock realtor headshots", "Low-resolution compressed floor plans without zoom", "Generic commercial glass office photos"]
+}

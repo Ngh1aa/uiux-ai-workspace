@@ -1,0 +1,40 @@
+{
+  "website_type": "startup",
+  "client_name": "Kinetics Frontier Robotics",
+  "tagline": "Embodied Spatial Intelligence for Autonomous Industrial Assembly",
+  "brand_attributes": ["kinetic", "frontier-tech", "relentless", "industrial-grade", "visionary"],
+  "primary_audience": "Advanced manufacturing partners, robotics engineers, and deep-tech seed/Series-A investors",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#050505",
+      "secondary": "#71717A",
+      "accent": "#F59E0B",
+      "surface": "#0C0C0E",
+      "surface_elevated": "#18181B"
+    },
+    "typography": "Chunky neo-grotesque header (e.g. Uncut Sans or Space Grotesk) with crisp utilitarian monospace technical callouts (e.g. JetBrains Mono)",
+    "composition": "High-contrast dark aesthetic, video loop of robotic micro-assembly dexterity, hardware exploded view interactive components, and investor deck download gate"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Mission announcement & hardware dexterity teaser",
+      "key_sections": ["industrial-dark-hero-with-actuator-model", "embodied-spatial-model-architecture-diagram", "assembly-benchmarks-and-tolerances-table", "founding-team-pedigree-strip", "early-access-beta-signup"],
+      "layout_family": "frontier-tech-launch"
+    },
+    {
+      "name": "technology",
+      "role": "Hardware & neural control architecture",
+      "key_sections": ["actuator-exploded-view-interactive", "reinforcement-learning-teleoperation-comparison", "published-preprints-and-whitepapers"],
+      "layout_family": "deeptech-systems"
+    },
+    {
+      "name": "careers",
+      "role": "Recruiting world-class robotics & ML researchers",
+      "key_sections": ["first-principles-culture-manifesto", "lab-facilities-photo-tour", "open-engineering-roles-with-compensation-transparency"],
+      "layout_family": "engineering-careers"
+    }
+  ],
+  "media_guidelines": "Real physical robot hardware prototypes, telemetry charts, high-frame-rate tactile manipulation video clips. Absolutely no generic AI generated plastic cyber-humans.",
+  "anti_patterns": ["Generic humanoid stock 3D renders with glowing blue brains", "Vague claims with zero torque/tolerance engineering specs", "Unstyled forms with standard browser controls"]
+}

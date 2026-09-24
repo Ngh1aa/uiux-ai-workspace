@@ -1,0 +1,9 @@
+{
+  "id": "release-evidence-001",
+  "category": "regression",
+  "prompt": "Kiểm tra website đã sẵn sàng release chưa và chỉ được nói done khi có bằng chứng.",
+  "recommended_skills": ["testing-strategy", "code-review-and-release", "web-quality-and-performance", "accessibility"],
+  "expected_outcomes": ["Phân biệt verified/unverified", "Critical paths tested", "Known issues documented", "A11y/SEO/performance checks theo scope", "Không bịa Lighthouse/test result"],
+  "must_not": ["Nói 100% responsive khi chưa inspect", "Bịa score", "Bỏ qua failing build/test"],
+  "rubric": {"alignment":10,"ux":10,"visual":5,"system":15,"inclusive":15,"web_quality":20,"verification":25}
+}

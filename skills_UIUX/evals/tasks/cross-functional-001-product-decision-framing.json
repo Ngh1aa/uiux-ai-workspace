@@ -1,0 +1,20 @@
+{
+  "id": "cross-functional-001-product-decision-framing",
+  "category": "capability",
+  "prompt": "Stakeholder nói 'hero phải cao gấp đôi và thêm chatbot vì site chưa wow'. Không có user research chứng minh hai giải pháp này. Hãy giúp xác định quyết định thiết kế đúng trước khi code.",
+  "recommended_skills": ["project-context", "product-decision-and-stakeholder-framing"],
+  "expected_outcomes": [
+    "Tách hero/chatbot khỏi problem statement và làm rõ underlying problems/outcomes",
+    "Phân biệt stakeholder assertion với user evidence",
+    "Stress-test evidence, alternate explanations và impact",
+    "Giữ final business call với authorized owner thay vì tự quyết",
+    "Chỉ handoff sang prioritization/design sau khi problem đủ rõ"
+  ],
+  "must_not": [
+    "Treat stakeholder preference as user research",
+    "Implement hero/chatbot immediately",
+    "Invent analytics or user quotes",
+    "Turn the task into a generic PM lecture"
+  ],
+  "rubric": {"alignment":30,"ux":20,"evidence":25,"system":10,"verification":15}
+}

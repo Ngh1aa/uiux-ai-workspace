@@ -1,0 +1,9 @@
+{
+  "id": "v5-service-outcome",
+  "category": "capability",
+  "prompt": "Define success metrics for a school admissions journey where the website form is followed by an admissions call, campus visit and final application. Avoid treating form submission as the final service outcome.",
+  "recommended_skills": ["journey-outcome-and-service-health", "omnichannel-experience-continuity", "analytics-and-experimentation"],
+  "expected_outcomes": ["Journey boundary includes post-form steps", "User and service outcomes are separated", "Metric definitions include data sources and meaningful denominators", "Quantitative signals are paired with research/qualitative evidence"],
+  "must_not": ["Use CTA clicks as the only success metric", "Ignore offline handoffs", "Invent targets without a baseline or rationale"],
+  "rubric": {"outcome_definition": 30, "metric_quality": 30, "journey_coverage": 25, "decision_usefulness": 15}
+}

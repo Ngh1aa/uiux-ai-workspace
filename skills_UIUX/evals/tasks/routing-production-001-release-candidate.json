@@ -1,0 +1,58 @@
+{
+  "id": "routing-production-001-release-candidate",
+  "category": "capability",
+  "prompt": "The redesigned e-commerce site is ready for production release. Review the implementation for production readiness: real vs mock integrations, security, performance budgets, accessibility, and create a release checklist with rollback plan.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "system-reality-and-production-readiness",
+      "code-review-and-release"
+    ],
+    "allowed_skills": [
+      "security-and-privacy",
+      "web-quality-and-performance",
+      "testing-strategy",
+      "accessibility",
+      "production-monitoring-and-maintenance",
+      "ai-agent-coding-guardrails"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "design-reference-research-and-benchmark",
+      "product-discovery",
+      "conversion-and-content",
+      "brand-guidelines"
+    ],
+    "activation_budget": {
+      "soft_max": 10
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "system-reality-and-production-readiness",
+    "code-review-and-release",
+    "security-and-privacy",
+    "web-quality-and-performance",
+    "testing-strategy",
+    "accessibility",
+    "production-monitoring-and-maintenance",
+    "ai-agent-coding-guardrails"
+  ],
+  "expected_outcomes": [
+    "Real vs mock integrations inventoried",
+    "Security review appropriate to scope",
+    "Performance budget defined",
+    "Release checklist with rollback",
+    "Post-deploy smoke plan"
+  ],
+  "must_not": [
+    "Load design/visual skills for a release review",
+    "Start brand or conversion analysis at release stage"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

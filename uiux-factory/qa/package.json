@@ -1,0 +1,17 @@
+{
+  "name": "uiux-factory-cloud-qa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:a11y": "playwright test tests/accessibility.spec.mjs",
+    "test:browser": "playwright test tests/browser-evidence.spec.mjs",
+    "test:media": "node scripts/media-smoke.mjs",
+    "test": "npm run test:a11y && npm run test:browser && npm run test:media"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@lhci/cli": "0.15.1",
+    "@playwright/test": "1.63.0",
+    "sharp": "0.35.4"
+  }
+}

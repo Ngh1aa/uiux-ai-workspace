@@ -1,0 +1,56 @@
+{
+  "id": "routing-production-005-post-deploy-regression",
+  "category": "capability",
+  "prompt": "After deploying the latest release, users report that the mobile navigation hamburger menu doesn't close after selecting a link, and form submissions on the contact page silently fail. Investigate, fix, and ensure we have regression coverage.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "frontend-implementation",
+      "interaction-patterns-and-form-ux",
+      "responsive-and-device-strategy",
+      "testing-strategy",
+      "state-feedback-and-error-recovery",
+      "system-reality-and-production-readiness",
+      "ai-agent-coding-guardrails"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "design-reference-research-and-benchmark",
+      "product-discovery",
+      "brand-guidelines",
+      "ux-research-and-journey",
+      "website-audit-and-redesign"
+    ],
+    "activation_budget": {
+      "soft_max": 7
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "frontend-implementation",
+    "interaction-patterns-and-form-ux",
+    "responsive-and-device-strategy",
+    "testing-strategy",
+    "state-feedback-and-error-recovery",
+    "system-reality-and-production-readiness",
+    "ai-agent-coding-guardrails"
+  ],
+  "expected_outcomes": [
+    "Both bugs identified and fixed",
+    "Root cause analysis",
+    "Regression tests added",
+    "System reality checked for form submission"
+  ],
+  "must_not": [
+    "Start a redesign for post-deploy bug fixes",
+    "Load research/brand skills for debugging"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

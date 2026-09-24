@@ -1,0 +1,58 @@
+{
+  "id": "routing-journey-004-search-filter",
+  "category": "capability",
+  "prompt": "The real estate listings page has basic filters (price, beds, baths) but users complain they can't find relevant properties. Redesign the search and filter experience with map integration, saved searches, and better result cards.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "site-search-and-findability"
+    ],
+    "allowed_skills": [
+      "interaction-patterns-and-form-ux",
+      "data-tables-and-enterprise-ux",
+      "responsive-and-device-strategy",
+      "ux-research-and-journey",
+      "ui-improvement",
+      "design-system-and-components",
+      "system-reality-and-production-readiness"
+    ],
+    "forbidden_without_trigger": [
+      "information-architecture",
+      "website-audit-and-redesign",
+      "product-discovery",
+      "analytics-and-experimentation",
+      "design-reference-research-and-benchmark"
+    ],
+    "activation_budget": {
+      "soft_max": 8
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "site-search-and-findability",
+    "interaction-patterns-and-form-ux",
+    "data-tables-and-enterprise-ux",
+    "responsive-and-device-strategy",
+    "ux-research-and-journey",
+    "ui-improvement",
+    "design-system-and-components",
+    "system-reality-and-production-readiness"
+  ],
+  "expected_outcomes": [
+    "Enhanced filter system",
+    "Map view integration considered",
+    "Result card information hierarchy improved",
+    "Saved search UX",
+    "System reality noted for map/search integration"
+  ],
+  "must_not": [
+    "Audit entire site IA for a search page improvement",
+    "Load product discovery for a known search problem"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

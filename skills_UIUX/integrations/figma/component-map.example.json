@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "project": "Example",
+  "framework": "React",
+  "mappings": [
+    {
+      "figma_component": "Button / Primary",
+      "figma_node_url": "https://www.figma.com/design/FILE?node-id=1-2",
+      "code_component": "Button",
+      "source_path": "src/components/Button.tsx",
+      "status": "CANDIDATE",
+      "notes": "Example evidence shape only; verify against real Code Connect mapping."
+    }
+  ]
+}

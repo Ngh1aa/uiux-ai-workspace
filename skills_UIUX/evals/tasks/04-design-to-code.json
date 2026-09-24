@@ -1,0 +1,9 @@
+{
+  "id": "design-to-code-001",
+  "category": "regression",
+  "prompt": "Dựa trên screenshot/reference site, implement giao diện tương tự nhưng phải dùng brand hiện tại và component system có sẵn, không copy asset/brand của reference.",
+  "recommended_skills": ["reference-analysis-and-design-to-code", "design-system-and-components", "ai-agent-coding-guardrails"],
+  "expected_outcomes": ["Extract layout/spacing/hierarchy rules", "Map sang existing tokens/components", "Tách structural inspiration khỏi protected assets/content", "Responsive inference có rationale"],
+  "must_not": ["Copy logo/text/image reference", "Hardcode hàng loạt magic values", "Tạo component duplicate khi đã có equivalent"],
+  "rubric": {"alignment":15,"ux":15,"visual":25,"system":25,"inclusive":10,"web_quality":5,"verification":5}
+}

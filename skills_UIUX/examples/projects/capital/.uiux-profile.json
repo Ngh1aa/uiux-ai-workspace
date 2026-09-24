@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "profile": "uiux-real-estate",
+  "additional_skills": ["website-audit-and-redesign"],
+  "exclude_skills": [],
+  "project": {"name": "Capital", "mode": "interactive-prototype", "domain": "office-building-leasing"},
+  "source_of_truth": [],
+  "constraints": ["Preserve the established visual language while improving leasing and inquiry journeys"]
+}

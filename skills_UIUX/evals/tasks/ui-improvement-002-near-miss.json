@@ -1,0 +1,9 @@
+{
+  "id": "ui-improvement-002-near-miss",
+  "category": "capability",
+  "prompt": "Chỉ review giao diện trang landing này và cho tôi danh sách lỗi visual, chưa được sửa code. Tôi muốn biết spacing, typography và hierarchy có vấn đề gì.",
+  "recommended_skills": ["ui-craft-and-visual-qa"],
+  "expected_outcomes": ["Nhận ra đây là audit-only chứ không phải remediation implementation", "Không route ui-improvement làm orchestrator chính", "Đưa finding visual có evidence/rationale", "Không thay đổi source hoặc dependency"],
+  "must_not": ["Sửa code khi user chỉ yêu cầu review", "Kích hoạt toàn bộ remediation pipeline", "Tự redesign brand", "Biến audit visual thành full production audit"],
+  "rubric": {"alignment":30,"ux":15,"visual":25,"system":10,"inclusive":5,"web_quality":5,"verification":10}
+}

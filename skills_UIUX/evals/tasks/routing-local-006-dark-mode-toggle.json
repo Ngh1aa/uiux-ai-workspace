@@ -1,0 +1,45 @@
+{
+  "id": "routing-local-006-dark-mode-toggle",
+  "category": "regression",
+  "prompt": "The dark mode toggle in the header stops working after page navigation in Next.js. The theme resets to light on route change. Debug and fix.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "frontend-implementation",
+      "frontend-architecture-and-refactoring",
+      "ai-agent-coding-guardrails"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "design-system-and-components",
+      "brand-guidelines",
+      "product-discovery"
+    ],
+    "activation_budget": {
+      "soft_max": 4
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "frontend-implementation",
+    "frontend-architecture-and-refactoring",
+    "ai-agent-coding-guardrails"
+  ],
+  "expected_outcomes": [
+    "Theme persists across navigation",
+    "Root cause identified (state/hydration)",
+    "Fix is framework-appropriate"
+  ],
+  "must_not": [
+    "Redesign the dark mode implementation from scratch",
+    "Load design direction for a bug fix"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

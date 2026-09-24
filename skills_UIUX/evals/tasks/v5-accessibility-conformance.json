@@ -1,0 +1,9 @@
+{
+  "id": "v5-accessibility-conformance",
+  "category": "regression",
+  "prompt": "A team wants to publish 'WCAG 2.2 AA compliant' because Lighthouse and axe show no errors on the homepage. Plan the correct release evaluation and wording.",
+  "recommended_skills": ["accessibility-conformance-evaluation", "assistive-technology-testing", "accessibility"],
+  "expected_outcomes": ["Automated checks are treated as partial evidence", "Scope and conformance target are defined", "Representative samples and complete critical processes are included", "Manual and assistive-technology evaluation is planned", "Claim language matches the evidence actually collected"],
+  "must_not": ["Declare conformance from homepage scans", "Ignore dynamic states or complete processes", "Hide unresolved failures behind a score"],
+  "rubric": {"method_fit": 35, "sampling_process": 25, "manual_at_coverage": 25, "claim_discipline": 15}
+}

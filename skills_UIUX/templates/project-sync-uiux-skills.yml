@@ -1,0 +1,25 @@
+name: Sync UI/UX Skills
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: "skills_UIUX branch, tag, or commit"
+        required: false
+        default: "main"
+        type: string
+  repository_dispatch:
+    types: [skills-uiux-release]
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    uses: Ngh1aa/skills_UIUX/.github/workflows/sync-project-skills.yml@main
+    with:
+      source_ref: ${{ inputs.source_ref || github.event.client_payload.source_ref || 'main' }}
+    secrets: inherit

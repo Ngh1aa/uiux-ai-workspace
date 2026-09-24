@@ -1,0 +1,24 @@
+{
+  "id": "v5-3-code-review-three-axes",
+  "category": "regression",
+  "prompt": "Review a PR that perfectly follows the coding conventions and passes unit tests, but implements a different CTA journey than the approved Design Contract and the rendered mobile page visibly overflows. Decide whether it is releasable and structure the review.",
+  "recommended_skills": ["code-review-and-release", "project-context", "testing-strategy", "ui-craft-and-visual-qa"],
+  "expected_outcomes": [
+    "Requirement/spec fidelity is reported separately from project/code standards",
+    "Rendered/runtime evidence is treated as a separate review axis rather than inferred from source/tests",
+    "The standards axis may pass while requirement fidelity and rendered evidence block release",
+    "The approved Design Contract outranks clean-but-wrong implementation",
+    "Visible overflow is not masked by green CI/unit tests"
+  ],
+  "must_not": [
+    "Approve because code quality and tests are green",
+    "Merge all findings into one average score that hides a failed axis",
+    "Use build success as visual QA evidence"
+  ],
+  "rubric": {
+    "spec_fidelity_axis": 30,
+    "standards_axis": 20,
+    "rendered_evidence_axis": 30,
+    "release_decision": 20
+  }
+}

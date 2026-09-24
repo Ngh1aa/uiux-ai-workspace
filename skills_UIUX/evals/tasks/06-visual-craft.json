@@ -1,0 +1,9 @@
+{
+  "id": "visual-craft-001",
+  "category": "capability",
+  "prompt": "Trang đã code đúng chức năng nhưng nhìn rất AI-generated: mọi section đều card bo tròn, spacing giống nhau, ảnh stock generic. Nâng cấp craft mà không đổi brand primary và content hierarchy.",
+  "recommended_skills": ["ui-craft-and-visual-qa", "ui-improvement", "design-reference-research-and-benchmark", "visual-design-direction", "asset-media-and-art-direction"],
+  "expected_outcomes": ["Chẩn đoán repetition/template smell", "Tạo section rhythm đa dạng nhưng coherent", "Giữ brand/content hierarchy", "Nâng art direction ảnh", "Dùng reference research khi cần nhưng không copy surface", "Không trang trí vô mục đích"],
+  "must_not": ["Thêm gradient/glass mọi nơi", "Đổi primary color trái brief", "Giải quyết bằng animation quá mức", "Copy một award/gallery reference như template mới"],
+  "rubric": {"alignment":15,"ux":15,"visual":35,"system":15,"inclusive":10,"web_quality":5,"verification":5}
+}

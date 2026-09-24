@@ -1,0 +1,9 @@
+{
+  "id": "responsive-regression-001",
+  "category": "regression",
+  "prompt": "Desktop đã đẹp nhưng mobile bị overflow, menu khó dùng, hero crop sai và CTA rớt khỏi viewport. Sửa mà không làm hỏng desktop.",
+  "recommended_skills": ["responsive-and-device-strategy", "ui-craft-and-visual-qa", "accessibility"],
+  "expected_outcomes": ["Find root cause thay vì patch media query ngẫu nhiên", "Mobile nav usable bằng touch/keyboard", "Hero art direction/crop có safe zone", "CTA priority còn rõ", "Verify representative viewport"],
+  "must_not": ["Ẩn content để hết overflow", "Dùng fixed pixel width gây regression", "Chỉ test một viewport"],
+  "rubric": {"alignment":10,"ux":20,"visual":20,"system":15,"inclusive":20,"web_quality":10,"verification":5}
+}

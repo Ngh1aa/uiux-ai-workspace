@@ -1,0 +1,48 @@
+{
+  "id": "routing-edge-002-stakeholder-solution",
+  "category": "capability",
+  "prompt": "The CEO wants us to add a chatbot to the homepage. He saw a competitor has one and thinks it will increase conversions.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "product-decision-and-stakeholder-framing"
+    ],
+    "allowed_skills": [
+      "human-ai-interaction-design",
+      "conversion-and-content",
+      "analytics-and-experimentation"
+    ],
+    "forbidden_without_trigger": [
+      "design-reference-research-and-benchmark",
+      "website-audit-and-redesign",
+      "visual-design-direction",
+      "frontend-implementation"
+    ],
+    "activation_budget": {
+      "soft_max": 5
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "product-decision-and-stakeholder-framing",
+    "human-ai-interaction-design",
+    "conversion-and-content",
+    "analytics-and-experimentation"
+  ],
+  "expected_outcomes": [
+    "Solution ask translated to underlying problem",
+    "Evidence for chatbot value questioned",
+    "Product decision framing before implementation",
+    "Not jumping to design/code"
+  ],
+  "must_not": [
+    "Skip problem framing and start designing the chatbot",
+    "Load implementation skills before the decision is validated"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 20
+  }
+}

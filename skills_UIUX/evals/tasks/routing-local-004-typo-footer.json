@@ -1,0 +1,41 @@
+{
+  "id": "routing-local-004-typo-footer",
+  "category": "regression",
+  "prompt": "There's a typo in the footer: 'Copyrigth 2026' should be 'Copyright 2026'. Fix it.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "frontend-implementation"
+    ],
+    "forbidden_without_trigger": [
+      "ux-writing-and-microcopy",
+      "content-design-and-question-design",
+      "seo-strategy",
+      "brand-guidelines",
+      "conversion-and-content"
+    ],
+    "activation_budget": {
+      "soft_max": 2
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "frontend-implementation"
+  ],
+  "expected_outcomes": [
+    "Typo fixed",
+    "No other changes"
+  ],
+  "must_not": [
+    "Load content strategy for a typo fix",
+    "Run SEO audit for a spelling error"
+  ],
+  "rubric": {
+    "minimality": 40,
+    "coverage": 20,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

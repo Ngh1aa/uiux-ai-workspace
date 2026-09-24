@@ -1,0 +1,11 @@
+{
+  "name": "redesign",
+  "description": "Audit and redesign an existing website while preserving valuable content, URLs and behavior.",
+  "extends": "professional-core",
+  "skills": [
+    "website-audit-and-redesign",
+    "reference-analysis-and-design-to-code",
+    "asset-media-and-art-direction",
+    "production-monitoring-and-maintenance"
+  ]
+}

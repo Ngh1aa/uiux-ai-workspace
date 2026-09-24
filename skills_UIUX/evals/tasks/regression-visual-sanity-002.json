@@ -1,0 +1,28 @@
+{
+  "id": "visual-sanity-regression-002",
+  "category": "regression",
+  "prompt": "Một website có CI visual QA xanh nhưng user vẫn thấy: một số link/button hover thành chữ sáng trên nền sáng, text ở vài summary/footer gần như trắng trên nền trắng, và nhiều hero/feature image cắt người vô tội vạ. Test hiện tại chỉ audit vài class button/footer, không seed Cart/Order nên CTA conditional không render, và coi object-position: top là đủ để xác nhận crop. Hãy sửa project và harden quy trình để loại false-green này.",
+  "recommended_skills": ["ui-improvement", "ui-craft-and-visual-qa", "asset-media-and-art-direction", "testing-strategy", "visual-regression-and-design-drift", "skill-authoring-and-governance"],
+  "expected_outcomes": [
+    "Xác định false green do coverage matrix thiếu data-state/interaction-state chứ không chỉ do CSS value sai",
+    "Seed/populate deterministic Cart/Order/other conditional states để CTA thực sự render trước state audit",
+    "Audit semantic rendered interactive elements thay vì chỉ một whitelist class nhỏ",
+    "Thêm all-visible catastrophic foreground/surface scan ngoài variable-media contexts để bắt text bị quên selector",
+    "Inspect winning computed cascade/specificity cho default/hover/focus và sửa shared semantic owner",
+    "Map shared owner tới all affected routes/templates và declared pressure viewports",
+    "Coi primary/focal object-fit: cover là unsafe by default nếu chưa có verified crop contract",
+    "Dùng contain/responsive art direction/alternate crop/layout khi asset không sống được qua required ratios",
+    "Recapture và mở/inspect known defect states sau remediation",
+    "Cập nhật project regression + owning skill/checklist/testing guidance + regression eval trước khi PASS"
+  ],
+  "must_not": [
+    "PASS khi broken CTA chưa từng render trong test",
+    "Giới hạn state audit vào một vài class button/footer mà không chứng minh completeness",
+    "Coi source CSS declaration là rendered evidence",
+    "Coi object-position top/center/percentage là focal proof",
+    "Cho phép primary human/focal cover crop không có crop contract/evidence",
+    "Dùng screenshot existence thay cho mở/inspect screenshot",
+    "Tuyên bố đảm bảo tuyệt đối không tái diễn thay vì nói guard đã được exercise"
+  ],
+  "rubric": {"alignment":10,"ux":10,"visual":25,"system":25,"inclusive":5,"web_quality":5,"verification":20}
+}

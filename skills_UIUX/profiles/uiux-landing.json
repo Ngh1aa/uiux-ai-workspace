@@ -1,0 +1,6 @@
+{
+  "name": "uiux-landing",
+  "description": "High-fidelity landing-page UIUX prototype focused on one audience, one offer and a clear conversion path.",
+  "extends": "prototype-uiux",
+  "skills": ["landing-page"]
+}

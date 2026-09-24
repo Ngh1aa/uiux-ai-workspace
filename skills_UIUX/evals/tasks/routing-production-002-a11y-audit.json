@@ -1,0 +1,57 @@
+{
+  "id": "routing-production-002-a11y-audit",
+  "category": "capability",
+  "prompt": "Conduct a WCAG 2.2 AA conformance evaluation of this government services website. The site has 12 page types including forms, data tables, document downloads, and an interactive map. Provide a scoped evaluation report.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "accessibility-conformance-evaluation",
+      "accessibility"
+    ],
+    "allowed_skills": [
+      "assistive-technology-testing",
+      "inclusive-design-and-cognitive-accessibility",
+      "data-tables-and-enterprise-ux",
+      "complex-forms-and-wizards",
+      "interaction-patterns-and-form-ux"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "brand-guidelines",
+      "conversion-and-content",
+      "product-discovery",
+      "design-reference-research-and-benchmark",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": {
+      "soft_max": 8
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "accessibility-conformance-evaluation",
+    "accessibility",
+    "assistive-technology-testing",
+    "inclusive-design-and-cognitive-accessibility",
+    "data-tables-and-enterprise-ux",
+    "complex-forms-and-wizards",
+    "interaction-patterns-and-form-ux"
+  ],
+  "expected_outcomes": [
+    "WCAG-EM scoped evaluation",
+    "Representative sample selected",
+    "Manual + automated methods used",
+    "Limitations documented",
+    "Not claimed as full conformance if partial"
+  ],
+  "must_not": [
+    "Load visual design for a compliance audit",
+    "Load marketing/conversion for accessibility work"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "v5-3-external-source-adoption",
+  "category": "regression",
+  "prompt": "You find a popular external repository with a 300-line agent skill that overlaps heavily with an existing local skill. The upstream repo is MIT and has useful error-recovery ideas. Decide how to integrate it into skills_UIUX.",
+  "recommended_skills": ["skill-authoring-and-governance", "adaptive-skill-routing-and-context-budget", "project-context"],
+  "expected_outcomes": [
+    "The existing catalog/owner is checked before creating a new skill",
+    "Upstream source, immutable ref and license are recorded",
+    "Useful ideas are classified ADOPT/ADAPT/REJECT against local project/runtime rules",
+    "High-overlap content extends/refactors the existing owner instead of creating a duplicate orchestrator",
+    "Representative evals and structural validation are required before release",
+    "Popularity is not treated as evidence that the workflow is correct for this library"
+  ],
+  "must_not": [
+    "Bulk-copy the upstream repository because it is popular",
+    "Create a duplicate local skill without an ownership/overlap check",
+    "Fetch mutable upstream main during normal consumer execution",
+    "Skip attribution or license review"
+  ],
+  "rubric": {
+    "ownership_and_overlap": 30,
+    "provenance_and_license": 25,
+    "adaptation_quality": 25,
+    "verification_and_context_cost": 20
+  }
+}

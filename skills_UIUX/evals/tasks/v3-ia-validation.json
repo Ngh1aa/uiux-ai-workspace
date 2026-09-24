@@ -1,0 +1,9 @@
+{
+  "id": "v3-ia-validation",
+  "category": "capability",
+  "prompt": "A corporate site has confusing navigation. Propose a card-sorting and tree-testing plan that distinguishes generative IA research from evaluative findability testing.",
+  "recommended_skills": ["card-sorting-and-tree-testing", "information-architecture"],
+  "expected_outcomes": ["Card sorting and tree testing have different roles", "Tasks avoid leaking menu labels", "Critical destinations are prioritized", "Business taxonomy is tested against user language"],
+  "must_not": ["Treat card-sort output as final sitemap", "Evaluate visual design with tree testing"],
+  "rubric": {"method_fit": 30, "task_quality": 25, "analysis_plan": 25, "decision_usefulness": 20}
+}

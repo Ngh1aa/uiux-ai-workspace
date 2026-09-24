@@ -1,0 +1,50 @@
+{
+  "id": "visual-quality-001-corporate",
+  "category": "capability",
+  "prompt": "Design and build a multi-page website for Vanguard Architectural Partners based on the brand brief in evals/fixtures/visual-quality/corporate-brief.json. Deliver at least 4 distinct page roles (Home, Projects, Project Detail, Contact). Ensure the design avoids generic SaaS tropes, maintains strong visual hierarchy, uses art-directed architectural imagery, and satisfies evals/visual-quality-rubric.md.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "brand-guidelines"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "brand-guidelines"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation",
+      "ux-research-and-journey"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "At least 4 distinct page roles with distinct composition families",
+    "Editorial serif typography hierarchy paired with technical sans body",
+    "Architectural imagery with realistic shadows and authentic textures",
+    "Mobile layout demonstrates intentional re-composition rather than pure column stacking",
+    "Deterministic visual gates pass with no horizontal overflow and valid viewport meta"
+  ],
+  "must_not": [
+    "Use identical hero + 3 cards + CTA silhouette across all pages",
+    "Use generic purple SaaS gradients or heavy glassmorphism cards",
+    "Include stock photos with visible watermarks or unrelated corporate handshakes",
+    "Leave text over bright unbacked images illegible"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

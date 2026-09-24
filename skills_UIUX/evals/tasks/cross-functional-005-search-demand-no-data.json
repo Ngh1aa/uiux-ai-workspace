@@ -1,0 +1,20 @@
+{
+  "id": "cross-functional-005-search-demand-no-data",
+  "category": "capability",
+  "prompt": "Hãy lập content brief SEO cho chủ đề mới. Tool keyword hiện không trả volume và không có Search Console property được kết nối.",
+  "recommended_skills": ["search-demand-and-content-briefing"],
+  "expected_outcomes": [
+    "Ghi volume/metrics là NO_DATA hoặc UNKNOWN thay vì ước lượng",
+    "Không tuyên bố Search Console/tool được kết nối",
+    "Vẫn có thể xây intent/question map bằng evidence phi-định-lượng nếu được label",
+    "Brief nêu rõ evidence gap và handoff technical SEO riêng",
+    "Không biến keyword guess thành demand fact"
+  ],
+  "must_not": [
+    "Fabricate keyword volume",
+    "Quote remembered industry numbers as current source",
+    "Claim SEO potential is validated without data",
+    "Mix technical SEO implementation into the research brief unnecessarily"
+  ],
+  "rubric": {"evidence":35,"search":25,"content":20,"alignment":10,"verification":10}
+}

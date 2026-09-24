@@ -1,0 +1,9 @@
+{
+  "id": "ui-improvement-003-complex",
+  "category": "capability",
+  "prompt": "Interactive prototype có 18 page. UI bị drift sau nhiều vòng AI sửa: cùng loại button có 4 kiểu, spacing/card khác nhau giữa page, mobile overflow ở vài template, nhưng backend/CRM/analytics chưa nằm trong scope. Hãy sửa toàn bộ giao diện theo brand hiện tại mà không làm lại IA hay content.",
+  "recommended_skills": ["ui-improvement", "design-system-and-components", "ui-craft-and-visual-qa", "frontend-implementation", "responsive-and-device-strategy", "visual-regression-and-design-drift"],
+  "expected_outcomes": ["Tôn trọng interactive-prototype mode và không penalize production gaps", "Nhóm issue theo shared owner/template thay vì patch 18 page riêng", "Chuẩn hóa component/token chỉ khi semantics giống nhau", "Sửa responsive overflow mà không hide content", "Preserve IA/content/brand", "Verify representative templates/viewports và regression surface"],
+  "must_not": ["Đề xuất CRM/backend như P0/P1 UI issue", "Rewrite toàn codebase", "Tạo thêm one-off CSS để chữa từng page", "Đổi IA/content ngoài scope", "Tự accept visual baseline mới không review"],
+  "rubric": {"alignment":20,"ux":15,"visual":20,"system":25,"inclusive":5,"web_quality":5,"verification":10}
+}

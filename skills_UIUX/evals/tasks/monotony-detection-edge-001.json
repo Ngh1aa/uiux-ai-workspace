@@ -1,0 +1,23 @@
+{
+  "id": "monotony-detection-edge-001",
+  "category": "capability",
+  "prompt": "Analyze 5 pages that share identical navigation and footer but have completely different body compositions: landing page with video hero, documentation page with sidebar, pricing with comparison table, blog with article list, about with team grid.",
+  "expected_outcomes": [
+    "Shared nav/footer excluded from monotony analysis",
+    "Body compositions recognized as diverse",
+    "Verdict is OK"
+  ],
+  "must_not": [
+    "Count shared nav/footer as monotony evidence",
+    "Report diverse body sections as template repetition"
+  ],
+  "rubric": {
+    "detection_accuracy": 40,
+    "family_counting": 30,
+    "false_positive_rate": 30
+  },
+  "recommended_skills": [
+    "visual-redesign-delta-gate",
+    "ui-craft-and-visual-qa"
+  ]
+}

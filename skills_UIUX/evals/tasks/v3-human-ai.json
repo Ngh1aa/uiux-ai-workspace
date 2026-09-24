@@ -1,0 +1,9 @@
+{
+  "id": "v3-human-ai",
+  "category": "capability",
+  "prompt": "Design the UX contract for an AI assistant that drafts website copy. Cover capability boundaries, uncertainty, feedback/correction, undo and graceful failure.",
+  "recommended_skills": ["human-ai-interaction-design", "content-design-and-question-design", "state-feedback-and-error-recovery"],
+  "expected_outcomes": ["User understands what AI can and cannot do", "Correction and undo exist", "Failure/uncertainty states are designed", "Feedback effect is explained", "Claims do not overstate reliability"],
+  "must_not": ["Present probabilistic output as guaranteed fact", "Remove human control over publishing", "Hide material data-use behavior"],
+  "rubric": {"mental_model": 25, "control": 25, "failure_design": 25, "transparency": 25}
+}

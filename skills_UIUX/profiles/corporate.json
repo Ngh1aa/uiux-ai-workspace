@@ -1,0 +1,11 @@
+{
+  "name": "corporate",
+  "description": "Corporate and B2B websites focused on credibility, capabilities, proof and qualified lead generation.",
+  "extends": "professional-core",
+  "skills": [
+    "corporate-website",
+    "asset-media-and-art-direction",
+    "content-governance-and-cms",
+    "localization-and-i18n"
+  ]
+}

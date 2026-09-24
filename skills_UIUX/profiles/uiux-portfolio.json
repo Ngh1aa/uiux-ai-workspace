@@ -1,0 +1,6 @@
+{
+  "name": "uiux-portfolio",
+  "description": "Interactive portfolio/studio UIUX prototype focused on work presentation, credibility and inquiry conversion.",
+  "extends": "prototype-uiux",
+  "skills": ["portfolio-website"]
+}

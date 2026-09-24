@@ -1,0 +1,46 @@
+{
+  "website_type": "hospitality",
+  "client_name": "Sylvan Haven Eco-Resort & Spa",
+  "tagline": "Sanctuary in the Ancient Cedars of the Pacific Northwest",
+  "brand_attributes": ["rejuvenating", "luxurious", "organic", "tranquil", "immersive"],
+  "primary_audience": "Urban wellness travelers, couples seeking secluded retreats, and sustainable luxury vacationers",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#1E2B24",
+      "secondary": "#5C6B5E",
+      "accent": "#B87333",
+      "surface": "#F7F5F0",
+      "surface_elevated": "#EDEAE2"
+    },
+    "typography": "Lyrical display serif (e.g. Ogg or Cormorant) paired with light, balanced geometric sans (e.g. Tenor Sans or Inter)",
+    "composition": "Cinematic visual storytelling, full-height atmospheric vignettes, seamless date-picker reservation integration, and sensory detail cards"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Resort introduction & mood setting",
+      "key_sections": ["cinematic-hero-with-booking-bar", "sensory-pillars-story", "featured-cabins-carousel-with-floorplans", "culinary-farm-to-table-spotlight", "guest-accolades-slider"],
+      "layout_family": "cinematic-storytelling"
+    },
+    {
+      "name": "accommodations",
+      "role": "Lodging selection & amenity comparison",
+      "key_sections": ["cabin-typology-filter", "immersive-cabin-listing-with-amenity-pills", "panoramic-view-preview-gallery", "direct-rate-guarantee-banner"],
+      "layout_family": "immersive-directory"
+    },
+    {
+      "name": "wellness-dining",
+      "role": "Spa treatments & organic dining",
+      "key_sections": ["botanical-spa-treatment-menu", "seasonal-tasting-menu-preview", "foraging-experience-story"],
+      "layout_family": "sensory-editorial"
+    },
+    {
+      "name": "booking",
+      "role": "Multi-step room reservation & package add-ons",
+      "key_sections": ["dates-and-guests-picker", "room-selection-cards", "wellness-addons-checkbox-list", "transparent-tax-and-fees-summary"],
+      "layout_family": "transactional-workflow"
+    }
+  ],
+  "media_guidelines": "Warm, mist-filled golden hour photography of forest foliage, cedar hot tubs, and artisan plated dishes. Natural lighting only.",
+  "anti_patterns": ["Corporate blue accents", "Cold harsh white surfaces", "Stock photos of unrelated tropical beaches", "Hidden resort fees in fine print"]
+}

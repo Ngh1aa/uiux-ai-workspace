@@ -1,0 +1,46 @@
+{
+  "website_type": "saas",
+  "client_name": "NexusTelemetry",
+  "tagline": "Continuous Distributed Tracing & Autonomous Root-Cause Diagnostics",
+  "brand_attributes": ["high-velocity", "dense-yet-clear", "developer-native", "reliable", "uncompromising"],
+  "primary_audience": "Staff Site Reliability Engineers, Platform Architects, and VP Infrastructure",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#0F172A",
+      "secondary": "#475569",
+      "accent": "#06B6D4",
+      "surface": "#F8FAFC",
+      "surface_elevated": "#FFFFFF"
+    },
+    "typography": "Modern ergonomic sans-serif (e.g. Plus Jakarta Sans or Geist) paired with tabular monospace numbers and code snippets (e.g. Geist Mono)",
+    "composition": "Information-dense layout with live interactive latency visualizers, side-by-side terminal output, and clear architectural diagrams"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Product thesis & engineering proof",
+      "key_sections": ["developer-first-hero-with-live-flamegraph", "flamegraph-vs-traditional-traces-comparison", "enterprise-scale-throughput-metrics", "customer-engineering-quotes-with-tech-stacks", "get-started-terminal-command-cta"],
+      "layout_family": "developer-interactive"
+    },
+    {
+      "name": "features",
+      "role": "Deep dive into eBPF tracing & AI root-cause",
+      "key_sections": ["architecture-interactive-explainer", "feature-tab-deep-dives", "compliance-and-security-matrix", "integration-ecosystem-logo-grid"],
+      "layout_family": "feature-tabbed-deepdive"
+    },
+    {
+      "name": "pricing",
+      "role": "Transparent tier selection & ROI calculator",
+      "key_sections": ["monthly-annual-billing-toggle", "three-tier-comparison-cards-with-recommended-highlight", "detailed-feature-entitlement-table", "faq-accordion-with-search"],
+      "layout_family": "decision-pricing-matrix"
+    },
+    {
+      "name": "docs-landing",
+      "role": "Fast onboarding to SDK installation",
+      "key_sections": ["quickstart-snippet-switcher", "language-sdk-grid", "popular-guides-list"],
+      "layout_family": "documentation-hub"
+    }
+  ],
+  "media_guidelines": "Accurate terminal screens, SVG flamegraphs, structured network topologies. No fake stock 3D robots or floating glass spheres.",
+  "anti_patterns": ["Generic 'All-in-one AI platform' buzzwords without technical specifics", "Low-contrast grey text in dark code blocks", "Identical card silhouettes for all features"]
+}

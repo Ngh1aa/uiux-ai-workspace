@@ -1,0 +1,44 @@
+name: Flow OS Validate
+
+on:
+  push:
+    branches:
+      - main
+      - feat/declarative-flow-agent-os
+      - feat/provider-managed-agent-loop
+  pull_request:
+    paths:
+      - 'flows/**'
+      - 'runtime/**'
+      - 'schemas/flow.schema.json'
+      - 'schemas/provider-stage-response.schema.json'
+      - 'scripts/uiux-agent.py'
+      - 'scripts/validate-flows.py'
+      - 'scripts/validate-runtime-foundation.py'
+      - 'scripts/validate-provider-runtime.py'
+      - '.github/workflows/flow-os-validate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-flow-os:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate declarative flows
+        run: python -B scripts/validate-flows.py
+
+      - name: Validate runtime foundation
+        run: python -B scripts/validate-runtime-foundation.py
+
+      - name: Validate provider-managed runtime
+        run: python -B scripts/validate-provider-runtime.py
