@@ -32,6 +32,15 @@
       "conditional_skills": [
         {
           "when": {
+            "domain": "financial-services"
+          },
+          "skills": [
+            "financial-product-intelligence",
+            "trust-credibility-and-transparency"
+          ]
+        },
+        {
+          "when": {
             "website_type": "corporate"
           },
           "skills": [
@@ -177,6 +186,15 @@
       "conditional_skills": [
         {
           "when": {
+            "domain": "financial-services"
+          },
+          "skills": [
+            "financial-product-intelligence",
+            "trust-credibility-and-transparency"
+          ]
+        },
+        {
+          "when": {
             "website_type": [
               "ecommerce",
               "saas"
@@ -249,6 +267,16 @@
         "responsive-and-device-strategy"
       ],
       "conditional_skills": [
+        {
+          "when": {
+            "features": [
+              "agentic-workflow"
+            ]
+          },
+          "skills": [
+            "specialist-agent-orchestration"
+          ]
+        },
         {
           "when": {
             "mode": [
@@ -339,6 +367,17 @@
         "media-crop-and-layout-integrity"
       ],
       "conditional_skills": [
+        {
+          "when": {
+            "features": [
+              "agentic-workflow"
+            ]
+          },
+          "skills": [
+            "specialist-agent-orchestration",
+            "agent-evaluation-and-reliability"
+          ]
+        },
         {
           "when": {
             "mode": [

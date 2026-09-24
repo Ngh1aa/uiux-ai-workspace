@@ -108,7 +108,8 @@ class AdaptiveSkillRouter:
 
     @classmethod
     def infer_domain(cls, goal: str) -> str:
-        return cls._interpreter.interpret(goal).website_type
+        profile = cls._interpreter.interpret(goal)
+        return profile.domain if profile.domain != "generic" else profile.website_type
 
     @classmethod
     def route(
@@ -124,7 +125,9 @@ class AdaptiveSkillRouter:
 
         flow = ProfessionalWebsiteFlow(skills_root)
         profile, paths, mandatory_paths = flow.resolve_paths(stage, goal)
-        resolved_domain = domain or profile.website_type
+        resolved_domain = domain or (
+            profile.domain if profile.domain != "generic" else profile.website_type
+        )
 
         reasons: dict[str, str] = {}
         mandatory = set(mandatory_paths)
@@ -138,7 +141,8 @@ class AdaptiveSkillRouter:
             else:
                 reasons[path] = (
                     f"Domain/factory-stage capability selected for website_type="
-                    f"{profile.website_type}: {skill_name}."
+                    f"{profile.website_type}, domain={profile.domain}, "
+                    f"product_archetype={profile.product_archetype}: {skill_name}."
                 )
 
         return SkillSelection(
