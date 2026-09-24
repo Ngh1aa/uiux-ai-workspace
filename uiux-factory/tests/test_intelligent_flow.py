@@ -149,3 +149,61 @@ def test_adaptive_router_prefers_business_domain_when_known() -> None:
     assert AdaptiveSkillRouter.infer_domain(
         "B2B fintech settlement infrastructure for PSPs"
     ) == "financial-services"
+
+
+def test_validation_lane_scales_lifecycle_rigor_without_overloading_prototypes() -> None:
+    interpreter = GoalInterpreter()
+
+    fast = interpreter.interpret("Build a visual prototype portfolio landing page")
+    assert fast.validation_lane == "prototype"
+
+    evidence_led = interpreter.interpret(
+        "Test this SaaS concept with real users using moderated usability testing"
+    )
+    assert evidence_led.validation_lane == "evidence-led"
+    assert "user-validation" in evidence_led.features
+
+    production = interpreter.interpret(
+        "Prepare this SaaS dashboard as a production candidate with analytics instrumentation"
+    )
+    assert production.mode == "production-candidate"
+    assert production.validation_lane == "production-learning"
+    assert "outcome-measurement" in production.features
+
+
+def test_evidence_led_and_production_learning_route_lifecycle_skills() -> None:
+    flow = ProfessionalWebsiteFlow(SKILLS)
+
+    profile, research_skills, _mandatory = flow.resolve_skill_names(
+        "research",
+        "Validate this SaaS concept with real users before implementation",
+    )
+    assert profile.validation_lane == "evidence-led"
+    assert "real-user-validation" in research_skills
+    assert "user-research-planning-and-recruitment" in research_skills
+
+    prod_profile, implementation_skills, _mandatory = flow.resolve_skill_names(
+        "implementation",
+        "Prepare this SaaS dashboard as a production candidate with success metrics",
+    )
+    assert prod_profile.validation_lane == "production-learning"
+    assert "outcome-metrics-and-instrumentation" in implementation_skills
+
+    _prod_profile, qa_skills, _mandatory = flow.resolve_skill_names(
+        "browser_qa",
+        "Prepare this SaaS dashboard as a production candidate with success metrics",
+    )
+    assert "post-launch-learning-loop" in qa_skills
+    assert "human-governance-and-playbacks" in qa_skills
+
+
+def test_plain_prototype_does_not_route_enterprise_lifecycle_overhead() -> None:
+    flow = ProfessionalWebsiteFlow(SKILLS)
+    profile, skills, _mandatory = flow.resolve_skill_names(
+        "research",
+        "Build a distinctive interactive portfolio prototype",
+    )
+    assert profile.validation_lane == "prototype"
+    assert "real-user-validation" not in skills
+    assert "outcome-metrics-and-instrumentation" not in skills
+    assert "human-governance-and-playbacks" not in skills
