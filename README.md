@@ -27,6 +27,7 @@ uiux-factory/qa/
 
 - `uiux-factory/` — canonical Factory runtime and cloud QA harness.
 - `skills_UIUX/` — shared UI/UX skills and website-delivery policies.
+- `upstream/anthropics/` — pinned Anthropic reference repositories for agentic coding, tool/eval patterns and finance-domain workflow intelligence; reference-only unless a local skill explicitly adapts them.
 - `MetaGPT/` — vendored MetaGPT framework source; modify only for intentional framework integration work.
 - `scripts/` — repository-level utilities/migrations that still have an active owner.
 - `docs/` — repository-level operating/prompt documentation.

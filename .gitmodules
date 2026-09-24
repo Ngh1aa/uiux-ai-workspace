@@ -7,3 +7,18 @@
 	path = skills_UIUX/upstream/motion-primitives-website
 	url = https://github.com/itsjwill/motion-primitives-website.git
 	branch = main
+
+[submodule "upstream/anthropics/claude-code"]
+	path = upstream/anthropics/claude-code
+	url = https://github.com/anthropics/claude-code.git
+	branch = main
+
+[submodule "upstream/anthropics/claude-cookbooks"]
+	path = upstream/anthropics/claude-cookbooks
+	url = https://github.com/anthropics/claude-cookbooks.git
+	branch = main
+
+[submodule "upstream/anthropics/financial-services"]
+	path = upstream/anthropics/financial-services
+	url = https://github.com/anthropics/financial-services.git
+	branch = main
