@@ -20,6 +20,9 @@ def _managed_overrides(args: argparse.Namespace) -> dict[str, object]:
     return {
         "intent": args.intent,
         "website_type": args.website_type,
+        "domain": args.domain,
+        "product_archetype": args.product_archetype,
+        "validation_lane": args.validation_lane,
         "mode": args.mode,
         "risk": args.risk,
         "features": args.feature,
@@ -52,6 +55,9 @@ def main() -> int:
     parser.add_argument("--managed-run-id", help="Resume an existing managed website run")
     parser.add_argument("--intent", choices=["build", "redesign", "rebuild"], help="Optional override; otherwise inferred from --task")
     parser.add_argument("--website-type", help="Optional override; otherwise inferred from --task")
+    parser.add_argument("--domain", help="Optional business-domain override, e.g. financial-services")
+    parser.add_argument("--product-archetype", help="Optional product/workflow archetype override, e.g. payments-infrastructure")
+    parser.add_argument("--validation-lane", choices=["prototype", "evidence-led", "production-learning"], help="Optional lifecycle rigor override; otherwise inferred from mode/risk/features")
     parser.add_argument("--mode", choices=["visual-prototype", "interactive-prototype", "production-candidate", "production"], help="Optional override; otherwise inferred from --task")
     parser.add_argument("--risk", help="Optional override; otherwise inferred from --task")
     parser.add_argument("--feature", action="append", default=[], help="Optional feature override(s); otherwise inferred from --task")
