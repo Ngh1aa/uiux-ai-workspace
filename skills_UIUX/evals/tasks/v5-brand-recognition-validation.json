@@ -1,0 +1,9 @@
+{
+  "id": "v5-brand-recognition-validation",
+  "category": "capability",
+  "prompt": "The design team says cropped screenshots without the logo are recognizable as the brand. Turn this heuristic into a defensible validation study for prospective customers.",
+  "recommended_skills": ["brand-recognition-validation", "brand-recognition-and-consistency-qa", "brand-distinctiveness-and-visual-signature"],
+  "expected_outcomes": ["Research question and audience are explicit", "Multiple representative stimuli and competitor/category controls are used", "Correct association and misattribution are captured", "Protocol/sample limitations are reported", "Internal heuristic is distinguished from validated participant evidence"],
+  "must_not": ["Treat designer opinion as participant evidence", "Test only the hero", "Invent statistical significance", "Assume color recall alone proves brand recognition"],
+  "rubric": {"study_design": 30, "stimulus_quality": 25, "measurement": 25, "claim_discipline": 20}
+}

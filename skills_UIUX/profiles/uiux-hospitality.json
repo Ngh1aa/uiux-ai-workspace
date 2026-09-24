@@ -1,0 +1,6 @@
+{
+  "name": "uiux-hospitality",
+  "description": "Interactive hospitality UIUX prototype for destination storytelling, rooms, amenities and booking intent.",
+  "extends": "prototype-uiux",
+  "skills": ["hospitality-website"]
+}

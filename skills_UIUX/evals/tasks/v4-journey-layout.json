@@ -1,0 +1,9 @@
+{
+  "id": "v4-journey-layout",
+  "category": "regression",
+  "prompt": "A homepage has Hero, About, 3 Service Cards, Logo Wall, News and Contact CTA because those blocks existed in the old site. Restructure it around the user's decision journey and explain the job of every section.",
+  "recommended_skills": ["journey-driven-content-and-layout", "audience-intent-and-top-tasks"],
+  "expected_outcomes": ["Orders sections by user questions/decision confidence", "Each section has one explicit journey job", "Critical proof appears near relevant claims", "Removes/repositions blocks that do not advance the journey"],
+  "must_not": ["Keep sections solely because they already exist", "Use generic hero-card-proof-news-CTA grammar without rationale", "Optimize visual variety over user decision clarity"],
+  "rubric": {"journey_logic": 35, "section_jobs": 25, "content_priority": 20, "transition_quality": 20}
+}

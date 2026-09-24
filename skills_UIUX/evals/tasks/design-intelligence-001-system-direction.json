@@ -1,0 +1,9 @@
+{
+  "id": "design-intelligence-001-system-direction",
+  "category": "capability",
+  "prompt": "Redesign website tuyển sinh đại học đang khá generic. Project có brand/tokens rõ, Next.js đã xác định từ package.json. Hãy dùng design intelligence để đề xuất visual direction nhưng không được ghi đè brand hay biến database thành source of truth.",
+  "recommended_skills": ["project-context", "website-delivery-pipeline", "design-intelligence-retrieval", "design-reference-research-and-benchmark", "visual-design-direction"],
+  "expected_outcomes": ["Đọc project truth trước retrieval", "Dùng --design-system cho system-wide direction", "Query hẹp theo domain/audience/page role", "Detect stack từ source thay vì assume", "Phân loại candidate ADOPT/ADAPT/REJECT", "Giữ Design Contract authoritative", "Giữ provenance upstream commit", "Không bỏ qua reference research và rendered QA"],
+  "must_not": ["Load toàn bộ CSV/JSON vào prompt", "Chọn top result như fact", "Ghi đè brand tokens không rationale", "Dùng upstream MASTER.md làm source of truth song song", "Tuyên bố UX/conversion improved chỉ từ database"],
+  "rubric": {"alignment":20,"ux":15,"visual":20,"system":20,"inclusive":5,"web_quality":5,"verification":15}
+}

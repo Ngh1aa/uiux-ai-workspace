@@ -1,0 +1,48 @@
+{
+  "id": "visual-quality-002-education",
+  "category": "capability",
+  "prompt": "Design and build an institutional admissions and campus portal for Aetheria International Academy based on evals/fixtures/visual-quality/education-brief.json. Provide 4 page roles (Home, Academics, Admissions, Campus Experience). Satisfy evals/visual-quality-rubric.md by demonstrating authentic storytelling, clear academic pathway hierarchy, and intentional mobile responsive adaptation.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "brand-guidelines"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "brand-guidelines"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "Admissions timeline and academic curriculum have distinct, clear functional layouts",
+    "Scholarly humanist serif paired with accessible geometric sans",
+    "Candid documentary-style classroom/campus media direction without posed stock graduation photos",
+    "Navigation and admissions workflows adapt seamlessly to touchscreens",
+    "Deterministic visual gates pass with clean DOM and valid meta tags"
+  ],
+  "must_not": [
+    "Clone homepage hero-cards-cta layout onto academics and admissions pages",
+    "Use stock photos with unrelated graduation gown models or watermarks",
+    "Hide key tuition milestones or admissions deadlines behind unstyled wall of text"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skills-uiux.local/schemas/provider-stage-response.schema.json",
+  "title": "Provider Stage Response",
+  "type": "object",
+  "required": ["status", "actions", "summary", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["CONTINUE", "PASS", "FAIL", "BLOCKED"]
+    },
+    "actions": {
+      "type": "array",
+      "maxItems": 24,
+      "items": {
+        "type": "object",
+        "required": ["tool", "args"],
+        "additionalProperties": false,
+        "properties": {
+          "tool": {"type": "string", "minLength": 1},
+          "args": {"type": "object"}
+        }
+      }
+    },
+    "summary": {"type": "string"},
+    "evidence": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "replan_signal": {
+      "type": ["string", "null"],
+      "enum": [null, "GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"]
+    }
+  }
+}

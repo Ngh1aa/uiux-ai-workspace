@@ -1,0 +1,21 @@
+{
+  "id": "reference-research-001",
+  "category": "capability",
+  "prompt": "Redesign homepage cho một trường quốc tế premium. Hãy tham khảo Awwwards, MUUUUU, Behance, Dribbble, Pinterest và các website trường thật để tạo hướng thiết kế chuyên nghiệp. Không copy website nào và phải giải thích reference nào dùng cho UX, reference nào chỉ dùng cho visual/art direction.",
+  "recommended_skills": ["design-reference-research-and-benchmark", "visual-design-direction", "education-website", "reference-analysis-and-design-to-code"],
+  "expected_outcomes": [
+    "Phân vai nguồn: real production vs curated/case-study/shot/mood",
+    "Có mixed candidate strategy thay vì chỉ gallery đẹp",
+    "Chọn finalists theo industry/audience/business/brand/UX/feasibility fit",
+    "Mỗi finalist có role riêng và transferable principles",
+    "Phân biệt observation/hypothesis và không coi award là UX proof",
+    "Tạo design DNA nguyên bản để handoff sang visual direction"
+  ],
+  "must_not": [
+    "Chọn reference chỉ vì đẹp hoặc nhiều award",
+    "Dùng Pinterest/Dribbble làm bằng chứng sitemap hoặc UX flow",
+    "Copy nguyên composition/branding/assets của một website",
+    "Bịa conversion/accessibility metrics cho reference"
+  ],
+  "rubric": {"alignment":20,"ux":20,"visual":20,"system":10,"inclusive":5,"web_quality":5,"verification":20}
+}

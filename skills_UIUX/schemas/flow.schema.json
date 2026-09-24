@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/skills-uiux/flow.schema.json",
+  "title": "skills_UIUX Declarative Flow",
+  "type": "object",
+  "required": ["schema_version", "id", "description", "match", "stages", "replanning"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "description": {"type": "string", "minLength": 1},
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "priority": {"type": "integer"},
+        "intents": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "website_types": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "modes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "risks": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "features": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "agent", "purpose", "required_skills"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "agent": {"type": "string"},
+          "purpose": {"type": "string"},
+          "required_skills": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "optional_skills": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "conditional_skills": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["when", "skills"],
+              "additionalProperties": false,
+              "properties": {
+                "when": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {"type": "string"},
+                      {"type": "array", "items": {"type": "string"}}
+                    ]
+                  }
+                },
+                "skills": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+              }
+            }
+          },
+          "gates": {"type": "array", "items": {"type": "object"}}
+        }
+      }
+    },
+    "replanning": {
+      "type": "object",
+      "required": ["max_replans", "triggers", "policies"],
+      "additionalProperties": false,
+      "properties": {
+        "max_replans": {"type": "integer", "minimum": 0},
+        "triggers": {
+          "type": "array",
+          "items": {"enum": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"]},
+          "uniqueItems": true
+        },
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["when", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "when": {
+                "type": "object",
+                "additionalProperties": {
+                  "oneOf": [
+                    {"type": "string"},
+                    {"type": "array", "items": {"type": "string"}}
+                  ]
+                }
+              },
+              "reason": {"type": "string"},
+              "target_stage": {"type": "string"},
+              "add_skills": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+              "drop_skills": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+            }
+          }
+        }
+      }
+    }
+  }
+}

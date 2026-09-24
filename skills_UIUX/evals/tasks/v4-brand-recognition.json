@@ -1,0 +1,9 @@
+{
+  "id": "v4-brand-recognition",
+  "category": "regression",
+  "prompt": "Review a redesign whose sections look polished but become indistinguishable from generic SaaS templates when the header/logo is cropped. Propose a brand-distinctiveness system and QA method without reducing usability.",
+  "recommended_skills": ["brand-distinctiveness-and-visual-signature", "brand-recognition-and-consistency-qa", "visual-design-direction"],
+  "expected_outcomes": ["Defines multiple repeatable brand-linked cues beyond logo/color", "Balances distinctive expression with familiar controls", "Uses cropped-screen review as heuristic rather than fake standardized score", "Checks cross-template and mobile consistency"],
+  "must_not": ["Solve recognition by repeating logos everywhere", "Claim a numeric recognition rate without testing", "Add trendy effects unrelated to brand source-of-truth"],
+  "rubric": {"brand_linkage": 30, "system_quality": 25, "usability_balance": 25, "qa_rigor": 20}
+}

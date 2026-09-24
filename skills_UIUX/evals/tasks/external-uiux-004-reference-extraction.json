@@ -1,0 +1,22 @@
+{
+  "id": "external-uiux-004-reference-extraction",
+  "category": "capability",
+  "prompt": "Một production website được shortlist làm reference cho redesign. Hãy extract design-system evidence từ trang Home + Product detail để phục vụ benchmark, nhưng không clone brand/surface và không đổi project sang Tailwind.",
+  "recommended_skills": ["project-context", "design-reference-research-and-benchmark", "reference-extraction-and-design-audit"],
+  "expected_outcomes": [
+    "Ghi rõ pages/states/source inspected",
+    "Extract color/type/spacing/layout/component/responsive evidence với source + certainty",
+    "Phân biệt FACT, EVIDENCE_BACKED_INFERENCE và UNKNOWN",
+    "Có transferable principle + do-not-copy boundary",
+    "Handoff về benchmark/visual direction thay vì code trực tiếp",
+    "Không normalize/migrate framework ngoài scope"
+  ],
+  "must_not": [
+    "Suy cả design system chỉ từ hero screenshot",
+    "Copy logo/text/proprietary assets",
+    "Biến frequent token thành canonical project token tự động",
+    "Fabricate dark mode",
+    "Bắt buộc Firecrawl hoặc Tailwind"
+  ],
+  "rubric": {"alignment":20,"ux":10,"visual":20,"system":20,"inclusive":5,"web_quality":5,"verification":20}
+}

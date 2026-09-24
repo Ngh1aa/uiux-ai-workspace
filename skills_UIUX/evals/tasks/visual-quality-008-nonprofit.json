@@ -1,0 +1,49 @@
+{
+  "id": "visual-quality-008-nonprofit",
+  "category": "capability",
+  "prompt": "Build an ocean conservation and donor action portal for Pelagic Reef Alliance using evals/fixtures/visual-quality/nonprofit-brief.json. Deliver 4 pages (Home Campaign, Regional Initiatives, Financial Transparency Audits, Donate Flow). Achieve compelling visual urgency through high-impact photography, clear scientific data visualization, and frictionless donation paths.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "brand-guidelines"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "brand-guidelines"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "Compelling urgency and scientific authority reflected in marine color palette and bold typography",
+    "Transparent financial allocation charts and expedition tracking maps provide proof",
+    "Dedicated donation page features intuitive preset impact amounts and security assurance badges",
+    "Mobile layout ensures donation workflow is prominent and single-column optimized",
+    "Deterministic visual gates pass with clean DOM and valid meta tags"
+  ],
+  "must_not": [
+    "Use blurry low-resolution stock disaster photos",
+    "Employ dark patterns or hidden recurring donation traps",
+    "Clone homepage layout for the financial transparency and donation pages",
+    "Leave text contrast unverified over underwater background imagery"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

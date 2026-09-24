@@ -1,0 +1,6 @@
+{
+  "name": "uiux-education",
+  "description": "Interactive school/education UIUX prototype with parent/student journeys, admissions and academic information patterns.",
+  "extends": "prototype-uiux",
+  "skills": ["education-website"]
+}

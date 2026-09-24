@@ -1,0 +1,16 @@
+{
+  "actions": [
+    {
+      "tool": "list_files",
+      "args": {
+        "path": "."
+      }
+    },
+    {
+      "tool": "run_validator",
+      "args": {
+        "name": "validate-runtime"
+      }
+    }
+  ]
+}

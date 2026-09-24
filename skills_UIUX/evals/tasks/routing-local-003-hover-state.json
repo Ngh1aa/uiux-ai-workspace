@@ -1,0 +1,45 @@
+{
+  "id": "routing-local-003-hover-state",
+  "category": "regression",
+  "prompt": "Navigation links have no hover/focus indicator. Add the hover state that matches the existing active state style.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "ui-improvement",
+      "interaction-patterns-and-form-ux",
+      "accessibility"
+    ],
+    "forbidden_without_trigger": [
+      "motion-and-microinteractions",
+      "ux-research-and-journey",
+      "website-audit-and-redesign",
+      "design-reference-research-and-benchmark"
+    ],
+    "activation_budget": {
+      "soft_max": 4
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ui-improvement",
+    "interaction-patterns-and-form-ux",
+    "accessibility"
+  ],
+  "expected_outcomes": [
+    "Hover/focus state added to nav links",
+    "Consistent with existing active state",
+    "Keyboard focus visible"
+  ],
+  "must_not": [
+    "Redesign entire navigation",
+    "Load research pack for a CSS addition"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

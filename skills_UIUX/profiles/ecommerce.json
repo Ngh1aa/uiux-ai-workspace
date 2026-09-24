@@ -1,0 +1,11 @@
+{
+  "name": "ecommerce",
+  "description": "Commerce/catalogue websites with discovery, comparison, product detail, cart and conversion flows.",
+  "extends": "professional-core",
+  "skills": [
+    "ecommerce-website",
+    "asset-media-and-art-direction",
+    "component-driven-development",
+    "content-governance-and-cms"
+  ]
+}

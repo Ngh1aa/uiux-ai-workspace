@@ -1,0 +1,19 @@
+{
+  "id": "cross-functional-003-cro-message-match",
+  "category": "capability",
+  "prompt": "Landing page từ quảng cáo đang có bounce cao. Ad hứa 'báo giá trong 2 phút' nhưng hero chỉ nói 'giải pháp toàn diện'. Hãy đề xuất UX/content direction, chưa có A/B test.",
+  "recommended_skills": ["conversion-and-content", "analytics-and-experimentation"],
+  "expected_outcomes": [
+    "Nhận diện traffic/message-match gap và page job",
+    "Đề xuất value/CTA/proof hierarchy phù hợp ad intent",
+    "Label nguyên nhân conversion là hypothesis, không phải fact",
+    "Không bịa lift/conversion impact",
+    "Đưa testable hypothesis + primary metric/guardrail handoff"
+  ],
+  "must_not": [
+    "Claim conversion will improve by a percentage",
+    "Treat page-CRO conventions as causal proof",
+    "Ignore the downstream quote flow or trust requirements"
+  ],
+  "rubric": {"alignment":20,"content":25,"conversion":25,"evidence":20,"verification":10}
+}

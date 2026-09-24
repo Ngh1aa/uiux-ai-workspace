@@ -1,0 +1,6 @@
+{
+  "name": "uiux-corporate",
+  "description": "Interactive corporate/B2B UIUX prototype with credibility, capability, proof and lead-generation patterns.",
+  "extends": "prototype-uiux",
+  "skills": ["corporate-website"]
+}

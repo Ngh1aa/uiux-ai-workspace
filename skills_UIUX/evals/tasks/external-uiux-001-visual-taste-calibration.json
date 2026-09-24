@@ -1,0 +1,21 @@
+{
+  "id": "external-uiux-001-visual-taste-calibration",
+  "category": "capability",
+  "prompt": "Homepage B2B đã có Design Contract và visual direction rõ, nhưng prototype hiện vẫn là centered hero + gradient + 3 card giống template SaaS phổ biến. Hãy cải thiện độ distinctive mà không đổi brand hoặc IA ngoài scope.",
+  "recommended_skills": ["project-context", "visual-design-direction", "visual-taste-calibration"],
+  "expected_outcomes": [
+    "Đọc Design Contract/visual direction trước critique",
+    "Chỉ ra pattern generic/interchangeable bằng evidence từ prototype",
+    "Giữ một memorable visual commitment có rationale theo domain/brand/content",
+    "Đưa material revision trở lại visual direction/Design Contract thay vì tạo source of truth mới",
+    "Giữ accessibility/content clarity và verify representative page composition"
+  ],
+  "must_not": [
+    "Đổi palette/font chỉ để trông khác",
+    "Bắt buộc loại mọi card/gradient chỉ vì common",
+    "Bỏ qua Design Contract",
+    "Tạo một visual-direction orchestrator thứ hai",
+    "Gọi distinctive đã verified nếu chưa inspect rendered evidence"
+  ],
+  "rubric": {"alignment":25,"ux":10,"visual":30,"system":15,"inclusive":5,"web_quality":5,"verification":10}
+}

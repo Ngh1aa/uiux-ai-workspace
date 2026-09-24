@@ -1,0 +1,57 @@
+{
+  "id": "routing-journey-005-donation-flow",
+  "category": "capability",
+  "prompt": "Redesign the donation flow for this nonprofit. Currently it's a single long form. Need one-time and recurring options, suggested amounts, impact messaging, and a thank-you page. Trust and transparency are critical — donors need to see where money goes.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "ux-research-and-journey",
+      "trust-credibility-and-transparency"
+    ],
+    "allowed_skills": [
+      "interaction-patterns-and-form-ux",
+      "conversion-and-content",
+      "ux-writing-and-microcopy",
+      "state-feedback-and-error-recovery",
+      "responsive-and-device-strategy",
+      "system-reality-and-production-readiness"
+    ],
+    "forbidden_without_trigger": [
+      "product-strategy-and-prioritization",
+      "experimentation-interpretation",
+      "service-blueprinting",
+      "design-reference-research-and-benchmark"
+    ],
+    "activation_budget": {
+      "soft_max": 8
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ux-research-and-journey",
+    "trust-credibility-and-transparency",
+    "interaction-patterns-and-form-ux",
+    "conversion-and-content",
+    "ux-writing-and-microcopy",
+    "state-feedback-and-error-recovery",
+    "responsive-and-device-strategy",
+    "system-reality-and-production-readiness"
+  ],
+  "expected_outcomes": [
+    "Donation options clear",
+    "Trust signals present",
+    "Impact messaging integrated",
+    "Recurring option prominent",
+    "Thank-you page meaningful"
+  ],
+  "must_not": [
+    "Load experiment interpretation without experiment data",
+    "Run product strategy for a defined donation flow"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & Inquiries — Vanguard Architectural Partners</title>
+  <style>
+    :root {
+      --bg: #F4F4F2;
+      --surface: #FFFFFF;
+      --text: #1A1D20;
+      --muted: #7D8287;
+      --font-display: "Playfair Display", Georgia, serif;
+      --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.6; }
+    header { padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .logo { font-size: 1.25rem; font-weight: 700; }
+    nav a { margin-left: 2rem; color: var(--text); text-decoration: none; }
+    .contact-layout { padding: 6rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1200px; }
+    h1 { font-family: var(--font-display); font-size: 2.75rem; margin-bottom: 1rem; }
+    .rfq-form { display: flex; flex-direction: column; gap: 1.5rem; background: var(--surface); padding: 2.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-group input, .form-group textarea, .form-group select { padding: 0.75rem; border: 1px solid #CCC; font-family: inherit; font-size: 1rem; }
+    .submit-btn { padding: 1rem; background: var(--text); color: #FFF; border: none; font-weight: 600; cursor: pointer; }
+    footer { padding: 4rem; border-top: 1px solid rgba(0,0,0,0.08); color: var(--muted); font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Vanguard</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main class="contact-layout">
+    <div>
+      <h1>Commission an Inquiry</h1>
+      <p>We consult on civic competitions, institutional masterplans, and regenerative infrastructure projects worldwide.</p>
+      <div style="margin-top: 2rem;">
+        <h3>Studios</h3>
+        <p><strong>Oslo:</strong> Dronningens gate 14, 0152 Oslo, Norway</p>
+        <p><strong>Kyoto:</strong> Nakagyo Ward, Kyoto 604-8136, Japan</p>
+      </div>
+    </div>
+    <form class="rfq-form">
+      <div class="form-group">
+        <label for="name">Representative Name</label>
+        <input type="text" id="name" required placeholder="Dr. Astrid Lindgren">
+      </div>
+      <div class="form-group">
+        <label for="org">Organization / Institution</label>
+        <input type="text" id="org" required placeholder="Copenhagen Municipal Development">
+      </div>
+      <div class="form-group">
+        <label for="typology">Project Typology</label>
+        <select id="typology">
+          <option>Civic / Cultural Pavilion</option>
+          <option>Higher Education Campus</option>
+          <option>Adaptive Historic Retrofit</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="details">Project Scope & Timeline</label>
+        <textarea id="details" rows="4" placeholder="Outline estimated square meterage, target groundbreaking, and sustainability certifications..."></textarea>
+      </div>
+      <button type="submit" class="submit-btn">Transmit Inquiry</button>
+    </form>
+  </main>
+  <footer>
+    <p>&copy; 2026 Vanguard Architectural Partners. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "id": "form-ux-001",
+  "category": "capability",
+  "prompt": "Thiết kế form lead nhiều bước trên mobile. Có validation, loading, submit error, success và cho phép user sửa dữ liệu trước khi gửi.",
+  "recommended_skills": ["interaction-patterns-and-form-ux", "accessibility", "conversion-and-content"],
+  "expected_outcomes": ["Field grouping và step count có rationale", "Inline validation cụ thể", "Focus/error summary accessible", "Loading/error/success/retry states", "Review/edit step nếu phù hợp"],
+  "must_not": ["Validate tất cả chỉ sau submit mà không dẫn user tới lỗi", "Disable submit không giải thích", "Reset data sau network error"],
+  "rubric": {"alignment":15,"ux":30,"visual":10,"system":15,"inclusive":20,"web_quality":5,"verification":5}
+}

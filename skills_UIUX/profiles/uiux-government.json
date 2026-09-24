@@ -1,0 +1,6 @@
+{
+  "name": "uiux-government",
+  "description": "Interactive public-sector UIUX prototype prioritizing task completion, trust, accessibility and service discovery.",
+  "extends": "prototype-uiux",
+  "skills": ["government-and-public-sector-website"]
+}

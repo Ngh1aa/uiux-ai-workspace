@@ -1,0 +1,19 @@
+{
+  "id": "cross-functional-006-engineering-routing-near-miss",
+  "category": "capability",
+  "prompt": "Một component hiện có sai class spacing duy nhất; owner/token đã rõ và test/render path đã biết. Hãy sửa an toàn.",
+  "recommended_skills": ["project-context", "ui-improvement", "ai-agent-coding-guardrails"],
+  "expected_outcomes": [
+    "Giữ ai-agent-coding-guardrails nhẹ cho local low-risk fix",
+    "Không tạo dependency graph/vertical-slice plan dài cho một edit hiển nhiên",
+    "Không route product/growth/search/experiment skills",
+    "Sửa root owner/token nhỏ nhất",
+    "Verify component/render path liên quan"
+  ],
+  "must_not": [
+    "Create a multi-phase engineering plan for one class change",
+    "Load cross-functional external knowledge just because installed",
+    "Refactor unrelated component architecture"
+  ],
+  "rubric": {"alignment":30,"scope":25,"code":15,"routing":20,"verification":10}
+}

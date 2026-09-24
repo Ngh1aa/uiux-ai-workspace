@@ -1,0 +1,56 @@
+{
+  "id": "routing-system-002-design-system-migration",
+  "category": "capability",
+  "prompt": "Migrate the existing ad-hoc CSS to a design system with tokens, components, and documentation. The site has 8 pages with inconsistent spacing, colors, and typography. Don't redesign — systematize what exists.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "design-system-and-components"
+    ],
+    "allowed_skills": [
+      "design-system-governance-and-adoption",
+      "frontend-architecture-and-refactoring",
+      "ui-craft-and-visual-qa",
+      "visual-regression-and-design-drift",
+      "ai-agent-coding-guardrails",
+      "frontend-implementation"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "design-reference-research-and-benchmark",
+      "website-audit-and-redesign",
+      "conversion-and-content",
+      "product-discovery"
+    ],
+    "activation_budget": {
+      "soft_max": 8
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "design-system-and-components",
+    "design-system-governance-and-adoption",
+    "frontend-architecture-and-refactoring",
+    "ui-craft-and-visual-qa",
+    "visual-regression-and-design-drift",
+    "ai-agent-coding-guardrails",
+    "frontend-implementation"
+  ],
+  "expected_outcomes": [
+    "Token system extracted from existing styles",
+    "Components identified and documented",
+    "Consistency improved without visual redesign",
+    "Drift detection considered"
+  ],
+  "must_not": [
+    "Treat systematization as redesign",
+    "Load visual direction or reference research for extraction work",
+    "Run product discovery for a technical migration"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 30,
+    "project_grounding": 30,
+    "escalation_logic": 15
+  }
+}

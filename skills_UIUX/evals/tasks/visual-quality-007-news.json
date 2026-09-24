@@ -1,0 +1,50 @@
+{
+  "id": "visual-quality-007-news",
+  "category": "capability",
+  "prompt": "Create an authoritative digital journalism platform for The Meridian Chronicle based on evals/fixtures/visual-quality/news-brief.json. Provide 4 page roles (Home Broadsheet, Article Reading View, Sections Archive, Membership Support). Emphasize high-legibility editorial typography, scannable news hierarchy, immersive distraction-free reading, and strict avoidance of clickbait ad layouts.",
+  "recommended_skills": [
+    "visual-design-direction",
+    "ui-craft-and-visual-qa",
+    "asset-media-and-art-direction",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "brand-guidelines"
+  ],
+  "routing": {
+    "required_owners": ["project-context", "visual-design-direction", "ui-craft-and-visual-qa"],
+    "allowed_skills": [
+      "asset-media-and-art-direction",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "brand-guidelines",
+      "information-architecture"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": { "soft_max": 7 }
+  },
+  "expected_outcomes": [
+    "Multi-column editorial broadsheet layout with clear lead story dominance on Home",
+    "Article page optimized for long-form reading comfort (proper line-length, dropcaps, pull-quotes, margin notes)",
+    "Photojournalism captions and provenance credits clearly rendered",
+    "Mobile reading experience is distraction-free with intuitive font size and reading progress indicators",
+    "Deterministic visual gates pass with clean valid HTML"
+  ],
+  "must_not": [
+    "Render clickbait badges, flashing ads, or intrusive modal overlays",
+    "Give equal visual prominence to lead investigative reporting and minor briefs",
+    "Use low-contrast grey body text for long-form article prose",
+    "Produce identical 3-card rows across home and article pages"
+  ],
+  "rubric": {
+    "hierarchy_and_ia": 20,
+    "typography": 15,
+    "media_art_direction": 15,
+    "page_role_diversity": 15,
+    "responsive": 10,
+    "brand_distinctiveness": 15,
+    "anti_generic_ai": 10
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "v3-ethical-trust-review",
+  "category": "regression",
+  "prompt": "Review an ecommerce subscription checkout that uses a preselected paid add-on, a countdown timer, hidden cancellation terms and a much larger Accept button than decline.",
+  "recommended_skills": ["ethical-ux-and-deceptive-patterns", "trust-credibility-and-transparency", "ecommerce-website"],
+  "expected_outcomes": ["Manipulative patterns are identified", "Material terms are moved before commitment", "Choice prominence is corrected", "Cancellation path is considered", "Trust impact is explained"],
+  "must_not": ["Optimize deceptive tactics for conversion", "Treat legal disclosure hidden after purchase as sufficient UX"],
+  "rubric": {"risk_detection": 35, "user_choice": 25, "trust": 20, "remediation_quality": 20}
+}

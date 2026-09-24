@@ -1,0 +1,9 @@
+{
+  "id": "v3-complex-form",
+  "category": "regression",
+  "prompt": "Design the UX behavior for a 5-step school application form with conditional questions, document upload, save/resume, review/edit and server validation failures.",
+  "recommended_skills": ["complex-forms-and-wizards", "state-feedback-and-error-recovery", "content-design-and-question-design", "accessibility"],
+  "expected_outcomes": ["Progress and back behavior are defined", "Input is preserved through errors", "Conditional branches are coherent", "Review/edit exists before final submit", "Save/resume and failure recovery are explicit"],
+  "must_not": ["Clear valid answers on validation error", "Use placeholders as the only labels", "Hide unresolved errors after submit"],
+  "rubric": {"flow_coherence": 30, "recovery": 25, "content_clarity": 20, "accessibility": 25}
+}

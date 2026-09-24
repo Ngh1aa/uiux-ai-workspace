@@ -1,0 +1,9 @@
+{
+  "id": "v4-service-to-digital",
+  "category": "capability",
+  "prompt": "Redesign a school website so browsing feels like understanding and experiencing the school before a campus visit. Translate the real service journey into a digital journey without using decorative 3D gimmicks as a substitute for evidence.",
+  "recommended_skills": ["service-experience-to-digital-journey", "journey-driven-content-and-layout", "education-website"],
+  "expected_outcomes": ["Maps real-world discovery/evaluation/visit/admission stages", "Identifies moments that influence trust and fit", "Creates honest digital representations for physical experiences", "Preserves a clear handoff to campus visit/admissions"],
+  "must_not": ["Equate immersion with 3D animation", "Hide practical admissions information behind storytelling", "End the journey at an unexplained lead form"],
+  "rubric": {"service_mapping": 30, "digital_translation": 30, "decision_support": 20, "handoff_quality": 20}
+}

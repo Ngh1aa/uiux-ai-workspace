@@ -1,0 +1,6 @@
+{
+  "name": "uiux-real-estate",
+  "description": "Interactive property/building UIUX prototype focused on place, amenities, spaces, leasing and inquiry journeys.",
+  "extends": "prototype-uiux",
+  "skills": ["real-estate-and-building-website"]
+}

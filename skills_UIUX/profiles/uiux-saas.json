@@ -1,0 +1,6 @@
+{
+  "name": "uiux-saas",
+  "description": "Interactive SaaS/product UIUX prototype focused on product understanding, feature proof and conversion.",
+  "extends": "prototype-uiux",
+  "skills": ["saas-website"]
+}

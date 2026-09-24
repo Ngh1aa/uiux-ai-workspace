@@ -1,0 +1,9 @@
+{
+  "id": "v5-adaptive-routing",
+  "category": "regression",
+  "prompt": "The user asks only to fix a mobile navigation focus trap in an existing branded site. Select the smallest useful skill set and explain what would cause escalation.",
+  "recommended_skills": ["adaptive-skill-routing-and-context-budget", "project-context", "interaction-patterns-and-form-ux", "responsive-and-device-strategy", "accessibility"],
+  "expected_outcomes": ["Project/source-of-truth context is read first", "The selected set is narrow and task-relevant", "Unrelated research/service/brand packs are not loaded by default", "Escalation triggers are explicit"],
+  "must_not": ["Load every installed pack", "Skip accessibility because the change is small", "Use routing as a substitute for inspecting the implementation"],
+  "rubric": {"minimality": 30, "risk_coverage": 30, "project_grounding": 25, "escalation_logic": 15}
+}

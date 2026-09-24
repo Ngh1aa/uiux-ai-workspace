@@ -1,0 +1,23 @@
+{
+  "id": "monotony-detection-justified-001",
+  "category": "capability",
+  "prompt": "Analyze an e-commerce site with 8 category pages. All category pages intentionally share the same filter sidebar + product grid + pagination pattern because the user task (browse and filter products) is identical across categories. A design rationale document explains this repetition.",
+  "expected_outcomes": [
+    "Repetition detected but context considered",
+    "Category pages recognized as same page role",
+    "Verdict accounts for justified repetition"
+  ],
+  "must_not": [
+    "Hard-fail justified structural repetition without context",
+    "Ignore that all pages serve the same user task"
+  ],
+  "rubric": {
+    "detection_accuracy": 30,
+    "family_counting": 30,
+    "context_sensitivity": 40
+  },
+  "recommended_skills": [
+    "visual-redesign-delta-gate",
+    "ui-craft-and-visual-qa"
+  ]
+}

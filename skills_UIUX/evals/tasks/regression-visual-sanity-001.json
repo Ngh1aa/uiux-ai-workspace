@@ -1,0 +1,26 @@
+{
+  "id": "visual-sanity-regression-001",
+  "category": "regression",
+  "prompt": "Một website multi-page đã được QA PASS nhưng production có các lỗi rất sơ đẳng: footer nền sáng nhưng text gần trắng nên chỉ thấy khi bôi đen; button outline chữ đen nền trắng nhưng hover làm chữ trắng trong khi nền vẫn trắng; hero dùng object-fit: cover cắt mất nửa đầu người mẫu. Hãy sửa triệt để root cause và làm cho quy trình QA không bỏ lọt loại lỗi này nữa.",
+  "recommended_skills": ["ui-improvement", "ui-craft-and-visual-qa", "design-system-and-components", "asset-media-and-art-direction", "testing-strategy", "visual-regression-and-design-drift"],
+  "expected_outcomes": [
+    "Phân loại đây là P0/P1 rendered visual sanity defects chứ không phải preference",
+    "Inspect actual rendered evidence và winning computed cascade/specificity thay vì chỉ đọc CSS declarations",
+    "Fix shared surface/foreground owner và semantic button state contract thay vì page-local patch",
+    "Audit default/hover/focus/active/disabled state readability trên actual rendered controls",
+    "Map shared footer/theme/button owner tới tất cả affected routes/templates cho elementary sanity coverage",
+    "Verify human/focal hero crop ở declared viewports; không coi object-fit: cover là proof",
+    "Recapture và mở/inspect screenshots sau fix",
+    "Add project regression guard và promote generalizable failure vào skill/checklist/eval before closing remediation"
+  ],
+  "must_not": [
+    "Kết luận PASS chỉ vì build/CI xanh",
+    "Chỉ sửa một trang dù owner là shared footer/theme/button",
+    "Chỉ kiểm default button state và bỏ hover/focus/disabled",
+    "Thêm !important/page CSS patch để che cascade root cause mà không có rationale",
+    "Coi object-position percentage hoặc object-fit cover là bằng chứng crop đúng",
+    "Cập nhật baseline để hợp thức hóa screenshot đang hỏng",
+    "Gọi lỗi đã được ngăn tái diễn nếu chưa thêm hoặc exercise regression guard"
+  ],
+  "rubric": {"alignment":15,"ux":10,"visual":30,"system":20,"inclusive":5,"web_quality":5,"verification":15}
+}

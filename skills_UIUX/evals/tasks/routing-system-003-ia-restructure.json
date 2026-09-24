@@ -1,0 +1,60 @@
+{
+  "id": "routing-system-003-ia-restructure",
+  "category": "capability",
+  "prompt": "The university website has grown organically to 200+ pages with no clear taxonomy. Prospective students can't find admissions info, current students can't find course schedules. Restructure the IA with proper navigation, page hierarchy, and URL migration plan.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "information-architecture",
+      "audience-intent-and-top-tasks"
+    ],
+    "allowed_skills": [
+      "ux-research-and-journey",
+      "card-sorting-and-tree-testing",
+      "site-search-and-findability",
+      "entry-context-and-visit-intent",
+      "seo-strategy",
+      "content-governance-and-cms",
+      "website-audit-and-redesign"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "design-reference-research-and-benchmark",
+      "motion-and-microinteractions",
+      "asset-media-and-art-direction",
+      "conversion-and-content"
+    ],
+    "activation_budget": {
+      "soft_max": 10
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "information-architecture",
+    "audience-intent-and-top-tasks",
+    "ux-research-and-journey",
+    "card-sorting-and-tree-testing",
+    "site-search-and-findability",
+    "entry-context-and-visit-intent",
+    "seo-strategy",
+    "content-governance-and-cms",
+    "website-audit-and-redesign"
+  ],
+  "expected_outcomes": [
+    "Audience-first taxonomy",
+    "Top tasks identified",
+    "Navigation structure proposed",
+    "URL migration plan",
+    "Content audit of key areas"
+  ],
+  "must_not": [
+    "Load visual design for a structural IA task",
+    "Start visual reference research before IA is settled"
+  ],
+  "rubric": {
+    "minimality": 20,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 20
+  }
+}

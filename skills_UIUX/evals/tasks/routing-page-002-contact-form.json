@@ -1,0 +1,52 @@
+{
+  "id": "routing-page-002-contact-form",
+  "category": "capability",
+  "prompt": "Improve the contact form UX. It currently has 12 required fields in one block, no validation feedback, and the submit button is below the fold on mobile.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "interaction-patterns-and-form-ux"
+    ],
+    "allowed_skills": [
+      "ui-improvement",
+      "content-design-and-question-design",
+      "responsive-and-device-strategy",
+      "accessibility",
+      "state-feedback-and-error-recovery"
+    ],
+    "forbidden_without_trigger": [
+      "complex-forms-and-wizards",
+      "analytics-and-experimentation",
+      "conversion-and-content",
+      "product-strategy-and-prioritization"
+    ],
+    "activation_budget": {
+      "soft_max": 6
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "interaction-patterns-and-form-ux",
+    "ui-improvement",
+    "content-design-and-question-design",
+    "responsive-and-device-strategy",
+    "accessibility",
+    "state-feedback-and-error-recovery"
+  ],
+  "expected_outcomes": [
+    "Form fields grouped logically",
+    "Inline validation added",
+    "Mobile layout improved",
+    "Submit accessible on mobile"
+  ],
+  "must_not": [
+    "Turn a contact form into a multi-step wizard without evidence it's needed",
+    "Load conversion/CRO for a basic form fix"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 35,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

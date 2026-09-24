@@ -1,0 +1,54 @@
+{
+  "id": "routing-page-003-pricing-table",
+  "category": "capability",
+  "prompt": "Design and implement a responsive pricing comparison table for this SaaS product. Three tiers: Free, Pro, Enterprise. The existing site has brand tokens and a component library.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "design-system-and-components"
+    ],
+    "allowed_skills": [
+      "ui-improvement",
+      "frontend-implementation",
+      "responsive-and-device-strategy",
+      "data-tables-and-enterprise-ux",
+      "conversion-and-content",
+      "interaction-patterns-and-form-ux"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "website-audit-and-redesign",
+      "service-blueprinting",
+      "product-decision-and-stakeholder-framing"
+    ],
+    "activation_budget": {
+      "soft_max": 7
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "design-system-and-components",
+    "ui-improvement",
+    "frontend-implementation",
+    "responsive-and-device-strategy",
+    "data-tables-and-enterprise-ux",
+    "conversion-and-content",
+    "interaction-patterns-and-form-ux"
+  ],
+  "expected_outcomes": [
+    "Pricing table uses existing design tokens",
+    "Responsive on mobile",
+    "Tier differences clear",
+    "CTA hierarchy appropriate"
+  ],
+  "must_not": [
+    "Run product discovery for a known pricing structure",
+    "Audit the whole site for a single component"
+  ],
+  "rubric": {
+    "minimality": 25,
+    "coverage": 30,
+    "project_grounding": 30,
+    "escalation_logic": 15
+  }
+}

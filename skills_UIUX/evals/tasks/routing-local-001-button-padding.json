@@ -1,0 +1,43 @@
+{
+  "id": "routing-local-001-button-padding",
+  "category": "regression",
+  "prompt": "The primary CTA button on the homepage has 8px padding instead of the design system's 12px 24px. Fix it.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "ui-improvement",
+      "design-system-and-components"
+    ],
+    "forbidden_without_trigger": [
+      "website-audit-and-redesign",
+      "visual-design-direction",
+      "design-reference-research-and-benchmark",
+      "product-strategy-and-prioritization",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": {
+      "soft_max": 3
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ui-improvement",
+    "design-system-and-components"
+  ],
+  "expected_outcomes": [
+    "Button padding matches design system token",
+    "No unrelated layout changes"
+  ],
+  "must_not": [
+    "Trigger a full redesign workflow",
+    "Load research or brand audit packs"
+  ],
+  "rubric": {
+    "minimality": 35,
+    "coverage": 25,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

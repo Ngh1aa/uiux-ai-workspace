@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "profile": "uiux-corporate",
+  "packs": ["research-validation", "experience-strategy", "inclusive-trust", "designops-governance", "measurement-reliability"],
+  "additional_skills": ["website-audit-and-redesign"],
+  "exclude_skills": [],
+  "project": {
+    "name": "QTSC",
+    "mode": "interactive-prototype",
+    "domain": "technology-park-corporate"
+  },
+  "source_of_truth": [
+    "docs/digital-brand-guideline.md",
+    "docs/ui-foundation.md",
+    "docs/source-architecture.md"
+  ],
+  "constraints": [
+    "Prioritize UI/UX fidelity and realistic interactions over production backend scope",
+    "Reuse existing design tokens and shared components before adding local styles",
+    "Do not claim validated UX improvement, formal accessibility conformance or agent reliability without evidence appropriate to the claim"
+  ]
+}

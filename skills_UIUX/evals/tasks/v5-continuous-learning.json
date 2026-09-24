@@ -1,0 +1,9 @@
+{
+  "id": "v5-continuous-learning",
+  "category": "capability",
+  "prompt": "A production service shows higher mobile form abandonment and support tickets saying users lose uploaded documents. Create a learning loop that diagnoses, fixes, verifies and prevents recurrence.",
+  "recommended_skills": ["continuous-learning-and-improvement", "journey-outcome-and-service-health", "complex-forms-and-wizards", "testing-strategy"],
+  "expected_outcomes": ["Analytics/support signals are linked but not treated as root-cause proof", "A focused research/diagnosis step is defined", "The expected outcome is specified before the change", "Post-release measurement verifies the fix", "The failure becomes regression coverage"],
+  "must_not": ["Redesign the form solely from a trend", "Assume support tickets represent every user", "Ship without verifying whether document loss is fixed"],
+  "rubric": {"diagnosis": 25, "learning_loop": 30, "measurement": 25, "regression_prevention": 20}
+}

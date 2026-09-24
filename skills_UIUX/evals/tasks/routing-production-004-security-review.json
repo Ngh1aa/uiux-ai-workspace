@@ -1,0 +1,53 @@
+{
+  "id": "routing-production-004-security-review",
+  "category": "capability",
+  "prompt": "Review the authentication and account recovery flows of this healthcare portal for security and privacy concerns. Users handle sensitive medical data. The site uses Next.js with NextAuth and stores patient records.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "security-and-privacy",
+      "authentication-account-and-recovery-ux"
+    ],
+    "allowed_skills": [
+      "system-reality-and-production-readiness",
+      "testing-strategy",
+      "ai-agent-coding-guardrails"
+    ],
+    "forbidden_without_trigger": [
+      "visual-design-direction",
+      "brand-guidelines",
+      "product-discovery",
+      "conversion-and-content",
+      "design-reference-research-and-benchmark",
+      "analytics-and-experimentation"
+    ],
+    "activation_budget": {
+      "soft_max": 7
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "security-and-privacy",
+    "authentication-account-and-recovery-ux",
+    "system-reality-and-production-readiness",
+    "testing-strategy",
+    "ai-agent-coding-guardrails"
+  ],
+  "expected_outcomes": [
+    "Trust boundary analysis",
+    "Auth flow security review",
+    "Privacy controls reviewed",
+    "Recovery flow safety verified",
+    "Residual risks documented"
+  ],
+  "must_not": [
+    "Load visual/brand design for a security review",
+    "Start product discovery for a security audit"
+  ],
+  "rubric": {
+    "minimality": 30,
+    "coverage": 30,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}

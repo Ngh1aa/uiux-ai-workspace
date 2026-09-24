@@ -1,0 +1,22 @@
+{
+  "id": "external-uiux-002-web-ui-code-review-react",
+  "category": "capability",
+  "prompt": "Review pre-merge một Next.js UI: page server component await tuần tự 3 request độc lập, client component import cả icon package, icon-only settings button không có accessible name, CTA ghi 'Continue'. Hãy ưu tiên issue thật và route owner đúng.",
+  "recommended_skills": ["project-context", "web-ui-code-review", "accessibility", "web-quality-and-performance", "ux-writing-and-microcopy"],
+  "expected_outcomes": [
+    "Detect Next.js từ project source/version trước framework-specific guidance",
+    "Ưu tiên waterfall và bundle issues trước micro-optimization",
+    "Flag icon-only accessible name với owner accessibility",
+    "Đánh giá CTA Continue theo consequence/context thay vì đổi máy móc",
+    "Tách static code finding khỏi claim performance/accessibility đã verified",
+    "Mỗi material finding có verification method"
+  ],
+  "must_not": [
+    "Apply React rules nếu stack chưa được detect",
+    "Gọi WCAG conformant từ code review",
+    "Claim performance improved khi chưa đo",
+    "Refactor unrelated architecture",
+    "Fetch mutable upstream main trong runtime review"
+  ],
+  "rubric": {"alignment":20,"ux":15,"visual":5,"system":20,"inclusive":15,"web_quality":20,"verification":5}
+}

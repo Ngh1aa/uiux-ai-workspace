@@ -1,0 +1,25 @@
+{
+  "id": "runtime-durable-001-resume",
+  "category": "capability",
+  "prompt": "Run a provider-neutral action plan that writes a scoped UI/UX artifact, checkpoints the run, and resumes from the local checkpoint without losing completed action history.",
+  "recommended_skills": [
+    "ai-agent-coding-guardrails",
+    "agent-evaluation-and-reliability"
+  ],
+  "expected_outcomes": [
+    "Checkpoint is written atomically under the run directory",
+    "Resume restores task, authority, role and completed action history",
+    "Local resumability is not mislabeled as distributed durable execution"
+  ],
+  "must_not": [
+    "Claim Temporal-grade durability from a local JSON checkpoint",
+    "Discard completed action history on resume",
+    "Write checkpoint state outside the project run directory"
+  ],
+  "rubric": {
+    "resume_integrity": 40,
+    "system_reality": 25,
+    "state_safety": 20,
+    "evidence": 15
+  }
+}

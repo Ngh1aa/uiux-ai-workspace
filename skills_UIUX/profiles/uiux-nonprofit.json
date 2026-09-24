@@ -1,0 +1,6 @@
+{
+  "name": "uiux-nonprofit",
+  "description": "Interactive nonprofit/NGO UIUX prototype focused on mission, trust, impact, support and participation journeys.",
+  "extends": "prototype-uiux",
+  "skills": ["nonprofit-website"]
+}

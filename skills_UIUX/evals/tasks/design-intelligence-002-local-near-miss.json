@@ -1,0 +1,9 @@
+{
+  "id": "design-intelligence-002-local-near-miss",
+  "category": "capability",
+  "prompt": "Một button trong header lệch 2px so với token spacing đã có. Hãy sửa đúng project convention. Bộ UI UX Pro Max đã được vendored trong repo.",
+  "recommended_skills": ["project-context", "ui-improvement"],
+  "expected_outcomes": ["Ưu tiên inspect project token/component owner", "Không route design-intelligence-retrieval khi project truth đã quyết định local fix", "Sửa root cause tối thiểu", "Verify đúng component/state liên quan"],
+  "must_not": ["Chạy --design-system chỉ vì vendor đã cài", "Load design database", "Thay palette/typography", "Mở rộng thành redesign ngoài scope"],
+  "rubric": {"alignment":30,"ux":10,"visual":15,"system":20,"inclusive":5,"web_quality":5,"verification":15}
+}

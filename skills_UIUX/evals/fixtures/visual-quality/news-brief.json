@@ -1,0 +1,46 @@
+{
+  "website_type": "news",
+  "client_name": "The Meridian Chronicle",
+  "tagline": "Independent Investigative Journalism & Long-Form Global Reporting",
+  "brand_attributes": ["scrupulous", "uncompromising", "editorial", "timely", "deeply-reported"],
+  "primary_audience": "Informed readers, policy analysts, investigative researchers, and public interest advocates",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#111111",
+      "secondary": "#555555",
+      "accent": "#9E1B1B",
+      "surface": "#FAFAFA",
+      "surface_elevated": "#FFFFFF"
+    },
+    "typography": "Classic high-legibility editorial serif (e.g. Merriweather or Source Serif Pro) for body copy with punchy headline display serif (e.g. Frank Ruhl Libre or Playfair)",
+    "composition": "Multi-column broadsheet-inspired editorial grid, varying lead story hierarchy, prominent bylines and reading time, pull-quote callouts, and clean article reader mode"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Current edition front page",
+      "key_sections": ["breaking-investigation-lead-story", "secondary-analyses-grid", "opinion-and-essay-column", "photojournalism-essay-strip", "newsletter-dispatch-box"],
+      "layout_family": "broadsheet-editorial"
+    },
+    {
+      "name": "article-view",
+      "role": "Focused long-form reading experience",
+      "key_sections": ["article-headline-byline-date-header", "dropcap-body-prose-with-pullquotes", "interactive-data-chart-embed", "author-bio-and-credentials", "related-investigations-list"],
+      "layout_family": "longform-reading"
+    },
+    {
+      "name": "sections-archive",
+      "role": "Topic taxonomy & historical investigative series",
+      "key_sections": ["topic-breadcrumbs-and-filters", "chronological-article-stream-with-summaries", "series-collection-cards"],
+      "layout_family": "content-stream"
+    },
+    {
+      "name": "membership",
+      "role": "Subscriber support for independent press",
+      "key_sections": ["editorial-independence-statement", "membership-tiers-comparison", "reader-impact-metrics-counter"],
+      "layout_family": "pledge-conversion"
+    }
+  ],
+  "media_guidelines": "Photojournalism with authentic source captions, historical archival imagery, and clear informational data charts. Strict credit provenance.",
+  "anti_patterns": ["Intrusive ad interstitials", "Clickbait layout patterns with screaming badges", "Low contrast grey-on-grey article prose", "Identical card dimensions for lead story vs minor brief"]
+}

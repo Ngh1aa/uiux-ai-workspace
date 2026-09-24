@@ -1,0 +1,46 @@
+{
+  "website_type": "ecommerce",
+  "client_name": "Komorebi Ceramic & Tea Studio",
+  "tagline": "Handcrafted Stoneware Vessels & Single-Estate Teas",
+  "brand_attributes": ["tactile", "wabi-sabi", "serene", "artisanal", "earthy"],
+  "primary_audience": "Design-conscious collectors, loose-leaf tea enthusiasts, and mindful living practitioners",
+  "aesthetic_direction": {
+    "palette": {
+      "primary": "#282520",
+      "secondary": "#6A645A",
+      "accent": "#9E7153",
+      "surface": "#F6F4F0",
+      "surface_elevated": "#EFECE6"
+    },
+    "typography": "Delicate high-contrast display serif (e.g. Cormorant Garamond) combined with crisp neutral sans (e.g. DM Sans or Inter)",
+    "composition": "Spacious product cards with tactile zoom, craft provenance callouts, material glaze comparisons, and calming grid rhythms"
+  },
+  "required_pages": [
+    {
+      "name": "home",
+      "role": "Studio ethos & seasonal drops",
+      "key_sections": ["quiet-atmospheric-hero", "current-kiln-firing-drop-grid", "craft-process-video-split", "tea-pairing-curated-set", "newsletter-dispatch-card"],
+      "layout_family": "editorial-storefront"
+    },
+    {
+      "name": "shop",
+      "role": "Product collection catalogue",
+      "key_sections": ["clay-body-and-glaze-filter", "spacious-product-grid-with-hover-glaze-detail", "in-stock-status-badges", "artisan-notes-sidebar"],
+      "layout_family": "catalogue-browse"
+    },
+    {
+      "name": "product-detail",
+      "role": "Decision & purchase experience",
+      "key_sections": ["multi-angle-ceramic-gallery", "dimensions-capacity-spec-table", "glaze-characteristics-accordion", "add-to-tote-sticky-bar", "artisan-signature-callout"],
+      "layout_family": "detail-decision"
+    },
+    {
+      "name": "about-craft",
+      "role": "Studio philosophy & wood-firing kiln",
+      "key_sections": ["kiln-history-essay", "artisan-portrait-and-philosophical-quote", "clay-sourcing-map"],
+      "layout_family": "longform-narrative"
+    }
+  ],
+  "media_guidelines": "High-detail macro photography revealing glaze crazing, raw clay textures, and natural daylight on ceramic curves. Natural linen backdrops.",
+  "anti_patterns": ["Flashing discount popups or urgency countdown timers", "Harsh neon badge colors", "Cluttered multi-tier discount tables", "Stock tea field images"]
+}

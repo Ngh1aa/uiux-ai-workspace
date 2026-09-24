@@ -1,0 +1,9 @@
+{
+  "id": "v3-ia-architecture",
+  "category": "regression",
+  "prompt": "Redesign the information architecture for a multi-audience corporate website with 80+ pages, several ambiguous service categories, deep legacy URLs and users who may enter through search engines rather than the homepage. Propose the IA decision framework before visual navigation design.",
+  "recommended_skills": ["information-architecture", "card-sorting-and-tree-testing", "website-audit-and-redesign"],
+  "expected_outcomes": ["Separates IA from navigation UI", "Inventories content and page roles", "Uses task/topic mental models and information-scent labels", "Balances breadth and depth without arbitrary click limits", "Plans multiple findability routes and legacy URL migration", "Identifies assumptions and validation methods"],
+  "must_not": ["Apply a 3-click rule", "Apply a 7±2 navigation-item rule", "Treat sitemap as the entirety of IA", "Assume all journeys start at the homepage", "Copy the organization chart directly into primary navigation"],
+  "rubric": {"structure_quality": 25, "findability": 25, "evidence_and_validation": 20, "migration_safety": 15, "labeling_and_taxonomy": 15}
+}

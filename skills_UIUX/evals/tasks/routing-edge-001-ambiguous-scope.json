@@ -1,0 +1,58 @@
+{
+  "id": "routing-edge-001-ambiguous-scope",
+  "category": "capability",
+  "prompt": "The client says 'make the website look more modern.' No other constraints. The site is a 4-page portfolio for a photographer.",
+  "routing": {
+    "required_owners": [
+      "project-context"
+    ],
+    "allowed_skills": [
+      "ui-improvement",
+      "website-audit-and-redesign",
+      "visual-design-direction",
+      "brand-guidelines",
+      "design-system-and-components",
+      "responsive-and-device-strategy",
+      "design-reference-research-and-benchmark",
+      "asset-media-and-art-direction",
+      "website-delivery-pipeline"
+    ],
+    "forbidden_without_trigger": [
+      "product-discovery",
+      "analytics-and-experimentation",
+      "service-blueprinting",
+      "data-tables-and-enterprise-ux",
+      "complex-forms-and-wizards"
+    ],
+    "activation_budget": {
+      "soft_max": 10
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "ui-improvement",
+    "website-audit-and-redesign",
+    "visual-design-direction",
+    "brand-guidelines",
+    "design-system-and-components",
+    "responsive-and-device-strategy",
+    "design-reference-research-and-benchmark",
+    "asset-media-and-art-direction",
+    "website-delivery-pipeline"
+  ],
+  "expected_outcomes": [
+    "Scope clarified or reasonable assumption stated",
+    "Appropriate escalation based on interpreted scope",
+    "Not both minimal and maximal skill loading"
+  ],
+  "must_not": [
+    "Load enterprise/form/data skills for a portfolio site",
+    "Load all packs without reasoning about scope"
+  ],
+  "rubric": {
+    "minimality": 20,
+    "coverage": 25,
+    "project_grounding": 30,
+    "escalation_logic": 25
+  }
+}

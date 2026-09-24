@@ -1,0 +1,45 @@
+{
+  "id": "routing-edge-003-meta-canonical-fix",
+  "category": "regression",
+  "prompt": "Several pages have duplicate canonical URLs pointing to the homepage instead of themselves. Fix the canonical tags across the site.",
+  "routing": {
+    "required_owners": [
+      "project-context",
+      "seo-strategy"
+    ],
+    "allowed_skills": [
+      "frontend-implementation"
+    ],
+    "forbidden_without_trigger": [
+      "search-demand-and-content-briefing",
+      "information-architecture",
+      "content-governance-and-cms",
+      "analytics-and-experimentation",
+      "visual-design-direction",
+      "conversion-and-content"
+    ],
+    "activation_budget": {
+      "soft_max": 3
+    }
+  },
+  "recommended_skills": [
+    "project-context",
+    "seo-strategy",
+    "frontend-implementation"
+  ],
+  "expected_outcomes": [
+    "Canonical URLs corrected per page",
+    "Template/framework root cause identified",
+    "No live keyword research loaded"
+  ],
+  "must_not": [
+    "Load search demand research for a technical SEO bug",
+    "Load visual/content skills for a meta tag fix"
+  ],
+  "rubric": {
+    "minimality": 35,
+    "coverage": 25,
+    "project_grounding": 25,
+    "escalation_logic": 15
+  }
+}
