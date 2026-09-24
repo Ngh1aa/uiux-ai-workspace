@@ -134,10 +134,10 @@ class GoalInterpreter:
                 features.append(feature)
                 evidence.append(f"feature:{feature}")
 
-        if _contains(normalized, ("production", "go live", "deploy production", "lên production", "chạy thật")):
-            mode = "production"
-        elif _contains(normalized, ("production candidate", "staging", "pre-production", "tiền production")):
+        if _contains(normalized, ("production candidate", "staging", "pre-production", "tiền production")):
             mode = "production-candidate"
+        elif _contains(normalized, ("production", "go live", "deploy production", "lên production", "chạy thật")):
+            mode = "production"
         elif _contains(normalized, ("mockup", "visual prototype", "prototype hình", "chỉ giao diện")):
             mode = "visual-prototype"
         else:
