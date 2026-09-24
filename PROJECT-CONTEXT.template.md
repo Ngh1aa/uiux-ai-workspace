@@ -31,6 +31,33 @@ Fill what is known. Keep unsupported claims labeled with the evidence states at 
 - **Important alternate / recovery paths:** [...]
 - **Evidence that could change the design:** [UNKNOWNS THAT MAY INVALIDATE THE CURRENT DIRECTION]
 
+## Validation and lifecycle rigor
+
+Use the lightest lane that matches project risk. Do not force enterprise ceremony onto a visual prototype.
+
+- **Validation lane:** [prototype / evidence-led / production-learning]
+- **Reason for lane:** [MODE / RISK / REQUESTED EVIDENCE]
+- **Claims requiring direct user evidence:** [...]
+- **Claims that may rely on desk/proxy evidence:** [...]
+- **Direct user evidence currently available:** [...]
+- **Validation still planned / blocked:** [...]
+
+Evidence rule: competitor research, stakeholder opinion, heuristic review and AI critique are not substitutes for direct user evidence. If direct user validation has not occurred, label the claim accordingly.
+
+## Human governance and decision ownership
+
+- **Product / business decision owner:** [...]
+- **Design decision owner:** [...]
+- **Engineering / feasibility owner:** [...]
+- **Research / user-evidence owner:** [...]
+- **Release authority (if applicable):** [...]
+- **Representative user / design-partner access:** [...]
+- **Stakeholder playback / review moments:** [...]
+- **Decisions that require explicit human approval:** [...]
+- **Known disagreements / unresolved trade-offs:** [...]
+
+AI agents may prepare evidence and recommendations; they do not silently assume human business, regulatory or release authority.
+
 ## Product success and measurement
 
 A target is not a measured outcome. Do not invent baseline values or uplift.
@@ -42,6 +69,25 @@ A target is not a measured outcome. Do not invent baseline values or uplift.
 - **Available analytics / logs / funnel data:** [...]
 - **Business outcome evidence available:** [...]
 - **Claims that must not be made:** [...]
+
+### Outcome metric tree and instrumentation
+
+For production-learning work, connect measurement to the user problem before implementation.
+
+- **User outcome:** [...]
+- **Owner / business outcome:** [...]
+- **Critical experience / journey:** [...]
+- **Primary behavioral metric:** [...]
+- **Primary attitudinal metric:** [...]
+- **Guardrail metrics:** [ACCESSIBILITY / ERROR / PERFORMANCE / TRUST / OTHER]
+- **Baseline:** [VALUE + SOURCE / UNKNOWN]
+- **Target / decision threshold:** [VALUE + RATIONALE / UNKNOWN]
+- **Event / measurement definitions:** [...]
+- **Data sources:** [ANALYTICS / SUPPORT / RESEARCH / LOGS / SURVEY / OTHER]
+- **Segmentation required:** [...]
+- **Privacy / consent constraints:** [...]
+- **Instrumentation owner:** [...]
+- **How instrumentation will be verified before launch:** [...]
 
 ## Research and validation access
 
@@ -195,6 +241,22 @@ Rules:
 - **Competitors:** [...]
 - **Research:** [...]
 - **Do not copy:** [...]
+
+## Post-launch learning
+
+Use for production or live services; leave N/A for prototypes.
+
+- **Critical experiences to monitor:** [...]
+- **Analytics / product-health signals:** [...]
+- **Support / service-desk signals:** [...]
+- **Ongoing user-research cadence:** [...]
+- **Inclusive / assistive-technology follow-up:** [...]
+- **Survey / attitudinal signal:** [...]
+- **Experiment / A-B testing candidates:** [...]
+- **Feature-flag / staged-rollout strategy:** [...]
+- **Rollback / stop signals:** [...]
+- **Post-launch review cadence and owners:** [...]
+- **How live evidence feeds backlog / design decisions:** [...]
 
 ## Portfolio / case-study capture
 
