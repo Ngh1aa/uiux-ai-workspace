@@ -17,6 +17,9 @@ REPLAN_SIGNALS = {
 CONTEXT_KEYS = {
     "intent",
     "website_type",
+    "domain",
+    "product_archetype",
+    "validation_lane",
     "mode",
     "risk",
     "features",
