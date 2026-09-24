@@ -52,7 +52,9 @@ jobs:
         run: python scripts/verify_motion_primitives.py
 
       - name: Compile active Python source tree
-        run: python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
+        run: |
+          python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
+          python -m compileall -q ../skills_UIUX/runtime
 
       - name: Run foundation tests
         run: python -m pytest -q tests
