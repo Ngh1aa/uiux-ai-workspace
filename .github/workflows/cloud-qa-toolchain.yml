@@ -20,13 +20,13 @@ on:
         required: false
         default: ""
       target_dir:
-        description: "Project root inside the target repository"
+        description: "Project root inside the target repository; blank uses external repo root or this repo's QA fixture root"
         required: false
-        default: "uiux-factory/qa"
+        default: ""
       routes:
-        description: "Comma-separated routes to inspect"
+        description: "Comma-separated routes to inspect; blank uses / for external targets or fixture routes for the internal toolchain smoke"
         required: false
-        default: "/fixture/,/fixture/index.html"
+        default: ""
       install_command:
         description: "Optional dependency install command run from target_dir"
         required: false
@@ -69,7 +69,7 @@ jobs:
           node-version: "22"
 
       - name: Install QA dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -77,24 +77,29 @@ jobs:
       - name: Prepare, serve and audit target project
         env:
           INPUT_TARGET_REPOSITORY: ${{ github.event.inputs.target_repository || '' }}
-          INPUT_TARGET_DIR: ${{ github.event.inputs.target_dir || 'uiux-factory/qa' }}
-          QA_ROUTES: ${{ github.event.inputs.routes || '/fixture/,/fixture/index.html' }}
+          INPUT_TARGET_DIR: ${{ github.event.inputs.target_dir || '' }}
+          INPUT_ROUTES: ${{ github.event.inputs.routes || '' }}
           QA_INSTALL_COMMAND: ${{ github.event.inputs.install_command || '' }}
           QA_BUILD_COMMAND: ${{ github.event.inputs.build_command || '' }}
           QA_SERVE_COMMAND: ${{ github.event.inputs.serve_command || '' }}
         run: |
           if [ -n "$INPUT_TARGET_REPOSITORY" ]; then
             QA_REPO_ROOT="$GITHUB_WORKSPACE/target-project"
+            TARGET_RELATIVE="${INPUT_TARGET_DIR#/}"
+            [ -n "$TARGET_RELATIVE" ] || TARGET_RELATIVE="."
+            export QA_ROUTES="${INPUT_ROUTES:-/}"
           else
             QA_REPO_ROOT="$GITHUB_WORKSPACE"
+            TARGET_RELATIVE="${INPUT_TARGET_DIR#/}"
+            [ -n "$TARGET_RELATIVE" ] || TARGET_RELATIVE="uiux-factory/qa"
+            export QA_ROUTES="${INPUT_ROUTES:-/fixture/,/fixture/index.html}"
           fi
 
-          TARGET_RELATIVE="${INPUT_TARGET_DIR#/}"
-          if [ -z "$TARGET_RELATIVE" ]; then
-            TARGET_RELATIVE="."
-          fi
           export QA_TARGET_DIR="$QA_REPO_ROOT/$TARGET_RELATIVE"
           export QA_BASE_URL="http://127.0.0.1:4173"
+
+          echo "[QA] target=$QA_TARGET_DIR"
+          echo "[QA] routes=$QA_ROUTES"
 
           if [ ! -d "$QA_TARGET_DIR" ]; then
             echo "Target directory does not exist: $QA_TARGET_DIR" >&2

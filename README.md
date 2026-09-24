@@ -86,6 +86,35 @@ Local execution output is written under `uiux-factory/runs/` and `uiux-factory/g
 
 The old deterministic ecommerce generator remains available only as an internal regression-fixture path used by existing tests; it is no longer exposed as a production CLI engine.
 
+## Managed Flow OS CLI
+
+From the repository root, inspect or start the declarative Development Manager with:
+
+```bash
+python -B skills_UIUX/scripts/uiux-agent.py \
+  --project ../my-site \
+  --managed \
+  --task "Redesign a B2B fintech settlement product" \
+  --authority branch_write
+```
+
+When project truth is already known, the managed CLI can override inference explicitly:
+
+```bash
+python -B skills_UIUX/scripts/uiux-agent.py \
+  --project ../my-site \
+  --managed \
+  --task "Redesign the product" \
+  --website-type saas \
+  --domain financial-services \
+  --product-archetype payments-infrastructure \
+  --validation-lane production-learning \
+  --mode production-candidate \
+  --authority branch_write
+```
+
+Use `skills_UIUX/FLOW-AGENT-OS.md` for lifecycle, provider, approval and replanning commands.
+
 ## Cloud QA
 
 The cloud QA workflow installs and exercises:
@@ -105,8 +134,8 @@ For `workflow_dispatch`, provide:
 
 - `target_repository` — `owner/name`; blank means this repository;
 - `target_ref` — branch/tag/SHA; blank uses the target repository default branch;
-- `target_dir` — project root inside that repository;
-- `routes` — comma-separated routes such as `/,/about.html,/contact.html`;
+- `target_dir` — project root inside that repository; blank uses an external target repository's root, or `uiux-factory/qa` for the internal toolchain smoke;
+- `routes` — comma-separated routes such as `/,/about.html,/contact.html`; blank uses `/` for an external target or the internal fixture routes for the toolchain smoke;
 - `install_command` — optional dependency install command;
 - `build_command` — optional production build command;
 - `serve_command` — optional preview command; blank uses static HTTP serving.
