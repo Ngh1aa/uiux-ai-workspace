@@ -152,12 +152,14 @@ An accepted replan can target an earlier stage, add/drop non-mandatory skills, i
 
 ## CLI lifecycle
 
+The commands below assume the current directory is the repository root.
+
 ### 1. Start from one natural-language goal
 
 No website type or skill selection is required for common cases:
 
 ```bash
-python -B scripts/uiux-agent.py \
+python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed \
   --task "Tạo website bán giày thể thao hiện đại, có giỏ hàng, checkout và tìm kiếm" \
@@ -169,11 +171,14 @@ The output contains `manager_run_id`, inferred `task_context`, the resolved flow
 Use explicit overrides only when project truth is known and inference should not decide it:
 
 ```bash
-python -B scripts/uiux-agent.py \
+python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed \
   --task "Redesign website" \
   --website-type ecommerce \
+  --domain financial-services \
+  --product-archetype payments-infrastructure \
+  --validation-lane production-learning \
   --mode production-candidate \
   --feature search \
   --authority branch_write
@@ -184,7 +189,7 @@ python -B scripts/uiux-agent.py \
 The core runtime remains provider-neutral. A model/provider adapter is responsible for producing the JSON `actions` plan; the runtime enforces roles, tools, authority, checkpoints and lifecycle.
 
 ```bash
-python -B scripts/uiux-agent.py \
+python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed-run-id <manager_run_id> \
   --plan path/to/provider-plan.json \
@@ -198,7 +203,7 @@ Repeat for the next active stage. The manager prevents stage skipping.
 Start in manual approval mode:
 
 ```bash
-python -B scripts/uiux-agent.py \
+python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed \
   --task "Tạo website công ty công nghệ hiện đại" \
@@ -209,7 +214,7 @@ python -B scripts/uiux-agent.py \
 After the design stage produces and verifies its Design Contract, approve the gate:
 
 ```bash
-python -B scripts/uiux-agent.py \
+python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed-run-id <manager_run_id> \
   --approve-gate design-contract
@@ -220,7 +225,7 @@ Then complete/advance the design stage as normal.
 ### 4. Inspect status
 
 ```bash
-python -B scripts/uiux-agent.py \
+python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed-run-id <manager_run_id>
 ```
@@ -230,7 +235,7 @@ python -B scripts/uiux-agent.py \
 For a QA failure:
 
 ```bash
-python -B scripts/uiux-agent.py \
+python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed-run-id <manager_run_id> \
   --replan-signal GATE_FAIL
@@ -249,11 +254,11 @@ This separation is intentional: Flow OS remains portable across Anthropic, OpenA
 ## Validation
 
 ```bash
-python -B scripts/validate-flows.py
-python -B scripts/validate-runtime-foundation.py
+python -B skills_UIUX/scripts/validate-flows.py
+python -B skills_UIUX/scripts/validate-runtime-foundation.py
 ```
 
-`.github/workflows/flow-os-validate.yml` runs these checks for relevant pushes and pull requests.
+`.github/workflows/uiux-factory-ci.yml` runs these Flow Agent OS checks for relevant pushes and pull requests.
 
 ## Extension rule
 
