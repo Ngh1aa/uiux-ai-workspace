@@ -33,6 +33,7 @@ def test_goal_interpreter_supports_professional_website_domains() -> None:
             "policy": "adaptive-prompt-os-v4",
             "lane": "full_prompt_os",
         }
+        assert profile.domain in {"generic", "financial-services"}
 
 
 def test_factory_default_delivery_policy_is_pinned_to_upstream_source() -> None:
@@ -91,3 +92,60 @@ def test_router_no_longer_defaults_every_unknown_goal_to_corporate() -> None:
     )
     assert selection.domain == "generic"
     assert "project-context/SKILL.md" in selection.mandatory_paths
+
+
+def test_goal_interpreter_classifies_financial_domain_and_archetypes() -> None:
+    interpreter = GoalInterpreter()
+
+    finflow = interpreter.interpret(
+        "Design a B2B fintech multi-rail settlement platform for PSP and MTO payout operations"
+    )
+    assert finflow.domain == "financial-services"
+    assert finflow.product_archetype == "payments-infrastructure"
+
+    kyc = interpreter.interpret("Build a KYC AML onboarding review workflow")
+    assert kyc.domain == "financial-services"
+    assert kyc.product_archetype == "compliance-operations"
+
+    nova = interpreter.interpret("Create a consumer banking app for spending, saving and debit cards")
+    assert nova.domain == "financial-services"
+    assert nova.product_archetype == "consumer-banking"
+
+    lumen = interpreter.interpret("Create an immersive digital museum experience")
+    assert lumen.domain == "generic"
+    assert lumen.product_archetype == "generic"
+
+
+def test_financial_projects_route_financial_product_intelligence() -> None:
+    flow = ProfessionalWebsiteFlow(SKILLS)
+    profile, skills, _mandatory = flow.resolve_skill_names(
+        "research",
+        "Redesign a fintech settlement and payment rails landing page for PSP operations",
+    )
+    assert profile.domain == "financial-services"
+    assert profile.product_archetype == "payments-infrastructure"
+    assert "financial-product-intelligence" in skills
+    assert "trust-credibility-and-transparency" in skills
+
+
+def test_agentic_workflow_routes_specialist_orchestration_only_when_signaled() -> None:
+    flow = ProfessionalWebsiteFlow(SKILLS)
+
+    profile, skills, _mandatory = flow.resolve_skill_names(
+        "implementation",
+        "Build a multi-agent orchestration workflow with subagent verification",
+    )
+    assert "agentic-workflow" in profile.features
+    assert "specialist-agent-orchestration" in skills
+
+    _plain_profile, plain_skills, _mandatory = flow.resolve_skill_names(
+        "implementation",
+        "Build a responsive portfolio landing page",
+    )
+    assert "specialist-agent-orchestration" not in plain_skills
+
+
+def test_adaptive_router_prefers_business_domain_when_known() -> None:
+    assert AdaptiveSkillRouter.infer_domain(
+        "B2B fintech settlement infrastructure for PSPs"
+    ) == "financial-services"
