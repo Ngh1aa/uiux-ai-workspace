@@ -22,6 +22,7 @@ class GoalProfile:
     website_type: str
     domain: str
     product_archetype: str
+    validation_lane: str
     mode: str
     risk: str
     features: tuple[str, ...] = field(default_factory=tuple)
@@ -36,6 +37,7 @@ class GoalProfile:
             "website_type": self.website_type,
             "domain": self.domain,
             "product_archetype": self.product_archetype,
+            "validation_lane": self.validation_lane,
             "mode": self.mode,
             "risk": self.risk,
             "features": list(self.features),
@@ -110,6 +112,28 @@ class GoalInterpreter:
             "multi-agent", "multiagent", "subagent", "sub-agent", "agent workflow",
             "agentic workflow", "autonomous agent", "orchestrator", "orchestration"
         )),
+        ("user-validation", (
+            "real users", "real user", "user research", "usability test", "usability testing",
+            "moderated testing", "concept test", "concept testing", "user validation",
+            "test with users", "research participants", "sponsor user", "interview users"
+        )),
+        ("outcome-measurement", (
+            "outcome metric", "outcome metrics", "success metric", "success metrics", "kpi",
+            "analytics instrumentation", "instrumentation", "measurement plan", "measure success",
+            "baseline metric", "product analytics"
+        )),
+        ("stakeholder-governance", (
+            "stakeholder", "playback", "governance", "decision owner", "approval gate",
+            "cross-functional", "cross functional", "release approval"
+        )),
+        ("experimentation", (
+            "a/b test", "a/b testing", "ab test", "split test", "experiment",
+            "feature flag", "gradual rollout", "staged rollout"
+        )),
+        ("live-learning", (
+            "post-launch", "post launch", "after launch", "live learning", "continuous research",
+            "support tickets", "production analytics", "live monitoring", "product health"
+        )),
     )
 
     @staticmethod
@@ -156,10 +180,10 @@ class GoalInterpreter:
                 features.append(name)
                 evidence.append(f"feature:{name}")
 
-        if self._contains(text, ("production", "go live", "lên production", "chạy thật")):
-            mode = "production"
-        elif self._contains(text, ("staging", "production candidate", "pre-production")):
+        if self._contains(text, ("staging", "production candidate", "pre-production")):
             mode = "production-candidate"
+        elif self._contains(text, ("production", "go live", "lên production", "chạy thật")):
+            mode = "production"
         elif self._contains(text, ("mockup", "visual prototype", "chỉ giao diện")):
             mode = "visual-prototype"
         else:
@@ -172,6 +196,21 @@ class GoalInterpreter:
         elif mode == "production":
             risk = "production"
         evidence.append(f"risk:{risk}")
+
+        validation_lane = "prototype"
+        lifecycle_features = {
+            "user-validation",
+            "outcome-measurement",
+            "stakeholder-governance",
+            "experimentation",
+            "live-learning",
+        }
+        if mode in {"production", "production-candidate"}:
+            validation_lane = "production-learning"
+        elif risk == "high" or lifecycle_features.intersection(features):
+            validation_lane = "evidence-led"
+        evidence.append(f"validation_lane:{validation_lane}")
+
         evidence.append(f"delivery_policy:{DEFAULT_DELIVERY_POLICY_ID}")
         evidence.append(f"delivery_lane:{DEFAULT_FACTORY_DELIVERY_LANE}")
 
@@ -180,6 +219,7 @@ class GoalInterpreter:
             website_type=website_type,
             domain=domain,
             product_archetype=product_archetype,
+            validation_lane=validation_lane,
             mode=mode,
             risk=risk,
             features=tuple(features),

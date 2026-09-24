@@ -54,7 +54,28 @@
               }
             }
           },
-          "gates": {"type": "array", "items": {"type": "object"}}
+          "gates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "require"],
+              "additionalProperties": false,
+              "properties": {
+                "id": {"type": "string", "minLength": 1},
+                "require": {"type": "string", "minLength": 1},
+                "approval": {"enum": ["human"]},
+                "when": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {"type": "string"},
+                      {"type": "array", "items": {"type": "string"}}
+                    ]
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
