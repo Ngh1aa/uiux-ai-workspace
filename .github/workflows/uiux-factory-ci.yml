@@ -56,5 +56,10 @@ jobs:
           python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
           python -m compileall -q ../skills_UIUX/runtime
 
+      - name: Validate Flow Agent OS contracts
+        run: |
+          python ../skills_UIUX/scripts/validate-flows.py
+          python ../skills_UIUX/scripts/validate-runtime-foundation.py
+
       - name: Run foundation tests
         run: python -m pytest -q tests
