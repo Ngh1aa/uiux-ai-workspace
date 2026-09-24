@@ -249,6 +249,60 @@ def main() -> int:
                 if flag not in cli.stdout:
                     errors.append(f"managed CLI is missing documented option {flag}")
 
+    if not errors:
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                cli_run = subprocess.run(
+                    [
+                        sys.executable,
+                        "-B",
+                        str(ROOT / "scripts" / "uiux-agent.py"),
+                        "--project",
+                        tmp,
+                        "--managed",
+                        "--task",
+                        "Redesign the product",
+                        "--website-type",
+                        "saas",
+                        "--domain",
+                        "financial-services",
+                        "--product-archetype",
+                        "payments-infrastructure",
+                        "--validation-lane",
+                        "production-learning",
+                        "--mode",
+                        "production-candidate",
+                    ],
+                    cwd=ROOT,
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                )
+                if cli_run.returncode != 0:
+                    errors.append(
+                        "managed CLI lifecycle override smoke failed: "
+                        + (cli_run.stderr.strip() or cli_run.stdout.strip())
+                    )
+                else:
+                    payload = json.loads(cli_run.stdout)
+                    context = payload.get("task_context", {})
+                    expected = {
+                        "website_type": "saas",
+                        "domain": "financial-services",
+                        "product_archetype": "payments-infrastructure",
+                        "validation_lane": "production-learning",
+                        "mode": "production-candidate",
+                    }
+                    for key, value in expected.items():
+                        if context.get(key) != value:
+                            errors.append(
+                                f"managed CLI override {key} mismatch: expected {value!r}, got {context.get(key)!r}"
+                            )
+        except Exception as exc:
+            errors.append(
+                f"managed CLI lifecycle override smoke exception: {type(exc).__name__}: {exc}"
+            )
+
     try:
         node = subprocess.run(
             ["node", "--check", str(ROOT / "integrations" / "playwright" / "capture.mjs")],
