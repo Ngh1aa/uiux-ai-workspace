@@ -30,6 +30,9 @@ The manager routes on:
 
 - `intent`: build/redesign/rebuild/improve/fix/polish;
 - `website_type`: corporate, ecommerce, education, government, hospitality, news, real-estate, saas, startup, portfolio, nonprofit, landing, or a future type;
+- `domain`: business/domain family such as financial-services when evidence supports it;
+- `product_archetype`: narrower workflow family such as payments-infrastructure or consumer-banking;
+- `validation_lane`: prototype, evidence-led, or production-learning;
 - `mode`: visual-prototype, interactive-prototype, production-candidate, production;
 - `risk`: project-defined risk label;
 - `features`: active behavior such as auth, forms, search, dashboard, motion or i18n.

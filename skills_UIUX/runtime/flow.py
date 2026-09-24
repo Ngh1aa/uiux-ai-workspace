@@ -17,6 +17,9 @@ REPLAN_SIGNALS = {
 CONTEXT_KEYS = {
     "intent",
     "website_type",
+    "domain",
+    "product_archetype",
+    "validation_lane",
     "mode",
     "risk",
     "features",
@@ -108,6 +111,23 @@ def validate_flow_document(doc: dict[str, Any]) -> list[str]:
                 skills = rule.get("skills", [])
                 if not isinstance(skills, list) or any(not isinstance(item, str) for item in skills):
                     errors.append(f"{prefix}.conditional_skills[{cidx}].skills must be an array")
+
+        gates = stage.get("gates", [])
+        if not isinstance(gates, list):
+            errors.append(f"{prefix}.gates must be an array")
+        else:
+            for gidx, gate in enumerate(gates):
+                if not isinstance(gate, dict):
+                    errors.append(f"{prefix}.gates[{gidx}] must be an object")
+                    continue
+                if not isinstance(gate.get("id"), str) or not gate.get("id"):
+                    errors.append(f"{prefix}.gates[{gidx}].id must be a non-empty string")
+                if not isinstance(gate.get("require"), str) or not gate.get("require"):
+                    errors.append(f"{prefix}.gates[{gidx}].require must be a non-empty string")
+                if "when" in gate and not isinstance(gate.get("when"), dict):
+                    errors.append(f"{prefix}.gates[{gidx}].when must be an object")
+                if gate.get("approval") not in {None, "human"}:
+                    errors.append(f"{prefix}.gates[{gidx}].approval must be human when set")
 
     replanning = doc.get("replanning", {})
     if not isinstance(replanning, dict):
@@ -294,13 +314,22 @@ class SkillResolver:
         if missing:
             raise ValueError(f"stage {stage['id']} references missing skills: {', '.join(missing)}")
 
+        gates: list[dict[str, Any]] = []
+        for gate in stage.get("gates", []):
+            condition = dict(gate.get("when", {}))
+            if condition and not _condition_matches(condition, context):
+                continue
+            resolved_gate = dict(gate)
+            resolved_gate.pop("when", None)
+            gates.append(resolved_gate)
+
         return ResolvedStage(
             id=str(stage["id"]),
             agent=agent,
             purpose=str(stage.get("purpose", "")),
             skills=skills,
             mandatory_skills=mandatory,
-            gates=list(stage.get("gates", [])),
+            gates=gates,
         )
 
 
