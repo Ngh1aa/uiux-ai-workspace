@@ -22,6 +22,9 @@ Development Manager
 GoalInterpreter
   ├─ intent
   ├─ website type
+  ├─ business domain
+  ├─ product archetype
+  ├─ validation lane
   ├─ features
   ├─ mode
   └─ risk
@@ -58,7 +61,17 @@ Gate evidence
 
 `runtime/task_context.py::GoalInterpreter` provides a conservative deterministic first pass over the user's natural-language goal. It can infer common website types (corporate, ecommerce, education, government, hospitality, news, real estate, SaaS, startup, portfolio, nonprofit, landing), common features (search, forms, auth, dashboard, motion, i18n), lifecycle intent, mode and risk.
 
-Explicit CLI/config values always override inferred values. When the domain cannot be inferred safely, the interpreter uses `generic` instead of fabricating business truth. The resolved context records confidence and evidence so routing remains inspectable.
+Explicit CLI/config values always override inferred values. When business domain or product archetype cannot be inferred safely, the interpreter uses `generic` instead of fabricating business truth. The resolved context records confidence and evidence so routing remains inspectable.
+
+### Validation lanes
+
+The Flow OS scales lifecycle rigor instead of forcing one enterprise process onto every project:
+
+- `prototype` — default for visual/interactive prototypes; preserve fast design → build → rendered QA.
+- `evidence-led` — selected for high-risk work or explicit user-validation/measurement/governance/experiment requests; adds direct-evidence planning and solution validation without requiring a live-production loop.
+- `production-learning` — selected for production-candidate/production; adds outcome instrumentation, human decision governance and post-launch learning readiness.
+
+A lane changes which specialist skills/gates become active. It does not turn unavailable user evidence into a PASS: missing research remains PLANNED, BLOCKED or UNKNOWN.
 
 ## Development Manager
 
