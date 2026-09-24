@@ -180,10 +180,10 @@ class GoalInterpreter:
                 features.append(name)
                 evidence.append(f"feature:{name}")
 
-        if self._contains(text, ("production", "go live", "lên production", "chạy thật")):
-            mode = "production"
-        elif self._contains(text, ("staging", "production candidate", "pre-production")):
+        if self._contains(text, ("staging", "production candidate", "pre-production")):
             mode = "production-candidate"
+        elif self._contains(text, ("production", "go live", "lên production", "chạy thật")):
+            mode = "production"
         elif self._contains(text, ("mockup", "visual prototype", "chỉ giao diện")):
             mode = "visual-prototype"
         else:
