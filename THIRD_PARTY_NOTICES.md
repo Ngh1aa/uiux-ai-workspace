@@ -47,3 +47,57 @@ The UIUX Factory uses this upstream repository as a **motion/component intellige
 The upstream source is intentionally kept unmodified so provenance, updates and diffs remain clear. At the pinned revision, the upstream README and `package.json` declare MIT licensing and `CONTRIBUTING.md` states contributions are MIT licensed. GitHub repository metadata does not expose a detected license and the root listing does not contain a standalone `LICENSE` file at that revision. Keep provenance intact and perform any additional license review required before redistributing copied source outside project use.
 
 The Factory does not treat Motion Primitives as a canonical design system or automatic template source. Components are shortlisted and adapted only after project truth, art direction, stack compatibility, accessibility, performance and responsive constraints are established.
+
+## Anthropic Reference Upstreams
+
+The following public Anthropic repositories are tracked as pinned Git submodules under `upstream/anthropics/`. They are reference corpora, not automatic runtime dependencies of UIUX Factory.
+
+### Claude Code
+
+Path:
+
+`upstream/anthropics/claude-code`
+
+Pinned upstream revision:
+
+`cbab6f4598e975b382507dab4392f61f42dd1b94`
+
+Upstream repository:
+
+`https://github.com/anthropics/claude-code`
+
+Intended local use: study agentic coding, repository understanding, Git workflow and plugin/agent organization patterns. Do not treat upstream source as a UI design system.
+
+### Claude Cookbooks
+
+Path:
+
+`upstream/anthropics/claude-cookbooks`
+
+Pinned upstream revision:
+
+`c5ff1dc523e28d9b8fbd5c6ecd63204e20b8a0ed`
+
+Upstream repository:
+
+`https://github.com/anthropics/claude-cookbooks`
+
+Intended local use: reference patterns for tool use, multimodal/vision workflows, sub-agents, retrieval and evaluation. Do not automatically import cookbook code into production paths.
+
+### Financial Services
+
+Path:
+
+`upstream/anthropics/financial-services`
+
+Pinned upstream revision:
+
+`574ed3624aebd0418c7e96cd101262f30210ab26`
+
+Upstream repository:
+
+`https://github.com/anthropics/financial-services`
+
+Intended local use: finance-domain terminology, workflow decomposition, skills/agent structure and human-review patterns. It is not a source of visual style rules and does not replace project-specific product research.
+
+For all three repositories, preserve upstream provenance and review the license/terms that apply to the specific upstream files before copying or redistributing source. Local adaptations should live outside the submodules so upstream diffs remain inspectable.
