@@ -5,7 +5,8 @@ import json
 from metagpt.actions import Action
 
 from core.actions.create_spec_first_prompt_pack import CreateSpecFirstPromptPack
-from core.contracts.prompt_pack_schema import PromptPack, SpecProfile
+from core.contracts.prompt_pack_schema import PromptPack
+from core.contracts.spec_profile import SpecProfile, infer_spec_profile
 
 
 class CreateProfileAwarePromptPack(Action):
@@ -16,62 +17,6 @@ class CreateProfileAwarePromptPack(Action):
         "Compile the universal spec-first baseline, classify the target into a specialized "
         "spec profile, and carry that profile into implementation and QA lineage."
     )
-
-    VALID_PROFILES: tuple[str, ...] = (
-        "pixel_faithful",
-        "preserve_and_extend",
-        "redesign",
-        "original_design",
-    )
-
-    @classmethod
-    def infer_profile(cls, payload: dict) -> SpecProfile:
-        explicit = str(payload.get("spec_profile", "")).strip().lower()
-        if explicit in cls.VALID_PROFILES:
-            return explicit  # type: ignore[return-value]
-
-        goal = str(payload.get("goal", "")).lower()
-        reference = str(payload.get("reference_analysis", "")).strip()
-
-        pixel_terms = (
-            "pixel faithful",
-            "pixel-faithful",
-            "clone chính xác",
-            "clone exact",
-            "reproduce exactly",
-            "rebuild exactly",
-            "verbatim",
-            "1:1 clone",
-        )
-        redesign_terms = (
-            "redesign",
-            "re-design",
-            "thiết kế lại",
-            "làm lại giao diện",
-            "new visual direction",
-        )
-        preserve_terms = (
-            "preserve",
-            "giữ nguyên",
-            "giữ core",
-            "keep existing",
-            "extend",
-            "mở rộng",
-            "complete the current",
-            "hoàn thiện project hiện tại",
-        )
-
-        if any(term in goal for term in pixel_terms):
-            return "pixel_faithful"
-        if any(term in goal for term in redesign_terms):
-            return "redesign"
-        if any(term in goal for term in preserve_terms):
-            return "preserve_and_extend"
-        if reference:
-            # A reference alone never implies pixel fidelity. Existing evidence defaults to
-            # preserve-and-extend until the goal explicitly authorizes a redesign or clone.
-            return "preserve_and_extend"
-        return "original_design"
 
     @staticmethod
     def _profile_contract(profile: SpecProfile) -> str:
@@ -104,12 +49,12 @@ class CreateProfileAwarePromptPack(Action):
 
         baseline_raw = await CreateSpecFirstPromptPack().run(instruction)
         pack = PromptPack.model_validate_json(baseline_raw)
-        profile = self.infer_profile(payload)
+        profile = infer_spec_profile(payload)
         pack.spec_profile = profile
 
         contract = self._profile_contract(profile)
         profile_block = (
-            f"## Specification profile\n\n"
+            "## Specification profile\n\n"
             f"- Profile: `{profile}`\n"
             f"- Contract: {contract}\n"
             "- Evidence vocabulary: VERIFIED / INFERRED / ASSUMED / UNKNOWN / PROPOSED / N/A_JUSTIFIED.\n"
@@ -117,9 +62,7 @@ class CreateProfileAwarePromptPack(Action):
             "- Example projects are resolution examples only, never requirement sources.\n"
         )
 
-        pack.project_context = (
-            f"# Spec profile\n- `{profile}`\n\n" + pack.project_context
-        )
+        pack.project_context = f"# Spec profile\n- `{profile}`\n\n" + pack.project_context
         mission_marker = "## 0. Mission"
         pack.full_build_spec = pack.full_build_spec.replace(
             mission_marker,
@@ -130,7 +73,8 @@ class CreateProfileAwarePromptPack(Action):
             f"SPEC PROFILE: `{profile}`\n{contract}\n\n" + pack.implementation_prompt
         )
         pack.qa_remediation_prompt = (
-            f"SPEC PROFILE: `{profile}`\nEvaluate fidelity/change boundaries according to this profile.\n\n"
+            f"SPEC PROFILE: `{profile}`\n"
+            "Evaluate fidelity/change boundaries according to this profile.\n\n"
             + pack.qa_remediation_prompt
         )
 
