@@ -9,8 +9,11 @@ on:
       - 'uiux-factory/core/verification/**'
       - 'uiux-factory/core/orchestration/quality_loop.py'
       - 'uiux-factory/core/contracts/evidence_contract_schema.py'
+      - 'uiux-factory/core/contracts/reference_evidence_schema.py'
+      - 'uiux-factory/core/actions/analyze_references.py'
       - 'uiux-factory/config/verification/**'
       - 'uiux-factory/scripts/smoke_post_render_evaluators.py'
+      - 'uiux-factory/scripts/smoke_reference_evidence_extractor.py'
       - '.github/workflows/post-render-evaluator-smoke.yml'
   pull_request:
     branches: [main]
@@ -18,8 +21,11 @@ on:
       - 'uiux-factory/core/verification/**'
       - 'uiux-factory/core/orchestration/quality_loop.py'
       - 'uiux-factory/core/contracts/evidence_contract_schema.py'
+      - 'uiux-factory/core/contracts/reference_evidence_schema.py'
+      - 'uiux-factory/core/actions/analyze_references.py'
       - 'uiux-factory/config/verification/**'
       - 'uiux-factory/scripts/smoke_post_render_evaluators.py'
+      - 'uiux-factory/scripts/smoke_reference_evidence_extractor.py'
       - '.github/workflows/post-render-evaluator-smoke.yml'
 
 permissions:
@@ -50,3 +56,7 @@ jobs:
         env:
           UIUX_FREE_TIER_CONFIRMED: '0'
         run: python scripts/smoke_post_render_evaluators.py
+
+      - name: Run reference evidence extractor smoke
+        working-directory: uiux-factory
+        run: python scripts/smoke_reference_evidence_extractor.py
