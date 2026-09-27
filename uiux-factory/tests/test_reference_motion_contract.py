@@ -50,8 +50,11 @@ def test_motion_sampler_is_non_destructive_and_samples_runtime() -> None:
     assert ".check(" not in source
 
 
-def test_reference_analyzer_uses_motion_aware_action() -> None:
-    source = (ROOT / "core" / "agents" / "reference_analyzer.py").read_text(encoding="utf-8")
-    assert "AnalyzeReferencesWithMotion" in source
-    assert "Runtime motion values may be VERIFIED" in source
-    assert "choreography interpretation must remain INFERRED" in source
+def test_reference_analyzer_keeps_motion_sampling_through_provenance_wrapper() -> None:
+    agent_source = (ROOT / "core" / "agents" / "reference_analyzer.py").read_text(encoding="utf-8")
+    wrapper_source = (ROOT / "core" / "actions" / "analyze_references_with_provenance.py").read_text(encoding="utf-8")
+    assert "AnalyzeReferencesWithProvenance" in agent_source
+    assert "AnalyzeReferencesWithMotion" in wrapper_source
+    assert "await AnalyzeReferencesWithMotion().run(instruction)" in wrapper_source
+    assert "Runtime motion values may be VERIFIED" in agent_source
+    assert "choreography interpretation must remain INFERRED" in agent_source
