@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from core.contracts.spec_profile import infer_spec_profile
+
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
@@ -43,3 +45,26 @@ def test_spec_writer_source_requires_profile_routing() -> None:
     assert "pixel_faithful, preserve_and_extend, redesign, or original_design" in source
     assert "A reference alone does not imply" in source
     assert "Deliberate design decisions are PROPOSED, not ASSUMED" in source
+    assert "CreateProfileAwarePromptPack" in source
+
+
+def test_profile_classifier_does_not_treat_reference_as_clone_authority() -> None:
+    assert infer_spec_profile(
+        {
+            "goal": "Complete the current cultural prototype",
+            "reference_analysis": "existing repository evidence",
+        }
+    ) == "preserve_and_extend"
+
+
+def test_profile_classifier_routes_explicit_intent() -> None:
+    assert infer_spec_profile({"goal": "Create a pixel-faithful 1:1 clone"}) == "pixel_faithful"
+    assert infer_spec_profile({"goal": "Redesign this SaaS dashboard"}) == "redesign"
+    assert infer_spec_profile({"goal": "Design a new editorial portfolio from scratch"}) == "original_design"
+    assert infer_spec_profile(
+        {
+            "goal": "anything",
+            "spec_profile": "original_design",
+            "reference_analysis": "reference exists",
+        }
+    ) == "original_design"
