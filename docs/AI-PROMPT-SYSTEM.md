@@ -1,8 +1,8 @@
 # Universal AI Prompt System
 
-This repository includes a reusable three-layer prompt system for AI-assisted project work.
+This repository includes a reusable layered prompt system for AI-assisted project work.
 
-The goal is to avoid rewriting a giant prompt for every task. Stable operating rules live at the repository level, project-specific truth lives in a context packet, and task-specific instructions stay small and explicit.
+The goal is to avoid rewriting a giant prompt for every task. Stable operating rules live at the repository level, project-specific truth lives in a context packet, task-specific instructions stay small and explicit, and the Prompt Compiler can synthesize those layers plus live repository evidence into an executable project specification.
 
 ## Files
 
@@ -55,6 +55,34 @@ The task prompt supplies:
 - failure policy;
 - output contract.
 
+### `skills_UIUX/prompt-compiler/`
+
+Repository-to-spec compiler for substantial UI/UX/product work.
+
+Use it when the user has a target repository and a short goal but wants a detailed build prompt or prompt pack before implementation.
+
+Minimal invocation:
+
+```text
+Prompt Compile:
+repo = https://github.com/OWNER/REPO
+goal = [1–3 sentences]
+```
+
+Default substantial-project output:
+
+```text
+00-PROJECT-CONTEXT.md
+01-RESEARCH-PROMPT.md
+02-FULL-BUILD-SPEC.md
+03-IMPLEMENTATION-PROMPT.md
+04-QA-REMEDIATION-PROMPT.md
+```
+
+The compiler audits the target repository first, extracts exact project truth, classifies evidence, identifies Preserve/Can-change boundaries, loads only applicable UIUX skills, and then compiles an implementation-ready specification. It does **not** implement the target during the default `spec_only` compile.
+
+Use `.github/prompts/prompt-compiler.prompt.md` as the short task entrypoint and `skills_UIUX/prompt-compiler/examples/mostar-guide.md` as the golden example for precision.
+
 ## Recommended context architecture
 
 ```text
@@ -71,7 +99,8 @@ Repository
 │
 └── .github/
     └── prompts/
-        └── universal-task.prompt.md
+        ├── universal-task.prompt.md
+        └── prompt-compiler.prompt.md
 ```
 
 ## Recommended usage
@@ -83,11 +112,30 @@ Repository
 3. Fill project facts, constraints, source-of-truth paths, quality requirements, and Definition of Done.
 4. Keep detailed domain knowledge in normal project docs rather than inflating `AGENTS.md`.
 
-### Starting a task
+### Starting a normal task
 
 Provide the concrete task using `.github/prompts/universal-task.prompt.md`.
 
 You do not need to fill every field. Include only context that materially changes the work.
+
+### Compiling a substantial project prompt
+
+Use Prompt Compiler when a repository already exists and the detailed implementation contract should be derived from the repository rather than manually described.
+
+```text
+Prompt Compile:
+repo = https://github.com/OWNER/REPO
+goal = Turn the current prototype into a complete multi-page experience while preserving its strongest existing interaction model.
+```
+
+The compiler should:
+
+1. audit the target source;
+2. extract exact architecture, routes, selectors, tokens, functions, breakpoints, workflows and protected behavior;
+3. distinguish `VERIFIED / INFERRED / ASSUMED / UNKNOWN / PROPOSED / N/A_JUSTIFIED`;
+4. compile the prompt pack;
+5. self-review for contradictions and hidden-chat dependencies;
+6. stop before implementation unless the user explicitly changes authority.
 
 ### Updating context
 
@@ -116,12 +164,16 @@ AGENTS.md OPERATING CONTRACT
       ↓
 SOURCE CODE / TESTS / RUNTIME / ARTIFACTS
       ↓
+APPLICABLE skills_UIUX CONTRACTS
+      ↓
 OFFICIAL EXTERNAL SOURCES
       ↓
 INFERENCE / ASSUMPTION
 ```
 
 A lower-confidence source must not silently override a higher-confidence one.
+
+Prompt Compiler is a synthesis layer, not a new source of truth. It must not invent project facts that are absent from the layers above.
 
 ## Minimal task form
 
@@ -147,7 +199,7 @@ Verify with:
 
 The full task contract is most useful for substantial or high-risk work.
 
-## Why the system is split into three layers
+## Why the system is split into layers
 
 A single mega-prompt creates several problems:
 
@@ -157,7 +209,9 @@ A single mega-prompt creates several problems:
 - conflicts become harder to resolve;
 - agents are more likely to overlook acceptance criteria.
 
-Separating stable instructions, project context, and task context makes the operating contract easier to reuse and audit.
+Separating stable instructions, project context, task context and repository-to-spec compilation makes the operating contract easier to reuse and audit.
+
+Prompt Compiler does not change this philosophy: it generates a detailed spec **from** those separated layers instead of forcing the user to manually merge them.
 
 ## Evidence-first behavior
 
@@ -167,6 +221,11 @@ The system deliberately separates:
 - `INFERRED`;
 - `ASSUMED`;
 - `UNKNOWN`.
+
+Prompt Compiler additionally uses:
+
+- `PROPOSED` — new design/product/architecture decisions introduced by the specification;
+- `N/A_JUSTIFIED` — explicitly not applicable to the declared project/scope.
 
 This is especially important for generated software and design work. A successful generation step, build, or CI check does not automatically prove product quality.
 
@@ -211,6 +270,6 @@ These sources converge on a few useful ideas reflected here: give clear instruct
 
 ## Maintenance rule
 
-Treat this as a stable V1 operating contract.
+Treat the operating contract as stable. Prompt Compiler schemas may evolve as a reusable skill, but do not continuously expand `AGENTS.md` with project-specific lessons.
 
-Do not continuously expand `AGENTS.md` with every new project lesson. Add a global rule only when it is broadly reusable across projects. Keep domain-specific knowledge in project docs, skills, or task prompts.
+Add a global rule only when it is broadly reusable across projects. Keep domain-specific knowledge in project docs, skills, compiled specs, or task prompts.
