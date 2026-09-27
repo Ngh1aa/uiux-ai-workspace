@@ -1,16 +1,8 @@
 from __future__ import annotations
 
-from typing import Literal
-
 from pydantic import BaseModel, Field, field_validator
 
-
-SpecProfile = Literal[
-    "pixel_faithful",
-    "preserve_and_extend",
-    "redesign",
-    "original_design",
-]
+from core.contracts.spec_profile import SpecProfile
 
 
 class PromptPackGate(BaseModel):
