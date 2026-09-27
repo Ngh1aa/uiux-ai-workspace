@@ -1,10 +1,15 @@
 import asyncio
 import json
+from pathlib import Path
 
 from core.actions.create_spec_first_prompt_pack import CreateSpecFirstPromptPack
 from core.contracts.prompt_pack_schema import PromptPack
 from core.manager.development_manager import DevelopmentManager
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SKILLS = ROOT.parent / "skills_UIUX"
 
 
 def _payload() -> dict:
@@ -130,7 +135,7 @@ def test_development_manager_places_specification_before_implementation() -> Non
 
 
 def test_specification_stage_routes_prompt_compiler_skill() -> None:
-    flow = ProfessionalWebsiteFlow(DevelopmentManager.__module__ and __import__("pathlib").Path(__file__).resolve().parents[2] / "skills_UIUX")
+    flow = ProfessionalWebsiteFlow(SKILLS)
     _profile, skills, _mandatory = flow.resolve_skill_names(
         "specification_compile",
         "Build a responsive portfolio website",
