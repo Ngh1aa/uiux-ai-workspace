@@ -25,7 +25,7 @@ from core.contracts.reference_evidence_schema import (
 )
 
 
-MOTION_INIT_SCRIPT = r"""() => {
+MOTION_INIT_SCRIPT = r"""(() => {
   window.__uiuxReferenceListeners = [];
   const originalAdd = EventTarget.prototype.addEventListener;
   const label = target => {
@@ -54,7 +54,7 @@ MOTION_INIT_SCRIPT = r"""() => {
     } catch (_) {}
     return originalAdd.call(this, type, listener, options);
   };
-}"""
+})();"""
 
 
 MOTION_CHECKPOINT_JS = r"""() => {
@@ -79,6 +79,7 @@ MOTION_CHECKPOINT_JS = r"""() => {
     }
     return parts.join(' > ') || el.tagName.toLowerCase();
   };
+
   const customNames = new Set();
   const scan = rules => {
     if (!rules) return;
@@ -189,17 +190,20 @@ async def _sample_interactions(page) -> list[InteractionStateEvidence]:
     selectors = await page.evaluate(INTERACTION_TARGETS_JS)
     for selector in selectors:
         locator = page.locator(selector).first
+        baseline: dict[str, str] = {}
         try:
-            before = await locator.evaluate(INTERACTION_STYLE_JS)
+            baseline = await locator.evaluate(INTERACTION_STYLE_JS)
             await locator.hover(timeout=1200)
             await page.wait_for_timeout(60)
             hover = await locator.evaluate(INTERACTION_STYLE_JS)
-            hover_changed = sorted(key for key in set(before) | set(hover) if before.get(key) != hover.get(key))
+            hover_changed = sorted(
+                key for key in set(baseline) | set(hover) if baseline.get(key) != hover.get(key)
+            )
             results.append(
                 InteractionStateEvidence(
                     selector=selector,
                     state="hover",
-                    before=before,
+                    before=baseline,
                     after=hover,
                     changed_properties=hover_changed,
                 )
@@ -207,11 +211,14 @@ async def _sample_interactions(page) -> list[InteractionStateEvidence]:
         except Exception:
             pass
         try:
+            if not baseline:
+                baseline = await locator.evaluate(INTERACTION_STYLE_JS)
             await locator.focus(timeout=1200)
             await page.wait_for_timeout(40)
             focus = await locator.evaluate(INTERACTION_STYLE_JS)
-            baseline = before if 'before' in locals() else {}
-            focus_changed = sorted(key for key in set(baseline) | set(focus) if baseline.get(key) != focus.get(key))
+            focus_changed = sorted(
+                key for key in set(baseline) | set(focus) if baseline.get(key) != focus.get(key)
+            )
             results.append(
                 InteractionStateEvidence(
                     selector=selector,
@@ -270,7 +277,10 @@ async def sample_reference_motion(url: str, role: str = "reference") -> Referenc
                     response = await page.goto(url, wait_until="load", timeout=25_000)
                     if not response or not response.ok:
                         raise ValueError(f"Reference returned HTTP {response.status if response else 'unknown'}.")
-                    max_scroll = int(await page.evaluate("Math.max(0, document.documentElement.scrollHeight - innerHeight)"))
+
+                    max_scroll = int(
+                        await page.evaluate("Math.max(0, document.documentElement.scrollHeight - innerHeight)")
+                    )
                     evidence.max_scroll_y = max_scroll
                     progress_values = [0.0] if max_scroll == 0 else [0.0, 0.125, 0.25, 0.5, 0.75, 0.875, 1.0]
                     seen_y: set[int] = set()
@@ -326,7 +336,9 @@ class AnalyzeReferencesWithMotion(Action):
         design_context = DesignContext.model_validate(payload.get("design_context", {}))
         run_dir = Path(payload["run_dir"])
         evidence_path = run_dir / "reference-evidence.v1.json"
-        bundle = ReferenceEvidenceBundle.model_validate_json(evidence_path.read_text(encoding="utf-8"))
+        bundle = ReferenceEvidenceBundle.model_validate_json(
+            evidence_path.read_text(encoding="utf-8")
+        )
 
         targets = [
             (url, "reference")
