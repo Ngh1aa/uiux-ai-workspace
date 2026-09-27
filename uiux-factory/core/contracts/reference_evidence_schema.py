@@ -113,6 +113,7 @@ class ReferenceCaptureEvidence(BaseModel):
 
     viewport: EvidenceViewport
     page_url: str = Field(min_length=1, max_length=4000)
+    document: dict[str, str] = Field(default_factory=dict)
     scroll_width: int = Field(ge=0)
     scroll_height: int = Field(ge=0)
     horizontal_overflow: bool
