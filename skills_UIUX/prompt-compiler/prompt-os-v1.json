@@ -1,0 +1,65 @@
+{
+  "schema_version": "prompt-os-release.v1",
+  "name": "UIUX Factory Prompt OS",
+  "version": "1.0.0",
+  "status": "stable-contract",
+  "profiles": [
+    "pixel_faithful",
+    "preserve_and_extend",
+    "redesign",
+    "original_design"
+  ],
+  "pipeline": [
+    "reference_analysis",
+    "research",
+    "ux_ia",
+    "art_direction",
+    "design_contract",
+    "design_system",
+    "implementation_plan",
+    "visual_composition",
+    "specification_compile",
+    "implementation",
+    "browser_qa",
+    "visual_qa",
+    "repair"
+  ],
+  "capabilities": {
+    "spec_first_prompt_pack": true,
+    "frozen_full_build_spec": true,
+    "profile_aware_spec_writer": true,
+    "reference_evidence_extraction": true,
+    "motion_interaction_sampling": true,
+    "evidence_provenance": true,
+    "reference_aware_visual_qa": true,
+    "root_cause_repair_loop": true,
+    "four_profile_benchmark": true
+  },
+  "canonical_outputs": [
+    "00-PROJECT-CONTEXT.md",
+    "01-RESEARCH-PROMPT.md",
+    "02-FULL-BUILD-SPEC.md",
+    "03-IMPLEMENTATION-PROMPT.md",
+    "04-QA-REMEDIATION-PROMPT.md"
+  ],
+  "reference_artifacts": [
+    "reference-evidence.v1.json",
+    "reference-dna.json",
+    "reference-visual-qa.json"
+  ],
+  "evidence_vocabulary": [
+    "VERIFIED",
+    "INFERRED",
+    "ASSUMED",
+    "UNKNOWN",
+    "PROPOSED",
+    "N/A_JUSTIFIED"
+  ],
+  "non_goals": [
+    "A reference URL is not permission to clone.",
+    "Green CI is not visual verification.",
+    "Pixel similarity is not a redesign/original-design success criterion.",
+    "Prompt length is not a quality metric.",
+    "Simulated prototype behavior is not production capability."
+  ]
+}
