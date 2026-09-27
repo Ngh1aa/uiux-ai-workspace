@@ -108,6 +108,77 @@ class ScreenshotEvidence(BaseModel):
     evidence: Literal["VERIFIED"] = "VERIFIED"
 
 
+class MotionElementStateEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    selector: str = Field(min_length=1, max_length=1200)
+    opacity: str = Field(default="", max_length=120)
+    transform: str = Field(default="", max_length=1000)
+    position: str = Field(default="", max_length=120)
+    filter: str = Field(default="", max_length=1000)
+    rect: EvidenceRect
+    custom_properties: dict[str, str] = Field(default_factory=dict)
+    evidence: Literal["VERIFIED"] = "VERIFIED"
+
+
+class WebAnimationEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    selector: str = Field(default="", max_length=1200)
+    play_state: str = Field(default="", max_length=120)
+    current_time: float | None = None
+    duration: str = Field(default="", max_length=120)
+    delay: str = Field(default="", max_length=120)
+    easing: str = Field(default="", max_length=300)
+    iterations: str = Field(default="", max_length=120)
+    evidence: Literal["VERIFIED"] = "VERIFIED"
+
+
+class MotionCheckpointEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    label: str = Field(min_length=1, max_length=120)
+    scroll_y: int = Field(ge=0)
+    scroll_progress: float = Field(ge=0, le=1)
+    elements: list[MotionElementStateEvidence] = Field(default_factory=list)
+    animations: list[WebAnimationEvidence] = Field(default_factory=list)
+    root_custom_properties: dict[str, str] = Field(default_factory=dict)
+    evidence: Literal["VERIFIED"] = "VERIFIED"
+
+
+class EventListenerEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    event_type: str = Field(min_length=1, max_length=120)
+    target: str = Field(min_length=1, max_length=1200)
+    capture: bool = False
+    once: bool = False
+    passive: bool = False
+    evidence: Literal["VERIFIED"] = "VERIFIED"
+
+
+class InteractionStateEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    selector: str = Field(min_length=1, max_length=1200)
+    state: Literal["hover", "focus"]
+    before: dict[str, str] = Field(default_factory=dict)
+    after: dict[str, str] = Field(default_factory=dict)
+    changed_properties: list[str] = Field(default_factory=list, max_length=64)
+    evidence: Literal["VERIFIED"] = "VERIFIED"
+
+
+class ReferenceMotionEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    viewport: EvidenceViewport
+    max_scroll_y: int = Field(ge=0)
+    checkpoints: list[MotionCheckpointEvidence] = Field(default_factory=list)
+    listeners: list[EventListenerEvidence] = Field(default_factory=list)
+    interactions: list[InteractionStateEvidence] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+
+
 class ReferenceCaptureEvidence(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -150,14 +221,15 @@ class ReferencePageEvidence(BaseModel):
     captured_at: str = Field(default="", max_length=120)
     document: DocumentEvidence = Field(default_factory=DocumentEvidence)
     captures: list[ReferenceCaptureEvidence] = Field(default_factory=list)
+    motion: list[ReferenceMotionEvidence] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 
 
 class ReferenceEvidenceBundle(BaseModel):
     """Machine-readable reference evidence consumed by Spec Writer and QA.
 
-    The extractor measures public, unauthenticated browser state only. It never upgrades
-    screenshot-derived palette clusters or later motion inference to source truth.
+    Runtime measurements remain separate from later interpretation. Screenshot-derived palette
+    clusters and choreography inferred across checkpoints are never promoted to authored source truth.
     """
 
     model_config = ConfigDict(extra="forbid")
