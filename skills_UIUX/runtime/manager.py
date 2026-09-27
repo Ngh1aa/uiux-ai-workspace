@@ -5,7 +5,7 @@ from typing import Any
 
 from runtime.agent import ProviderNeutralAgentHarness, RunState
 from runtime.flow import DevelopmentManager, ReplanDecision, ResolvedFlow, ResolvedStage
-from runtime.task_context import GoalInterpreter
+from runtime.task_context import AUTHORITY_LEVELS, GoalInterpreter
 
 
 @dataclass
@@ -88,6 +88,17 @@ class DevelopmentManagerAgent:
         context.setdefault("approval_mode", "auto")
         return context
 
+    def _bounded_authority(self, caller_authority: str, requested_authority: str) -> str:
+        """Natural language may reduce authority, but it can never increase the caller cap."""
+        order = tuple(self.harness.permissions.order)
+        if caller_authority not in order:
+            raise ValueError(f"unknown caller authority: {caller_authority}")
+        if requested_authority not in AUTHORITY_LEVELS:
+            return caller_authority
+        if requested_authority not in order:
+            return caller_authority
+        return order[min(order.index(caller_authority), order.index(requested_authority))]
+
     def resolve_flow(
         self,
         task_context: dict[str, Any],
@@ -130,10 +141,15 @@ class DevelopmentManagerAgent:
         exclude_skills: list[str] | None = None,
     ) -> ManagedWebsiteRun:
         context = self.interpret_goal(goal, overrides)
+        effective_authority = self._bounded_authority(
+            authority,
+            str(context.get("authority", "unspecified")),
+        )
+        context["effective_authority"] = effective_authority
         return self.start(
             goal,
             context,
-            authority=authority,
+            authority=effective_authority,
             additional_skills=additional_skills,
             exclude_skills=exclude_skills,
         )

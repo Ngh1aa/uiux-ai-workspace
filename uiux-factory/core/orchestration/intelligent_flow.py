@@ -4,20 +4,72 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Iterable
 
 
 DEFAULT_DELIVERY_POLICY_ID = "adaptive-prompt-os-v4"
 DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
+TASK_CONTRACT_VERSION = "1.0"
 ANTHROPIC_SKILL_ROOT = "upstream/anthropic-skills/skills"
 ANTHROPIC_FRONTEND_DESIGN = f"{ANTHROPIC_SKILL_ROOT}/frontend-design"
 ANTHROPIC_WEBAPP_TESTING = f"{ANTHROPIC_SKILL_ROOT}/webapp-testing"
 ANTHROPIC_SKILL_CREATOR = f"{ANTHROPIC_SKILL_ROOT}/skill-creator"
 ANTHROPIC_WEB_ARTIFACTS = f"{ANTHROPIC_SKILL_ROOT}/web-artifacts-builder"
 MOTION_COMPONENT_INTELLIGENCE = "motion-component-intelligence"
+URL_PATTERN = re.compile(r"https?://[^\s,;)\]}>]+", re.IGNORECASE)
+
+
+def _contains(text: str, terms: Iterable[str]) -> bool:
+    return any(term in text for term in terms)
+
+
+def _contains_non_negated(text: str, terms: Iterable[str]) -> bool:
+    negative_prefix = re.compile(
+        r"(?:không|đừng|do not|don't|dont|without)\s+(?:được\s+)?$",
+        re.IGNORECASE,
+    )
+    for term in terms:
+        start = 0
+        while True:
+            index = text.find(term, start)
+            if index < 0:
+                break
+            prefix = text[max(0, index - 28):index]
+            if not negative_prefix.search(prefix):
+                return True
+            start = index + max(1, len(term))
+    return False
+
+
+def _unique(values: Iterable[str]) -> tuple[str, ...]:
+    seen: set[str] = set()
+    output: list[str] = []
+    for value in values:
+        cleaned = re.sub(r"\s+", " ", str(value)).strip(" \t\n\r:-–—'\"")
+        if cleaned and cleaned not in seen:
+            seen.add(cleaned)
+            output.append(cleaned)
+    return tuple(output)
+
+
+def _extract_fragments(text: str, patterns: Iterable[str]) -> tuple[str, ...]:
+    values: list[str] = []
+    for pattern in patterns:
+        for match in re.finditer(pattern, text, flags=re.IGNORECASE):
+            value = match.group(1).strip()
+            if value:
+                values.append(value)
+    return _unique(values)
+
+
+def _extract_urls(text: str) -> tuple[str, ...]:
+    return _unique(match.rstrip(".,") for match in URL_PATTERN.findall(text))
 
 
 @dataclass(frozen=True)
 class GoalProfile:
+    """Canonical Factory goal profile plus the V1 natural-language Task Contract."""
+
     intent: str
     website_type: str
     domain: str
@@ -26,10 +78,16 @@ class GoalProfile:
     mode: str
     risk: str
     features: tuple[str, ...] = field(default_factory=tuple)
+    scope: tuple[str, ...] = field(default_factory=tuple)
+    preserve: tuple[str, ...] = field(default_factory=tuple)
+    forbidden: tuple[str, ...] = field(default_factory=tuple)
+    references: tuple[str, ...] = field(default_factory=tuple)
+    authority: str = "unspecified"
     confidence: float = 0.0
     evidence: tuple[str, ...] = field(default_factory=tuple)
     delivery_policy: str = DEFAULT_DELIVERY_POLICY_ID
     delivery_lane: str = DEFAULT_FACTORY_DELIVERY_LANE
+    task_contract_version: str = TASK_CONTRACT_VERSION
 
     def to_dict(self) -> dict:
         return {
@@ -41,6 +99,12 @@ class GoalProfile:
             "mode": self.mode,
             "risk": self.risk,
             "features": list(self.features),
+            "scope": list(self.scope),
+            "preserve": list(self.preserve),
+            "forbidden": list(self.forbidden),
+            "references": list(self.references),
+            "authority": self.authority,
+            "task_contract_version": self.task_contract_version,
             "delivery": {
                 "policy": self.delivery_policy,
                 "lane": self.delivery_lane,
@@ -50,6 +114,9 @@ class GoalProfile:
                 "evidence": list(self.evidence),
             },
         }
+
+
+TaskContract = GoalProfile
 
 
 class GoalInterpreter:
@@ -136,32 +203,141 @@ class GoalInterpreter:
         )),
     )
 
+    SCOPE_TERMS = (
+        ("mobile-nav", ("mobile navigation", "mobile nav", "mobile menu")),
+        ("navigation", ("navigation", "navbar", "nav bar")),
+        ("hero", ("hero section", "hero")),
+        ("header", ("header",)),
+        ("footer", ("footer",)),
+        ("landing-page", ("landing page", "trang đích")),
+        ("homepage", ("homepage", "home page", "trang chủ")),
+        ("dashboard", ("dashboard", "bảng điều khiển")),
+        ("checkout", ("checkout",)),
+        ("pricing", ("pricing", "bảng giá")),
+        ("cards", ("cards", "card", "thẻ")),
+        ("form", ("form", "biểu mẫu")),
+        ("modal", ("modal", "dialog")),
+        ("sidebar", ("sidebar",)),
+        ("thumbnail", ("thumbnail",)),
+        ("banner", ("banner",)),
+        ("typography", ("typography", "kiểu chữ")),
+        ("content", ("content", "copy", "nội dung")),
+        ("animation", ("animation", "motion", "hiệu ứng", "chuyển động")),
+    )
+
+    INTENT_TERMS = (
+        ("redesign", ("redesign", "re-design", "thiết kế lại", "làm lại giao diện")),
+        ("rebuild", ("rebuild", "build lại", "xây lại")),
+        ("fix", ("fix", "repair", "bugfix", "sửa lỗi", "khắc phục", "sửa")),
+        ("polish", ("polish", "trau chuốt", "tinh chỉnh", "hoàn thiện giao diện")),
+        ("improve", ("improve", "enhance", "refine", "cải thiện", "nâng cấp", "tối ưu giao diện")),
+    )
+
+    PRESERVE_PATTERNS = (
+        r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",
+    )
+    FORBIDDEN_PATTERNS = (
+        r"(?:đừng|không được|must not|do not|don't|dont|avoid)\s+(?:đụng|sửa|thay đổi|đổi|remove|delete|change|modify)?\s*([^,.;\n]+)",
+    )
+    SCOPE_PATTERNS = (
+        r"(?:scope|phạm vi)\s*[:=-]\s*([^,.;\n]+)",
+        r"(?:chỉ|only)\s+(?:sửa|fix|polish|improve|cải thiện|nâng cấp|chỉnh|đổi|thay đổi)\s+([^,.;\n]+)",
+    )
+    REFERENCE_PATTERNS = (
+        r"(?:tham khảo|reference|refer to|inspired by)\s+([^,.;\n]+)",
+    )
+
+    @classmethod
+    def _intent(cls, text: str) -> str:
+        for intent, terms in cls.INTENT_TERMS:
+            if _contains_non_negated(text, terms):
+                return intent
+        return "build"
+
+    @classmethod
+    def _scope(
+        cls,
+        text: str,
+        preserve: tuple[str, ...],
+        forbidden: tuple[str, ...],
+    ) -> tuple[str, ...]:
+        explicit = _extract_fragments(text, cls.SCOPE_PATTERNS)
+        if explicit:
+            return explicit
+
+        scan_text = re.split(
+            r"\b(?:tham khảo|reference|refer to|inspired by)\b",
+            text,
+            maxsplit=1,
+        )[0]
+        blocked_text = " ".join(preserve + forbidden)
+        inferred: list[str] = []
+        for name, terms in cls.SCOPE_TERMS:
+            if _contains(scan_text, terms) and not _contains(blocked_text, terms):
+                inferred.append(name)
+        return _unique(inferred)
+
     @staticmethod
-    def _contains(text: str, terms: tuple[str, ...]) -> bool:
-        return any(term in text for term in terms)
+    def _authority(text: str) -> str:
+        if _contains(text, (
+            "read only", "read-only", "audit only", "analysis only", "analyze only",
+            "review only", "chỉ audit", "chỉ review", "chỉ phân tích", "chỉ kiểm tra",
+            "không sửa code", "không thay đổi code", "không chỉnh code",
+        )):
+            return "read_only"
+        if _contains(text, (
+            "merge to main", "merge into main", "merge vào main", "deploy production",
+            "deploy to production", "go live", "release production", "lên production",
+        )):
+            return "release"
+        if _contains(text, (
+            "deploy preview", "preview deployment", "push to vercel", "deploy to vercel",
+            "external write", "publish preview",
+        )):
+            return "external_write"
+        if _contains(text, (
+            "implement", "sửa code", "chỉnh code", "viết code", "tạo branch", "create branch",
+            "open pr", "pull request", "commit", "push code", "apply changes",
+        )):
+            return "branch_write"
+        return "unspecified"
 
     def interpret(self, goal: str) -> GoalProfile:
         text = re.sub(r"\s+", " ", goal.strip().lower())
         evidence: list[str] = []
 
-        if self._contains(text, ("redesign", "re-design", "thiết kế lại", "làm lại giao diện")):
-            intent = "redesign"
-        elif self._contains(text, ("rebuild", "build lại", "xây lại")):
-            intent = "rebuild"
-        else:
-            intent = "build"
+        intent = self._intent(text)
         evidence.append(f"intent:{intent}")
+
+        preserve = _extract_fragments(text, self.PRESERVE_PATTERNS)
+        forbidden = _extract_fragments(text, self.FORBIDDEN_PATTERNS)
+        references = _extract_urls(goal)
+        if not references:
+            references = _extract_fragments(text, self.REFERENCE_PATTERNS)
+        scope = self._scope(text, preserve, forbidden)
+        authority = self._authority(text)
+
+        if scope:
+            evidence.append("scope:" + "|".join(scope))
+        if preserve:
+            evidence.append("preserve:" + "|".join(preserve))
+        if forbidden:
+            evidence.append("forbidden:" + "|".join(forbidden))
+        if references:
+            evidence.append("references:" + "|".join(references))
+        if authority != "unspecified":
+            evidence.append(f"authority:{authority}")
 
         website_type = "generic"
         for candidate, terms in self.WEBSITE_TYPES:
-            if self._contains(text, terms):
+            if _contains(text, terms):
                 website_type = candidate
                 evidence.append(f"website_type:{candidate}")
                 break
 
         domain = "generic"
         for candidate, terms in self.DOMAINS:
-            if self._contains(text, terms):
+            if _contains(text, terms):
                 domain = candidate
                 evidence.append(f"domain:{candidate}")
                 break
@@ -169,29 +345,29 @@ class GoalInterpreter:
         product_archetype = "generic"
         if domain == "financial-services":
             for candidate, terms in self.FINANCIAL_ARCHETYPES:
-                if self._contains(text, terms):
+                if _contains(text, terms):
                     product_archetype = candidate
                     evidence.append(f"product_archetype:{candidate}")
                     break
 
         features: list[str] = []
         for name, terms in self.FEATURES:
-            if self._contains(text, terms):
+            if _contains(text, terms):
                 features.append(name)
                 evidence.append(f"feature:{name}")
 
-        if self._contains(text, ("staging", "production candidate", "pre-production")):
+        if _contains(text, ("staging", "production candidate", "pre-production")):
             mode = "production-candidate"
-        elif self._contains(text, ("production", "go live", "lên production", "chạy thật")):
+        elif _contains(text, ("production", "go live", "lên production", "chạy thật")):
             mode = "production"
-        elif self._contains(text, ("mockup", "visual prototype", "chỉ giao diện")):
+        elif _contains(text, ("mockup", "visual prototype", "chỉ giao diện")):
             mode = "visual-prototype"
         else:
             mode = "interactive-prototype"
         evidence.append(f"mode:{mode}")
 
         risk = "standard"
-        if website_type == "government" or self._contains(text, ("high risk", "critical", "compliance", "tuân thủ")):
+        if website_type == "government" or _contains(text, ("high risk", "critical", "compliance", "tuân thủ")):
             risk = "high"
         elif mode == "production":
             risk = "production"
@@ -223,6 +399,11 @@ class GoalInterpreter:
             mode=mode,
             risk=risk,
             features=tuple(features),
+            scope=scope,
+            preserve=preserve,
+            forbidden=forbidden,
+            references=references,
+            authority=authority,
             confidence=0.95 if website_type != "generic" else 0.65,
             evidence=tuple(evidence),
             delivery_policy=DEFAULT_DELIVERY_POLICY_ID,
