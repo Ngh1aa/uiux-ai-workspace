@@ -24,12 +24,14 @@ class UIUXTeamRunner:
         "design_system",
         "implementation_plan",
         "visual_composition",
+        "specification_compile",
     }
     JSON_STAGES = {
         "design_contract",
         "design_system",
         "implementation_plan",
         "visual_composition",
+        "specification_compile",
     }
 
     def __init__(self, root: Path) -> None:
@@ -177,11 +179,13 @@ class UIUXTeamRunner:
             "visual distinctiveness and implementation usefulness while obeying the real skill rules. "
             + output_rule
         )
+        instruction_limit = 24000 if stage == "specification_compile" else 10000
+        baseline_limit = 60000 if stage == "specification_compile" else 18000
         prompt = (
             "# PROJECT GOAL\n" + context.goal[:5000]
-            + "\n\n# STAGE INPUT (bounded)\n" + instruction[:10000]
+            + "\n\n# STAGE INPUT (bounded)\n" + instruction[:instruction_limit]
             + "\n\n# REAL SKILL RULE DIGEST\n" + rules
-            + "\n\n# DETERMINISTIC BASELINE TO CRITIQUE AND REFINE\n" + baseline[:18000]
+            + "\n\n# DETERMINISTIC BASELINE TO CRITIQUE AND REFINE\n" + baseline[:baseline_limit]
         )
         bus = self.event_bus(context)
         bus.emit(
