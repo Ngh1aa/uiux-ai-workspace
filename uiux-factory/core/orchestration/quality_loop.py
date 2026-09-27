@@ -8,15 +8,17 @@ from core.agents.repair_agent import RepairAgent
 from core.agents.visual_critic import VisualCritic
 from core.contracts.browser_qa_schema import BrowserQAResult
 from core.contracts.quality_loop_schema import QualityIteration, QualityLoopResult
+from core.contracts.reference_visual_qa_schema import ReferenceVisualQAResult
 from core.contracts.repair_result_schema import RepairResult
-from core.contracts.visual_critic_schema import VisualCriticResult
+from core.contracts.visual_critic_schema import RepairDirective, VisualCriticResult, VisualIssue
 from core.team.team_runner import UIUXTeamRunner
 from core.verification.evidence_contract_v1 import EvidenceContractEvaluatorV1
 from core.verification.post_render_evaluators_final import PostRenderEvaluatorSuite
+from core.verification.reference_aware_visual_qa import ReferenceAwareVisualQA
 
 
 class QualityLoopRunner:
-    """BrowserQA -> VisualCritic -> evidence contract -> repair/replan against the frozen spec."""
+    """BrowserQA -> reference-aware QA -> VisualCritic -> evidence contract -> repair/replan."""
 
     def __init__(
         self,
@@ -40,10 +42,16 @@ class QualityLoopRunner:
         return json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
 
     def _spec_context(self) -> dict[str, str]:
-        """Return frozen spec lineage for every QA/repair stage."""
+        """Return frozen spec/reference lineage for every QA/repair stage."""
         artifacts = getattr(self.run_context, "artifacts", {})
         result: dict[str, str] = {}
-        for key in ("full_build_spec", "qa_remediation_prompt", "spec_manifest"):
+        for key in (
+            "full_build_spec",
+            "qa_remediation_prompt",
+            "spec_manifest",
+            "reference_analysis",
+            "evidence_provenance",
+        ):
             raw = artifacts.get(key)
             if raw:
                 path = Path(raw)
@@ -198,6 +206,93 @@ class QualityLoopRunner:
         )
         return outputs
 
+    def _run_reference_visual_qa(
+        self,
+        *,
+        browser_path: Path,
+        iteration_dir: Path,
+        spec_context: dict[str, str],
+    ) -> tuple[ReferenceVisualQAResult | None, Path | None]:
+        reference_raw = spec_context.get("reference_analysis_path")
+        if not reference_raw:
+            return None, None
+        result = ReferenceAwareVisualQA.evaluate(
+            browser_report_path=browser_path,
+            reference_analysis_path=Path(reference_raw),
+            full_spec_path=Path(spec_context["full_build_spec_path"]),
+            spec_manifest_path=(
+                Path(spec_context["spec_manifest_path"])
+                if spec_context.get("spec_manifest_path")
+                else None
+            ),
+        )
+        path = iteration_dir / "reference-visual-qa.json"
+        path.write_text(result.model_dump_json(indent=2), encoding="utf-8")
+        self.run_context.add_artifact("reference_visual_qa", path)
+        self.team_runner.event_bus(self.run_context).emit(
+            "verification.reference_visual_qa_completed",
+            stage="visual_qa",
+            data={
+                "artifact": str(path.resolve()),
+                "profile": result.spec_profile,
+                "mode": result.mode,
+                "status": result.status,
+                "blocking": result.blocking,
+                "comparison_count": len(result.comparisons),
+            },
+        )
+        return result, path
+
+    @staticmethod
+    def _apply_reference_visual_gate(
+        critic: VisualCriticResult,
+        reference_result: ReferenceVisualQAResult | None,
+    ) -> VisualCriticResult:
+        if reference_result is None or not reference_result.blocking:
+            return critic
+        if reference_result.status == "passed":
+            critic.notes.append(
+                f"Reference-aware QA PASS: {reference_result.policy_id} ({len(reference_result.comparisons)} comparison(s))."
+            )
+            return critic
+        if reference_result.status != "failed":
+            return critic
+
+        failed = [row for row in reference_result.comparisons if row.status == "failed"]
+        evidence = "; ".join(row.evidence for row in failed[:3]) or "Strict reference comparison failed."
+        issue = VisualIssue(
+            severity="P1",
+            category="reference-fidelity",
+            route="/",
+            viewport=failed[0].viewport if failed else "reference-matched",
+            evidence=evidence,
+            recommendation=(
+                "Repair the implementation against the exact frozen pixel-faithful reference evidence. "
+                "Do not change the reference contract or thresholds merely to obtain PASS."
+            ),
+        )
+        directive = RepairDirective(
+            priority=1,
+            route="/",
+            target="pixel-faithful rendered surface",
+            instruction=(
+                "Compare target rendering with the verified reference capture and repair the earliest owning "
+                "layout/typography/media/motion rule causing the measured difference."
+            ),
+            success_criteria=(
+                "Reference-aware visual QA returns passed under policy pixel-faithful-reference-v1 at every comparable viewport."
+            ),
+        )
+        if not any(row.category == issue.category and row.route == issue.route for row in critic.issues):
+            critic.issues.append(issue)
+        critic.repair_directives.insert(0, directive)
+        critic.gates.repair_directives_generated = True
+        critic.gates.ready_for_repair_agent = True
+        critic.score.overall = min(critic.score.overall, 89)
+        critic.status = "repair_required"
+        critic.notes.append("Strict pixel-faithful reference gate failed and cannot be overruled by aggregate semantic score.")
+        return critic
+
     async def run(
         self,
         *,
@@ -260,16 +355,39 @@ class QualityLoopRunner:
                     browser_report_path=str(browser_path),
                 )
 
+            reference_result, reference_path = self._run_reference_visual_qa(
+                browser_path=browser_path,
+                iteration_dir=iteration_dir,
+                spec_context=spec_context,
+            )
+            if (
+                reference_result is not None
+                and reference_result.blocking
+                and reference_result.status == "cantTell"
+            ):
+                iterations.append(current)
+                return QualityLoopResult(
+                    status="blocked",
+                    project_slug=project_slug,
+                    project_dir=str(project_dir),
+                    max_iterations=self.max_iterations,
+                    iterations=iterations,
+                    final_score=None,
+                    stop_reason="pixel_faithful_reference_evidence_cantTell",
+                    browser_report_path=str(browser_path),
+                )
+
+            critic_instruction = {"browser_report_path": str(browser_path), **spec_context}
+            if reference_path:
+                critic_instruction["reference_visual_qa_path"] = str(reference_path.resolve())
             critic_message = await self.team_runner.run_role(
                 role_class=VisualCritic,
                 stage="visual_qa",
-                instruction=json.dumps(
-                    {"browser_report_path": str(browser_path), **spec_context},
-                    ensure_ascii=False,
-                ),
+                instruction=json.dumps(critic_instruction, ensure_ascii=False),
                 context=self.run_context,
             )
             critic = VisualCriticResult.model_validate_json(critic_message.content)
+            critic = self._apply_reference_visual_gate(critic, reference_result)
             critic_path = iteration_dir / "visual-critic.json"
             critic_path.write_text(critic.model_dump_json(indent=2), encoding="utf-8")
             latest_critic = critic_path
@@ -366,18 +484,18 @@ class QualityLoopRunner:
                     visual_critic_path=str(critic_path),
                 )
 
+            repair_instruction = {
+                "visual_critic_path": str(critic_path),
+                "browser_report_path": str(browser_path),
+                "output_dir": str(iteration_dir),
+                **spec_context,
+            }
+            if reference_path:
+                repair_instruction["reference_visual_qa_path"] = str(reference_path.resolve())
             repair_message = await self.team_runner.run_role(
                 role_class=RepairAgent,
                 stage="repair",
-                instruction=json.dumps(
-                    {
-                        "visual_critic_path": str(critic_path),
-                        "browser_report_path": str(browser_path),
-                        "output_dir": str(iteration_dir),
-                        **spec_context,
-                    },
-                    ensure_ascii=False,
-                ),
+                instruction=json.dumps(repair_instruction, ensure_ascii=False),
                 context=self.run_context,
             )
             repair = RepairResult.model_validate_json(repair_message.content)
