@@ -1,0 +1,41 @@
+{
+  "schema_version": "prompt-os-profile-benchmark.v1",
+  "cases": [
+    {
+      "id": "pixel-faithful-live-rebuild",
+      "goal": "Rebuild the supplied existing website exactly as a pixel-faithful 1:1 implementation without creative reinterpretation.",
+      "reference_analysis": "{\"references\":[{\"role\":\"existing_website\"}]}",
+      "expected_profile": "pixel_faithful",
+      "expected_visual_mode": "strict_reference",
+      "expected_missing_evidence_status": "cantTell",
+      "expected_missing_evidence_blocking": true
+    },
+    {
+      "id": "preserve-and-extend-existing-product",
+      "goal": "Preserve the existing interaction core and visual DNA, then extend the current product with the missing portfolio-grade surfaces.",
+      "reference_analysis": "{\"references\":[{\"role\":\"existing_website\"}]}",
+      "expected_profile": "preserve_and_extend",
+      "expected_visual_mode": "protected_surfaces",
+      "expected_missing_evidence_status": "cantTell",
+      "expected_missing_evidence_blocking": false
+    },
+    {
+      "id": "redesign-existing-product",
+      "goal": "Redesign the existing product with a new visual direction while preserving product truth, content ownership and critical journeys.",
+      "reference_analysis": "{\"references\":[{\"role\":\"existing_website\"}]}",
+      "expected_profile": "redesign",
+      "expected_visual_mode": "spec_only",
+      "expected_missing_evidence_status": "inapplicable",
+      "expected_missing_evidence_blocking": false
+    },
+    {
+      "id": "original-design-greenfield",
+      "goal": "Create a new original portfolio-grade product experience from this brief and research, with no existing visual implementation to preserve.",
+      "reference_analysis": "",
+      "expected_profile": "original_design",
+      "expected_visual_mode": "spec_only",
+      "expected_missing_evidence_status": "inapplicable",
+      "expected_missing_evidence_blocking": false
+    }
+  ]
+}
