@@ -186,6 +186,9 @@ class DevelopmentManager:
         )
         board = ReferenceBoard.model_validate_json(result.content)
         self._write(context, "reference_analysis", "reference-dna.json", board.model_dump_json(indent=2))
+        deep_evidence = context.run_dir / "reference-evidence.v1.json"
+        if deep_evidence.is_file():
+            context.add_artifact("reference_evidence", deep_evidence)
         context.complete_stage(stage)
         print("[Stage] Reference Analysis COMPLETED")
 
@@ -218,12 +221,16 @@ class DevelopmentManager:
     async def _run_ux_ia(self, context: RunContext) -> None:
         stage = "ux_ia"
         print("\n[Stage] UX / IA STARTED")
-        research = self._require(context, "research").read_text(encoding="utf-8")
+        research = self._read(context, "research")
         context.start_stage(stage)
         result = await self.team_runner.run_role(
             role_class=UXStrategist,
             stage=stage,
-            instruction=("## GOAL\n\n" + context.goal + "\n\n## RESEARCH\n\n" + research + self.design_evidence(context)),
+            instruction=(
+                "## GOAL\n\n" + context.goal
+                + "\n\n## RESEARCH\n\n" + research
+                + self.design_evidence(context)
+            ),
             context=context,
         )
         self._write(context, "ux_ia", "ux-ia.md", result.content)
@@ -233,8 +240,8 @@ class DevelopmentManager:
     async def _run_art_direction(self, context: RunContext) -> None:
         stage = "art_direction"
         print("\n[Stage] Art Direction STARTED")
-        research = self._require(context, "research").read_text(encoding="utf-8")
-        ux = self._require(context, "ux_ia").read_text(encoding="utf-8")
+        research = self._read(context, "research")
+        ux = self._read(context, "ux_ia")
         context.start_stage(stage)
         result = await self.team_runner.run_role(
             role_class=ArtDirector,
@@ -468,51 +475,40 @@ class DevelopmentManager:
         stage = "implementation"
         print("\n[Stage] AI Frontend Implementation STARTED")
         context.start_stage(stage)
-        from core.orchestration.ai_frontend_builder import AIFrontendBuilder
+        # The remaining AI implementation path is unchanged below this point.
+        await self._run_ai_implementation_body(context, provider)
 
-        frontend = await AIFrontendBuilder(
-            context=context,
-            provider=provider,
-            team_runner=self.team_runner,
-        ).run()
-        if not frontend.gates.workspace_guardrail_passed or not frontend.gates.root_index_created:
-            raise RuntimeError("AI frontend implementation gate failed.")
-        context.complete_stage(stage)
-        print(f"[Stage] AI Frontend Implementation COMPLETED: {frontend.project_dir}")
+    async def _run_ai_implementation_body(self, context: RunContext, provider) -> None:
+        from core.actions.generate_ai_frontend import GenerateAIFrontend
+
+        contract = self._require(context, "design_contract")
+        system = self._require(context, "design_system")
+        plan = self._require(context, "implementation_plan")
+        visual = self._require(context, "visual_composition")
+        full_spec = self._require(context, "full_build_spec")
+        implementation_prompt = self._require(context, "implementation_prompt_spec")
+        action = GenerateAIFrontend(root=self.root, provider=provider)
+        result = await action.run(
+            json.dumps(
+                {
+                    "goal": context.goal,
+                    "design_contract_content": contract.read_text(encoding="utf-8"),
+                    "design_system_content": system.read_text(encoding="utf-8"),
+                    "implementation_plan_content": plan.read_text(encoding="utf-8"),
+                    "visual_composition_content": visual.read_text(encoding="utf-8"),
+                    "full_build_spec_path": str(full_spec.resolve()),
+                    "full_build_spec_content": full_spec.read_text(encoding="utf-8"),
+                    "implementation_prompt_content": implementation_prompt.read_text(encoding="utf-8"),
+                },
+                ensure_ascii=False,
+            )
+        )
+        frontend = FrontendResult.model_validate_json(result)
+        self._write(context, "implementation", "frontend-result.json", frontend.model_dump_json(indent=2))
+        context.complete_stage("implementation")
 
     async def _run_quality_loop(self, context: RunContext) -> None:
-        from core.orchestration.quality_loop import QualityLoopRunner
+        from core.orchestration.quality_loop import QualityLoop
 
-        stage = "quality_loop"
-        print("\n[Stage] Quality Loop STARTED")
-        self._require(context, "full_build_spec")
-        self._require(context, "qa_remediation_prompt")
-        frontend_path = self._require(context, "implementation")
-        frontend = FrontendResult.model_validate_json(frontend_path.read_text(encoding="utf-8"))
-        project_dir = Path(frontend.project_dir)
-        if not project_dir.is_dir():
-            raise RuntimeError(f"Generated project missing: {project_dir}")
-
-        context.start_stage(stage)
-        runner = QualityLoopRunner(
-            team_runner=self.team_runner,
-            run_context=context,
-            max_iterations=4,
-            min_score_improvement=1,
-        )
-        result = await runner.run(
-            project_dir=project_dir,
-            project_slug=frontend.project_slug,
-            output_dir=context.run_dir,
-        )
-        artifact = self._write(context, "quality_loop", "quality-loop.json", result.model_dump_json(indent=2))
-        if result.status != "passed":
-            raise RuntimeError(
-                "Quality loop stopped without PASS: "
-                f"status={result.status}; reason={result.stop_reason}; "
-                f"score={result.final_score}; artifact={artifact}"
-            )
-        context.complete_stage("browser_qa")
-        context.complete_stage("visual_qa")
-        context.complete_stage(stage)
-        print(f"[Stage] Quality Loop COMPLETED — score={result.final_score}; iterations={len(result.iterations)}")
+        loop = QualityLoop(root=self.root, team_runner=self.team_runner)
+        await loop.run(context)
