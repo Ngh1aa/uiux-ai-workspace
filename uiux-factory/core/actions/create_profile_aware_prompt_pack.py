@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from metagpt.actions import Action
 
@@ -22,25 +23,41 @@ class CreateProfileAwarePromptPack(Action):
     def _profile_contract(profile: SpecProfile) -> str:
         contracts = {
             "pixel_faithful": (
-                "Use `skills_UIUX/prompt-compiler/profiles/pixel-faithful.md`. "
                 "Reference evidence dominates; creativity is constrained. Preserve exact values "
                 "only when evidence proves them and keep perceptual choreography separate from code mechanics."
             ),
             "preserve_and_extend": (
-                "Use `skills_UIUX/prompt-compiler/profiles/preserve-and-extend.md`. "
                 "Classify preservation strength per owner, isolate extension boundaries, and allow "
                 "VERIFIED preserved behavior to coexist with PROPOSED new design decisions."
             ),
             "redesign": (
-                "Use `skills_UIUX/prompt-compiler/profiles/redesign.md`. Preserve product/data/journey "
-                "truth where required; do not protect incidental DOM/CSS or visual debt merely because it exists."
+                "Preserve product/data/journey truth where required; do not protect incidental DOM/CSS "
+                "or visual debt merely because it exists."
             ),
             "original_design": (
-                "Use `skills_UIUX/prompt-compiler/profiles/original-design.md`. New design values are "
-                "PROPOSED, not ASSUMED; use research and the adaptive prototype rubric when applicable."
+                "New design values are PROPOSED, not ASSUMED; use research and the adaptive prototype "
+                "rubric when applicable."
             ),
         }
         return contracts[profile]
+
+    @staticmethod
+    def _profile_rules(profile: SpecProfile) -> str:
+        workspace_root = Path(__file__).resolve().parents[3]
+        compiler_root = workspace_root / "skills_UIUX" / "prompt-compiler"
+        filename = {
+            "pixel_faithful": "pixel-faithful.md",
+            "preserve_and_extend": "preserve-and-extend.md",
+            "redesign": "redesign.md",
+            "original_design": "original-design.md",
+        }[profile]
+        profile_path = compiler_root / "profiles" / filename
+        rules = profile_path.read_text(encoding="utf-8") if profile_path.is_file() else ""
+        if profile == "original_design":
+            rubric_path = compiler_root / "PROTOTYPE-QUALITY-RUBRIC.md"
+            if rubric_path.is_file():
+                rules += "\n\n# Adaptive prototype rubric\n\n" + rubric_path.read_text(encoding="utf-8")
+        return rules
 
     async def run(self, instruction: str) -> str:
         payload = json.loads(instruction)
@@ -53,6 +70,7 @@ class CreateProfileAwarePromptPack(Action):
         pack.spec_profile = profile
 
         contract = self._profile_contract(profile)
+        active_rules = self._profile_rules(profile)
         profile_block = (
             "## Specification profile\n\n"
             f"- Profile: `{profile}`\n"
@@ -60,6 +78,9 @@ class CreateProfileAwarePromptPack(Action):
             "- Evidence vocabulary: VERIFIED / INFERRED / ASSUMED / UNKNOWN / PROPOSED / N/A_JUSTIFIED.\n"
             "- A deliberate new design decision is PROPOSED, not ASSUMED.\n"
             "- Example projects are resolution examples only, never requirement sources.\n"
+            "\n### Active profile rules\n\n"
+            + (active_rules or "UNKNOWN — profile rules file could not be loaded; do not invent substitute requirements.")
+            + "\n"
         )
 
         pack.project_context = f"# Spec profile\n- `{profile}`\n\n" + pack.project_context
@@ -70,11 +91,14 @@ class CreateProfileAwarePromptPack(Action):
             1,
         )
         pack.implementation_prompt = (
-            f"SPEC PROFILE: `{profile}`\n{contract}\n\n" + pack.implementation_prompt
+            f"SPEC PROFILE: `{profile}`\n{contract}\n\n"
+            "The frozen Full Build Spec contains the active profile rules. Follow that spec; do not "
+            "reclassify the project during implementation.\n\n"
+            + pack.implementation_prompt
         )
         pack.qa_remediation_prompt = (
             f"SPEC PROFILE: `{profile}`\n"
-            "Evaluate fidelity/change boundaries according to this profile.\n\n"
+            "Evaluate fidelity/change boundaries according to the active rules embedded in the frozen spec.\n\n"
             + pack.qa_remediation_prompt
         )
 
