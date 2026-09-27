@@ -92,6 +92,12 @@ async def main() -> None:
             listeners = [EventListenerEvidence.model_validate(row) for row in raw]
             await page.evaluate("scrollTo(0,0)")
             await page.wait_for_timeout(80)
+
+            # This probe is read-only. Verify that before deliberately entering hover/focus states.
+            before_probe = await page.locator("#action").evaluate(INTERACTION_STYLE_JS)
+            after_probe = await page.locator("#action").evaluate(INTERACTION_STYLE_JS)
+            assert before_probe == after_probe
+
             interactions = await _sample_interactions(page)
             evidence = ReferenceMotionEvidence(
                 viewport={"label": "desktop-motion", "width": 1440, "height": 1000},
@@ -110,14 +116,19 @@ async def main() -> None:
             assert len({state[2] for state in target_states}) >= 2, target_states
             assert evidence.checkpoints[1].root_custom_properties.get("--scroll-progress") not in {None, "0"}
             assert any(item.event_type == "scroll" and item.target == "window" for item in evidence.listeners)
-            assert any(item.selector == "#action" and item.state == "hover" and "transform" in item.changed_properties for item in evidence.interactions)
-            assert any(item.selector == "#action" and item.state == "focus" and "outline-width" in item.changed_properties for item in evidence.interactions)
-            assert any(animation.selector == "#motion-target" and animation.duration in {"1200", "1200.0"} for animation in evidence.checkpoints[0].animations)
+            assert any(
+                item.selector == "#action" and item.state == "hover" and "transform" in item.changed_properties
+                for item in evidence.interactions
+            )
+            assert any(
+                item.selector == "#action" and item.state == "focus" and "outline-width" in item.changed_properties
+                for item in evidence.interactions
+            )
+            assert any(
+                animation.selector == "#motion-target" and animation.duration in {"1200", "1200.0"}
+                for animation in evidence.checkpoints[0].animations
+            )
 
-            # Prove the style probe itself remains side-effect free.
-            before = await page.locator("#action").evaluate(INTERACTION_STYLE_JS)
-            after = await page.locator("#action").evaluate(INTERACTION_STYLE_JS)
-            assert before == after
             print(json.dumps(evidence.model_dump(), indent=2)[:5000])
             print("reference motion sampling Chromium smoke passed")
         finally:
