@@ -4,11 +4,41 @@ Use this schema for the compiled `02-FULL-BUILD-SPEC.md` output.
 
 The result must stand alone. A second implementation agent should not need hidden chat history to understand the project.
 
+This schema defines **resolution**, not a fixed project template. Omit or mark `N/A_JUSTIFIED` for irrelevant categories. Never import routes, file trees, selectors, deployment targets, visual direction, or other facts from an example project.
+
+## Resolution contract
+
+When a category is applicable, the spec should be concrete enough to execute without interpretation drift.
+
+Prefer:
+
+```text
+Create `vercel.json` with these exact keys...
+Add `<meta property="og:title" ...>` to these exact entry documents...
+Place the skip link before this exact root node...
+Verify these exact routes at 390 / 768 / 1440 px...
+Deliver these exact files...
+```
+
+over:
+
+```text
+Configure Vercel.
+Add SEO.
+Improve accessibility.
+Test responsiveness.
+Finish the site.
+```
+
+Concrete new design/architecture decisions are `PROPOSED`; repository/runtime facts are `VERIFIED` only when evidenced.
+
+---
+
 # [PROJECT NAME] — Full Prototype / Product Build Prompt
 
 > **Goal:** [One concise outcome statement.]
 >
-> **Mode:** specification only unless authority explicitly says otherwise.
+> **Mode:** specification only or compile-then-execute, as declared by the run.
 >
 > **Evidence rule:** distinguish VERIFIED / INFERRED / ASSUMED / UNKNOWN / PROPOSED / N/A_JUSTIFIED.
 
@@ -22,9 +52,10 @@ State:
 - what must remain intact;
 - the target experience/outcome;
 - current phase;
-- whether this is build, extension, redesign, or rebuild;
+- whether this is build, extension, redesign, rebuild, migration, or release work;
 - declared responsive scope;
-- declared release authority.
+- declared release authority;
+- declared execution mode (`compile_only` or `compile_then_execute`).
 
 Avoid generic goals such as “make it modern.”
 
@@ -44,6 +75,8 @@ List in precedence order:
 
 Call out any conflicts.
 
+For substantial existing-project work, name the exact source-of-truth files/paths.
+
 ---
 
 ## 2. Current verified architecture
@@ -56,13 +89,15 @@ Describe only material verified facts:
 - routes/sitemap;
 - key files/modules;
 - current DOM/component owners;
+- public selectors/IDs/data attributes when material;
 - design tokens;
 - key animation/interaction owners;
+- APIs/data/state owners when applicable;
 - current responsive rules;
 - deployment configuration;
 - current known QA evidence.
 
-Use exact names where available.
+Use exact names and values where available.
 
 ---
 
@@ -144,7 +179,7 @@ For portfolio prototypes, be explicit about what is concept/proxy evidence versu
 
 ## 6. Sitemap and information architecture
 
-Provide:
+Provide a concrete map when the project has multiple routes/pages/anchors:
 
 ```text
 Home
@@ -158,7 +193,8 @@ For every route/page/anchor include:
 - source/owner;
 - destination behavior;
 - whether existing/proposed;
-- whether material to the critical journey.
+- whether material to the critical journey;
+- exact route/anchor when known or `PROPOSED`.
 
 Do not create extra pages solely to inflate project size.
 
@@ -202,7 +238,9 @@ For every material page/route:
 
 **Preserve notes:** ...
 
-Do not use lorem ipsum when content hierarchy or copy is part of the design.
+When content hierarchy or copy matters, provide production-quality proposed copy instead of lorem ipsum.
+
+When layout values are material, include exact dimensions/tokens/breakpoints rather than “large”, “spacious”, or “responsive”.
 
 ---
 
@@ -217,31 +255,43 @@ Do not use lorem ipsum when content hierarchy or copy is part of the design.
 
 ### 8.2 Color
 
-Use exact existing tokens when preserved; clearly label proposed additions.
+Use exact existing tokens when preserved; clearly label proposed additions with literal values where useful.
 
 ### 8.3 Typography
+
+Define when applicable:
 
 - families;
 - sources;
 - roles;
+- weights;
 - scale;
-- special display rules.
+- line heights;
+- tracking;
+- special display rules;
+- glyph/language requirements.
 
 ### 8.4 Grid and spacing
+
+Define when applicable:
 
 - content width;
 - columns;
 - gutters;
 - spacing rhythm;
-- composition exceptions.
+- composition exceptions;
+- container/padding rules.
 
 ### 8.5 Media direction
 
-- hero/editorial;
-- cards/listing;
+Define:
+
+- hero/editorial role;
+- cards/listing role;
 - crop/focal treatment;
 - iconography;
-- remote/local asset policy.
+- remote/local asset policy;
+- provenance/licensing requirements when relevant.
 
 ### 8.6 Anti-AI-template guardrails
 
@@ -265,6 +315,8 @@ For each material interaction define:
 - preserve level.
 
 For protected engines, explicitly state what new code **must not** modify.
+
+For scroll/animation-heavy work, write independent human-readable choreography/checkpoints that can be visually verified without reading the implementation.
 
 ---
 
@@ -290,7 +342,7 @@ Verify declared desktop pressure points. Mark mobile/tablet `N/A_JUSTIFIED`. Do 
 
 Define intentional transformation across representative mobile/tablet/desktop widths.
 
-Include:
+Include exact representative widths when useful, plus:
 
 - content priority changes;
 - layout stack/reorder rules;
@@ -304,14 +356,14 @@ Include:
 
 ## 11. Technical architecture and file structure
 
-Provide the target file tree.
+Provide the target file tree when file ownership changes materially.
 
-Example:
+Example form only:
 
 ```text
 project/
-├── index.html
-├── ...
+├── [real/proposed entry]
+└── ...
 ```
 
 Then define:
@@ -340,38 +392,57 @@ Then define:
 ### Framework/build restrictions
 - [...]
 
+### Commands
+
+Include exact install/build/dev/test commands when known or intentionally proposed.
+
 Prefer isolated extension scopes over coupling new behavior into protected core engines.
 
 ---
 
 ## 12. Accessibility / performance / SEO
 
-Use only applicable requirements.
+Use only applicable requirements, but make applicable requirements implementation-ready.
 
 ### Accessibility
 
-- semantic structure;
-- keyboard/focus;
-- skip links/landmarks;
-- alt text;
+Specify exact semantics/behavior where relevant:
+
+- landmark/heading structure;
+- skip-link placement;
+- keyboard/focus behavior;
+- aria/name relationships;
+- alt/decorative-image rules;
 - reduced motion;
+- touch targets;
 - contrast;
 - automated Axe/Lighthouse targets when due now.
 
+Include literal markup examples when they remove ambiguity.
+
 ### Performance
+
+Define:
 
 - media loading strategy;
 - dependency budget;
 - animation/runtime constraints;
-- applicable Lighthouse/performance budget.
+- applicable Lighthouse/performance budget;
+- lazy/eager/preload ownership when material.
 
 ### SEO / metadata
+
+Define exact applicable requirements:
 
 - title/description;
 - OG metadata;
 - favicon/theme color;
-- robots/sitemap;
-- canonical/structured data when relevant.
+- canonical behavior;
+- `robots.txt`;
+- `sitemap.xml`;
+- structured data when justified.
+
+When appropriate, include literal `<meta>`/JSON-LD examples. Label proposed copy as `PROPOSED`.
 
 Mark irrelevant categories `N/A_JUSTIFIED`.
 
@@ -379,25 +450,33 @@ Mark irrelevant categories `N/A_JUSTIFIED`.
 
 ## 13. Deployment
 
-Inspect before prescribing.
+Inspect the real hosting/build model before prescribing.
 
-For each applicable target define:
+For each applicable target define concrete settings, files, and commands.
 
 ### GitHub Pages
 
-- workflow;
-- source;
-- artifact path;
+When applicable, specify:
+
+- workflow path;
+- workflow/config content or exact required steps;
+- Pages source setting;
+- artifact/output path;
 - relative-link/base-path rules;
-- custom-domain implications if any.
+- custom-domain implications;
+- production verification.
 
 ### Vercel
 
-- preset;
+When applicable, specify:
+
+- framework preset;
 - build command;
 - output directory;
+- `vercel.json` path/content or exact keys when needed;
 - routing/clean URLs;
-- environment requirements.
+- environment requirements;
+- production verification.
 
 ### Other
 
@@ -424,6 +503,17 @@ At minimum for material UI work consider:
 - deployment;
 - visual review against Design Contract.
 
+Prefer binary checks with exact target routes/selectors/states/widths/checkpoints/thresholds.
+
+Examples of resolution, not universal requirements:
+
+```text
+[ ] No horizontal overflow at 390 / 768 / 1440 px.
+[ ] All declared routes return <400.
+[ ] No serious or critical Axe violations on representative routes.
+[ ] No project-code console errors during the critical journey.
+```
+
 A build PASS is not a visual PASS.
 
 ---
@@ -432,15 +522,16 @@ A build PASS is not a visual PASS.
 
 List concrete outputs, for example:
 
-- files to create/change;
-- routes/pages;
+- exact files to create/change;
+- routes/pages/states;
 - docs;
+- assets;
 - tests/QA artifacts;
 - workflows;
 - screenshots;
 - PR/release output if authorized.
 
-Avoid vague deliverables such as “polished UI.”
+If the deliverable is file-based, name the files instead of saying “complete the website”.
 
 ---
 
@@ -477,7 +568,10 @@ Before handing this prompt to an implementation agent, verify:
 - [ ] every named selector/function exists or is clearly labeled PROPOSED;
 - [ ] sitemap and page specs agree;
 - [ ] responsive scope is internally consistent;
-- [ ] deploy paths fit the hosting model;
+- [ ] deploy paths/config fit the real hosting model;
+- [ ] applicable deployment/SEO/accessibility sections contain concrete implementation detail rather than labels only;
 - [ ] QA criteria are measurable enough to verify;
+- [ ] deliverables name concrete outputs;
 - [ ] future-phase requirements are not accidental blockers;
+- [ ] no example-project fact leaked into the current project;
 - [ ] the document can be understood without conversation history.
