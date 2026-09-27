@@ -16,7 +16,7 @@ from core.verification.post_render_evaluators_final import PostRenderEvaluatorSu
 
 
 class QualityLoopRunner:
-    """BrowserQA -> VisualCritic -> V1 post-render evidence -> 56-rule contract -> repair/replan."""
+    """BrowserQA -> VisualCritic -> evidence contract -> repair/replan against the frozen spec."""
 
     def __init__(
         self,
@@ -38,6 +38,20 @@ class QualityLoopRunner:
     def fingerprint(critic: VisualCriticResult) -> str:
         rows = sorted((issue.severity, issue.category, issue.route) for issue in critic.issues)
         return json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+
+    def _spec_context(self) -> dict[str, str]:
+        """Return frozen spec lineage for every QA/repair stage."""
+        artifacts = getattr(self.run_context, "artifacts", {})
+        result: dict[str, str] = {}
+        for key in ("full_build_spec", "qa_remediation_prompt", "spec_manifest"):
+            raw = artifacts.get(key)
+            if raw:
+                path = Path(raw)
+                if path.is_file():
+                    result[f"{key}_path"] = str(path.resolve())
+        if "full_build_spec_path" not in result:
+            raise RuntimeError("Spec-first QA gate failed: full_build_spec artifact is missing")
+        return result
 
     def _evaluate_acceptance(
         self,
@@ -69,6 +83,7 @@ class QualityLoopRunner:
                 "summary": report.summary.model_dump(),
                 "project_digest": report.project_digest,
                 "stale_evidence_count": report.stale_evidence_count,
+                "full_build_spec": self._spec_context().get("full_build_spec_path"),
             },
         )
         return report, acceptance_path
@@ -84,10 +99,11 @@ class QualityLoopRunner:
             "design_system": 4,
             "implementation_plan": 5,
             "visual_composition": 6,
-            "implementation": 7,
-            "browser_qa": 8,
-            "visual_qa": 9,
-            "repair": 10,
+            "specification_compile": 7,
+            "implementation": 8,
+            "browser_qa": 9,
+            "visual_qa": 10,
+            "repair": 11,
         }
         for result in acceptance.requirements:
             definition = definitions.get(result.requirement_id)
@@ -126,9 +142,11 @@ class QualityLoopRunner:
             "earliest_owner_stage": earliest,
             "blocker_count": len(blockers),
             "blockers": blockers,
+            "spec_context": self._spec_context(),
             "strategy": (
-                "Use requirement ownership and rendered evidence to repair/replan from the earliest responsible stage; "
-                "do not convert cantTell/untested into PASS and do not blind-retry unchanged output."
+                "Use requirement ownership, the frozen Full Build Spec and rendered evidence to repair/replan "
+                "from the earliest responsible stage; do not convert cantTell/untested into PASS and do not "
+                "blind-retry unchanged output."
             ),
         }
         path = output_dir / "evidence-remediation-plan.json"
@@ -190,6 +208,7 @@ class QualityLoopRunner:
         project_dir = Path(project_dir).resolve()
         output_dir = Path(output_dir).resolve()
         output_dir.mkdir(parents=True, exist_ok=True)
+        spec_context = self._spec_context()
 
         iterations: list[QualityIteration] = []
         previous_score = None
@@ -210,6 +229,7 @@ class QualityLoopRunner:
                         "project_dir": str(project_dir),
                         "project_slug": project_slug,
                         "output_dir": str(iteration_dir),
+                        **spec_context,
                     },
                     ensure_ascii=False,
                 ),
@@ -243,7 +263,10 @@ class QualityLoopRunner:
             critic_message = await self.team_runner.run_role(
                 role_class=VisualCritic,
                 stage="visual_qa",
-                instruction=json.dumps({"browser_report_path": str(browser_path)}, ensure_ascii=False),
+                instruction=json.dumps(
+                    {"browser_report_path": str(browser_path), **spec_context},
+                    ensure_ascii=False,
+                ),
                 context=self.run_context,
             )
             critic = VisualCriticResult.model_validate_json(critic_message.content)
@@ -351,6 +374,7 @@ class QualityLoopRunner:
                         "visual_critic_path": str(critic_path),
                         "browser_report_path": str(browser_path),
                         "output_dir": str(iteration_dir),
+                        **spec_context,
                     },
                     ensure_ascii=False,
                 ),
