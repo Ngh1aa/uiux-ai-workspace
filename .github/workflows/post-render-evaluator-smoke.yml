@@ -11,9 +11,12 @@ on:
       - 'uiux-factory/core/contracts/evidence_contract_schema.py'
       - 'uiux-factory/core/contracts/reference_evidence_schema.py'
       - 'uiux-factory/core/actions/analyze_references.py'
+      - 'uiux-factory/core/actions/analyze_references_with_motion.py'
+      - 'uiux-factory/core/agents/reference_analyzer.py'
       - 'uiux-factory/config/verification/**'
       - 'uiux-factory/scripts/smoke_post_render_evaluators.py'
       - 'uiux-factory/scripts/smoke_reference_evidence_extractor.py'
+      - 'uiux-factory/scripts/smoke_reference_motion_sampling.py'
       - '.github/workflows/post-render-evaluator-smoke.yml'
   pull_request:
     branches: [main]
@@ -23,9 +26,12 @@ on:
       - 'uiux-factory/core/contracts/evidence_contract_schema.py'
       - 'uiux-factory/core/contracts/reference_evidence_schema.py'
       - 'uiux-factory/core/actions/analyze_references.py'
+      - 'uiux-factory/core/actions/analyze_references_with_motion.py'
+      - 'uiux-factory/core/agents/reference_analyzer.py'
       - 'uiux-factory/config/verification/**'
       - 'uiux-factory/scripts/smoke_post_render_evaluators.py'
       - 'uiux-factory/scripts/smoke_reference_evidence_extractor.py'
+      - 'uiux-factory/scripts/smoke_reference_motion_sampling.py'
       - '.github/workflows/post-render-evaluator-smoke.yml'
 
 permissions:
@@ -60,3 +66,7 @@ jobs:
       - name: Run reference evidence extractor smoke
         working-directory: uiux-factory
         run: python scripts/smoke_reference_evidence_extractor.py
+
+      - name: Run reference motion sampler smoke
+        working-directory: uiux-factory
+        run: python scripts/smoke_reference_motion_sampling.py
