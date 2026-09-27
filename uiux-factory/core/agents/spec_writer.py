@@ -2,7 +2,7 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role
 from metagpt.schema import Message
 
-from core.actions.create_spec_first_prompt_pack import CreateSpecFirstPromptPack
+from core.actions.create_profile_aware_prompt_pack import CreateProfileAwarePromptPack
 
 
 class SpecWriter(Role):
@@ -10,17 +10,26 @@ class SpecWriter(Role):
     profile: str = "SpecWriter"
     goal: str = (
         "Compile project truth and approved upstream design artifacts into a standalone, "
-        "evidence-grounded prompt pack that implementation must read before coding."
+        "evidence-grounded prompt pack that implementation must read before coding. "
+        "Select the specification profile from the target project instead of forcing every "
+        "project into a pixel-faithful web reconstruction schema."
     )
     constraints: str = (
         "Do not implement target code. Do not copy example-project requirements. "
         "Keep VERIFIED / INFERRED / ASSUMED / UNKNOWN / PROPOSED / N/A_JUSTIFIED distinct. "
-        "Make applicable deployment, SEO, accessibility, QA and deliverable requirements concrete."
+        "Classify work as pixel_faithful, preserve_and_extend, redesign, or original_design "
+        "using the prompt-compiler profile routing contract. A reference alone does not imply "
+        "pixel_faithful. Deliberate design decisions are PROPOSED, not ASSUMED. "
+        "Treat prototype checklist numbers as adaptive heuristics unless project evidence makes "
+        "them hard requirements. Use BLOCKING_UNKNOWN only when missing information can change "
+        "architecture, preservation boundaries, asset/legal ownership, core behavior, real-vs-"
+        "simulated behavior, or release authority. Make applicable deployment, SEO, accessibility, "
+        "QA and deliverable requirements concrete."
     )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set_actions([CreateSpecFirstPromptPack])
+        self.set_actions([CreateProfileAwarePromptPack])
 
     async def _act(self) -> Message:
         todo = self.rc.todo
