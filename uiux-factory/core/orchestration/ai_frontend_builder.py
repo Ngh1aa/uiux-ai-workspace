@@ -12,7 +12,7 @@ from core.contracts.visual_composition_schema import VisualComposition
 
 
 class AIFrontendBuilder:
-    """Generate a custom static frontend only after the canonical design flow is complete."""
+    """Generate a custom static frontend only after the canonical design flow and frozen spec are complete."""
 
     def __init__(self, *, context, provider, team_runner) -> None:
         self.context = context
@@ -95,6 +95,11 @@ class AIFrontendBuilder:
         plan_path = Path(self.context.artifacts["implementation_plan"])
         composition_path = Path(self.context.artifacts["visual_composition"])
         tokens_path = Path(self.context.artifacts["design_tokens"])
+        full_spec_path = Path(self.context.artifacts["full_build_spec"])
+        implementation_prompt_path = Path(self.context.artifacts["implementation_prompt_spec"])
+
+        if not full_spec_path.is_file() or not implementation_prompt_path.is_file():
+            raise RuntimeError("Spec-first gate failed: compiled build spec/implementation prompt is missing")
 
         plan = ImplementationPlan.model_validate_json(plan_path.read_text(encoding="utf-8"))
         composition = VisualComposition.model_validate_json(composition_path.read_text(encoding="utf-8"))
@@ -108,7 +113,10 @@ class AIFrontendBuilder:
         rule_digest = self.team_runner._skill_rule_digest(skill_context, max_chars=9000)
 
         prompt = (
-            "# APPROVED DESIGN BRIEF\n" + brief.model_dump_json(indent=2)
+            "# FROZEN FULL BUILD SPEC — PRIMARY IMPLEMENTATION SOURCE OF TRUTH\n"
+            + self._bounded(full_spec_path, 26000)
+            + "\n\n# IMPLEMENTATION PROMPT\n" + self._bounded(implementation_prompt_path, 7000)
+            + "\n\n# APPROVED DESIGN BRIEF\n" + brief.model_dump_json(indent=2)
             + "\n\n# DESIGN CONTRACT\n" + self._bounded(contract_path, 6500)
             + "\n\n# DESIGN SYSTEM\n" + self._bounded(system_path, 7000)
             + "\n\n# IMPLEMENTATION PLAN\n" + self._bounded(plan_path, 7000)
@@ -118,8 +126,11 @@ class AIFrontendBuilder:
 
         system = (
             "You are the senior frontend implementation specialist in a gated UI/UX production system. "
-            "The upstream research, UX, art direction, design contract, design system, implementation plan and visual composition are authoritative. "
-            "Implement them faithfully and creatively without inventing business facts. The result will be judged from rendered screenshots, responsive behavior, accessibility and visual distinctiveness.\n\n"
+            "SPEC-FIRST RULE: read and follow the frozen Full Build Spec before writing code. "
+            "The user's latest explicit correction may override the spec; otherwise do not independently reinterpret it. "
+            "The upstream research, UX, art direction, design contract, design system, implementation plan and visual composition support that spec. "
+            "Implement faithfully and creatively without inventing business facts. Record unavoidable deviations rather than silently widening scope. "
+            "The result will be judged from rendered screenshots, responsive behavior, accessibility, visual distinctiveness and conformance to the frozen spec.\n\n"
             + CODER_CONTRACT
         )
 
@@ -162,7 +173,13 @@ class AIFrontendBuilder:
             (system_path, "design-system.json", "design-system"),
             (plan_path, "implementation-plan.json", "implementation-plan"),
             (composition_path, "visual-composition.json", "visual-composition"),
+            (full_spec_path, "02-FULL-BUILD-SPEC.md", "full-build-spec"),
+            (implementation_prompt_path, "03-IMPLEMENTATION-PROMPT.md", "implementation-prompt"),
         ]
+        if self.context.artifacts.get("qa_remediation_prompt"):
+            qa_path = Path(self.context.artifacts["qa_remediation_prompt"])
+            if qa_path.is_file():
+                evidence_files.append((qa_path, "04-QA-REMEDIATION-PROMPT.md", "qa-remediation-prompt"))
         for source, name, _kind in evidence_files:
             copy2(source, project / name)
         if self.context.artifacts.get("design_document"):
@@ -199,6 +216,7 @@ class AIFrontendBuilder:
                 "page_role_diversity_required": True,
                 "canonical_tokens_preserved": True,
                 "quality_evidence_copied": True,
+                "spec_first_consumed": True,
             },
             commands=[],
             unresolved_items=brief.unknowns,
