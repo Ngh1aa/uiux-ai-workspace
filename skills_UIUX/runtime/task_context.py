@@ -1,16 +1,66 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass, field
 from typing import Iterable
+
+
+TASK_CONTRACT_VERSION = "1.0"
+AUTHORITY_LEVELS = ("read_only", "branch_write", "external_write", "release")
+URL_PATTERN = re.compile(r"https?://[^\s,;)\]}>]+", re.IGNORECASE)
 
 
 def _contains(text: str, terms: Iterable[str]) -> bool:
     return any(term in text for term in terms)
 
 
+def _contains_non_negated(text: str, terms: Iterable[str]) -> bool:
+    negative_prefix = re.compile(
+        r"(?:không|đừng|do not|don't|dont|without)\s+(?:được\s+)?$",
+        re.IGNORECASE,
+    )
+    for term in terms:
+        start = 0
+        while True:
+            index = text.find(term, start)
+            if index < 0:
+                break
+            prefix = text[max(0, index - 28):index]
+            if not negative_prefix.search(prefix):
+                return True
+            start = index + max(1, len(term))
+    return False
+
+
+def _unique(values: Iterable[str]) -> list[str]:
+    seen: set[str] = set()
+    output: list[str] = []
+    for value in values:
+        cleaned = re.sub(r"\s+", " ", str(value)).strip(" \t\n\r:-–—'\"")
+        if cleaned and cleaned not in seen:
+            seen.add(cleaned)
+            output.append(cleaned)
+    return output
+
+
+def _extract_fragments(text: str, patterns: Iterable[str]) -> list[str]:
+    values: list[str] = []
+    for pattern in patterns:
+        for match in re.finditer(pattern, text, flags=re.IGNORECASE):
+            value = match.group(1).strip()
+            if value:
+                values.append(value)
+    return _unique(values)
+
+
+def _extract_urls(text: str) -> list[str]:
+    return _unique(match.rstrip(".,") for match in URL_PATTERN.findall(text))
+
+
 @dataclass(frozen=True)
 class GoalInterpretation:
+    """V1 Task Contract plus the existing Flow OS classification profile."""
+
     intent: str
     website_type: str
     domain: str
@@ -19,8 +69,14 @@ class GoalInterpretation:
     mode: str
     risk: str
     features: list[str]
-    confidence: float
-    evidence: list[str]
+    scope: list[str] = field(default_factory=list)
+    preserve: list[str] = field(default_factory=list)
+    forbidden: list[str] = field(default_factory=list)
+    references: list[str] = field(default_factory=list)
+    authority: str = "unspecified"
+    confidence: float = 0.0
+    evidence: list[str] = field(default_factory=list)
+    task_contract_version: str = TASK_CONTRACT_VERSION
 
     def to_context(self) -> dict[str, object]:
         payload = asdict(self)
@@ -33,6 +89,12 @@ class GoalInterpretation:
             "mode": payload["mode"],
             "risk": payload["risk"],
             "features": payload["features"],
+            "scope": payload["scope"],
+            "preserve": payload["preserve"],
+            "forbidden": payload["forbidden"],
+            "references": payload["references"],
+            "authority": payload["authority"],
+            "task_contract_version": payload["task_contract_version"],
             "inference": {
                 "confidence": payload["confidence"],
                 "evidence": payload["evidence"],
@@ -40,8 +102,11 @@ class GoalInterpretation:
         }
 
 
+TaskContract = GoalInterpretation
+
+
 class GoalInterpreter:
-    """Conservative first-pass classifier for goal-driven Flow OS."""
+    """Conservative first-pass classifier and V1 natural-language Task Contract compiler."""
 
     WEBSITE_TYPES = (
         ("ecommerce", ("ecommerce", "e-commerce", "online store", "shop", "store", "bán hàng", "giỏ hàng", "checkout", "sản phẩm")),
@@ -94,17 +159,125 @@ class GoalInterpreter:
         ("live-learning", ("post-launch", "post launch", "after launch", "live learning", "continuous research", "support tickets", "production analytics", "live monitoring", "product health")),
     )
 
+    SCOPE_TERMS = (
+        ("mobile-nav", ("mobile navigation", "mobile nav", "mobile menu")),
+        ("navigation", ("navigation", "navbar", "nav bar")),
+        ("hero", ("hero section", "hero")),
+        ("header", ("header",)),
+        ("footer", ("footer",)),
+        ("landing-page", ("landing page", "trang đích")),
+        ("homepage", ("homepage", "home page", "trang chủ")),
+        ("dashboard", ("dashboard", "bảng điều khiển")),
+        ("checkout", ("checkout",)),
+        ("pricing", ("pricing", "bảng giá")),
+        ("cards", ("cards", "card", "thẻ")),
+        ("form", ("form", "biểu mẫu")),
+        ("modal", ("modal", "dialog")),
+        ("sidebar", ("sidebar",)),
+        ("thumbnail", ("thumbnail",)),
+        ("banner", ("banner",)),
+        ("typography", ("typography", "kiểu chữ")),
+        ("content", ("content", "copy", "nội dung")),
+        ("animation", ("animation", "motion", "hiệu ứng", "chuyển động")),
+    )
+
+    INTENT_TERMS = (
+        ("redesign", ("redesign", "re-design", "thiết kế lại", "làm lại giao diện")),
+        ("rebuild", ("rebuild", "build lại", "xây lại")),
+        ("fix", ("fix", "repair", "bugfix", "sửa lỗi", "khắc phục", "sửa")),
+        ("polish", ("polish", "trau chuốt", "tinh chỉnh", "hoàn thiện giao diện")),
+        ("improve", ("improve", "enhance", "refine", "cải thiện", "nâng cấp", "tối ưu giao diện")),
+    )
+
+    PRESERVE_PATTERNS = (
+        r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",
+    )
+    FORBIDDEN_PATTERNS = (
+        r"(?:đừng|không được|must not|do not|don't|dont|avoid)\s+(?:đụng|sửa|thay đổi|đổi|remove|delete|change|modify)?\s*([^,.;\n]+)",
+    )
+    SCOPE_PATTERNS = (
+        r"(?:scope|phạm vi)\s*[:=-]\s*([^,.;\n]+)",
+        r"(?:chỉ|only)\s+(?:sửa|fix|polish|improve|cải thiện|nâng cấp|chỉnh|đổi|thay đổi)\s+([^,.;\n]+)",
+    )
+    REFERENCE_PATTERNS = (
+        r"(?:tham khảo|reference|refer to|inspired by)\s+([^,.;\n]+)",
+    )
+
+    @classmethod
+    def _intent(cls, text: str) -> str:
+        for intent, terms in cls.INTENT_TERMS:
+            if _contains_non_negated(text, terms):
+                return intent
+        return "build"
+
+    @classmethod
+    def _scope(cls, text: str, preserve: list[str], forbidden: list[str]) -> list[str]:
+        explicit = _extract_fragments(text, cls.SCOPE_PATTERNS)
+        if explicit:
+            return explicit
+
+        scan_text = re.split(
+            r"\b(?:tham khảo|reference|refer to|inspired by)\b",
+            text,
+            maxsplit=1,
+        )[0]
+        blocked_text = " ".join(preserve + forbidden)
+        inferred: list[str] = []
+        for name, terms in cls.SCOPE_TERMS:
+            if _contains(scan_text, terms) and not _contains(blocked_text, terms):
+                inferred.append(name)
+        return _unique(inferred)
+
+    @staticmethod
+    def _authority(text: str) -> str:
+        if _contains(text, (
+            "read only", "read-only", "audit only", "analysis only", "analyze only",
+            "review only", "chỉ audit", "chỉ review", "chỉ phân tích", "chỉ kiểm tra",
+            "không sửa code", "không thay đổi code", "không chỉnh code",
+        )):
+            return "read_only"
+        if _contains(text, (
+            "merge to main", "merge into main", "merge vào main", "deploy production",
+            "deploy to production", "go live", "release production", "lên production",
+        )):
+            return "release"
+        if _contains(text, (
+            "deploy preview", "preview deployment", "push to vercel", "deploy to vercel",
+            "external write", "publish preview",
+        )):
+            return "external_write"
+        if _contains(text, (
+            "implement", "sửa code", "chỉnh code", "viết code", "tạo branch", "create branch",
+            "open pr", "pull request", "commit", "push code", "apply changes",
+        )):
+            return "branch_write"
+        return "unspecified"
+
     def interpret(self, goal: str) -> GoalInterpretation:
         normalized = re.sub(r"\s+", " ", goal.strip().lower())
         evidence: list[str] = []
 
-        if _contains(normalized, ("redesign", "re-design", "thiết kế lại", "làm lại giao diện")):
-            intent = "redesign"
-        elif _contains(normalized, ("rebuild", "build lại", "xây lại")):
-            intent = "rebuild"
-        else:
-            intent = "build"
+        intent = self._intent(normalized)
         evidence.append(f"intent:{intent}")
+
+        preserve = _extract_fragments(normalized, self.PRESERVE_PATTERNS)
+        forbidden = _extract_fragments(normalized, self.FORBIDDEN_PATTERNS)
+        references = _extract_urls(goal)
+        if not references:
+            references = _extract_fragments(normalized, self.REFERENCE_PATTERNS)
+        scope = self._scope(normalized, preserve, forbidden)
+        authority = self._authority(normalized)
+
+        if scope:
+            evidence.append("scope:" + "|".join(scope))
+        if preserve:
+            evidence.append("preserve:" + "|".join(preserve))
+        if forbidden:
+            evidence.append("forbidden:" + "|".join(forbidden))
+        if references:
+            evidence.append("references:" + "|".join(references))
+        if authority != "unspecified":
+            evidence.append(f"authority:{authority}")
 
         website_type = "generic"
         for candidate, terms in self.WEBSITE_TYPES:
@@ -169,6 +342,11 @@ class GoalInterpreter:
             mode=mode,
             risk=risk,
             features=features,
+            scope=scope,
+            preserve=preserve,
+            forbidden=forbidden,
+            references=references,
+            authority=authority,
             confidence=confidence,
             evidence=evidence,
         )

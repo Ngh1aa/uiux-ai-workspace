@@ -53,7 +53,7 @@ def main() -> int:
 
     parser.add_argument("--managed", action="store_true", help="Use the Development Manager declarative Flow OS")
     parser.add_argument("--managed-run-id", help="Resume an existing managed website run")
-    parser.add_argument("--intent", choices=["build", "redesign", "rebuild"], help="Optional override; otherwise inferred from --task")
+    parser.add_argument("--intent", choices=["build", "redesign", "rebuild", "improve", "fix", "polish"], help="Optional override; otherwise inferred from --task")
     parser.add_argument("--website-type", help="Optional override; otherwise inferred from --task")
     parser.add_argument("--domain", help="Optional business-domain override, e.g. financial-services")
     parser.add_argument("--product-archetype", help="Optional product/workflow archetype override, e.g. payments-infrastructure")
