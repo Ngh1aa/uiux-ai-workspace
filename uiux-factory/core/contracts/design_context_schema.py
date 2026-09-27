@@ -94,15 +94,10 @@ class DesignContext(BaseModel):
     avoid: list[str] = Field(default_factory=list, max_length=20)
     guideline: str = Field(default="", max_length=30_000)
     existing_code: str = Field(default="", max_length=100_000)
-    # Accepts the brief's compact JSON or the existing canonical foundations.
     tokens: dict[str, JsonValue] = Field(default_factory=dict)
     reference_urls: list[str] = Field(default_factory=list, max_length=4)
     existing_website: str = Field(default="", max_length=2000)
     assets: list[ContextAsset] = Field(default_factory=list, max_length=4)
-    # When fewer than target references are supplied, Factory may add curated
-    # live production sites for measurable inspiration. User references win.
-    # Four is the finalist cap for ReferenceAnalyzer; broader discovery belongs
-    # to ResearchAgent and should normally inspect 10–20 candidates.
     auto_inspiration: bool = True
     inspiration_target: int = Field(default=4, ge=0, le=4)
 
@@ -161,6 +156,8 @@ class ReferenceBoard(BaseModel):
     schema_version: str = "0.3.0"
     references: list[ReferenceDNA] = Field(default_factory=list)
     generated_by: str = "ReferenceAnalyzer"
+    evidence_artifact: str = ""
+    evidence_sha256: str = ""
 
 
 class BrandDNA(BaseModel):
