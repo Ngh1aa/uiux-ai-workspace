@@ -1,3 +1,8 @@
+---
+name: prompt-compiler
+description: Compiles a target repository plus a short product/design goal into an evidence-grounded project prompt pack or standalone full build specification. Use when the user wants a Mostar-style detailed build prompt, a repository-to-spec handoff, or reusable prompts before implementation.
+---
+
 # Prompt Compiler — Repository-to-Executable-Spec Skill
 
 ## Purpose
