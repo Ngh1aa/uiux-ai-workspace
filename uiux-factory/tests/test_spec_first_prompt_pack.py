@@ -4,7 +4,6 @@ from pathlib import Path
 
 from core.actions.create_spec_first_prompt_pack import CreateSpecFirstPromptPack
 from core.contracts.prompt_pack_schema import PromptPack
-from core.manager.development_manager import DevelopmentManager
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 
 
@@ -130,8 +129,14 @@ def test_spec_first_compiler_builds_standalone_pack_without_example_leakage() ->
 
 
 def test_development_manager_places_specification_before_implementation() -> None:
-    assert "specification_compile" in DevelopmentManager.FLOW
-    assert DevelopmentManager.FLOW.index("specification_compile") < DevelopmentManager.FLOW.index("implementation")
+    manager = (ROOT / "core" / "manager" / "development_manager.py").read_text(encoding="utf-8")
+    flow_start = manager.index("FLOW = [")
+    flow_end = manager.index("]", flow_start)
+    flow_block = manager[flow_start:flow_end]
+
+    assert '"specification_compile"' in flow_block
+    assert flow_block.index('"specification_compile"') < flow_block.index('"implementation"')
+    assert "await self._run_specification_compile(context)" in manager
 
 
 def test_specification_stage_routes_prompt_compiler_skill() -> None:
