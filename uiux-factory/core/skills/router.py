@@ -16,9 +16,6 @@ class RoutedSkill:
 class AdaptiveSkillRouter:
     """Route real skills_UIUX paths using its declarative professional website flow."""
 
-class AdaptiveSkillRouter:
-    """Route real skills_UIUX paths using its declarative professional website flow."""
-
     BASE_BY_STAGE: dict[str, tuple[RoutedSkill, ...]] = {
         "reference_analysis": (
             RoutedSkill("reference-extraction-and-design-audit/SKILL.md", "Extract measured values with source and certainty."),
@@ -71,6 +68,11 @@ class AdaptiveSkillRouter:
             RoutedSkill("asset-media-and-art-direction/SKILL.md", "Define page visual anchors/media role."),
             RoutedSkill("trust-credibility-and-transparency/SKILL.md", "Ensure trust signals and credibility are designed into composition."),
             RoutedSkill("ux-laws-and-heuristics/SKILL.md", "Apply proven UX laws to layout and interaction design."),
+        ),
+        "specification_compile": (
+            RoutedSkill("prompt-compiler/SKILL.md", "Compile project truth into the frozen implementation source of truth."),
+            RoutedSkill("testing-strategy/SKILL.md", "Translate requirements into verifiable QA checkpoints."),
+            RoutedSkill("accessibility/SKILL.md", "Make applicable accessibility requirements implementation-ready."),
         ),
         "implementation": (
             RoutedSkill("frontend-implementation/SKILL.md", "Own semantic implementation and verification."),

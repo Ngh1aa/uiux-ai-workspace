@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -12,12 +13,14 @@ from core.agents.frontend_engineer import FrontendEngineer
 from core.agents.implementation_planner import ImplementationPlanner
 from core.agents.reference_analyzer import ReferenceAnalyzer
 from core.agents.research_agent import ResearchAgent
+from core.agents.spec_writer import SpecWriter
 from core.agents.ux_strategist import UXStrategist
 from core.agents.visual_composer import VisualComposer
 from core.contracts.design_context_schema import DesignContext, ReferenceBoard
 from core.contracts.design_system_schema import DesignSystemContract
 from core.contracts.frontend_result_schema import FrontendResult
 from core.contracts.implementation_plan_schema import ImplementationPlan
+from core.contracts.prompt_pack_schema import PromptPack
 from core.contracts.schema import DesignContract
 from core.contracts.visual_composition_schema import VisualComposition
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
@@ -37,6 +40,7 @@ class DevelopmentManager:
         "design_system",
         "implementation_plan",
         "visual_composition",
+        "specification_compile",
         "implementation",
         "browser_qa",
         "visual_qa",
@@ -69,6 +73,10 @@ class DevelopmentManager:
             raise RuntimeError(f"Required artifact not found: {path}")
         return path
 
+    @staticmethod
+    def _read(context: RunContext, key: str) -> str:
+        return DevelopmentManager._require(context, key).read_text(encoding="utf-8")
+
     def _save_flow_plan(self, context: RunContext, engine: str) -> None:
         profile = self.flow.interpreter.interpret(context.goal)
         stages = []
@@ -93,7 +101,8 @@ class DevelopmentManager:
             "replanning": self.flow.document.get("replanning", {}),
             "policy": (
                 "AI and deterministic engines follow the same canonical stage sequence. "
-                "AI may refine specialist artifacts, but cannot bypass contracts or quality gates."
+                "AI may refine specialist artifacts, but cannot bypass contracts or quality gates. "
+                "Substantial implementation is spec-first: compile and freeze the prompt pack before target code generation."
             ),
         }
         self._write(context, "flow_plan", "flow-plan.json", json.dumps(payload, indent=2, ensure_ascii=False))
@@ -148,6 +157,7 @@ class DevelopmentManager:
 
             await self._run_implementation_plan(context)
             await self._run_visual_composition(context)
+            await self._run_specification_compile(context)
 
             if engine == "ai":
                 await self._run_ai_implementation(context, provider)
@@ -347,6 +357,66 @@ class DevelopmentManager:
         context.complete_stage(stage)
         print("[Stage] Visual Composition COMPLETED")
 
+    async def _run_specification_compile(self, context: RunContext) -> None:
+        stage = "specification_compile"
+        print("\n[Stage] Specification Compile STARTED")
+        context.start_stage(stage)
+        instruction = {
+            "goal": context.goal,
+            "reference_analysis": self._read(context, "reference_analysis"),
+            "research": self._read(context, "research"),
+            "ux_ia": self._read(context, "ux_ia"),
+            "art_direction": self._read(context, "art_direction"),
+            "design_contract_content": self._read(context, "design_contract"),
+            "design_system_content": self._read(context, "design_system"),
+            "implementation_plan_content": self._read(context, "implementation_plan"),
+            "visual_composition_content": self._read(context, "visual_composition"),
+        }
+        result = await self.team_runner.run_role(
+            role_class=SpecWriter,
+            stage=stage,
+            instruction=json.dumps(instruction, ensure_ascii=False),
+            context=context,
+        )
+        pack = PromptPack.model_validate_json(result.content)
+        if not pack.gates.passed:
+            raise RuntimeError("Spec-first prompt pack consistency gate failed.")
+
+        prompt_files = {
+            "project_context_prompt": ("00-PROJECT-CONTEXT.md", pack.project_context),
+            "research_prompt": ("01-RESEARCH-PROMPT.md", pack.research_prompt),
+            "full_build_spec": ("02-FULL-BUILD-SPEC.md", pack.full_build_spec),
+            "implementation_prompt_spec": ("03-IMPLEMENTATION-PROMPT.md", pack.implementation_prompt),
+            "qa_remediation_prompt": ("04-QA-REMEDIATION-PROMPT.md", pack.qa_remediation_prompt),
+        }
+        written: dict[str, str] = {}
+        for key, (filename, content) in prompt_files.items():
+            path = self._write(context, key, filename, content)
+            written[key] = str(path.resolve())
+
+        spec_bytes = pack.full_build_spec.encode("utf-8")
+        manifest = {
+            "schema_version": 1,
+            "mode": "compile_then_execute",
+            "frozen": True,
+            "source_of_truth": written["full_build_spec"],
+            "full_build_spec_sha256": hashlib.sha256(spec_bytes).hexdigest(),
+            "artifacts": written,
+            "gates": pack.gates.model_dump(),
+            "rule": (
+                "Implementation and QA must consume this frozen spec. Material spec changes invalidate "
+                "affected downstream implementation/QA evidence."
+            ),
+        }
+        self._write(
+            context,
+            "spec_manifest",
+            "spec-manifest.json",
+            json.dumps(manifest, indent=2, ensure_ascii=False),
+        )
+        context.complete_stage(stage)
+        print("[Stage] Specification Compile COMPLETED — frozen spec ready for implementation")
+
     async def _run_template_implementation(self, context: RunContext) -> None:
         stage = "implementation"
         print("\n[Stage] Deterministic Frontend Implementation STARTED")
@@ -354,6 +424,8 @@ class DevelopmentManager:
         system = self._require(context, "design_system")
         plan = self._require(context, "implementation_plan")
         visual = self._require(context, "visual_composition")
+        full_spec = self._require(context, "full_build_spec")
+        implementation_prompt = self._require(context, "implementation_prompt_spec")
         context.start_stage(stage)
         result = await self.team_runner.run_role(
             role_class=FrontendEngineer,
@@ -365,6 +437,9 @@ class DevelopmentManager:
                     "design_system_content": system.read_text(encoding="utf-8"),
                     "implementation_plan_content": plan.read_text(encoding="utf-8"),
                     "visual_composition_content": visual.read_text(encoding="utf-8"),
+                    "full_build_spec_path": str(full_spec.resolve()),
+                    "full_build_spec_content": full_spec.read_text(encoding="utf-8"),
+                    "implementation_prompt_content": implementation_prompt.read_text(encoding="utf-8"),
                 },
                 ensure_ascii=False,
             ),
@@ -380,12 +455,16 @@ class DevelopmentManager:
         artifact = self._write(context, "implementation", "frontend-result.json", frontend.model_dump_json(indent=2))
         if context.artifacts.get("design_document"):
             copy2(context.artifacts["design_document"], Path(frontend.project_dir) / "DESIGN.md")
+        copy2(full_spec, Path(frontend.project_dir) / "02-FULL-BUILD-SPEC.md")
+        copy2(implementation_prompt, Path(frontend.project_dir) / "03-IMPLEMENTATION-PROMPT.md")
         context.complete_stage(stage)
         print(f"[Stage] Deterministic Frontend Implementation COMPLETED: {artifact}")
 
     async def _run_ai_implementation(self, context: RunContext, provider) -> None:
         if provider is None:
             raise RuntimeError("AI implementation requires a configured provider.")
+        self._require(context, "full_build_spec")
+        self._require(context, "implementation_prompt_spec")
         stage = "implementation"
         print("\n[Stage] AI Frontend Implementation STARTED")
         context.start_stage(stage)
@@ -406,6 +485,8 @@ class DevelopmentManager:
 
         stage = "quality_loop"
         print("\n[Stage] Quality Loop STARTED")
+        self._require(context, "full_build_spec")
+        self._require(context, "qa_remediation_prompt")
         frontend_path = self._require(context, "implementation")
         frontend = FrontendResult.model_validate_json(frontend_path.read_text(encoding="utf-8"))
         project_dir = Path(frontend.project_dir)

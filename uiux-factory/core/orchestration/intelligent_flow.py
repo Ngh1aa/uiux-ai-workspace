@@ -242,6 +242,7 @@ class ProfessionalWebsiteFlow:
         "design_system": "design",
         "implementation_plan": "implementation",
         "visual_composition": "design",
+        "specification_compile": "implementation",
         "implementation": "implementation",
         "browser_qa": "qa",
         "visual_qa": "qa",
@@ -266,6 +267,11 @@ class ProfessionalWebsiteFlow:
             "motion-and-microinteractions",
             MOTION_COMPONENT_INTELLIGENCE,
             ANTHROPIC_FRONTEND_DESIGN,
+        ),
+        "specification_compile": (
+            "prompt-compiler",
+            "accessibility",
+            "testing-strategy",
         ),
         "implementation": (
             "accessibility",
