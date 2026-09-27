@@ -2,7 +2,7 @@ from metagpt.logs import logger
 from metagpt.roles.role import Role
 from metagpt.schema import Message
 
-from core.actions.create_spec_first_prompt_pack import CreateSpecFirstPromptPack
+from core.actions.create_profile_aware_prompt_pack import CreateProfileAwarePromptPack
 
 
 class SpecWriter(Role):
@@ -29,7 +29,7 @@ class SpecWriter(Role):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set_actions([CreateSpecFirstPromptPack])
+        self.set_actions([CreateProfileAwarePromptPack])
 
     async def _act(self) -> Message:
         todo = self.rc.todo
