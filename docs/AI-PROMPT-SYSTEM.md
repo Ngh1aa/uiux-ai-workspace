@@ -2,7 +2,7 @@
 
 This repository includes a reusable layered prompt system for AI-assisted project work.
 
-The goal is to avoid rewriting a giant prompt for every task. Stable operating rules live at the repository level, project-specific truth lives in a context packet, task-specific instructions stay small and explicit, and the Prompt Compiler can synthesize those layers plus live repository evidence into an executable project specification.
+The goal is to avoid rewriting a giant prompt for every task. Stable operating rules live at the repository level, project-specific truth lives in a context packet, task-specific instructions stay small and explicit, and Prompt Compiler synthesizes those layers plus repository/research/design evidence into a **project-specific executable specification before substantial implementation begins**.
 
 ## Files
 
@@ -39,37 +39,26 @@ Do not treat the template itself as actual project context.
 
 ### `.github/prompts/universal-task.prompt.md`
 
-Reusable task-level prompt.
-
-Use it when requesting a specific feature, fix, audit, research task, refactor, review, or release action.
-
-The task prompt supplies:
-
-- task and rationale;
-- scope;
-- inputs;
-- acceptance criteria;
-- constraints;
-- execution contract;
-- verification contract;
-- failure policy;
-- output contract.
+Reusable task-level prompt for a specific feature, fix, audit, research task, refactor, review, or release action.
 
 ### `skills_UIUX/prompt-compiler/`
 
 Repository-to-spec compiler for substantial UI/UX/product work.
 
-Use it when the user has a target repository and a short goal but wants a detailed build prompt or prompt pack before implementation.
+Use it when the user has a target repository and a short goal and wants either:
+
+- a detailed prompt/specification to review first; or
+- the Factory to compile that specification first and then implement from it.
 
 Minimal invocation:
 
 ```text
-Prompt Compile:
 repo = https://github.com/OWNER/REPO
 goal = [1–3 sentences]
+mode = compile_then_execute
 ```
 
-Default substantial-project output:
+Canonical substantial-project output:
 
 ```text
 00-PROJECT-CONTEXT.md
@@ -79,9 +68,109 @@ Default substantial-project output:
 04-QA-REMEDIATION-PROMPT.md
 ```
 
-The compiler audits the target repository first, extracts exact project truth, classifies evidence, identifies Preserve/Can-change boundaries, loads only applicable UIUX skills, and then compiles an implementation-ready specification. It does **not** implement the target during the default `spec_only` compile.
+The compiler audits project truth, consumes applicable research/design artifacts, classifies evidence, identifies Preserve/Can-change boundaries, loads only relevant UIUX skills, and compiles an implementation-ready specification.
 
-Use `.github/prompts/prompt-compiler.prompt.md` as the short task entrypoint and `skills_UIUX/prompt-compiler/examples/mostar-guide.md` as the golden example for precision.
+Read `skills_UIUX/prompt-compiler/SPEC-FIRST-EXECUTION.md` for the compile-before-code contract.
+
+## Important: examples are resolution references, not templates
+
+`skills_UIUX/prompt-compiler/examples/mostar-guide.md` is one example showing how detailed a spec can become when a project has enough evidence.
+
+It must **not** be used as a default source for another project's:
+
+- sitemap;
+- routes;
+- file tree;
+- selectors/functions;
+- assets;
+- animation engine;
+- deployment targets;
+- SEO metadata;
+- accessibility markup;
+- visual direction;
+- section order.
+
+The transferable property is **specificity and executability**, not Mostar's content or architecture.
+
+## Spec-first execution modes
+
+### `compile_only`
+
+Use when the user wants to inspect the prompt/spec before implementation.
+
+```text
+TARGET REPO + GOAL
+      ↓
+AUDIT / RESEARCH / DESIGN INTELLIGENCE
+      ↓
+PROMPT PACK
+      ↓
+CONSISTENCY GATE
+      ↓
+STOP
+```
+
+### `compile_then_execute`
+
+Use when substantial work should actually be implemented.
+
+```text
+TARGET REPO + GOAL
+      ↓
+AUDIT / RESEARCH / DESIGN INTELLIGENCE
+      ↓
+PROMPT PACK
+      ↓
+CONSISTENCY GATE
+      ↓
+FREEZE 02-FULL-BUILD-SPEC.md + HASH
+      ↓
+IMPLEMENTATION READS FROZEN SPEC
+      ↓
+RENDERED QA READS SAME SPEC
+      ↓
+ROOT-CAUSE REPAIR
+      ↓
+RELEASE WITHIN AUTHORITY
+```
+
+A second approval turn is only required when the user asks for one or when a blocking conflict/UNKNOWN makes safe execution impossible.
+
+## Why compile before implementation
+
+The generated Full Build Spec becomes a single project-specific handoff that can include, when applicable:
+
+- exact routes/pages/anchors;
+- file paths and ownership;
+- selectors/classes/IDs/functions/state owners;
+- visual tokens and breakpoints;
+- typography/grid/media rules;
+- motion timing/choreography;
+- literal configuration snippets;
+- GitHub Pages/Vercel settings;
+- SEO/meta markup;
+- accessibility semantics/keyboard behavior;
+- binary QA checkpoints;
+- exact delivery inventory.
+
+This prevents the implementation agent from independently reinterpreting a vague original request after design/research decisions have already been made.
+
+## Detail is project-specific
+
+The system should be capable of producing a long prompt like the detailed Mostar example, but it should not optimize for length.
+
+For example, when a static project genuinely needs Vercel configuration, a spec may state concrete proposed content such as:
+
+```json
+{
+  "cleanUrls": true,
+  "trailingSlash": false
+}
+```
+
+When SEO is DUE NOW, a spec may include literal `<meta>` examples. When accessibility requires a skip link, it may specify exact placement and markup. When GitHub Pages is a release target, it may define exact workflow/settings and base-path rules.
+
+Those requirements must come from the **current project evidence or deliberate `PROPOSED` decisions**. They are never copied simply because another project's prompt contained them.
 
 ## Recommended context architecture
 
@@ -112,48 +201,53 @@ Repository
 3. Fill project facts, constraints, source-of-truth paths, quality requirements, and Definition of Done.
 4. Keep detailed domain knowledge in normal project docs rather than inflating `AGENTS.md`.
 
-### Starting a normal task
+### Starting a normal small task
 
 Provide the concrete task using `.github/prompts/universal-task.prompt.md`.
 
-You do not need to fill every field. Include only context that materially changes the work.
+A full prompt pack is unnecessary when a small direct edit is safer and clearer.
 
-### Compiling a substantial project prompt
-
-Use Prompt Compiler when a repository already exists and the detailed implementation contract should be derived from the repository rather than manually described.
+### Compiling a substantial project prompt only
 
 ```text
 Prompt Compile:
 repo = https://github.com/OWNER/REPO
-goal = Turn the current prototype into a complete multi-page experience while preserving its strongest existing interaction model.
+goal = [desired outcome]
+mode = compile_only
 ```
 
 The compiler should:
 
 1. audit the target source;
-2. extract exact architecture, routes, selectors, tokens, functions, breakpoints, workflows and protected behavior;
+2. extract exact architecture, routes, selectors, tokens, functions, breakpoints, workflows and protected behavior when available;
 3. distinguish `VERIFIED / INFERRED / ASSUMED / UNKNOWN / PROPOSED / N/A_JUSTIFIED`;
 4. compile the prompt pack;
 5. self-review for contradictions and hidden-chat dependencies;
-6. stop before implementation unless the user explicitly changes authority.
+6. stop before implementation.
 
-### Updating context
+### Compiling and executing a substantial project
 
-Update project context when one of these changes:
+```text
+@GitHub use uiux-ai-workspace.
 
-- architecture;
-- canonical source paths;
-- technology/runtime versions;
-- quality gates;
-- deployment process;
-- hard constraints;
-- Definition of Done.
+repo = https://github.com/OWNER/REPO
+goal = [desired outcome]
+mode = compile_then_execute
+```
 
-Avoid storing short-lived task details in the persistent operating contract.
+The Factory should:
+
+1. run the normal project intelligence/design stages;
+2. compile the five-file prompt pack;
+3. validate pack consistency;
+4. persist/freeze `02-FULL-BUILD-SPEC.md` and record its SHA-256;
+5. make the implementation stage consume that exact spec;
+6. make QA/remediation consume that exact spec lineage;
+7. invalidate/re-run downstream evidence if the frozen spec changes materially.
 
 ## Prompt layering
 
-The intended precedence is:
+The intended precedence before compilation is:
 
 ```text
 LATEST USER TASK
@@ -171,63 +265,36 @@ OFFICIAL EXTERNAL SOURCES
 INFERENCE / ASSUMPTION
 ```
 
-A lower-confidence source must not silently override a higher-confidence one.
-
-Prompt Compiler is a synthesis layer, not a new source of truth. It must not invent project facts that are absent from the layers above.
-
-## Minimal task form
-
-For small tasks, this shorter form is sufficient:
+During implementation after compilation:
 
 ```text
-Task:
-[what to do]
-
-Source of truth:
-[files / repo / URL]
-
-Acceptance criteria:
-- [criterion]
-- [criterion]
-
-Constraints:
-- [constraint]
-
-Verify with:
-- [tests / browser / sources / runtime evidence]
+LATEST EXPLICIT USER CORRECTION
+      ↓
+FROZEN 02-FULL-BUILD-SPEC.md
+      ↓
+PROJECT CONTRACTS / CURRENT SOURCE TRUTH
+      ↓
+UPSTREAM DESIGN ARTIFACTS
+      ↓
+INFERENCE / ASSUMPTION
 ```
 
-The full task contract is most useful for substantial or high-risk work.
-
-## Why the system is split into layers
-
-A single mega-prompt creates several problems:
-
-- repeated context consumes attention and tokens;
-- project facts become stale inside copied prompts;
-- task details get mixed with permanent operating rules;
-- conflicts become harder to resolve;
-- agents are more likely to overlook acceptance criteria.
-
-Separating stable instructions, project context, task context and repository-to-spec compilation makes the operating contract easier to reuse and audit.
-
-Prompt Compiler does not change this philosophy: it generates a detailed spec **from** those separated layers instead of forcing the user to manually merge them.
+Prompt Compiler is a synthesis layer, not permission to invent project facts.
 
 ## Evidence-first behavior
 
-The system deliberately separates:
+The system separates:
 
 - `VERIFIED`;
 - `INFERRED`;
 - `ASSUMED`;
-- `UNKNOWN`.
+- `UNKNOWN`;
+- `PROPOSED` — deliberate new design/product/architecture decision;
+- `N/A_JUSTIFIED` — explicitly not applicable.
 
-Prompt Compiler additionally uses:
+A design value selected by the compiler is normally `PROPOSED`, not `ASSUMED`.
 
-- `PROPOSED` — new design/product/architecture decisions introduced by the specification;
-- `N/A_JUSTIFIED` — explicitly not applicable to the declared project/scope.
-
-This is especially important for generated software and design work. A successful generation step, build, or CI check does not automatically prove product quality.
+A successful generation step, build, or CI check does not automatically prove product quality.
 
 Use evidence appropriate to the claim:
 
@@ -239,7 +306,7 @@ Use evidence appropriate to the claim:
 
 ## Root-cause repair
 
-When validation fails, the default behavior is:
+When validation fails:
 
 ```text
 FAILURE EVIDENCE
@@ -250,26 +317,13 @@ INVALIDATE / REPAIR FROM OWNER
       ↓
 RERUN DOWNSTREAM WORK
       ↓
-REVALIDATE
+REVALIDATE AGAINST FROZEN SPEC
 ```
 
-Do not repeatedly patch downstream symptoms when the failure originates upstream.
-
-## Research basis
-
-The structure of this prompt system was informed by current guidance from multiple primary sources, especially:
-
-- OpenAI prompt engineering guidance: https://developers.openai.com/api/docs/guides/latest-model
-- Anthropic prompt engineering overview and templates: https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview
-- Anthropic prompt templates and variables: https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-templates-and-variables
-- Google Vertex AI prompt design strategies: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/prompt-design-strategies
-- GitHub Copilot custom instructions: https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot
-- GitHub Copilot response customization concepts: https://docs.github.com/en/copilot/concepts/prompting/response-customization
-
-These sources converge on a few useful ideas reflected here: give clear instructions, separate context from task intent, specify constraints/output expectations, keep persistent project instructions focused, and evaluate prompts by the quality of the resulting work rather than by prompt length.
+Do not repeatedly patch downstream symptoms when the failure originates upstream. Do not weaken QA to force implementation to match a PASS state.
 
 ## Maintenance rule
 
-Treat the operating contract as stable. Prompt Compiler schemas may evolve as a reusable skill, but do not continuously expand `AGENTS.md` with project-specific lessons.
+Treat `AGENTS.md` as stable. Evolve project-specific intelligence in project docs, skills, contracts, and compiled specs.
 
-Add a global rule only when it is broadly reusable across projects. Keep domain-specific knowledge in project docs, skills, compiled specs, or task prompts.
+Prompt Compiler schemas may evolve, but global examples must remain examples—not hidden templates.
