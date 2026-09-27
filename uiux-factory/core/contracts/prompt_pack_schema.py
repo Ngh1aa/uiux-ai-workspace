@@ -1,6 +1,16 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field, field_validator
+
+
+SpecProfile = Literal[
+    "pixel_faithful",
+    "preserve_and_extend",
+    "redesign",
+    "original_design",
+]
 
 
 class PromptPackGate(BaseModel):
@@ -29,6 +39,8 @@ class PromptPackGate(BaseModel):
 
 class PromptPack(BaseModel):
     schema_version: int = 1
+    spec_profile: SpecProfile = "original_design"
+    blocking_unknowns: list[str] = Field(default_factory=list)
     project_context: str = Field(min_length=80)
     research_prompt: str = Field(min_length=40)
     full_build_spec: str = Field(min_length=400)
