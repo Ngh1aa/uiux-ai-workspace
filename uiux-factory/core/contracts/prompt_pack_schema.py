@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field, field_validator
 
+from core.contracts.spec_profile import SpecProfile
+
 
 class PromptPackGate(BaseModel):
     goal_scope_consistent: bool = False
@@ -29,6 +31,8 @@ class PromptPackGate(BaseModel):
 
 class PromptPack(BaseModel):
     schema_version: int = 1
+    spec_profile: SpecProfile = "original_design"
+    blocking_unknowns: list[str] = Field(default_factory=list)
     project_context: str = Field(min_length=80)
     research_prompt: str = Field(min_length=40)
     full_build_spec: str = Field(min_length=400)
