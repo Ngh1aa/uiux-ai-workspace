@@ -1,17 +1,19 @@
 ---
 name: prompt-compiler
-description: Compiles a target repository plus a short product/design goal into an evidence-grounded project prompt pack or standalone full build specification. Use when the user wants a Mostar-style detailed build prompt, a repository-to-spec handoff, or reusable prompts before implementation.
+description: Compiles a target repository plus a short product/design goal into an evidence-grounded, project-specific prompt pack or standalone full build specification before implementation. Use when substantial work should be specified first, then implemented and QA'd against the same frozen spec.
 ---
 
 # Prompt Compiler — Repository-to-Executable-Spec Skill
 
 ## Purpose
 
-Turn a target repository plus a short product/design goal into a grounded, implementation-ready prompt pack without immediately changing the target code.
+Turn a target repository plus a short product/design goal into a grounded, implementation-ready prompt pack **before target implementation begins**.
 
-This skill exists so users do **not** need to hand-write a giant prompt for every project. It compiles project truth, relevant UIUX Factory rules, and task intent into an executable specification that another agent can implement with minimal ambiguity.
+This skill exists so users do **not** need to hand-write giant prompts for every project. It compiles project truth, relevant UIUX Factory rules, research/design artifacts, and task intent into an executable specification that another agent can implement with minimal ambiguity.
 
-Golden reference: `examples/mostar-guide.md`.
+`examples/mostar-guide.md` is only a **resolution example** for specificity and preservation discipline. It is not a reusable project template.
+
+Read `SPEC-FIRST-EXECUTION.md` for the compile-before-code execution contract.
 
 ## Trigger
 
@@ -19,11 +21,11 @@ Use this skill when the user asks for any of the following:
 
 - "Prompt Compile" / "compile prompt" / "generate full build prompt";
 - a detailed project build specification from an existing repository;
-- a prompt pack comparable to the Mostar Guide build prompt;
-- a reusable implementation prompt before coding;
-- a repository audit that should become a design/engineering contract.
+- a reusable prompt pack before coding;
+- a repository audit that should become a design/engineering contract;
+- substantial build/redesign/extension work where the system should compile a detailed spec first and then execute it.
 
-Do not use this skill when the user explicitly wants immediate implementation and no specification phase is useful.
+For tiny, obvious edits where a full specification adds no value, normal direct execution is allowed.
 
 ## Minimal input
 
@@ -41,11 +43,50 @@ preserve = [known protected areas]
 change = [known desired changes]
 responsive_scope = desktop_only | responsive_all
 deployment = GitHub Pages | Vercel | other | UNKNOWN
+mode = compile_only | compile_then_execute
 authority = spec_only | branch_write | create_pr_only | merge_only | merge_and_deploy
 output = full_build_prompt | prompt_pack
 ```
 
 If optional fields are absent, infer only when evidence supports the inference. Otherwise use `UNKNOWN` or `N/A_JUSTIFIED`.
+
+## Execution modes
+
+### `compile_only`
+
+Use when the user asks only for the prompt/spec or explicitly says not to implement yet.
+
+Pipeline:
+
+```text
+AUDIT → COMPILE → CONSISTENCY GATE → RETURN/PERSIST PACK → STOP
+```
+
+### `compile_then_execute`
+
+Use for substantial work when the user wants the system to actually build/redesign/extend the project using a spec-first workflow.
+
+Pipeline:
+
+```text
+AUDIT / RESEARCH / DESIGN INTELLIGENCE
+    ↓
+COMPILE PROMPT PACK
+    ↓
+CONSISTENCY GATE
+    ↓
+FREEZE 02-FULL-BUILD-SPEC.md
+    ↓
+IMPLEMENTATION READS FROZEN SPEC
+    ↓
+RENDERED QA READS SAME SPEC
+    ↓
+ROOT-CAUSE REPAIR
+    ↓
+RELEASE WITHIN AUTHORITY
+```
+
+Do not require a second user approval message between compile and implementation unless the user requested an approval gate or the compiled spec exposes a blocking UNKNOWN/conflict.
 
 ## Mandatory operating sources
 
@@ -61,21 +102,22 @@ Before compiling, read only the relevant current versions of:
 8. `skills_UIUX/MASTER-PROMPT-V7.2.md` for substantial structural implementation planning;
 9. `skills_UIUX/FINAL-UIUX-VISUAL-CONTENT-QA-REMEDIATION-V3.2.md` for QA contracts;
 10. `skills_UIUX/PHASE-AWARE-GATING.md` for phase/scope ownership;
-11. other `skills_UIUX` files only when they materially apply.
+11. `skills_UIUX/prompt-compiler/SPEC-FIRST-EXECUTION.md` for spec freeze/consumption rules;
+12. other `skills_UIUX` files only when they materially apply.
 
 Do not preload the entire skills corpus merely because it exists.
 
 ## Core principle
 
-The compiler must convert **repository evidence** into **explicit specification**.
+The compiler must convert **target-project evidence** into **explicit project-specific specification**.
 
 Prefer exact evidence:
 
 ```text
-normalizeSightSlider()
+normalizeSlider()
 --hero-progress
 @media (max-width: 640px)
-section.story-panel-bridge
+section.checkout-summary
 560–1620
 ```
 
@@ -85,21 +127,42 @@ instead of vague descriptions such as:
 the slider logic
 the animation
 the mobile CSS
-the bridge section
+the summary section
 ```
 
 Never invent selectors, functions, routes, assets, breakpoints, metrics, research, or runtime behavior.
 
+## Example isolation rule
+
+No example project may become an implicit source of truth.
+
+Do not copy from Mostar or any other example:
+
+- routes/sitemap;
+- file tree;
+- selectors/functions;
+- assets;
+- timings;
+- deployment targets;
+- SEO copy;
+- accessibility markup;
+- visual direction;
+- section order.
+
+Examples demonstrate how **concrete** a spec can be, not what another project should contain.
+
 ## Evidence vocabulary
 
-Every material statement should be mentally classified as one of:
+Every material statement should be classified as one of:
 
 - `VERIFIED` — directly supported by source, runtime, test, tool result, or authoritative source;
 - `INFERRED` — reasonable conclusion derived from evidence;
 - `ASSUMED` — temporary assumption required to proceed;
 - `UNKNOWN` — insufficient evidence;
-- `PROPOSED` — new design/product/architecture decision introduced by the compiler;
+- `PROPOSED` — new design/product/architecture decision introduced intentionally by the compiler;
 - `N/A_JUSTIFIED` — intentionally not applicable to this project/scope.
+
+A deliberate new design value is normally `PROPOSED`, not `ASSUMED`.
 
 Never let `PROPOSED`, `ASSUMED`, or `UNKNOWN` masquerade as current project truth.
 
@@ -130,7 +193,7 @@ COMPILE QA / REMEDIATION PROMPT
     ↓
 SELF-CRITIQUE FOR CONTRADICTIONS
     ↓
-OUTPUT PROMPT PACK
+FREEZE OR RETURN PROMPT PACK
 ```
 
 ## Repository forensic audit
@@ -146,6 +209,7 @@ Inspect the target directly before writing the specification. Determine what is 
 - JS modules/functions/state;
 - animation engines, timelines and thresholds;
 - media/assets and remote URLs;
+- APIs/data/schema ownership;
 - responsive breakpoints and transformation behavior;
 - accessibility behavior;
 - SEO/metadata;
@@ -167,7 +231,7 @@ Every substantial compile must produce an explicit:
 IMMUTABLE / DO NOT BREAK
 ```
 
-section containing the exact files, selectors, functions, algorithms, timings, assets, routes, visual signatures, and working interactions that must survive.
+section containing the exact files, selectors, functions, algorithms, timings, assets, routes, visual signatures, data/API contracts, and working interactions that must survive.
 
 When preservation is requested, distinguish:
 
@@ -250,6 +314,58 @@ DEPENDENCIES
 
 Do not use lorem ipsum when content is part of the design decision.
 
+## Detail-resolution contract
+
+When a category is applicable, make it **implementation-ready**, not label-only.
+
+### Deployment
+
+Do not write only “deploy to Vercel/GitHub Pages”. Specify applicable exact:
+
+- config path and keys/content;
+- framework preset;
+- build command;
+- output directory;
+- base/relative-path rules;
+- workflow path/steps;
+- Pages source setting;
+- environment ownership;
+- production verification.
+
+### SEO / metadata
+
+When applicable specify exact:
+
+- title/description ownership;
+- OG tags;
+- canonical behavior;
+- favicon/theme color;
+- robots/sitemap;
+- structured data when justified.
+
+Use literal markup examples when that removes ambiguity. Label proposed copy `PROPOSED`.
+
+### Accessibility
+
+When applicable specify exact:
+
+- semantic/heading structure;
+- skip-link placement;
+- focus-visible behavior;
+- keyboard/touch behavior;
+- aria/name relationships;
+- alt/decorative-image rules;
+- reduced-motion behavior;
+- automated gates.
+
+### QA
+
+Use exact routes, viewport widths, selectors/states, animation checkpoints, console/network expectations and thresholds where applicable.
+
+### Deliverables
+
+Name the exact files/routes/docs/assets/tests/workflows/evidence expected from the milestone.
+
 ## Technical contract
 
 The build spec must identify:
@@ -330,9 +446,21 @@ Return the five-file logical pack defined in `PROMPT-PACK.schema.md`:
 
 The assistant may present them inline or save them to the target/project workspace when authorized.
 
+## Spec freeze / consumption gate
+
+In `compile_then_execute` mode:
+
+1. persist the prompt pack;
+2. run the pack consistency gate;
+3. freeze `02-FULL-BUILD-SPEC.md` as the implementation source of truth;
+4. record a content hash when runtime support exists;
+5. implementation must read that exact artifact before editing target code;
+6. QA/repair must evaluate against that exact artifact;
+7. material changes to the frozen spec invalidate affected downstream implementation/QA evidence.
+
 ## Self-review gate
 
-Before returning a compiled prompt, check for:
+Before returning or executing a compiled prompt, check for:
 
 - contradictions;
 - stale assumptions;
@@ -345,6 +473,9 @@ Before returning a compiled prompt, check for:
 - responsive-scope contradictions;
 - future-phase work incorrectly blocking the present phase;
 - missing reduced-motion/accessibility handling when applicable;
+- label-only deployment/SEO/accessibility sections that need concrete detail;
+- vague delivery inventory;
+- example-project leakage;
 - output that depends on hidden conversation context.
 
 The final spec must be usable by a second capable agent that has access to only:
@@ -355,7 +486,7 @@ The final spec must be usable by a second capable agent that has access to only:
 
 ## Default invocation
 
-The user can invoke the compiler with only:
+Compile only:
 
 ```text
 @GitHub use uiux-ai-workspace.
@@ -363,27 +494,33 @@ The user can invoke the compiler with only:
 Prompt Compile:
 repo = https://github.com/OWNER/REPOSITORY
 goal = [1–3 sentences]
+mode = compile_only
 ```
 
-Optional concise form:
+Compile then execute:
 
 ```text
-Prompt Compile https://github.com/OWNER/REPO
-Goal: ...
+@GitHub use uiux-ai-workspace.
+
+repo = https://github.com/OWNER/REPOSITORY
+goal = [1–3 sentences]
+mode = compile_then_execute
 ```
 
 ## Non-negotiables
 
 Do not:
 
-- implement target code during a `spec_only` compile;
+- implement target code during a `compile_only` run;
+- begin substantial implementation before the compile gate passes in `compile_then_execute` mode;
 - paraphrase away protected exact contracts;
 - fabricate research/results/metrics;
 - force irrelevant skills into the spec;
-- treat a template as project truth;
+- treat an example/template as project truth;
 - call an unrendered UI visually verified;
 - create requirements solely to make the document longer;
-- depend on details that exist only in chat history.
+- depend on details that exist only in chat history;
+- let implementation silently bypass or reinterpret the frozen spec.
 
 Optimize for:
 
