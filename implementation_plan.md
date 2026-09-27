@@ -1,3 +1,6 @@
+> [!WARNING]
+> **SUPERSEDED — historical planning document.** This file is preserved only as implementation history and must not be used as current runtime/provider/architecture truth. The active architecture snapshot is `uiux-factory/docs/architecture/CURRENT-RUNTIME-MAP.md`; migration boundaries are in `uiux-factory/docs/architecture/MIGRATION-BOUNDARIES.md`. Current source code, tests, root `README.md`, `AGENTS.md`, and active runtime/flow contracts take precedence.
+
 # Kế hoạch Triển khai: Chi phí 0đ & Nâng cấp "Bộ não" Hệ thống UI/UX
 
 Kế hoạch chi tiết nhằm **đảm bảo 100% chi phí 0 đồng** (sử dụng hoàn toàn mã nguồn mở, Local LLM và Cloud Free-Tier hợp pháp) kết hợp với giải pháp **nâng cấp "Bộ não" (Brain & Multi-Agent Intelligence)** để tạo ra các trang web có thẩm mỹ và chất lượng kỹ thuật vượt trội.
