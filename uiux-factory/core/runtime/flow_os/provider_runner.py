@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,10 @@ from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRu
 from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, load_context_documents
 from core.runtime.flow_os.sandbox import ContainerSandbox
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
+
+
+class ProviderContextBudgetError(ValueError):
+    """The next provider request would exceed the operator-owned document context ceiling."""
 
 
 @dataclass(frozen=True)
@@ -161,10 +166,92 @@ class ProviderManagedRunner:
             raise ValueError("jit_skill_context.max_active_per_stage must be between 1 and 32")
         return enabled, max_active
 
+    def _provider_context_budget(self) -> tuple[int, str]:
+        raw = self.harness.policy_doc.get("provider_context", {})
+        if raw is None:
+            raw = {}
+        if not isinstance(raw, dict):
+            raise ValueError("runtime-policy provider_context must be an object")
+
+        max_chars = raw.get("max_document_chars_per_request", 180000)
+        if isinstance(max_chars, bool) or not isinstance(max_chars, int):
+            raise ValueError("provider_context.max_document_chars_per_request must be an integer")
+        if max_chars < 1 or max_chars > 2_000_000:
+            raise ValueError("provider_context.max_document_chars_per_request must be between 1 and 2000000")
+
+        source = "runtime_policy"
+        env_raw = os.environ.get("UIUX_PROVIDER_CONTEXT_CHARS", "").strip()
+        if env_raw:
+            try:
+                env_chars = int(env_raw)
+            except (TypeError, ValueError, OverflowError) as exc:
+                raise ValueError("UIUX_PROVIDER_CONTEXT_CHARS must be a positive integer") from exc
+            if env_chars < 1 or env_chars > 2_000_000:
+                raise ValueError("UIUX_PROVIDER_CONTEXT_CHARS must be between 1 and 2000000")
+            if env_chars < max_chars:
+                source = "runtime_policy+env_ceiling"
+            max_chars = min(max_chars, env_chars)
+        return max_chars, source
+
     @staticmethod
     def _skill_name(item: dict[str, Any]) -> str:
         path = Path(str(item.get("path", "")))
         return path.parent.name if path.name == "SKILL.md" else ""
+
+    @staticmethod
+    def _document_chars(documents: list[dict[str, str]]) -> int:
+        return sum(len(str(item.get("content", ""))) for item in documents)
+
+    def _load_provider_context(
+        self,
+        stage_state: Any,
+        active_skill_names: set[str],
+    ) -> tuple[list[dict[str, str]], list[dict[str, str]], dict[str, Any]]:
+        items = list(stage_state.context.get("items", []))
+        allowed_roots = (self.project_root, self.harness.repo_root)
+        limit, source = self._provider_context_budget()
+        skill_items = [
+            item
+            for item in items
+            if str(item.get("kind", "")) == "skill" and self._skill_name(item) in active_skill_names
+        ]
+        try:
+            skills = load_context_documents(
+                skill_items,
+                {"skill"},
+                max_chars=limit,
+                allowed_roots=allowed_roots,
+            )
+            sources = load_context_documents(
+                items,
+                {"source_of_truth", "project_config"},
+                max_chars=limit,
+                allowed_roots=allowed_roots,
+            )
+        except ValueError as exc:
+            if "provider context budget exceeded" in str(exc):
+                raise ProviderContextBudgetError(str(exc)) from exc
+            raise
+
+        skill_chars = self._document_chars(skills)
+        source_chars = self._document_chars(sources)
+        loaded_chars = skill_chars + source_chars
+        if loaded_chars > limit:
+            raise ProviderContextBudgetError(
+                "shared provider context document budget exceeded "
+                f"({loaded_chars}>{limit} chars across skill + source documents); "
+                "route/activate fewer skills, load fewer sources, or deliberately raise "
+                "provider_context.max_document_chars_per_request"
+            )
+        return skills, sources, {
+            "max_document_chars_per_request": limit,
+            "loaded_document_chars": loaded_chars,
+            "skill_document_chars": skill_chars,
+            "source_document_chars": source_chars,
+            "remaining_document_chars": max(0, limit - loaded_chars),
+            "source": source,
+            "measurement": "unicode_chars",
+        }
 
     def _jit_skill_state(self, managed: ManagedWebsiteRun, stage_state: Any) -> dict[str, Any]:
         stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
@@ -230,17 +317,47 @@ class ProviderManagedRunner:
             if len(active) >= int(state["max_active"]):
                 raise ValueError("JIT skill activation limit reached for this stage")
             active.append(requested)
+
+        try:
+            _skills, _sources, context_budget = self._load_provider_context(
+                stage_state,
+                set(state["mandatory"]) | set(active),
+            )
+        except ProviderContextBudgetError as exc:
+            return {
+                "activated": None,
+                "requested": requested,
+                "accepted": False,
+                "source": state["sources"].get(requested, "legacy_inferred"),
+                "already_active": already_active,
+                "active_jit_skills": list(state["active"]),
+                "remaining_jit_skills": [
+                    name for name in state["pool"] if name not in set(state["active"])
+                ],
+                "available_next_turn": False,
+                "reason": str(exc),
+                "authority_effect": "none",
+                "gate_effect": "none",
+                "evidence_effect": "none",
+            }
+
+        if not already_active:
             stage_state.context["jit_active_skills"] = active
             self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
 
         remaining = [name for name in state["pool"] if name not in set(active)]
         return {
             "activated": requested,
+            "requested": requested,
+            "accepted": True,
             "source": state["sources"].get(requested, "legacy_inferred"),
             "already_active": already_active,
             "active_jit_skills": active,
             "remaining_jit_skills": remaining,
             "available_next_turn": True,
+            "document_chars_after_activation": int(context_budget["loaded_document_chars"]),
+            "document_char_limit": int(context_budget["max_document_chars_per_request"]),
+            "remaining_document_chars": int(context_budget["remaining_document_chars"]),
             "authority_effect": "none",
             "gate_effect": "none",
             "evidence_effect": "none",
@@ -305,21 +422,9 @@ class ProviderManagedRunner:
         observations: list[dict[str, Any]],
     ) -> ProviderStageRequest:
         stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
-        items = list(stage_state.context.get("items", []))
-        allowed_roots = (self.project_root, self.harness.repo_root)
         jit = self._jit_skill_state(managed, stage_state)
         active_names = set(jit["mandatory"]) | set(jit["active"])
-        skill_items = [
-            item
-            for item in items
-            if str(item.get("kind", "")) == "skill" and self._skill_name(item) in active_names
-        ]
-        skills = load_context_documents(skill_items, {"skill"}, allowed_roots=allowed_roots)
-        sources = load_context_documents(
-            items,
-            {"source_of_truth", "project_config"},
-            allowed_roots=allowed_roots,
-        )
+        skills, sources, context_budget = self._load_provider_context(stage_state, active_names)
         manager_state = self.harness.resume(managed.manager_run_id)
         task_context = dict(managed.task_context)
         task_context["jit_skill_context"] = {
@@ -338,6 +443,16 @@ class ProviderManagedRunner:
             "rule": (
                 "Only Flow-routed non-mandatory skills may be activated. Activation adds knowledge on the next "
                 "provider turn; it cannot add authority, satisfy gates or count as runtime evidence."
+            ),
+        }
+        task_context["provider_context_budget"] = {
+            **context_budget,
+            "authority_effect": "none",
+            "gate_effect": "none",
+            "evidence_effect": "none",
+            "rule": (
+                "Skill and source documents share one operator-owned request ceiling. "
+                "JIT activation is accepted only when the resulting next-turn document context fits this budget."
             ),
         }
         return ProviderStageRequest(
@@ -488,7 +603,22 @@ class ProviderManagedRunner:
         self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
 
         for turn in range(1, max_turns + 1):
-            request = self._request(managed, stage_state, observations)
+            try:
+                request = self._request(managed, stage_state, observations)
+            except ProviderContextBudgetError as exc:
+                trace.emit("provider.context.budget", "BLOCKED", message=str(exc), turn=turn)
+                stage_state.state = "BLOCKED"
+                stage_state.limitations.append(str(exc))
+                self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
+                self._set_managed_terminal(managed, "BLOCKED")
+                return ProviderRunResult(
+                    "BLOCKED",
+                    managed.active_stage,
+                    turn,
+                    self.provider.name,
+                    self.provider.model,
+                    str(exc),
+                )
             trace.emit(
                 "provider.call",
                 "START",
