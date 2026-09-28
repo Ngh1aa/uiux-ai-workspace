@@ -1,0 +1,123 @@
+name: A14 Fix Once Validate Across Projects
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/a14-fix-once-validate-across-projects.yml"
+      - "uiux-factory/core/dogfood/**"
+      - "uiux-factory/core/runtime/flow_os/**"
+      - "uiux-factory/scripts/run_cross_project_dogfood.py"
+      - "uiux-factory/tests/test_cross_project_dogfood_a13.py"
+      - "uiux-factory/tests/test_fix_once_a14.py"
+      - "uiux-factory/tests/test_generic_real_project_a14.py"
+      - "skills_UIUX/flows/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/a14-fix-once-validate-across-projects.yml"
+      - "uiux-factory/core/dogfood/**"
+      - "uiux-factory/core/runtime/flow_os/**"
+      - "uiux-factory/scripts/run_cross_project_dogfood.py"
+      - "uiux-factory/tests/test_cross_project_dogfood_a13.py"
+      - "uiux-factory/tests/test_fix_once_a14.py"
+      - "uiux-factory/tests/test_generic_real_project_a14.py"
+      - "skills_UIUX/flows/**"
+
+permissions:
+  contents: read
+
+jobs:
+  fix-once-validate-across-projects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      NOVA_SHA: e206f51f2fda006adcf52497d8b827e048e157ec
+      LUMEN_SHA: 219f3e49f9956290ef69a2e49cb91fefddd5f561
+      CENNEXT_SHA: 273403accf8979608fbb16dbe2741cedb0430fb6
+      NOVA_ROOT: ${{ github.workspace }}/.dogfood/Nova
+      LUMEN_ROOT: ${{ github.workspace }}/.dogfood/Lumen
+      CENNEXT_ROOT: ${{ github.workspace }}/.dogfood/CENNEXT
+      REPORT_ROOT: ${{ github.workspace }}/a14-artifacts
+
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Checkout pinned Nova
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Nova
+          ref: e206f51f2fda006adcf52497d8b827e048e157ec
+          path: .dogfood/Nova
+
+      - name: Checkout pinned Lumen
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Lumen
+          ref: 219f3e49f9956290ef69a2e49cb91fefddd5f561
+          path: .dogfood/Lumen
+
+      - name: Checkout pinned CENNEXT
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/cennext-b2b-prototype
+          ref: 273403accf8979608fbb16dbe2741cedb0430fb6
+          path: .dogfood/CENNEXT
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install Factory test dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Run A14 focused regressions
+        working-directory: uiux-factory
+        run: |
+          python -m pytest -q \
+            tests/test_adaptive_flow.py \
+            tests/test_cross_project_dogfood_a13.py \
+            tests/test_fix_once_a14.py \
+            tests/test_generic_real_project_a14.py
+
+      - name: Validate pinned Nova with generic runner
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id nova \
+            --project-root "$NOVA_ROOT" \
+            --expected-target-sha "$NOVA_SHA" \
+            --report "$REPORT_ROOT/nova.json"
+
+      - name: Validate pinned Lumen with generic runner
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id lumen \
+            --project-root "$LUMEN_ROOT" \
+            --expected-target-sha "$LUMEN_SHA" \
+            --report "$REPORT_ROOT/lumen.json"
+
+      - name: Validate pinned CENNEXT with generic runner
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id cennext \
+            --project-root "$CENNEXT_ROOT" \
+            --expected-target-sha "$CENNEXT_SHA" \
+            --report "$REPORT_ROOT/cennext.json"
+
+      - name: Upload A14 reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: a14-fix-once-${{ github.run_id }}
+          if-no-files-found: warn
+          path: a14-artifacts/*.json
