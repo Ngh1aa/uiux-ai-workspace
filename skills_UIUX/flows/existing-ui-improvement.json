@@ -15,11 +15,15 @@
       "purpose": "Inspect project truth, current UI owner and the smallest root cause before changing code.",
       "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "ui-improvement"],
       "conditional_skills": [
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
         {"when": {"website_type": "ecommerce"}, "skills": ["ecommerce-website"]},
         {"when": {"website_type": "education"}, "skills": ["education-website"]},
         {"when": {"website_type": "corporate"}, "skills": ["corporate-website"]}
       ],
-      "gates": [{"id": "scope-root-cause", "require": "affected owner, constraints and expected outcome are known"}]
+      "gates": [
+        {"id": "scope-root-cause", "require": "affected owner, constraints and expected outcome are known"},
+        {"id": "evidence-led-problem-validation", "require": "material user/problem claims distinguish direct evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable", "when": {"validation_lane": ["evidence-led", "production-learning"]}}
+      ]
     },
     {
       "id": "implementation",
@@ -27,18 +31,32 @@
       "purpose": "Apply the smallest reusable implementation change while preserving project design language and unrelated work.",
       "required_skills": ["ai-agent-coding-guardrails", "ui-improvement", "frontend-implementation", "responsive-and-device-strategy"],
       "conditional_skills": [
+        {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation"]},
         {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
-        {"when": {"features": ["forms"]}, "skills": ["interaction-patterns-and-form-ux", "state-feedback-and-error-recovery"]}
+        {"when": {"features": ["forms"]}, "skills": ["interaction-patterns-and-form-ux", "state-feedback-and-error-recovery"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]}
       ],
-      "gates": [{"id": "focused-verification", "require": "changed behavior has a pass condition and focused verification"}]
+      "gates": [
+        {"id": "focused-verification", "require": "changed behavior has a pass condition and focused verification"},
+        {"id": "measurement-instrumentation", "require": "critical outcome metrics have event/data-source definitions, privacy/consent considerations, owners and verification before release", "when": {"validation_lane": "production-learning"}}
+      ]
     },
     {
       "id": "qa",
       "agent": "qa",
       "purpose": "Verify the actual rendered change and prevent regression across affected shared owners.",
       "required_skills": ["testing-strategy", "agent-evaluation-and-reliability", "ui-craft-and-visual-qa", "web-ui-code-review", "accessibility"],
-      "conditional_skills": [{"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance"]}],
-      "gates": [{"id": "rendered-check", "require": "changed UI is inspected in representative states/viewports"}]
+      "conditional_skills": [
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
+        {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation", "human-governance-and-playbacks", "post-launch-learning-loop"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance", "system-reality-and-production-readiness", "code-review-and-release"]}
+      ],
+      "gates": [
+        {"id": "rendered-check", "require": "changed UI is inspected in representative states/viewports"},
+        {"id": "truthful-completion", "require": "verified versus unverified areas are explicit; completion claims do not exceed evidence"},
+        {"id": "human-release-governance", "approval": "human", "require": "an authorized human decision owner reviews unresolved risk, outcome readiness and rollback/learning plan before production release when project policy requires it", "when": {"validation_lane": "production-learning"}},
+        {"id": "live-learning-ready", "require": "post-launch signals, critical experience checks, review cadence and rollback criteria are explicit for the affected surface", "when": {"validation_lane": "production-learning"}}
+      ]
     }
   ],
   "replanning": {
