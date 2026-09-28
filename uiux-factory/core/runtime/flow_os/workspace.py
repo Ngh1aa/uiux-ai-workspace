@@ -31,6 +31,8 @@ class WorktreeManager:
     The manager is intentionally fail-closed: writable isolation requires a real,
     clean git repository whose top-level directory is exactly ``source_root``.
     Existing branch names or ambiguous worktree paths are never silently reused.
+    Canonical runtime checkpoint state under `.uiux-agent-runs/` is ignored by the
+    cleanliness check because the harness creates it before the first writable action.
     """
 
     def __init__(self, source_root: Path, worktrees_root: Path | None = None) -> None:
@@ -68,6 +70,18 @@ class WorktreeManager:
             raise WorkspaceIsolationError(f"git {' '.join(args)} failed ({result.returncode}): {detail}")
         return result.stdout.strip()
 
+    @staticmethod
+    def _meaningful_status_lines(status: str) -> list[str]:
+        meaningful: list[str] = []
+        for line in status.splitlines():
+            if not line.strip():
+                continue
+            path = line[3:] if len(line) > 3 else ""
+            if path == ".uiux-agent-runs" or path.startswith(".uiux-agent-runs/"):
+                continue
+            meaningful.append(line)
+        return meaningful
+
     def validate_source(self) -> str:
         if not self.source_root.is_dir():
             raise WorkspaceIsolationError(f"source root is not a directory: {self.source_root}")
@@ -77,10 +91,12 @@ class WorktreeManager:
                 f"writable isolation requires the git top-level directory as project root: {top} != {self.source_root}"
             )
         status = self._git(["status", "--porcelain", "--untracked-files=normal"])
-        if status:
+        meaningful = self._meaningful_status_lines(status)
+        if meaningful:
+            preview = "; ".join(meaningful[:8])
             raise WorkspaceIsolationError(
-                "source checkout has uncommitted or untracked changes; commit/stash them before isolated writes "
-                "so the worktree cannot silently omit local project truth"
+                "source checkout has uncommitted or untracked project changes; commit/stash them before isolated writes "
+                f"so the worktree cannot silently omit local project truth ({preview})"
             )
         return self._git(["rev-parse", "HEAD"])
 
