@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from core.evaluation.run_evaluator import RunEvaluation, RunEvaluator
-from core.memory.evaluation_memory import EvaluationMemoryStore
+from core.memory.evaluation_memory import EvaluationMemoryError, EvaluationMemoryStore
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
 from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
@@ -75,6 +75,10 @@ class ManagedFlowController:
         self.run_evaluator = RunEvaluator()
         self.evaluation_memory = EvaluationMemoryStore(harness.project_root, harness.policy_doc)
 
+    @staticmethod
+    def _memory_error(exc: Exception) -> str:
+        return f"{type(exc).__name__}: {str(exc)[:500]}"
+
     def interpret_goal(
         self,
         goal: str,
@@ -132,11 +136,22 @@ class ManagedFlowController:
             self.record_evaluation(managed)
 
     def record_evaluation(self, managed: ManagedWebsiteRun) -> RunEvaluation:
-        """Persist current evidence-derived outcome and, when eligible, learn it."""
+        """Persist current evidence-derived outcome and, when eligible, learn it.
+
+        Memory is advisory, so a local memory corruption/lock/filesystem problem is
+        checkpointed as a diagnostic and never changes the managed terminal state.
+        """
         evaluation = self.run_evaluator.evaluate(managed, self.harness)
         manager_state = self.harness.resume(managed.manager_run_id)
         manager_state.context["run_evaluation"] = evaluation.to_dict()
-        manager_state.context["evaluation_memory_recorded"] = self.evaluation_memory.record(evaluation)
+        try:
+            recorded = self.evaluation_memory.record(evaluation)
+        except (EvaluationMemoryError, OSError) as exc:
+            recorded = False
+            manager_state.context["evaluation_memory_error"] = self._memory_error(exc)
+        else:
+            manager_state.context.pop("evaluation_memory_error", None)
+        manager_state.context["evaluation_memory_recorded"] = recorded
         self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
         return evaluation
 
@@ -182,7 +197,12 @@ class ManagedFlowController:
         flow = self.resolve_flow(task_context, additional_skills, exclude_skills)
         enriched_context = dict(task_context)
         signature = self.run_evaluator.signature(task_context)
-        insight = self.evaluation_memory.insight(flow_id=flow.id, signature=signature)
+        memory_error: str | None = None
+        try:
+            insight = self.evaluation_memory.insight(flow_id=flow.id, signature=signature)
+        except (EvaluationMemoryError, OSError) as exc:
+            insight = None
+            memory_error = self._memory_error(exc)
         if insight is not None:
             enriched_context["prior_evaluation_insight"] = insight
         manager_state = self.harness.create_run(
@@ -201,6 +221,9 @@ class ManagedFlowController:
         )
         if insight is not None:
             manager_state.context["prior_evaluation_insight"] = insight
+        if memory_error is not None:
+            manager_state.context["evaluation_memory_error"] = memory_error
+        if insight is not None or memory_error is not None:
             self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
         self._checkpoint_managed(managed)
         return managed
