@@ -16,6 +16,7 @@ REQUIRED = [
     ROOT / "RUNTIME-FOUNDATION.md",
     ROOT / "runtime" / "README.md",
     ROOT / "runtime" / "TOOL-OBSERVATION-CONTRACT.md",
+    ROOT / "runtime" / "A4-2-A4-5-RUNTIME-HARDENING.md",
     ROOT / "runtime" / "runtime-policy.json",
     ROOT / "runtime" / "agent.py",
     ROOT / "runtime" / "adaptive_surface.py",
@@ -61,12 +62,33 @@ PYTHON_FILES = [
 ]
 
 
+def _git_fixture(project: Path) -> None:
+    project.mkdir(parents=True, exist_ok=True)
+    for args in (
+        ["git", "init"],
+        ["git", "config", "user.email", "runtime-smoke@example.test"],
+        ["git", "config", "user.name", "Runtime Smoke"],
+    ):
+        subprocess.run(args, cwd=project, capture_output=True, text=True, check=True, timeout=30)
+    (project / ".gitkeep").write_text("runtime-smoke\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".gitkeep"], cwd=project, capture_output=True, text=True, check=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "runtime smoke fixture"],
+        cwd=project,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+
+
 def _run_flow_os_smoke(errors: list[str]) -> None:
     from runtime.agent import PermissionGate, ProviderNeutralAgentHarness, ToolRegistry
     from runtime.manager import DevelopmentManagerAgent
 
     with tempfile.TemporaryDirectory() as tmp:
-        project = Path(tmp)
+        project = Path(tmp) / "project"
+        _git_fixture(project)
         harness = ProviderNeutralAgentHarness(ROOT, project)
 
         state = harness.create_run("runtime smoke", "implementation", "branch_write")
@@ -92,8 +114,22 @@ def _run_flow_os_smoke(errors: list[str]) -> None:
         for skill in ("testing-strategy", "agent-evaluation-and-reliability"):
             if skill not in state.context.get("selected_skills", []):
                 errors.append(f"QA default skill not activated on handoff: {skill}")
-        if not (project / "docs" / "uiux" / "runtime-smoke.md").exists():
-            errors.append("runtime smoke did not create scoped artifact")
+        workspace_payload = state.context.get("workspace")
+        if not isinstance(workspace_payload, dict):
+            errors.append("runtime smoke did not persist isolated workspace metadata")
+        else:
+            try:
+                workspace = harness.worktrees.validate_metadata(
+                    workspace_payload,
+                    expected_run_id=state.run_id,
+                )
+                artifact = Path(workspace.workspace_root) / "docs" / "uiux" / "runtime-smoke.md"
+                if not artifact.exists():
+                    errors.append("runtime smoke did not create scoped artifact inside isolated worktree")
+                if (project / "docs" / "uiux" / "runtime-smoke.md").exists():
+                    errors.append("runtime smoke mutated source checkout instead of isolated worktree")
+            except Exception as exc:
+                errors.append(f"runtime smoke workspace validation failed: {type(exc).__name__}: {exc}")
         if harness.resume(state.run_id).completed_actions != state.completed_actions:
             errors.append("checkpoint resume does not preserve completed actions")
 
@@ -385,11 +421,11 @@ def main() -> int:
 
     print(
         "Runtime foundation passed: goal-driven adaptive Flow OS + public managed CLI + managed lifecycle/replanning + human approval gates + "
-        "enforced role defaults/handoffs + context/permissions/trace/checkpoint + adapter/discovery syntax"
+        "enforced role defaults/handoffs + isolated branch writes + context/permissions/trace/checkpoint + adapter/discovery syntax"
     )
     print(
-        "NOTE: provider reasoning and external integrations still require environment-specific "
-        "end-to-end verification before production claims"
+        "NOTE: target-runner isolation is policy/cwd/env bounded rather than an OS/network sandbox; "
+        "provider reasoning and external integrations still require environment-specific end-to-end verification before production claims"
     )
     return 0
 
