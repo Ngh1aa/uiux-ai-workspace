@@ -29,7 +29,7 @@ def _git(cwd: Path, *args: str) -> str:
 
 def _repo(tmp_path: Path) -> Path:
     root = tmp_path / "project"
-    root.mkdir()
+    root.mkdir(parents=True)
     _git(root, "init")
     _git(root, "config", "user.email", "a4@example.test")
     _git(root, "config", "user.name", "A4 Test")
