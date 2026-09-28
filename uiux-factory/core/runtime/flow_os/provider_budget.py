@@ -5,7 +5,12 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Any, Callable
 
-from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, ProviderStageResponse
+from core.runtime.flow_os.provider import (
+    ModelProvider,
+    ProviderReportedUsage,
+    ProviderStageRequest,
+    ProviderStageResponse,
+)
 
 
 @dataclass(frozen=True)
@@ -37,6 +42,14 @@ class ProviderUsageTelemetry:
     estimated_output_tokens: int = 0
     estimated_total_tokens: int = 0
     estimated_cost_usd: float = 0.0
+    reported_calls: int = 0
+    reported_input_tokens: int = 0
+    reported_output_tokens: int = 0
+    reported_total_tokens: int = 0
+    reported_cost_usd: float = 0.0
+    reported_usage_source: str | None = None
+    hard_output_cap_applied: bool = False
+    hard_output_cap_tokens: int | None = None
     elapsed_ms: int = 0
     exhausted: bool = False
     exhaustion_reason: str | None = None
@@ -53,6 +66,7 @@ class ProviderUsageTelemetry:
         model: str,
     ) -> "ProviderUsageTelemetry":
         raw = payload if isinstance(payload, dict) else {}
+        source = str(raw.get("reported_usage_source") or "").strip()[:64] or None
         return cls(
             stage_id=stage_id,
             agent=agent,
@@ -63,15 +77,28 @@ class ProviderUsageTelemetry:
             estimated_output_tokens=max(0, int(raw.get("estimated_output_tokens", 0) or 0)),
             estimated_total_tokens=max(0, int(raw.get("estimated_total_tokens", 0) or 0)),
             estimated_cost_usd=max(0.0, float(raw.get("estimated_cost_usd", 0.0) or 0.0)),
+            reported_calls=max(0, int(raw.get("reported_calls", 0) or 0)),
+            reported_input_tokens=max(0, int(raw.get("reported_input_tokens", 0) or 0)),
+            reported_output_tokens=max(0, int(raw.get("reported_output_tokens", 0) or 0)),
+            reported_total_tokens=max(0, int(raw.get("reported_total_tokens", 0) or 0)),
+            reported_cost_usd=max(0.0, float(raw.get("reported_cost_usd", 0.0) or 0.0)),
+            reported_usage_source=source,
+            hard_output_cap_applied=bool(raw.get("hard_output_cap_applied", False)),
+            hard_output_cap_tokens=(
+                max(1, int(raw.get("hard_output_cap_tokens")))
+                if raw.get("hard_output_cap_tokens") is not None
+                else None
+            ),
             elapsed_ms=max(0, int(raw.get("elapsed_ms", 0) or 0)),
             exhausted=bool(raw.get("exhausted", False)),
             exhaustion_reason=str(raw.get("exhaustion_reason")) if raw.get("exhaustion_reason") else None,
-            measurement="runtime_utf8_byte_estimate",
+            measurement=str(raw.get("measurement") or "runtime_utf8_byte_estimate")[:96],
         )
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
         payload["estimated_cost_usd"] = round(self.estimated_cost_usd, 8)
+        payload["reported_cost_usd"] = round(self.reported_cost_usd, 8)
         return payload
 
 
@@ -241,6 +268,19 @@ def _estimate_cost(budget: StageProviderBudget, input_tokens: int, output_tokens
     ) / 1_000_000.0
 
 
+def _trusted_reported_usage(provider: ModelProvider) -> ProviderReportedUsage | None:
+    raw = getattr(provider, "last_reported_usage", None)
+    if not isinstance(raw, ProviderReportedUsage):
+        return None
+    expected_source = {
+        "openai": "openai_api_usage",
+        "anthropic": "anthropic_api_usage",
+    }.get(str(getattr(provider, "name", "")).strip().lower())
+    if expected_source is None or raw.source != expected_source:
+        return None
+    return raw
+
+
 class BudgetedProvider:
     """Provider wrapper enforcing immutable stage budgets and recording bounded telemetry."""
 
@@ -289,6 +329,16 @@ class BudgetedProvider:
             return None
         return max(0.0, self.budget.timeout_seconds - (self.usage.elapsed_ms / 1000.0))
 
+    def _effective_total_tokens(self) -> int:
+        if self.usage.reported_calls == self.usage.calls and self.usage.calls > 0:
+            return self.usage.reported_total_tokens
+        return self.usage.estimated_total_tokens
+
+    def _effective_cost_usd(self) -> float:
+        if self.usage.reported_calls == self.usage.calls and self.usage.calls > 0:
+            return self.usage.reported_cost_usd
+        return self.usage.estimated_cost_usd
+
     def can_start(self) -> tuple[bool, str]:
         if self.usage.exhausted:
             return False, self.usage.exhaustion_reason or "stage budget already exhausted"
@@ -299,14 +349,14 @@ class BudgetedProvider:
             return False, f"stage timeout budget exhausted ({self.budget.timeout_seconds}s)"
         if (
             self.budget.max_estimated_total_tokens is not None
-            and self.usage.estimated_total_tokens >= self.budget.max_estimated_total_tokens
+            and self._effective_total_tokens() >= self.budget.max_estimated_total_tokens
         ):
-            return False, "estimated token budget exhausted"
+            return False, "provider token budget exhausted"
         if (
             self.budget.max_cost_usd is not None
-            and self.usage.estimated_cost_usd >= self.budget.max_cost_usd
+            and self._effective_cost_usd() >= self.budget.max_cost_usd
         ):
-            return False, "estimated cost budget exhausted"
+            return False, "provider cost budget exhausted"
         return True, "ok"
 
     def _apply_timeout_ceiling(self) -> None:
@@ -325,6 +375,25 @@ class BudgetedProvider:
             setattr(self.provider, "timeout", min(int(current), bounded))
         except Exception:
             return
+
+    def _apply_output_ceiling(self) -> None:
+        if not self.budget.enabled or self.budget.output_reserve_tokens_per_call <= 0:
+            return
+        if getattr(self.provider, "supports_hard_output_limit", False) is not True:
+            return
+        cap = int(self.budget.output_reserve_tokens_per_call)
+        current = getattr(self.provider, "max_output_tokens", None)
+        if current is not None:
+            try:
+                cap = min(cap, max(1, int(current)))
+            except (TypeError, ValueError, OverflowError):
+                return
+        try:
+            setattr(self.provider, "max_output_tokens", max(1, cap))
+        except Exception:
+            return
+        self.usage.hard_output_cap_applied = True
+        self.usage.hard_output_cap_tokens = max(1, cap)
 
     def run_stage(self, request: ProviderStageRequest) -> ProviderStageResponse:
         allowed, reason = self.can_start()
@@ -358,6 +427,7 @@ class BudgetedProvider:
             )
 
         self._apply_timeout_ceiling()
+        self._apply_output_ceiling()
         self.usage.calls += 1
         self.usage.estimated_input_tokens += input_estimate
         started = time.monotonic()
@@ -385,17 +455,31 @@ class BudgetedProvider:
             output_estimate,
         )
 
+        reported = _trusted_reported_usage(self.provider)
+        if reported is not None:
+            self.usage.reported_calls += 1
+            self.usage.reported_input_tokens += reported.input_tokens
+            self.usage.reported_output_tokens += reported.output_tokens
+            self.usage.reported_total_tokens += reported.total_tokens
+            self.usage.reported_cost_usd += _estimate_cost(
+                self.budget,
+                reported.input_tokens,
+                reported.output_tokens,
+            )
+            self.usage.reported_usage_source = reported.source
+            self.usage.measurement = "runtime_estimate+trusted_provider_usage"
+
         over_reason: str | None = None
         if (
             self.budget.max_estimated_total_tokens is not None
-            and self.usage.estimated_total_tokens > self.budget.max_estimated_total_tokens
+            and self._effective_total_tokens() > self.budget.max_estimated_total_tokens
         ):
-            over_reason = "provider response exceeded estimated token budget"
+            over_reason = "provider response exceeded token budget"
         elif (
             self.budget.max_cost_usd is not None
-            and self.usage.estimated_cost_usd > self.budget.max_cost_usd
+            and self._effective_cost_usd() > self.budget.max_cost_usd
         ):
-            over_reason = "provider response exceeded estimated cost budget"
+            over_reason = "provider response exceeded cost budget"
         elif (
             self.budget.timeout_seconds is not None
             and self.usage.elapsed_ms > self.budget.timeout_seconds * 1000
@@ -439,6 +523,11 @@ def persist_provider_usage(
         "estimated_output_tokens": 0,
         "estimated_total_tokens": 0,
         "estimated_cost_usd": 0.0,
+        "reported_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_total_tokens": 0,
+        "reported_cost_usd": 0.0,
         "elapsed_ms": 0,
     }
     for item in usage_by_stage.values():
@@ -449,8 +538,14 @@ def persist_provider_usage(
         totals["estimated_output_tokens"] += max(0, int(item.get("estimated_output_tokens", 0) or 0))
         totals["estimated_total_tokens"] += max(0, int(item.get("estimated_total_tokens", 0) or 0))
         totals["estimated_cost_usd"] += max(0.0, float(item.get("estimated_cost_usd", 0.0) or 0.0))
+        totals["reported_calls"] += max(0, int(item.get("reported_calls", 0) or 0))
+        totals["reported_input_tokens"] += max(0, int(item.get("reported_input_tokens", 0) or 0))
+        totals["reported_output_tokens"] += max(0, int(item.get("reported_output_tokens", 0) or 0))
+        totals["reported_total_tokens"] += max(0, int(item.get("reported_total_tokens", 0) or 0))
+        totals["reported_cost_usd"] += max(0.0, float(item.get("reported_cost_usd", 0.0) or 0.0))
         totals["elapsed_ms"] += max(0, int(item.get("elapsed_ms", 0) or 0))
     totals["estimated_cost_usd"] = round(float(totals["estimated_cost_usd"]), 8)
+    totals["reported_cost_usd"] = round(float(totals["reported_cost_usd"]), 8)
     manager_state.context["provider_usage_totals"] = totals
 
     history = list(manager_state.context.get("provider_usage_history", []))
