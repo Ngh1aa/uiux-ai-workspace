@@ -11,6 +11,9 @@ from urllib.parse import urlparse
 from core.runtime.flow_os.evidence import EvidenceRecord
 
 
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
 class BrowserEvidenceError(RuntimeError):
     """Raised when rendered browser evidence is missing, unsafe or invalid."""
 
@@ -113,7 +116,7 @@ class PlaywrightBrowserEvidenceAdapter:
             raise BrowserEvidenceError(f"Playwright browser capture failed ({result.returncode}): {detail}")
         return self.collect(output)
 
-    def _safe_artifact(self, root: Path, raw: str) -> Path:
+    def _safe_artifact(self, root: Path, raw: str, require_png: bool = False) -> Path:
         relative = Path(raw)
         if relative.is_absolute() or not relative.parts:
             raise BrowserEvidenceError("browser evidence paths must be artifact-relative")
@@ -134,6 +137,12 @@ class PlaywrightBrowserEvidenceAdapter:
             raise BrowserEvidenceError(f"browser evidence file is not regular: {raw}")
         if candidate.stat().st_size <= 0 or candidate.stat().st_size > self.max_artifact_bytes:
             raise BrowserEvidenceError(f"browser evidence file has invalid size: {raw}")
+        if require_png:
+            if candidate.suffix.lower() != ".png":
+                raise BrowserEvidenceError(f"browser screenshot must be a PNG file: {raw}")
+            with candidate.open("rb") as handle:
+                if handle.read(len(PNG_SIGNATURE)) != PNG_SIGNATURE:
+                    raise BrowserEvidenceError(f"browser screenshot has invalid PNG signature: {raw}")
         return candidate
 
     def collect(self, artifacts_dir: Path | None = None, stage_id: str = "qa") -> list[EvidenceRecord]:
@@ -153,18 +162,19 @@ class PlaywrightBrowserEvidenceAdapter:
             screenshot_raw = str(payload.get("screenshot", "")).strip()
             if not screenshot_raw:
                 raise BrowserEvidenceError(f"browser evidence missing screenshot reference: {path.name}")
-            screenshot = self._safe_artifact(root, screenshot_raw)
+            screenshot = self._safe_artifact(root, screenshot_raw, require_png=True)
             page_errors = list(payload.get("pageErrors", []))
             console_errors = [
                 item for item in list(payload.get("consoleMessages", []))
                 if isinstance(item, dict) and str(item.get("type", "")) == "error"
             ]
             blocked_requests = [str(item) for item in list(payload.get("blockedRequests", []))]
-            final_url = str(payload.get("url", ""))
+            final_url = str(payload.get("url", "")).strip()
             parsed_final = urlparse(final_url)
+            invalid_final_url = parsed_final.scheme not in {"http", "https"} or not parsed_final.hostname
             remote_final = bool(
-                not self.allow_remote
-                and parsed_final.hostname
+                not invalid_final_url
+                and not self.allow_remote
                 and parsed_final.hostname not in self.LOCAL_HOSTS
             )
             box = payload.get("box")
@@ -173,6 +183,7 @@ class PlaywrightBrowserEvidenceAdapter:
                 if not page_errors
                 and not console_errors
                 and not blocked_requests
+                and not invalid_final_url
                 and not remote_final
                 and box is not None
                 else "FAIL"
@@ -201,6 +212,7 @@ class PlaywrightBrowserEvidenceAdapter:
                         "page_errors": page_errors,
                         "console_errors": console_errors,
                         "blocked_requests": blocked_requests,
+                        "invalid_final_url": invalid_final_url,
                         "remote_final_url": remote_final,
                     },
                 )
