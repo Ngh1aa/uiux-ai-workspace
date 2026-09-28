@@ -65,6 +65,14 @@
     "enabled": true,
     "max_active_per_stage": 6
   },
+  "jit_skill_sections": {
+    "enabled": true,
+    "max_sections_per_skill": 64,
+    "max_section_chars": 12000,
+    "max_retrievals_per_stage": 24,
+    "max_total_retrieved_chars": 120000,
+    "max_index_chars": 60000
+  },
   "provider_context": {
     "max_document_chars_per_request": 180000
   },
@@ -149,6 +157,7 @@
     "Stage provider budgets are policy-owned and immutable from provider output; provider calls, estimated token/cost usage and elapsed time are persisted without prompts, outputs or secrets.",
     "Managed provider access defaults to zero-cost mode: auto may select only explicitly confirmed Groq/Gemini free-tier accounts, while OpenAI/Anthropic require both runtime-policy permission and per-invocation paid opt-in.",
     "JIT skill activation may expose only non-mandatory skills already routed by the active Flow stage; activation changes provider context only and can never change authority, satisfy gates or count as trusted runtime evidence.",
+    "Section-level JIT retrieval may read only random capabilities generated for skills already routed to the current specialist run; section reads are bounded advisory knowledge expansion and never trusted gate evidence.",
     "Provider skill/source documents share one policy-owned per-request character budget; JIT activation must preflight the next context before checkpoint mutation, and UIUX_PROVIDER_CONTEXT_CHARS may only lower this ceiling."
   ]
 }
