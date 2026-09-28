@@ -56,7 +56,6 @@ def default_change_surface_for_intent(intent: str) -> str:
 
 def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str:
     """Classify task size while preferring the narrowest credible change owner."""
-
     normalized = _normalise(text)
     normalized_scope = [_normalise(item) for item in scope if str(item).strip()]
     scope_text = " ".join(normalized_scope)
@@ -67,13 +66,12 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
             return "PAGE"
         if intent == "build" and has_product_cue:
             return "PRODUCT"
-
         atomic_count = _matched_count(scope_text, ATOMIC_HINTS)
         focused_count = _matched_count(scope_text, FOCUSED_HINTS)
         if atomic_count and not focused_count and len(normalized_scope) <= 2:
             return "MICRO"
         if focused_count:
-            return "PAGE" if focused_count >= 3 or len(normalized_scope) >= 3 else "FOCUSED"
+            return "PAGE" if focused_count >= 3 else "FOCUSED"
         if _contains_any(scope_text, PAGE_HINTS):
             return "PAGE"
         if len(normalized_scope) == 1 and intent in {"improve", "fix", "polish", "redesign", "rebuild"}:
@@ -93,5 +91,4 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
         return "FOCUSED"
     if _contains_any(normalized, PAGE_HINTS):
         return "PAGE"
-
     return default_change_surface_for_intent(intent)
