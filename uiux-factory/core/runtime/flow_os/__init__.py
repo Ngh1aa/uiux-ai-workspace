@@ -6,34 +6,57 @@ Python modules under skills_UIUX/runtime are compatibility adapters only.
 
 CANONICAL_RUNTIME_OWNER = "uiux-factory/core/runtime/flow_os"
 
+from core.runtime.flow_os.browser_evidence import BrowserEvidenceError, PlaywrightBrowserEvidenceAdapter
 from core.runtime.flow_os.evidence import EvidenceRecord
 from core.runtime.flow_os.file_tools import WorkspaceFileError, WorkspaceFileTools
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
+from core.runtime.flow_os.release import (
+    CommandDeployAdapter,
+    DeploymentResult,
+    ProductionReleaseController,
+    ProductionReleaseError,
+)
 from core.runtime.flow_os.safe_read import SafeReadError, SafeReadResult, SafeReader
+from core.runtime.flow_os.sandbox import ContainerSandbox, SandboxSpec, SandboxUnavailableError
 from core.runtime.flow_os.target_runner import TargetCommandResult, TargetRunner, TargetRunnerError
 from core.runtime.flow_os.task_context import GoalInterpretation, GoalInterpreter, TaskContract
-from core.runtime.flow_os.workspace import WorkspaceIsolationError, WorkspaceMetadata, WorktreeManager
+from core.runtime.flow_os.workspace import (
+    WorkspaceFinalizeResult,
+    WorkspaceIsolationError,
+    WorkspaceMetadata,
+    WorktreeManager,
+)
 
 __all__ = [
+    "BrowserEvidenceError",
     "CANONICAL_RUNTIME_OWNER",
+    "CommandDeployAdapter",
+    "ContainerSandbox",
+    "DeploymentResult",
     "EvidenceRecord",
     "FlowPlanner",
     "GoalInterpretation",
     "GoalInterpreter",
     "ManagedFlowController",
     "ManagedWebsiteRun",
+    "PlaywrightBrowserEvidenceAdapter",
+    "ProductionReleaseController",
+    "ProductionReleaseError",
     "ResolvedFlow",
     "ResolvedStage",
     "SafeReadError",
     "SafeReadResult",
     "SafeReader",
+    "SandboxSpec",
+    "SandboxUnavailableError",
     "TargetCommandResult",
     "TargetRunner",
     "TargetRunnerError",
     "TaskContract",
     "WorkspaceFileError",
     "WorkspaceFileTools",
+    "WorkspaceFinalizeResult",
     "WorkspaceIsolationError",
     "WorkspaceMetadata",
     "WorktreeManager",

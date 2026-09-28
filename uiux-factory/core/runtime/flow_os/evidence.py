@@ -14,6 +14,8 @@ TRUSTED_EVIDENCE_TYPES = frozenset({
     "validator_result",
     "artifact",
     "tool_observation",
+    "browser_render",
+    "deployment_result",
 })
 
 
@@ -121,16 +123,20 @@ def provider_claim_records(stage_id: str, claims: list[str]) -> list[dict[str, A
     ]
 
 
-def trusted_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> list[EvidenceRecord]:
+def _trusted_records(records: list[dict[str, Any]]) -> list[EvidenceRecord]:
     trusted: list[EvidenceRecord] = []
     for payload in records:
         try:
             record = EvidenceRecord.from_dict(dict(payload))
         except (KeyError, TypeError, ValueError):
             continue
-        if record.stage_id == stage_id and record.trusted and record.origin == "runtime":
+        if record.trusted and record.origin == "runtime":
             trusted.append(record)
     return trusted
+
+
+def trusted_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> list[EvidenceRecord]:
+    return [record for record in _trusted_records(records) if record.stage_id == stage_id]
 
 
 def _evidence_channel(record: EvidenceRecord) -> tuple[Any, ...]:
@@ -140,23 +146,35 @@ def _evidence_channel(record: EvidenceRecord) -> tuple[Any, ...]:
     if record.type == "command_result":
         argv = tuple(str(item) for item in record.data.get("argv", []))
         return (record.type, record.tool, argv, str(record.data.get("cwd", ".")))
+    if record.type == "browser_render":
+        viewport = record.data.get("viewport", {})
+        if isinstance(viewport, dict):
+            viewport_key = tuple(sorted((str(key), str(value)) for key, value in viewport.items()))
+        else:
+            viewport_key = str(viewport)
+        return (record.type, str(record.data.get("route", "")), viewport_key)
     path = str(record.data.get("path", ""))
     if path:
         return (record.type, record.tool, path)
     return (record.type, record.tool)
 
 
-def effective_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> list[EvidenceRecord]:
-    """Return the latest trusted record per evidence channel.
+def effective_evidence(records: list[dict[str, Any]]) -> list[EvidenceRecord]:
+    """Return the latest trusted record per stage + evidence channel.
 
-    A failing validator/command blocks a gate until the same check is rerun successfully;
-    unrelated evidence cannot hide it. Re-running the same check successfully supersedes
-    the stale failure so a repaired stage can progress.
+    Release readiness must evaluate the repaired current state, not permanently block
+    because an earlier attempt failed. A later retry only supersedes evidence from the
+    same stage and channel; unrelated evidence can never hide a failure.
     """
     latest: dict[tuple[Any, ...], EvidenceRecord] = {}
-    for record in trusted_stage_evidence(records, stage_id):
-        latest[_evidence_channel(record)] = record
+    for record in _trusted_records(records):
+        latest[(record.stage_id, *_evidence_channel(record))] = record
     return list(latest.values())
+
+
+def effective_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> list[EvidenceRecord]:
+    """Return the latest trusted record per evidence channel for one stage."""
+    return [record for record in effective_evidence(records) if record.stage_id == stage_id]
 
 
 def gate_evidence_errors(
@@ -165,14 +183,7 @@ def gate_evidence_errors(
     records: list[dict[str, Any]],
     agent: str = "",
 ) -> list[str]:
-    """Evaluate typed evidence requirements without treating model prose as proof.
-
-    Gate documents may opt into exact ``evidence_types``. For provider-driven legacy
-    gates that do not yet declare types, a conservative stage-role default is used so
-    PASS still requires runtime observations rather than provider claims. A latest
-    failing validator/target command is an explicit blocker even when other evidence
-    types are present.
-    """
+    """Evaluate typed evidence requirements without treating model prose as proof."""
     effective = effective_stage_evidence(records, stage_id)
     available = {record.type for record in effective if record.status != "FAIL"}
     errors: list[str] = []
@@ -183,7 +194,7 @@ def gate_evidence_errors(
     role_defaults = {
         "research": {"file_read", "search_result", "validator_result", "command_result"},
         "implementation": {"file_change", "validator_result", "command_result"},
-        "qa": {"validator_result", "command_result", "file_read", "search_result"},
+        "qa": {"validator_result", "command_result", "file_read", "search_result", "browser_render"},
         "development": set(TRUSTED_EVIDENCE_TYPES),
     }
     for gate in gates:
