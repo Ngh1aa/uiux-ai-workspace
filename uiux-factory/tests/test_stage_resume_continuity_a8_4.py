@@ -121,6 +121,20 @@ def test_a8_4_flow_revision_invalidates_prior_stage_checkpoint(tmp_path: Path) -
     assert managed.stage_runs["research"] == [first.run_id, second.run_id]
 
 
+def test_a8_4_replanned_state_starts_fresh_epoch_even_without_revision_increment(tmp_path: Path) -> None:
+    _harness, manager, managed = _research_run(tmp_path)
+    first = manager.start_stage(managed)
+
+    managed.state = "REPLANNED"
+    manager._checkpoint_managed(managed)
+    second = manager.start_stage(managed)
+
+    assert second.run_id != first.run_id
+    assert second.context["flow_revision"] == first.context["flow_revision"] == managed.flow.revision
+    assert managed.stage_runs["research"] == [first.run_id, second.run_id]
+    assert managed.state == "RUNNING"
+
+
 def test_a8_4_same_revision_checkpoint_metadata_tamper_fails_closed(tmp_path: Path) -> None:
     harness, manager, managed = _research_run(tmp_path)
     stage_state = manager.start_stage(managed)
