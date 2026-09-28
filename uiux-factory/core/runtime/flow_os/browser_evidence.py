@@ -27,9 +27,10 @@ class PlaywrightBrowserEvidenceAdapter:
     """Capture or ingest real Playwright-rendered evidence into Flow OS evidence.
 
     The adapter trusts only locally generated artifact files. Remote browsing is denied
-    by default; capture accepts localhost URLs unless the runtime policy explicitly
-    enables remote targets. Screenshot bytes are hashed and linked to their JSON
-    observation so a gate can distinguish rendered proof from provider prose.
+    by default; capture accepts localhost URLs and same-origin relative routes unless
+    runtime policy explicitly enables remote targets. Screenshot bytes are hashed and
+    linked to their JSON observation so a gate can distinguish rendered proof from
+    provider prose.
     """
 
     def __init__(self, qa_root: Path, policy: dict[str, Any]) -> None:
@@ -52,7 +53,24 @@ class PlaywrightBrowserEvidenceAdapter:
             raise BrowserEvidenceError("browser evidence base_url must be http(s)")
         if not self.allow_remote and parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
             raise BrowserEvidenceError("remote browser targets are disabled by runtime policy")
-        return base_url
+        return str(base_url)
+
+    def _validate_routes(self, routes: list[str]) -> list[str]:
+        normalized = [str(route).strip() for route in routes if str(route).strip()]
+        if not normalized or len(normalized) > self.max_routes:
+            raise BrowserEvidenceError(f"routes must contain between 1 and {self.max_routes} entries")
+        for route in normalized:
+            parsed = urlparse(route)
+            if (
+                not route.startswith("/")
+                or route.startswith("//")
+                or parsed.scheme
+                or parsed.netloc
+            ):
+                raise BrowserEvidenceError(
+                    "browser evidence routes must be same-origin relative paths beginning with exactly one '/'"
+                )
+        return normalized
 
     def _artifact_root(self, artifacts_dir: Path | None) -> Path:
         raw = Path(artifacts_dir or (self.qa_root / "artifacts"))
@@ -67,9 +85,7 @@ class PlaywrightBrowserEvidenceAdapter:
 
     def capture(self, base_url: str, routes: list[str], artifacts_dir: Path | None = None) -> list[EvidenceRecord]:
         base_url = self._validate_base_url(base_url)
-        normalized = [str(route).strip() for route in routes if str(route).strip()]
-        if not normalized or len(normalized) > self.max_routes:
-            raise BrowserEvidenceError(f"routes must contain between 1 and {self.max_routes} entries")
+        normalized = self._validate_routes(routes)
         output = self._artifact_root(artifacts_dir)
         output.mkdir(parents=True, exist_ok=True)
         env = {
@@ -78,6 +94,7 @@ class PlaywrightBrowserEvidenceAdapter:
             if key in {"PATH", "SYSTEMROOT", "WINDIR", "HOME", "USERPROFILE", "TMP", "TEMP", "LANG", "LC_ALL"}
         }
         env["QA_BASE_URL"] = base_url
+        env["QA_ALLOWED_ORIGIN"] = f"{urlparse(base_url).scheme}://{urlparse(base_url).netloc}"
         env["QA_ROUTES"] = ",".join(normalized)
         env["QA_ARTIFACTS_DIR"] = str(output)
         result = subprocess.run(
