@@ -4,6 +4,8 @@ import path from 'node:path';
 
 const artifactsDir = path.resolve(process.env.QA_ARTIFACTS_DIR || 'artifacts');
 fs.mkdirSync(artifactsDir, { recursive: true });
+const baseUrl = process.env.QA_BASE_URL || 'http://127.0.0.1:4173';
+const allowedOrigin = process.env.QA_ALLOWED_ORIGIN || new URL(baseUrl).origin;
 const routes = (process.env.QA_ROUTES || '/fixture/')
   .split(',')
   .map(route => route.trim())
@@ -13,12 +15,33 @@ for (const route of routes) {
   test(`captures browser evidence for ${route}`, async ({ page }) => {
     const consoleMessages = [];
     const pageErrors = [];
+    const blockedRequests = [];
     page.on('console', message => consoleMessages.push({ type: message.type(), text: message.text() }));
     page.on('pageerror', error => pageErrors.push(String(error)));
+
+    await page.route('**/*', async intercepted => {
+      const rawUrl = intercepted.request().url();
+      let parsed;
+      try {
+        parsed = new URL(rawUrl);
+      } catch {
+        blockedRequests.push(rawUrl);
+        await intercepted.abort('blockedbyclient');
+        return;
+      }
+      if ((parsed.protocol === 'http:' || parsed.protocol === 'https:') && parsed.origin !== allowedOrigin) {
+        blockedRequests.push(rawUrl);
+        await intercepted.abort('blockedbyclient');
+        return;
+      }
+      await intercepted.continue();
+    });
 
     const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
     expect(response, `No navigation response for ${route}`).not.toBeNull();
     expect(response.ok(), `Navigation failed for ${route} with HTTP ${response.status()}`).toBeTruthy();
+    expect(new URL(page.url()).origin, `Cross-origin navigation detected for ${route}`).toBe(allowedOrigin);
+    expect(blockedRequests, `Cross-origin network request detected for ${route}`).toEqual([]);
 
     const main = page.locator('main').first();
     const hasMain = (await main.count()) > 0;
@@ -57,7 +80,8 @@ for (const route of routes) {
       computedStyle,
       screenshot: screenshotName,
       consoleMessages,
-      pageErrors
+      pageErrors,
+      blockedRequests
     };
     fs.writeFileSync(
       path.join(artifactsDir, `browser-evidence-${safeRoute}.json`),
