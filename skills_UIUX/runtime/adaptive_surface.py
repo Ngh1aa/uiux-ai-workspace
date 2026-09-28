@@ -17,10 +17,10 @@ FOCUSED_HINTS = (
     "animation", "motion", "section",
 )
 STRONG_PAGE_HINTS = (
-    "landing-page", "landing page", "homepage", "home page", "trang chủ", "checkout",
-    "page", "route", "screen", "màn hình", "trang đích",
+    "landing-page", "landing page", "homepage", "home page", "trang chủ",
+    "single page", "one page", "một trang", "page", "route", "screen", "màn hình", "trang đích",
 )
-PAGE_HINTS = STRONG_PAGE_HINTS + ("dashboard", "bảng điều khiển")
+PAGE_HINTS = STRONG_PAGE_HINTS + ("checkout", "dashboard", "bảng điều khiển")
 FULL_REDESIGN_TERMS = (
     "whole website", "entire website", "full website", "all pages", "site-wide", "site wide",
     "whole site", "entire site", "toàn bộ website", "toàn bộ trang web", "cả website",
@@ -30,7 +30,7 @@ PRODUCT_TERMS = (
     "whole product", "entire product", "end-to-end product", "end to end product",
     "full product", "product-wide", "product wide", "new product", "build a product",
     "build the product", "xây sản phẩm", "toàn bộ sản phẩm", "cả sản phẩm",
-    "web app", "mobile app", "application", "platform", "nền tảng",
+    "web app", "mobile app", "application", "platform", "nền tảng", "website", "trang web",
 )
 
 
@@ -62,8 +62,10 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
     has_product_cue = _contains_any(normalized, PRODUCT_TERMS)
 
     if scope_text:
+        # Explicit single-page creation stays PAGE even when the page belongs to a platform/site.
         if intent == "build" and _contains_any(scope_text, STRONG_PAGE_HINTS):
             return "PAGE"
+        # A website/app/platform build with checkout/dashboard as features is product-sized.
         if intent == "build" and has_product_cue:
             return "PRODUCT"
 
@@ -84,10 +86,10 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
 
     if intent in {"redesign", "rebuild"} and _contains_any(normalized, FULL_REDESIGN_TERMS):
         return "REDESIGN"
-    if has_product_cue:
-        return "PRODUCT"
     if intent == "build" and _contains_any(normalized, STRONG_PAGE_HINTS):
         return "PAGE"
+    if has_product_cue:
+        return "PRODUCT"
     if _contains_any(normalized, ATOMIC_HINTS):
         return "MICRO"
     if _contains_any(normalized, FOCUSED_HINTS):
