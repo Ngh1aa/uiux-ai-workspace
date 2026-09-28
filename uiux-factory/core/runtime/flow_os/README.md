@@ -18,6 +18,7 @@ Factory runtime owns executable Python behavior for:
 - container/network-sandboxed target command execution;
 - typed runtime evidence and gate evaluation;
 - Playwright browser-rendered evidence ingestion/capture;
+- bounded advisory vision observations derived from validated screenshot artifacts;
 - evidence-derived terminal run evaluation;
 - bounded project-scoped advisory evaluation memory;
 - explicit human-owned production release/deploy authority;
@@ -162,3 +163,11 @@ Historical insight is advisory only. It cannot:
 - override current source truth.
 
 See `skills_UIUX/runtime/A5-EVALUATION-MEMORY.md` for the complete trust, storage and eligibility contract.
+
+## A7 — Vision evidence boundary
+
+`VisionEvidenceAdapter` connects trusted `browser_render` screenshots to bounded image interpretation without making model-authored interpretation trusted evidence. It re-validates artifact path, file signature, byte limit and screenshot SHA-256 before any analyzer is invoked.
+
+The default path is zero-cost: when no analyzer is configured, the runtime emits a `NOT_RUN` advisory observation rather than manufacturing a visual PASS. Local/zero-cost analyzers may emit bounded findings, but every `vision_observation` remains `trusted=false`, is excluded from `TRUSTED_EVIDENCE_TYPES`, and therefore cannot satisfy a gate or authorize merge/deploy/release.
+
+Inline image bytes/base64 are rejected; run evidence stores only the artifact reference/hash/size plus bounded findings. See `skills_UIUX/runtime/A7-VISION-EVIDENCE.md` for the complete contract.
