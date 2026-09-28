@@ -128,6 +128,8 @@ class ManagedFlowController:
         state.context["task_context"] = dict(managed.task_context)
         state.context["managed_run"] = managed.to_dict()
         self.harness.checkpoints.save(state.run_id, state.to_dict())
+        if managed.state in {"COMPLETED", "FAILED", "BLOCKED"}:
+            self.record_evaluation(managed)
 
     def record_evaluation(self, managed: ManagedWebsiteRun) -> RunEvaluation:
         """Persist current evidence-derived outcome and, when eligible, learn it."""
@@ -295,7 +297,6 @@ class ManagedFlowController:
             managed.state = "COMPLETED"
             managed.active_stage = target
             self._checkpoint_managed(managed)
-            self.record_evaluation(managed)
             return None
 
         managed.active_stage = stage_ids[index + 1]
