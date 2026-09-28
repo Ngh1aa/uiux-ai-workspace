@@ -28,9 +28,9 @@ class WorkspaceMetadata:
 class WorktreeManager:
     """Create branch-scoped writable worktrees without mutating the source checkout.
 
-    The manager is intentionally fail-closed: writable isolation requires a real git
-    repository whose top-level directory is exactly ``source_root``. Existing branch
-    names or ambiguous worktree paths are never silently reused.
+    The manager is intentionally fail-closed: writable isolation requires a real,
+    clean git repository whose top-level directory is exactly ``source_root``.
+    Existing branch names or ambiguous worktree paths are never silently reused.
     """
 
     def __init__(self, source_root: Path, worktrees_root: Path | None = None) -> None:
@@ -75,6 +75,12 @@ class WorktreeManager:
         if top != self.source_root:
             raise WorkspaceIsolationError(
                 f"writable isolation requires the git top-level directory as project root: {top} != {self.source_root}"
+            )
+        status = self._git(["status", "--porcelain", "--untracked-files=normal"])
+        if status:
+            raise WorkspaceIsolationError(
+                "source checkout has uncommitted or untracked changes; commit/stash them before isolated writes "
+                "so the worktree cannot silently omit local project truth"
             )
         return self._git(["rev-parse", "HEAD"])
 
@@ -153,4 +159,7 @@ class WorktreeManager:
         top = Path(self._git(["rev-parse", "--show-toplevel"], cwd=expected)).resolve()
         if top != expected:
             raise WorkspaceIsolationError("recorded workspace is no longer an isolated git worktree")
+        current_branch = self._git(["branch", "--show-current"], cwd=expected)
+        if current_branch != metadata.branch:
+            raise WorkspaceIsolationError("recorded workspace branch no longer matches checkpoint metadata")
         return metadata
