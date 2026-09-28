@@ -262,6 +262,11 @@ class ManagedFlowController:
         authority: str,
         explicit_sources: list[str] | None,
     ) -> RunState | None:
+        if managed.state == "REPLANNED":
+            # REPLANNED is an explicit lifecycle boundary even for compatibility
+            # callers that predate monotonically increasing Flow revisions.
+            return None
+
         runs = managed.stage_runs.get(stage.id, [])
         if not runs:
             return None
