@@ -1,0 +1,91 @@
+name: A13 Cross-Project Dogfood
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/a13-cross-project-dogfood.yml"
+      - "uiux-factory/core/dogfood/cross_project.py"
+      - "uiux-factory/scripts/run_cross_project_dogfood.py"
+      - "uiux-factory/tests/test_cross_project_dogfood_a13.py"
+      - "skills_UIUX/runtime/A13-CROSS-PROJECT-DOGFOOD.md"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/a13-cross-project-dogfood.yml"
+      - "uiux-factory/core/dogfood/cross_project.py"
+      - "uiux-factory/scripts/run_cross_project_dogfood.py"
+      - "uiux-factory/tests/test_cross_project_dogfood_a13.py"
+      - "skills_UIUX/runtime/A13-CROSS-PROJECT-DOGFOOD.md"
+
+permissions:
+  contents: read
+
+jobs:
+  cross-project-dogfood:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LUMEN_SHA: 219f3e49f9956290ef69a2e49cb91fefddd5f561
+      CENNEXT_SHA: 273403accf8979608fbb16dbe2741cedb0430fb6
+      LUMEN_ROOT: ${{ github.workspace }}/.dogfood/Lumen
+      CENNEXT_ROOT: ${{ github.workspace }}/.dogfood/CENNEXT
+      REPORT_ROOT: ${{ github.workspace }}/a13-artifacts/cross-project
+
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Checkout pinned Lumen
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Lumen
+          ref: 219f3e49f9956290ef69a2e49cb91fefddd5f561
+          path: .dogfood/Lumen
+
+      - name: Checkout pinned CENNEXT
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/cennext-b2b-prototype
+          ref: 273403accf8979608fbb16dbe2741cedb0430fb6
+          path: .dogfood/CENNEXT
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Run focused regression tests
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+          python -m pytest -q tests/test_cross_project_dogfood_a13.py
+
+      - name: Dogfood real Lumen checkout
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id lumen \
+            --project-root "$LUMEN_ROOT" \
+            --expected-target-sha "$LUMEN_SHA" \
+            --report "$REPORT_ROOT/lumen.json"
+
+      - name: Dogfood real CENNEXT checkout
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id cennext \
+            --project-root "$CENNEXT_ROOT" \
+            --expected-target-sha "$CENNEXT_SHA" \
+            --report "$REPORT_ROOT/cennext.json"
+
+      - name: Upload cross-project reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: a13-cross-project-dogfood-${{ github.run_id }}
+          if-no-files-found: warn
+          path: a13-artifacts/cross-project/*.json
