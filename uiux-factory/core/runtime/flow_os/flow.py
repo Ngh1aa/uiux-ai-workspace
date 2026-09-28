@@ -16,6 +16,14 @@ REPLAN_SIGNALS = {
     "CONTEXT_DRIFT",
 }
 
+JIT_SKILL_SOURCES = {
+    "optional",
+    "conditional",
+    "additional",
+    "replan",
+    "legacy_inferred",
+}
+
 CONTEXT_KEYS = {
     "intent",
     "change_surface",
@@ -184,7 +192,54 @@ class ResolvedStage:
     purpose: str
     skills: list[str]
     mandatory_skills: list[str] = field(default_factory=list)
+    jit_skills: list[str] | None = None
+    jit_skill_sources: dict[str, str] | None = None
     gates: list[dict[str, Any]] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        skills = _unique(self.skills)
+        mandatory = _unique(self.mandatory_skills)
+        skill_set = set(skills)
+        missing_mandatory = sorted(set(mandatory).difference(skill_set))
+        if missing_mandatory:
+            raise ValueError(
+                f"resolved stage {self.id} has mandatory skills outside skills: {', '.join(missing_mandatory)}"
+            )
+
+        if self.jit_skills is None:
+            mandatory_set = set(mandatory)
+            jit = [skill for skill in skills if skill not in mandatory_set]
+            raw_sources: dict[str, str] = {}
+        else:
+            jit = _unique(self.jit_skills)
+            raw_sources = dict(self.jit_skill_sources or {})
+        invalid_jit = sorted(set(jit).difference(skill_set))
+        if invalid_jit:
+            raise ValueError(
+                f"resolved stage {self.id} has JIT skills outside skills: {', '.join(invalid_jit)}"
+            )
+        overlap = sorted(set(jit).intersection(mandatory))
+        if overlap:
+            raise ValueError(
+                f"resolved stage {self.id} marks mandatory skills as JIT: {', '.join(overlap)}"
+            )
+
+        unknown_source_keys = sorted(set(raw_sources).difference(jit))
+        if unknown_source_keys:
+            raise ValueError(
+                f"resolved stage {self.id} has provenance for non-JIT skills: {', '.join(unknown_source_keys)}"
+            )
+        sources: dict[str, str] = {}
+        for skill in jit:
+            source = str(raw_sources.get(skill, "legacy_inferred")).strip()
+            if source not in JIT_SKILL_SOURCES:
+                raise ValueError(f"resolved stage {self.id} has invalid JIT source for {skill}: {source}")
+            sources[skill] = source
+
+        object.__setattr__(self, "skills", skills)
+        object.__setattr__(self, "mandatory_skills", mandatory)
+        object.__setattr__(self, "jit_skills", jit)
+        object.__setattr__(self, "jit_skill_sources", sources)
 
 
 @dataclass(frozen=True)
@@ -295,7 +350,7 @@ class FlowResolver:
 
 
 class SkillResolver:
-    """Merge role defaults, flow skills, task additions and exclusions."""
+    """Merge role defaults, required, optional/conditional JIT skills and task additions."""
 
     def __init__(self, library_root: Path, policy_doc: dict[str, Any]) -> None:
         self.library_root = Path(library_root)
@@ -317,6 +372,7 @@ class SkillResolver:
             raise ValueError(f"flow stage {stage['id']} references unknown agent role: {agent}")
 
         required = list(stage.get("required_skills", []))
+        optional = list(stage.get("optional_skills", []))
         conditional: list[str] = []
         for rule in stage.get("conditional_skills", []):
             if _condition_matches(dict(rule.get("when", {})), context):
@@ -326,14 +382,25 @@ class SkillResolver:
         additions = list(additional_skills or [])
         excludes = set(exclude_skills or [])
         mandatory = _unique(defaults + required)
-        illegal = sorted(excludes.intersection(mandatory))
+        mandatory_set = set(mandatory)
+        illegal = sorted(excludes.intersection(mandatory_set))
         if illegal:
             raise ValueError(
                 f"cannot exclude mandatory/default skills from stage {stage['id']}: {', '.join(illegal)}"
             )
 
-        skills = _unique(defaults + required + conditional + additions)
-        skills = [skill for skill in skills if skill not in excludes]
+        provenance: dict[str, str] = {}
+        for source, candidates in (
+            ("optional", optional),
+            ("conditional", conditional),
+            ("additional", additions),
+        ):
+            for skill in _unique(candidates):
+                if skill not in mandatory_set and skill not in excludes:
+                    provenance.setdefault(skill, source)
+
+        jit = _unique(provenance)
+        skills = _unique(mandatory + jit)
         missing = [skill for skill in skills if not self._exists(skill)]
         if missing:
             raise ValueError(f"stage {stage['id']} references missing skills: {', '.join(missing)}")
@@ -353,6 +420,8 @@ class SkillResolver:
             purpose=str(stage.get("purpose", "")),
             skills=skills,
             mandatory_skills=mandatory,
+            jit_skills=jit,
+            jit_skill_sources=provenance,
             gates=gates,
         )
 
@@ -408,10 +477,36 @@ class ReplanningEngine:
                     "replanning cannot drop mandatory/default skills from "
                     f"{stage.id}: {', '.join(illegal_drops)}"
                 )
-            skills = _unique(stage.skills + decision.add_skills)
             drop_set = set(decision.drop_skills)
-            skills = [skill for skill in skills if skill not in drop_set]
-            next_stages.append(replace(stage, skills=skills))
+            additions = [
+                skill
+                for skill in decision.add_skills
+                if skill not in set(stage.mandatory_skills) and skill not in drop_set
+            ]
+            skills = [
+                skill
+                for skill in _unique(stage.skills + additions)
+                if skill not in drop_set
+            ]
+            jit_skills = [
+                skill
+                for skill in _unique(list(stage.jit_skills or []) + additions)
+                if skill not in drop_set
+            ]
+            sources = {
+                skill: dict(stage.jit_skill_sources or {}).get(skill, "replan")
+                for skill in jit_skills
+            }
+            for skill in additions:
+                sources.setdefault(skill, "replan")
+            next_stages.append(
+                replace(
+                    stage,
+                    skills=skills,
+                    jit_skills=jit_skills,
+                    jit_skill_sources=sources,
+                )
+            )
 
         return replace(
             flow,
