@@ -38,11 +38,11 @@ class TargetCommandResult:
 
 
 class TargetRunner:
-    """Run explicitly allowlisted argv commands inside an isolated workspace.
+    """Validate and optionally run exact allowlisted argv inside one workspace.
 
-    This is command-policy isolation, not an OS/container sandbox. Project test/build
-    commands can execute project code; the contract only removes shell interpretation,
-    constrains cwd, filters environment variables and bounds time/output.
+    Host execution remains available for explicit compatibility/testing. Production
+    provider execution should wrap this validation contract with the canonical
+    container sandbox so untrusted project code does not execute directly on host.
     """
 
     def __init__(self, workspace_root: Path, policy: dict[str, Any]) -> None:
@@ -126,14 +126,22 @@ class TargetRunner:
             return [sys.executable, *argv[1:]]
         return argv
 
-    def run(self, argv: list[str], cwd: str = ".", timeout_seconds: int | None = None) -> TargetCommandResult:
+    def validate(
+        self,
+        argv: list[str],
+        cwd: str = ".",
+        timeout_seconds: int | None = None,
+    ) -> tuple[list[str], Path, int]:
         logical_argv = self._normalize_argv(argv)
         self._match_policy(logical_argv)
         working_directory = self._cwd(cwd)
         timeout = self.max_seconds if timeout_seconds is None else int(timeout_seconds)
         if timeout <= 0 or timeout > self.max_seconds:
             raise TargetRunnerError(f"timeout_seconds must be between 1 and {self.max_seconds}")
+        return logical_argv, working_directory, timeout
 
+    def run(self, argv: list[str], cwd: str = ".", timeout_seconds: int | None = None) -> TargetCommandResult:
+        logical_argv, working_directory, timeout = self.validate(argv, cwd, timeout_seconds)
         started = time.monotonic()
         try:
             result = subprocess.run(
