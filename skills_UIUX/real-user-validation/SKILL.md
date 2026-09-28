@@ -40,11 +40,13 @@ Combine ongoing user research with production behavior/support evidence to under
 
 ## Research contract
 
-Route detailed planning/recruitment to `user-research-planning-and-recruitment` and synthesis to `research-synthesis-and-insight-management`.
+Route detailed planning/recruitment to `user-research-planning-and-recruitment`, operational study packaging/evidence ingestion to `research-evidence-pipeline`, and synthesis to `research-synthesis-and-insight-management`.
 
 For each round define:
 
 `decision → research question → method → participant criteria → task/scenario → evidence captured → success/learning criteria → synthesis → design/product response`
+
+For substantial evidence-led work, use the canonical `docs/research/` package and evidence ledger owned by `research-evidence-pipeline` so observations can be traced into findings and decisions instead of surviving only as prose summaries.
 
 Include disabled people, assistive-technology users, low-digital-confidence users or other excluded contexts when relevant to the target population. Do not simulate those experiences as a substitute for direct engagement.
 
@@ -56,14 +58,15 @@ A representative recurring user collaborator can help the team stay close to rea
 
 If participant access does not exist:
 
-- produce the research plan;
+- produce the research plan and runnable protocol package;
+- leave the evidence ledger/findings empty;
 - label the decision **PLANNED VALIDATION** or **BLOCKED USER EVIDENCE**;
 - proceed only when project risk allows;
 - do not invent sessions/results.
 
 ## Output
 
-For substantial work create `docs/user-validation.md`:
+For substantial work create or use `docs/research/` (canonical package from `research-evidence-pipeline`) and keep `docs/user-validation.md` only as a concise project-facing summary when useful:
 
 - decisions/hypotheses being tested;
 - evidence labels;
@@ -80,6 +83,7 @@ For substantial work create `docs/user-validation.md`:
 - Direct-user validation is representative enough for the decision being made.
 - Accessibility/inclusion is considered in recruitment, not only in QA.
 - Findings change or confirm an explicit decision.
+- Every claimed direct finding can point to real evidence/source records.
 - No fictional participant counts, quotes, percentages or "research results".
 
 ## Baseline sources
