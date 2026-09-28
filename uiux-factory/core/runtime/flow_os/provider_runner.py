@@ -66,7 +66,7 @@ class ProviderManagedRunner:
             ),
             "search_text": ToolSpec(
                 "search_text",
-                "Bounded recursive text search with Safe Read filtering",
+                "Bounded recursive plain-text search with Safe Read filtering",
                 "READ",
                 "read_only",
                 False,
@@ -155,9 +155,9 @@ class ProviderManagedRunner:
                 "expected_count": "positive exact occurrence count; defaults to 1",
             },
             "search_text": {
-                "query": "plain text or bounded regex",
+                "query": "plain text; max 512 characters",
                 "path": "relative directory; defaults to .",
-                "regex": "boolean; defaults false",
+                "regex": "must remain false; regex evaluation is disabled in the bounded runtime",
                 "case_sensitive": "boolean; defaults false",
                 "max_files": "1..1000",
                 "max_matches": "1..1000",
