@@ -76,7 +76,14 @@ def test_a5_4_store_deduplicates_deterministic_pattern(tmp_path: Path) -> None:
     project.mkdir()
     store = EvaluationMemoryStore(
         project,
-        {"evaluation_memory": {"enabled": True, "max_records": 5, "max_patterns": 5}},
+        {
+            "evaluation_memory": {
+                "enabled": True,
+                "max_records": 5,
+                "max_patterns": 5,
+                "max_recall_records": 5,
+            }
+        },
     )
 
     assert store.record_post_render_report(_report()) == 1
