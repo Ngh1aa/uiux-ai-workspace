@@ -21,6 +21,12 @@ from core.runtime.flow_os.safe_read import SafeReadError, SafeReadResult, SafeRe
 from core.runtime.flow_os.sandbox import ContainerSandbox, SandboxSpec, SandboxUnavailableError
 from core.runtime.flow_os.target_runner import TargetCommandResult, TargetRunner, TargetRunnerError
 from core.runtime.flow_os.task_context import GoalInterpretation, GoalInterpreter, TaskContract
+from core.runtime.flow_os.vision_evidence import (
+    VisionAnalyzer,
+    VisionEvidenceAdapter,
+    VisionEvidenceError,
+    sanitize_vision_output,
+)
 from core.runtime.flow_os.workspace import (
     WorkspaceFinalizeResult,
     WorkspaceIsolationError,
@@ -54,10 +60,14 @@ __all__ = [
     "TargetRunner",
     "TargetRunnerError",
     "TaskContract",
+    "VisionAnalyzer",
+    "VisionEvidenceAdapter",
+    "VisionEvidenceError",
     "WorkspaceFileError",
     "WorkspaceFileTools",
     "WorkspaceFinalizeResult",
     "WorkspaceIsolationError",
     "WorkspaceMetadata",
     "WorktreeManager",
+    "sanitize_vision_output",
 ]
