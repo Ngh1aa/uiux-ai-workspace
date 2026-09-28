@@ -55,6 +55,17 @@
     "max_network_items": 40,
     "max_elements": 24
   },
+  "vision_creative_director": {
+    "enabled": true,
+    "allow_external": false,
+    "allow_command_analyzer": true,
+    "timeout_seconds": 180,
+    "max_output_chars": 60000,
+    "max_screenshots": 12,
+    "recommended_viewports": 3,
+    "max_decisions": 40,
+    "command_env_allowlist": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"]
+  },
   "production_release": {
     "command_argv_env": "UIUX_PRODUCTION_DEPLOY_ARGV_JSON",
     "timeout_seconds": 600,
@@ -167,6 +178,7 @@
     "JIT skill activation may expose only non-mandatory skills already routed by the active Flow stage; activation changes provider context only and can never change authority, satisfy gates or count as trusted runtime evidence.",
     "Section-level JIT retrieval may read only random capabilities generated for skills already routed to the current specialist run; section reads are bounded advisory knowledge expansion and never trusted gate evidence.",
     "Model-readable browser observations use fixed read-only Playwright capture logic, never model-authored browser JavaScript, and remain advisory context that cannot replace trusted browser_render acceptance evidence.",
+    "Vision Creative Director output is advisory-only KEEP/REVISE/REMOVE guidance grounded in trusted screenshot refs; it may never emit approval/pass authority, change Flow routing, satisfy gates, or authorize merge/deploy/release.",
     "Provider skill/source documents share one policy-owned per-request character budget; JIT activation must preflight the next context before checkpoint mutation, and UIUX_PROVIDER_CONTEXT_CHARS may only lower this ceiling."
   ]
 }
