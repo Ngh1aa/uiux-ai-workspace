@@ -184,19 +184,32 @@ python -B skills_UIUX/scripts/uiux-agent.py \
   --authority branch_write
 ```
 
-### 2. Run the active stage with a provider-generated action plan
+### 2. Run the active stage with the canonical provider loop
 
-The core runtime remains provider-neutral. A model/provider adapter is responsible for producing the JSON `actions` plan; the runtime enforces roles, tools, authority, checkpoints and lifecycle.
+The CLI includes the provider-neutral model→tool→observation loop. `ProviderManagedRunner` builds the active-stage request, exposes only authorized tools, executes bounded tool calls, checkpoints observations, enforces typed gate evidence and lets the Flow own stage progression/replanning.
+
+Under the default runtime policy, `--provider auto` is zero-cost-only. Paid providers require both runtime-policy permission and explicit per-invocation `--allow-paid-provider` opt-in.
 
 ```bash
 python -B skills_UIUX/scripts/uiux-agent.py \
   --project ../my-site \
   --managed-run-id <manager_run_id> \
-  --plan path/to/provider-plan.json \
-  --advance-on-success
+  --provider auto \
+  --max-provider-turns 12
 ```
 
-Repeat for the next active stage. The manager prevents stage skipping.
+Explicit providers may be selected when configured:
+
+```bash
+python -B skills_UIUX/scripts/uiux-agent.py \
+  --project ../my-site \
+  --managed-run-id <manager_run_id> \
+  --provider groq
+```
+
+The legacy/manual `--plan path/to/provider-plan.json --advance-on-success` path remains available for deterministic diagnostics or externally generated plans, but it is no longer required for normal provider-managed execution.
+
+Repeat provider-managed execution until the run reaches `COMPLETED`, `AWAITING_APPROVAL`, `BLOCKED` or another explicit boundary. The manager prevents stage skipping.
 
 ### 3. Optional Design Contract approval
 
@@ -247,9 +260,11 @@ Use `--no-apply-replan` for diagnostic what-if routing without mutating the pers
 
 ## Important execution boundary
 
-The Flow Agent OS now handles goal interpretation, flow selection, agent/skill routing, lifecycle checkpoints, approval gates, bounded replanning and tool permission enforcement. It does **not** pretend that provider reasoning is bundled into the core runtime. To generate code autonomously from the single goal, connect a provider adapter that turns each active stage context into a valid action plan and feeds it back to the runtime.
+The Flow Agent OS bundles provider-neutral orchestration plus canonical provider adapters and the managed provider loop. Model reasoning still happens in the configured external provider; the deterministic runtime does not trust provider prose as evidence and does not let provider output own orchestration, authority, gates or release decisions.
 
-This separation is intentional: Flow OS remains portable across Anthropic, OpenAI, Gemini or local providers rather than hard-coding one vendor API into orchestration logic.
+Provider tool calls remain bounded by runtime permissions and Flow routing. JIT skill activation can only load non-mandatory skills already routed to the active stage and cannot increase authority or satisfy evidence gates. Target commands are validated and executed through the required Docker/Podman container sandbox with network disabled, a read-only root filesystem by default, dropped Linux capabilities and fail-closed behavior when the sandbox engine/image is unavailable.
+
+External provider APIs, browser/deployment adapters and production integrations still require environment-specific end-to-end verification before production-readiness claims. This boundary preserves vendor neutrality without pretending external integrations are deterministic runtime primitives.
 
 ## Validation
 
