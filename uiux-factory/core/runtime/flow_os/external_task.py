@@ -10,6 +10,7 @@ from core.runtime.flow_os.task_context import GoalInterpreter
 
 EXTERNAL_TASK_MANIFEST_VERSION = "1.0"
 EXTERNAL_TASK_STATUS = "READY_FOR_EXTERNAL_COLLABORATOR"
+AUTHORITY_ORDER = ("read_only", "branch_write", "external_write", "release")
 
 
 @dataclass(frozen=True)
@@ -41,6 +42,14 @@ def _unique(values: list[str]) -> list[str]:
             seen.add(value)
             output.append(value)
     return output
+
+
+def _effective_authority(caller_authority: str, task_authority: str) -> str:
+    if caller_authority not in AUTHORITY_ORDER:
+        raise ValueError(f"unknown authority: {caller_authority}")
+    if task_authority not in AUTHORITY_ORDER:
+        return caller_authority
+    return AUTHORITY_ORDER[min(AUTHORITY_ORDER.index(caller_authority), AUTHORITY_ORDER.index(task_authority))]
 
 
 def _stage_manifest(flow: ResolvedFlow) -> list[dict[str, Any]]:
@@ -124,7 +133,11 @@ def build_external_task_manifest(
     interpreter = GoalInterpreter()
     interpreted = interpreter.interpret(cleaned_goal)
     context = interpreted.to_context()
-    context["authority"] = authority
+    inferred_task_authority = str(context.get("authority", "unspecified"))
+    effective_authority = _effective_authority(authority, inferred_task_authority)
+    context["requested_authority"] = inferred_task_authority
+    context["effective_authority"] = effective_authority
+    context["authority"] = effective_authority
 
     allowed_overrides = {
         "intent",
@@ -167,7 +180,7 @@ def build_external_task_manifest(
         status=EXTERNAL_TASK_STATUS,
         target_repository=cleaned_repository,
         task=cleaned_goal,
-        authority=authority,
+        authority=effective_authority,
         task_contract=context,
         resolved_flow=flow.to_dict(),
         stages=stages,
@@ -181,6 +194,7 @@ def build_external_task_manifest(
             "target_repository_audit_required_before_mutation": True,
             "target_runtime_evidence_required_for_runtime_claims": True,
             "missing_user_evidence_must_remain_planned_blocked_or_unknown": True,
+            "authority_never_exceeds_caller_or_task_language": True,
             "preferred_repository_workflow": "feature branch -> implementation -> verification -> pull request -> merge",
         },
     )
