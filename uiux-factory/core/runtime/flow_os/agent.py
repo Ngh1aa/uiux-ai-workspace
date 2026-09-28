@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
+from core.runtime.flow_os.browser_observation import PlaywrightBrowserObservationAdapter
 from core.runtime.flow_os.safe_read import SafeReader
 from core.runtime.flow_os.skill_sections import build_skill_section_registry, read_skill_section
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
@@ -255,6 +256,14 @@ class ToolRegistry:
             False,
             self._read_skill_section,
         )
+        self._register(
+            "browser_observe",
+            "Capture bounded read-only browser facts from one same-origin route; arguments base_url=<http(s) URL>, route=</path>",
+            "READ",
+            "read_only",
+            False,
+            self._browser_observe,
+        )
         self._register("write_artifact", "Write a project-local UI/UX artifact", "LOW_WRITE", "branch_write", True, self._write_artifact)
         self._register("run_validator", "Run an allowlisted skills_UIUX validator", "READ", "read_only", False, self._run_validator)
         self._register("release_action", "Contract-only release boundary", "CRITICAL", "release", True, self._release_action)
@@ -283,6 +292,14 @@ class ToolRegistry:
             self.repo_root,
             capability,
             policy_doc,
+        )
+
+    def _browser_observe(self, base_url: str, route: str) -> dict[str, Any]:
+        policy_doc = json.loads((self.repo_root / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
+        qa_root = self.repo_root.parent / "uiux-factory" / "qa"
+        return PlaywrightBrowserObservationAdapter(qa_root, policy_doc).capture_and_observe(
+            base_url,
+            route,
         )
 
     def _list_files(self, path: str = ".") -> dict[str, Any]:
