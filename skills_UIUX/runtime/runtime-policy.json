@@ -1,5 +1,5 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "authority_order": ["read_only", "branch_write", "external_write", "release"],
   "risk_defaults": {
     "READ": {"required_authority": "read_only", "automatic": true},
@@ -60,6 +60,11 @@
     "min_signature_matches": 1,
     "lock_timeout_seconds": 10,
     "lock_stale_seconds": 60
+  },
+  "provider_access": {
+    "mode": "zero_cost",
+    "allow_paid_providers": false,
+    "allow_command_provider": true
   },
   "provider_routing": {
     "enabled": false,
@@ -134,6 +139,7 @@
     "Provider claims are trace data, not gate evidence; gate evidence must originate from runtime observations.",
     "Cross-run evaluation memory is project-scoped, bounded, evidence-derived and advisory only; it cannot change flow selection, authority, gates, current-run evidence or release decisions.",
     "Stage provider routing is policy-owned and explicit; task text, provider output and recalled memory cannot select providers or models, and routed provider=auto is forbidden.",
-    "Stage provider budgets are policy-owned and immutable from provider output; provider calls, estimated token/cost usage and elapsed time are persisted without prompts, outputs or secrets."
+    "Stage provider budgets are policy-owned and immutable from provider output; provider calls, estimated token/cost usage and elapsed time are persisted without prompts, outputs or secrets.",
+    "Managed provider access defaults to zero-cost mode: auto may select only explicitly confirmed Groq/Gemini free-tier accounts, while OpenAI/Anthropic require both runtime-policy permission and per-invocation paid opt-in."
   ]
 }
