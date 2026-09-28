@@ -7,6 +7,7 @@ Python modules under skills_UIUX/runtime are compatibility adapters only.
 CANONICAL_RUNTIME_OWNER = "uiux-factory/core/runtime/flow_os"
 
 from core.runtime.flow_os.browser_evidence import BrowserEvidenceError, PlaywrightBrowserEvidenceAdapter
+from core.runtime.flow_os.browser_observation import BrowserObservationError, PlaywrightBrowserObservationAdapter
 from core.runtime.flow_os.evidence import EvidenceRecord
 from core.runtime.flow_os.file_tools import WorkspaceFileError, WorkspaceFileTools
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
@@ -36,6 +37,7 @@ from core.runtime.flow_os.workspace import (
 
 __all__ = [
     "BrowserEvidenceError",
+    "BrowserObservationError",
     "CANONICAL_RUNTIME_OWNER",
     "CommandDeployAdapter",
     "ContainerSandbox",
@@ -47,6 +49,7 @@ __all__ = [
     "ManagedFlowController",
     "ManagedWebsiteRun",
     "PlaywrightBrowserEvidenceAdapter",
+    "PlaywrightBrowserObservationAdapter",
     "ProductionReleaseController",
     "ProductionReleaseError",
     "ResolvedFlow",

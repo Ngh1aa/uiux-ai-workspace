@@ -169,6 +169,7 @@ class PlaywrightBrowserEvidenceAdapter:
                 if isinstance(item, dict) and str(item.get("type", "")) == "error"
             ]
             blocked_requests = [str(item) for item in list(payload.get("blockedRequests", []))]
+            failed_requests = [str(item) for item in list(payload.get("failedRequests", []))]
             final_url = str(payload.get("url", "")).strip()
             parsed_final = urlparse(final_url)
             invalid_final_url = parsed_final.scheme not in {"http", "https"} or not parsed_final.hostname
@@ -183,6 +184,7 @@ class PlaywrightBrowserEvidenceAdapter:
                 if not page_errors
                 and not console_errors
                 and not blocked_requests
+                and not failed_requests
                 and not invalid_final_url
                 and not remote_final
                 and box is not None
@@ -212,6 +214,7 @@ class PlaywrightBrowserEvidenceAdapter:
                         "page_errors": page_errors,
                         "console_errors": console_errors,
                         "blocked_requests": blocked_requests,
+                        "failed_requests": failed_requests,
                         "invalid_final_url": invalid_final_url,
                         "remote_final_url": remote_final,
                     },

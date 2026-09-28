@@ -109,6 +109,37 @@ def evidence_from_tool(stage_id: str, tool: str, result: Any) -> EvidenceRecord:
             trusted=False,
         )
 
+    if tool == "browser_observe":
+        raw = dict(result) if isinstance(result, dict) else {}
+        data = {
+            "route": str(raw.get("route", ""))[:1000],
+            "url": str(raw.get("url", ""))[:2000],
+            "title": str(raw.get("title", ""))[:500],
+            "viewport": dict(raw.get("viewport", {})) if isinstance(raw.get("viewport"), dict) else {},
+            "screenshot": str(raw.get("screenshot", ""))[:500],
+            "screenshot_sha256": str(raw.get("screenshot_sha256", ""))[:128],
+            "browser_evidence_status": str(raw.get("browser_evidence_status", ""))[:32],
+            "dom_excerpt_sha256": str(raw.get("dom_excerpt_sha256", ""))[:128],
+            "aria_snapshot_sha256": str(raw.get("aria_snapshot_sha256", ""))[:128],
+            "element_count": len(raw.get("elements", [])) if isinstance(raw.get("elements"), list) else 0,
+            "console_message_count": len(raw.get("console_messages", [])) if isinstance(raw.get("console_messages"), list) else 0,
+            "console_error_count": len(raw.get("console_errors", [])) if isinstance(raw.get("console_errors"), list) else 0,
+            "page_error_count": len(raw.get("page_errors", [])) if isinstance(raw.get("page_errors"), list) else 0,
+            "failed_request_count": len(raw.get("failed_requests", [])) if isinstance(raw.get("failed_requests"), list) else 0,
+            "blocked_request_count": len(raw.get("blocked_requests", [])) if isinstance(raw.get("blocked_requests"), list) else 0,
+        }
+        return EvidenceRecord(
+            id=f"ev_{uuid.uuid4().hex[:16]}",
+            type="browser_observation",
+            stage_id=str(stage_id),
+            tool=str(tool),
+            status="OBSERVED",
+            summary=f"runtime exposed bounded browser observation for {data['route'] or '(unknown route)'}",
+            data=data,
+            origin="runtime",
+            trusted=False,
+        )
+
     evidence_type = _record_type(tool, result)
     data = dict(result) if isinstance(result, dict) else {"value": result}
     if evidence_type in {"command_result", "validator_result"}:
