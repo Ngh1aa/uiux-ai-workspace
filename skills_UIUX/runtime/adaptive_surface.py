@@ -55,25 +55,15 @@ def default_change_surface_for_intent(intent: str) -> str:
 
 
 def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str:
-    """Classify task size while preferring the narrowest credible change owner.
-
-    MICRO      atomic UI owner / visual defect
-    FOCUSED    one section or tightly related component cluster
-    PAGE       one route/screen/page or several sections on one page
-    REDESIGN   multi-page / site-wide redesign of an existing experience
-    PRODUCT    new or product-wide experience spanning multiple surfaces/flows
-    """
-
+    """Classify task size while preferring the narrowest credible change owner."""
     normalized = _normalise(text)
     normalized_scope = [_normalise(item) for item in scope if str(item).strip()]
     scope_text = " ".join(normalized_scope)
     has_product_cue = _contains_any(normalized, PRODUCT_TERMS)
 
     if scope_text:
-        # A stated single-page build beats a broad product/domain noun in the same prompt.
         if intent == "build" and _contains_any(scope_text, STRONG_PAGE_HINTS):
             return "PAGE"
-        # A platform/app build with dashboard as a feature is still product-sized.
         if intent == "build" and has_product_cue:
             return "PRODUCT"
 
@@ -82,11 +72,9 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
         if atomic_count and not focused_count and len(normalized_scope) <= 2:
             return "MICRO"
         if focused_count:
-            return "PAGE" if focused_count >= 3 or len(normalized_scope) >= 3 else "FOCUSED"
+            return "PAGE" if focused_count >= 3 else "FOCUSED"
         if _contains_any(scope_text, PAGE_HINTS):
             return "PAGE"
-
-        # Unknown but explicitly narrow scope should not silently become a full redesign.
         if len(normalized_scope) == 1 and intent in {"improve", "fix", "polish", "redesign", "rebuild"}:
             return "FOCUSED"
         if len(normalized_scope) >= 2:
@@ -96,8 +84,6 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
         return "REDESIGN"
     if has_product_cue:
         return "PRODUCT"
-
-    # Direct language still helps when A2 could not extract a structured scope.
     if intent == "build" and _contains_any(normalized, STRONG_PAGE_HINTS):
         return "PAGE"
     if _contains_any(normalized, ATOMIC_HINTS):
@@ -106,5 +92,4 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
         return "FOCUSED"
     if _contains_any(normalized, PAGE_HINTS):
         return "PAGE"
-
     return default_change_surface_for_intent(intent)
