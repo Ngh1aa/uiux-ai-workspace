@@ -319,7 +319,13 @@ class ProviderNeutralAgentHarness:
         return roles[name]
 
     def _workspace_owner(self, state: RunState) -> str:
-        return str(state.context.get("manager_run_id") or state.run_id)
+        manager_run_id = str(state.context.get("manager_run_id", "")).strip()
+        if manager_run_id:
+            return manager_run_id
+        workspace = state.context.get("workspace")
+        if isinstance(workspace, dict) and str(workspace.get("run_id", "")).strip():
+            return str(workspace["run_id"])
+        return state.run_id
 
     def _workspace_from_state(self, state: RunState) -> WorkspaceMetadata | None:
         raw = state.context.get("workspace")
@@ -424,12 +430,24 @@ class ProviderNeutralAgentHarness:
                     state.active_role = target
                     target_defaults = list(target_role.get("default_skills", []))
                     loaded_sources = list(state.context.get("loaded_sources", []))
+                    runtime_metadata = {
+                        key: state.context[key]
+                        for key in (
+                            "workspace",
+                            "manager_run_id",
+                            "flow_id",
+                            "flow_revision",
+                            "stage_id",
+                            "stage_gates",
+                        )
+                        if key in state.context
+                    }
                     state.context = build_context_manifest(
                         self._active_project_root(state),
                         self.repo_root,
                         selected_skills=target_defaults,
                         explicit_sources=loaded_sources,
-                    ) | ({"workspace": state.context["workspace"]} if "workspace" in state.context else {})
+                    ) | runtime_metadata
                     state.completed_actions.append(f"handoff:{target}")
                     trace.emit(
                         "agent.handoff",
