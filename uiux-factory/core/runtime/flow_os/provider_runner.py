@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from runtime.agent import ToolSpec, TraceRecorder
-from runtime.manager import DevelopmentManagerAgent, ManagedWebsiteRun
-from runtime.provider import ModelProvider, ProviderStageRequest, load_context_documents
+from core.runtime.flow_os.agent import ToolSpec, TraceRecorder
+from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
+from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, load_context_documents
 
 
 @dataclass(frozen=True)
@@ -30,9 +30,9 @@ class ProviderRunResult:
 
 
 class ProviderManagedRunner:
-    """Runs specialist stages as model -> tool -> observation loops under Manager control."""
+    """Run model→tool→observation loops under the canonical managed controller."""
 
-    def __init__(self, manager: DevelopmentManagerAgent, provider: ModelProvider) -> None:
+    def __init__(self, manager: ManagedFlowController, provider: ModelProvider) -> None:
         self.manager = manager
         self.harness = manager.harness
         self.provider = provider
@@ -230,8 +230,7 @@ class ProviderManagedRunner:
             trace.emit("provider.call", "OK", response=response.to_dict())
             if response.actions:
                 try:
-                    new_observations = self._execute_actions(stage_state, response.actions, trace, dry_run)
-                    observations.extend(new_observations)
+                    observations.extend(self._execute_actions(stage_state, response.actions, trace, dry_run))
                 except Exception as exc:
                     trace.emit("provider.tool.error", "ERROR", error_type=type(exc).__name__, message=str(exc))
                     stage_state.state = "FAILED"
