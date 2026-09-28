@@ -13,8 +13,10 @@ if str(FACTORY_ROOT) not in sys.path:
 
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
+from core.runtime.flow_os.free_tier_provider import create_free_tier_provider
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
 from core.runtime.flow_os.provider import create_provider
+from core.runtime.flow_os.provider_access import ProviderAccessGuard, ZERO_COST_PROVIDERS
 from core.runtime.flow_os.provider_budget import (
     BudgetedProvider,
     StageProviderBudgetResolver,
@@ -76,6 +78,7 @@ def _run_provider_cycles(
     managed: ManagedWebsiteRun,
     args: argparse.Namespace,
 ) -> tuple[ProviderRunResult, list[dict[str, object]]]:
+    access_guard = ProviderAccessGuard(manager.harness.policy_doc)
     router = StageProviderRouter(manager.harness.policy_doc)
     budget_resolver = StageProviderBudgetResolver(manager.harness.policy_doc)
     route_records: list[dict[str, object]] = []
@@ -94,23 +97,37 @@ def _run_provider_cycles(
             return last, route_records
 
         stage = _active_stage(managed)
+        caller_access = access_guard.resolve(
+            str(args.provider or ""),
+            allow_paid_opt_in=args.allow_paid_provider,
+        )
         selection = router.resolve(
             stage_id=stage.id,
             agent=stage.agent,
-            default_provider=str(args.provider or ""),
+            default_provider=caller_access.provider,
             default_model=args.model,
             requested_max_turns=args.max_provider_turns,
+        )
+        selected_access = access_guard.resolve(
+            selection.provider,
+            allow_paid_opt_in=args.allow_paid_provider,
         )
         budget = budget_resolver.resolve(
             stage_id=stage.id,
             agent=stage.agent,
             requested_max_calls=selection.max_turns,
         )
-        base_provider = create_provider(
-            selection.provider,
-            model=selection.model,
-            command=args.provider_command,
-        )
+        if selected_access.provider in ZERO_COST_PROVIDERS:
+            base_provider = create_free_tier_provider(
+                selected_access.provider,
+                model=selection.model,
+            )
+        else:
+            base_provider = create_provider(
+                selected_access.provider,
+                model=selection.model,
+                command=args.provider_command,
+            )
         prior_usage = load_prior_provider_usage(manager.harness, managed, stage.id)
         provider = BudgetedProvider(
             base_provider,
@@ -124,6 +141,7 @@ def _run_provider_cycles(
             ),
         )
         route_record: dict[str, object] = selection.to_dict()
+        route_record["access"] = selected_access.to_dict()
         route_record["resolved_model"] = provider.model
         route_record["cycle"] = cycle
         route_record["budget"] = budget.to_dict()
@@ -213,9 +231,10 @@ def main() -> int:
     parser.add_argument("--replan-count", type=int, help="Override persisted replan count for diagnostics")
     parser.add_argument("--no-apply-replan", action="store_true", help="Return a replan decision without mutating the managed run")
 
-    parser.add_argument("--provider", choices=["auto", "openai", "anthropic", "command"], help="Run active managed stages automatically with a model provider")
+    parser.add_argument("--provider", choices=["auto", "groq", "gemini", "openai", "anthropic", "command"], help="Run active managed stages automatically with a model provider; auto is zero-cost-only")
     parser.add_argument("--model", help="Provider model override; otherwise provider/env default is used")
     parser.add_argument("--provider-command", help="Command adapter executable; receives JSON on stdin and returns stage JSON on stdout")
+    parser.add_argument("--allow-paid-provider", action="store_true", help="Explicit per-invocation opt-in for OpenAI/Anthropic; runtime policy must also allow paid providers")
     parser.add_argument("--max-provider-cycles", type=int, default=16, help="Maximum managed stage/replan cycles per invocation")
     parser.add_argument("--max-provider-turns", type=int, default=12, help="Maximum model→tool→observation turns per stage and hard ceiling for routed stage budgets")
     parser.add_argument("--no-auto-replan", action="store_true", help="Stop on provider FAIL/BLOCKED/tool failure instead of applying declarative replanning")
