@@ -4,6 +4,8 @@ import re
 from dataclasses import asdict, dataclass, field
 from typing import Iterable
 
+from runtime.adaptive_surface import classify_change_surface
+
 
 TASK_CONTRACT_VERSION = "1.0"
 AUTHORITY_LEVELS = ("read_only", "branch_write", "external_write", "release")
@@ -59,7 +61,7 @@ def _extract_urls(text: str) -> list[str]:
 
 @dataclass(frozen=True)
 class GoalInterpretation:
-    """V1 Task Contract plus the existing Flow OS classification profile."""
+    """V1 Task Contract plus Flow OS classification and A3 change-surface lane."""
 
     intent: str
     website_type: str
@@ -70,6 +72,7 @@ class GoalInterpretation:
     risk: str
     features: list[str]
     scope: list[str] = field(default_factory=list)
+    change_surface: str = "PRODUCT"
     preserve: list[str] = field(default_factory=list)
     forbidden: list[str] = field(default_factory=list)
     references: list[str] = field(default_factory=list)
@@ -90,6 +93,7 @@ class GoalInterpretation:
             "risk": payload["risk"],
             "features": payload["features"],
             "scope": payload["scope"],
+            "change_surface": payload["change_surface"],
             "preserve": payload["preserve"],
             "forbidden": payload["forbidden"],
             "references": payload["references"],
@@ -106,7 +110,7 @@ TaskContract = GoalInterpretation
 
 
 class GoalInterpreter:
-    """Conservative first-pass classifier and V1 natural-language Task Contract compiler."""
+    """Conservative Task Contract compiler with adaptive change-surface classification."""
 
     WEBSITE_TYPES = (
         ("ecommerce", ("ecommerce", "e-commerce", "online store", "shop", "store", "bán hàng", "giỏ hàng", "checkout", "sản phẩm")),
@@ -170,11 +174,17 @@ class GoalInterpreter:
         ("dashboard", ("dashboard", "bảng điều khiển")),
         ("checkout", ("checkout",)),
         ("pricing", ("pricing", "bảng giá")),
-        ("cards", ("cards", "card", "thẻ")),
+        ("cards", ("cards", "các card", "các thẻ")),
+        ("card", ("card", "thẻ")),
+        ("button", ("button", "cta", "nút")),
+        ("icon", ("icon", "biểu tượng")),
+        ("logo", ("logo",)),
+        ("input", ("input", "field", "ô nhập")),
         ("form", ("form", "biểu mẫu")),
         ("modal", ("modal", "dialog")),
         ("sidebar", ("sidebar",)),
         ("thumbnail", ("thumbnail",)),
+        ("image", ("image", "ảnh")),
         ("banner", ("banner",)),
         ("typography", ("typography", "kiểu chữ")),
         ("content", ("content", "copy", "nội dung")),
@@ -267,9 +277,11 @@ class GoalInterpreter:
             references = _extract_fragments(normalized, self.REFERENCE_PATTERNS)
         scope = self._scope(normalized, preserve, forbidden)
         authority = self._authority(normalized)
+        change_surface = classify_change_surface(normalized, intent, scope)
 
         if scope:
             evidence.append("scope:" + "|".join(scope))
+        evidence.append(f"change_surface:{change_surface}")
         if preserve:
             evidence.append("preserve:" + "|".join(preserve))
         if forbidden:
@@ -343,6 +355,7 @@ class GoalInterpreter:
             risk=risk,
             features=features,
             scope=scope,
+            change_surface=change_surface,
             preserve=preserve,
             forbidden=forbidden,
             references=references,
