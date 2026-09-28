@@ -15,6 +15,7 @@
       "properties": {
         "priority": {"type": "integer"},
         "intents": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "change_surfaces": {"type": "array", "items": {"enum": ["MICRO", "FOCUSED", "PAGE", "REDESIGN", "PRODUCT"]}, "uniqueItems": true},
         "website_types": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "modes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "risks": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
