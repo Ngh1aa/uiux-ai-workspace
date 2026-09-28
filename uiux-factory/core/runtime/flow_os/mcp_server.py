@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from core.runtime.flow_os.agent import build_context_manifest
+from core.runtime.flow_os.remote_control import RemoteFactoryControlPlane
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[4]
 SKILLS_ROOT = WORKSPACE_ROOT / "skills_UIUX"
@@ -20,6 +21,7 @@ def create_server() -> Any:
         ) from exc
 
     mcp = MCPServer("uiux-factory")
+    remote = RemoteFactoryControlPlane(SKILLS_ROOT)
 
     @mcp.resource("uiux://runtime/foundation")
     def runtime_foundation() -> str:
@@ -52,6 +54,80 @@ def create_server() -> Any:
             "stdout": result.stdout[-12000:],
             "stderr": result.stderr[-12000:],
         }
+
+    @mcp.tool()
+    def remote_health() -> dict[str, Any]:
+        return remote.health()
+
+    @mcp.tool()
+    def start_managed_run(
+        token: str,
+        project_root: str,
+        goal: str,
+        authority: str = "branch_write",
+        overrides: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return remote.start_run(
+            token=token,
+            project_root=project_root,
+            goal=goal,
+            authority=authority,
+            overrides=overrides,
+        )
+
+    @mcp.tool()
+    def managed_run_status(token: str, project_root: str, manager_run_id: str) -> dict[str, Any]:
+        return remote.status(token=token, project_root=project_root, manager_run_id=manager_run_id)
+
+    @mcp.tool()
+    def managed_run_artifacts(token: str, project_root: str, manager_run_id: str) -> dict[str, Any]:
+        return remote.list_artifacts(token=token, project_root=project_root, manager_run_id=manager_run_id)
+
+    @mcp.tool()
+    def read_managed_artifact(
+        token: str,
+        project_root: str,
+        manager_run_id: str,
+        path: str,
+    ) -> dict[str, Any]:
+        return remote.read_artifact(
+            token=token,
+            project_root=project_root,
+            manager_run_id=manager_run_id,
+            path=path,
+        )
+
+    @mcp.tool()
+    def submit_creative_directive(
+        token: str,
+        project_root: str,
+        manager_run_id: str,
+        directive: dict[str, Any],
+    ) -> dict[str, Any]:
+        return remote.submit_creative_directive(
+            token=token,
+            project_root=project_root,
+            manager_run_id=manager_run_id,
+            directive=directive,
+        )
+
+    @mcp.tool()
+    def start_revision_run(
+        token: str,
+        project_root: str,
+        manager_run_id: str,
+        goal: str | None = None,
+    ) -> dict[str, Any]:
+        return remote.start_revision(
+            token=token,
+            project_root=project_root,
+            manager_run_id=manager_run_id,
+            goal=goal,
+        )
+
+    @mcp.tool()
+    def cancel_managed_run(token: str, project_root: str, manager_run_id: str) -> dict[str, Any]:
+        return remote.cancel(token=token, project_root=project_root, manager_run_id=manager_run_id)
 
     return mcp
 
