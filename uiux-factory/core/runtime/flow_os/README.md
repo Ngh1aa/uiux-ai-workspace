@@ -13,6 +13,12 @@ Factory runtime owns executable Python behavior for:
 - provider-stage contracts and managed provider loops;
 - provider-neutral agent/checkpoint/permission harness behavior;
 - canonical Safe Read enforcement for model/provider-facing file reads;
+- isolated Git worktree writes and controlled finalization;
+- bounded file/search/edit tools;
+- container/network-sandboxed target command execution;
+- typed runtime evidence and gate evaluation;
+- Playwright browser-rendered evidence ingestion/capture;
+- explicit human-owned production release/deploy authority;
 - the optional MCP runtime adapter.
 
 `skills_UIUX/` remains the declarative knowledge/configuration owner for:
@@ -46,23 +52,56 @@ For the same goal:
 3. Legacy `skills_UIUX/runtime/*.py` imports resolve to the same canonical class identities.
 4. Declarative flows/policies remain in `skills_UIUX`; executable decisions remain in `uiux-factory`.
 
-## A4.1 Safe Read
+## A4.1 — Safe Read
 
-`safe_read.py` is the single read boundary for model/provider-facing project and skill text.
+`safe_read.py` is the single read boundary for model/provider-facing project and skill text. It rejects root escape, symlinks, credentials, binary/invalid UTF-8, oversized text and internal/generated directories while preserving safe environment templates.
 
-It is intentionally fail-closed:
+## A4.2–A4.5 — Isolated execution, target runner, evidence and file tools
 
-- reads must remain below an explicit trust root;
-- symlink paths are rejected;
-- credential-bearing paths, `.git`, `.uiux-agent-runs` and `node_modules` are denied;
-- `.env.example`, `.env.sample` and `.env.template` remain readable as non-secret templates;
-- reads are bounded to 512 KiB per file by default;
-- binary/NUL, invalid UTF-8 and obvious private-key material are rejected;
-- directory listing hides denied and symlink entries;
-- context manifests record `read_root` provenance;
-- provider context revalidates every path against harness-allowlisted project/skills roots at load time;
-- old checkpoints without `read_root` are accepted only when the current allowlist can safely infer their root.
+- branch-write mutations live in a clean, branch-scoped Git worktree;
+- target commands use exact argv allowlists and bounded cwd/timeout/output;
+- provider claims never count as trusted gate evidence;
+- runtime observations become typed evidence records;
+- bounded recursive search/list, atomic writes and exact text replacement share the same workspace boundary.
 
-Internal checkpoint reads and trusted Factory policy/config reads are not routed through the project Safe Read surface; otherwise the runtime would block its own private state. The contract is documented in `skills_UIUX/runtime/SAFE-READ.md`.
+See `skills_UIUX/runtime/A4-2-A4-5-RUNTIME-HARDENING.md`.
 
-A4.1 does **not** implement worktree/write isolation, a target runner, typed evidence/gates, or expanded file tools. Those remain A4.2–A4.5 follow-up hardening work.
+## A4.6 — Container / network sandbox
+
+Provider-facing target commands are now executed by `ContainerSandbox`, not directly on the host. The runtime requires a pre-provisioned Docker/Podman engine and image and fails closed when unavailable.
+
+Default security controls include:
+
+- network `none`;
+- read-only root filesystem;
+- writable mount limited to the isolated worktree;
+- all capabilities dropped;
+- `no-new-privileges`;
+- bounded PIDs, memory, CPU, timeout, output and tmpfs;
+- no implicit image pull;
+- no host-execution fallback.
+
+## A4.7 — Worktree finalization
+
+`WorktreeManager.finalize()` can commit, fast-forward merge and clean a completed isolated run. The source `HEAD` is pinned to the original base commit; source drift, conflicts, dirty state or branch changes stop the operation. Git hooks are disabled for runtime-managed Git commands. Cleanup uses `git worktree remove`, then deletes the merged temporary branch and prunes metadata.
+
+Automatic merge is a human-owned `external_write` boundary and is exposed through `ProductionReleaseController`, not provider tools.
+
+## A4.8 — Production release authority
+
+Production deploy is a `release`-authority boundary and requires:
+
+- explicit `PRODUCTION` confirmation;
+- managed flow `COMPLETED`;
+- isolated changes finalized/merged;
+- no failing trusted runtime evidence;
+- at least one successful validator/target-command result;
+- at least one `PASS` browser-render record.
+
+The generic command deploy adapter consumes operator-configured exact argv from `UIUX_PRODUCTION_DEPLOY_ARGV_JSON`, runs with `shell=False`, and forwards only explicitly allowlisted environment names. Provider roles remain capped below release authority.
+
+## A4.9 — Browser-rendered evidence
+
+`PlaywrightBrowserEvidenceAdapter` bridges the existing Playwright Cloud QA output into trusted Flow OS evidence. Browser records include screenshot and JSON hashes, route, URL, viewport, ARIA snapshot, representative bounding box and browser/console errors. Remote capture is denied by default; localhost is the default trusted target.
+
+See `skills_UIUX/runtime/A4-6-A4-9-SANDBOX-RELEASE.md` for the operational contract and CLI examples.

@@ -12,9 +12,11 @@ if str(FACTORY_ROOT) not in sys.path:
     sys.path.insert(0, str(FACTORY_ROOT))
 
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
+from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
 from core.runtime.flow_os.managed import ManagedFlowController
 from core.runtime.flow_os.provider import create_provider
 from core.runtime.flow_os.provider_runner import ProviderManagedRunner
+from core.runtime.flow_os.release import ProductionReleaseController
 
 
 def _managed_overrides(args: argparse.Namespace) -> dict[str, object]:
@@ -80,6 +82,16 @@ def main() -> int:
     parser.add_argument("--max-provider-cycles", type=int, default=16, help="Maximum managed stage/replan cycles per invocation")
     parser.add_argument("--max-provider-turns", type=int, default=12, help="Maximum model→tool→observation turns per stage")
     parser.add_argument("--no-auto-replan", action="store_true", help="Stop on provider FAIL/BLOCKED/tool failure instead of applying declarative replanning")
+
+    parser.add_argument("--browser-artifacts", help="Ingest Playwright browser-evidence artifacts below uiux-factory/qa")
+    parser.add_argument("--capture-browser-evidence", action="store_true", help="Run the Playwright browser evidence test against --browser-base-url")
+    parser.add_argument("--browser-base-url", help="Browser evidence target URL; localhost only by default")
+    parser.add_argument("--browser-route", action="append", default=[], help="Route to capture; repeat for multiple routes")
+    parser.add_argument("--finalize-worktree", action="store_true", help="Commit, fast-forward merge and optionally clean the isolated worktree; requires external_write")
+    parser.add_argument("--keep-worktree", action="store_true", help="Keep the worktree after successful finalize")
+    parser.add_argument("--commit-message", default="uiux-agent: finalize managed run", help="Commit message used by --finalize-worktree")
+    parser.add_argument("--deploy-production", action="store_true", help="Execute the configured production deploy adapter; requires release authority")
+    parser.add_argument("--confirm-production-release", help="Must equal PRODUCTION for --deploy-production")
     args = parser.parse_args()
 
     harness = ProviderNeutralAgentHarness(ROOT, Path(args.project))
@@ -97,11 +109,13 @@ def main() -> int:
                 exclude_skills=args.exclude_skill,
             )
 
+        output: dict[str, object] = {"managed": managed.to_dict()}
         approved_gate: str | None = None
         if args.approve_gate:
             manager.approve_gate(managed, args.approve_gate)
             approved_gate = args.approve_gate
             manager.complete_stage(managed)
+            output["approved_gate"] = approved_gate
 
         if args.replan_signal:
             decision = manager.replan(
@@ -129,14 +143,53 @@ def main() -> int:
                 auto_replan=not args.no_auto_replan,
                 dry_run=args.dry_run,
             )
-            output: dict[str, object] = {"managed": managed.to_dict(), "provider_run": result.to_dict()}
-            if approved_gate:
-                output["approved_gate"] = approved_gate
-            print(json.dumps(output, ensure_ascii=False, indent=2))
-            return 0 if result.state in {"COMPLETED", "AWAITING_APPROVAL", "READY", "RUNNING", "REPLANNED"} else 2
+            output["provider_run"] = result.to_dict()
+            output["managed"] = managed.to_dict()
+            if result.state not in {"COMPLETED", "AWAITING_APPROVAL", "READY", "RUNNING", "REPLANNED"}:
+                print(json.dumps(output, ensure_ascii=False, indent=2))
+                return 2
 
-        if approved_gate:
-            print(json.dumps({"managed": managed.to_dict(), "approved_gate": approved_gate}, ensure_ascii=False, indent=2))
+        release = ProductionReleaseController(harness)
+        if args.browser_artifacts or args.capture_browser_evidence:
+            adapter = PlaywrightBrowserEvidenceAdapter(FACTORY_ROOT / "qa", harness.policy_doc)
+            if args.capture_browser_evidence:
+                if not args.browser_base_url or not args.browser_route:
+                    raise ValueError("--capture-browser-evidence requires --browser-base-url and at least one --browser-route")
+                records = adapter.capture(args.browser_base_url, args.browser_route)
+            else:
+                records = adapter.collect(Path(args.browser_artifacts))
+            release.attach_release_evidence(managed, records)
+            output["browser_evidence"] = [record.to_dict() for record in records]
+
+        if args.finalize_worktree:
+            finalized = release.finalize_workspace(
+                managed,
+                authority=args.authority,
+                commit_message=args.commit_message,
+                cleanup=not args.keep_worktree,
+            )
+            output["workspace_finalize"] = finalized.to_dict()
+
+        if args.deploy_production:
+            deployed = release.deploy_production(
+                managed,
+                authority=args.authority,
+                confirmation=args.confirm_production_release or "",
+            )
+            output["production_deploy"] = deployed.to_dict()
+
+        if any(
+            [
+                args.provider,
+                approved_gate,
+                args.browser_artifacts,
+                args.capture_browser_evidence,
+                args.finalize_worktree,
+                args.deploy_production,
+            ]
+        ):
+            output["managed"] = managed.to_dict()
+            print(json.dumps(output, ensure_ascii=False, indent=2))
             return 0
 
         if not args.stage and not args.plan:

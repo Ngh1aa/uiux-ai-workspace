@@ -25,14 +25,27 @@ class WorkspaceMetadata:
         return asdict(self)
 
 
-class WorktreeManager:
-    """Create branch-scoped writable worktrees without mutating the source checkout.
+@dataclass(frozen=True)
+class WorkspaceFinalizeResult:
+    run_id: str
+    branch: str
+    commit: str | None
+    merged: bool
+    cleaned: bool
+    changed: bool
 
-    The manager is intentionally fail-closed: writable isolation requires a real,
-    clean git repository whose top-level directory is exactly ``source_root``.
-    Existing branch names or ambiguous worktree paths are never silently reused.
-    Canonical runtime checkpoint state under `.uiux-agent-runs/` is ignored by the
-    cleanliness check because the harness creates it before the first writable action.
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+class WorktreeManager:
+    """Create and safely finalize branch-scoped writable worktrees.
+
+    Writable isolation requires a real, clean Git repository whose top-level directory
+    is exactly ``source_root``. Finalization is deliberately conservative: source HEAD
+    must still equal the run's base commit, merge is fast-forward-only, hooks are
+    disabled for runtime-managed Git operations, and cleanup happens only after the
+    linked worktree is clean and (when requested) merged successfully.
     """
 
     def __init__(self, source_root: Path, worktrees_root: Path | None = None) -> None:
@@ -57,7 +70,7 @@ class WorktreeManager:
             if key in {"PATH", "SYSTEMROOT", "WINDIR", "HOME", "USERPROFILE", "TMP", "TEMP", "LANG", "LC_ALL"}
         }
         result = subprocess.run(
-            ["git", *args],
+            ["git", "-c", "core.hooksPath=/dev/null", *args],
             cwd=cwd or self.source_root,
             capture_output=True,
             text=True,
@@ -133,7 +146,7 @@ class WorktreeManager:
             )
 
         branch_probe = subprocess.run(
-            ["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
+            ["git", "-c", "core.hooksPath=/dev/null", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
             cwd=self.source_root,
             capture_output=True,
             text=True,
@@ -179,3 +192,71 @@ class WorktreeManager:
         if current_branch != metadata.branch:
             raise WorkspaceIsolationError("recorded workspace branch no longer matches checkpoint metadata")
         return metadata
+
+    def finalize(
+        self,
+        metadata: WorkspaceMetadata | dict[str, Any],
+        commit_message: str,
+        merge: bool = True,
+        cleanup: bool = True,
+    ) -> WorkspaceFinalizeResult:
+        if isinstance(metadata, dict):
+            metadata = self.validate_metadata(metadata)
+        else:
+            metadata = self.validate_metadata(metadata.to_dict(), expected_run_id=metadata.run_id)
+        workspace = Path(metadata.workspace_root)
+        source_head = self.validate_source()
+        if source_head != metadata.base_commit:
+            raise WorkspaceIsolationError(
+                "source HEAD moved after worktree creation; refusing automatic merge to avoid hidden conflict resolution"
+            )
+        source_branch = self._git(["branch", "--show-current"])
+        if not source_branch:
+            raise WorkspaceIsolationError("automatic merge requires a named source branch")
+
+        status = self._git(["status", "--porcelain", "--untracked-files=normal"], cwd=workspace)
+        changed = bool(self._meaningful_status_lines(status))
+        commit_sha: str | None = None
+        if changed:
+            message = str(commit_message).strip()
+            if not message or len(message) > 200:
+                raise WorkspaceIsolationError("commit_message must be non-empty and at most 200 characters")
+            self._git(["add", "--all"], cwd=workspace)
+            staged = self._git(["diff", "--cached", "--name-only"], cwd=workspace)
+            if not staged.strip():
+                changed = False
+            else:
+                self._git(["commit", "--no-verify", "-m", message], cwd=workspace, timeout=120)
+                commit_sha = self._git(["rev-parse", "HEAD"], cwd=workspace)
+
+        merged = False
+        if merge and changed:
+            current_head = self.validate_source()
+            if current_head != metadata.base_commit:
+                raise WorkspaceIsolationError("source HEAD changed during finalize; automatic merge aborted")
+            if self._git(["branch", "--show-current"]) != source_branch:
+                raise WorkspaceIsolationError("source branch changed during finalize; automatic merge aborted")
+            self._git(["merge", "--ff-only", metadata.branch], timeout=120)
+            merged = True
+        elif merge and not changed:
+            merged = True
+
+        cleaned = False
+        if cleanup and (merged or not merge):
+            residual = self._git(["status", "--porcelain", "--untracked-files=normal"], cwd=workspace)
+            if self._meaningful_status_lines(residual):
+                raise WorkspaceIsolationError("worktree is not clean after finalize; refusing automatic cleanup")
+            self._git(["worktree", "remove", str(workspace)], timeout=120)
+            if merged:
+                self._git(["branch", "-d", metadata.branch])
+            self._git(["worktree", "prune"])
+            cleaned = True
+
+        return WorkspaceFinalizeResult(
+            run_id=metadata.run_id,
+            branch=metadata.branch,
+            commit=commit_sha,
+            merged=merged,
+            cleaned=cleaned,
+            changed=changed,
+        )
