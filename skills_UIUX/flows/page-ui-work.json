@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "page-ui-work",
-  "description": "Page-sized build/redesign flow for one route or screen: enough research and design contract work to preserve quality without invoking the whole product lifecycle.",
+  "description": "Page-sized build/redesign flow for one route or screen: enough research and design contract work to preserve quality without invoking unrelated product scope.",
   "match": {
     "priority": 85,
     "change_surfaces": ["PAGE"],
@@ -14,13 +14,17 @@
       "purpose": "Establish the page role, existing owner, user intent, constraints and reference evidence without expanding into unrelated product research.",
       "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "audience-intent-and-top-tasks", "design-reference-research-and-benchmark"],
       "conditional_skills": [
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
+        {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation"]},
         {"when": {"domain": "financial-services"}, "skills": ["financial-product-intelligence", "trust-credibility-and-transparency"]},
         {"when": {"website_type": "ecommerce"}, "skills": ["ecommerce-website", "conversion-and-content"]},
         {"when": {"website_type": "landing"}, "skills": ["landing-page", "conversion-and-content"]},
         {"when": {"website_type": "portfolio"}, "skills": ["portfolio-website"]}
       ],
       "gates": [
-        {"id": "page-role-known", "require": "target route/screen, audience intent, preserve/forbidden constraints and source owner are explicit"}
+        {"id": "page-role-known", "require": "target route/screen, audience intent, preserve/forbidden constraints and source owner are explicit"},
+        {"id": "evidence-led-problem-validation", "require": "material user/problem claims distinguish direct evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable", "when": {"validation_lane": ["evidence-led", "production-learning"]}},
+        {"id": "outcome-definition", "require": "intended user and owner outcomes, baseline or UNKNOWN, measurement source and instrumentation owner are explicit", "when": {"validation_lane": "production-learning"}}
       ]
     },
     {
@@ -29,11 +33,14 @@
       "purpose": "Define a concrete page-level composition and responsive behavior using the existing design language unless the task explicitly changes it.",
       "required_skills": ["journey-driven-content-and-layout", "visual-design-direction", "design-system-and-components", "asset-media-and-art-direction"],
       "conditional_skills": [
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
+        {"when": {"validation_lane": "production-learning"}, "skills": ["human-governance-and-playbacks"]},
         {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
         {"when": {"features": ["forms"]}, "skills": ["interaction-patterns-and-form-ux"]}
       ],
       "gates": [
-        {"id": "page-design-contract", "require": "layout hierarchy, responsive transformation, component reuse and interaction states are concrete before implementation"}
+        {"id": "page-design-contract", "require": "layout hierarchy, responsive transformation, component reuse and interaction states are concrete before implementation"},
+        {"id": "solution-validation", "require": "consequential solution hypotheses have direct validation evidence or are explicitly labeled PLANNED/UNVALIDATED before irreversible implementation", "when": {"validation_lane": ["evidence-led", "production-learning"]}}
       ]
     },
     {
@@ -42,14 +49,16 @@
       "purpose": "Implement the page-level change as reusable responsive code while preserving unrelated routes and shared owners.",
       "required_skills": ["frontend-implementation", "component-driven-development", "responsive-and-device-strategy"],
       "conditional_skills": [
+        {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation"]},
         {"when": {"features": ["auth"]}, "skills": ["authentication-account-and-recovery-ux", "security-and-privacy"]},
         {"when": {"features": ["forms"]}, "skills": ["complex-forms-and-wizards", "state-feedback-and-error-recovery"]},
         {"when": {"features": ["search"]}, "skills": ["site-search-and-findability"]},
-        {"when": {"features": ["dashboard"]}, "skills": ["data-visualization-and-dashboard-ux"]},
-        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["system-reality-and-production-readiness", "web-quality-and-performance"]}
+        {"when": {"features": ["dashboard"]}, "skills": ["data-tables-and-enterprise-ux", "data-visualization-and-dashboard-ux"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]}
       ],
       "gates": [
-        {"id": "page-implementation-evidence", "require": "page acceptance criteria are mapped to the affected route and shared component regression surface"}
+        {"id": "page-implementation-evidence", "require": "page acceptance criteria are mapped to the affected route and shared component regression surface"},
+        {"id": "measurement-instrumentation", "require": "critical outcome metrics have event/data-source definitions, privacy/consent considerations, owners and verification before release", "when": {"validation_lane": "production-learning"}}
       ]
     },
     {
@@ -58,10 +67,15 @@
       "purpose": "Inspect the actual rendered page across representative viewports/states and verify shared-owner regressions without broadening into unrelated routes.",
       "required_skills": ["ui-craft-and-visual-qa", "web-ui-code-review", "accessibility", "media-crop-and-layout-integrity"],
       "conditional_skills": [
-        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance"]}
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
+        {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation", "human-governance-and-playbacks", "post-launch-learning-loop"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance", "system-reality-and-production-readiness", "code-review-and-release"]}
       ],
       "gates": [
-        {"id": "page-rendered-check", "require": "target page is inspected at representative desktop/mobile widths and affected shared components show no material regression"}
+        {"id": "page-rendered-check", "require": "target page is inspected at representative desktop/mobile widths and affected shared components show no material regression"},
+        {"id": "truthful-completion", "require": "verified versus unverified areas are explicit; no production/accessibility/UX improvement claim exceeds evidence"},
+        {"id": "human-release-governance", "approval": "human", "require": "an authorized human decision owner reviews unresolved risk, user evidence, outcome readiness and rollback/learning plan before production release when project policy requires it", "when": {"validation_lane": "production-learning"}},
+        {"id": "live-learning-ready", "require": "post-launch signals, critical experiences, research/feedback sources, review cadence and experiment/rollout/rollback criteria are explicit", "when": {"validation_lane": "production-learning"}}
       ]
     }
   ],
