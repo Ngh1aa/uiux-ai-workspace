@@ -74,6 +74,7 @@ class ManagedFlowController:
         "prior_quality_insight",
     )
     QUALITY_RECALL_AGENTS = frozenset({"implementation", "qa"})
+    RESUMABLE_STAGE_STATES = frozenset({"READY", "RUNNING"})
 
     def __init__(self, harness: ProviderNeutralAgentHarness) -> None:
         self.harness = harness
@@ -254,6 +255,77 @@ class ManagedFlowController:
         self._checkpoint_managed(managed)
         return managed
 
+    def _resume_current_stage(
+        self,
+        managed: ManagedWebsiteRun,
+        stage: ResolvedStage,
+        authority: str,
+        explicit_sources: list[str] | None,
+    ) -> RunState | None:
+        runs = managed.stage_runs.get(stage.id, [])
+        if not runs:
+            return None
+
+        latest = self.harness.resume(runs[-1])
+        raw_revision = latest.context.get("flow_revision")
+        if raw_revision is None:
+            # Pre-revision checkpoints are safe to retain historically but are never
+            # reused as live execution state because their routing epoch is unknown.
+            return None
+        if isinstance(raw_revision, bool) or not isinstance(raw_revision, int):
+            raise ValueError("stage checkpoint flow_revision must be an integer")
+        if raw_revision < managed.flow.revision:
+            # A declarative replan intentionally invalidates prior specialist state.
+            return None
+        if raw_revision > managed.flow.revision:
+            raise ValueError(
+                f"stage checkpoint flow_revision {raw_revision} is ahead of managed flow revision "
+                f"{managed.flow.revision}"
+            )
+
+        expected = {
+            "manager_run_id": managed.manager_run_id,
+            "flow_id": managed.flow.id,
+            "stage_id": stage.id,
+        }
+        for key, value in expected.items():
+            actual = str(latest.context.get(key, ""))
+            if actual != str(value):
+                raise ValueError(
+                    f"stage checkpoint {key} mismatch: expected {value!r}, got {actual!r}"
+                )
+        if latest.agent != stage.agent or latest.active_role != stage.agent:
+            raise ValueError(
+                f"stage checkpoint agent mismatch for {stage.id}: expected {stage.agent}, "
+                f"got agent={latest.agent}, active_role={latest.active_role}"
+            )
+        if latest.authority != authority:
+            raise ValueError(
+                f"stage checkpoint authority mismatch for {stage.id}: expected {authority}, "
+                f"got {latest.authority}"
+            )
+        if list(latest.context.get("stage_gates", [])) != list(stage.gates):
+            raise ValueError(f"stage checkpoint gates do not match current Flow revision for {stage.id}")
+
+        if explicit_sources is not None:
+            requested_sources = [str(item) for item in explicit_sources]
+            loaded_sources = [str(item) for item in latest.context.get("loaded_sources", [])]
+            if requested_sources != loaded_sources:
+                raise ValueError(
+                    "cannot change explicit source context while resuming an in-progress stage; "
+                    "finish/replan the stage or start from a new Flow revision"
+                )
+
+        if latest.state not in self.RESUMABLE_STAGE_STATES:
+            raise ValueError(
+                f"cannot resume stage {stage.id}; latest same-revision specialist run is {latest.state}. "
+                "Complete, replan, or explicitly resolve that terminal stage state first."
+            )
+
+        managed.state = "RUNNING"
+        self._checkpoint_managed(managed)
+        return latest
+
     def start_stage(
         self,
         managed: ManagedWebsiteRun,
@@ -273,6 +345,15 @@ class ManagedFlowController:
         authority = managed.authority
         if order.index(authority) > order.index(role["max_authority"]):
             authority = role["max_authority"]
+
+        resumed = self._resume_current_stage(
+            managed,
+            stage,
+            authority,
+            explicit_sources,
+        )
+        if resumed is not None:
+            return resumed
 
         quality_insight = self._quality_recall_for_stage(managed, stage)
         if quality_insight is None:
