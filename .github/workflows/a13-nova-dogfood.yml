@@ -1,0 +1,118 @@
+name: A13 Nova Real-Project Dogfood
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/a13-nova-dogfood.yml"
+      - "uiux-factory/core/dogfood/**"
+      - "uiux-factory/core/runtime/flow_os/**"
+      - "uiux-factory/qa/**"
+      - "uiux-factory/scripts/run_nova_dogfood.py"
+      - "uiux-factory/tests/test_nova_dogfood_a13.py"
+      - "skills_UIUX/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/a13-nova-dogfood.yml"
+      - "uiux-factory/core/dogfood/**"
+      - "uiux-factory/core/runtime/flow_os/**"
+      - "uiux-factory/qa/**"
+      - "uiux-factory/scripts/run_nova_dogfood.py"
+      - "uiux-factory/tests/test_nova_dogfood_a13.py"
+      - "skills_UIUX/**"
+
+permissions:
+  contents: read
+
+jobs:
+  nova-dogfood:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NOVA_SHA: e206f51f2fda006adcf52497d8b827e048e157ec
+      NOVA_ROOT: ${{ github.workspace }}/.dogfood/Nova
+      A13_REPORT: ${{ github.workspace }}/a13-artifacts/nova-dogfood.json
+
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Checkout pinned Nova
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Nova
+          ref: e206f51f2fda006adcf52497d8b827e048e157ec
+          path: .dogfood/Nova
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install Factory dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "pydantic>=2.5.3,<3" "python-dotenv>=1,<2" -r requirements-dev.txt
+
+      - name: Install canonical browser QA dependencies
+        working-directory: uiux-factory/qa
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Start pinned Nova static server
+        run: |
+          python -m http.server 4173 --bind 127.0.0.1 --directory "$NOVA_ROOT" > /tmp/a13-nova-server.log 2>&1 &
+          echo $! > /tmp/a13-nova-server.pid
+          python - <<'PY'
+          import time
+          import urllib.request
+          url = "http://127.0.0.1:4173/app.html?screen=home"
+          error = None
+          for _ in range(50):
+              try:
+                  with urllib.request.urlopen(url, timeout=2) as response:
+                      if response.status == 200:
+                          print(f"Nova server ready: {url}")
+                          raise SystemExit(0)
+              except Exception as exc:
+                  error = exc
+                  time.sleep(0.2)
+          raise SystemExit(f"Nova server did not become ready: {error}")
+          PY
+
+      - name: Run A13 against real Nova
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_nova_dogfood.py \
+            --project-root "$NOVA_ROOT" \
+            --base-url http://127.0.0.1:4173 \
+            --expected-target-sha "$NOVA_SHA" \
+            --report "$A13_REPORT"
+
+      - name: Upload dogfood evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: a13-nova-dogfood-${{ github.run_id }}
+          if-no-files-found: error
+          path: |
+            a13-artifacts/nova-dogfood.json
+            uiux-factory/qa/artifacts/a13-nova-*/**
+
+      - name: Stop Nova server
+        if: always()
+        run: |
+          if [ -f /tmp/a13-nova-server.pid ]; then
+            kill "$(cat /tmp/a13-nova-server.pid)" 2>/dev/null || true
+          fi
+          cat /tmp/a13-nova-server.log 2>/dev/null || true
