@@ -121,6 +121,7 @@ def test_a5_4_canonical_post_render_suite_learns_final_report_without_raw_artifa
 
     suite = PostRenderEvaluatorSuite.__new__(PostRenderEvaluatorSuite)
     suite.project_dir = project
+    suite.evaluation_memory_policy = {"evaluation_memory": {"enabled": True}}
     suite._learn_quality_patterns({"touch_targets": str(report_path)})
 
     store = EvaluationMemoryStore(project, {"evaluation_memory": {"enabled": True}})
@@ -132,3 +133,29 @@ def test_a5_4_canonical_post_render_suite_learns_final_report_without_raw_artifa
     assert "screenshot.png" not in raw_memory
     assert "raw visual critic narrative" not in raw_memory
     assert getattr(suite, "quality_pattern_memory_error", None) is None
+
+
+def test_a5_4_post_render_learning_honors_disabled_memory_policy(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    report_path = tmp_path / "touch-target-metrics.json"
+    report_path.write_text(json.dumps(_report()), encoding="utf-8")
+
+    suite = PostRenderEvaluatorSuite.__new__(PostRenderEvaluatorSuite)
+    suite.project_dir = project
+    suite.evaluation_memory_policy = {"evaluation_memory": {"enabled": False}}
+    suite._learn_quality_patterns({"touch_targets": str(report_path)})
+
+    memory_path = project / ".uiux-agent-runs" / "memory" / "evaluation-memory.json"
+    assert not memory_path.exists()
+    assert getattr(suite, "quality_pattern_memory_error", None) is None
+
+
+def test_a5_4_post_render_suite_defaults_to_canonical_runtime_policy() -> None:
+    suite = PostRenderEvaluatorSuite.__new__(PostRenderEvaluatorSuite)
+    suite.evaluation_memory_policy = None
+
+    policy = suite._resolved_evaluation_memory_policy()
+
+    assert isinstance(policy.get("evaluation_memory"), dict)
+    assert "enabled" in policy["evaluation_memory"]
