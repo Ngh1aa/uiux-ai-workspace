@@ -25,8 +25,8 @@ class ProjectDogfoodProfile:
     `expected_change_boundary` answers *where the implementation change belongs*
     (PRODUCT or FACTORY). The canonical Task Contract's `change_surface` separately
     answers *how broad the UI change is* (MICRO/FOCUSED/PAGE/REDESIGN/PRODUCT).
-    Keeping these axes orthogonal prevents project-validation plumbing from inflating
-    a focused task into a whole-product redesign.
+    Expected surface/flow values are regression assertions only; they never override
+    the canonical interpreter or router.
     """
 
     project_id: str
@@ -37,12 +37,18 @@ class ProjectDogfoodProfile:
     source_truth_candidates: tuple[str, ...]
     default_task: str
     expected_change_boundary: str
+    expected_change_surface: str
+    expected_flow_id: str
     routing_intent: str
     evidence_model: str
 
     def validate(self) -> None:
         if self.expected_change_boundary not in CHANGE_BOUNDARIES:
             raise ValueError(f"unsupported change boundary: {self.expected_change_boundary}")
+        if self.expected_change_surface not in CHANGE_SURFACES:
+            raise ValueError(f"unsupported adaptive change surface: {self.expected_change_surface}")
+        if not self.expected_flow_id.strip():
+            raise ValueError(f"{self.project_id} must declare an expected flow")
         if not self.evidence_paths:
             raise ValueError(f"{self.project_id} must declare evidence paths")
         if not self.source_truth_candidates:
@@ -62,6 +68,8 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
             "while preserving its established product strategy and interaction model."
         ),
         expected_change_boundary="PRODUCT",
+        expected_change_surface="PRODUCT",
+        expected_flow_id="professional-website-redesign",
         routing_intent="product-trust-data",
         evidence_model="trust-data-regulatory",
     ),
@@ -84,6 +92,8 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
             "preserve the cultural-experience concept."
         ),
         expected_change_boundary="PRODUCT",
+        expected_change_surface="FOCUSED",
+        expected_flow_id="existing-ui-improvement",
         routing_intent="visual-art-direction",
         evidence_model="composition-cultural-experience",
     ),
@@ -105,6 +115,8 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
             "preserving brief and compliance constraints."
         ),
         expected_change_boundary="PRODUCT",
+        expected_change_surface="FOCUSED",
+        expected_flow_id="existing-ui-improvement",
         routing_intent="enterprise-ia-workflow",
         evidence_model="ia-workflow-compliance",
     ),
@@ -199,6 +211,7 @@ def evaluate_cross_project_contract(
     checks = {
         "explicit_change_boundary_preserved": contract["change_boundary"] == expected_boundary,
         "adaptive_change_surface_valid": contract["change_surface"] in CHANGE_SURFACES,
+        "adaptive_change_surface_expected": contract["change_surface"] == profile.expected_change_surface,
         "source_truth_resolved": source_truth is not None,
         "profile_evidence_grounded": not missing_evidence,
         "no_nova_domain_leakage": not leaks,
