@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "id": "portfolio-career-system",
+  "description": "Recruiter-facing portfolio and career-positioning flow covering identity, case-study product reasoning, AI-assisted workflow proof, CV/link/source hygiene, truthful research evidence and rendered QA.",
+  "match": {
+    "priority": 90,
+    "change_surfaces": ["REDESIGN", "PRODUCT"],
+    "intents": ["build", "redesign", "rebuild", "improve"],
+    "website_types": ["portfolio"],
+    "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
+  },
+  "stages": [
+    {
+      "id": "research",
+      "agent": "research",
+      "purpose": "Establish target-role positioning, recruiter audience, public identity/CV/link inventory, case-study evidence boundaries, technical truth and research gaps before changing the narrative.",
+      "required_skills": [
+        "project-context",
+        "adaptive-skill-routing-and-context-budget",
+        "website-audit-and-redesign",
+        "portfolio-website",
+        "portfolio-career-positioning",
+        "audience-intent-and-top-tasks",
+        "information-architecture",
+        "design-reference-research-and-benchmark"
+      ],
+      "conditional_skills": [
+        {
+          "when": {"validation_lane": ["evidence-led", "production-learning"]},
+          "skills": [
+            "real-user-validation",
+            "user-research-planning-and-recruitment",
+            "research-synthesis-and-insight-management",
+            "research-evidence-pipeline"
+          ]
+        },
+        {
+          "when": {"features": ["outcome-measurement"]},
+          "skills": ["outcome-metrics-and-instrumentation"]
+        },
+        {
+          "when": {"features": ["stakeholder-governance"]},
+          "skills": ["human-governance-and-playbacks"]
+        }
+      ],
+      "gates": [
+        {
+          "id": "target-role-and-audience",
+          "require": "primary target role, seniority boundary, recruiter/hiring-manager audience, core differentiator and 5-second/60-second/10-minute scan goals are explicit"
+        },
+        {
+          "id": "public-surface-inventory",
+          "require": "homepage, flagship/supporting work, case routes, CV files/links, GitHub identity, live/source/Figma/contact links and public scratch/version clutter are inventoried from current source"
+        },
+        {
+          "id": "claim-boundary",
+          "require": "case-study user/outcome/technical claims are classified as verified evidence, proxy/desk evidence, hypothesis, planned validation, blocked or unknown; framework/stack claims match source"
+        },
+        {
+          "id": "research-package-ready",
+          "require": "when direct-user evidence is needed but unavailable, the research decision map, participant criteria, protocol and evidence-ledger structure exist while findings remain empty/planned rather than fabricated",
+          "when": {"validation_lane": ["evidence-led", "production-learning"]}
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "agent": "implementation",
+      "purpose": "Turn recruiter questions and verified project evidence into a distinctive portfolio narrative, case-study hierarchy and inspectable AI-assisted workflow proof.",
+      "required_skills": [
+        "ai-agent-coding-guardrails",
+        "portfolio-career-positioning",
+        "journey-driven-content-and-layout",
+        "visual-design-direction",
+        "brand-distinctiveness-and-visual-signature",
+        "design-system-and-components",
+        "asset-media-and-art-direction",
+        "conversion-and-content"
+      ],
+      "conditional_skills": [
+        {
+          "when": {"validation_lane": ["evidence-led", "production-learning"]},
+          "skills": ["real-user-validation"]
+        },
+        {
+          "when": {"features": ["motion"]},
+          "skills": ["motion-and-microinteractions"]
+        }
+      ],
+      "gates": [
+        {
+          "id": "recruiter-narrative-contract",
+          "approval": "human",
+          "require": "role identity, hero proposition, flagship order, case-study evidence structure, AI-assisted workflow explanation, scan-depth hierarchy and preserve/change decisions are concrete before broad implementation"
+        },
+        {
+          "id": "case-study-product-reasoning",
+          "require": "flagship cases expose problem/context, evidence class, product reasoning, decision/trade-off, system/design response, working proof and validation/outcome boundary where applicable"
+        },
+        {
+          "id": "ai-proof-boundary",
+          "require": "AI section separates human-owned judgment from AI-assisted work and links to inspectable workflow/config/QA evidence where public and safe instead of relying on a generic tools list"
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "agent": "implementation",
+      "purpose": "Implement recruiter-facing narrative and evidence changes while repairing source-of-truth links, CV/identity hygiene and maintainable responsive code.",
+      "required_skills": [
+        "ai-agent-coding-guardrails",
+        "frontend-implementation",
+        "component-driven-development",
+        "responsive-and-device-strategy",
+        "portfolio-career-positioning"
+      ],
+      "conditional_skills": [
+        {
+          "when": {"mode": ["production-candidate", "production"]},
+          "skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]
+        },
+        {
+          "when": {"features": ["motion"]},
+          "skills": ["motion-and-microinteractions"]
+        }
+      ],
+      "gates": [
+        {
+          "id": "critical-links-real",
+          "require": "recruiter-critical case, CV, live, source, Figma and contact links are real routes/files or intentionally removed; placeholder # links do not remain on public critical surfaces"
+        },
+        {
+          "id": "canonical-career-assets",
+          "require": "primary role identity and canonical recruiter CV are consistent across homepage/source/public files; legacy duplicates or confusing naming are migrated, removed or explicitly explained"
+        },
+        {
+          "id": "source-hygiene",
+          "require": "public source does not retain verified-unused versioned code, internal scratch notes or unsupported technical claims that contradict the portfolio narrative"
+        }
+      ]
+    },
+    {
+      "id": "qa",
+      "agent": "qa",
+      "purpose": "Independently verify the recruiter scan path, links/routes, technical claims, evidence boundaries, responsive rendering, accessibility and public-source hygiene before release.",
+      "required_skills": [
+        "testing-strategy",
+        "agent-evaluation-and-reliability",
+        "ui-craft-and-visual-qa",
+        "web-ui-code-review",
+        "accessibility",
+        "web-quality-and-performance",
+        "brand-recognition-and-consistency-qa",
+        "media-crop-and-layout-integrity",
+        "portfolio-career-positioning"
+      ],
+      "conditional_skills": [
+        {
+          "when": {"validation_lane": ["evidence-led", "production-learning"]},
+          "skills": ["real-user-validation", "research-evidence-pipeline"]
+        },
+        {
+          "when": {"mode": ["production-candidate", "production"]},
+          "skills": ["system-reality-and-production-readiness", "code-review-and-release"]
+        }
+      ],
+      "gates": [
+        {
+          "id": "rendered-recruiter-path",
+          "require": "actual rendered homepage and representative case routes are inspected at desktop/mobile viewports for hierarchy, overflow, broken media, navigation and critical interaction states"
+        },
+        {
+          "id": "critical-route-link-audit",
+          "require": "flagship/supporting case routes, canonical CV and other recruiter-critical links resolve; raw source does not depend on a hidden runtime patch to mask placeholder critical links"
+        },
+        {
+          "id": "technical-claim-audit",
+          "require": "framework, design-to-code, accessibility, AI workflow and QA claims are backed by source/test/runtime evidence or explicitly narrowed"
+        },
+        {
+          "id": "truthful-portfolio-completion",
+          "require": "independent concepts, missing user research, missing analytics/business outcomes and other evidence gaps remain clearly labeled; no polished artifact is presented as proof of unmeasured impact"
+        }
+      ]
+    }
+  ],
+  "replanning": {
+    "max_replans": 4,
+    "triggers": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"],
+    "policies": [
+      {
+        "when": {"signal": "GATE_FAIL", "current_stage": "qa"},
+        "reason": "Recruiter-path QA found a material rendering, link, claim or source-hygiene defect; repair the owning implementation/source layer before re-verifying.",
+        "target_stage": "implementation",
+        "add_skills": ["ui-improvement", "web-ui-code-review"]
+      },
+      {
+        "when": {"signal": "GATE_FAIL", "current_stage": "design"},
+        "reason": "Positioning or case-study hierarchy remains generic/unclear; deepen recruiter narrative and design critique before implementation.",
+        "target_stage": "design",
+        "add_skills": ["design-critique-and-rationale", "visual-taste-calibration"]
+      },
+      {
+        "when": {"signal": "INVALID_ASSUMPTION"},
+        "reason": "A career, project, research or technical assumption was invalidated; return to public/source evidence rather than patching the story downstream.",
+        "target_stage": "research",
+        "add_skills": ["research-synthesis-and-insight-management"]
+      },
+      {
+        "when": {"signal": "BLOCKED"},
+        "reason": "Missing target-role/project truth or user evidence blocks a responsible claim; reframe the unresolved decision and evidence plan.",
+        "target_stage": "research",
+        "add_skills": ["product-decision-and-stakeholder-framing", "research-evidence-pipeline"]
+      },
+      {
+        "when": {"signal": "CONTEXT_DRIFT"},
+        "reason": "Portfolio source or positioning changed; re-ground project truth before further narrative/code changes.",
+        "target_stage": "research",
+        "add_skills": ["project-context"]
+      },
+      {
+        "when": {"signal": "TOOL_FAILURE"},
+        "reason": "Tool failure requires diagnosis/evidence rather than blind retry.",
+        "add_skills": ["agent-evaluation-and-reliability"]
+      }
+    ]
+  }
+}
