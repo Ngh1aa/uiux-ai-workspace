@@ -15,6 +15,7 @@ See `uiux-factory/core/runtime/flow_os/README.md` for the A4 ownership contract.
 - `runtime-policy.json` — role, authority and permission policy consumed by Factory;
 - `TASK-CONTRACT.md` — Task Contract semantics;
 - `ADAPTIVE-FLOW.md` — adaptive change-surface semantics;
+- `SAFE-READ.md` — A4.1 model/provider-facing filesystem read contract;
 - `TOOL-OBSERVATION-CONTRACT.md` — tool/observation contract;
 - `../flows/*.json` — declarative flow definitions;
 - `../policies/*.json` — delivery policies;
@@ -58,12 +59,26 @@ user goal
 → canonical FlowPlanner
 → declarative skills_UIUX flow + policy inputs
 → Factory execution adapter or ManagedFlowController
+→ Safe Read for model/provider-facing project + skill text
 → specialist/provider/tool loop
 → evidence + gates
 → advance or bounded replan
 ```
 
-Provider code never owns stage order or handoff. Managed lifecycle state, provider loops, permission/checkpoint harness code and the optional MCP adapter are all implemented in the canonical Factory runtime.
+Provider code never owns stage order or handoff. Managed lifecycle state, provider loops, permission/checkpoint harness code, Safe Read enforcement and the optional MCP adapter are all implemented in the canonical Factory runtime.
+
+## A4.1 Safe Read
+
+Safe Read is active for:
+
+- `read_text`;
+- safe project directory listing;
+- project/source context manifest reads;
+- provider skill/source context loading.
+
+It rejects traversal/root escape, symlinks, credential-bearing paths, `.git`, `.uiux-agent-runs`, `node_modules`, oversized files, binary/NUL content, invalid UTF-8 and obvious private-key material. Provider context revalidates stored paths against roots supplied by the active harness instead of trusting checkpoint metadata.
+
+See [`SAFE-READ.md`](SAFE-READ.md) for the complete contract and scope boundary.
 
 ## Public managed CLI
 
@@ -117,4 +132,4 @@ From `uiux-factory/`:
 python -m pytest -q tests
 ```
 
-A4 does not include Safe Read, worktree isolation, target-runner isolation, typed evidence/gates or expanded file tools; those remain A4.1–A4.5 follow-up work.
+A4.1 is the read-safety hardening milestone. Worktree isolation, target-runner isolation, typed evidence/gates and expanded file tools remain A4.2–A4.5 follow-up work.
