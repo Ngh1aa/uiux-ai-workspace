@@ -18,6 +18,8 @@ Factory runtime owns executable Python behavior for:
 - container/network-sandboxed target command execution;
 - typed runtime evidence and gate evaluation;
 - Playwright browser-rendered evidence ingestion/capture;
+- evidence-derived terminal run evaluation;
+- bounded project-scoped advisory evaluation memory;
 - explicit human-owned production release/deploy authority;
 - the optional MCP runtime adapter.
 
@@ -31,9 +33,18 @@ Factory runtime owns executable Python behavior for:
 
 The canonical runtime consumes those resources; it does not copy them into Factory.
 
+Executable A5 evaluation/memory behavior lives in sibling Factory packages:
+
+```text
+uiux-factory/core/evaluation/
+uiux-factory/core/memory/
+```
+
+Flow OS consumes those packages through `ManagedFlowController`; they do not form a second runtime or Development Manager.
+
 ## Compatibility rule
 
-Python files under `skills_UIUX/runtime/` are deprecated compatibility shims. They may bootstrap `uiux-factory/` and re-export canonical symbols, but they must not define an independent `GoalInterpreter`, `FlowResolver`, `FlowPlanner`, managed Development Manager, provider runner, or agent harness.
+Python files under `skills_UIUX/runtime/` are deprecated compatibility shims. They may bootstrap `uiux-factory/` and re-export canonical symbols, but they must not define an independent `GoalInterpreter`, `FlowResolver`, `FlowPlanner`, managed Development Manager, provider runner, agent harness, evaluation engine or memory engine.
 
 The public managed CLI may stay at `skills_UIUX/scripts/uiux-agent.py` for backward compatibility, but it imports `core.runtime.flow_os.*` directly.
 
@@ -105,3 +116,49 @@ The generic command deploy adapter consumes operator-configured exact argv from 
 `PlaywrightBrowserEvidenceAdapter` bridges the existing Playwright Cloud QA output into trusted Flow OS evidence. Browser records include screenshot and JSON hashes, route, URL, viewport, ARIA snapshot, representative bounding box and browser/console errors. Remote capture is denied by default; localhost is the default trusted target.
 
 See `skills_UIUX/runtime/A4-6-A4-9-SANDBOX-RELEASE.md` for the operational contract and CLI examples.
+
+## A5.1 — Evidence-derived run evaluation
+
+`core.evaluation.RunEvaluator` evaluates managed runs from the canonical latest-effective trusted evidence set. Provider summaries and provider evidence claims remain untrusted context and cannot decide the outcome.
+
+A terminal `COMPLETED` lifecycle with no trusted runtime evidence is reported as `insufficient_evidence`, not PASS. Repaired same-channel failures follow the A4 effective-evidence supersession rule.
+
+The current evaluation is stored in the manager checkpoint as `run_evaluation`.
+
+## A5.2 — Project-scoped evaluation memory
+
+`core.memory.EvaluationMemoryStore` stores only memory-eligible bounded evaluation metadata below:
+
+```text
+<project>/.uiux-agent-runs/memory/evaluation-memory.json
+```
+
+Writes are schema-versioned, bounded, atomic and serialized across local processes through the existing `RunLock` primitive. Symlink/path escapes are rejected. Provider-facing `WorkspaceFileTools` blocks `.uiux-agent-runs`, preventing model tools from writing this state.
+
+Raw prompts, provider prose/claims, command output, DOM/source contents and credentials are not part of the memory schema.
+
+## A5.3 — Advisory recall boundary
+
+Canonical order is:
+
+```text
+current task
+→ GoalInterpreter
+→ FlowPlanner
+→ resolved flow
+→ aggregate prior-run insight
+→ provider/stage context
+```
+
+Memory is attached only after flow selection. `ManagedFlowController.replan()` removes `prior_evaluation_insight` before calling the canonical replanner, including attempted context-update overrides.
+
+Historical insight is advisory only. It cannot:
+
+- select or modify flow;
+- change authority;
+- satisfy gates;
+- become current-run evidence;
+- approve merge/release;
+- override current source truth.
+
+See `skills_UIUX/runtime/A5-EVALUATION-MEMORY.md` for the complete trust, storage and eligibility contract.

@@ -8,16 +8,17 @@ The single executable owner is:
 uiux-factory/core/runtime/flow_os/
 ```
 
-See `uiux-factory/core/runtime/flow_os/README.md` for the canonical A4 runtime ownership contract.
+See `uiux-factory/core/runtime/flow_os/README.md` for the canonical A4+ runtime ownership contract.
 
 ## What remains authoritative here
 
-- `runtime-policy.json` — roles, authorities, sandbox/release policy consumed by Factory;
+- `runtime-policy.json` — roles, authorities, sandbox/release/evaluation-memory policy consumed by Factory;
 - `TASK-CONTRACT.md` — Task Contract semantics;
 - `ADAPTIVE-FLOW.md` — adaptive change-surface semantics;
 - `SAFE-READ.md` — A4.1 read contract;
 - `A4-2-A4-5-RUNTIME-HARDENING.md` — worktree, target runner, typed evidence and file tools;
 - `A4-6-A4-9-SANDBOX-RELEASE.md` — container/network sandbox, finalize/merge, production release and browser evidence;
+- `A5-EVALUATION-MEMORY.md` — evidence-derived run evaluation and bounded advisory cross-run memory;
 - `TOOL-OBSERVATION-CONTRACT.md` — tool/observation contract;
 - `../flows/*.json` — declarative flow definitions;
 - `../policies/*.json` — delivery policies;
@@ -39,7 +40,7 @@ runtime/provider_runner.py
 runtime/task_context.py
 ```
 
-They bootstrap `uiux-factory/` and re-export canonical symbols. **Do not add executable decision logic to these wrappers.** New runtime behavior belongs under `uiux-factory/core/runtime/flow_os/`.
+They bootstrap `uiux-factory/` and re-export canonical symbols. **Do not add executable decision logic to these wrappers.** New runtime behavior belongs under `uiux-factory/`; Flow OS execution remains under `uiux-factory/core/runtime/flow_os/`, while canonical evaluation/memory behavior lives under `uiux-factory/core/evaluation/` and `uiux-factory/core/memory/`.
 
 Legacy names are intentionally mapped onto canonical concepts:
 
@@ -66,9 +67,13 @@ user goal
 → container-sandboxed target execution
 → typed evidence + gates
 → browser-rendered evidence
+→ evidence-derived terminal run evaluation
+→ bounded project-scoped advisory evaluation memory
 → explicit external_write finalize/merge
 → explicit release-authority production deploy
 ```
+
+Memory is attached only after canonical flow selection and is removed from replanning policy context. It never counts as current-run evidence and never changes authority, gates, merge or release decisions.
 
 Provider code never owns stage order, handoff, merge or production release authority.
 
@@ -84,7 +89,7 @@ python -B skills_UIUX/scripts/uiux-agent.py \
 
 The script imports `core.runtime.flow_os.*` directly; it does not execute a second runtime in `skills_UIUX`.
 
-Release/finalize examples are documented in `A4-6-A4-9-SANDBOX-RELEASE.md`.
+Release/finalize examples are documented in `A4-6-A4-9-SANDBOX-RELEASE.md`. Evaluation-memory behavior is documented in `A5-EVALUATION-MEMORY.md`.
 
 ## Validation
 
@@ -102,4 +107,6 @@ From `uiux-factory/`:
 python -m pytest -q tests
 ```
 
-A4.1 through A4.9 now form the canonical runtime hardening stack: safe read, isolated writes, bounded tools, trusted evidence, container/network sandboxing, controlled worktree finalization, browser-rendered proof and human-owned production release.
+A4.1 through A4.9 form the canonical runtime hardening stack: safe read, isolated writes, bounded tools, trusted evidence, container/network sandboxing, controlled worktree finalization, browser-rendered proof and human-owned production release.
+
+A5.1 through A5.3 add evidence-derived terminal evaluation and bounded project-scoped learning memory without weakening those A4 trust/authority boundaries.
