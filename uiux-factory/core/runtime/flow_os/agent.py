@@ -11,6 +11,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
+from core.runtime.flow_os.safe_read import SafeReader
+
 
 AUTHORITY_ORDER = ("read_only", "branch_write", "external_write", "release")
 RISK_LEVELS = ("READ", "LOW_WRITE", "HIGH_WRITE", "CRITICAL")
@@ -113,14 +115,16 @@ class LocalCheckpointStore:
         return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _context_item(kind: str, path: Path, trust: str) -> dict[str, Any]:
-    text = path.read_text(encoding="utf-8", errors="replace")
-    chars = len(text)
+def _context_item(kind: str, path: Path, trust: str, reader: SafeReader) -> dict[str, Any]:
+    loaded = reader.read_text(path)
+    chars = len(loaded.content)
     return {
         "kind": kind,
-        "path": str(path),
+        "path": str(loaded.path),
+        "read_root": str(reader.root),
         "trust": trust,
         "chars": chars,
+        "bytes": loaded.bytes_read,
         "estimated_tokens": math.ceil(chars / 4),
     }
 
@@ -131,6 +135,10 @@ def build_context_manifest(
     selected_skills: list[str] | None = None,
     explicit_sources: list[str] | None = None,
 ) -> dict[str, Any]:
+    project_root = Path(project_root).resolve()
+    library_root = Path(library_root).resolve()
+    project_reader = SafeReader(project_root)
+    library_reader = SafeReader(library_root)
     selected_skills = selected_skills or []
     explicit_sources = explicit_sources or []
     items: list[dict[str, Any]] = []
@@ -138,36 +146,34 @@ def build_context_manifest(
     config_path = project_root / ".uiux-profile.json"
     config: dict[str, Any] = {}
     if config_path.exists():
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-        items.append(_context_item("project_config", config_path, "project_authoritative"))
+        config_loaded = project_reader.read_text(config_path)
+        config = json.loads(config_loaded.content)
+        items.append(_context_item("project_config", config_path, "project_authoritative", project_reader))
 
     manifest_path = project_root / ".claude" / "skills" / ".skills-uiux-manifest.json"
     installed_skills: list[str] = []
     if manifest_path.exists():
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest_loaded = project_reader.read_text(manifest_path)
+        manifest = json.loads(manifest_loaded.content)
         installed_skills = list(manifest.get("skills", []))
-        items.append(_context_item("installed_manifest", manifest_path, "verify_before_acting"))
+        items.append(_context_item("installed_manifest", manifest_path, "verify_before_acting", project_reader))
 
     for skill in selected_skills:
         if installed_skills and skill not in installed_skills:
             raise ValueError(f"selected skill is not installed in project manifest: {skill}")
         skill_path = library_root / skill / "SKILL.md"
+        skill_reader = library_reader
         if not skill_path.exists():
             skill_path = project_root / ".claude" / "skills" / skill / "SKILL.md"
+            skill_reader = project_reader
         if not skill_path.exists():
             raise ValueError(f"selected skill not found: {skill}")
-        items.append(_context_item("skill", skill_path, "routed_knowledge"))
+        items.append(_context_item("skill", skill_path, "routed_knowledge", skill_reader))
 
     declared_sources = list(config.get("source_of_truth", [])) if config else []
     for raw in explicit_sources:
-        path = (project_root / raw).resolve()
-        try:
-            path.relative_to(project_root.resolve())
-        except ValueError as exc:
-            raise ValueError(f"source escapes project root: {raw}") from exc
-        if not path.exists() or not path.is_file():
-            raise ValueError(f"explicit source not found: {raw}")
-        items.append(_context_item("source_of_truth", path, "project_authoritative"))
+        path = project_root / raw
+        items.append(_context_item("source_of_truth", path, "project_authoritative", project_reader))
 
     return {
         "project_root": str(project_root),
@@ -178,9 +184,13 @@ def build_context_manifest(
         "totals": {
             "items": len(items),
             "chars": sum(item["chars"] for item in items),
+            "bytes": sum(item["bytes"] for item in items),
             "estimated_tokens": sum(item["estimated_tokens"] for item in items),
         },
-        "rule": "declared source_of_truth is discoverable but loaded only when explicitly selected for the active decision",
+        "rule": (
+            "declared source_of_truth is discoverable but loaded only when explicitly selected; "
+            "all project/library text loads are revalidated by canonical Safe Read"
+        ),
     }
 
 
@@ -206,10 +216,11 @@ class ToolRegistry:
     def __init__(self, repo_root: Path, project_root: Path) -> None:
         self.repo_root = repo_root
         self.project_root = project_root
+        self.safe_reader = SafeReader(project_root)
         self.specs: dict[str, ToolSpec] = {}
         self.handlers: dict[str, Handler] = {}
-        self._register("read_text", "Read a UTF-8 project file", "READ", "read_only", False, self._read_text)
-        self._register("list_files", "List files below a project-relative directory", "READ", "read_only", False, self._list_files)
+        self._register("read_text", "Safely read one bounded UTF-8 project file", "READ", "read_only", False, self._read_text)
+        self._register("list_files", "Safely list visible files below a project-relative directory", "READ", "read_only", False, self._list_files)
         self._register("write_artifact", "Write a project-local UI/UX artifact", "LOW_WRITE", "branch_write", True, self._write_artifact)
         self._register("run_validator", "Run an allowlisted skills_UIUX validator", "READ", "read_only", False, self._run_validator)
         self._register("release_action", "Contract-only release boundary", "CRITICAL", "release", True, self._release_action)
@@ -229,16 +240,12 @@ class ToolRegistry:
         return path
 
     def _read_text(self, path: str) -> dict[str, Any]:
-        resolved = self._resolve_project_path(path)
-        return {"path": path, "content": resolved.read_text(encoding="utf-8", errors="replace")}
+        return self.safe_reader.read_text(path).observation()
 
     def _list_files(self, path: str = ".") -> dict[str, Any]:
-        resolved = self._resolve_project_path(path)
-        if not resolved.exists() or not resolved.is_dir():
-            raise ValueError(f"directory not found: {path}")
         return {
             "path": path,
-            "items": sorted(str(item.relative_to(self.project_root)) for item in resolved.iterdir()),
+            "items": self.safe_reader.list_files(path),
         }
 
     def _write_artifact(self, path: str, content: str) -> dict[str, Any]:
