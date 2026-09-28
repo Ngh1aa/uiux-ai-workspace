@@ -19,6 +19,7 @@ from runtime.provider_runner import ProviderManagedRunner
 def _managed_overrides(args: argparse.Namespace) -> dict[str, object]:
     return {
         "intent": args.intent,
+        "change_surface": args.change_surface,
         "website_type": args.website_type,
         "domain": args.domain,
         "product_archetype": args.product_archetype,
@@ -54,6 +55,7 @@ def main() -> int:
     parser.add_argument("--managed", action="store_true", help="Use the Development Manager declarative Flow OS")
     parser.add_argument("--managed-run-id", help="Resume an existing managed website run")
     parser.add_argument("--intent", choices=["build", "redesign", "rebuild", "improve", "fix", "polish"], help="Optional override; otherwise inferred from --task")
+    parser.add_argument("--change-surface", choices=["MICRO", "FOCUSED", "PAGE", "REDESIGN", "PRODUCT"], help="Optional A3 change-size override; otherwise inferred from Task Contract scope")
     parser.add_argument("--website-type", help="Optional override; otherwise inferred from --task")
     parser.add_argument("--domain", help="Optional business-domain override, e.g. financial-services")
     parser.add_argument("--product-archetype", help="Optional product/workflow archetype override, e.g. payments-infrastructure")
