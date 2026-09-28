@@ -5,7 +5,7 @@
   "match": {
     "priority": 90,
     "change_surfaces": ["REDESIGN", "PRODUCT"],
-    "intents": ["build", "redesign", "rebuild", "improve"],
+    "intents": ["build", "redesign", "rebuild", "improve", "fix", "polish"],
     "website_types": ["portfolio"],
     "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
   },
