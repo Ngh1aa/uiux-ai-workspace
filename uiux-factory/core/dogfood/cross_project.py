@@ -3,10 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Iterable
 
+from core.runtime.flow_os.adaptive_surface import CHANGE_SURFACES
 from core.runtime.flow_os.task_context import GoalInterpreter
 
 
-CHANGE_SURFACES = {"PRODUCT", "FACTORY"}
+CHANGE_BOUNDARIES = {"PRODUCT", "FACTORY"}
 NOVA_LEAK_TOKENS = (
     "vcb",
     "fpt",
@@ -19,11 +20,13 @@ NOVA_LEAK_TOKENS = (
 
 @dataclass(frozen=True)
 class ProjectDogfoodProfile:
-    """Small, explicit contract for cross-domain A13 dogfood.
+    """Observable, data-driven contract for cross-project Factory dogfood.
 
-    The profile intentionally contains only facts that are observable from the target
-    repository. It is not a synthetic `.uiux-profile.json` and must not invent missing
-    taxonomy in order to make a project fit Nova's assumptions.
+    `expected_change_boundary` answers *where the implementation change belongs*
+    (PRODUCT or FACTORY). The canonical Task Contract's `change_surface` separately
+    answers *how broad the UI change is* (MICRO/FOCUSED/PAGE/REDESIGN/PRODUCT).
+    Keeping these axes orthogonal prevents project-validation plumbing from inflating
+    a focused task into a whole-product redesign.
     """
 
     project_id: str
@@ -33,13 +36,13 @@ class ProjectDogfoodProfile:
     evidence_paths: tuple[str, ...]
     source_truth_candidates: tuple[str, ...]
     default_task: str
-    expected_change_surface: str
+    expected_change_boundary: str
     routing_intent: str
     evidence_model: str
 
     def validate(self) -> None:
-        if self.expected_change_surface not in CHANGE_SURFACES:
-            raise ValueError(f"unsupported change surface: {self.expected_change_surface}")
+        if self.expected_change_boundary not in CHANGE_BOUNDARIES:
+            raise ValueError(f"unsupported change boundary: {self.expected_change_boundary}")
         if not self.evidence_paths:
             raise ValueError(f"{self.project_id} must declare evidence paths")
         if not self.source_truth_candidates:
@@ -55,10 +58,10 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
         evidence_paths=("PROJECT-CONTEXT.md", ".uiux-profile.json", "app.html"),
         source_truth_candidates=("PROJECT-CONTEXT.md", "PROJECT_CONTEXT.md"),
         default_task=(
-            "Improve the existing Nova product while preserving explicit PRODUCT scope and "
-            "grounding trust/data decisions in repository evidence."
+            "Improve trust and data clarity across the whole Nova fintech product while "
+            "preserving its existing product strategy and interaction model."
         ),
-        expected_change_surface="PRODUCT",
+        expected_change_boundary="PRODUCT",
         routing_intent="product-trust-data",
         evidence_model="trust-data-regulatory",
     ),
@@ -77,10 +80,10 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
         ),
         source_truth_candidates=("PROJECT-CONTEXT.md", "PROJECT_CONTEXT.md", "AGENTS.md"),
         default_task=(
-            "Refine Lumen's visual and art direction without reopening product strategy; "
-            "preserve the cultural-experience concept and keep the change surface PRODUCT."
+            "Refine Lumen's visual and art direction only without reopening product strategy; "
+            "preserve the cultural-experience concept."
         ),
-        expected_change_surface="PRODUCT",
+        expected_change_boundary="PRODUCT",
         routing_intent="visual-art-direction",
         evidence_model="composition-cultural-experience",
     ),
@@ -99,9 +102,9 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
         source_truth_candidates=("README.md", "BRIEF_COMPLIANCE.md"),
         default_task=(
             "Improve CENNEXT enterprise information architecture and workflow clarity while "
-            "preserving brief/compliance constraints and keeping the change surface PRODUCT."
+            "preserving brief and compliance constraints."
         ),
-        expected_change_surface="PRODUCT",
+        expected_change_boundary="PRODUCT",
         routing_intent="enterprise-ia-workflow",
         evidence_model="ia-workflow-compliance",
     ),
@@ -133,21 +136,22 @@ def compile_task_contract(
     profile: ProjectDogfoodProfile,
     *,
     task_description: str | None = None,
-    change_surface: str | None = None,
+    change_boundary: str | None = None,
 ) -> dict[str, Any]:
-    """Compile the canonical Task Contract while preserving explicit boundary authority.
+    """Compile one canonical task without overwriting adaptive UI scope.
 
-    GoalInterpreter remains the single inference compiler. The cross-project lane applies
-    the same explicit-override semantics as ManagedFlowController.interpret_goal so a
-    user's PRODUCT/FACTORY boundary cannot silently change because the domain changed.
+    GoalInterpreter owns `change_surface`. Dogfood orchestration owns the orthogonal
+    PRODUCT/FACTORY `change_boundary`. Neither is allowed to silently rewrite the other.
     """
 
     task = (task_description or profile.default_task).strip()
     context = GoalInterpreter().interpret(task).to_context()
-    explicit_surface = (change_surface or profile.expected_change_surface).strip().upper()
-    if explicit_surface not in CHANGE_SURFACES:
-        raise ValueError(f"unsupported explicit change surface: {explicit_surface}")
-    context["change_surface"] = explicit_surface
+    explicit_boundary = (change_boundary or profile.expected_change_boundary).strip().upper()
+    if explicit_boundary not in CHANGE_BOUNDARIES:
+        raise ValueError(f"unsupported explicit change boundary: {explicit_boundary}")
+    if str(context.get("change_surface", "")).upper() not in CHANGE_SURFACES:
+        raise ValueError(f"canonical interpreter returned invalid change_surface: {context.get('change_surface')!r}")
+    context["change_boundary"] = explicit_boundary
     context["dogfood_profile"] = {
         "project_id": profile.project_id,
         "archetype": profile.archetype,
@@ -180,27 +184,28 @@ def evaluate_cross_project_contract(
     *,
     available_paths: Iterable[str],
     task_description: str | None = None,
-    change_surface: str | None = None,
+    change_boundary: str | None = None,
 ) -> dict[str, Any]:
     available = _normalize_paths(available_paths)
     contract = compile_task_contract(
         profile,
         task_description=task_description,
-        change_surface=change_surface,
+        change_boundary=change_boundary,
     )
     source_truth = resolve_source_truth(profile, available)
     missing_evidence = [path for path in profile.evidence_paths if path not in available]
     leaks = nova_domain_leaks(profile)
+    expected_boundary = (change_boundary or profile.expected_change_boundary).strip().upper()
     checks = {
-        "explicit_change_surface_preserved": contract["change_surface"]
-        == (change_surface or profile.expected_change_surface).strip().upper(),
+        "explicit_change_boundary_preserved": contract["change_boundary"] == expected_boundary,
+        "adaptive_change_surface_valid": contract["change_surface"] in CHANGE_SURFACES,
         "source_truth_resolved": source_truth is not None,
         "profile_evidence_grounded": not missing_evidence,
         "no_nova_domain_leakage": not leaks,
     }
     return {
-        "schema_version": 1,
-        "phase": "A13-cross-project",
+        "schema_version": 2,
+        "phase": "A14-fix-once-validate-across-projects",
         "project": profile.project_id,
         "repo": profile.repo,
         "repo_ref": profile.repo_ref,
@@ -214,8 +219,8 @@ def evaluate_cross_project_contract(
         "checks": checks,
         "passed": all(checks.values()),
         "truth_boundary": (
-            "This lane verifies project-source isolation and canonical Task Contract boundary "
-            "propagation. It does not manufacture browser, provider-quality, aesthetic-human-review, "
+            "This lane verifies project-source isolation, execution-boundary propagation and canonical "
+            "adaptive UI scope. It does not manufacture browser, provider-quality, aesthetic-human-review, "
             "deploy, or release verdicts."
         ),
     }
