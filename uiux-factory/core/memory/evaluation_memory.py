@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -67,6 +68,16 @@ class EvaluationMemoryStore:
 
     def _lock(self) -> RunLock:
         self._prepare_memory_dir()
+        lock_parent = self.memory_dir / ".runtime"
+        if lock_parent.exists() and lock_parent.is_symlink():
+            raise EvaluationMemoryError("evaluation memory lock directory must not be a symlink")
+        lock_parent.mkdir(exist_ok=True)
+        if lock_parent.is_symlink():
+            raise EvaluationMemoryError("evaluation memory lock directory must not be a symlink")
+        try:
+            lock_parent.resolve().relative_to(self.memory_dir.resolve())
+        except ValueError as exc:
+            raise EvaluationMemoryError("evaluation memory lock directory escapes memory root") from exc
         return RunLock(
             self.memory_dir,
             timeout_seconds=self.lock_timeout_seconds,
@@ -109,11 +120,17 @@ class EvaluationMemoryStore:
             "schema_version": self.schema_version,
             "records": [record.to_dict() for record in records[-self.max_records :]],
         }
-        tmp = self.path.with_suffix(".tmp")
-        if tmp.exists() and tmp.is_symlink():
-            raise EvaluationMemoryError("evaluation memory temporary path must not be a symlink")
-        tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        os.replace(tmp, self.path)
+        encoded = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+        fd, temporary = tempfile.mkstemp(prefix=".evaluation-memory-", suffix=".tmp", dir=str(self.memory_dir))
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(encoded)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, self.path)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
 
     def record(self, evaluation: RunEvaluation) -> bool:
         if not self.enabled or not evaluation.memory_eligible:
