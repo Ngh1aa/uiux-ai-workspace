@@ -3,9 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from runtime.agent import ProviderNeutralAgentHarness, RunState
-from runtime.flow import DevelopmentManager, ReplanDecision, ResolvedFlow, ResolvedStage
-from runtime.task_context import AUTHORITY_LEVELS, GoalInterpreter
+from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
+from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
+from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
 
 
 @dataclass
@@ -57,18 +57,18 @@ class ManagedWebsiteRun:
         }
 
 
-class DevelopmentManagerAgent:
-    """Owns end-to-end website routing while specialist agents own execution stages.
+class ManagedFlowController:
+    """Compatibility-oriented lifecycle controller backed by the canonical FlowPlanner.
 
-    The manager does not absorb UI/UX knowledge. It interprets the user's goal,
-    resolves a declarative flow, activates specialist runs, records stage progress,
-    enforces configured human approval gates, and applies bounded replans when
-    explicit evidence signals a failure, new risk or invalid assumption.
+    This class owns managed-run checkpoint progression only. It is not a second
+    Development Manager and does not implement an independent interpreter or flow
+    decision system. Every routing decision delegates to the canonical Factory
+    GoalInterpreter + FlowPlanner.
     """
 
     def __init__(self, harness: ProviderNeutralAgentHarness) -> None:
         self.harness = harness
-        self.manager = DevelopmentManager(harness.repo_root, harness.policy_doc)
+        self.planner = FlowPlanner(harness.repo_root, harness.policy_doc)
         self.goal_interpreter = GoalInterpreter()
 
     def interpret_goal(
@@ -105,7 +105,7 @@ class DevelopmentManagerAgent:
         additional_skills: list[str] | None = None,
         exclude_skills: list[str] | None = None,
     ) -> ResolvedFlow:
-        return self.manager.plan(
+        return self.planner.plan(
             task_context,
             additional_skills=additional_skills,
             exclude_skills=exclude_skills,
@@ -244,9 +244,7 @@ class DevelopmentManagerAgent:
     def complete_stage(self, managed: ManagedWebsiteRun, stage_id: str | None = None) -> str | None:
         target = stage_id or managed.active_stage
         if target != managed.active_stage:
-            raise ValueError(
-                f"cannot complete stage {target}; active stage is {managed.active_stage}"
-            )
+            raise ValueError(f"cannot complete stage {target}; active stage is {managed.active_stage}")
         self._stage(managed, target)
         pending = self.required_human_approvals(managed, target)
         if pending:
@@ -261,9 +259,7 @@ class DevelopmentManagerAgent:
             raise ValueError(f"cannot complete stage {target}; no specialist run has been started")
         latest = self.harness.resume(runs[-1])
         if latest.state != "COMPLETED":
-            raise ValueError(
-                f"cannot complete stage {target}; latest specialist run is {latest.state}"
-            )
+            raise ValueError(f"cannot complete stage {target}; latest specialist run is {latest.state}")
         if target not in managed.completed_stages:
             managed.completed_stages.append(target)
 
@@ -292,15 +288,13 @@ class DevelopmentManagerAgent:
         stage_id = current_stage or managed.active_stage
         self._stage(managed, stage_id)
         if apply and stage_id != managed.active_stage:
-            raise ValueError(
-                f"cannot apply replan from stage {stage_id}; active stage is {managed.active_stage}"
-            )
+            raise ValueError(f"cannot apply replan from stage {stage_id}; active stage is {managed.active_stage}")
 
         context = dict(managed.task_context)
         context.update(context_updates or {})
         context["current_stage"] = stage_id
         effective_count = managed.replan_count if replan_count is None else replan_count
-        decision = self.manager.replan(
+        decision = self.planner.replan(
             managed.flow,
             signal=signal,
             context=context,
@@ -308,7 +302,7 @@ class DevelopmentManagerAgent:
         )
 
         if decision.accepted and apply:
-            managed.flow = self.manager.apply_replan(managed.flow, decision)
+            managed.flow = self.planner.apply_replan(managed.flow, decision)
             managed.replan_count += 1
             managed.replan_history.append(decision.to_dict())
             managed.state = "REPLANNED"
@@ -318,9 +312,7 @@ class DevelopmentManagerAgent:
             stage_ids = [stage.id for stage in managed.flow.stages]
             target_index = stage_ids.index(target)
             managed.completed_stages = [
-                item
-                for item in managed.completed_stages
-                if stage_ids.index(item) < target_index
+                item for item in managed.completed_stages if stage_ids.index(item) < target_index
             ]
             self._checkpoint_managed(managed)
 
