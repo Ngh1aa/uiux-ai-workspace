@@ -76,8 +76,8 @@ class ProviderManagedRunner:
 
     def _tools(self, authority: str) -> list[dict[str, Any]]:
         arg_contracts = {
-            "read_text": {"path": "project-relative UTF-8 file path"},
-            "list_files": {"path": "project-relative directory path; defaults to ."},
+            "read_text": {"path": "safe project-relative UTF-8 file path; secrets/symlinks/binary/oversize reads are refused"},
+            "list_files": {"path": "safe project-relative directory path; defaults to ."},
             "write_artifact": {"path": "must be below docs/uiux/", "content": "UTF-8 content"},
             "run_validator": {"name": "validate-skills | validate-v2 | validate-runtime | validate-flows"},
             "release_action": {"action": "release intent; contract-only unless an external release adapter exists"},
@@ -107,8 +107,13 @@ class ProviderManagedRunner:
     ) -> ProviderStageRequest:
         stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
         items = list(stage_state.context.get("items", []))
-        skills = load_context_documents(items, {"skill"})
-        sources = load_context_documents(items, {"source_of_truth", "project_config"})
+        allowed_roots = (self.project_root, self.harness.repo_root)
+        skills = load_context_documents(items, {"skill"}, allowed_roots=allowed_roots)
+        sources = load_context_documents(
+            items,
+            {"source_of_truth", "project_config"},
+            allowed_roots=allowed_roots,
+        )
         manager_state = self.harness.resume(managed.manager_run_id)
         return ProviderStageRequest(
             goal=manager_state.task,
