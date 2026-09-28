@@ -5,9 +5,10 @@ import os
 import tempfile
 from collections import Counter
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from core.evaluation.run_evaluator import RunEvaluation
+from core.memory.quality_pattern_normalizer import normalize_post_render_report
 from core.runtime.run_lock import RunLock, RunLockTimeout
 
 
@@ -16,13 +17,14 @@ class EvaluationMemoryError(RuntimeError):
 
 
 class EvaluationMemoryStore:
-    """Bounded project-scoped memory containing evidence-derived run outcomes only.
+    """Bounded project-scoped memory containing evidence-derived outcomes and patterns.
 
     This store is advisory. It never mutates flow selection, authority, gates or release
     state. Raw prompts, provider prose, observations, command output and secrets are not
-    accepted into the schema. Record updates are serialized with the repository's
-    cross-process RunLock primitive so concurrent managed runs cannot lose each other's
-    read-modify-write updates.
+    accepted into the schema. Post-render quality patterns pass through a strict
+    allowlist normalizer before persistence. Record updates are serialized with the
+    repository's cross-process RunLock primitive so concurrent managed runs cannot lose
+    each other's read-modify-write updates.
     """
 
     schema_version = 1
@@ -32,12 +34,15 @@ class EvaluationMemoryStore:
         config = dict(policy.get("evaluation_memory", {}))
         self.enabled = bool(config.get("enabled", True))
         self.max_records = int(config.get("max_records", 200))
+        self.max_patterns = int(config.get("max_patterns", self.max_records))
         self.max_recall_records = int(config.get("max_recall_records", 20))
         self.min_signature_matches = int(config.get("min_signature_matches", 1))
         self.lock_timeout_seconds = float(config.get("lock_timeout_seconds", 10.0))
         self.lock_stale_seconds = float(config.get("lock_stale_seconds", 60.0))
         if not 1 <= self.max_records <= 2000:
             raise ValueError("evaluation_memory.max_records must be between 1 and 2000")
+        if not 1 <= self.max_patterns <= 2000:
+            raise ValueError("evaluation_memory.max_patterns must be between 1 and 2000")
         if not 1 <= self.max_recall_records <= min(200, self.max_records):
             raise ValueError("evaluation_memory.max_recall_records must be between 1 and min(200, max_records)")
         if not 0 <= self.min_signature_matches <= 6:
@@ -85,12 +90,12 @@ class EvaluationMemoryStore:
             poll_seconds=0.05,
         )
 
-    def load(self) -> list[RunEvaluation]:
+    def _read_payload(self) -> dict[str, Any]:
         if not self.enabled:
-            return []
+            return {"schema_version": self.schema_version, "records": [], "quality_patterns": []}
         self._assert_safe_path()
         if not self.path.exists():
-            return []
+            return {"schema_version": self.schema_version, "records": [], "quality_patterns": []}
         try:
             payload = json.loads(self.path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
@@ -103,9 +108,17 @@ class EvaluationMemoryStore:
             raise EvaluationMemoryError("evaluation memory schema version is malformed") from exc
         if schema_version != self.schema_version:
             raise EvaluationMemoryError("evaluation memory schema version is unsupported")
-        raw_records = payload.get("records", [])
-        if not isinstance(raw_records, list):
+        if not isinstance(payload.get("records", []), list):
             raise EvaluationMemoryError("evaluation memory records must be a list")
+        if not isinstance(payload.get("quality_patterns", []), list):
+            raise EvaluationMemoryError("evaluation memory quality_patterns must be a list")
+        return payload
+
+    def load(self) -> list[RunEvaluation]:
+        if not self.enabled:
+            return []
+        payload = self._read_payload()
+        raw_records = payload.get("records", [])
         records: list[RunEvaluation] = []
         for raw in raw_records[-self.max_records :]:
             if not isinstance(raw, dict):
@@ -118,13 +131,50 @@ class EvaluationMemoryStore:
                 records.append(record)
         return records
 
-    def _write(self, records: list[RunEvaluation]) -> None:
+    def load_quality_patterns(self) -> list[dict[str, Any]]:
+        """Return only bounded, previously normalized advisory quality patterns."""
+        if not self.enabled:
+            return []
+        payload = self._read_payload()
+        patterns: list[dict[str, Any]] = []
+        allowed_keys = {
+            "source",
+            "evaluator",
+            "requirement_id",
+            "outcome",
+            "applicable",
+            "test_targets",
+            "advisory_only",
+            "authority_effect",
+            "gate_effect",
+            "fingerprint",
+            "occurrences",
+        }
+        for raw in payload.get("quality_patterns", [])[-self.max_patterns :]:
+            if not isinstance(raw, dict):
+                continue
+            fingerprint = raw.get("fingerprint")
+            if not isinstance(fingerprint, str) or len(fingerprint) != 64:
+                continue
+            item = {key: raw[key] for key in allowed_keys if key in raw}
+            item["advisory_only"] = True
+            item["authority_effect"] = "none"
+            item["gate_effect"] = "none"
+            try:
+                item["occurrences"] = max(1, min(int(item.get("occurrences", 1)), 1_000_000))
+            except (TypeError, ValueError, OverflowError):
+                item["occurrences"] = 1
+            patterns.append(item)
+        return patterns
+
+    def _write(self, records: list[RunEvaluation], quality_patterns: list[dict[str, Any]]) -> None:
         if not self.enabled:
             return
         self._prepare_memory_dir()
         payload = {
             "schema_version": self.schema_version,
             "records": [record.to_dict() for record in records[-self.max_records :]],
+            "quality_patterns": quality_patterns[-self.max_patterns :],
         }
         encoded = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         fd, temporary = tempfile.mkstemp(prefix=".evaluation-memory-", suffix=".tmp", dir=str(self.memory_dir))
@@ -145,12 +195,48 @@ class EvaluationMemoryStore:
             with self._lock():
                 records = [item for item in self.load() if item.run_id != evaluation.run_id]
                 records.append(evaluation)
-                self._write(records)
+                self._write(records, self.load_quality_patterns())
         except RunLockTimeout as exc:
             raise EvaluationMemoryError("timed out waiting for evaluation memory transaction lock") from exc
         except OSError as exc:
             raise EvaluationMemoryError(f"evaluation memory transaction failed: {exc}") from exc
         return True
+
+    def record_post_render_report(self, report: Mapping[str, Any] | Any) -> int:
+        """Learn normalized post-render patterns without granting them gate authority."""
+        if not self.enabled:
+            return 0
+        incoming = normalize_post_render_report(report)
+        if not incoming:
+            return 0
+        try:
+            with self._lock():
+                existing = self.load_quality_patterns()
+                by_fingerprint = {item["fingerprint"]: dict(item) for item in existing}
+                order = [item["fingerprint"] for item in existing]
+                for pattern in incoming:
+                    fingerprint = pattern["fingerprint"]
+                    if fingerprint in by_fingerprint:
+                        merged = dict(pattern)
+                        merged["occurrences"] = min(
+                            1_000_000,
+                            int(by_fingerprint[fingerprint].get("occurrences", 1)) + 1,
+                        )
+                        by_fingerprint[fingerprint] = merged
+                        order.remove(fingerprint)
+                        order.append(fingerprint)
+                    else:
+                        item = dict(pattern)
+                        item["occurrences"] = 1
+                        by_fingerprint[fingerprint] = item
+                        order.append(fingerprint)
+                patterns = [by_fingerprint[fingerprint] for fingerprint in order[-self.max_patterns :]]
+                self._write(self.load(), patterns)
+        except RunLockTimeout as exc:
+            raise EvaluationMemoryError("timed out waiting for evaluation memory transaction lock") from exc
+        except OSError as exc:
+            raise EvaluationMemoryError(f"evaluation memory transaction failed: {exc}") from exc
+        return len(incoming)
 
     @staticmethod
     def _signature_matches(a: dict[str, str], b: dict[str, str]) -> int:
