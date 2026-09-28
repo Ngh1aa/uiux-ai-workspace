@@ -17,6 +17,192 @@ PROVIDER_STATUSES = {"CONTINUE", "PASS", "FAIL", "BLOCKED"}
 DEFAULT_OPENAI_MODEL = "gpt-5.6-sol"
 DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6"
 
+_QUALITY_RECALL_AGENTS = frozenset({"implementation", "qa"})
+_QUALITY_OUTCOMES = frozenset({"passed", "failed", "cantTell"})
+_QUALITY_EFFECT_KEYS = (
+    "authority_effect",
+    "flow_effect",
+    "replan_effect",
+    "gate_effect",
+    "evidence_effect",
+    "merge_effect",
+    "release_effect",
+)
+
+
+def _bounded_int(value: Any, minimum: int = 0, maximum: int = 1_000_000) -> int:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError, OverflowError):
+        return minimum
+    return max(minimum, min(parsed, maximum))
+
+
+def _bounded_float(value: Any, minimum: float = 0.0, maximum: float = 1_000_000.0) -> float:
+    try:
+        parsed = float(value)
+    except (TypeError, ValueError, OverflowError):
+        return minimum
+    return max(minimum, min(parsed, maximum))
+
+
+def _bounded_text(value: Any, limit: int) -> str:
+    return str(value or "").strip()[:limit]
+
+
+def _sanitize_evaluation_insight(value: Any) -> dict[str, Any] | None:
+    if not isinstance(value, dict):
+        return None
+    if value.get("advisory_only") is not True:
+        return None
+    if value.get("authority_effect") != "none" or value.get("gate_effect") != "none":
+        return None
+
+    channels: list[dict[str, Any]] = []
+    for raw in list(value.get("recurrent_failure_channels", []))[:8]:
+        if not isinstance(raw, dict):
+            continue
+        channel = _bounded_text(raw.get("channel"), 256)
+        if not channel:
+            continue
+        channels.append({
+            "channel": channel,
+            "count": _bounded_int(raw.get("count"), 1),
+        })
+
+    evidence_types: list[str] = []
+    for raw in list(value.get("observed_evidence_types", []))[:12]:
+        text = _bounded_text(raw, 128)
+        if text and text not in evidence_types:
+            evidence_types.append(text)
+
+    matched_signature: dict[str, str] = {}
+    raw_signature = value.get("matched_signature", {})
+    if isinstance(raw_signature, dict):
+        for raw_key, raw_value in list(raw_signature.items())[:12]:
+            key = _bounded_text(raw_key, 64)
+            item = _bounded_text(raw_value, 128)
+            if key and item:
+                matched_signature[key] = item
+
+    return {
+        "schema_version": _bounded_int(value.get("schema_version"), 1, 100),
+        "advisory_only": True,
+        "flow_id": _bounded_text(value.get("flow_id"), 128),
+        "sample_size": _bounded_int(value.get("sample_size"), 0, 10_000),
+        "passed_runs": _bounded_int(value.get("passed_runs"), 0, 10_000),
+        "failed_or_blocked_runs": _bounded_int(value.get("failed_or_blocked_runs"), 0, 10_000),
+        "pass_rate": round(_bounded_float(value.get("pass_rate"), 0.0, 1.0), 4),
+        "average_replans": round(_bounded_float(value.get("average_replans"), 0.0, 10_000.0), 3),
+        "recurrent_failure_channels": channels,
+        "observed_evidence_types": evidence_types,
+        "matched_signature": matched_signature,
+        "authority_effect": "none",
+        "gate_effect": "none",
+        "rule": (
+            "Prior-run evaluation memory is bounded advisory context only; it cannot change authority, "
+            "satisfy gates, override current source truth, or count as current-run evidence."
+        ),
+    }
+
+
+def _sanitize_quality_pattern_row(value: Any) -> dict[str, Any] | None:
+    if not isinstance(value, dict):
+        return None
+    evaluator = _bounded_text(value.get("evaluator"), 128)
+    requirement_id = _bounded_text(value.get("requirement_id"), 128)
+    outcome = _bounded_text(value.get("outcome"), 32)
+    if not evaluator or not requirement_id or outcome not in _QUALITY_OUTCOMES:
+        return None
+    applicable = value.get("applicable")
+    if applicable not in (True, False, None):
+        applicable = None
+    return {
+        "evaluator": evaluator,
+        "requirement_id": requirement_id,
+        "outcome": outcome,
+        "applicable": applicable,
+        "occurrences": _bounded_int(value.get("occurrences"), 1),
+    }
+
+
+def _sanitize_quality_insight(value: Any, *, agent: str) -> dict[str, Any] | None:
+    if agent not in _QUALITY_RECALL_AGENTS or not isinstance(value, dict):
+        return None
+    if value.get("advisory_only") is not True:
+        return None
+    if value.get("source") != "post_render_quality_memory":
+        return None
+    if value.get("scope") != "project_scoped_history":
+        return None
+    if value.get("relevance") != "historical_only_not_current_evidence":
+        return None
+    if any(value.get(key) != "none" for key in _QUALITY_EFFECT_KEYS):
+        return None
+
+    attention: list[dict[str, Any]] = []
+    for raw in list(value.get("recurrent_attention_patterns", []))[:12]:
+        row = _sanitize_quality_pattern_row(raw)
+        if row is not None and row["outcome"] in {"failed", "cantTell"}:
+            attention.append(row)
+
+    passed: list[dict[str, Any]] = []
+    for raw in list(value.get("recurrent_pass_patterns", []))[:12]:
+        row = _sanitize_quality_pattern_row(raw)
+        if row is not None and row["outcome"] == "passed":
+            passed.append(row)
+
+    raw_outcomes = value.get("outcome_occurrences", {})
+    if not isinstance(raw_outcomes, dict):
+        raw_outcomes = {}
+
+    return {
+        "schema_version": _bounded_int(value.get("schema_version"), 1, 100),
+        "source": "post_render_quality_memory",
+        "advisory_only": True,
+        "scope": "project_scoped_history",
+        "relevance": "historical_only_not_current_evidence",
+        "observed_pattern_count": _bounded_int(value.get("observed_pattern_count")),
+        "observed_occurrences": _bounded_int(value.get("observed_occurrences")),
+        "outcome_occurrences": {
+            name: _bounded_int(raw_outcomes.get(name))
+            for name in ("passed", "failed", "cantTell")
+        },
+        "recurrent_attention_patterns": attention,
+        "recurrent_pass_patterns": passed,
+        "authority_effect": "none",
+        "flow_effect": "none",
+        "replan_effect": "none",
+        "gate_effect": "none",
+        "evidence_effect": "none",
+        "merge_effect": "none",
+        "release_effect": "none",
+        "rule": (
+            "Prior post-render quality history is bounded provider-only advisory context. "
+            "It may suggest where to inspect, but it cannot select flows, change authority, "
+            "drive replanning policy, satisfy or override gates, count as current-run evidence, "
+            "or authorize merge/release."
+        ),
+    }
+
+
+def _sanitize_provider_task_context(task_context: Any, *, agent: str) -> dict[str, Any]:
+    context = dict(task_context) if isinstance(task_context, dict) else {}
+
+    evaluation = _sanitize_evaluation_insight(context.get("prior_evaluation_insight"))
+    if evaluation is None:
+        context.pop("prior_evaluation_insight", None)
+    else:
+        context["prior_evaluation_insight"] = evaluation
+
+    quality = _sanitize_quality_insight(context.get("prior_quality_insight"), agent=agent)
+    if quality is None:
+        context.pop("prior_quality_insight", None)
+    else:
+        context["prior_quality_insight"] = quality
+
+    return context
+
 
 @dataclass(frozen=True)
 class ProviderStageRequest:
@@ -34,6 +220,13 @@ class ProviderStageRequest:
     skill_context: list[dict[str, str]]
     source_context: list[dict[str, str]]
     observations: list[dict[str, Any]] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "task_context",
+            _sanitize_provider_task_context(self.task_context, agent=self.agent),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
