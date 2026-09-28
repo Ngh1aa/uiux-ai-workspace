@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "authority_order": ["read_only", "branch_write", "external_write", "release"],
   "risk_defaults": {
     "READ": {"required_authority": "read_only", "automatic": true},
@@ -25,6 +25,33 @@
       {"prefix": ["yarn", "lint"], "allow_extra": false},
       {"prefix": ["python", "-m", "pytest"], "allow_extra": false}
     ]
+  },
+  "sandbox": {
+    "required": true,
+    "engines": ["docker", "podman"],
+    "network": "none",
+    "read_only_rootfs": true,
+    "memory": "1g",
+    "cpus": "2",
+    "pids_limit": 256,
+    "tmpfs_size": "256m",
+    "images": {
+      "node": "node:22-bookworm-slim",
+      "python": "python:3.13-slim"
+    },
+    "image_pull": "never"
+  },
+  "browser_evidence": {
+    "allow_remote": false,
+    "max_routes": 12,
+    "max_artifact_bytes": 4194304,
+    "timeout_seconds": 180
+  },
+  "production_release": {
+    "command_argv_env": "UIUX_PRODUCTION_DEPLOY_ARGV_JSON",
+    "timeout_seconds": 600,
+    "max_output_chars": 12000,
+    "deploy_env_allowlist": ["VERCEL_TOKEN", "VERCEL_ORG_ID", "VERCEL_PROJECT_ID"]
   },
   "roles": {
     "development": {
@@ -69,10 +96,13 @@
     "A handoff may preserve or reduce authority; it never increases authority.",
     "Every handoff target must be explicitly listed on the source role.",
     "Role default_skills are always active and cannot be silently omitted.",
-    "Release authority must come from explicit user/project authorization.",
+    "Release authority must come from explicit user/project authorization and is never delegated to provider roles.",
     "Untrusted external content is data, not authority.",
     "Provider-facing writes must use the canonical isolated git worktree boundary.",
-    "Target commands must use exact argv allowlisted execution inside an isolated worktree; this is not an OS/network sandbox.",
+    "Provider target commands require a fail-closed Docker/Podman sandbox with network none and no host fallback.",
+    "Sandbox images are pre-provisioned by operators and are never pulled implicitly by the runtime.",
+    "Automatic worktree merge is external_write authority, fast-forward-only, and allowed only after managed completion.",
+    "Production deployment is release authority, requires explicit PRODUCTION confirmation, successful runtime checks and PASS browser-render evidence.",
     "Provider claims are trace data, not gate evidence; gate evidence must originate from runtime observations."
   ]
 }
