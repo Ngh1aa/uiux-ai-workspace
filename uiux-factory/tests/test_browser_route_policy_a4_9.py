@@ -33,7 +33,13 @@ def test_a4_9_routes_must_stay_same_origin_relative(tmp_path: Path) -> None:
             adapter._validate_routes([unsafe])
 
 
-def _write_artifact(artifacts: Path, *, url: str, blocked_requests: list[str]) -> None:
+def _write_artifact(
+    artifacts: Path,
+    *,
+    url: str,
+    blocked_requests: list[str],
+    sanitized_remote_stylesheets: list[dict[str, str]] | None = None,
+) -> None:
     screenshot = artifacts / "home-render.png"
     screenshot.write_bytes(b"\x89PNG\r\n\x1a\nfixture-png-bytes")
     payload = {
@@ -47,6 +53,8 @@ def _write_artifact(artifacts: Path, *, url: str, blocked_requests: list[str]) -
         "consoleMessages": [],
         "pageErrors": [],
         "blockedRequests": blocked_requests,
+        "failedRequests": [],
+        "sanitizedRemoteStylesheets": list(sanitized_remote_stylesheets or []),
     }
     (artifacts / "browser-evidence-home.json").write_text(json.dumps(payload), encoding="utf-8")
 
@@ -74,3 +82,48 @@ def test_a4_9_ingested_cross_origin_network_evidence_is_failed(tmp_path: Path) -
     redirected = adapter.collect(artifacts)
     assert redirected[0].status == "FAIL"
     assert redirected[0].data["remote_final_url"] is True
+
+
+def test_a14_sanitized_remote_stylesheet_is_observable_but_not_a_remote_network_pass(tmp_path: Path) -> None:
+    qa = tmp_path / "qa"
+    artifacts = qa / "artifacts"
+    artifacts.mkdir(parents=True)
+    adapter = PlaywrightBrowserEvidenceAdapter(qa, _policy())
+
+    sanitized = [
+        {
+            "url": "https://fonts.example.test/css?family=Example",
+            "resourceType": "stylesheet",
+        }
+    ]
+    _write_artifact(
+        artifacts,
+        url="http://127.0.0.1:4173/",
+        blocked_requests=[],
+        sanitized_remote_stylesheets=sanitized,
+    )
+
+    records = adapter.collect(artifacts)
+    assert records[0].status == "PASS"
+    assert records[0].data["sanitized_remote_stylesheets"] == sanitized
+    assert records[0].data["render_limitations"] == ["cross_origin_stylesheets_sanitized"]
+    assert records[0].data["blocked_requests"] == []
+
+
+def test_a14_active_cross_origin_resource_remains_fatal_even_with_sanitized_styles(tmp_path: Path) -> None:
+    qa = tmp_path / "qa"
+    artifacts = qa / "artifacts"
+    artifacts.mkdir(parents=True)
+    adapter = PlaywrightBrowserEvidenceAdapter(qa, _policy())
+
+    _write_artifact(
+        artifacts,
+        url="http://127.0.0.1:4173/",
+        blocked_requests=["https://example.com/app.js"],
+        sanitized_remote_stylesheets=[
+            {"url": "https://example.com/font.css", "resourceType": "stylesheet"}
+        ],
+    )
+    records = adapter.collect(artifacts)
+    assert records[0].status == "FAIL"
+    assert records[0].data["blocked_requests"] == ["https://example.com/app.js"]
