@@ -1,0 +1,130 @@
+name: A20 UIUX Factory v1 Release Candidate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/a20-release-candidate.yml"
+      - "uiux-factory/**"
+      - "skills_UIUX/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/a20-release-candidate.yml"
+      - "uiux-factory/**"
+      - "skills_UIUX/**"
+
+permissions:
+  contents: read
+
+jobs:
+  release-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NOVA_SHA: e206f51f2fda006adcf52497d8b827e048e157ec
+      LUMEN_SHA: 219f3e49f9956290ef69a2e49cb91fefddd5f561
+      CENNEXT_SHA: 273403accf8979608fbb16dbe2741cedb0430fb6
+      NOVA_ROOT: ${{ github.workspace }}/.dogfood/Nova
+      LUMEN_ROOT: ${{ github.workspace }}/.dogfood/Lumen
+      CENNEXT_ROOT: ${{ github.workspace }}/.dogfood/CENNEXT
+      REPORT_ROOT: ${{ github.workspace }}/a20-artifacts
+
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Checkout pinned Nova
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Nova
+          ref: e206f51f2fda006adcf52497d8b827e048e157ec
+          path: .dogfood/Nova
+
+      - name: Checkout pinned Lumen
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Lumen
+          ref: 219f3e49f9956290ef69a2e49cb91fefddd5f561
+          path: .dogfood/Lumen
+
+      - name: Checkout pinned CENNEXT
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/cennext-b2b-prototype
+          ref: 273403accf8979608fbb16dbe2741cedb0430fb6
+          path: .dogfood/CENNEXT
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install Factory test dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "pydantic>=2.5.3,<3" "python-dotenv>=1,<2" -r requirements-dev.txt
+
+      - name: Compile active v1 Python surfaces
+        working-directory: uiux-factory
+        run: |
+          python -m compileall -q core scripts run.py creator.py
+          python -m compileall -q ../skills_UIUX/runtime
+
+      - name: Validate declarative runtime contracts
+        working-directory: uiux-factory
+        run: |
+          python ../skills_UIUX/scripts/validate-flows.py
+          python ../skills_UIUX/scripts/validate-runtime-foundation.py
+          python scripts/validate_benchmark_corpus.py --manifest "$REPORT_ROOT/benchmark-v2.json"
+
+      - name: Run full Factory regression suite
+        working-directory: uiux-factory
+        run: python -m pytest -q tests
+
+      - name: Run A20 structural and security audit
+        working-directory: uiux-factory
+        run: python scripts/a20_release_audit.py --report "$REPORT_ROOT/release-audit.json"
+
+      - name: Dogfood pinned Nova with generic runner
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id nova \
+            --project-root "$NOVA_ROOT" \
+            --expected-target-sha "$NOVA_SHA" \
+            --report "$REPORT_ROOT/nova-generic.json"
+
+      - name: Dogfood pinned Lumen with generic runner
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id lumen \
+            --project-root "$LUMEN_ROOT" \
+            --expected-target-sha "$LUMEN_SHA" \
+            --report "$REPORT_ROOT/lumen-generic.json"
+
+      - name: Dogfood pinned CENNEXT with generic runner
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id cennext \
+            --project-root "$CENNEXT_ROOT" \
+            --expected-target-sha "$CENNEXT_SHA" \
+            --report "$REPORT_ROOT/cennext-generic.json"
+
+      - name: Upload A20 release evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: a20-release-candidate-${{ github.run_id }}
+          if-no-files-found: warn
+          path: a20-artifacts/*.json
