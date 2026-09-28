@@ -32,7 +32,7 @@ CENNEXT_PATHS = {
 }
 
 
-def test_a13_lumen_visual_art_direction_is_product_scoped_without_nova_leakage() -> None:
+def test_a13_lumen_visual_art_direction_stays_product_boundary_without_nova_leakage() -> None:
     profile = project_profile("lumen")
     report = evaluate_cross_project_contract(
         profile,
@@ -41,11 +41,12 @@ def test_a13_lumen_visual_art_direction_is_product_scoped_without_nova_leakage()
             "Refine the visual and art direction only. Preserve the cultural experience and "
             "do not reopen product strategy."
         ),
-        change_surface="PRODUCT",
+        change_boundary="PRODUCT",
     )
 
     assert report["passed"] is True
-    assert report["contract"]["change_surface"] == "PRODUCT"
+    assert report["contract"]["change_boundary"] == "PRODUCT"
+    assert report["contract"]["change_surface"] == "FOCUSED"
     assert report["routing_intent"] == "visual-art-direction"
     assert report["evidence_model"] == "composition-cultural-experience"
     assert report["source_truth"] == "PROJECT-CONTEXT.md"
@@ -53,7 +54,7 @@ def test_a13_lumen_visual_art_direction_is_product_scoped_without_nova_leakage()
     assert report["nova_domain_leaks"] == []
 
 
-def test_a13_cennext_enterprise_ia_is_product_scoped_without_fintech_assumptions() -> None:
+def test_a13_cennext_enterprise_ia_stays_product_boundary_without_fintech_assumptions() -> None:
     profile = project_profile("cennext")
     report = evaluate_cross_project_contract(
         profile,
@@ -62,11 +63,12 @@ def test_a13_cennext_enterprise_ia_is_product_scoped_without_fintech_assumptions
             "Improve enterprise information architecture and workflow clarity while preserving "
             "brief and compliance constraints."
         ),
-        change_surface="PRODUCT",
+        change_boundary="PRODUCT",
     )
 
     assert report["passed"] is True
-    assert report["contract"]["change_surface"] == "PRODUCT"
+    assert report["contract"]["change_boundary"] == "PRODUCT"
+    assert report["contract"]["change_surface"] == "FOCUSED"
     assert report["routing_intent"] == "enterprise-ia-workflow"
     assert report["evidence_model"] == "ia-workflow-compliance"
     assert report["source_truth"] == "README.md"
@@ -74,14 +76,15 @@ def test_a13_cennext_enterprise_ia_is_product_scoped_without_fintech_assumptions
     assert report["nova_domain_leaks"] == []
 
 
-def test_a13_change_surface_is_domain_invariant_across_nova_lumen_and_cennext() -> None:
+def test_a13_execution_boundary_is_domain_invariant_without_overwriting_ui_surface() -> None:
     for project_id in ("nova", "lumen", "cennext"):
         profile = project_profile(project_id)
-        product = compile_task_contract(profile, change_surface="PRODUCT")
-        factory = compile_task_contract(profile, change_surface="FACTORY")
+        product = compile_task_contract(profile, change_boundary="PRODUCT")
+        factory = compile_task_contract(profile, change_boundary="FACTORY")
 
-        assert product["change_surface"] == "PRODUCT"
-        assert factory["change_surface"] == "FACTORY"
+        assert product["change_boundary"] == "PRODUCT"
+        assert factory["change_boundary"] == "FACTORY"
+        assert product["change_surface"] == factory["change_surface"]
         assert product["dogfood_profile"]["project_id"] == project_id
         assert factory["dogfood_profile"]["project_id"] == project_id
 
@@ -100,14 +103,14 @@ def test_a13_cross_project_profiles_do_not_share_one_generic_evidence_model() ->
     assert len({profile.archetype for profile in profiles}) == 3
     assert len({profile.routing_intent for profile in profiles}) == 3
     assert len({profile.evidence_model for profile in profiles}) == 3
-    assert all(profile.expected_change_surface == "PRODUCT" for profile in profiles)
+    assert all(profile.expected_change_boundary == "PRODUCT" for profile in profiles)
 
 
 def test_a13_missing_project_specific_evidence_fails_closed() -> None:
     report = evaluate_cross_project_contract(
         project_profile("cennext"),
         available_paths={"README.md", "index.html"},
-        change_surface="PRODUCT",
+        change_boundary="PRODUCT",
     )
 
     assert report["passed"] is False
