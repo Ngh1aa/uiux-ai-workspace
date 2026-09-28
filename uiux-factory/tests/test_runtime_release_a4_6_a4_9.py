@@ -115,7 +115,8 @@ def test_a4_7_finalize_fast_forwards_source_and_cleans_worktree(tmp_path: Path) 
     assert result.commit
     assert (source / "app.txt").read_text(encoding="utf-8") == "changed\n"
     assert not workspace.exists()
-    assert _git(source, "show-ref", "--verify", "--quiet", f"refs/heads/{metadata.branch}") == ""
+    branches = _git(source, "branch", "--format=%(refname:short)").splitlines()
+    assert metadata.branch not in branches
 
 
 def test_a4_7_finalize_refuses_source_head_drift(tmp_path: Path) -> None:
