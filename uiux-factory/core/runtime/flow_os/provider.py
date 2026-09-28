@@ -10,7 +10,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
-from runtime.flow import REPLAN_SIGNALS
+from core.runtime.flow_os.flow import REPLAN_SIGNALS
 
 PROVIDER_STATUSES = {"CONTINUE", "PASS", "FAIL", "BLOCKED"}
 DEFAULT_OPENAI_MODEL = "gpt-5.6-sol"
@@ -133,7 +133,7 @@ def provider_response_schema() -> dict[str, Any]:
 def _system_prompt() -> str:
     return (
         "You are a specialist execution agent inside skills_UIUX Flow Agent OS. "
-        "The Development Manager and declarative Flow own orchestration, stage order, skill routing, approvals and replanning. "
+        "The canonical Factory runtime and declarative Flow own orchestration, stage order, skill routing, approvals and replanning. "
         "You must never invent a handoff or bypass gates. Use only the provided tools. "
         "Work iteratively: inspect project evidence with tools, make the smallest justified changes, verify them, then return PASS only with concrete evidence. "
         "A model claim is not evidence. If evidence is insufficient, use CONTINUE with tool actions. "
