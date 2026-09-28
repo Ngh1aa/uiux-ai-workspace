@@ -8,14 +8,16 @@ The single executable owner is:
 uiux-factory/core/runtime/flow_os/
 ```
 
-See `uiux-factory/core/runtime/flow_os/README.md` for the A4 ownership contract.
+See `uiux-factory/core/runtime/flow_os/README.md` for the canonical A4 runtime ownership contract.
 
 ## What remains authoritative here
 
-- `runtime-policy.json` — role, authority and permission policy consumed by Factory;
+- `runtime-policy.json` — roles, authorities, sandbox/release policy consumed by Factory;
 - `TASK-CONTRACT.md` — Task Contract semantics;
 - `ADAPTIVE-FLOW.md` — adaptive change-surface semantics;
-- `SAFE-READ.md` — A4.1 model/provider-facing filesystem read contract;
+- `SAFE-READ.md` — A4.1 read contract;
+- `A4-2-A4-5-RUNTIME-HARDENING.md` — worktree, target runner, typed evidence and file tools;
+- `A4-6-A4-9-SANDBOX-RELEASE.md` — container/network sandbox, finalize/merge, production release and browser evidence;
 - `TOOL-OBSERVATION-CONTRACT.md` — tool/observation contract;
 - `../flows/*.json` — declarative flow definitions;
 - `../policies/*.json` — delivery policies;
@@ -59,30 +61,18 @@ user goal
 → canonical FlowPlanner
 → declarative skills_UIUX flow + policy inputs
 → Factory execution adapter or ManagedFlowController
-→ Safe Read for model/provider-facing project + skill text
-→ specialist/provider/tool loop
-→ evidence + gates
-→ advance or bounded replan
+→ Safe Read + isolated worktree
+→ provider/tool loop
+→ container-sandboxed target execution
+→ typed evidence + gates
+→ browser-rendered evidence
+→ explicit external_write finalize/merge
+→ explicit release-authority production deploy
 ```
 
-Provider code never owns stage order or handoff. Managed lifecycle state, provider loops, permission/checkpoint harness code, Safe Read enforcement and the optional MCP adapter are all implemented in the canonical Factory runtime.
-
-## A4.1 Safe Read
-
-Safe Read is active for:
-
-- `read_text`;
-- safe project directory listing;
-- project/source context manifest reads;
-- provider skill/source context loading.
-
-It rejects traversal/root escape, symlinks, credential-bearing paths, `.git`, `.uiux-agent-runs`, `node_modules`, oversized files, binary/NUL content, invalid UTF-8 and obvious private-key material. Provider context revalidates stored paths against roots supplied by the active harness instead of trusting checkpoint metadata.
-
-See [`SAFE-READ.md`](SAFE-READ.md) for the complete contract and scope boundary.
+Provider code never owns stage order, handoff, merge or production release authority.
 
 ## Public managed CLI
-
-The compatibility command remains stable:
 
 ```bash
 python -B skills_UIUX/scripts/uiux-agent.py \
@@ -94,27 +84,7 @@ python -B skills_UIUX/scripts/uiux-agent.py \
 
 The script imports `core.runtime.flow_os.*` directly; it does not execute a second runtime in `skills_UIUX`.
 
-Provider examples remain supported:
-
-```bash
-export OPENAI_API_KEY="your-key"
-python -B skills_UIUX/scripts/uiux-agent.py \
-  --project ../my-site \
-  --managed \
-  --task "Build a modern ecommerce store" \
-  --provider openai \
-  --authority branch_write
-```
-
-```bash
-export ANTHROPIC_API_KEY="your-key"
-python -B skills_UIUX/scripts/uiux-agent.py \
-  --project ../my-site \
-  --managed \
-  --task "Build a modern ecommerce store" \
-  --provider anthropic \
-  --authority branch_write
-```
+Release/finalize examples are documented in `A4-6-A4-9-SANDBOX-RELEASE.md`.
 
 ## Validation
 
@@ -132,4 +102,4 @@ From `uiux-factory/`:
 python -m pytest -q tests
 ```
 
-A4.1 is the read-safety hardening milestone. Worktree isolation, target-runner isolation, typed evidence/gates and expanded file tools remain A4.2–A4.5 follow-up work.
+A4.1 through A4.9 now form the canonical runtime hardening stack: safe read, isolated writes, bounded tools, trusted evidence, container/network sandboxing, controlled worktree finalization, browser-rendered proof and human-owned production release.
