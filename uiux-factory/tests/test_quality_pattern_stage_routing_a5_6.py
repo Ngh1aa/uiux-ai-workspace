@@ -50,17 +50,21 @@ def _manager(tmp_path: Path) -> tuple[ManagedFlowController, object]:
     return manager, harness
 
 
-def test_a5_6_research_stage_never_receives_quality_memory(tmp_path: Path) -> None:
-    manager, harness = _manager(tmp_path)
-    managed = manager.start_from_goal(
+def _start_redesign(manager: ManagedFlowController):
+    return manager.start_from_goal(
         "Redesign the full SaaS marketing website",
         authority="branch_write",
         overrides={
             "mode": "visual-prototype",
             "website_type": "saas",
-            "change_surface": "MULTI_PAGE",
+            "change_surface": "REDESIGN",
         },
     )
+
+
+def test_a5_6_research_stage_never_receives_quality_memory(tmp_path: Path) -> None:
+    manager, harness = _manager(tmp_path)
+    managed = _start_redesign(manager)
 
     assert managed.active_stage == "research"
     assert "prior_quality_insight" not in managed.task_context
@@ -75,15 +79,7 @@ def test_a5_6_research_stage_never_receives_quality_memory(tmp_path: Path) -> No
 
 def test_a5_6_quality_memory_is_injected_when_implementation_stage_starts(tmp_path: Path) -> None:
     manager, harness = _manager(tmp_path)
-    managed = manager.start_from_goal(
-        "Redesign the full SaaS marketing website",
-        authority="branch_write",
-        overrides={
-            "mode": "visual-prototype",
-            "website_type": "saas",
-            "change_surface": "MULTI_PAGE",
-        },
-    )
+    managed = _start_redesign(manager)
 
     research = manager.start_stage(managed)
     research.state = "COMPLETED"
@@ -102,21 +98,13 @@ def test_a5_6_quality_memory_is_injected_when_implementation_stage_starts(tmp_pa
 
 def test_a5_6_routing_removes_quality_memory_if_run_returns_to_research(tmp_path: Path) -> None:
     manager, harness = _manager(tmp_path)
-    managed = manager.start_from_goal(
-        "Redesign the full SaaS marketing website",
-        authority="branch_write",
-        overrides={
-            "mode": "visual-prototype",
-            "website_type": "saas",
-            "change_surface": "MULTI_PAGE",
-        },
-    )
+    managed = _start_redesign(manager)
 
     research = manager.start_stage(managed)
     research.state = "COMPLETED"
     harness.checkpoints.save(research.run_id, research.to_dict())
     manager.complete_stage(managed)
-    design = manager.start_stage(managed)
+    manager.start_stage(managed)
     assert "prior_quality_insight" in managed.task_context
 
     managed.active_stage = "research"
@@ -129,7 +117,7 @@ def test_a5_6_routing_removes_quality_memory_if_run_returns_to_research(tmp_path
 
 
 def test_a5_6_quality_routing_does_not_change_authority_or_gate_contract(tmp_path: Path) -> None:
-    manager, harness = _manager(tmp_path)
+    manager, _harness = _manager(tmp_path)
     managed = manager.start_from_goal(
         "Fix button spacing on the current website",
         authority="branch_write",
