@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from core.evaluation.run_evaluator import RunEvaluation
+from core.runtime.run_lock import RunLock, RunLockTimeout
 
 
 class EvaluationMemoryError(RuntimeError):
@@ -18,7 +19,9 @@ class EvaluationMemoryStore:
 
     This store is advisory. It never mutates flow selection, authority, gates or release
     state. Raw prompts, provider prose, observations, command output and secrets are not
-    accepted into the schema.
+    accepted into the schema. Record updates are serialized with the repository's
+    cross-process RunLock primitive so concurrent managed runs cannot lose each other's
+    read-modify-write updates.
     """
 
     schema_version = 1
@@ -30,12 +33,18 @@ class EvaluationMemoryStore:
         self.max_records = int(config.get("max_records", 200))
         self.max_recall_records = int(config.get("max_recall_records", 20))
         self.min_signature_matches = int(config.get("min_signature_matches", 1))
+        self.lock_timeout_seconds = float(config.get("lock_timeout_seconds", 10.0))
+        self.lock_stale_seconds = float(config.get("lock_stale_seconds", 60.0))
         if not 1 <= self.max_records <= 2000:
             raise ValueError("evaluation_memory.max_records must be between 1 and 2000")
         if not 1 <= self.max_recall_records <= min(200, self.max_records):
             raise ValueError("evaluation_memory.max_recall_records must be between 1 and min(200, max_records)")
         if not 0 <= self.min_signature_matches <= 6:
             raise ValueError("evaluation_memory.min_signature_matches must be between 0 and 6")
+        if not 0.1 <= self.lock_timeout_seconds <= 120:
+            raise ValueError("evaluation_memory.lock_timeout_seconds must be between 0.1 and 120")
+        if not 1 <= self.lock_stale_seconds <= 3600:
+            raise ValueError("evaluation_memory.lock_stale_seconds must be between 1 and 3600")
         self.memory_dir = self.project_root / ".uiux-agent-runs" / "memory"
         self.path = self.memory_dir / "evaluation-memory.json"
 
@@ -51,8 +60,19 @@ class EvaluationMemoryStore:
         except ValueError as exc:
             raise EvaluationMemoryError("evaluation memory path escapes project root") from exc
 
-    def _empty(self) -> dict[str, Any]:
-        return {"schema_version": self.schema_version, "records": []}
+    def _prepare_memory_dir(self) -> None:
+        self._assert_safe_path()
+        self.memory_dir.mkdir(parents=True, exist_ok=True)
+        self._assert_safe_path()
+
+    def _lock(self) -> RunLock:
+        self._prepare_memory_dir()
+        return RunLock(
+            self.memory_dir,
+            timeout_seconds=self.lock_timeout_seconds,
+            stale_seconds=self.lock_stale_seconds,
+            poll_seconds=0.05,
+        )
 
     def load(self) -> list[RunEvaluation]:
         if not self.enabled:
@@ -84,9 +104,7 @@ class EvaluationMemoryStore:
     def _write(self, records: list[RunEvaluation]) -> None:
         if not self.enabled:
             return
-        self._assert_safe_path()
-        self.memory_dir.mkdir(parents=True, exist_ok=True)
-        self._assert_safe_path()
+        self._prepare_memory_dir()
         payload = {
             "schema_version": self.schema_version,
             "records": [record.to_dict() for record in records[-self.max_records :]],
@@ -100,9 +118,13 @@ class EvaluationMemoryStore:
     def record(self, evaluation: RunEvaluation) -> bool:
         if not self.enabled or not evaluation.memory_eligible:
             return False
-        records = [item for item in self.load() if item.run_id != evaluation.run_id]
-        records.append(evaluation)
-        self._write(records)
+        try:
+            with self._lock():
+                records = [item for item in self.load() if item.run_id != evaluation.run_id]
+                records.append(evaluation)
+                self._write(records)
+        except RunLockTimeout as exc:
+            raise EvaluationMemoryError("timed out waiting for evaluation memory transaction lock") from exc
         return True
 
     @staticmethod
@@ -131,12 +153,10 @@ class EvaluationMemoryStore:
         selected = [row[1] for row in candidates[: self.max_recall_records]]
         outcomes = Counter(record.outcome for record in selected)
         failure_channels = Counter(channel for record in selected for channel in record.failing_channels)
-        evidence_types = Counter(
-            evidence_type
-            for record in selected
-            for evidence_type, count in record.evidence_type_counts.items()
-            for _ in range(min(max(0, int(count)), 100))
-        )
+        evidence_types: Counter[str] = Counter()
+        for record in selected:
+            for evidence_type, count in record.evidence_type_counts.items():
+                evidence_types[evidence_type] += min(max(0, int(count)), 100)
         replans = [record.replan_count for record in selected]
         passed = outcomes.get("passed", 0)
         return {
