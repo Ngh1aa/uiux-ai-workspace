@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
+from core.orchestration.adaptive_surface import classify_change_surface
+
 
 DEFAULT_DELIVERY_POLICY_ID = "adaptive-prompt-os-v4"
 DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
@@ -68,7 +70,7 @@ def _extract_urls(text: str) -> tuple[str, ...]:
 
 @dataclass(frozen=True)
 class GoalProfile:
-    """Canonical Factory goal profile plus the V1 natural-language Task Contract."""
+    """Canonical Factory goal profile plus Task Contract and A3 change surface."""
 
     intent: str
     website_type: str
@@ -79,6 +81,7 @@ class GoalProfile:
     risk: str
     features: tuple[str, ...] = field(default_factory=tuple)
     scope: tuple[str, ...] = field(default_factory=tuple)
+    change_surface: str = "PRODUCT"
     preserve: tuple[str, ...] = field(default_factory=tuple)
     forbidden: tuple[str, ...] = field(default_factory=tuple)
     references: tuple[str, ...] = field(default_factory=tuple)
@@ -100,6 +103,7 @@ class GoalProfile:
             "risk": self.risk,
             "features": list(self.features),
             "scope": list(self.scope),
+            "change_surface": self.change_surface,
             "preserve": list(self.preserve),
             "forbidden": list(self.forbidden),
             "references": list(self.references),
@@ -152,20 +156,10 @@ class GoalInterpreter:
             "cross-border", "money movement", "treasury", "clearing", "acquiring", "psp", "mto",
             "payment orchestration", "ledger", "card issuing"
         )),
-        ("compliance-operations", (
-            "kyc", "aml", "sanctions", "pep", "onboarding", "enhanced due diligence", "edd"
-        )),
-        ("financial-operations", (
-            "reconciliation", "reconcile", "general ledger", "gl ", "subledger", "month-end",
-            "fund admin", "fund accounting", "exception report"
-        )),
-        ("consumer-banking", (
-            "personal finance", "spending", "saving", "savings", "budget", "banking app",
-            "debit card", "credit card", "consumer bank", "money goals"
-        )),
-        ("investment-wealth", (
-            "wealth", "portfolio", "brokerage", "investment", "advisor", "asset management"
-        )),
+        ("compliance-operations", ("kyc", "aml", "sanctions", "pep", "onboarding", "enhanced due diligence", "edd")),
+        ("financial-operations", ("reconciliation", "reconcile", "general ledger", "gl ", "subledger", "month-end", "fund admin", "fund accounting", "exception report")),
+        ("consumer-banking", ("personal finance", "spending", "saving", "savings", "budget", "banking app", "debit card", "credit card", "consumer bank", "money goals")),
+        ("investment-wealth", ("wealth", "portfolio", "brokerage", "investment", "advisor", "asset management")),
     )
 
     FEATURES = (
@@ -175,32 +169,12 @@ class GoalInterpreter:
         ("dashboard", ("dashboard", "admin panel", "analytics", "bảng điều khiển", "trang quản trị")),
         ("motion", ("animation", "motion", "microinteraction", "hiệu ứng", "chuyển động")),
         ("i18n", ("multilingual", "multi-language", "bilingual", "đa ngôn ngữ", "song ngữ")),
-        ("agentic-workflow", (
-            "multi-agent", "multiagent", "subagent", "sub-agent", "agent workflow",
-            "agentic workflow", "autonomous agent", "orchestrator", "orchestration"
-        )),
-        ("user-validation", (
-            "real users", "real user", "user research", "usability test", "usability testing",
-            "moderated testing", "concept test", "concept testing", "user validation",
-            "test with users", "research participants", "sponsor user", "interview users"
-        )),
-        ("outcome-measurement", (
-            "outcome metric", "outcome metrics", "success metric", "success metrics", "kpi",
-            "analytics instrumentation", "instrumentation", "measurement plan", "measure success",
-            "baseline metric", "product analytics"
-        )),
-        ("stakeholder-governance", (
-            "stakeholder", "playback", "governance", "decision owner", "approval gate",
-            "cross-functional", "cross functional", "release approval"
-        )),
-        ("experimentation", (
-            "a/b test", "a/b testing", "ab test", "split test", "experiment",
-            "feature flag", "gradual rollout", "staged rollout"
-        )),
-        ("live-learning", (
-            "post-launch", "post launch", "after launch", "live learning", "continuous research",
-            "support tickets", "production analytics", "live monitoring", "product health"
-        )),
+        ("agentic-workflow", ("multi-agent", "multiagent", "subagent", "sub-agent", "agent workflow", "agentic workflow", "autonomous agent", "orchestrator", "orchestration")),
+        ("user-validation", ("real users", "real user", "user research", "usability test", "usability testing", "moderated testing", "concept test", "concept testing", "user validation", "test with users", "research participants", "sponsor user", "interview users")),
+        ("outcome-measurement", ("outcome metric", "outcome metrics", "success metric", "success metrics", "kpi", "analytics instrumentation", "instrumentation", "measurement plan", "measure success", "baseline metric", "product analytics")),
+        ("stakeholder-governance", ("stakeholder", "playback", "governance", "decision owner", "approval gate", "cross-functional", "cross functional", "release approval")),
+        ("experimentation", ("a/b test", "a/b testing", "ab test", "split test", "experiment", "feature flag", "gradual rollout", "staged rollout")),
+        ("live-learning", ("post-launch", "post launch", "after launch", "live learning", "continuous research", "support tickets", "production analytics", "live monitoring", "product health")),
     )
 
     SCOPE_TERMS = (
@@ -214,11 +188,17 @@ class GoalInterpreter:
         ("dashboard", ("dashboard", "bảng điều khiển")),
         ("checkout", ("checkout",)),
         ("pricing", ("pricing", "bảng giá")),
-        ("cards", ("cards", "card", "thẻ")),
+        ("cards", ("cards", "các card", "các thẻ")),
+        ("card", ("card", "thẻ")),
+        ("button", ("button", "cta", "nút")),
+        ("icon", ("icon", "biểu tượng")),
+        ("logo", ("logo",)),
+        ("input", ("input", "field", "ô nhập")),
         ("form", ("form", "biểu mẫu")),
         ("modal", ("modal", "dialog")),
         ("sidebar", ("sidebar",)),
         ("thumbnail", ("thumbnail",)),
+        ("image", ("image", "ảnh")),
         ("banner", ("banner",)),
         ("typography", ("typography", "kiểu chữ")),
         ("content", ("content", "copy", "nội dung")),
@@ -233,19 +213,13 @@ class GoalInterpreter:
         ("improve", ("improve", "enhance", "refine", "cải thiện", "nâng cấp", "tối ưu giao diện")),
     )
 
-    PRESERVE_PATTERNS = (
-        r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",
-    )
-    FORBIDDEN_PATTERNS = (
-        r"(?:đừng|không được|must not|do not|don't|dont|avoid)\s+(?:đụng|sửa|thay đổi|đổi|remove|delete|change|modify)?\s*([^,.;\n]+)",
-    )
+    PRESERVE_PATTERNS = (r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",)
+    FORBIDDEN_PATTERNS = (r"(?:đừng|không được|must not|do not|don't|dont|avoid)\s+(?:đụng|sửa|thay đổi|đổi|remove|delete|change|modify)?\s*([^,.;\n]+)",)
     SCOPE_PATTERNS = (
         r"(?:scope|phạm vi)\s*[:=-]\s*([^,.;\n]+)",
         r"(?:chỉ|only)\s+(?:sửa|fix|polish|improve|cải thiện|nâng cấp|chỉnh|đổi|thay đổi)\s+([^,.;\n]+)",
     )
-    REFERENCE_PATTERNS = (
-        r"(?:tham khảo|reference|refer to|inspired by)\s+([^,.;\n]+)",
-    )
+    REFERENCE_PATTERNS = (r"(?:tham khảo|reference|refer to|inspired by)\s+([^,.;\n]+)",)
 
     @classmethod
     def _intent(cls, text: str) -> str:
@@ -255,21 +229,11 @@ class GoalInterpreter:
         return "build"
 
     @classmethod
-    def _scope(
-        cls,
-        text: str,
-        preserve: tuple[str, ...],
-        forbidden: tuple[str, ...],
-    ) -> tuple[str, ...]:
+    def _scope(cls, text: str, preserve: tuple[str, ...], forbidden: tuple[str, ...]) -> tuple[str, ...]:
         explicit = _extract_fragments(text, cls.SCOPE_PATTERNS)
         if explicit:
             return explicit
-
-        scan_text = re.split(
-            r"\b(?:tham khảo|reference|refer to|inspired by)\b",
-            text,
-            maxsplit=1,
-        )[0]
+        scan_text = re.split(r"\b(?:tham khảo|reference|refer to|inspired by)\b", text, maxsplit=1)[0]
         blocked_text = " ".join(preserve + forbidden)
         inferred: list[str] = []
         for name, terms in cls.SCOPE_TERMS:
@@ -279,33 +243,19 @@ class GoalInterpreter:
 
     @staticmethod
     def _authority(text: str) -> str:
-        if _contains(text, (
-            "read only", "read-only", "audit only", "analysis only", "analyze only",
-            "review only", "chỉ audit", "chỉ review", "chỉ phân tích", "chỉ kiểm tra",
-            "không sửa code", "không thay đổi code", "không chỉnh code",
-        )):
+        if _contains(text, ("read only", "read-only", "audit only", "analysis only", "analyze only", "review only", "chỉ audit", "chỉ review", "chỉ phân tích", "chỉ kiểm tra", "không sửa code", "không thay đổi code", "không chỉnh code")):
             return "read_only"
-        if _contains(text, (
-            "merge to main", "merge into main", "merge vào main", "deploy production",
-            "deploy to production", "go live", "release production", "lên production",
-        )):
+        if _contains(text, ("merge to main", "merge into main", "merge vào main", "deploy production", "deploy to production", "go live", "release production", "lên production")):
             return "release"
-        if _contains(text, (
-            "deploy preview", "preview deployment", "push to vercel", "deploy to vercel",
-            "external write", "publish preview",
-        )):
+        if _contains(text, ("deploy preview", "preview deployment", "push to vercel", "deploy to vercel", "external write", "publish preview")):
             return "external_write"
-        if _contains(text, (
-            "implement", "sửa code", "chỉnh code", "viết code", "tạo branch", "create branch",
-            "open pr", "pull request", "commit", "push code", "apply changes",
-        )):
+        if _contains(text, ("implement", "sửa code", "chỉnh code", "viết code", "tạo branch", "create branch", "open pr", "pull request", "commit", "push code", "apply changes")):
             return "branch_write"
         return "unspecified"
 
     def interpret(self, goal: str) -> GoalProfile:
         text = re.sub(r"\s+", " ", goal.strip().lower())
         evidence: list[str] = []
-
         intent = self._intent(text)
         evidence.append(f"intent:{intent}")
 
@@ -316,9 +266,11 @@ class GoalInterpreter:
             references = _extract_fragments(text, self.REFERENCE_PATTERNS)
         scope = self._scope(text, preserve, forbidden)
         authority = self._authority(text)
+        change_surface = classify_change_surface(text, intent, scope)
 
         if scope:
             evidence.append("scope:" + "|".join(scope))
+        evidence.append(f"change_surface:{change_surface}")
         if preserve:
             evidence.append("preserve:" + "|".join(preserve))
         if forbidden:
@@ -374,19 +326,12 @@ class GoalInterpreter:
         evidence.append(f"risk:{risk}")
 
         validation_lane = "prototype"
-        lifecycle_features = {
-            "user-validation",
-            "outcome-measurement",
-            "stakeholder-governance",
-            "experimentation",
-            "live-learning",
-        }
+        lifecycle_features = {"user-validation", "outcome-measurement", "stakeholder-governance", "experimentation", "live-learning"}
         if mode in {"production", "production-candidate"}:
             validation_lane = "production-learning"
         elif risk == "high" or lifecycle_features.intersection(features):
             validation_lane = "evidence-led"
         evidence.append(f"validation_lane:{validation_lane}")
-
         evidence.append(f"delivery_policy:{DEFAULT_DELIVERY_POLICY_ID}")
         evidence.append(f"delivery_lane:{DEFAULT_FACTORY_DELIVERY_LANE}")
 
@@ -400,6 +345,7 @@ class GoalInterpreter:
             risk=risk,
             features=tuple(features),
             scope=scope,
+            change_surface=change_surface,
             preserve=preserve,
             forbidden=forbidden,
             references=references,
@@ -415,69 +361,25 @@ class ProfessionalWebsiteFlow:
     """Read the declarative flow and default delivery policy shipped by skills_UIUX."""
 
     FACTORY_TO_FLOW_STAGE = {
-        "reference_analysis": "research",
-        "research": "research",
-        "ux_ia": "research",
-        "art_direction": "design",
-        "design_contract": "design",
-        "design_system": "design",
-        "implementation_plan": "implementation",
-        "visual_composition": "design",
-        "specification_compile": "implementation",
-        "implementation": "implementation",
-        "browser_qa": "qa",
-        "visual_qa": "qa",
-        "repair": "qa",
+        "reference_analysis": "research", "research": "research", "ux_ia": "research",
+        "art_direction": "design", "design_contract": "design", "design_system": "design",
+        "implementation_plan": "implementation", "visual_composition": "design",
+        "specification_compile": "implementation", "implementation": "implementation",
+        "browser_qa": "qa", "visual_qa": "qa", "repair": "qa",
     }
 
     EXTRA_BY_FACTORY_STAGE = {
         "reference_analysis": ("reference-extraction-and-design-audit",),
         "ux_ia": ("ux-research-and-journey", "journey-driven-content-and-layout"),
-        "art_direction": (
-            "visual-taste-calibration",
-            "brand-guidelines",
-            "motion-and-microinteractions",
-            MOTION_COMPONENT_INTELLIGENCE,
-            ANTHROPIC_FRONTEND_DESIGN,
-        ),
+        "art_direction": ("visual-taste-calibration", "brand-guidelines", "motion-and-microinteractions", MOTION_COMPONENT_INTELLIGENCE, ANTHROPIC_FRONTEND_DESIGN),
         "design_system": ("responsive-and-device-strategy", "accessibility"),
         "implementation_plan": ("frontend-architecture-and-refactoring",),
-        "visual_composition": (
-            "visual-taste-calibration",
-            "responsive-and-device-strategy",
-            "motion-and-microinteractions",
-            MOTION_COMPONENT_INTELLIGENCE,
-            ANTHROPIC_FRONTEND_DESIGN,
-        ),
-        "specification_compile": (
-            "prompt-compiler",
-            "accessibility",
-            "testing-strategy",
-        ),
-        "implementation": (
-            "accessibility",
-            "motion-and-microinteractions",
-            MOTION_COMPONENT_INTELLIGENCE,
-            ANTHROPIC_FRONTEND_DESIGN,
-        ),
-        "browser_qa": (
-            "visual-regression-and-design-drift",
-            ANTHROPIC_WEBAPP_TESTING,
-        ),
-        "visual_qa": (
-            "visual-taste-calibration",
-            "visual-regression-and-design-drift",
-            ANTHROPIC_FRONTEND_DESIGN,
-            ANTHROPIC_WEBAPP_TESTING,
-        ),
-        "repair": (
-            "ui-improvement",
-            "visual-taste-calibration",
-            "responsive-and-device-strategy",
-            "motion-and-microinteractions",
-            MOTION_COMPONENT_INTELLIGENCE,
-            ANTHROPIC_FRONTEND_DESIGN,
-        ),
+        "visual_composition": ("visual-taste-calibration", "responsive-and-device-strategy", "motion-and-microinteractions", MOTION_COMPONENT_INTELLIGENCE, ANTHROPIC_FRONTEND_DESIGN),
+        "specification_compile": ("prompt-compiler", "accessibility", "testing-strategy"),
+        "implementation": ("accessibility", "motion-and-microinteractions", MOTION_COMPONENT_INTELLIGENCE, ANTHROPIC_FRONTEND_DESIGN),
+        "browser_qa": ("visual-regression-and-design-drift", ANTHROPIC_WEBAPP_TESTING),
+        "visual_qa": ("visual-taste-calibration", "visual-regression-and-design-drift", ANTHROPIC_FRONTEND_DESIGN, ANTHROPIC_WEBAPP_TESTING),
+        "repair": ("ui-improvement", "visual-taste-calibration", "responsive-and-device-strategy", "motion-and-microinteractions", MOTION_COMPONENT_INTELLIGENCE, ANTHROPIC_FRONTEND_DESIGN),
     }
 
     COMPLEX_PROTOTYPE_FEATURES = frozenset({"auth", "dashboard", "forms", "search"})
@@ -489,16 +391,12 @@ class ProfessionalWebsiteFlow:
             raise FileNotFoundError(f"Professional website flow missing: {self.flow_path}")
         self.document = json.loads(self.flow_path.read_text(encoding="utf-8"))
         self._stages = {stage["id"]: stage for stage in self.document.get("stages", [])}
-
         self.delivery_policy_path = self.skills_root / "policies" / f"{DEFAULT_DELIVERY_POLICY_ID}.json"
         if not self.delivery_policy_path.is_file():
             raise FileNotFoundError(f"Default website delivery policy missing: {self.delivery_policy_path}")
         self.delivery_policy = json.loads(self.delivery_policy_path.read_text(encoding="utf-8"))
         if self.delivery_policy.get("id") != DEFAULT_DELIVERY_POLICY_ID:
-            raise ValueError(
-                f"Unexpected default delivery policy id: {self.delivery_policy.get('id')!r}; "
-                f"expected {DEFAULT_DELIVERY_POLICY_ID!r}"
-            )
+            raise ValueError(f"Unexpected default delivery policy id: {self.delivery_policy.get('id')!r}; expected {DEFAULT_DELIVERY_POLICY_ID!r}")
         phase_ids = [phase.get("id") for phase in self.delivery_policy.get("full_prompt_os", {}).get("phases", [])]
         if phase_ids != [0, 1, 2, 3, 4]:
             raise ValueError(f"Default delivery policy must define Prompt OS phases 0→4, got {phase_ids!r}")
@@ -525,7 +423,6 @@ class ProfessionalWebsiteFlow:
         flow_stage_id = self.FACTORY_TO_FLOW_STAGE.get(factory_stage)
         if not flow_stage_id or flow_stage_id not in self._stages:
             raise ValueError(f"No declarative flow mapping for Factory stage: {factory_stage}")
-
         profile = self.interpreter.interpret(goal)
         stage = self._stages[flow_stage_id]
         mandatory = list(stage.get("required_skills", []))
@@ -534,14 +431,8 @@ class ProfessionalWebsiteFlow:
             if self._condition_matches(rule.get("when", {}), profile):
                 selected.extend(rule.get("skills", []))
         selected.extend(self.EXTRA_BY_FACTORY_STAGE.get(factory_stage, ()))
-
-        if (
-            factory_stage == "implementation"
-            and profile.mode == "interactive-prototype"
-            and self.COMPLEX_PROTOTYPE_FEATURES.intersection(profile.features)
-        ):
+        if factory_stage == "implementation" and profile.mode == "interactive-prototype" and self.COMPLEX_PROTOTYPE_FEATURES.intersection(profile.features):
             selected.append(ANTHROPIC_WEB_ARTIFACTS)
-
         if factory_stage == "repair":
             selected.extend(("web-ui-code-review", "state-feedback-and-error-recovery"))
         return profile, self._unique(selected), self._unique(mandatory)
@@ -553,13 +444,5 @@ class ProfessionalWebsiteFlow:
             submodule_hint = ""
             if any(name.startswith("upstream/anthropic-skills/") for name in missing):
                 submodule_hint = " Run: git submodule update --init --recursive."
-            raise FileNotFoundError(
-                "Declarative flow references missing skills: "
-                + ", ".join(missing)
-                + submodule_hint
-            )
-        return (
-            profile,
-            [f"{name}/SKILL.md" for name in selected],
-            [f"{name}/SKILL.md" for name in mandatory],
-        )
+            raise FileNotFoundError("Declarative flow references missing skills: " + ", ".join(missing) + submodule_hint)
+        return profile, [f"{name}/SKILL.md" for name in selected], [f"{name}/SKILL.md" for name in mandatory]
