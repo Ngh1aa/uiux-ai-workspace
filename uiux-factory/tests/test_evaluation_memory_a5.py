@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -45,6 +46,25 @@ def _evidence(stage_id: str, status: str = "PASS", name: str = "validate-runtime
         summary=f"{name}: {status}",
         data={"name": name, "returncode": 0 if status == "PASS" else 1},
     ).to_dict()
+
+
+def _memory_record(run_id: str, outcome: str = "passed", channel: str = "") -> RunEvaluation:
+    suffix = sum(ord(char) for char in run_id) % 60
+    return RunEvaluation(
+        schema_version=1,
+        run_id=run_id,
+        flow_id="micro-ui-change",
+        flow_revision=0,
+        managed_state="COMPLETED" if outcome == "passed" else "FAILED",
+        outcome=outcome,
+        evaluated_at=f"2026-09-28T00:00:{suffix:02d}+00:00",
+        signature={"change_surface": "MICRO"},
+        effective_evidence_count=1,
+        evidence_type_counts={"validator_result": 1},
+        passing_evidence_types=["validator_result"] if outcome == "passed" else [],
+        failing_channels=[channel] if channel else [],
+        memory_eligible=True,
+    )
 
 
 def _complete_with_evidence(
@@ -105,6 +125,30 @@ def test_a5_terminal_run_is_evaluated_and_repaired_failure_is_superseded(tmp_pat
     assert checkpoint.context["evaluation_memory_recorded"] is True
 
 
+def test_a5_terminal_failure_checkpoint_is_evaluated_and_learned(tmp_path: Path) -> None:
+    project = _repo(tmp_path)
+    harness = ProviderNeutralAgentHarness(SKILLS, project)
+    manager = ManagedFlowController(harness)
+    managed = manager.start_from_goal(
+        "Fix one broken button",
+        authority="branch_write",
+        overrides={"change_surface": "MICRO"},
+    )
+    stage_state = manager.start_stage(managed)
+    stage_state.context["evidence_records"] = [_evidence(managed.active_stage, "FAIL")]
+    stage_state.state = "FAILED"
+    harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
+    managed.state = "FAILED"
+    manager._checkpoint_managed(managed)
+
+    checkpoint = harness.resume(managed.manager_run_id)
+    evaluation = RunEvaluation.from_dict(checkpoint.context["run_evaluation"])
+    assert evaluation.outcome == "failed"
+    assert evaluation.memory_eligible is True
+    assert evaluation.failing_channels
+    assert manager.evaluation_memory.load()[-1].run_id == managed.manager_run_id
+
+
 def test_a5_memory_excludes_provider_prose_and_reuses_only_aggregate_insight(tmp_path: Path) -> None:
     project = _repo(tmp_path)
     harness = ProviderNeutralAgentHarness(SKILLS, project)
@@ -153,29 +197,12 @@ def test_a5_memory_is_bounded_and_deduplicates_run_ids(tmp_path: Path) -> None:
     }
     store = EvaluationMemoryStore(project, policy)
 
-    def record(run_id: str, outcome: str, channel: str = "") -> RunEvaluation:
-        return RunEvaluation(
-            schema_version=1,
-            run_id=run_id,
-            flow_id="micro-ui-change",
-            flow_revision=0,
-            managed_state="COMPLETED" if outcome == "passed" else "FAILED",
-            outcome=outcome,
-            evaluated_at=f"2026-09-28T00:00:0{run_id[-1]}+00:00",
-            signature={"change_surface": "MICRO"},
-            effective_evidence_count=1,
-            evidence_type_counts={"validator_result": 1},
-            passing_evidence_types=["validator_result"] if outcome == "passed" else [],
-            failing_channels=[channel] if channel else [],
-            memory_eligible=True,
-        )
-
-    assert store.record(record("run1", "failed", "qa:validator_result:run_validator:validate-runtime"))
-    assert store.record(record("run2", "passed"))
-    assert store.record(record("run3", "passed"))
+    assert store.record(_memory_record("run1", "failed", "qa:validator_result:run_validator:validate-runtime"))
+    assert store.record(_memory_record("run2", "passed"))
+    assert store.record(_memory_record("run3", "passed"))
     assert [row.run_id for row in store.load()] == ["run2", "run3"]
 
-    updated = record("run3", "failed", "qa:browser_render:playwright:/")
+    updated = _memory_record("run3", "failed", "qa:browser_render:playwright:/")
     assert store.record(updated)
     loaded = store.load()
     assert [row.run_id for row in loaded] == ["run2", "run3"]
@@ -186,6 +213,28 @@ def test_a5_memory_is_bounded_and_deduplicates_run_ids(tmp_path: Path) -> None:
     assert insight["sample_size"] == 2
     assert insight["failed_or_blocked_runs"] == 1
     assert insight["recurrent_failure_channels"][0]["channel"] == "qa:browser_render:playwright:/"
+
+
+def test_a5_memory_serializes_concurrent_writers_without_lost_updates(tmp_path: Path) -> None:
+    project = _repo(tmp_path)
+    policy = {
+        "evaluation_memory": {
+            "enabled": True,
+            "max_records": 10,
+            "max_recall_records": 10,
+            "min_signature_matches": 1,
+            "lock_timeout_seconds": 5,
+            "lock_stale_seconds": 30,
+        }
+    }
+    store = EvaluationMemoryStore(project, policy)
+    records = [_memory_record(f"parallel-{index}") for index in range(6)]
+
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        results = list(pool.map(store.record, records))
+
+    assert results == [True] * 6
+    assert {row.run_id for row in store.load()} == {row.run_id for row in records}
 
 
 def test_a5_memory_refuses_symlinked_storage_path(tmp_path: Path) -> None:
