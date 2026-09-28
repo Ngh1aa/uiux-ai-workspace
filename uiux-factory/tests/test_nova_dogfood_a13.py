@@ -1,13 +1,18 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
 
 import core.dogfood.real_project as dogfood_module
 from core.dogfood.real_project import RealProjectDogfoodRunner
-from core.runtime.flow_os.browser_evidence import BrowserEvidenceError, PlaywrightBrowserEvidenceAdapter
+from core.runtime.flow_os.browser_evidence import (
+    BrowserEvidenceError,
+    PlaywrightBrowserEvidenceAdapter,
+    _failure_detail,
+)
 from core.runtime.flow_os.evidence import EvidenceRecord
 
 
@@ -213,6 +218,20 @@ def test_a13_viewport_contract_is_bounded_and_strict(tmp_path: Path) -> None:
         adapter._validate_viewports([{"name": "mobile", "width": True, "height": 844}])
     with pytest.raises(BrowserEvidenceError, match="between 240 and 4096"):
         adapter._validate_viewports([{"name": "mobile", "width": 120, "height": 844}])
+
+
+def test_a13_browser_capture_failure_keeps_stdout_when_stderr_has_npm_notices() -> None:
+    result = subprocess.CompletedProcess(
+        args=["npm", "run", "test:browser"],
+        returncode=1,
+        stdout="Error: Cross-origin network request detected for /app.html?screen=home",
+        stderr="npm notice New major version available",
+    )
+    detail = _failure_detail(result)
+    assert "Cross-origin network request detected" in detail
+    assert "npm notice" in detail
+    assert "--- stdout ---" in detail
+    assert "--- stderr ---" in detail
 
 
 def test_a13_expected_target_sha_fails_closed_before_browser_execution(
