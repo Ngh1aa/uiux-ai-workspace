@@ -5,6 +5,7 @@ from typing import Any
 
 from core.evaluation.run_evaluator import RunEvaluation, RunEvaluator
 from core.memory.evaluation_memory import EvaluationMemoryError, EvaluationMemoryStore
+from core.memory.quality_pattern_recall import build_quality_pattern_insight
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
 from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
@@ -67,6 +68,11 @@ class ManagedFlowController:
     decision system. Every routing decision delegates to the canonical Factory
     GoalInterpreter + FlowPlanner.
     """
+
+    ADVISORY_MEMORY_CONTEXT_KEYS = (
+        "prior_evaluation_insight",
+        "prior_quality_insight",
+    )
 
     def __init__(self, harness: ProviderNeutralAgentHarness) -> None:
         self.harness = harness
@@ -192,19 +198,27 @@ class ManagedFlowController:
         additional_skills: list[str] | None = None,
         exclude_skills: list[str] | None = None,
     ) -> ManagedWebsiteRun:
-        # Flow selection is based only on the current task. Prior-run memory is attached
-        # after planning so advisory history can never steer authority/flow selection.
-        flow = self.resolve_flow(task_context, additional_skills, exclude_skills)
-        enriched_context = dict(task_context)
-        signature = self.run_evaluator.signature(task_context)
+        # Flow selection is based only on the current task. Memory-shaped keys supplied
+        # by callers are stripped before planning, then trusted project-scoped advisory
+        # memory is attached only after the canonical flow has already been resolved.
+        planning_context = dict(task_context)
+        for key in self.ADVISORY_MEMORY_CONTEXT_KEYS:
+            planning_context.pop(key, None)
+        flow = self.resolve_flow(planning_context, additional_skills, exclude_skills)
+        enriched_context = dict(planning_context)
+        signature = self.run_evaluator.signature(planning_context)
         memory_error: str | None = None
+        insight: dict[str, Any] | None = None
+        quality_insight: dict[str, Any] | None = None
         try:
             insight = self.evaluation_memory.insight(flow_id=flow.id, signature=signature)
+            quality_insight = build_quality_pattern_insight(self.evaluation_memory)
         except (EvaluationMemoryError, OSError) as exc:
-            insight = None
             memory_error = self._memory_error(exc)
         if insight is not None:
             enriched_context["prior_evaluation_insight"] = insight
+        if quality_insight is not None:
+            enriched_context["prior_quality_insight"] = quality_insight
         manager_state = self.harness.create_run(
             task,
             "development",
@@ -221,9 +235,11 @@ class ManagedFlowController:
         )
         if insight is not None:
             manager_state.context["prior_evaluation_insight"] = insight
+        if quality_insight is not None:
+            manager_state.context["prior_quality_insight"] = quality_insight
         if memory_error is not None:
             manager_state.context["evaluation_memory_error"] = memory_error
-        if insight is not None or memory_error is not None:
+        if insight is not None or quality_insight is not None or memory_error is not None:
             self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
         self._checkpoint_managed(managed)
         return managed
@@ -260,9 +276,10 @@ class ManagedFlowController:
         state.context["flow_revision"] = managed.flow.revision
         state.context["stage_id"] = stage.id
         state.context["stage_gates"] = list(stage.gates)
-        prior = managed.task_context.get("prior_evaluation_insight")
-        if isinstance(prior, dict):
-            state.context["prior_evaluation_insight"] = dict(prior)
+        for key in self.ADVISORY_MEMORY_CONTEXT_KEYS:
+            prior = managed.task_context.get(key)
+            if isinstance(prior, dict):
+                state.context[key] = dict(prior)
         self.harness.checkpoints.save(state.run_id, state.to_dict())
 
         managed.active_stage = stage.id
@@ -343,10 +360,12 @@ class ManagedFlowController:
 
         context = dict(managed.task_context)
         # Cross-run learning is advisory provider context only. It never participates in
-        # canonical replanning policy evaluation, even if a future flow adds a matching key.
-        context.pop("prior_evaluation_insight", None)
+        # canonical replanning policy evaluation, including attempted caller overrides.
+        for key in self.ADVISORY_MEMORY_CONTEXT_KEYS:
+            context.pop(key, None)
         context.update(context_updates or {})
-        context.pop("prior_evaluation_insight", None)
+        for key in self.ADVISORY_MEMORY_CONTEXT_KEYS:
+            context.pop(key, None)
         context["current_stage"] = stage_id
         effective_count = managed.replan_count if replan_count is None else replan_count
         decision = self.planner.replan(
