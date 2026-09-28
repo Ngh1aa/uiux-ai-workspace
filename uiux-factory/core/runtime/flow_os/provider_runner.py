@@ -9,7 +9,7 @@ from core.runtime.flow_os.evidence import evidence_from_tool, gate_evidence_erro
 from core.runtime.flow_os.file_tools import WorkspaceFileTools
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
 from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, load_context_documents
-from core.runtime.flow_os.target_runner import TargetRunner
+from core.runtime.flow_os.sandbox import ContainerSandbox
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
 
 
@@ -36,11 +36,9 @@ class ProviderRunResult:
 class ProviderManagedRunner:
     """Run model→tool→observation loops under the canonical managed controller.
 
-    A4.2–A4.5 guarantees for this provider-facing execution path:
-    - writable operations are redirected to a branch-scoped git worktree;
-    - target commands are argv-only, policy allowlisted and workspace-scoped;
-    - runtime tool observations become typed evidence while model prose remains claims;
-    - bounded search/list/replace/write tools share the same workspace boundary.
+    Provider-facing execution is isolated through one Git worktree and target commands
+    additionally require the canonical container sandbox. Runtime observations become
+    typed evidence while provider prose remains untrusted claims.
     """
 
     def __init__(self, manager: ManagedFlowController, provider: ModelProvider) -> None:
@@ -80,7 +78,7 @@ class ProviderManagedRunner:
             ),
             "run_target_command": ToolSpec(
                 "run_target_command",
-                "Run an allowlisted argv command inside the isolated branch worktree",
+                "Run an exact allowlisted argv command in the required container/network sandbox",
                 "LOW_WRITE",
                 "branch_write",
                 True,
@@ -146,7 +144,7 @@ class ProviderManagedRunner:
             "list_files": {"path": "safe project/worktree-relative directory path; defaults to ."},
             "write_artifact": {"path": "must be below docs/uiux/ in isolated worktree", "content": "UTF-8 content"},
             "run_validator": {"name": "validate-skills | validate-v2 | validate-runtime | validate-flows"},
-            "release_action": {"action": "release intent; contract-only unless an external release adapter exists"},
+            "release_action": {"action": "release intent; production release is human-owned outside provider tools"},
             "write_project_file": {"path": "workspace-relative source/config path", "content": "complete UTF-8 file content"},
             "replace_text": {
                 "path": "workspace-relative UTF-8 file",
@@ -164,9 +162,10 @@ class ProviderManagedRunner:
             },
             "list_files_recursive": {"path": "relative directory", "max_files": "1..1000"},
             "run_target_command": {
-                "argv": "array matching one runtime-policy target_runner command prefix",
+                "argv": "exact runtime-policy allowlisted argv array",
                 "cwd": "workspace-relative directory; defaults to .",
                 "timeout_seconds": "positive integer no larger than policy maximum",
+                "sandbox": "required Docker/Podman container; network none; no host fallback",
             },
         }
         specs = list(self.harness.registry.specs.values()) + list(self.extra_specs.values())
@@ -243,8 +242,8 @@ class ProviderManagedRunner:
             return self._file_tools_for(managed, stage_state).list_files_recursive(**args)
         if name == "run_target_command":
             metadata = self._ensure_workspace(managed, stage_state)
-            runner = TargetRunner(Path(metadata.workspace_root), self.harness.policy_doc)
-            return runner.run(**args).to_dict()
+            sandbox = ContainerSandbox(Path(metadata.workspace_root), self.harness.policy_doc)
+            return sandbox.run(**args).to_dict()
         if name == "write_artifact":
             metadata = self._ensure_workspace(managed, stage_state)
             path = str(args.get("path", ""))
@@ -333,8 +332,8 @@ class ProviderManagedRunner:
         ]
         stage_state.limitations.extend(
             [
-                "provider execution is active; browser-rendered visual QA still requires a connected render/observation adapter",
-                "target command isolation is policy/cwd/env bounded, not an OS/container/network sandbox",
+                "provider execution is active; browser-rendered evidence is ingested through the Playwright adapter",
+                "target commands require a local pre-provisioned Docker/Podman sandbox image and never fall back to host execution",
             ]
         )
         trace = TraceRecorder(
