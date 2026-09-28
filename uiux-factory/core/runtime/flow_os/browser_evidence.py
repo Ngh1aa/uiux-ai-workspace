@@ -33,6 +33,8 @@ class PlaywrightBrowserEvidenceAdapter:
     provider prose.
     """
 
+    LOCAL_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+
     def __init__(self, qa_root: Path, policy: dict[str, Any]) -> None:
         raw_root = Path(qa_root)
         if raw_root.is_symlink():
@@ -51,7 +53,7 @@ class PlaywrightBrowserEvidenceAdapter:
         parsed = urlparse(str(base_url))
         if parsed.scheme not in {"http", "https"} or not parsed.hostname:
             raise BrowserEvidenceError("browser evidence base_url must be http(s)")
-        if not self.allow_remote and parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
+        if not self.allow_remote and parsed.hostname not in self.LOCAL_HOSTS:
             raise BrowserEvidenceError("remote browser targets are disabled by runtime policy")
         return str(base_url)
 
@@ -157,8 +159,24 @@ class PlaywrightBrowserEvidenceAdapter:
                 item for item in list(payload.get("consoleMessages", []))
                 if isinstance(item, dict) and str(item.get("type", "")) == "error"
             ]
+            blocked_requests = [str(item) for item in list(payload.get("blockedRequests", []))]
+            final_url = str(payload.get("url", ""))
+            parsed_final = urlparse(final_url)
+            remote_final = bool(
+                not self.allow_remote
+                and parsed_final.hostname
+                and parsed_final.hostname not in self.LOCAL_HOSTS
+            )
             box = payload.get("box")
-            status = "PASS" if not page_errors and not console_errors and box is not None else "FAIL"
+            status = (
+                "PASS"
+                if not page_errors
+                and not console_errors
+                and not blocked_requests
+                and not remote_final
+                and box is not None
+                else "FAIL"
+            )
             route = str(payload.get("route", ""))
             screenshot_hash = _sha256(screenshot)
             records.append(
@@ -171,7 +189,7 @@ class PlaywrightBrowserEvidenceAdapter:
                     summary=f"Playwright rendered {route or path.stem}: {status}",
                     data={
                         "route": route,
-                        "url": str(payload.get("url", "")),
+                        "url": final_url,
                         "title": str(payload.get("title", "")),
                         "viewport": dict(payload.get("viewport", {})),
                         "box": box,
@@ -182,6 +200,8 @@ class PlaywrightBrowserEvidenceAdapter:
                         "aria_snapshot": str(payload.get("ariaSnapshot", ""))[:20000],
                         "page_errors": page_errors,
                         "console_errors": console_errors,
+                        "blocked_requests": blocked_requests,
+                        "remote_final_url": remote_final,
                     },
                 )
             )
