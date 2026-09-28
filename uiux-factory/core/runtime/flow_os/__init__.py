@@ -6,13 +6,18 @@ Python modules under skills_UIUX/runtime are compatibility adapters only.
 
 CANONICAL_RUNTIME_OWNER = "uiux-factory/core/runtime/flow_os"
 
+from core.runtime.flow_os.evidence import EvidenceRecord
+from core.runtime.flow_os.file_tools import WorkspaceFileError, WorkspaceFileTools
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
 from core.runtime.flow_os.safe_read import SafeReadError, SafeReadResult, SafeReader
+from core.runtime.flow_os.target_runner import TargetCommandResult, TargetRunner, TargetRunnerError
 from core.runtime.flow_os.task_context import GoalInterpretation, GoalInterpreter, TaskContract
+from core.runtime.flow_os.workspace import WorkspaceIsolationError, WorkspaceMetadata, WorktreeManager
 
 __all__ = [
     "CANONICAL_RUNTIME_OWNER",
+    "EvidenceRecord",
     "FlowPlanner",
     "GoalInterpretation",
     "GoalInterpreter",
@@ -23,5 +28,13 @@ __all__ = [
     "SafeReadError",
     "SafeReadResult",
     "SafeReader",
+    "TargetCommandResult",
+    "TargetRunner",
+    "TargetRunnerError",
     "TaskContract",
+    "WorkspaceFileError",
+    "WorkspaceFileTools",
+    "WorkspaceIsolationError",
+    "WorkspaceMetadata",
+    "WorktreeManager",
 ]
