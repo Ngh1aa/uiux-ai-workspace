@@ -7,7 +7,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from core.runtime.flow_os.evidence import EvidenceRecord
+from core.runtime.flow_os.evidence import EvidenceRecord, effective_evidence
 from core.runtime.flow_os.managed import ManagedWebsiteRun
 from core.runtime.flow_os.workspace import WorktreeManager, WorkspaceFinalizeResult
 
@@ -156,16 +156,10 @@ class ProductionReleaseController:
         if isinstance(workspace, dict):
             if not isinstance(finalized, dict) or not bool(finalized.get("merged")):
                 errors.append("isolated worktree changes must be finalized and merged before production release")
-        records = []
-        for payload in self._all_evidence(managed):
-            try:
-                record = EvidenceRecord.from_dict(dict(payload))
-            except (KeyError, TypeError, ValueError):
-                continue
-            if record.trusted and record.origin == "runtime":
-                records.append(record)
+
+        records = effective_evidence(self._all_evidence(managed))
         if any(record.status == "FAIL" for record in records):
-            errors.append("trusted runtime evidence contains a failing result")
+            errors.append("latest effective trusted runtime evidence contains a failing result")
         browser = [record for record in records if record.type == "browser_render" and record.status == "PASS"]
         if not browser:
             errors.append("at least one PASS browser_render evidence record is required for production release")
