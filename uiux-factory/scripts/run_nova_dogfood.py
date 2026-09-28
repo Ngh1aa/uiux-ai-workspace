@@ -11,14 +11,16 @@ REPO_ROOT = FACTORY_ROOT.parent
 if str(FACTORY_ROOT) not in sys.path:
     sys.path.insert(0, str(FACTORY_ROOT))
 
-from core.dogfood.nova_real_project_legacy import (  # noqa: E402
-    RealProjectDogfoodError,
-    RealProjectDogfoodRunner,
+from core.dogfood.nova_render_lane import (  # noqa: E402
+    NovaRenderDogfoodError,
+    NovaRenderDogfoodRunner,
 )
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run the A13 deterministic legacy render lane against pinned Nova")
+    parser = argparse.ArgumentParser(
+        description="Run the Nova-specific A13 rendered regression lane against pinned Nova"
+    )
     parser.add_argument("--project-root", type=Path, required=True)
     parser.add_argument("--base-url", required=True)
     parser.add_argument("--route", default="/app.html?screen=home")
@@ -26,7 +28,7 @@ def main() -> int:
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
 
-    runner = RealProjectDogfoodRunner(
+    runner = NovaRenderDogfoodRunner(
         skills_root=REPO_ROOT / "skills_UIUX",
         factory_root=FACTORY_ROOT,
         project_root=args.project_root,
@@ -38,8 +40,8 @@ def main() -> int:
             expected_target_sha=args.expected_target_sha,
             report_path=args.report,
         )
-    except (OSError, ValueError, RealProjectDogfoodError) as exc:
-        print(f"A13 Nova dogfood FAILED: {exc}")
+    except (OSError, ValueError, NovaRenderDogfoodError) as exc:
+        print(f"A13 Nova rendered dogfood FAILED: {exc}")
         return 1
 
     print(json.dumps(report, indent=2, ensure_ascii=False))
