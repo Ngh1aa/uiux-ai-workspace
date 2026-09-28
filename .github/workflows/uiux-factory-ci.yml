@@ -61,5 +61,8 @@ jobs:
           python ../skills_UIUX/scripts/validate-flows.py
           python ../skills_UIUX/scripts/validate-runtime-foundation.py
 
+      - name: Validate benchmark corpus
+        run: python scripts/validate_benchmark_corpus.py
+
       - name: Run foundation tests
         run: python -m pytest -q tests
