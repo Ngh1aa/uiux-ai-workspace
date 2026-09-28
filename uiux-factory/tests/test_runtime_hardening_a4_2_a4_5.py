@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -181,6 +182,21 @@ def test_a4_5_file_tools_bound_search_replace_and_secret_paths(tmp_path: Path) -
         tools.write_text("broken/escape.txt", "no")
 
 
+def test_a4_5_search_budget_counts_non_text_candidates(tmp_path: Path) -> None:
+    root = tmp_path / "workspace"
+    root.mkdir()
+    (root / "01.bin").write_bytes(b"\x00binary")
+    (root / "02.bin").write_bytes(b"\xff\xfeinvalid")
+    (root / "03.txt").write_text("needle", encoding="utf-8")
+
+    result = WorkspaceFileTools(root).search_text("needle", max_files=2)
+
+    assert result["scanned_files"] == 2
+    assert result["readable_files"] == 0
+    assert result["matches"] == []
+    assert result["truncated"] is True
+
+
 def test_a4_3_runner_is_argv_only_allowlisted_workspace_scoped_and_env_filtered(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -218,6 +234,16 @@ def test_a4_3_runner_is_argv_only_allowlisted_workspace_scoped_and_env_filtered(
         runner.run(["python", "-c", "print('x')"], cwd="linked")
 
 
+def test_a4_3_shipped_policy_rejects_extra_target_arguments(tmp_path: Path) -> None:
+    root = tmp_path / "workspace"
+    root.mkdir()
+    policy = json.loads((SKILLS / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
+    runner = TargetRunner(root, policy)
+
+    with pytest.raises(TargetRunnerError, match="not allowlisted"):
+        runner.run(["python", "-m", "pytest", "--basetemp", "../outside"])
+
+
 def test_a4_4_provider_claims_never_satisfy_typed_gates() -> None:
     gates = [{"id": "implementation-proof", "require": "implementation evidence", "evidence_types": ["file_change"]}]
     claims = provider_claim_records("implementation", ["I changed the file."])
@@ -242,3 +268,36 @@ def test_a4_4_legacy_provider_gate_still_requires_runtime_evidence() -> None:
     assert gate_evidence_errors(gate, "research", [], agent="research")
     read_record = evidence_from_tool("research", "read_text", {"path": "README.md", "bytes": 12})
     assert gate_evidence_errors(gate, "research", [read_record.to_dict()], agent="research") == []
+
+
+def test_a4_4_failed_runtime_check_blocks_until_same_check_passes() -> None:
+    gates = [{"id": "implementation-proof", "require": "implementation evidence"}]
+    change = evidence_from_tool(
+        "implementation",
+        "write_project_file",
+        {"path": "src/app.tsx", "bytes": 10, "after_sha256": "abc"},
+    )
+    failed = evidence_from_tool(
+        "implementation",
+        "run_validator",
+        {"name": "validate-runtime", "returncode": 1, "stdout": "", "stderr": "failed"},
+    )
+    errors = gate_evidence_errors(
+        gates,
+        "implementation",
+        [change.to_dict(), failed.to_dict()],
+        agent="implementation",
+    )
+    assert any("runtime evidence failed: validator_result" in error for error in errors)
+
+    passed = evidence_from_tool(
+        "implementation",
+        "run_validator",
+        {"name": "validate-runtime", "returncode": 0, "stdout": "ok", "stderr": ""},
+    )
+    assert gate_evidence_errors(
+        gates,
+        "implementation",
+        [change.to_dict(), failed.to_dict(), passed.to_dict()],
+        agent="implementation",
+    ) == []
