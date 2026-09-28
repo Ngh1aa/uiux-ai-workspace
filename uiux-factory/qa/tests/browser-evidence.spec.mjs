@@ -16,8 +16,12 @@ for (const route of routes) {
     const consoleMessages = [];
     const pageErrors = [];
     const blockedRequests = [];
+    const failedRequests = [];
     page.on('console', message => consoleMessages.push({ type: message.type(), text: message.text() }));
     page.on('pageerror', error => pageErrors.push(String(error)));
+    page.on('requestfailed', request => {
+      failedRequests.push(`${request.method()} ${request.url()} :: ${request.failure()?.errorText || 'failed'}`);
+    });
 
     await page.route('**/*', async intercepted => {
       const rawUrl = intercepted.request().url();
@@ -56,14 +60,63 @@ for (const route of routes) {
       return {
         color: style.color,
         backgroundColor: style.backgroundColor,
+        fontFamily: style.fontFamily,
         fontSize: style.fontSize,
+        fontWeight: style.fontWeight,
+        lineHeight: style.lineHeight,
         minWidth: style.minWidth,
-        minHeight: style.minHeight
+        minHeight: style.minHeight,
+        overflow: style.overflow
       };
     });
     const dom = await evidenceRoot.evaluate(el => el.outerHTML);
     const ariaSnapshot = await page.locator('body').ariaSnapshot();
     const viewport = page.viewportSize() || {};
+    const elements = await page.locator(
+      'a, button, input, select, textarea, img, [role], h1, h2, h3, main, nav, header, footer'
+    ).evaluateAll(nodes => nodes.slice(0, 24).map(el => {
+      const style = getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      const role = el.getAttribute('role') || '';
+      const checked = 'checked' in el && typeof el.checked === 'boolean' ? el.checked : null;
+      const expandedRaw = el.getAttribute('aria-expanded');
+      const expanded = expandedRaw === 'true' ? true : expandedRaw === 'false' ? false : null;
+      const image = el instanceof HTMLImageElement
+        ? {
+            src: el.currentSrc || el.src || '',
+            naturalWidth: el.naturalWidth,
+            naturalHeight: el.naturalHeight,
+            renderedWidth: rect.width,
+            renderedHeight: rect.height
+          }
+        : null;
+      return {
+        tag: el.tagName.toLowerCase(),
+        role,
+        text: (el.textContent || '').trim().slice(0, 300),
+        ariaLabel: el.getAttribute('aria-label') || '',
+        name: el.getAttribute('name') || '',
+        type: el.getAttribute('type') || '',
+        disabled: 'disabled' in el ? Boolean(el.disabled) : false,
+        checked,
+        expanded,
+        box: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
+        style: {
+          display: style.display,
+          position: style.position,
+          color: style.color,
+          backgroundColor: style.backgroundColor,
+          fontFamily: style.fontFamily,
+          fontSize: style.fontSize,
+          fontWeight: style.fontWeight,
+          lineHeight: style.lineHeight,
+          width: style.width,
+          height: style.height,
+          overflow: style.overflow
+        },
+        image
+      };
+    }));
     const safeRoute = route.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'root';
     const screenshotName = `${safeRoute}-render.png`;
     await page.screenshot({ path: path.join(artifactsDir, screenshotName), fullPage: true });
@@ -78,10 +131,12 @@ for (const route of routes) {
       ariaSnapshot,
       box,
       computedStyle,
+      elements,
       screenshot: screenshotName,
       consoleMessages,
       pageErrors,
-      blockedRequests
+      blockedRequests,
+      failedRequests
     };
     fs.writeFileSync(
       path.join(artifactsDir, `browser-evidence-${safeRoute}.json`),
