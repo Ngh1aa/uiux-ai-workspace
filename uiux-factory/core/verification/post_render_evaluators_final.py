@@ -19,7 +19,7 @@ class PostRenderEvaluatorSuite(V1PostRenderEvaluatorSuite):
     change post-render outcomes, gates, authority or the report artifacts themselves.
     """
 
-    EVALUATOR_VERSION = "2.1.0"
+    EVALUATOR_VERSION = "2.1.1"
 
     async def _run_design_system_metrics(self) -> Path:
         path = await super()._run_design_system_metrics()
