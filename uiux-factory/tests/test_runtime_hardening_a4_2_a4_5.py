@@ -8,6 +8,7 @@ import pytest
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.evidence import evidence_from_tool, gate_evidence_errors, provider_claim_records
 from core.runtime.flow_os.file_tools import WorkspaceFileError, WorkspaceFileTools
+from core.runtime.flow_os.managed import ManagedFlowController
 from core.runtime.flow_os.target_runner import TargetRunner, TargetRunnerError
 from core.runtime.flow_os.workspace import WorkspaceIsolationError, WorktreeManager
 
@@ -103,6 +104,45 @@ def test_a4_2_legacy_harness_low_write_uses_worktree_not_source(tmp_path: Path) 
     )
     assert not (source / "docs" / "uiux" / "a4.md").exists()
     assert (Path(metadata.workspace_root) / "docs" / "uiux" / "a4.md").read_text(encoding="utf-8") == "isolated"
+
+
+def test_a4_2_managed_handoff_preserves_workspace_owner_and_reads_worktree(tmp_path: Path) -> None:
+    source = _repo(tmp_path)
+    harness = ProviderNeutralAgentHarness(SKILLS, source)
+    manager = ManagedFlowController(harness)
+    managed = manager.start_from_goal(
+        "Redesign a SaaS product website",
+        authority="branch_write",
+        overrides={"change_surface": "PRODUCT", "website_type": "saas"},
+    )
+
+    for expected in ("research", "design"):
+        assert managed.active_stage == expected
+        stage = harness.execute_plan(manager.start_stage(managed), [])
+        assert stage.state == "COMPLETED"
+        manager.complete_stage(managed)
+
+    assert managed.active_stage == "implementation"
+    implementation = manager.start_stage(managed)
+    completed = harness.execute_plan(
+        implementation,
+        [
+            {
+                "tool": "write_artifact",
+                "args": {"path": "docs/uiux/managed.md", "content": "managed isolated"},
+            },
+            {"handoff": "qa"},
+            {"tool": "read_text", "args": {"path": "docs/uiux/managed.md"}},
+        ],
+    )
+    assert completed.state == "COMPLETED"
+    assert completed.context["manager_run_id"] == managed.manager_run_id
+    assert completed.context["stage_id"] == "implementation"
+    metadata = harness.worktrees.validate_metadata(
+        completed.context["workspace"], expected_run_id=managed.manager_run_id
+    )
+    assert not (source / "docs" / "uiux" / "managed.md").exists()
+    assert (Path(metadata.workspace_root) / "docs" / "uiux" / "managed.md").read_text(encoding="utf-8") == "managed isolated"
 
 
 def test_a4_5_file_tools_bound_search_replace_and_secret_paths(tmp_path: Path) -> None:
