@@ -49,6 +49,10 @@ class PlaywrightBrowserEvidenceAdapter:
     linked to their JSON observation so a gate can distinguish rendered proof from
     provider prose.
 
+    Cross-origin stylesheets may be represented by the QA harness as locally sanitized
+    empty CSS. They stay observable as a render limitation but are not a remote-network
+    success and do not by themselves invalidate an otherwise local browser render.
+
     A13 adds an explicitly bounded multi-viewport capture lane. Existing callers that
     omit ``viewports`` keep the original single desktop viewport behavior from the QA
     Playwright config.
@@ -240,6 +244,11 @@ class PlaywrightBrowserEvidenceAdapter:
             ]
             blocked_requests = [str(item) for item in list(payload.get("blockedRequests", []))]
             failed_requests = [str(item) for item in list(payload.get("failedRequests", []))]
+            sanitized_remote_stylesheets = [
+                dict(item)
+                for item in list(payload.get("sanitizedRemoteStylesheets", []))
+                if isinstance(item, dict)
+            ]
             final_url = str(payload.get("url", "")).strip()
             parsed_final = urlparse(final_url)
             invalid_final_url = parsed_final.scheme not in {"http", "https"} or not parsed_final.hostname
@@ -285,6 +294,10 @@ class PlaywrightBrowserEvidenceAdapter:
                         "console_errors": console_errors,
                         "blocked_requests": blocked_requests,
                         "failed_requests": failed_requests,
+                        "sanitized_remote_stylesheets": sanitized_remote_stylesheets,
+                        "render_limitations": (
+                            ["cross_origin_stylesheets_sanitized"] if sanitized_remote_stylesheets else []
+                        ),
                         "invalid_final_url": invalid_final_url,
                         "remote_final_url": remote_final,
                     },
