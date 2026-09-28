@@ -233,6 +233,45 @@ class ProviderStageRequest:
 
 
 @dataclass(frozen=True)
+class ProviderReportedUsage:
+    """Trusted transport-level usage metadata captured by canonical provider adapters.
+
+    This object is never parsed from model-authored structured stage output. Canonical
+    OpenAI/Anthropic adapters build it only from their HTTP response metadata.
+    """
+
+    input_tokens: int
+    output_tokens: int
+    total_tokens: int
+    source: str
+
+    @classmethod
+    def from_counts(
+        cls,
+        *,
+        input_tokens: Any,
+        output_tokens: Any,
+        total_tokens: Any | None,
+        source: str,
+    ) -> "ProviderReportedUsage":
+        bounded_input = _bounded_int(input_tokens, 0, 100_000_000)
+        bounded_output = _bounded_int(output_tokens, 0, 100_000_000)
+        bounded_total = _bounded_int(total_tokens, 0, 200_000_000)
+        if bounded_total == 0:
+            bounded_total = bounded_input + bounded_output
+        bounded_total = max(bounded_total, bounded_input + bounded_output)
+        return cls(
+            input_tokens=bounded_input,
+            output_tokens=bounded_output,
+            total_tokens=bounded_total,
+            source=_bounded_text(source, 64),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class ProviderStageResponse:
     status: str
     actions: list[dict[str, Any]]
@@ -370,17 +409,20 @@ def _http_json(url: str, headers: dict[str, str], payload: dict[str, Any], timeo
 
 class OpenAIResponsesProvider:
     name = "openai"
+    supports_hard_output_limit = True
 
     def __init__(self, model: str | None = None, api_key: str | None = None, timeout: int = 180) -> None:
         self.model = model or os.environ.get("UIUX_OPENAI_MODEL") or DEFAULT_OPENAI_MODEL
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
         self.timeout = timeout
+        self.max_output_tokens: int | None = None
+        self.last_reported_usage: ProviderReportedUsage | None = None
         if not self.api_key:
             raise ValueError("OPENAI_API_KEY is required for provider=openai")
 
     def run_stage(self, request: ProviderStageRequest) -> ProviderStageResponse:
         schema = provider_response_schema()
-        payload = {
+        payload: dict[str, Any] = {
             "model": self.model,
             "store": False,
             "instructions": _system_prompt(),
@@ -394,6 +436,8 @@ class OpenAIResponsesProvider:
                 }
             },
         }
+        if self.max_output_tokens is not None:
+            payload["max_output_tokens"] = max(1, int(self.max_output_tokens))
         data = _http_json(
             "https://api.openai.com/v1/responses",
             {
@@ -403,6 +447,16 @@ class OpenAIResponsesProvider:
             payload,
             self.timeout,
         )
+        raw_usage = data.get("usage")
+        if isinstance(raw_usage, dict):
+            self.last_reported_usage = ProviderReportedUsage.from_counts(
+                input_tokens=raw_usage.get("input_tokens"),
+                output_tokens=raw_usage.get("output_tokens"),
+                total_tokens=raw_usage.get("total_tokens"),
+                source="openai_api_usage",
+            )
+        else:
+            self.last_reported_usage = None
         texts: list[str] = []
         for item in data.get("output", []):
             if not isinstance(item, dict) or item.get("type") != "message":
@@ -420,11 +474,14 @@ class OpenAIResponsesProvider:
 
 class AnthropicMessagesProvider:
     name = "anthropic"
+    supports_hard_output_limit = True
 
     def __init__(self, model: str | None = None, api_key: str | None = None, timeout: int = 180) -> None:
         self.model = model or os.environ.get("UIUX_ANTHROPIC_MODEL") or DEFAULT_ANTHROPIC_MODEL
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         self.timeout = timeout
+        self.max_output_tokens = int(os.environ.get("UIUX_ANTHROPIC_MAX_TOKENS", "8192"))
+        self.last_reported_usage: ProviderReportedUsage | None = None
         if not self.api_key:
             raise ValueError("ANTHROPIC_API_KEY is required for provider=anthropic")
 
@@ -432,7 +489,7 @@ class AnthropicMessagesProvider:
         schema = provider_response_schema()
         payload = {
             "model": self.model,
-            "max_tokens": int(os.environ.get("UIUX_ANTHROPIC_MAX_TOKENS", "8192")),
+            "max_tokens": max(1, int(self.max_output_tokens)),
             "system": _system_prompt(),
             "messages": [{"role": "user", "content": render_provider_prompt(request)}],
             "tools": [
@@ -454,6 +511,16 @@ class AnthropicMessagesProvider:
             payload,
             self.timeout,
         )
+        raw_usage = data.get("usage")
+        if isinstance(raw_usage, dict):
+            self.last_reported_usage = ProviderReportedUsage.from_counts(
+                input_tokens=raw_usage.get("input_tokens"),
+                output_tokens=raw_usage.get("output_tokens"),
+                total_tokens=None,
+                source="anthropic_api_usage",
+            )
+        else:
+            self.last_reported_usage = None
         for item in data.get("content", []):
             if isinstance(item, dict) and item.get("type") == "tool_use" and item.get("name") == "submit_stage_response":
                 value = item.get("input")
@@ -465,6 +532,7 @@ class AnthropicMessagesProvider:
 
 class CommandProvider:
     name = "command"
+    supports_hard_output_limit = False
 
     def __init__(self, command: str, model: str | None = None, timeout: int = 300) -> None:
         if not command.strip():
@@ -472,6 +540,7 @@ class CommandProvider:
         self.command = command
         self.model = model or "external-command"
         self.timeout = timeout
+        self.last_reported_usage: ProviderReportedUsage | None = None
 
     def run_stage(self, request: ProviderStageRequest) -> ProviderStageResponse:
         envelope = {
@@ -491,6 +560,7 @@ class CommandProvider:
         decoded = json.loads(result.stdout)
         if not isinstance(decoded, dict):
             raise RuntimeError("provider command stdout must be a JSON object")
+        self.last_reported_usage = None
         return ProviderStageResponse.from_dict(decoded)
 
 
@@ -499,13 +569,16 @@ class ScriptedProvider:
 
     name = "scripted"
     model = "scripted-test"
+    supports_hard_output_limit = False
 
     def __init__(self, responses: list[dict[str, Any]]) -> None:
         self.responses = list(responses)
         self.requests: list[ProviderStageRequest] = []
+        self.last_reported_usage: ProviderReportedUsage | None = None
 
     def run_stage(self, request: ProviderStageRequest) -> ProviderStageResponse:
         self.requests.append(request)
+        self.last_reported_usage = None
         if not self.responses:
             raise RuntimeError("scripted provider has no remaining responses")
         return ProviderStageResponse.from_dict(self.responses.pop(0))
