@@ -107,6 +107,21 @@ def test_old_a8_checkpoint_stage_infers_legacy_jit_pool() -> None:
     assert stage.jit_skill_sources == {"ecommerce-website": "legacy_inferred"}
 
 
+def test_explicit_empty_jit_pool_is_not_treated_as_legacy_missing_metadata() -> None:
+    stage = ResolvedStage(
+        id="research",
+        agent="research",
+        purpose="fixture",
+        skills=["project-context", "ecommerce-website"],
+        mandatory_skills=["project-context"],
+        jit_skills=[],
+        jit_skill_sources={},
+    )
+
+    assert stage.jit_skills == []
+    assert stage.jit_skill_sources == {}
+
+
 def test_resolved_stage_rejects_invalid_jit_provenance() -> None:
     with pytest.raises(ValueError, match="invalid JIT source"):
         ResolvedStage(
