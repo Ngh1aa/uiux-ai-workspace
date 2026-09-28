@@ -125,6 +125,10 @@ class ProductionReleaseController:
         cleanup: bool = True,
     ) -> WorkspaceFinalizeResult:
         self._require_authority(authority, "external_write")
+        if managed.state != "COMPLETED":
+            raise ProductionReleaseError(
+                f"automatic merge requires managed flow COMPLETED; current state is {managed.state}"
+            )
         manager = self._manager_state(managed)
         raw = manager.context.get("workspace")
         if not isinstance(raw, dict):
@@ -190,6 +194,22 @@ class ProductionReleaseController:
         result = deployer.deploy(self.harness.project_root)
         manager = self._manager_state(managed)
         manager.context["production_deploy"] = result.to_dict()
+        deployment_evidence = EvidenceRecord(
+            id=f"deploy_{managed.manager_run_id}",
+            type="deployment_result",
+            stage_id="release",
+            tool=result.adapter,
+            status="PASS" if result.deployed else "FAIL",
+            summary=f"production deployment via {result.adapter}: {'PASS' if result.deployed else 'FAIL'}",
+            data={
+                "adapter": result.adapter,
+                "returncode": result.returncode,
+                "deployed": result.deployed,
+            },
+        )
+        existing = list(manager.context.get("release_evidence", []))
+        existing.append(deployment_evidence.to_dict())
+        manager.context["release_evidence"] = existing[-128:]
         self.harness.checkpoints.save(manager.run_id, manager.to_dict())
         if not result.deployed:
             raise ProductionReleaseError(f"production deploy command failed with code {result.returncode}")
