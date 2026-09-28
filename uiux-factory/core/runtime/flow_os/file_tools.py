@@ -189,6 +189,7 @@ class WorkspaceFileTools:
         needle = query if case_sensitive else query.casefold()
         matches: list[dict[str, Any]] = []
         scanned = 0
+        readable = 0
         truncated = False
 
         for current, dirnames, filenames in os.walk(directory, followlinks=False):
@@ -198,17 +199,18 @@ class WorkspaceFileTools:
                 if name.lower() not in BLOCKED_WRITE_DIRS and not (Path(current) / name).is_symlink()
             )
             for name in sorted(filenames):
-                if scanned >= max_files:
-                    truncated = True
-                    break
                 candidate = Path(current) / name
                 if candidate.is_symlink() or self._blocked_name(name):
                     continue
+                if scanned >= max_files:
+                    truncated = True
+                    break
+                scanned += 1
                 try:
                     loaded = self.reader.read_text(candidate)
                 except SafeReadError:
                     continue
-                scanned += 1
+                readable += 1
                 for line_number, line in enumerate(loaded.content.splitlines(), start=1):
                     haystack = line if case_sensitive else line.casefold()
                     if needle in haystack:
@@ -231,6 +233,7 @@ class WorkspaceFileTools:
             "query": query,
             "regex": False,
             "scanned_files": scanned,
+            "readable_files": readable,
             "matches": matches,
             "truncated": truncated,
         }
