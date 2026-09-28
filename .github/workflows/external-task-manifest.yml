@@ -1,0 +1,71 @@
+name: External Task Manifest
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_repository:
+        description: "Target repository (owner/name or GitHub URL)"
+        required: true
+        type: string
+      task:
+        description: "Natural-language task goal"
+        required: true
+        type: string
+      authority:
+        description: "Maximum caller-granted authority"
+        required: true
+        default: branch_write
+        type: choice
+        options:
+          - read_only
+          - branch_write
+          - external_write
+          - release
+      validation_lane:
+        description: "Optional override: prototype, evidence-led, or production-learning"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  compile-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Compile governed external task manifest
+        env:
+          TARGET_REPOSITORY: ${{ inputs.target_repository }}
+          TASK_GOAL: ${{ inputs.task }}
+          TASK_AUTHORITY: ${{ inputs.authority }}
+          VALIDATION_LANE: ${{ inputs.validation_lane }}
+        run: |
+          args=(
+            python -B skills_UIUX/scripts/prepare-external-task.py
+            --repository "$TARGET_REPOSITORY"
+            --task "$TASK_GOAL"
+            --authority "$TASK_AUTHORITY"
+            --output external-task-manifest.json
+          )
+          if [ -n "$VALIDATION_LANE" ]; then
+            args+=(--validation-lane "$VALIDATION_LANE")
+          fi
+          "${args[@]}" > external-task-manifest.stdout.json
+          cmp external-task-manifest.json external-task-manifest.stdout.json
+
+      - name: Upload manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-task-manifest
+          path: external-task-manifest.json
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uiux-factory.local/schemas/research-evidence-ledger-record.schema.json",
+  "title": "Research Evidence Ledger Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_id",
+    "evidence_class",
+    "observation",
+    "decision_ids",
+    "limitations",
+    "source_ref"
+  ],
+  "properties": {
+    "evidence_id": {"type": "string", "minLength": 1},
+    "evidence_class": {
+      "type": "string",
+      "enum": [
+        "DIRECT_USER",
+        "LIVE_BEHAVIOR",
+        "PROXY",
+        "DESK_EVIDENCE",
+        "HYPOTHESIS",
+        "UNKNOWN"
+      ]
+    },
+    "study_id": {"type": ["string", "null"]},
+    "session_id": {"type": ["string", "null"]},
+    "source_type": {"type": ["string", "null"]},
+    "participant_segment": {"type": ["string", "null"]},
+    "observation": {"type": "string", "minLength": 1},
+    "decision_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "hypothesis_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "observed_at": {"type": ["string", "null"]},
+    "confidence": {
+      "type": ["string", "null"],
+      "enum": ["low", "medium", "high", null]
+    },
+    "limitations": {"type": "string"},
+    "source_ref": {"type": "string", "minLength": 1},
+    "quote": {"type": ["string", "null"]}
+  }
+}
