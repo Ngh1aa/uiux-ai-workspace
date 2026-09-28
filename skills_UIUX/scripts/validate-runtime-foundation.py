@@ -424,8 +424,9 @@ def main() -> int:
         "enforced role defaults/handoffs + isolated branch writes + context/permissions/trace/checkpoint + adapter/discovery syntax"
     )
     print(
-        "NOTE: target-runner isolation is policy/cwd/env bounded rather than an OS/network sandbox; "
-        "provider reasoning and external integrations still require environment-specific end-to-end verification before production claims"
+        "NOTE: provider target commands are validated and executed through the required Docker/Podman container sandbox "
+        "with network disabled and fail-closed behavior when the engine/image is unavailable; provider APIs and external "
+        "integrations still require environment-specific end-to-end verification before production claims"
     )
     return 0
 
