@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "principle": "progressive_disclosure",
+  "canonical_ownership": "docs/CONTRACT-OWNERSHIP.md",
+  "profiles": {
+    "external_collaborator": {
+      "always": [
+        "START-HERE.md",
+        "AGENTS.md",
+        "docs/CONTRACT-OWNERSHIP.md",
+        "external-task-manifest.json"
+      ],
+      "then": [
+        "resolved_flow.source",
+        "active_stage.skill_paths",
+        "target_project.required_source_files"
+      ],
+      "avoid_by_default": [
+        "skills_UIUX/runtime/A*-*.md",
+        "all_skills_eager_load",
+        "all_flows_eager_load",
+        "historical_backup_files"
+      ]
+    },
+    "managed_cli": {
+      "always": [
+        "AGENTS.md",
+        "skills_UIUX/runtime/runtime-policy.json"
+      ],
+      "then": [
+        "resolved_flow.source",
+        "active_stage.skill_paths"
+      ]
+    },
+    "qa": {
+      "always": [
+        "AGENTS.md",
+        "skills_UIUX/runtime/runtime-policy.json",
+        "active_flow.qa_stage"
+      ],
+      "then": [
+        "qa_stage.skill_paths",
+        "target_project.routes",
+        "target_project.runtime_evidence"
+      ]
+    }
+  },
+  "evidence_boundary": {
+    "manifest_status_is_acceptance": false,
+    "provider_self_report_is_gate_evidence": false,
+    "fixture_pass_proves_target": false,
+    "target_runtime_evidence_required_for_runtime_claims": true
+  }
+}
