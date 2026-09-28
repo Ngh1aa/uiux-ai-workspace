@@ -95,7 +95,13 @@ class EvaluationMemoryStore:
             payload = json.loads(self.path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise EvaluationMemoryError(f"evaluation memory is unreadable: {exc}") from exc
-        if not isinstance(payload, dict) or int(payload.get("schema_version", 0)) != self.schema_version:
+        if not isinstance(payload, dict):
+            raise EvaluationMemoryError("evaluation memory root must be an object")
+        try:
+            schema_version = int(payload.get("schema_version", 0))
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise EvaluationMemoryError("evaluation memory schema version is malformed") from exc
+        if schema_version != self.schema_version:
             raise EvaluationMemoryError("evaluation memory schema version is unsupported")
         raw_records = payload.get("records", [])
         if not isinstance(raw_records, list):
@@ -142,6 +148,8 @@ class EvaluationMemoryStore:
                 self._write(records)
         except RunLockTimeout as exc:
             raise EvaluationMemoryError("timed out waiting for evaluation memory transaction lock") from exc
+        except OSError as exc:
+            raise EvaluationMemoryError(f"evaluation memory transaction failed: {exc}") from exc
         return True
 
     @staticmethod
