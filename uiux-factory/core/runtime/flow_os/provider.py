@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from core.runtime.flow_os.flow import REPLAN_SIGNALS
+from core.runtime.flow_os.safe_read import SafeReadError, SafeReader
 
 PROVIDER_STATUSES = {"CONTINUE", "PASS", "FAIL", "BLOCKED"}
 DEFAULT_OPENAI_MODEL = "gpt-5.6-sol"
@@ -347,26 +348,59 @@ def create_provider(
     raise ValueError(f"unknown provider: {name}")
 
 
+def _resolve_context_reader(
+    item: dict[str, Any],
+    path: Path,
+    allowed_roots: tuple[Path, ...],
+) -> SafeReader:
+    normalized_roots = tuple(Path(root).resolve() for root in allowed_roots)
+    declared_root = str(item.get("read_root", "")).strip()
+    if declared_root:
+        root = Path(declared_root).resolve()
+        if normalized_roots and root not in normalized_roots:
+            raise ValueError(f"provider context read_root is not allowlisted: {root}")
+        reader = SafeReader(root)
+        reader.resolve_file(path)
+        return reader
+
+    # Backward-compatible checkpoint migration: infer the root only from the
+    # caller-provided allowlist, never from untrusted item metadata.
+    for root in normalized_roots:
+        reader = SafeReader(root)
+        try:
+            reader.resolve_file(path)
+        except SafeReadError:
+            continue
+        return reader
+    raise ValueError(
+        "provider context item has no safe allowlisted read root; restart the managed run "
+        "or provide allowed_roots from the canonical harness"
+    )
+
+
 def load_context_documents(
     items: list[dict[str, Any]],
     kinds: set[str],
     max_chars: int | None = None,
+    allowed_roots: tuple[Path, ...] = (),
 ) -> list[dict[str, str]]:
     budget = max_chars or int(os.environ.get("UIUX_PROVIDER_CONTEXT_CHARS", "180000"))
+    if budget <= 0:
+        raise ValueError("provider context budget must be positive")
     result: list[dict[str, str]] = []
     used = 0
     for item in items:
         if str(item.get("kind", "")) not in kinds:
             continue
         path = Path(str(item.get("path", "")))
-        if not path.is_file():
-            continue
-        text = path.read_text(encoding="utf-8", errors="replace")
+        reader = _resolve_context_reader(item, path, allowed_roots)
+        loaded = reader.read_text(path)
+        text = loaded.content
         if used + len(text) > budget:
             raise ValueError(
-                f"provider context budget exceeded ({budget} chars) while loading {path}; "
+                f"provider context budget exceeded ({budget} chars) while loading {loaded.relative_path}; "
                 "route fewer skills/sources or raise UIUX_PROVIDER_CONTEXT_CHARS deliberately"
             )
-        result.append({"path": str(path), "content": text})
+        result.append({"path": str(loaded.path), "content": text})
         used += len(text)
     return result
