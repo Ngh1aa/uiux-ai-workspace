@@ -15,7 +15,8 @@
       "required_skills": ["ui-improvement", "frontend-implementation"],
       "conditional_skills": [
         {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
-        {"when": {"features": ["forms"]}, "skills": ["state-feedback-and-error-recovery"]}
+        {"when": {"features": ["forms"]}, "skills": ["state-feedback-and-error-recovery"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]}
       ],
       "gates": [
         {"id": "micro-scope", "require": "changed owner is explicit and preserve/forbidden constraints are respected"}
@@ -27,10 +28,14 @@
       "purpose": "Verify the changed owner in its representative rendered state and check nearby regression risk only.",
       "required_skills": ["ui-craft-and-visual-qa", "web-ui-code-review", "accessibility"],
       "conditional_skills": [
-        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance"]}
+        {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation", "human-governance-and-playbacks", "post-launch-learning-loop"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance", "system-reality-and-production-readiness", "code-review-and-release"]}
       ],
       "gates": [
-        {"id": "micro-rendered-check", "require": "changed UI is visually inspected and no adjacent regression is observed"}
+        {"id": "micro-rendered-check", "require": "changed UI is visually inspected and no adjacent regression is observed"},
+        {"id": "truthful-completion", "require": "verified versus unverified areas are explicit; completion claims do not exceed evidence"},
+        {"id": "human-release-governance", "approval": "human", "require": "an authorized human decision owner reviews unresolved risk and rollback/learning readiness before production release when project policy requires it", "when": {"validation_lane": "production-learning"}},
+        {"id": "live-learning-ready", "require": "post-launch signals, review cadence and rollback criteria are explicit for the affected owner", "when": {"validation_lane": "production-learning"}}
       ]
     }
   ],
