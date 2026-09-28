@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 
-ROUTABLE_PROVIDERS = frozenset({"openai", "anthropic", "command"})
+ROUTABLE_PROVIDERS = frozenset({"groq", "gemini", "openai", "anthropic", "command"})
 
 
 @dataclass(frozen=True)
