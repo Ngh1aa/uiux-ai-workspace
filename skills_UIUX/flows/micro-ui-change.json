@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "micro-ui-change",
+  "description": "Minimal implementation and rendered verification for one atomic UI owner or tightly bounded visual defect.",
+  "match": {
+    "priority": 95,
+    "change_surfaces": ["MICRO"],
+    "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
+  },
+  "stages": [
+    {
+      "id": "implementation",
+      "agent": "implementation",
+      "purpose": "Inspect the owning component/token and apply the smallest reversible change without widening scope.",
+      "required_skills": ["ui-improvement", "frontend-implementation"],
+      "conditional_skills": [
+        {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
+        {"when": {"features": ["forms"]}, "skills": ["state-feedback-and-error-recovery"]}
+      ],
+      "gates": [
+        {"id": "micro-scope", "require": "changed owner is explicit and preserve/forbidden constraints are respected"}
+      ]
+    },
+    {
+      "id": "qa",
+      "agent": "qa",
+      "purpose": "Verify the changed owner in its representative rendered state and check nearby regression risk only.",
+      "required_skills": ["ui-craft-and-visual-qa", "web-ui-code-review", "accessibility"],
+      "conditional_skills": [
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance"]}
+      ],
+      "gates": [
+        {"id": "micro-rendered-check", "require": "changed UI is visually inspected and no adjacent regression is observed"}
+      ]
+    }
+  ],
+  "replanning": {
+    "max_replans": 2,
+    "triggers": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"],
+    "policies": [
+      {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "Micro rendered QA failed; return to the owning implementation without widening scope.", "target_stage": "implementation", "add_skills": ["web-ui-code-review"]},
+      {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "The assumed owner was wrong; re-inspect project context in implementation before another edit.", "target_stage": "implementation", "add_skills": ["project-context"]},
+      {"when": {"signal": "NEW_RISK", "risk": ["production", "high"]}, "reason": "Risk exceeded the micro lane; add production verification specialists without silently expanding product scope.", "target_stage": "implementation", "add_skills": ["testing-strategy", "web-quality-and-performance"]},
+      {"when": {"signal": "TOOL_FAILURE"}, "reason": "Diagnose tool failure instead of retrying blindly.", "target_stage": "implementation", "add_skills": ["agent-evaluation-and-reliability"]},
+      {"when": {"signal": "BLOCKED"}, "reason": "Blocked atomic work needs scope/owner re-evaluation before mutation.", "target_stage": "implementation", "add_skills": ["project-context"]}
+    ]
+  }
+}
