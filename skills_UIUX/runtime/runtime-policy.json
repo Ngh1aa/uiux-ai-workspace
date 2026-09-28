@@ -57,7 +57,9 @@
     "enabled": true,
     "max_records": 200,
     "max_recall_records": 20,
-    "min_signature_matches": 1
+    "min_signature_matches": 1,
+    "lock_timeout_seconds": 10,
+    "lock_stale_seconds": 60
   },
   "roles": {
     "development": {
