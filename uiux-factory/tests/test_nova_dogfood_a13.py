@@ -23,15 +23,21 @@ def _nova_fixture(root: Path) -> Path:
     (project / ".uiux-profile.json").write_text(
         json.dumps(
             {
-                "domain": "financial-services",
-                "product_archetype": "mobile-finance-control-app",
-                "validation_lane": "PRODUCT",
+                "project": "Nova — Personal Banking & Money Planning",
+                "mode": "interactive_prototype",
+                "request_type": "whole_product_redesign",
+                "domain": "consumer_fintech_personal_banking",
+                "responsive_scope": "responsive_all",
+                "implementation": {
+                    "stack": "static HTML/CSS/JavaScript",
+                    "entry_points": ["index.html", "app.html", "prototype.html"],
+                },
             }
         ),
         encoding="utf-8",
     )
     (project / "PROJECT-CONTEXT.md").write_text(
-        "# Nova\n\nMobile-first fintech money-management product.\n",
+        "# Nova\n\nResponsive consumer-finance personal banking prototype.\n",
         encoding="utf-8",
     )
     for name in ("index.html", "app.html", "prototype.html"):
@@ -103,7 +109,7 @@ class _FakeVision:
         }
 
 
-def test_a13_real_project_lane_routes_nova_without_faking_model_or_human_pass(
+def test_a13_real_project_lane_routes_legacy_nova_profile_without_faking_taxonomy_or_pass(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -123,6 +129,12 @@ def test_a13_real_project_lane_routes_nova_without_faking_model_or_human_pass(
 
     assert report["passed"] is True
     assert report["project_shape"]["kind"] == "static_html"
+    assert report["profile"]["source_domain"] == "consumer_fintech_personal_banking"
+    assert report["profile"]["normalized_flow_domain"] == "financial-services"
+    assert report["profile"]["product_archetype"] is None
+    assert report["profile"]["validation_lane"] is None
+    assert report["profile"]["missing_optional_fields"] == ["product_archetype", "validation_lane"]
+    assert report["runtime_task_context"]["domain"] == "financial-services"
     assert report["flow"]["id"] == "professional-website-redesign"
     assert report["jit_section"]["skill"] == "financial-product-intelligence"
     assert report["browser"]["viewports"] == ["desktop", "mobile", "tablet"]
@@ -130,14 +142,17 @@ def test_a13_real_project_lane_routes_nova_without_faking_model_or_human_pass(
     assert report["provider_reasoning"]["status"] == "NOT_RUN"
     assert report["human_review"] == {"status": "pending", "verdict": None}
     assert report["release"]["status"] == "NOT_ATTEMPTED"
-    assert {item["id"] for item in report["target_findings"]} == {
+    finding_ids = {item["id"] for item in report["target_findings"]}
+    assert {
         "stale-package-install",
         "stale-factory-cli",
-    }
+        "legacy-domain-taxonomy",
+        "partial-profile-taxonomy",
+    }.issubset(finding_ids)
     assert "provider-quality" in report["truth_boundary"]
 
 
-def test_a13_financial_profile_is_required(tmp_path: Path) -> None:
+def test_a13_unsupported_domain_taxonomy_fails_closed(tmp_path: Path) -> None:
     project = _nova_fixture(tmp_path)
     profile = json.loads((project / ".uiux-profile.json").read_text(encoding="utf-8"))
     profile["domain"] = "generic"
@@ -148,8 +163,28 @@ def test_a13_financial_profile_is_required(tmp_path: Path) -> None:
         factory_root=FACTORY_ROOT,
         project_root=project,
     )
-    with pytest.raises(Exception, match="domain=financial-services"):
+    with pytest.raises(Exception, match="unsupported Nova domain taxonomy"):
         runner._profile()
+
+
+def test_a13_canonical_financial_domain_remains_identity_mapping(tmp_path: Path) -> None:
+    project = _nova_fixture(tmp_path)
+    profile = json.loads((project / ".uiux-profile.json").read_text(encoding="utf-8"))
+    profile["domain"] = "financial-services"
+    profile["product_archetype"] = "mobile-finance-control-app"
+    profile["validation_lane"] = "PRODUCT"
+    (project / ".uiux-profile.json").write_text(json.dumps(profile), encoding="utf-8")
+
+    runner = RealProjectDogfoodRunner(
+        skills_root=SKILLS_ROOT,
+        factory_root=FACTORY_ROOT,
+        project_root=project,
+    )
+    loaded = runner._profile()
+    assert loaded["domain"] == "financial-services"
+    findings = runner._target_findings(runner._project_shape(), loaded)
+    assert "legacy-domain-taxonomy" not in {item["id"] for item in findings}
+    assert "partial-profile-taxonomy" not in {item["id"] for item in findings}
 
 
 def test_a13_viewport_contract_is_bounded_and_strict(tmp_path: Path) -> None:
