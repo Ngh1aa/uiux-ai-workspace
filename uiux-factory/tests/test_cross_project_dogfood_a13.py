@@ -97,6 +97,18 @@ def test_a13_source_truth_resolution_supports_hyphenated_and_legacy_underscore_n
     assert resolve_source_truth(lumen, {"AGENTS.md"}) == "AGENTS.md"
 
 
+def test_a14_path_normalization_preserves_dotfiles_and_removes_only_real_prefixes() -> None:
+    report = evaluate_cross_project_contract(
+        project_profile("nova"),
+        available_paths={"./PROJECT-CONTEXT.md", "./.uiux-profile.json", "/app.html"},
+        change_boundary="PRODUCT",
+    )
+
+    assert report["missing_evidence"] == []
+    assert report["checks"]["profile_evidence_grounded"] is True
+    assert report["source_truth"] == "PROJECT-CONTEXT.md"
+
+
 def test_a13_cross_project_profiles_do_not_share_one_generic_evidence_model() -> None:
     profiles = [PROJECT_PROFILES[key] for key in ("nova", "lumen", "cennext")]
 
