@@ -42,8 +42,8 @@ def _visible_files(root: Path) -> list[str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run A13 cross-project source/contract dogfood")
-    parser.add_argument("--project-id", choices=("lumen", "cennext"), required=True)
+    parser = argparse.ArgumentParser(description="Run Factory cross-project source/contract dogfood")
+    parser.add_argument("--project-id", choices=("nova", "lumen", "cennext"), required=True)
     parser.add_argument("--project-root", type=Path, required=True)
     parser.add_argument("--expected-target-sha", required=True)
     parser.add_argument("--report", type=Path, required=True)
@@ -64,7 +64,7 @@ def main() -> int:
     report = evaluate_cross_project_contract(
         profile,
         available_paths=_visible_files(root),
-        change_surface=profile.expected_change_surface,
+        change_boundary=profile.expected_change_boundary,
     )
     report["target_sha"] = actual_sha
     report["expected_target_sha"] = args.expected_target_sha
