@@ -139,7 +139,7 @@ def test_a4_9_browser_adapter_hashes_real_artifacts_and_marks_errors_failed(tmp_
     artifacts = qa / "artifacts"
     artifacts.mkdir(parents=True)
     screenshot = artifacts / "home-render.png"
-    screenshot.write_bytes(b"not-a-real-png-but-nonempty-test-bytes")
+    screenshot.write_bytes(b"\x89PNG\r\n\x1a\nfixture-png-bytes")
     evidence = {
         "route": "/",
         "url": "http://127.0.0.1:4173/",
@@ -150,6 +150,7 @@ def test_a4_9_browser_adapter_hashes_real_artifacts_and_marks_errors_failed(tmp_
         "ariaSnapshot": "- heading Home",
         "consoleMessages": [],
         "pageErrors": [],
+        "blockedRequests": [],
     }
     (artifacts / "browser-evidence-home.json").write_text(json.dumps(evidence), encoding="utf-8")
 
