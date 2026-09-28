@@ -83,6 +83,13 @@ class ProviderManagedRunner:
                 "branch_write",
                 True,
             ),
+            "activate_skill_context": ToolSpec(
+                "activate_skill_context",
+                "Activate one Flow-routed non-mandatory skill for subsequent provider turns",
+                "READ",
+                "read_only",
+                False,
+            ),
         }
         for spec in self.extra_specs.values():
             spec.validate()
@@ -138,7 +145,102 @@ class ProviderManagedRunner:
         )
         return WorkspaceFileTools(root)
 
-    def _tools(self, authority: str) -> list[dict[str, Any]]:
+    def _jit_config(self) -> tuple[bool, int]:
+        raw = self.harness.policy_doc.get("jit_skill_context", {})
+        if not isinstance(raw, dict):
+            raise ValueError("runtime-policy jit_skill_context must be an object")
+        enabled = bool(raw.get("enabled", True))
+        try:
+            max_active = int(raw.get("max_active_per_stage", 6))
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError("jit_skill_context.max_active_per_stage must be an integer") from exc
+        if max_active < 1 or max_active > 32:
+            raise ValueError("jit_skill_context.max_active_per_stage must be between 1 and 32")
+        return enabled, max_active
+
+    @staticmethod
+    def _skill_name(item: dict[str, Any]) -> str:
+        path = Path(str(item.get("path", "")))
+        return path.parent.name if path.name == "SKILL.md" else ""
+
+    def _jit_skill_state(self, managed: ManagedWebsiteRun, stage_state: Any) -> dict[str, Any]:
+        stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
+        mandatory = list(stage.mandatory_skills)
+        mandatory_set = set(mandatory)
+        pool = [skill for skill in stage.skills if skill not in mandatory_set]
+        enabled, max_active = self._jit_config()
+        if not enabled:
+            return {
+                "enabled": False,
+                "mandatory": mandatory,
+                "pool": pool,
+                "active": list(pool),
+                "available": [],
+                "max_active": max_active,
+            }
+
+        raw_active = stage_state.context.get("jit_active_skills", [])
+        if not isinstance(raw_active, list):
+            raise ValueError("jit_active_skills checkpoint state must be a list")
+        active: list[str] = []
+        for raw_skill in raw_active:
+            skill = str(raw_skill).strip()
+            if skill and skill not in active:
+                active.append(skill)
+        invalid = sorted(set(active).difference(pool))
+        if invalid:
+            raise ValueError("checkpoint contains non-routed JIT skills: " + ", ".join(invalid))
+        if len(active) > max_active:
+            raise ValueError("checkpoint JIT skill count exceeds runtime-policy max_active_per_stage")
+        return {
+            "enabled": True,
+            "mandatory": mandatory,
+            "pool": pool,
+            "active": active,
+            "available": [skill for skill in pool if skill not in set(active)],
+            "max_active": max_active,
+        }
+
+    def _activate_skill_context(
+        self,
+        managed: ManagedWebsiteRun,
+        stage_state: Any,
+        *,
+        skill: str,
+    ) -> dict[str, Any]:
+        state = self._jit_skill_state(managed, stage_state)
+        if not state["enabled"]:
+            raise ValueError("JIT skill activation is disabled by runtime policy")
+        requested = str(skill).strip()
+        if not requested:
+            raise ValueError("activate_skill_context requires a non-empty skill name")
+        if requested in set(state["mandatory"]):
+            raise ValueError(f"skill is mandatory and already active: {requested}")
+        if requested not in set(state["pool"]):
+            raise ValueError(f"skill is not in the Flow-routed JIT pool for this stage: {requested}")
+
+        active = list(state["active"])
+        already_active = requested in active
+        if not already_active:
+            if len(active) >= int(state["max_active"]):
+                raise ValueError("JIT skill activation limit reached for this stage")
+            active.append(requested)
+            stage_state.context["jit_active_skills"] = active
+            self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
+
+        remaining = [name for name in state["pool"] if name not in set(active)]
+        return {
+            "activated": requested,
+            "already_active": already_active,
+            "active_jit_skills": active,
+            "remaining_jit_skills": remaining,
+            "available_next_turn": True,
+            "authority_effect": "none",
+            "gate_effect": "none",
+            "evidence_effect": "none",
+        }
+
+    def _tools(self, authority: str, available_jit_skills: list[str] | None = None) -> list[dict[str, Any]]:
         arg_contracts = {
             "read_text": {"path": "safe project/worktree-relative UTF-8 file path"},
             "list_files": {"path": "safe project/worktree-relative directory path; defaults to ."},
@@ -167,10 +269,16 @@ class ProviderManagedRunner:
                 "timeout_seconds": "positive integer no larger than policy maximum",
                 "sandbox": "required Docker/Podman container; network none; no host fallback",
             },
+            "activate_skill_context": {
+                "skill": "one exact name from task_context.jit_skill_context.available_jit_skills"
+            },
         }
+        available = set(available_jit_skills or [])
         specs = list(self.harness.registry.specs.values()) + list(self.extra_specs.values())
         result: list[dict[str, Any]] = []
         for spec in specs:
+            if spec.name == "activate_skill_context" and not available:
+                continue
             allowed, reason = self.harness.permissions.authorize(spec, authority)
             if allowed:
                 result.append(
@@ -193,13 +301,35 @@ class ProviderManagedRunner:
         stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
         items = list(stage_state.context.get("items", []))
         allowed_roots = (self.project_root, self.harness.repo_root)
-        skills = load_context_documents(items, {"skill"}, allowed_roots=allowed_roots)
+        jit = self._jit_skill_state(managed, stage_state)
+        active_names = set(jit["mandatory"]) | set(jit["active"])
+        skill_items = [
+            item
+            for item in items
+            if str(item.get("kind", "")) == "skill" and self._skill_name(item) in active_names
+        ]
+        skills = load_context_documents(skill_items, {"skill"}, allowed_roots=allowed_roots)
         sources = load_context_documents(
             items,
             {"source_of_truth", "project_config"},
             allowed_roots=allowed_roots,
         )
         manager_state = self.harness.resume(managed.manager_run_id)
+        task_context = dict(managed.task_context)
+        task_context["jit_skill_context"] = {
+            "enabled": bool(jit["enabled"]),
+            "mandatory_skills": list(jit["mandatory"]),
+            "active_jit_skills": list(jit["active"]),
+            "available_jit_skills": list(jit["available"]),
+            "max_active_per_stage": int(jit["max_active"]),
+            "authority_effect": "none",
+            "gate_effect": "none",
+            "evidence_effect": "none",
+            "rule": (
+                "Only Flow-routed non-mandatory skills may be activated. Activation adds knowledge on the next "
+                "provider turn; it cannot add authority, satisfy gates or count as runtime evidence."
+            ),
+        }
         return ProviderStageRequest(
             goal=manager_state.task,
             project_root=str(self._active_root(managed, stage_state)),
@@ -209,9 +339,9 @@ class ProviderManagedRunner:
             agent=stage.agent,
             purpose=stage.purpose,
             gates=list(stage.gates),
-            task_context=dict(managed.task_context),
+            task_context=task_context,
             authority=stage_state.authority,
-            tools=self._tools(stage_state.authority),
+            tools=self._tools(stage_state.authority, list(jit["available"])),
             skill_context=skills,
             source_context=sources,
             observations=list(observations[-24:]),
@@ -232,6 +362,8 @@ class ProviderManagedRunner:
         name: str,
         args: dict[str, Any],
     ) -> Any:
+        if name == "activate_skill_context":
+            return self._activate_skill_context(managed, stage_state, **args)
         if name == "write_project_file":
             return self._file_tools_for(managed, stage_state, require_workspace=True).write_text(**args)
         if name == "replace_text":
@@ -286,10 +418,11 @@ class ProviderManagedRunner:
                 trace.emit("provider.tool.call", "START", tool=name, args=args)
                 result = self._execute_one(managed, stage_state, name, args)
                 trace.emit("provider.tool.call", "OK", tool=name, result=result)
-                evidence = evidence_from_tool(stage.id, name, result)
-                records = list(stage_state.context.get("evidence_records", []))
-                records.append(evidence.to_dict())
-                stage_state.context["evidence_records"] = records[-128:]
+                evidence = None if name == "activate_skill_context" else evidence_from_tool(stage.id, name, result)
+                if evidence is not None:
+                    records = list(stage_state.context.get("evidence_records", []))
+                    records.append(evidence.to_dict())
+                    stage_state.context["evidence_records"] = records[-128:]
 
             observation = {"tool": name, "result": result}
             if evidence is not None:
