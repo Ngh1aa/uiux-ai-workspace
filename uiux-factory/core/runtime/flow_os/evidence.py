@@ -133,6 +133,32 @@ def trusted_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> list
     return trusted
 
 
+def _evidence_channel(record: EvidenceRecord) -> tuple[Any, ...]:
+    """Identify observations where a later retry supersedes an earlier result."""
+    if record.type == "validator_result":
+        return (record.type, record.tool, str(record.data.get("name", "")))
+    if record.type == "command_result":
+        argv = tuple(str(item) for item in record.data.get("argv", []))
+        return (record.type, record.tool, argv, str(record.data.get("cwd", ".")))
+    path = str(record.data.get("path", ""))
+    if path:
+        return (record.type, record.tool, path)
+    return (record.type, record.tool)
+
+
+def effective_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> list[EvidenceRecord]:
+    """Return the latest trusted record per evidence channel.
+
+    A failing validator/command blocks a gate until the same check is rerun successfully;
+    unrelated evidence cannot hide it. Re-running the same check successfully supersedes
+    the stale failure so a repaired stage can progress.
+    """
+    latest: dict[tuple[Any, ...], EvidenceRecord] = {}
+    for record in trusted_stage_evidence(records, stage_id):
+        latest[_evidence_channel(record)] = record
+    return list(latest.values())
+
+
 def gate_evidence_errors(
     gates: list[dict[str, Any]],
     stage_id: str,
@@ -143,11 +169,17 @@ def gate_evidence_errors(
 
     Gate documents may opt into exact ``evidence_types``. For provider-driven legacy
     gates that do not yet declare types, a conservative stage-role default is used so
-    PASS still requires runtime observations rather than provider claims.
+    PASS still requires runtime observations rather than provider claims. A latest
+    failing validator/target command is an explicit blocker even when other evidence
+    types are present.
     """
-    trusted = trusted_stage_evidence(records, stage_id)
-    available = {record.type for record in trusted if record.status != "FAIL"}
+    effective = effective_stage_evidence(records, stage_id)
+    available = {record.type for record in effective if record.status != "FAIL"}
     errors: list[str] = []
+    for record in effective:
+        if record.status == "FAIL":
+            errors.append(f"runtime evidence failed: {record.type} via {record.tool} ({record.summary})")
+
     role_defaults = {
         "research": {"file_read", "search_result", "validator_result", "command_result"},
         "implementation": {"file_change", "validator_result", "command_result"},
