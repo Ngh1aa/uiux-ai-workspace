@@ -149,11 +149,14 @@ class ProviderManagedRunner:
         raw = self.harness.policy_doc.get("jit_skill_context", {})
         if not isinstance(raw, dict):
             raise ValueError("runtime-policy jit_skill_context must be an object")
-        enabled = bool(raw.get("enabled", True))
-        try:
-            max_active = int(raw.get("max_active_per_stage", 6))
-        except (TypeError, ValueError, OverflowError) as exc:
-            raise ValueError("jit_skill_context.max_active_per_stage must be an integer") from exc
+
+        enabled = raw.get("enabled", True)
+        if not isinstance(enabled, bool):
+            raise ValueError("jit_skill_context.enabled must be a boolean")
+
+        max_active = raw.get("max_active_per_stage", 6)
+        if isinstance(max_active, bool) or not isinstance(max_active, int):
+            raise ValueError("jit_skill_context.max_active_per_stage must be an integer")
         if max_active < 1 or max_active > 32:
             raise ValueError("jit_skill_context.max_active_per_stage must be between 1 and 32")
         return enabled, max_active
