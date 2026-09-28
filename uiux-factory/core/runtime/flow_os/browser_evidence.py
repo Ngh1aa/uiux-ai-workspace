@@ -33,7 +33,10 @@ class PlaywrightBrowserEvidenceAdapter:
     """
 
     def __init__(self, qa_root: Path, policy: dict[str, Any]) -> None:
-        self.qa_root = Path(qa_root).resolve()
+        raw_root = Path(qa_root)
+        if raw_root.is_symlink():
+            raise BrowserEvidenceError("QA root must not be a symlink")
+        self.qa_root = raw_root.resolve()
         self.policy = dict(policy)
         config = dict(self.policy.get("browser_evidence", {}))
         self.allow_remote = bool(config.get("allow_remote", False))
@@ -51,16 +54,23 @@ class PlaywrightBrowserEvidenceAdapter:
             raise BrowserEvidenceError("remote browser targets are disabled by runtime policy")
         return base_url
 
+    def _artifact_root(self, artifacts_dir: Path | None) -> Path:
+        raw = Path(artifacts_dir or (self.qa_root / "artifacts"))
+        if raw.is_symlink():
+            raise BrowserEvidenceError("browser artifact root must not be a symlink")
+        root = raw.resolve()
+        try:
+            root.relative_to(self.qa_root)
+        except ValueError as exc:
+            raise BrowserEvidenceError("browser artifact root must stay below qa_root") from exc
+        return root
+
     def capture(self, base_url: str, routes: list[str], artifacts_dir: Path | None = None) -> list[EvidenceRecord]:
         base_url = self._validate_base_url(base_url)
         normalized = [str(route).strip() for route in routes if str(route).strip()]
         if not normalized or len(normalized) > self.max_routes:
             raise BrowserEvidenceError(f"routes must contain between 1 and {self.max_routes} entries")
-        output = Path(artifacts_dir or (self.qa_root / "artifacts")).resolve()
-        try:
-            output.relative_to(self.qa_root)
-        except ValueError as exc:
-            raise BrowserEvidenceError("browser artifacts directory must stay below qa_root") from exc
+        output = self._artifact_root(artifacts_dir)
         output.mkdir(parents=True, exist_ok=True)
         env = {
             key: value
@@ -86,25 +96,29 @@ class PlaywrightBrowserEvidenceAdapter:
 
     def _safe_artifact(self, root: Path, raw: str) -> Path:
         relative = Path(raw)
-        if relative.is_absolute():
+        if relative.is_absolute() or not relative.parts:
             raise BrowserEvidenceError("browser evidence paths must be artifact-relative")
-        candidate = (root / relative).resolve()
+        current = root
+        for part in relative.parts:
+            current = current / part
+            if current.is_symlink():
+                raise BrowserEvidenceError(f"browser evidence refuses symlink path: {raw}")
+        try:
+            candidate = (root / relative).resolve(strict=True)
+        except FileNotFoundError as exc:
+            raise BrowserEvidenceError(f"browser evidence file missing: {raw}") from exc
         try:
             candidate.relative_to(root)
         except ValueError as exc:
             raise BrowserEvidenceError(f"browser evidence path escapes artifact root: {raw}") from exc
-        if candidate.is_symlink() or not candidate.is_file():
-            raise BrowserEvidenceError(f"browser evidence file missing or unsafe: {raw}")
+        if not candidate.is_file():
+            raise BrowserEvidenceError(f"browser evidence file is not regular: {raw}")
         if candidate.stat().st_size <= 0 or candidate.stat().st_size > self.max_artifact_bytes:
             raise BrowserEvidenceError(f"browser evidence file has invalid size: {raw}")
         return candidate
 
     def collect(self, artifacts_dir: Path | None = None, stage_id: str = "qa") -> list[EvidenceRecord]:
-        root = Path(artifacts_dir or (self.qa_root / "artifacts")).resolve()
-        try:
-            root.relative_to(self.qa_root)
-        except ValueError as exc:
-            raise BrowserEvidenceError("browser artifact root must stay below qa_root") from exc
+        root = self._artifact_root(artifacts_dir)
         if not root.is_dir():
             raise BrowserEvidenceError(f"browser artifact root does not exist: {root}")
         records: list[EvidenceRecord] = []
@@ -129,9 +143,10 @@ class PlaywrightBrowserEvidenceAdapter:
             box = payload.get("box")
             status = "PASS" if not page_errors and not console_errors and box is not None else "FAIL"
             route = str(payload.get("route", ""))
+            screenshot_hash = _sha256(screenshot)
             records.append(
                 EvidenceRecord(
-                    id=f"browser_{hashlib.sha256((path.name + _sha256(screenshot)).encode()).hexdigest()[:16]}",
+                    id=f"browser_{hashlib.sha256((path.name + screenshot_hash).encode()).hexdigest()[:16]}",
                     type="browser_render",
                     stage_id=stage_id,
                     tool="playwright",
@@ -144,7 +159,7 @@ class PlaywrightBrowserEvidenceAdapter:
                         "viewport": dict(payload.get("viewport", {})),
                         "box": box,
                         "screenshot": screenshot.name,
-                        "screenshot_sha256": _sha256(screenshot),
+                        "screenshot_sha256": screenshot_hash,
                         "evidence_json": path.name,
                         "evidence_sha256": _sha256(path),
                         "aria_snapshot": str(payload.get("ariaSnapshot", ""))[:20000],
