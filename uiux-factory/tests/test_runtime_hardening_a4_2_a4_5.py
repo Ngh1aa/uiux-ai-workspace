@@ -1,15 +1,19 @@
 from __future__ import annotations
 
-import os
 import subprocess
 from pathlib import Path
 
 import pytest
 
+from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.evidence import evidence_from_tool, gate_evidence_errors, provider_claim_records
 from core.runtime.flow_os.file_tools import WorkspaceFileError, WorkspaceFileTools
 from core.runtime.flow_os.target_runner import TargetRunner, TargetRunnerError
 from core.runtime.flow_os.workspace import WorkspaceIsolationError, WorktreeManager
+
+
+FACTORY = Path(__file__).resolve().parents[1]
+SKILLS = FACTORY.parent / "skills_UIUX"
 
 
 def _git(cwd: Path, *args: str) -> str:
@@ -57,6 +61,48 @@ def test_a4_2_requires_real_git_top_level(tmp_path: Path) -> None:
     plain.mkdir()
     with pytest.raises(WorkspaceIsolationError):
         WorktreeManager(plain).ensure("managed123")
+
+
+def test_a4_2_refuses_dirty_project_truth_but_ignores_runtime_checkpoint_state(tmp_path: Path) -> None:
+    source = _repo(tmp_path)
+    runtime_state = source / ".uiux-agent-runs" / "abc"
+    runtime_state.mkdir(parents=True)
+    (runtime_state / "checkpoint.json").write_text("{}", encoding="utf-8")
+    manager = WorktreeManager(source)
+    metadata = manager.ensure("cleanruntime")
+    assert Path(metadata.workspace_root).is_dir()
+
+    source2 = _repo(tmp_path / "other")
+    (source2 / "uncommitted.txt").write_text("project truth", encoding="utf-8")
+    with pytest.raises(WorkspaceIsolationError, match="uncommitted or untracked project changes"):
+        WorktreeManager(source2).ensure("dirtyrun")
+
+
+def test_a4_2_legacy_harness_low_write_uses_worktree_not_source(tmp_path: Path) -> None:
+    source = _repo(tmp_path)
+    harness = ProviderNeutralAgentHarness(SKILLS, source)
+    state = harness.create_run(
+        "Write a UIUX artifact",
+        "implementation",
+        "branch_write",
+        selected_skills=[],
+        explicit_sources=[],
+        run_id="legacy123",
+    )
+    completed = harness.execute_plan(
+        state,
+        [
+            {
+                "tool": "write_artifact",
+                "args": {"path": "docs/uiux/a4.md", "content": "isolated"},
+            }
+        ],
+    )
+    metadata = harness.worktrees.validate_metadata(
+        completed.context["workspace"], expected_run_id="legacy123"
+    )
+    assert not (source / "docs" / "uiux" / "a4.md").exists()
+    assert (Path(metadata.workspace_root) / "docs" / "uiux" / "a4.md").read_text(encoding="utf-8") == "isolated"
 
 
 def test_a4_5_file_tools_bound_search_replace_and_secret_paths(tmp_path: Path) -> None:
