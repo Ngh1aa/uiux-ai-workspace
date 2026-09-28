@@ -132,8 +132,15 @@ def project_profile(project_id: str) -> ProjectDogfoodProfile:
     return profile
 
 
+def _normalize_path(path: object) -> str:
+    value = str(path).strip().replace("\\", "/")
+    while value.startswith("./"):
+        value = value[2:]
+    return value.lstrip("/")
+
+
 def _normalize_paths(paths: Iterable[str]) -> set[str]:
-    return {str(path).replace("\\", "/").lstrip("./") for path in paths if str(path).strip()}
+    return {_normalize_path(path) for path in paths if str(path).strip()}
 
 
 def resolve_source_truth(profile: ProjectDogfoodProfile, available_paths: Iterable[str]) -> str | None:
