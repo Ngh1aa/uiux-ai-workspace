@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import os
-import re
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -13,6 +12,7 @@ from core.runtime.flow_os.safe_read import SafeReadError, SafeReader
 MAX_WRITE_BYTES = 1024 * 1024
 MAX_SEARCH_FILES = 300
 MAX_SEARCH_MATCHES = 200
+MAX_SEARCH_QUERY_CHARS = 512
 BLOCKED_WRITE_DIRS = frozenset({".git", ".uiux-agent-runs", "node_modules", ".next", "dist", "build"})
 BLOCKED_WRITE_NAMES = frozenset({
     ".env",
@@ -79,7 +79,7 @@ class WorkspaceFileTools:
         current = self.root
         for part in relative.parts:
             current = current / part
-            if current.exists() and current.is_symlink():
+            if current.is_symlink():
                 raise WorkspaceFileError(f"workspace writes refuse symlink paths: {relative.as_posix()}")
         return lexical, relative
 
@@ -103,13 +103,16 @@ class WorkspaceFileTools:
             raise WorkspaceFileError(
                 f"workspace write exceeds {self.max_write_bytes} byte limit: {relative.as_posix()}"
             )
-        before = resolved.read_bytes() if resolved.is_file() else b""
+        existed = resolved.exists()
+        if existed and not resolved.is_file():
+            raise WorkspaceFileError(f"workspace write target is not a regular file: {relative.as_posix()}")
+        before = resolved.read_bytes() if existed else b""
         self._atomic_write(resolved, payload)
         return {
             "path": relative.as_posix(),
             "bytes": len(payload),
-            "created": not bool(before),
-            "before_sha256": _sha256(before) if before else None,
+            "created": not existed,
+            "before_sha256": _sha256(before) if existed else None,
             "after_sha256": _sha256(payload),
         }
 
@@ -122,7 +125,7 @@ class WorkspaceFileTools:
     ) -> dict[str, Any]:
         if expected_count <= 0:
             raise WorkspaceFileError("expected_count must be positive")
-        resolved, relative = self._resolve_write_path(path)
+        _resolved, relative = self._resolve_write_path(path)
         try:
             loaded = self.reader.read_text(relative)
         except SafeReadError as exc:
@@ -174,13 +177,16 @@ class WorkspaceFileTools:
     ) -> dict[str, Any]:
         if not query:
             raise WorkspaceFileError("search query must not be empty")
+        if len(query) > MAX_SEARCH_QUERY_CHARS:
+            raise WorkspaceFileError(f"search query exceeds {MAX_SEARCH_QUERY_CHARS} character limit")
+        if regex:
+            raise WorkspaceFileError("regex search is disabled in the bounded runtime; use plain text search")
         if max_files <= 0 or max_files > 1000:
             raise WorkspaceFileError("max_files must be between 1 and 1000")
         if max_matches <= 0 or max_matches > 1000:
             raise WorkspaceFileError("max_matches must be between 1 and 1000")
         directory, relative = self.reader.resolve_directory(path)
-        flags = 0 if case_sensitive else re.IGNORECASE
-        pattern = re.compile(query if regex else re.escape(query), flags)
+        needle = query if case_sensitive else query.casefold()
         matches: list[dict[str, Any]] = []
         scanned = 0
         truncated = False
@@ -204,7 +210,8 @@ class WorkspaceFileTools:
                     continue
                 scanned += 1
                 for line_number, line in enumerate(loaded.content.splitlines(), start=1):
-                    if pattern.search(line):
+                    haystack = line if case_sensitive else line.casefold()
+                    if needle in haystack:
                         matches.append(
                             {
                                 "path": loaded.relative_path,
@@ -222,7 +229,7 @@ class WorkspaceFileTools:
         return {
             "path": relative.as_posix() or ".",
             "query": query,
-            "regex": bool(regex),
+            "regex": False,
             "scanned_files": scanned,
             "matches": matches,
             "truncated": truncated,
