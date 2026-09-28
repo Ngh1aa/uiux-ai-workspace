@@ -26,6 +26,7 @@ def test_a3_change_surface_is_consistent_across_factory_and_managed_runtime() ->
         "Redesign the whole website": "REDESIGN",
         "Thiết kế lại toàn bộ website": "REDESIGN",
         "Build a SaaS software platform with dashboard": "PRODUCT",
+        "Tạo website bán giày thể thao hiện đại, có giỏ hàng, checkout và tìm kiếm": "PRODUCT",
         "Create a landing page for a fintech platform": "PAGE",
     }
 
@@ -56,6 +57,10 @@ def test_a3_adaptive_flows_choose_smallest_credible_lane() -> None:
         "Create a landing page for a fintech platform": ("page-ui-work", ["research", "design", "implementation", "qa"]),
         "Redesign the whole website": ("professional-website-redesign", ["research", "design", "implementation", "qa"]),
         "Build a SaaS software platform with dashboard": ("professional-website-redesign", ["research", "design", "implementation", "qa"]),
+        "Tạo website bán giày thể thao hiện đại, có giỏ hàng, checkout và tìm kiếm": (
+            "professional-website-redesign",
+            ["research", "design", "implementation", "qa"],
+        ),
     }
 
     for goal, (expected_flow, expected_stages) in cases.items():
