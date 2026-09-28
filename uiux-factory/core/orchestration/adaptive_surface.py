@@ -68,6 +68,8 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
             return "PRODUCT"
         atomic_count = _matched_count(scope_text, ATOMIC_HINTS)
         focused_count = _matched_count(scope_text, FOCUSED_HINTS)
+        if atomic_count and focused_count <= 1 and intent in {"improve", "fix", "polish"}:
+            return "MICRO"
         if atomic_count and not focused_count and len(normalized_scope) <= 2:
             return "MICRO"
         if focused_count:
