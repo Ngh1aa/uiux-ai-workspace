@@ -28,6 +28,18 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _failure_detail(result: subprocess.CompletedProcess[str]) -> str:
+    parts: list[str] = []
+    stdout = str(result.stdout or "").strip()
+    stderr = str(result.stderr or "").strip()
+    if stdout:
+        parts.append("--- stdout ---\n" + stdout[-8000:])
+    if stderr:
+        parts.append("--- stderr ---\n" + stderr[-4000:])
+    detail = "\n".join(parts).strip()
+    return detail[-12000:] if detail else "(no subprocess output)"
+
+
 class PlaywrightBrowserEvidenceAdapter:
     """Capture or ingest real Playwright-rendered evidence into Flow OS evidence.
 
@@ -169,8 +181,9 @@ class PlaywrightBrowserEvidenceAdapter:
             shell=False,
         )
         if result.returncode != 0:
-            detail = (result.stderr or result.stdout)[-6000:]
-            raise BrowserEvidenceError(f"Playwright browser capture failed ({result.returncode}): {detail}")
+            raise BrowserEvidenceError(
+                f"Playwright browser capture failed ({result.returncode}): {_failure_detail(result)}"
+            )
         return self.collect(output)
 
     def _safe_artifact(self, root: Path, raw: str, require_png: bool = False) -> Path:
