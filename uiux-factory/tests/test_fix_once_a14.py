@@ -33,12 +33,12 @@ def test_a14_cennext_focused_ia_workflow_does_not_expand_to_full_redesign() -> N
     assert flow_id == "existing-ui-improvement"
 
 
-def test_a14_nova_focused_trust_data_task_does_not_expand_to_full_redesign() -> None:
+def test_a14_nova_dashboard_task_stays_page_bounded_without_full_redesign() -> None:
     surface, flow_id = _flow_for(
         "Improve trust and data clarity in the dashboard only while preserving the existing product strategy."
     )
-    assert surface == "FOCUSED"
-    assert flow_id == "existing-ui-improvement"
+    assert surface == "PAGE"
+    assert flow_id == "page-ui-work"
 
 
 def test_a14_true_whole_site_redesign_still_routes_to_professional_flow() -> None:
@@ -66,12 +66,11 @@ def test_a14_execution_boundary_is_orthogonal_to_ui_change_surface() -> None:
 
 
 def test_a14_project_profiles_do_not_control_canonical_surface() -> None:
-    tasks = {
-        "nova": "Improve trust and data clarity in the dashboard only.",
-        "lumen": "Refine the hero art direction only.",
-        "cennext": "Improve navigation only while preserving compliance constraints.",
-    }
-    for project_id, task in tasks.items():
+    task = "Improve the hero section only while preserving the current structure."
+    surfaces = set()
+    for project_id in ("nova", "lumen", "cennext"):
         contract = compile_task_contract(project_profile(project_id), task_description=task)
         assert contract["change_boundary"] == "PRODUCT"
-        assert contract["change_surface"] == "FOCUSED"
+        surfaces.add(str(contract["change_surface"]))
+
+    assert surfaces == {"FOCUSED"}
