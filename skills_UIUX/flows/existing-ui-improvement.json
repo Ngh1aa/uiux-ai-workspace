@@ -1,10 +1,11 @@
 {
   "schema_version": 1,
   "id": "existing-ui-improvement",
-  "description": "Focused improvement flow for an implemented website/page where the goal is to modernize, fix or polish without forcing a whole-site redesign lifecycle.",
+  "description": "Focused improvement flow for one implemented section/component cluster without forcing a page or whole-product redesign lifecycle.",
   "match": {
-    "priority": 70,
-    "intents": ["improve", "fix", "polish"],
+    "priority": 80,
+    "intents": ["build", "improve", "fix", "polish", "redesign", "rebuild"],
+    "change_surfaces": ["FOCUSED"],
     "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
   },
   "stages": [
