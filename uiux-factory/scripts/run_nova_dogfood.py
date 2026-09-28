@@ -11,11 +11,14 @@ REPO_ROOT = FACTORY_ROOT.parent
 if str(FACTORY_ROOT) not in sys.path:
     sys.path.insert(0, str(FACTORY_ROOT))
 
-from core.dogfood.real_project import RealProjectDogfoodError, RealProjectDogfoodRunner  # noqa: E402
+from core.dogfood.nova_real_project_legacy import (  # noqa: E402
+    RealProjectDogfoodError,
+    RealProjectDogfoodRunner,
+)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run the A13 deterministic real-project dogfood lane against Nova")
+    parser = argparse.ArgumentParser(description="Run the A13 deterministic legacy render lane against pinned Nova")
     parser.add_argument("--project-root", type=Path, required=True)
     parser.add_argument("--base-url", required=True)
     parser.add_argument("--route", default="/app.html?screen=home")
