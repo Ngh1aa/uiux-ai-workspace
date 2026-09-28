@@ -22,6 +22,13 @@ DEFAULT_VIEWPORTS = [
     {"name": "mobile", "width": 390, "height": 844},
 ]
 
+NOVA_DOMAIN_ALIASES = {
+    "financial-services": "financial-services",
+    "consumer_fintech_personal_banking": "financial-services",
+}
+
+OPTIONAL_PROFILE_FIELDS = ("product_archetype", "validation_lane")
+
 
 class RealProjectDogfoodError(RuntimeError):
     """Raised when a pinned real-project dogfood invariant is not satisfied."""
@@ -60,6 +67,16 @@ def _find_capability(index: dict[str, Any], skill: str) -> str:
         if isinstance(first, dict) and str(first.get("capability", "")).strip():
             return str(first["capability"])
     raise RealProjectDogfoodError(f"no retrievable A8.5 section capability for routed skill {skill}")
+
+
+def _normalize_nova_domain(source_domain: str) -> str:
+    normalized = NOVA_DOMAIN_ALIASES.get(str(source_domain).strip())
+    if normalized is None:
+        supported = ", ".join(sorted(NOVA_DOMAIN_ALIASES))
+        raise RealProjectDogfoodError(
+            f"unsupported Nova domain taxonomy {source_domain!r}; supported source values: {supported}"
+        )
+    return normalized
 
 
 class RealProjectDogfoodRunner:
@@ -106,39 +123,65 @@ class RealProjectDogfoodRunner:
             "static_entrypoints": static_entrypoints,
         }
 
-    def _target_findings(self, shape: dict[str, Any]) -> list[dict[str, str]]:
+    def _target_findings(self, shape: dict[str, Any], profile: dict[str, Any]) -> list[dict[str, str]]:
         findings: list[dict[str, str]] = []
         workflow = ".github/workflows/nova-cloud-qa.yml"
-        if not (self.project_root / workflow).is_file():
-            return findings
-        text = self.reader.read_text(workflow).content
-        if not shape["has_package_json"] and ("npm ci" in text or "npm install" in text):
+        if (self.project_root / workflow).is_file():
+            text = self.reader.read_text(workflow).content
+            if not shape["has_package_json"] and ("npm ci" in text or "npm install" in text):
+                findings.append(
+                    {
+                        "id": "stale-package-install",
+                        "severity": "P1",
+                        "summary": "Target workflow installs npm dependencies although the checked-out project has no package.json.",
+                    }
+                )
+            compact = " ".join(text.split())
+            if "run.py\" qa" in compact or "run.py qa" in compact or "run.py' qa" in compact:
+                findings.append(
+                    {
+                        "id": "stale-factory-cli",
+                        "severity": "P1",
+                        "summary": "Target workflow calls the removed legacy `run.py qa` Factory CLI surface.",
+                    }
+                )
+
+        source_domain = str(profile.get("domain", "")).strip()
+        normalized_domain = _normalize_nova_domain(source_domain)
+        if source_domain != normalized_domain:
             findings.append(
                 {
-                    "id": "stale-package-install",
-                    "severity": "P1",
-                    "summary": "Target workflow installs npm dependencies although the checked-out project has no package.json.",
+                    "id": "legacy-domain-taxonomy",
+                    "severity": "P2",
+                    "summary": (
+                        f"Nova profile uses legacy domain taxonomy {source_domain!r}; "
+                        f"A13 explicitly normalizes it to Flow domain {normalized_domain!r}."
+                    ),
                 }
             )
-        compact = " ".join(text.split())
-        if "run.py\" qa" in compact or "run.py qa" in compact or "run.py' qa" in compact:
+        missing_optional = [
+            key for key in OPTIONAL_PROFILE_FIELDS if not str(profile.get(key, "")).strip()
+        ]
+        if missing_optional:
             findings.append(
                 {
-                    "id": "stale-factory-cli",
-                    "severity": "P1",
-                    "summary": "Target workflow calls the removed legacy `run.py qa` Factory CLI surface.",
+                    "id": "partial-profile-taxonomy",
+                    "severity": "P2",
+                    "summary": (
+                        "Nova profile predates optional normalized taxonomy fields: "
+                        + ", ".join(missing_optional)
+                        + ". A13 does not invent them."
+                    ),
                 }
             )
         return findings
 
     def _profile(self) -> dict[str, Any]:
         profile = _load_json(self.reader, ".uiux-profile.json")
-        required = ("domain", "product_archetype", "validation_lane")
-        missing = [key for key in required if not str(profile.get(key, "")).strip()]
-        if missing:
-            raise RealProjectDogfoodError(".uiux-profile.json missing required fields: " + ", ".join(missing))
-        if str(profile["domain"]) != "financial-services":
-            raise RealProjectDogfoodError("Nova A13 fixture must declare domain=financial-services")
+        source_domain = str(profile.get("domain", "")).strip()
+        if not source_domain:
+            raise RealProjectDogfoodError(".uiux-profile.json missing required field: domain")
+        _normalize_nova_domain(source_domain)
         return profile
 
     def run(
@@ -158,22 +201,31 @@ class RealProjectDogfoodRunner:
                 f"dogfood target SHA mismatch: expected {expected_target_sha}, got {target_sha or '(not a git checkout)'}"
             )
 
+        source_domain = str(profile["domain"]).strip()
+        flow_domain = _normalize_nova_domain(source_domain)
+        missing_optional = [
+            key for key in OPTIONAL_PROFILE_FIELDS if not str(profile.get(key, "")).strip()
+        ]
+        overrides: dict[str, Any] = {
+            "intent": "redesign",
+            "change_surface": "PRODUCT",
+            "website_type": "application",
+            "domain": flow_domain,
+            "mode": "interactive-prototype",
+            "risk": "medium",
+            "features": ["dashboard", "motion"],
+        }
+        for key in OPTIONAL_PROFILE_FIELDS:
+            value = str(profile.get(key, "")).strip()
+            if value:
+                overrides[key] = value
+
         harness = ProviderNeutralAgentHarness(self.skills_root, self.project_root)
         manager = ManagedFlowController(harness)
         managed = manager.start_from_goal(
             "Redesign and dogfood the existing Nova mobile-first fintech money-control product using its real source truth, responsive rendered evidence and visual-review readiness; do not release.",
             authority="read_only",
-            overrides={
-                "intent": "redesign",
-                "change_surface": "PRODUCT",
-                "website_type": "application",
-                "domain": str(profile["domain"]),
-                "product_archetype": str(profile["product_archetype"]),
-                "validation_lane": str(profile["validation_lane"]),
-                "mode": "interactive-prototype",
-                "risk": "medium",
-                "features": ["dashboard", "motion"],
-            },
+            overrides=overrides,
         )
         if managed.flow.id != "professional-website-redesign":
             raise RealProjectDogfoodError(
@@ -258,6 +310,7 @@ class RealProjectDogfoodRunner:
 
         checks = {
             "source_truth_loaded": bool(project_context.content.strip()) and bool(profile),
+            "source_profile_grounded": bool(source_domain) and flow_domain == "financial-services",
             "static_project_detected": shape["kind"] == "static_html",
             "canonical_flow_routed": managed.flow.id == "professional-website-redesign",
             "financial_skill_routed": "financial-product-intelligence" in research.skills,
@@ -279,9 +332,20 @@ class RealProjectDogfoodRunner:
             "expected_target_sha": expected_target_sha,
             "project_shape": shape,
             "profile": {
-                "domain": str(profile["domain"]),
-                "product_archetype": str(profile["product_archetype"]),
-                "validation_lane": str(profile["validation_lane"]),
+                "source_domain": source_domain,
+                "normalized_flow_domain": flow_domain,
+                "product_archetype": str(profile.get("product_archetype", "")).strip() or None,
+                "validation_lane": str(profile.get("validation_lane", "")).strip() or None,
+                "missing_optional_fields": missing_optional,
+                "normalization_rule": (
+                    "Explicit A13 compatibility mapping from Nova's source taxonomy to canonical Flow taxonomy; "
+                    "missing optional fields remain null and are not invented."
+                ),
+            },
+            "runtime_task_context": {
+                "domain": managed.task_context.get("domain"),
+                "product_archetype": managed.task_context.get("product_archetype"),
+                "validation_lane": managed.task_context.get("validation_lane"),
             },
             "flow": {
                 "id": managed.flow.id,
@@ -323,7 +387,7 @@ class RealProjectDogfoodRunner:
             },
             "human_review": {"status": "pending", "verdict": None},
             "release": {"status": "NOT_ATTEMPTED"},
-            "target_findings": self._target_findings(shape),
+            "target_findings": self._target_findings(shape, profile),
             "checks": checks,
             "passed": all(checks.values()),
             "truth_boundary": (
