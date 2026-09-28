@@ -22,14 +22,10 @@ on:
           - external_write
           - release
       validation_lane:
-        description: "Optional explicit validation lane override"
+        description: "Optional override: prototype, evidence-led, or production-learning"
         required: false
-        type: choice
-        options:
-          - ""
-          - prototype
-          - evidence-led
-          - production-learning
+        default: ""
+        type: string
 
 permissions:
   contents: read
