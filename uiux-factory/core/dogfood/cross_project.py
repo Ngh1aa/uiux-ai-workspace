@@ -58,8 +58,8 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
         evidence_paths=("PROJECT-CONTEXT.md", ".uiux-profile.json", "app.html"),
         source_truth_candidates=("PROJECT-CONTEXT.md", "PROJECT_CONTEXT.md"),
         default_task=(
-            "Improve trust and data clarity across the whole Nova fintech product while "
-            "preserving its existing product strategy and interaction model."
+            "Redesign the whole product trust and data experience for the existing Nova fintech app "
+            "while preserving its established product strategy and interaction model."
         ),
         expected_change_boundary="PRODUCT",
         routing_intent="product-trust-data",
