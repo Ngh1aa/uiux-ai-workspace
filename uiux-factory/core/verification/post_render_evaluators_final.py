@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from core.memory.evaluation_memory import EvaluationMemoryError, EvaluationMemoryStore
 from core.verification.evidence_contract_v1 import EvidenceContractEvaluatorV1
@@ -19,7 +19,60 @@ class PostRenderEvaluatorSuite(V1PostRenderEvaluatorSuite):
     change post-render outcomes, gates, authority or the report artifacts themselves.
     """
 
-    EVALUATOR_VERSION = "2.1.1"
+    EVALUATOR_VERSION = "2.1.2"
+    RUNTIME_POLICY_PATH = (
+        Path(__file__).resolve().parents[3]
+        / "skills_UIUX"
+        / "runtime"
+        / "runtime-policy.json"
+    )
+
+    def __init__(
+        self,
+        *,
+        run_dir: Path,
+        project_dir: Path,
+        browser_report_path: Path,
+        evidence_dir: Path,
+        evaluation_memory_policy: Mapping[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            run_dir=run_dir,
+            project_dir=project_dir,
+            browser_report_path=browser_report_path,
+            evidence_dir=evidence_dir,
+        )
+        self.evaluation_memory_policy = (
+            dict(evaluation_memory_policy)
+            if evaluation_memory_policy is not None
+            else None
+        )
+
+    def _resolved_evaluation_memory_policy(self) -> dict[str, Any]:
+        """Resolve A5 memory policy from the canonical runtime contract.
+
+        Explicit injection is supported for managed callers and deterministic tests.
+        Otherwise the evaluator consumes the same runtime-policy.json owned by
+        ``skills_UIUX`` that backs Flow OS. Missing or malformed policy is an advisory
+        memory failure, never a reason to silently enable learning.
+        """
+        explicit = getattr(self, "evaluation_memory_policy", None)
+        if explicit is not None:
+            return dict(explicit)
+
+        try:
+            payload = json.loads(self.RUNTIME_POLICY_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise EvaluationMemoryError(
+                f"canonical evaluation memory policy is unavailable: {exc}"
+            ) from exc
+        if not isinstance(payload, dict):
+            raise EvaluationMemoryError("canonical runtime policy root must be an object")
+        if not isinstance(payload.get("evaluation_memory"), dict):
+            raise EvaluationMemoryError(
+                "canonical runtime policy is missing evaluation_memory configuration"
+            )
+        return payload
 
     async def _run_design_system_metrics(self) -> Path:
         path = await super()._run_design_system_metrics()
@@ -92,7 +145,7 @@ class PostRenderEvaluatorSuite(V1PostRenderEvaluatorSuite):
         try:
             store = EvaluationMemoryStore(
                 self.project_dir,
-                {"evaluation_memory": {"enabled": True}},
+                self._resolved_evaluation_memory_policy(),
             )
             for report_path in outputs.values():
                 path = Path(report_path)
