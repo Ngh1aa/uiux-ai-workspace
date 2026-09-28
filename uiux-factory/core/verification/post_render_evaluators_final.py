@@ -4,13 +4,20 @@ import json
 from pathlib import Path
 from typing import Any
 
+from core.memory.evaluation_memory import EvaluationMemoryError, EvaluationMemoryStore
 from core.verification.evidence_contract_v1 import EvidenceContractEvaluatorV1
 from core.verification.evidence_contract import RequirementRegistry
 from core.verification.post_render_evaluators_v1 import PostRenderEvaluatorSuite as V1PostRenderEvaluatorSuite
 
 
 class PostRenderEvaluatorSuite(V1PostRenderEvaluatorSuite):
-    """Frozen V1 suite with registry-complete readiness accounting."""
+    """Frozen V1 suite with registry-complete readiness accounting.
+
+    A5.4 adds one strictly advisory side effect after the canonical report set is
+    complete: bounded quality patterns are normalized into project-scoped evaluation
+    memory. The memory write is deliberately fail-open so learned history can never
+    change post-render outcomes, gates, authority or the report artifacts themselves.
+    """
 
     EVALUATOR_VERSION = "2.1.0"
 
@@ -73,3 +80,35 @@ class PostRenderEvaluatorSuite(V1PostRenderEvaluatorSuite):
             ),
         }
         return self._write_report("v1-verification-readiness.json", payload)
+
+    def _learn_quality_patterns(self, outputs: dict[str, str]) -> None:
+        """Persist only normalized report metadata after every final report is stable.
+
+        Reading reports after ``super().run()`` is intentional. Some final evaluators
+        refine an inherited report after its first write; learning earlier would retain
+        stale ``cantTell`` patterns beside the final outcome.
+        """
+        self.quality_pattern_memory_error: str | None = None
+        try:
+            store = EvaluationMemoryStore(
+                self.project_dir,
+                {"evaluation_memory": {"enabled": True}},
+            )
+            for report_path in outputs.values():
+                path = Path(report_path)
+                if not path.is_file():
+                    continue
+                try:
+                    payload = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    continue
+                store.record_post_render_report(payload)
+        except (EvaluationMemoryError, OSError, ValueError) as exc:
+            # Advisory memory is not part of post-render truth or gate authority.
+            # A memory failure therefore cannot downgrade, upgrade or block the suite.
+            self.quality_pattern_memory_error = str(exc)[:240]
+
+    async def run(self) -> dict[str, str]:
+        outputs = await super().run()
+        self._learn_quality_patterns(outputs)
+        return outputs
