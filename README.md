@@ -1,94 +1,137 @@
 # UIUX AI Workspace
 
-This repository contains the active **UIUX Factory** design-engineering harness, its UI/UX skill library, and the framework/runtime dependencies used by the Factory.
+UIUX Factory is a design-engineering operating system for moving a goal from **project truth → research/design decisions → implementation → rendered verification → repair → handoff/release** without treating model self-report as evidence.
 
-## Source of truth
+## Start here
 
-The canonical product source lives in:
+For a human or external AI collaborator, read **`START-HERE.md` first**. Do not preload the whole repository.
+
+Normative ownership is defined in `docs/CONTRACT-OWNERSHIP.md`:
+
+- `AGENTS.md` — universal operating/evidence contract;
+- `skills_UIUX/runtime/runtime-policy.json` — authority, tools, sandbox, provider and release policy;
+- `uiux-factory/core/runtime/flow_os/task_context.py` — natural-language Task Contract;
+- `skills_UIUX/flows/*.json` + canonical Flow OS runtime — stage/skill/gate/replanning decisions;
+- `skills_UIUX/<skill>/SKILL.md` — specialist capability knowledge;
+- target-project source/runtime/tests — project truth and acceptance evidence.
+
+## One-command external collaborator mode
+
+Use this when ChatGPT, Codex, Claude, another cloud model, or a GitHub-connected agent will perform the target-repository work instead of an internal Factory provider:
+
+```bash
+python -B skills_UIUX/scripts/prepare-external-task.py \
+  --repository owner/repo \
+  --task "Redesign the portfolio toward Product Designer and make AI workflow evidence inspectable" \
+  --authority branch_write \
+  --qa-route / \
+  --output external-task-manifest.json
+```
+
+The command compiles the natural-language goal into:
+
+- Task Contract + effective authority;
+- resolved Flow;
+- ordered stages;
+- active skills and exact `SKILL.md` paths;
+- gate-derived acceptance criteria;
+- optional QA routes;
+- research packet when evidence-led validation is required;
+- explicit evidence/claim boundaries.
+
+The initial status is always `READY_FOR_EXTERNAL_COLLABORATOR`. A generated manifest **never means implementation or QA passed**. The collaborator must still audit the target repository, work within authority, verify the actual changed target, repair failures and attach evidence.
+
+Machine-readable context loading profiles live in `skills_UIUX/runtime/context-routing.json`.
+
+## Portfolio / career positioning
+
+Broad portfolio builds, rebuilds and role-positioning upgrades now have a dedicated `portfolio-career-system` Flow. It treats the portfolio as a recruiter-facing product and checks:
+
+- primary target role and scan hierarchy;
+- public identity/GitHub/CV consistency;
+- flagship/supporting case routes;
+- case-study product reasoning and evidence classes;
+- inspectable AI-assisted workflow proof;
+- technical/framework claims against source;
+- link/CV/source hygiene;
+- desktop/mobile rendered recruiter paths;
+- user-research and outcome gaps without fabricated evidence.
+
+Narrow portfolio edits such as “fix this hero/card” still route to focused UI flows instead of invoking the full career system.
+
+## Real-user evidence pipeline
+
+Evidence-led work can use `research-evidence-pipeline` together with the existing validation/planning/synthesis skills. It provides reusable templates for:
+
+- decision-mapped research plans;
+- participant screeners;
+- interview guides;
+- usability-test scripts;
+- traceable JSONL evidence ledger records;
+- findings and decision logs.
+
+If participants are unavailable, the correct result is a runnable plan marked `PLANNED_VALIDATION` or `BLOCKED_USER_EVIDENCE` — never fictional participants, quotes, counts, percentages or findings.
+
+## Canonical product source
+
+The Factory runtime lives in:
 
 ```text
 uiux-factory/
 ```
 
-Use that directory for design intelligence, agents, contracts, skill routing, orchestration, generation, verification, evidence and repair.
-
 Key surfaces:
 
 ```text
 uiux-factory/run.py
+uiux-factory/core/runtime/flow_os/
 uiux-factory/core/manager/development_manager.py
 uiux-factory/core/
 uiux-factory/qa/
+skills_UIUX/flows/
+skills_UIUX/runtime/runtime-policy.json
 .github/workflows/uiux-factory-ci.yml
 .github/workflows/cloud-qa-toolchain.yml
 ```
 
-## Active top-level surfaces
+Active top-level surfaces:
 
-- `uiux-factory/` — canonical Factory runtime and cloud QA harness.
-- `skills_UIUX/` — shared UI/UX skills and website-delivery policies.
-- `upstream/anthropics/` — pinned Anthropic reference repositories for agentic coding, tool/eval patterns and finance-domain workflow intelligence; reference-only unless a local skill explicitly adapts them.
-- `MetaGPT/` — vendored MetaGPT framework source; modify only for intentional framework integration work.
-- `scripts/` — repository-level utilities/migrations that still have an active owner.
-- `docs/` — repository-level operating/prompt documentation.
-- `AGENTS.md` — repository operating contract.
+- `uiux-factory/` — canonical Factory runtime and cloud QA harness;
+- `skills_UIUX/` — shared UI/UX skills, flows and runtime policy;
+- `upstream/anthropics/` — pinned reference repositories; reference-only unless intentionally adapted;
+- `MetaGPT/` — vendored framework source; modify only for intentional framework integration;
+- `scripts/` — active repository utilities/migrations;
+- `docs/` — operating and architecture documentation;
+- `AGENTS.md` — universal operating contract;
 - `PROJECT-CONTEXT.template.md` — reusable project-context template.
 
-The old top-level `core/` prototype, standalone `showcase/`, local Workbench UI and localhost Workbench bridge have been removed. The only canonical `core` implementation is `uiux-factory/core/`.
+Historical backup copies are not active source and should not live beside canonical runtime files.
 
 ## Cloud-first collaboration
 
-The preferred operating model does not require a powerful local LLM or a local Workbench:
+Preferred model:
 
 ```text
-External AI collaborator / cloud model
-→ Factory skills + design contracts
-→ target GitHub repository
-→ GitHub branch / pull request
-→ GitHub Actions runner
-→ browser / accessibility / performance / media evidence
-→ creative review and root-cause repair
-→ merge
+User goal
+→ Task Contract
+→ resolved Flow + active-stage skills
+→ external AI collaborator / managed provider
+→ target GitHub branch
+→ implementation
+→ GitHub Actions / target browser evidence
+→ accessibility / performance / media / creative review
+→ root-cause repair
+→ pull request
+→ merge/release within authority
 ```
 
-GitHub Actions owns repeatable execution. `uiux-factory/qa/` provides the cloud-native browser evidence stack using Playwright, axe-core, Lighthouse CI and Sharp.
+GitHub Actions owns repeatable execution. `uiux-factory/qa/` provides Playwright/Chromium, axe-core, Lighthouse CI and Sharp-based evidence.
 
-The Factory can still run directly from the CLI for development and unattended automation. Provider-backed `engine=ai` remains available. For ChatGPT + GitHub collaboration, use `engine=external`: Factory generates governed research/design artifacts and an `external-handoff.json`, then stops without calling an internal provider, generating the deterministic ecommerce fixture, or claiming implementation/QA PASS.
-
-A run with status `handoff_ready` is **not** a completed website. It means the target repository is ready for an external implementation agent to consume the Factory artifacts. Rendered QA must run after the target implementation exists.
-
-## Local development (optional)
-
-From `uiux-factory/`:
-
-```bash
-python -m pip install -r requirements-metagpt-core.txt
-python -m pip install -r requirements-dev.txt
-python -m pytest -q tests
-```
-
-For provider-backed visual work when an approved provider is configured:
-
-```bash
-python run.py "Design a distinctive ecommerce website" --engine ai --runtime-preset visual-first
-```
-
-For an external-brain handoff, provide a design-context JSON with `brain: "external"` plus a target repository contract, then run:
-
-```bash
-python run.py "Redesign the target project" \
-  --context ./design-context.json \
-  --engine external \
-  --runtime-preset visual-first
-```
-
-Local execution output is written under `uiux-factory/runs/` and `uiux-factory/generated/`, which are ignored by Git. The run lock remains because direct CLI/provider-backed runs may still execute outside GitHub Actions.
-
-The old deterministic ecommerce generator remains available only as an internal regression-fixture path used by existing tests; it is no longer exposed as a production CLI engine.
+The older direct `uiux-factory/run.py --engine external` handoff remains supported for Factory-pipeline runs. `skills_UIUX/scripts/prepare-external-task.py` is the lightweight route when the external collaborator needs a governed manifest without running the full generation pipeline.
 
 ## Managed Flow OS CLI
 
-From the repository root, inspect or start the declarative Development Manager with:
+For local/provider-managed execution from the repository root:
 
 ```bash
 python -B skills_UIUX/scripts/uiux-agent.py \
@@ -98,7 +141,7 @@ python -B skills_UIUX/scripts/uiux-agent.py \
   --authority branch_write
 ```
 
-When project truth is already known, the managed CLI can override inference explicitly:
+Explicit project-truth overrides are available when inference should not decide:
 
 ```bash
 python -B skills_UIUX/scripts/uiux-agent.py \
@@ -113,38 +156,41 @@ python -B skills_UIUX/scripts/uiux-agent.py \
   --authority branch_write
 ```
 
-Use `skills_UIUX/FLOW-AGENT-OS.md` for lifecycle, provider, approval and replanning commands.
+See `skills_UIUX/FLOW-AGENT-OS.md` for lifecycle, provider, approval and replanning commands.
+
+## Local development
+
+From `uiux-factory/`:
+
+```bash
+python -m pip install -r requirements-metagpt-core.txt
+python -m pip install -r requirements-dev.txt
+python -m pytest -q tests
+```
+
+Provider-backed direct pipeline work remains available when an approved provider is configured:
+
+```bash
+python run.py "Design a distinctive ecommerce website" --engine ai --runtime-preset visual-first
+```
 
 ## Cloud QA
 
-The cloud QA workflow installs and exercises:
+`Cloud QA Toolchain` can audit the website that actually changed. For `workflow_dispatch` provide the target repository/ref/root, routes and optional install/build/serve commands.
 
-- Playwright Test / Chromium for browser evidence;
-- `@axe-core/playwright` for automated accessibility checks;
-- Lighthouse CI for performance/accessibility/best-practice budgets;
-- Sharp for WebP/AVIF media processing smoke tests.
+The workflow:
 
-QA evidence is uploaded as GitHub Actions artifacts. Automated checks support, but do not replace, visual/creative review.
+1. checks out the declared target in isolation;
+2. runs declared install/build steps;
+3. starts the preview server;
+4. waits for target routes;
+5. runs Playwright + axe on declared routes;
+6. runs Lighthouse against the declared target URLs;
+7. uploads QA artifacts.
 
-### Target-project QA
+The internal `/fixture/` is only a toolchain smoke test. A green fixture never proves another target website passed QA.
 
-`Cloud QA Toolchain` can audit the website that actually changed instead of treating the Factory fixture as product evidence.
-
-For `workflow_dispatch`, provide:
-
-- `target_repository` — `owner/name`; blank means this repository;
-- `target_ref` — branch/tag/SHA; blank uses the target repository default branch;
-- `target_dir` — project root inside that repository; blank uses an external target repository's root, or `uiux-factory/qa` for the internal toolchain smoke;
-- `routes` — comma-separated routes such as `/,/about.html,/contact.html`; blank uses `/` for an external target or the internal fixture routes for the toolchain smoke;
-- `install_command` — optional dependency install command;
-- `build_command` — optional production build command;
-- `serve_command` — optional preview command; blank uses static HTTP serving.
-
-When the target repository differs from `uiux-ai-workspace`, the workflow checks it out into an isolated `target-project/` directory before QA. Public repositories can use the workflow token; private cross-repository checkout may require the `UIUX_TARGET_REPO_TOKEN` Actions secret with read access to the target repository.
-
-The workflow executes install/build from the declared target root, starts the preview server, waits until the first declared route responds successfully, then runs Playwright and axe across all declared routes. Lighthouse CI receives all declared routes instead of auditing only the first page.
-
-For local/manual harness use:
+For local/manual target harness use:
 
 ```bash
 cd uiux-factory/qa
@@ -156,23 +202,22 @@ QA_SERVE_COMMAND='npm run preview -- --host 0.0.0.0 --port 4173' \
 node scripts/serve-target.mjs
 ```
 
-The `/fixture/` route remains only a toolchain smoke test. A green fixture run proves the QA stack works; it must never be reported as evidence that an unrelated target website passed QA.
+## Change invariants
 
-## Change policy
+Keep these green before expanding the pipeline:
 
-Before expanding the design pipeline, keep these invariants green:
-
-1. Active Python source compiles.
-2. Foundation tests pass.
-3. Pinned skills verify successfully.
-4. Generated files cannot escape the generated project root.
-5. Cloud browser/a11y/performance/media QA remains executable on the GitHub runner.
-6. `run.json` and evidence artifacts remain truthful and inspectable.
-7. Changes to MetaGPT/vendor code are isolated and intentional.
-8. Removed local UI/server surfaces are not reintroduced merely to satisfy obsolete tests.
-9. External-brain runs never invoke an internal provider or claim rendered QA before target implementation exists.
-10. Toolchain-smoke fixtures are never used as acceptance evidence for a different project.
+1. active Python source compiles;
+2. foundation tests pass;
+3. pinned skills/corpora verify;
+4. generated files cannot escape their owned root;
+5. cloud browser/a11y/performance/media QA remains executable;
+6. evidence/run artifacts stay truthful and inspectable;
+7. vendor/framework changes stay isolated and intentional;
+8. external-brain/manifests never claim rendered QA before target implementation exists;
+9. fixture evidence is never substituted for target evidence;
+10. authority never escalates implicitly;
+11. missing direct-user evidence remains planned, blocked or unknown rather than invented.
 
 ## Capability upgrades
 
-See `uiux-factory/docs/AI-CAPABILITY-UPGRADE-SOURCES.md` for the remaining optional capabilities that would improve model routing, vision review, browser observation and evaluation depth.
+See `uiux-factory/docs/AI-CAPABILITY-UPGRADE-SOURCES.md` for optional future improvements to model routing, vision review, browser observation and evaluation depth.
