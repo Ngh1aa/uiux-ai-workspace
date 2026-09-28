@@ -73,6 +73,7 @@ class ManagedFlowController:
         "prior_evaluation_insight",
         "prior_quality_insight",
     )
+    QUALITY_RECALL_AGENTS = frozenset({"implementation", "qa"})
 
     def __init__(self, harness: ProviderNeutralAgentHarness) -> None:
         self.harness = harness
@@ -130,6 +131,14 @@ class ManagedFlowController:
         if stage is None:
             raise ValueError(f"unknown stage for flow {managed.flow.id}: {stage_id}")
         return stage
+
+    def _quality_recall_for_stage(self, managed: ManagedWebsiteRun, stage: ResolvedStage) -> dict[str, Any] | None:
+        """Route visual/post-render history only to implementation/QA specialist stages."""
+        if stage.agent not in self.QUALITY_RECALL_AGENTS:
+            return None
+        manager_state = self.harness.resume(managed.manager_run_id)
+        payload = manager_state.context.get("prior_quality_insight")
+        return dict(payload) if isinstance(payload, dict) else None
 
     def _checkpoint_managed(self, managed: ManagedWebsiteRun) -> None:
         state = self.harness.resume(managed.manager_run_id)
@@ -217,8 +226,9 @@ class ManagedFlowController:
             memory_error = self._memory_error(exc)
         if insight is not None:
             enriched_context["prior_evaluation_insight"] = insight
-        if quality_insight is not None:
-            enriched_context["prior_quality_insight"] = quality_insight
+        # A5.6 keeps quality history out of the general managed task context. The
+        # trusted aggregate remains on the manager checkpoint until an eligible stage
+        # starts, preventing research/planning providers from receiving visual memory.
         manager_state = self.harness.create_run(
             task,
             "development",
@@ -264,6 +274,12 @@ class ManagedFlowController:
         if order.index(authority) > order.index(role["max_authority"]):
             authority = role["max_authority"]
 
+        quality_insight = self._quality_recall_for_stage(managed, stage)
+        if quality_insight is None:
+            managed.task_context.pop("prior_quality_insight", None)
+        else:
+            managed.task_context["prior_quality_insight"] = quality_insight
+
         state = self.harness.create_run(
             task=f"{managed.flow.id}:{stage.id}",
             agent=stage.agent,
@@ -276,10 +292,11 @@ class ManagedFlowController:
         state.context["flow_revision"] = managed.flow.revision
         state.context["stage_id"] = stage.id
         state.context["stage_gates"] = list(stage.gates)
-        for key in self.ADVISORY_MEMORY_CONTEXT_KEYS:
-            prior = managed.task_context.get(key)
-            if isinstance(prior, dict):
-                state.context[key] = dict(prior)
+        prior = managed.task_context.get("prior_evaluation_insight")
+        if isinstance(prior, dict):
+            state.context["prior_evaluation_insight"] = dict(prior)
+        if quality_insight is not None:
+            state.context["prior_quality_insight"] = dict(quality_insight)
         self.harness.checkpoints.save(state.run_id, state.to_dict())
 
         managed.active_stage = stage.id
