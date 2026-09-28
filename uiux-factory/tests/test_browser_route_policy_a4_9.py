@@ -35,7 +35,7 @@ def test_a4_9_routes_must_stay_same_origin_relative(tmp_path: Path) -> None:
 
 def _write_artifact(artifacts: Path, *, url: str, blocked_requests: list[str]) -> None:
     screenshot = artifacts / "home-render.png"
-    screenshot.write_bytes(b"render-bytes")
+    screenshot.write_bytes(b"\x89PNG\r\n\x1a\nfixture-png-bytes")
     payload = {
         "route": "/",
         "url": url,
