@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from core.evaluation.run_evaluator import RunEvaluation, RunEvaluator
+from core.memory.evaluation_memory import EvaluationMemoryStore
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
 from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
@@ -70,6 +72,8 @@ class ManagedFlowController:
         self.harness = harness
         self.planner = FlowPlanner(harness.repo_root, harness.policy_doc)
         self.goal_interpreter = GoalInterpreter()
+        self.run_evaluator = RunEvaluator()
+        self.evaluation_memory = EvaluationMemoryStore(harness.project_root, harness.policy_doc)
 
     def interpret_goal(
         self,
@@ -125,6 +129,15 @@ class ManagedFlowController:
         state.context["managed_run"] = managed.to_dict()
         self.harness.checkpoints.save(state.run_id, state.to_dict())
 
+    def record_evaluation(self, managed: ManagedWebsiteRun) -> RunEvaluation:
+        """Persist current evidence-derived outcome and, when eligible, learn it."""
+        evaluation = self.run_evaluator.evaluate(managed, self.harness)
+        manager_state = self.harness.resume(managed.manager_run_id)
+        manager_state.context["run_evaluation"] = evaluation.to_dict()
+        manager_state.context["evaluation_memory_recorded"] = self.evaluation_memory.record(evaluation)
+        self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
+        return evaluation
+
     def resume(self, manager_run_id: str) -> ManagedWebsiteRun:
         state = self.harness.resume(manager_run_id)
         payload = state.context.get("managed_run")
@@ -162,7 +175,14 @@ class ManagedFlowController:
         additional_skills: list[str] | None = None,
         exclude_skills: list[str] | None = None,
     ) -> ManagedWebsiteRun:
+        # Flow selection is based only on the current task. Prior-run memory is attached
+        # after planning so advisory history can never steer authority/flow selection.
         flow = self.resolve_flow(task_context, additional_skills, exclude_skills)
+        enriched_context = dict(task_context)
+        signature = self.run_evaluator.signature(task_context)
+        insight = self.evaluation_memory.insight(flow_id=flow.id, signature=signature)
+        if insight is not None:
+            enriched_context["prior_evaluation_insight"] = insight
         manager_state = self.harness.create_run(
             task,
             "development",
@@ -173,10 +193,13 @@ class ManagedFlowController:
         managed = ManagedWebsiteRun(
             manager_run_id=manager_state.run_id,
             flow=flow,
-            task_context=dict(task_context),
+            task_context=enriched_context,
             authority=authority,
             active_stage=flow.stages[0].id,
         )
+        if insight is not None:
+            manager_state.context["prior_evaluation_insight"] = insight
+            self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
         self._checkpoint_managed(managed)
         return managed
 
@@ -212,6 +235,9 @@ class ManagedFlowController:
         state.context["flow_revision"] = managed.flow.revision
         state.context["stage_id"] = stage.id
         state.context["stage_gates"] = list(stage.gates)
+        prior = managed.task_context.get("prior_evaluation_insight")
+        if isinstance(prior, dict):
+            state.context["prior_evaluation_insight"] = dict(prior)
         self.harness.checkpoints.save(state.run_id, state.to_dict())
 
         managed.active_stage = stage.id
@@ -269,6 +295,7 @@ class ManagedFlowController:
             managed.state = "COMPLETED"
             managed.active_stage = target
             self._checkpoint_managed(managed)
+            self.record_evaluation(managed)
             return None
 
         managed.active_stage = stage_ids[index + 1]
