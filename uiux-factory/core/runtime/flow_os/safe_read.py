@@ -22,6 +22,7 @@ BLOCKED_FILE_NAMES = frozenset({
     "id_rsa",
     "id_ed25519",
 })
+SAFE_ENV_TEMPLATE_NAMES = frozenset({".env.example", ".env.sample", ".env.template"})
 BLOCKED_FILE_PREFIXES = (".env.",)
 BLOCKED_FILE_SUFFIXES = (".p12", ".pfx", ".key")
 PRIVATE_KEY_MARKERS = (
@@ -71,6 +72,8 @@ class SafeReader:
     @staticmethod
     def _is_blocked_file_name(name: str) -> bool:
         lowered = name.lower()
+        if lowered in SAFE_ENV_TEMPLATE_NAMES:
+            return False
         return (
             lowered in BLOCKED_FILE_NAMES
             or any(lowered.startswith(prefix) for prefix in BLOCKED_FILE_PREFIXES)
