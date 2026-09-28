@@ -159,6 +159,25 @@ def _skill_path(project_root: Path, library_root: Path, skill: str) -> tuple[Pat
     raise SkillSectionError(f"routed skill not found while indexing sections: {skill}")
 
 
+def _state_root_for_capability(project_root: Path, run_id: str) -> Path:
+    project_root = Path(project_root).resolve()
+    direct = project_root / ".uiux-agent-runs" / run_id / _PRIVATE_REGISTRY
+    if direct.is_file():
+        return project_root
+
+    # Provider writes may switch ToolRegistry to the canonical linked worktree:
+    # <source-parent>/.uiux-worktrees/<source-name>/<manager-run-id>.
+    # Recover only that exact source-root shape; never perform an unbounded filesystem search.
+    parent = project_root.parent
+    worktrees_root = parent.parent
+    if worktrees_root.name == ".uiux-worktrees" and parent.name:
+        source_candidate = worktrees_root.parent / parent.name
+        candidate_registry = source_candidate / ".uiux-agent-runs" / run_id / _PRIVATE_REGISTRY
+        if candidate_registry.is_file():
+            return source_candidate.resolve()
+    raise SkillSectionError("skill section capability registry not found")
+
+
 def build_skill_section_registry(
     project_root: Path,
     library_root: Path,
@@ -297,11 +316,12 @@ def read_skill_section(
     if not policy.enabled:
         raise SkillSectionError("JIT skill section retrieval is disabled by runtime policy")
 
-    project_root = Path(project_root).resolve()
+    active_project_root = Path(project_root).resolve()
     library_root = Path(library_root).resolve()
-    registry_path = project_root / ".uiux-agent-runs" / run_id / _PRIVATE_REGISTRY
-    if not registry_path.is_file() or registry_path.is_symlink():
-        raise SkillSectionError("skill section capability registry not found")
+    state_root = _state_root_for_capability(active_project_root, run_id)
+    registry_path = state_root / ".uiux-agent-runs" / run_id / _PRIVATE_REGISTRY
+    if registry_path.is_symlink():
+        raise SkillSectionError("skill section capability registry must not be a symlink")
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     if registry.get("run_id") != run_id or not isinstance(registry.get("entries"), dict):
         raise SkillSectionError("skill section registry is invalid")
@@ -322,7 +342,7 @@ def read_skill_section(
 
     source_path = Path(str(entry.get("source_path", "")))
     read_root = Path(str(entry.get("read_root", ""))).resolve()
-    if read_root not in {project_root, library_root}:
+    if read_root not in {state_root, library_root}:
         raise SkillSectionError("skill section read root is not allowlisted")
     loaded = SafeReader(read_root).read_text(source_path)
     content = str(entry.get("content", ""))
