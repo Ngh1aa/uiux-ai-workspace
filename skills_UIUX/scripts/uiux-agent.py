@@ -13,9 +13,10 @@ if str(FACTORY_ROOT) not in sys.path:
 
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
-from core.runtime.flow_os.managed import ManagedFlowController
+from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
 from core.runtime.flow_os.provider import create_provider
-from core.runtime.flow_os.provider_runner import ProviderManagedRunner
+from core.runtime.flow_os.provider_routing import StageProviderRouter
+from core.runtime.flow_os.provider_runner import ProviderManagedRunner, ProviderRunResult
 from core.runtime.flow_os.release import ProductionReleaseController
 
 
@@ -39,6 +40,116 @@ def _actions_from_plan(path: str | None) -> list[dict[str, object]]:
         return []
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     return list(payload.get("actions", []))
+
+
+def _active_stage(managed: ManagedWebsiteRun):
+    return next(stage for stage in managed.flow.stages if stage.id == managed.active_stage)
+
+
+def _persist_provider_route(
+    harness: ProviderNeutralAgentHarness,
+    managed: ManagedWebsiteRun,
+    record: dict[str, object],
+) -> None:
+    manager_state = harness.resume(managed.manager_run_id)
+    history = list(manager_state.context.get("provider_routing_history", []))
+    history.append(dict(record))
+    manager_state.context["provider_routing_history"] = history[-64:]
+    manager_state.context["provider_route_last"] = dict(record)
+    harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
+
+    stage_runs = managed.stage_runs.get(str(record.get("stage_id", "")), [])
+    if stage_runs:
+        stage_state = harness.resume(stage_runs[-1])
+        stage_state.context["provider_route"] = dict(record)
+        harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
+
+
+def _run_provider_cycles(
+    manager: ManagedFlowController,
+    managed: ManagedWebsiteRun,
+    args: argparse.Namespace,
+) -> tuple[ProviderRunResult, list[dict[str, object]]]:
+    router = StageProviderRouter(manager.harness.policy_doc)
+    route_records: list[dict[str, object]] = []
+    last: ProviderRunResult | None = None
+
+    for cycle in range(1, args.max_provider_cycles + 1):
+        if managed.state in {"COMPLETED", "AWAITING_APPROVAL", "BLOCKED", "FAILED"}:
+            if last is None:
+                last = ProviderRunResult(
+                    managed.state,
+                    managed.active_stage,
+                    0,
+                    str(args.provider or ""),
+                    str(args.model or "provider-default"),
+                )
+            return last, route_records
+
+        stage = _active_stage(managed)
+        selection = router.resolve(
+            stage_id=stage.id,
+            agent=stage.agent,
+            default_provider=str(args.provider or ""),
+            default_model=args.model,
+            requested_max_turns=args.max_provider_turns,
+        )
+        provider = create_provider(
+            selection.provider,
+            model=selection.model,
+            command=args.provider_command,
+        )
+        route_record: dict[str, object] = selection.to_dict()
+        route_record["resolved_model"] = provider.model
+        route_record["cycle"] = cycle
+
+        runner = ProviderManagedRunner(manager, provider)
+        try:
+            stage_result = runner.run_active_stage(
+                managed,
+                max_turns=selection.max_turns,
+                auto_replan=not args.no_auto_replan,
+                dry_run=args.dry_run,
+            )
+        finally:
+            _persist_provider_route(manager.harness, managed, route_record)
+            route_records.append(dict(route_record))
+
+        last = ProviderRunResult(
+            managed.state if managed.state == "COMPLETED" else stage_result.state,
+            managed.active_stage,
+            cycle,
+            provider.name,
+            provider.model,
+            stage_result.message,
+        )
+        if (
+            stage_result.state in {"AWAITING_APPROVAL", "BLOCKED", "FAILED", "FAIL", "DRY_RUN"}
+            or managed.state == "COMPLETED"
+        ):
+            return last, route_records
+
+    managed.state = "FAILED"
+    manager._checkpoint_managed(managed)
+    if last is None:
+        last = ProviderRunResult(
+            "FAILED",
+            managed.active_stage,
+            args.max_provider_cycles,
+            str(args.provider or ""),
+            str(args.model or "provider-default"),
+            "managed provider cycle budget exhausted",
+        )
+    else:
+        last = ProviderRunResult(
+            "FAILED",
+            managed.active_stage,
+            args.max_provider_cycles,
+            last.provider,
+            last.model,
+            "managed provider cycle budget exhausted",
+        )
+    return last, route_records
 
 
 def main() -> int:
@@ -80,7 +191,7 @@ def main() -> int:
     parser.add_argument("--model", help="Provider model override; otherwise provider/env default is used")
     parser.add_argument("--provider-command", help="Command adapter executable; receives JSON on stdin and returns stage JSON on stdout")
     parser.add_argument("--max-provider-cycles", type=int, default=16, help="Maximum managed stage/replan cycles per invocation")
-    parser.add_argument("--max-provider-turns", type=int, default=12, help="Maximum model→tool→observation turns per stage")
+    parser.add_argument("--max-provider-turns", type=int, default=12, help="Maximum model→tool→observation turns per stage and hard ceiling for routed stage budgets")
     parser.add_argument("--no-auto-replan", action="store_true", help="Stop on provider FAIL/BLOCKED/tool failure instead of applying declarative replanning")
 
     parser.add_argument("--browser-artifacts", help="Ingest Playwright browser-evidence artifacts below uiux-factory/qa")
@@ -134,16 +245,9 @@ def main() -> int:
             return 0
 
         if args.provider:
-            provider = create_provider(args.provider, model=args.model, command=args.provider_command)
-            runner = ProviderManagedRunner(manager, provider)
-            result = runner.run_to_boundary(
-                managed,
-                max_cycles=args.max_provider_cycles,
-                max_turns_per_stage=args.max_provider_turns,
-                auto_replan=not args.no_auto_replan,
-                dry_run=args.dry_run,
-            )
+            result, provider_routes = _run_provider_cycles(manager, managed, args)
             output["provider_run"] = result.to_dict()
+            output["provider_routes"] = provider_routes
             output["managed"] = managed.to_dict()
             if result.state not in {"COMPLETED", "AWAITING_APPROVAL", "READY", "RUNNING", "REPLANNED"}:
                 print(json.dumps(output, ensure_ascii=False, indent=2))
