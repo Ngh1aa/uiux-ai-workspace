@@ -5,14 +5,22 @@ on:
     paths:
       - "uiux-factory/**"
       - "skills_UIUX/**"
+      - "START-HERE.md"
+      - "AGENTS.md"
+      - "docs/CONTRACT-OWNERSHIP.md"
       - ".gitmodules"
       - ".github/workflows/uiux-factory-ci.yml"
+      - ".github/workflows/external-task-manifest.yml"
   pull_request:
     paths:
       - "uiux-factory/**"
       - "skills_UIUX/**"
+      - "START-HERE.md"
+      - "AGENTS.md"
+      - "docs/CONTRACT-OWNERSHIP.md"
       - ".gitmodules"
       - ".github/workflows/uiux-factory-ci.yml"
+      - ".github/workflows/external-task-manifest.yml"
 
 permissions:
   contents: read
@@ -54,7 +62,7 @@ jobs:
       - name: Compile active Python source tree
         run: |
           python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
-          python -m compileall -q ../skills_UIUX/runtime
+          python -m compileall -q ../skills_UIUX/runtime ../skills_UIUX/scripts/prepare-external-task.py
 
       - name: Validate Flow Agent OS contracts
         run: |
