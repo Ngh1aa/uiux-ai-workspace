@@ -210,6 +210,13 @@ def test_a4_3_runner_is_argv_only_allowlisted_workspace_scoped_and_env_filtered(
     with pytest.raises(TargetRunnerError):
         runner.run(["python", "-c", "print('x')"], cwd="../outside")
 
+    inside = root / "inside"
+    inside.mkdir()
+    linked = root / "linked"
+    linked.symlink_to(inside, target_is_directory=True)
+    with pytest.raises(TargetRunnerError, match="symlink"):
+        runner.run(["python", "-c", "print('x')"], cwd="linked")
+
 
 def test_a4_4_provider_claims_never_satisfy_typed_gates() -> None:
     gates = [{"id": "implementation-proof", "require": "implementation evidence", "evidence_types": ["file_change"]}]
