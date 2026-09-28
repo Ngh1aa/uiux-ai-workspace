@@ -3,9 +3,15 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 from pathlib import Path
 
-from core.dogfood.cross_project import evaluate_cross_project_contract, project_profile
+
+FACTORY_ROOT = Path(__file__).resolve().parents[1]
+if str(FACTORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(FACTORY_ROOT))
+
+from core.dogfood.cross_project import evaluate_cross_project_contract, project_profile  # noqa: E402
 
 
 def _git_sha(root: Path) -> str | None:
