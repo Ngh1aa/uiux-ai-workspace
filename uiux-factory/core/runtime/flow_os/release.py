@@ -27,13 +27,22 @@ class DeploymentResult:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    def checkpoint_dict(self) -> dict[str, Any]:
+        """Persist only non-sensitive deployment metadata, never command output."""
+        return {
+            "adapter": self.adapter,
+            "returncode": self.returncode,
+            "deployed": self.deployed,
+        }
+
 
 class CommandDeployAdapter:
     """Execute one operator-configured exact argv deployment command.
 
     The command is never sourced from a model response and never executed through a
-    shell. Credentials are provided only through an explicit environment-name allowlist;
-    values are neither persisted nor returned in observations.
+    shell. Credentials are provided only through an explicit environment-name allowlist.
+    Known credential values are redacted from returned output, and command output is
+    never persisted into runtime checkpoints.
     """
 
     def __init__(self, policy: dict[str, Any]) -> None:
@@ -57,6 +66,15 @@ class CommandDeployAdapter:
             raise ProductionReleaseError("production deploy argv must be a non-empty string array with at most 32 items")
         return list(argv)
 
+    @staticmethod
+    def _redact_known_secrets(text: str, environment: dict[str, str], secret_names: list[str]) -> str:
+        redacted = str(text)
+        for name in secret_names:
+            value = environment.get(name, "")
+            if value:
+                redacted = redacted.replace(value, "[REDACTED]")
+        return redacted
+
     def deploy(self, project_root: Path) -> DeploymentResult:
         argv = self._argv()
         env = {
@@ -74,8 +92,8 @@ class CommandDeployAdapter:
             env=env,
             shell=False,
         )
-        stdout = (result.stdout or "")[-self.max_output_chars :]
-        stderr = (result.stderr or "")[-self.max_output_chars :]
+        stdout = self._redact_known_secrets((result.stdout or "")[-self.max_output_chars :], env, self.env_allowlist)
+        stderr = self._redact_known_secrets((result.stderr or "")[-self.max_output_chars :], env, self.env_allowlist)
         return DeploymentResult(
             adapter="command",
             returncode=int(result.returncode),
@@ -187,7 +205,7 @@ class ProductionReleaseController:
         deployer = adapter or CommandDeployAdapter(self.harness.policy_doc)
         result = deployer.deploy(self.harness.project_root)
         manager = self._manager_state(managed)
-        manager.context["production_deploy"] = result.to_dict()
+        manager.context["production_deploy"] = result.checkpoint_dict()
         deployment_evidence = EvidenceRecord(
             id=f"deploy_{managed.manager_run_id}",
             type="deployment_result",
@@ -195,11 +213,7 @@ class ProductionReleaseController:
             tool=result.adapter,
             status="PASS" if result.deployed else "FAIL",
             summary=f"production deployment via {result.adapter}: {'PASS' if result.deployed else 'FAIL'}",
-            data={
-                "adapter": result.adapter,
-                "returncode": result.returncode,
-                "deployed": result.deployed,
-            },
+            data=result.checkpoint_dict(),
         )
         existing = list(manager.context.get("release_evidence", []))
         existing.append(deployment_evidence.to_dict())
