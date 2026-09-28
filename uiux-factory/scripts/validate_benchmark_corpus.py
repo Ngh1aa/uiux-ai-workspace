@@ -12,11 +12,11 @@ if str(ROOT) not in sys.path:
 from core.benchmarks.regression_corpus import BenchmarkCorpus, BenchmarkCorpusError
 
 
-DEFAULT_CORPUS = ROOT / "benchmarks" / "corpus" / "uiux-product-v1.json"
+DEFAULT_CORPUS = ROOT / "benchmarks" / "corpus" / "uiux-product-v2.json"
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate the canonical A12 UI/UX benchmark corpus")
+    parser = argparse.ArgumentParser(description="Validate the canonical UI/UX benchmark corpus")
     parser.add_argument("--corpus", type=Path, default=DEFAULT_CORPUS)
     parser.add_argument("--manifest", type=Path, default=None)
     args = parser.parse_args()
@@ -24,13 +24,14 @@ def main() -> int:
     try:
         corpus = BenchmarkCorpus.load(args.corpus)
     except (OSError, json.JSONDecodeError, BenchmarkCorpusError) as exc:
-        print(f"A12 benchmark corpus validation FAILED: {exc}")
+        print(f"benchmark corpus validation FAILED: {exc}")
         return 1
 
     manifest = corpus.manifest()
     print(
-        "A12 benchmark corpus passed: "
-        f"{manifest['case_count']} cases, hash={manifest['content_hash'][:16]}, version={manifest['version']}"
+        "benchmark corpus passed: "
+        f"{manifest['case_count']} cases, hash={manifest['content_hash'][:16]}, "
+        f"version={manifest['version']}"
     )
     for case in manifest["cases"]:
         print(
@@ -40,7 +41,10 @@ def main() -> int:
 
     if args.manifest is not None:
         args.manifest.parent.mkdir(parents=True, exist_ok=True)
-        args.manifest.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        args.manifest.write_text(
+            json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
     return 0
 
 
