@@ -54,7 +54,7 @@ class RealProjectDogfoodRunner:
     declarative Flow routing with the exact same core used by normal Factory execution.
 
     Render/browser/provider/human/release verdicts intentionally remain outside this
-    generic lane unless another evidence adapter explicitly runs them. A legacy A13 Nova
+    generic lane unless another evidence adapter explicitly runs them. A legacy A13
     render lane is retained separately as a compatibility adapter during migration.
     """
 
