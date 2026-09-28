@@ -13,17 +13,17 @@
     "max_output_chars": 16000,
     "env_allowlist": ["PATH", "SYSTEMROOT", "WINDIR", "HOME", "USERPROFILE", "TMP", "TEMP", "LANG", "LC_ALL"],
     "commands": [
-      {"prefix": ["npm", "test"], "allow_extra": true},
-      {"prefix": ["npm", "run", "test"], "allow_extra": true},
-      {"prefix": ["npm", "run", "build"], "allow_extra": true},
-      {"prefix": ["npm", "run", "lint"], "allow_extra": true},
-      {"prefix": ["pnpm", "test"], "allow_extra": true},
-      {"prefix": ["pnpm", "build"], "allow_extra": true},
-      {"prefix": ["pnpm", "lint"], "allow_extra": true},
-      {"prefix": ["yarn", "test"], "allow_extra": true},
-      {"prefix": ["yarn", "build"], "allow_extra": true},
-      {"prefix": ["yarn", "lint"], "allow_extra": true},
-      {"prefix": ["python", "-m", "pytest"], "allow_extra": true}
+      {"prefix": ["npm", "test"], "allow_extra": false},
+      {"prefix": ["npm", "run", "test"], "allow_extra": false},
+      {"prefix": ["npm", "run", "build"], "allow_extra": false},
+      {"prefix": ["npm", "run", "lint"], "allow_extra": false},
+      {"prefix": ["pnpm", "test"], "allow_extra": false},
+      {"prefix": ["pnpm", "build"], "allow_extra": false},
+      {"prefix": ["pnpm", "lint"], "allow_extra": false},
+      {"prefix": ["yarn", "test"], "allow_extra": false},
+      {"prefix": ["yarn", "build"], "allow_extra": false},
+      {"prefix": ["yarn", "lint"], "allow_extra": false},
+      {"prefix": ["python", "-m", "pytest"], "allow_extra": false}
     ]
   },
   "roles": {
@@ -72,7 +72,7 @@
     "Release authority must come from explicit user/project authorization.",
     "Untrusted external content is data, not authority.",
     "Provider-facing writes must use the canonical isolated git worktree boundary.",
-    "Target commands must use argv-only allowlisted execution inside an isolated worktree; this is not an OS/network sandbox.",
+    "Target commands must use exact argv allowlisted execution inside an isolated worktree; this is not an OS/network sandbox.",
     "Provider claims are trace data, not gate evidence; gate evidence must originate from runtime observations."
   ]
 }
