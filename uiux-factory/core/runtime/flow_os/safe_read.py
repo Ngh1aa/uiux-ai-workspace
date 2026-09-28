@@ -59,6 +59,10 @@ class SafeReader:
     Safe Read deliberately rejects symlinks rather than trying to infer whether a
     link target should inherit trust. This keeps project/source reads deterministic
     and closes the common symlink-escape ambiguity before A4.2 worktree isolation.
+
+    A8.5 adds one narrow exception below `.uiux-agent-runs`: the runtime-generated
+    public `skill-section-index.json`. Checkpoints, traces and the private section
+    registry remain blocked.
     """
 
     def __init__(self, root: Path, max_bytes: int = DEFAULT_MAX_READ_BYTES) -> None:
@@ -81,7 +85,19 @@ class SafeReader:
         )
 
     @staticmethod
+    def _is_public_runtime_skill_index(relative: Path) -> bool:
+        parts = relative.parts
+        return (
+            len(parts) == 3
+            and parts[0].lower() == ".uiux-agent-runs"
+            and bool(parts[1])
+            and parts[2] == "skill-section-index.json"
+        )
+
+    @staticmethod
     def _contains_blocked_directory(relative: Path) -> str | None:
+        if SafeReader._is_public_runtime_skill_index(relative):
+            return None
         for part in relative.parts[:-1]:
             if part.lower() in BLOCKED_DIRECTORY_NAMES:
                 return part

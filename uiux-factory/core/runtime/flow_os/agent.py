@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from core.runtime.flow_os.safe_read import SafeReader
+from core.runtime.flow_os.skill_sections import build_skill_section_registry, read_skill_section
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
 
 
@@ -135,6 +136,7 @@ def build_context_manifest(
     library_root: Path,
     selected_skills: list[str] | None = None,
     explicit_sources: list[str] | None = None,
+    run_id: str | None = None,
 ) -> dict[str, Any]:
     project_root = Path(project_root).resolve()
     library_root = Path(library_root).resolve()
@@ -171,6 +173,27 @@ def build_context_manifest(
             raise ValueError(f"selected skill not found: {skill}")
         items.append(_context_item("skill", skill_path, "routed_knowledge", skill_reader))
 
+    section_index: dict[str, Any] | None = None
+    if run_id and selected_skills:
+        policy_path = library_root / "runtime" / "runtime-policy.json"
+        policy_doc = json.loads(policy_path.read_text(encoding="utf-8"))
+        section_index = build_skill_section_registry(
+            project_root,
+            library_root,
+            run_id,
+            list(selected_skills),
+            policy_doc,
+        )
+        if section_index is not None:
+            items.append(
+                _context_item(
+                    "project_config",
+                    Path(str(section_index["path"])),
+                    "runtime_metadata",
+                    project_reader,
+                )
+            )
+
     declared_sources = list(config.get("source_of_truth", [])) if config else []
     for raw in explicit_sources:
         path = project_root / raw
@@ -181,6 +204,7 @@ def build_context_manifest(
         "selected_skills": selected_skills,
         "declared_sources": declared_sources,
         "loaded_sources": explicit_sources,
+        "skill_section_index": section_index,
         "items": items,
         "totals": {
             "items": len(items),
@@ -190,7 +214,8 @@ def build_context_manifest(
         },
         "rule": (
             "declared source_of_truth is discoverable but loaded only when explicitly selected; "
-            "all project/library text loads are revalidated by canonical Safe Read"
+            "all project/library text loads are revalidated by canonical Safe Read; routed skill "
+            "sections may be expanded only through run-scoped capabilities"
         ),
     }
 
@@ -215,13 +240,21 @@ Handler = Callable[..., Any]
 
 class ToolRegistry:
     def __init__(self, repo_root: Path, project_root: Path) -> None:
-        self.repo_root = repo_root
-        self.project_root = project_root
-        self.safe_reader = SafeReader(project_root)
+        self.repo_root = repo_root.resolve()
+        self.project_root = project_root.resolve()
+        self.safe_reader = SafeReader(self.project_root)
         self.specs: dict[str, ToolSpec] = {}
         self.handlers: dict[str, Handler] = {}
         self._register("read_text", "Safely read one bounded UTF-8 project file", "READ", "read_only", False, self._read_text)
         self._register("list_files", "Safely list visible files below a project-relative directory", "READ", "read_only", False, self._list_files)
+        self._register(
+            "read_skill_section",
+            "Read one bounded Flow-routed skill section using argument capability=<run_id>:<token>",
+            "READ",
+            "read_only",
+            False,
+            self._read_skill_section,
+        )
         self._register("write_artifact", "Write a project-local UI/UX artifact", "LOW_WRITE", "branch_write", True, self._write_artifact)
         self._register("run_validator", "Run an allowlisted skills_UIUX validator", "READ", "read_only", False, self._run_validator)
         self._register("release_action", "Contract-only release boundary", "CRITICAL", "release", True, self._release_action)
@@ -242,6 +275,15 @@ class ToolRegistry:
 
     def _read_text(self, path: str) -> dict[str, Any]:
         return self.safe_reader.read_text(path).observation()
+
+    def _read_skill_section(self, capability: str) -> dict[str, Any]:
+        policy_doc = json.loads((self.repo_root / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
+        return read_skill_section(
+            self.project_root,
+            self.repo_root,
+            capability,
+            policy_doc,
+        )
 
     def _list_files(self, path: str = ".") -> dict[str, Any]:
         return {
@@ -379,8 +421,9 @@ class ProviderNeutralAgentHarness:
             raise ValueError(f"role {agent} caps authority at {role['max_authority']}")
 
         effective_skills = _unique(list(role.get("default_skills", [])) + list(selected_skills or []))
+        effective_run_id = run_id or uuid.uuid4().hex[:16]
         state = RunState(
-            run_id=run_id or uuid.uuid4().hex[:16],
+            run_id=effective_run_id,
             task=task,
             project_root=str(self.project_root),
             agent=agent,
@@ -391,6 +434,7 @@ class ProviderNeutralAgentHarness:
                 self.repo_root,
                 selected_skills=effective_skills,
                 explicit_sources=explicit_sources,
+                run_id=effective_run_id,
             ),
             limitations=[
                 "model/provider reasoning is not bundled",
@@ -447,6 +491,7 @@ class ProviderNeutralAgentHarness:
                         self.repo_root,
                         selected_skills=target_defaults,
                         explicit_sources=loaded_sources,
+                        run_id=state.run_id,
                     ) | runtime_metadata
                     state.completed_actions.append(f"handoff:{target}")
                     trace.emit(

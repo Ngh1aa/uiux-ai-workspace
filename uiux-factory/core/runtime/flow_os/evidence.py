@@ -73,6 +73,42 @@ def _record_type(tool: str, result: Any) -> str:
 
 
 def evidence_from_tool(stage_id: str, tool: str, result: Any) -> EvidenceRecord:
+    if tool == "read_skill_section":
+        raw = dict(result) if isinstance(result, dict) else {}
+        data = {
+            key: raw[key]
+            for key in (
+                "skill",
+                "section_id",
+                "heading",
+                "part",
+                "parts",
+                "start_line",
+                "end_line",
+                "sha256",
+                "chars",
+                "retrievals_used",
+                "retrievals_limit",
+                "retrieved_chars_used",
+                "retrieved_chars_limit",
+            )
+            if key in raw
+        }
+        return EvidenceRecord(
+            id=f"ev_{uuid.uuid4().hex[:16]}",
+            type="skill_section_read",
+            stage_id=str(stage_id),
+            tool=str(tool),
+            status="OBSERVED",
+            summary=(
+                f"runtime retrieved routed skill section "
+                f"{data.get('skill', '(unknown)')}:{data.get('section_id', '(unknown)')}"
+            ),
+            data=data,
+            origin="runtime",
+            trusted=False,
+        )
+
     evidence_type = _record_type(tool, result)
     data = dict(result) if isinstance(result, dict) else {"value": result}
     if evidence_type in {"command_result", "validator_result"}:
