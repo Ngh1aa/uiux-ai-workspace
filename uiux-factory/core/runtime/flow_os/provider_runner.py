@@ -169,14 +169,15 @@ class ProviderManagedRunner:
     def _jit_skill_state(self, managed: ManagedWebsiteRun, stage_state: Any) -> dict[str, Any]:
         stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
         mandatory = list(stage.mandatory_skills)
-        mandatory_set = set(mandatory)
-        pool = [skill for skill in stage.skills if skill not in mandatory_set]
+        pool = list(stage.jit_skills)
+        sources = dict(stage.jit_skill_sources)
         enabled, max_active = self._jit_config()
         if not enabled:
             return {
                 "enabled": False,
                 "mandatory": mandatory,
                 "pool": pool,
+                "sources": sources,
                 "active": list(pool),
                 "available": [],
                 "max_active": max_active,
@@ -199,6 +200,7 @@ class ProviderManagedRunner:
             "enabled": True,
             "mandatory": mandatory,
             "pool": pool,
+            "sources": sources,
             "active": active,
             "available": [skill for skill in pool if skill not in set(active)],
             "max_active": max_active,
@@ -234,6 +236,7 @@ class ProviderManagedRunner:
         remaining = [name for name in state["pool"] if name not in set(active)]
         return {
             "activated": requested,
+            "source": state["sources"].get(requested, "legacy_inferred"),
             "already_active": already_active,
             "active_jit_skills": active,
             "remaining_jit_skills": remaining,
@@ -324,6 +327,10 @@ class ProviderManagedRunner:
             "mandatory_skills": list(jit["mandatory"]),
             "active_jit_skills": list(jit["active"]),
             "available_jit_skills": list(jit["available"]),
+            "jit_skill_sources": {
+                skill: str(jit["sources"].get(skill, "legacy_inferred"))
+                for skill in jit["pool"]
+            },
             "max_active_per_stage": int(jit["max_active"]),
             "authority_effect": "none",
             "gate_effect": "none",
