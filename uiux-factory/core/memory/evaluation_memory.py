@@ -5,11 +5,13 @@ import os
 import tempfile
 from collections import Counter
 from pathlib import Path
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 
-from core.evaluation.run_evaluator import RunEvaluation
 from core.memory.quality_pattern_normalizer import normalize_post_render_report
 from core.runtime.run_lock import RunLock, RunLockTimeout
+
+if TYPE_CHECKING:
+    from core.evaluation.run_evaluator import RunEvaluation
 
 
 class EvaluationMemoryError(RuntimeError):
@@ -25,6 +27,11 @@ class EvaluationMemoryStore:
     allowlist normalizer before persistence. Record updates are serialized with the
     repository's cross-process RunLock primitive so concurrent managed runs cannot lose
     each other's read-modify-write updates.
+
+    A5.4 intentionally keeps the post-render pattern path independent from the canonical
+    RunEvaluation import graph. That prevents standalone post-render tools from creating
+    a cycle through flow_os.managed while preserving the existing RunEvaluation API for
+    managed runs.
     """
 
     schema_version = 1
@@ -114,29 +121,10 @@ class EvaluationMemoryStore:
             raise EvaluationMemoryError("evaluation memory quality_patterns must be a list")
         return payload
 
-    def load(self) -> list[RunEvaluation]:
-        if not self.enabled:
+    @staticmethod
+    def _sanitize_patterns(raw_patterns: Any, max_patterns: int) -> list[dict[str, Any]]:
+        if not isinstance(raw_patterns, list):
             return []
-        payload = self._read_payload()
-        raw_records = payload.get("records", [])
-        records: list[RunEvaluation] = []
-        for raw in raw_records[-self.max_records :]:
-            if not isinstance(raw, dict):
-                continue
-            try:
-                record = RunEvaluation.from_dict(raw)
-            except (TypeError, ValueError):
-                continue
-            if record.run_id and record.memory_eligible:
-                records.append(record)
-        return records
-
-    def load_quality_patterns(self) -> list[dict[str, Any]]:
-        """Return only bounded, previously normalized advisory quality patterns."""
-        if not self.enabled:
-            return []
-        payload = self._read_payload()
-        patterns: list[dict[str, Any]] = []
         allowed_keys = {
             "source",
             "evaluator",
@@ -150,7 +138,8 @@ class EvaluationMemoryStore:
             "fingerprint",
             "occurrences",
         }
-        for raw in payload.get("quality_patterns", [])[-self.max_patterns :]:
+        patterns: list[dict[str, Any]] = []
+        for raw in raw_patterns[-max_patterns:]:
             if not isinstance(raw, dict):
                 continue
             fingerprint = raw.get("fingerprint")
@@ -167,14 +156,42 @@ class EvaluationMemoryStore:
             patterns.append(item)
         return patterns
 
-    def _write(self, records: list[RunEvaluation], quality_patterns: list[dict[str, Any]]) -> None:
+    def load(self) -> list[RunEvaluation]:
+        if not self.enabled:
+            return []
+        # Lazy import prevents standalone post-render tools from traversing the
+        # RunEvaluation -> flow_os package graph merely to persist advisory patterns.
+        from core.evaluation.run_evaluator import RunEvaluation
+
+        payload = self._read_payload()
+        raw_records = payload.get("records", [])
+        records: list[RunEvaluation] = []
+        for raw in raw_records[-self.max_records:]:
+            if not isinstance(raw, dict):
+                continue
+            try:
+                record = RunEvaluation.from_dict(raw)
+            except (TypeError, ValueError):
+                continue
+            if record.run_id and record.memory_eligible:
+                records.append(record)
+        return records
+
+    def load_quality_patterns(self) -> list[dict[str, Any]]:
+        """Return only bounded, previously normalized advisory quality patterns."""
+        if not self.enabled:
+            return []
+        payload = self._read_payload()
+        return self._sanitize_patterns(payload.get("quality_patterns", []), self.max_patterns)
+
+    def _write_payload(self, raw_records: list[dict[str, Any]], quality_patterns: list[dict[str, Any]]) -> None:
         if not self.enabled:
             return
         self._prepare_memory_dir()
         payload = {
             "schema_version": self.schema_version,
-            "records": [record.to_dict() for record in records[-self.max_records :]],
-            "quality_patterns": quality_patterns[-self.max_patterns :],
+            "records": raw_records[-self.max_records:],
+            "quality_patterns": quality_patterns[-self.max_patterns:],
         }
         encoded = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         fd, temporary = tempfile.mkstemp(prefix=".evaluation-memory-", suffix=".tmp", dir=str(self.memory_dir))
@@ -187,6 +204,12 @@ class EvaluationMemoryStore:
         finally:
             if os.path.exists(temporary):
                 os.unlink(temporary)
+
+    def _write(self, records: list[RunEvaluation], quality_patterns: list[dict[str, Any]]) -> None:
+        self._write_payload(
+            [record.to_dict() for record in records[-self.max_records:]],
+            quality_patterns,
+        )
 
     def record(self, evaluation: RunEvaluation) -> bool:
         if not self.enabled or not evaluation.memory_eligible:
@@ -211,7 +234,8 @@ class EvaluationMemoryStore:
             return 0
         try:
             with self._lock():
-                existing = self.load_quality_patterns()
+                payload = self._read_payload()
+                existing = self._sanitize_patterns(payload.get("quality_patterns", []), self.max_patterns)
                 by_fingerprint = {item["fingerprint"]: dict(item) for item in existing}
                 order = [item["fingerprint"] for item in existing]
                 for pattern in incoming:
@@ -230,8 +254,12 @@ class EvaluationMemoryStore:
                         item["occurrences"] = 1
                         by_fingerprint[fingerprint] = item
                         order.append(fingerprint)
-                patterns = [by_fingerprint[fingerprint] for fingerprint in order[-self.max_patterns :]]
-                self._write(self.load(), patterns)
+                patterns = [by_fingerprint[fingerprint] for fingerprint in order[-self.max_patterns:]]
+                raw_records = [
+                    raw for raw in payload.get("records", [])[-self.max_records:]
+                    if isinstance(raw, dict)
+                ]
+                self._write_payload(raw_records, patterns)
         except RunLockTimeout as exc:
             raise EvaluationMemoryError("timed out waiting for evaluation memory transaction lock") from exc
         except OSError as exc:
@@ -261,7 +289,7 @@ class EvaluationMemoryStore:
         if not candidates:
             return None
         candidates.sort(key=lambda row: (row[0], row[1].evaluated_at), reverse=True)
-        selected = [row[1] for row in candidates[: self.max_recall_records]]
+        selected = [row[1] for row in candidates[:self.max_recall_records]]
         outcomes = Counter(record.outcome for record in selected)
         failure_channels = Counter(channel for record in selected for channel in record.failing_channels)
         evidence_types: Counter[str] = Counter()
