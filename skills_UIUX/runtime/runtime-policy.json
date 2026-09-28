@@ -47,6 +47,14 @@
     "max_artifact_bytes": 4194304,
     "timeout_seconds": 180
   },
+  "browser_observation": {
+    "enabled": true,
+    "max_dom_chars": 12000,
+    "max_aria_chars": 12000,
+    "max_console_items": 40,
+    "max_network_items": 40,
+    "max_elements": 24
+  },
   "production_release": {
     "command_argv_env": "UIUX_PRODUCTION_DEPLOY_ARGV_JSON",
     "timeout_seconds": 600,
@@ -158,6 +166,7 @@
     "Managed provider access defaults to zero-cost mode: auto may select only explicitly confirmed Groq/Gemini free-tier accounts, while OpenAI/Anthropic require both runtime-policy permission and per-invocation paid opt-in.",
     "JIT skill activation may expose only non-mandatory skills already routed by the active Flow stage; activation changes provider context only and can never change authority, satisfy gates or count as trusted runtime evidence.",
     "Section-level JIT retrieval may read only random capabilities generated for skills already routed to the current specialist run; section reads are bounded advisory knowledge expansion and never trusted gate evidence.",
+    "Model-readable browser observations use fixed read-only Playwright capture logic, never model-authored browser JavaScript, and remain advisory context that cannot replace trusted browser_render acceptance evidence.",
     "Provider skill/source documents share one policy-owned per-request character budget; JIT activation must preflight the next context before checkpoint mutation, and UIUX_PROVIDER_CONTEXT_CHARS may only lower this ceiling."
   ]
 }
