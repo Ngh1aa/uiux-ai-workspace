@@ -22,6 +22,14 @@ from core.runtime.flow_os.safe_read import SafeReadError, SafeReadResult, SafeRe
 from core.runtime.flow_os.sandbox import ContainerSandbox, SandboxSpec, SandboxUnavailableError
 from core.runtime.flow_os.target_runner import TargetCommandResult, TargetRunner, TargetRunnerError
 from core.runtime.flow_os.task_context import GoalInterpretation, GoalInterpreter, TaskContract
+from core.runtime.flow_os.vision_director import (
+    CommandVisionCreativeAnalyzer,
+    VisionCreativeAnalyzer,
+    VisionCreativeDirectorAdapter,
+    VisionCreativeDirectorError,
+    configured_vision_creative_analyzer,
+    sanitize_creative_output,
+)
 from core.runtime.flow_os.vision_evidence import (
     VisionAnalyzer,
     VisionEvidenceAdapter,
@@ -40,6 +48,7 @@ __all__ = [
     "BrowserObservationError",
     "CANONICAL_RUNTIME_OWNER",
     "CommandDeployAdapter",
+    "CommandVisionCreativeAnalyzer",
     "ContainerSandbox",
     "DeploymentResult",
     "EvidenceRecord",
@@ -64,6 +73,9 @@ __all__ = [
     "TargetRunnerError",
     "TaskContract",
     "VisionAnalyzer",
+    "VisionCreativeAnalyzer",
+    "VisionCreativeDirectorAdapter",
+    "VisionCreativeDirectorError",
     "VisionEvidenceAdapter",
     "VisionEvidenceError",
     "WorkspaceFileError",
@@ -72,5 +84,7 @@ __all__ = [
     "WorkspaceIsolationError",
     "WorkspaceMetadata",
     "WorktreeManager",
+    "configured_vision_creative_analyzer",
+    "sanitize_creative_output",
     "sanitize_vision_output",
 ]
