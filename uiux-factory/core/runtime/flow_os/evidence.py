@@ -14,6 +14,8 @@ TRUSTED_EVIDENCE_TYPES = frozenset({
     "validator_result",
     "artifact",
     "tool_observation",
+    "browser_render",
+    "deployment_result",
 })
 
 
@@ -140,6 +142,8 @@ def _evidence_channel(record: EvidenceRecord) -> tuple[Any, ...]:
     if record.type == "command_result":
         argv = tuple(str(item) for item in record.data.get("argv", []))
         return (record.type, record.tool, argv, str(record.data.get("cwd", ".")))
+    if record.type == "browser_render":
+        return (record.type, str(record.data.get("route", "")), str(record.data.get("viewport", "")))
     path = str(record.data.get("path", ""))
     if path:
         return (record.type, record.tool, path)
@@ -149,9 +153,8 @@ def _evidence_channel(record: EvidenceRecord) -> tuple[Any, ...]:
 def effective_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> list[EvidenceRecord]:
     """Return the latest trusted record per evidence channel.
 
-    A failing validator/command blocks a gate until the same check is rerun successfully;
-    unrelated evidence cannot hide it. Re-running the same check successfully supersedes
-    the stale failure so a repaired stage can progress.
+    A failing validator/command/browser observation blocks a gate until the same check
+    is rerun successfully; unrelated evidence cannot hide it.
     """
     latest: dict[tuple[Any, ...], EvidenceRecord] = {}
     for record in trusted_stage_evidence(records, stage_id):
@@ -165,14 +168,7 @@ def gate_evidence_errors(
     records: list[dict[str, Any]],
     agent: str = "",
 ) -> list[str]:
-    """Evaluate typed evidence requirements without treating model prose as proof.
-
-    Gate documents may opt into exact ``evidence_types``. For provider-driven legacy
-    gates that do not yet declare types, a conservative stage-role default is used so
-    PASS still requires runtime observations rather than provider claims. A latest
-    failing validator/target command is an explicit blocker even when other evidence
-    types are present.
-    """
+    """Evaluate typed evidence requirements without treating model prose as proof."""
     effective = effective_stage_evidence(records, stage_id)
     available = {record.type for record in effective if record.status != "FAIL"}
     errors: list[str] = []
@@ -183,7 +179,7 @@ def gate_evidence_errors(
     role_defaults = {
         "research": {"file_read", "search_result", "validator_result", "command_result"},
         "implementation": {"file_change", "validator_result", "command_result"},
-        "qa": {"validator_result", "command_result", "file_read", "search_result"},
+        "qa": {"validator_result", "command_result", "file_read", "search_result", "browser_render"},
         "development": set(TRUSTED_EVIDENCE_TYPES),
     }
     for gate in gates:
