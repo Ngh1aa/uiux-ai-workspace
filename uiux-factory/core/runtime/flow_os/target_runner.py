@@ -90,23 +90,29 @@ class TargetRunner:
         relative = Path(raw or ".")
         if relative.is_absolute():
             raise TargetRunnerError("target runner cwd must be workspace-relative")
-        lexical = (self.workspace_root / relative).resolve()
+        lexical = Path(os.path.abspath(os.fspath(self.workspace_root / relative)))
         try:
-            lexical.relative_to(self.workspace_root)
+            lexical_relative = lexical.relative_to(self.workspace_root)
         except ValueError as exc:
             raise TargetRunnerError(f"target runner cwd escapes workspace: {raw}") from exc
+
         current = self.workspace_root
-        try:
-            relative_parts = lexical.relative_to(self.workspace_root).parts
-        except ValueError as exc:
-            raise TargetRunnerError("invalid target runner cwd") from exc
-        for part in relative_parts:
+        for part in lexical_relative.parts:
             current = current / part
             if current.is_symlink():
                 raise TargetRunnerError(f"target runner refuses symlink cwd: {raw}")
-        if not lexical.is_dir():
+
+        try:
+            resolved = lexical.resolve(strict=True)
+        except FileNotFoundError as exc:
+            raise TargetRunnerError(f"target runner cwd is not a directory: {raw}") from exc
+        try:
+            resolved.relative_to(self.workspace_root)
+        except ValueError as exc:
+            raise TargetRunnerError(f"target runner cwd resolves outside workspace: {raw}") from exc
+        if not resolved.is_dir():
             raise TargetRunnerError(f"target runner cwd is not a directory: {raw}")
-        return lexical
+        return resolved
 
     def _environment(self) -> dict[str, str]:
         environment = {key: value for key, value in os.environ.items() if key in self.env_allowlist}
