@@ -65,6 +65,9 @@
     "enabled": true,
     "max_active_per_stage": 6
   },
+  "provider_context": {
+    "max_document_chars_per_request": 180000
+  },
   "provider_access": {
     "mode": "zero_cost",
     "allow_paid_providers": false,
@@ -145,6 +148,7 @@
     "Stage provider routing is policy-owned and explicit; task text, provider output and recalled memory cannot select providers or models, and routed provider=auto is forbidden.",
     "Stage provider budgets are policy-owned and immutable from provider output; provider calls, estimated token/cost usage and elapsed time are persisted without prompts, outputs or secrets.",
     "Managed provider access defaults to zero-cost mode: auto may select only explicitly confirmed Groq/Gemini free-tier accounts, while OpenAI/Anthropic require both runtime-policy permission and per-invocation paid opt-in.",
-    "JIT skill activation may expose only non-mandatory skills already routed by the active Flow stage; activation changes provider context only and can never change authority, satisfy gates or count as trusted runtime evidence."
+    "JIT skill activation may expose only non-mandatory skills already routed by the active Flow stage; activation changes provider context only and can never change authority, satisfy gates or count as trusted runtime evidence.",
+    "Provider skill/source documents share one policy-owned per-request character budget; JIT activation must preflight the next context before checkpoint mutation, and UIUX_PROVIDER_CONTEXT_CHARS may only lower this ceiling."
   ]
 }
