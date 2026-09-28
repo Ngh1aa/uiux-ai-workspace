@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "authority_order": ["read_only", "branch_write", "external_write", "release"],
   "risk_defaults": {
     "READ": {"required_authority": "read_only", "automatic": true},
@@ -68,6 +68,19 @@
     "by_agent": {},
     "by_stage": {}
   },
+  "provider_budget": {
+    "enabled": false,
+    "default": {
+      "max_calls": 12,
+      "max_estimated_total_tokens": 196608,
+      "output_reserve_tokens_per_call": 8192,
+      "timeout_seconds": 180,
+      "max_cost_usd": null,
+      "pricing": {}
+    },
+    "by_agent": {},
+    "by_stage": {}
+  },
   "roles": {
     "development": {
       "schema_version": 1,
@@ -120,6 +133,7 @@
     "Production deployment is release authority, requires explicit PRODUCTION confirmation, successful runtime checks and PASS browser-render evidence.",
     "Provider claims are trace data, not gate evidence; gate evidence must originate from runtime observations.",
     "Cross-run evaluation memory is project-scoped, bounded, evidence-derived and advisory only; it cannot change flow selection, authority, gates, current-run evidence or release decisions.",
-    "Stage provider routing is policy-owned and explicit; task text, provider output and recalled memory cannot select providers or models, and routed provider=auto is forbidden."
+    "Stage provider routing is policy-owned and explicit; task text, provider output and recalled memory cannot select providers or models, and routed provider=auto is forbidden.",
+    "Stage provider budgets are policy-owned and immutable from provider output; provider calls, estimated token/cost usage and elapsed time are persisted without prompts, outputs or secrets."
   ]
 }
