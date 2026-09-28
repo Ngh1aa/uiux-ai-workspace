@@ -185,6 +185,21 @@ BLOCKED
 
 The manager checkpoint stores the current `run_evaluation` and whether the memory record was accepted.
 
+## Advisory failure behavior
+
+Memory availability is never a correctness or authority prerequisite.
+
+If recall or recording fails because the memory file is corrupt, locked, unavailable or unwritable:
+
+- canonical flow selection still uses the current task only;
+- the run continues without prior insight;
+- terminal run state/evaluation is preserved;
+- gates/release behavior is unchanged;
+- a bounded `evaluation_memory_error` diagnostic is stored in the manager checkpoint;
+- `evaluation_memory_recorded` is false when recording failed.
+
+A memory subsystem failure must not turn an otherwise valid run into `FAILED`, and it must not hide the original failure of a run that was already terminal.
+
 ## Trust model
 
 A5 preserves the A4 distinction:
