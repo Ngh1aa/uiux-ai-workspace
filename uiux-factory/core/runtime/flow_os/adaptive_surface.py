@@ -31,6 +31,7 @@ PRODUCT_TERMS = (
     "full product", "product-wide", "product wide", "new product", "build a product",
     "build the product", "xây sản phẩm", "toàn bộ sản phẩm", "cả sản phẩm",
     "web app", "mobile app", "application", "platform", "nền tảng", "website", "trang web",
+    "portfolio", "case study site", "hồ sơ năng lực", "showcase",
 )
 
 
