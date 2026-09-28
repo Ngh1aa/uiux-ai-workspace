@@ -319,7 +319,11 @@ class ManagedFlowController:
             raise ValueError(f"cannot apply replan from stage {stage_id}; active stage is {managed.active_stage}")
 
         context = dict(managed.task_context)
+        # Cross-run learning is advisory provider context only. It never participates in
+        # canonical replanning policy evaluation, even if a future flow adds a matching key.
+        context.pop("prior_evaluation_insight", None)
         context.update(context_updates or {})
+        context.pop("prior_evaluation_insight", None)
         context["current_stage"] = stage_id
         effective_count = managed.replan_count if replan_count is None else replan_count
         decision = self.planner.replan(
