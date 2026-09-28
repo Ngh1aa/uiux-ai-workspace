@@ -15,6 +15,12 @@ from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
 from core.runtime.flow_os.provider import create_provider
+from core.runtime.flow_os.provider_budget import (
+    BudgetedProvider,
+    StageProviderBudgetResolver,
+    load_prior_provider_usage,
+    persist_provider_usage,
+)
 from core.runtime.flow_os.provider_routing import StageProviderRouter
 from core.runtime.flow_os.provider_runner import ProviderManagedRunner, ProviderRunResult
 from core.runtime.flow_os.release import ProductionReleaseController
@@ -71,6 +77,7 @@ def _run_provider_cycles(
     args: argparse.Namespace,
 ) -> tuple[ProviderRunResult, list[dict[str, object]]]:
     router = StageProviderRouter(manager.harness.policy_doc)
+    budget_resolver = StageProviderBudgetResolver(manager.harness.policy_doc)
     route_records: list[dict[str, object]] = []
     last: ProviderRunResult | None = None
 
@@ -94,14 +101,32 @@ def _run_provider_cycles(
             default_model=args.model,
             requested_max_turns=args.max_provider_turns,
         )
-        provider = create_provider(
+        budget = budget_resolver.resolve(
+            stage_id=stage.id,
+            agent=stage.agent,
+            requested_max_calls=selection.max_turns,
+        )
+        base_provider = create_provider(
             selection.provider,
             model=selection.model,
             command=args.provider_command,
         )
+        prior_usage = load_prior_provider_usage(manager.harness, managed, stage.id)
+        provider = BudgetedProvider(
+            base_provider,
+            budget,
+            prior_usage=prior_usage,
+            on_update=lambda resolved_budget, usage: persist_provider_usage(
+                manager.harness,
+                managed,
+                resolved_budget,
+                usage,
+            ),
+        )
         route_record: dict[str, object] = selection.to_dict()
         route_record["resolved_model"] = provider.model
         route_record["cycle"] = cycle
+        route_record["budget"] = budget.to_dict()
 
         runner = ProviderManagedRunner(manager, provider)
         try:
@@ -112,6 +137,7 @@ def _run_provider_cycles(
                 dry_run=args.dry_run,
             )
         finally:
+            persist_provider_usage(manager.harness, managed, budget, provider.usage)
             _persist_provider_route(manager.harness, managed, route_record)
             route_records.append(dict(route_record))
 
@@ -248,6 +274,8 @@ def main() -> int:
             result, provider_routes = _run_provider_cycles(manager, managed, args)
             output["provider_run"] = result.to_dict()
             output["provider_routes"] = provider_routes
+            manager_state = harness.resume(managed.manager_run_id)
+            output["provider_usage"] = dict(manager_state.context.get("provider_usage_totals", {}))
             output["managed"] = managed.to_dict()
             if result.state not in {"COMPLETED", "AWAITING_APPROVAL", "READY", "RUNNING", "REPLANNED"}:
                 print(json.dumps(output, ensure_ascii=False, indent=2))
