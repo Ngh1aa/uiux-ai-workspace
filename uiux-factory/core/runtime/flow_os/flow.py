@@ -192,8 +192,8 @@ class ResolvedStage:
     purpose: str
     skills: list[str]
     mandatory_skills: list[str] = field(default_factory=list)
-    jit_skills: list[str] = field(default_factory=list)
-    jit_skill_sources: dict[str, str] = field(default_factory=dict)
+    jit_skills: list[str] | None = None
+    jit_skill_sources: dict[str, str] | None = None
     gates: list[dict[str, Any]] = field(default_factory=list)
 
     def __post_init__(self) -> None:
@@ -206,11 +206,13 @@ class ResolvedStage:
                 f"resolved stage {self.id} has mandatory skills outside skills: {', '.join(missing_mandatory)}"
             )
 
-        if self.jit_skills:
-            jit = _unique(self.jit_skills)
-        else:
+        if self.jit_skills is None:
             mandatory_set = set(mandatory)
             jit = [skill for skill in skills if skill not in mandatory_set]
+            raw_sources: dict[str, str] = {}
+        else:
+            jit = _unique(self.jit_skills)
+            raw_sources = dict(self.jit_skill_sources or {})
         invalid_jit = sorted(set(jit).difference(skill_set))
         if invalid_jit:
             raise ValueError(
@@ -222,7 +224,6 @@ class ResolvedStage:
                 f"resolved stage {self.id} marks mandatory skills as JIT: {', '.join(overlap)}"
             )
 
-        raw_sources = dict(self.jit_skill_sources)
         unknown_source_keys = sorted(set(raw_sources).difference(jit))
         if unknown_source_keys:
             raise ValueError(
@@ -489,11 +490,11 @@ class ReplanningEngine:
             ]
             jit_skills = [
                 skill
-                for skill in _unique(stage.jit_skills + additions)
+                for skill in _unique(list(stage.jit_skills or []) + additions)
                 if skill not in drop_set
             ]
             sources = {
-                skill: stage.jit_skill_sources.get(skill, "replan")
+                skill: dict(stage.jit_skill_sources or {}).get(skill, "replan")
                 for skill in jit_skills
             }
             for skill in additions:
