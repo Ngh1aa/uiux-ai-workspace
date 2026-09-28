@@ -4,10 +4,12 @@ import re
 from dataclasses import asdict, dataclass, field
 from typing import Iterable
 
-from runtime.adaptive_surface import classify_change_surface
+from core.runtime.flow_os.adaptive_surface import classify_change_surface
 
 
 TASK_CONTRACT_VERSION = "1.0"
+DEFAULT_DELIVERY_POLICY_ID = "adaptive-prompt-os-v4"
+DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
 AUTHORITY_LEVELS = ("read_only", "branch_write", "external_write", "release")
 URL_PATTERN = re.compile(r"https?://[^\s,;)\]}>]+", re.IGNORECASE)
 
@@ -61,7 +63,7 @@ def _extract_urls(text: str) -> list[str]:
 
 @dataclass(frozen=True)
 class GoalInterpretation:
-    """V1 Task Contract plus Flow OS classification and A3 change-surface lane."""
+    """Canonical natural-language Task Contract for every Factory execution surface."""
 
     intent: str
     website_type: str
@@ -79,6 +81,8 @@ class GoalInterpretation:
     authority: str = "unspecified"
     confidence: float = 0.0
     evidence: list[str] = field(default_factory=list)
+    delivery_policy: str = DEFAULT_DELIVERY_POLICY_ID
+    delivery_lane: str = DEFAULT_FACTORY_DELIVERY_LANE
     task_contract_version: str = TASK_CONTRACT_VERSION
 
     def to_context(self) -> dict[str, object]:
@@ -99,18 +103,26 @@ class GoalInterpretation:
             "references": payload["references"],
             "authority": payload["authority"],
             "task_contract_version": payload["task_contract_version"],
+            "delivery": {
+                "policy": payload["delivery_policy"],
+                "lane": payload["delivery_lane"],
+            },
             "inference": {
                 "confidence": payload["confidence"],
                 "evidence": payload["evidence"],
             },
         }
 
+    def to_dict(self) -> dict[str, object]:
+        return self.to_context()
+
 
 TaskContract = GoalInterpretation
+GoalProfile = GoalInterpretation
 
 
 class GoalInterpreter:
-    """Conservative Task Contract compiler with adaptive change-surface classification."""
+    """Single canonical compiler for intent, scope, lifecycle and change surface."""
 
     WEBSITE_TYPES = (
         ("ecommerce", ("ecommerce", "e-commerce", "online store", "shop", "store", "bán hàng", "giỏ hàng", "checkout", "sản phẩm")),
@@ -132,7 +144,7 @@ class GoalInterpreter:
             "fintech", "financial", "banking", "bank", "payment", "payments", "settlement",
             "treasury", "ledger", "payout", "remittance", "cross-border", "money movement",
             "mto", "psp", "kyc", "aml", "sanctions", "reconciliation", "subledger",
-            "wealth", "brokerage", "investment", "card issuing", "acquiring"
+            "wealth", "brokerage", "investment", "card issuing", "acquiring",
         )),
     )
 
@@ -140,7 +152,7 @@ class GoalInterpreter:
         ("payments-infrastructure", (
             "settlement", "payment rail", "payment rails", "multi-rail", "payout", "remittance",
             "cross-border", "money movement", "treasury", "clearing", "acquiring", "psp", "mto",
-            "payment orchestration", "ledger", "card issuing"
+            "payment orchestration", "ledger", "card issuing",
         )),
         ("compliance-operations", ("kyc", "aml", "sanctions", "pep", "onboarding", "enhanced due diligence", "edd")),
         ("financial-operations", ("reconciliation", "reconcile", "general ledger", "gl ", "subledger", "month-end", "fund admin", "fund accounting", "exception report")),
@@ -199,9 +211,7 @@ class GoalInterpreter:
         ("improve", ("improve", "enhance", "refine", "cải thiện", "nâng cấp", "tối ưu giao diện")),
     )
 
-    PRESERVE_PATTERNS = (
-        r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",
-    )
+    PRESERVE_PATTERNS = (r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",)
     FORBIDDEN_PATTERNS = (
         r"(?:đừng|không được|must not|do not|don't|dont|avoid)\s+(?:đụng|sửa|thay đổi|đổi|remove|delete|change|modify)?\s*([^,.;\n]+)",
     )
@@ -209,9 +219,7 @@ class GoalInterpreter:
         r"(?:scope|phạm vi)\s*[:=-]\s*([^,.;\n]+)",
         r"(?:chỉ|only)\s+(?:sửa|fix|polish|improve|cải thiện|nâng cấp|chỉnh|đổi|thay đổi)\s+([^,.;\n]+)",
     )
-    REFERENCE_PATTERNS = (
-        r"(?:tham khảo|reference|refer to|inspired by)\s+([^,.;\n]+)",
-    )
+    REFERENCE_PATTERNS = (r"(?:tham khảo|reference|refer to|inspired by)\s+([^,.;\n]+)",)
 
     @classmethod
     def _intent(cls, text: str) -> str:
@@ -225,12 +233,7 @@ class GoalInterpreter:
         explicit = _extract_fragments(text, cls.SCOPE_PATTERNS)
         if explicit:
             return explicit
-
-        scan_text = re.split(
-            r"\b(?:tham khảo|reference|refer to|inspired by)\b",
-            text,
-            maxsplit=1,
-        )[0]
+        scan_text = re.split(r"\b(?:tham khảo|reference|refer to|inspired by)\b", text, maxsplit=1)[0]
         blocked_text = " ".join(preserve + forbidden)
         inferred: list[str] = []
         for name, terms in cls.SCOPE_TERMS:
@@ -336,15 +339,17 @@ class GoalInterpreter:
             risk = "production"
         evidence.append(f"risk:{risk}")
 
-        validation_lane = "prototype"
         lifecycle_features = {"user-validation", "outcome-measurement", "stakeholder-governance", "experimentation", "live-learning"}
         if mode in {"production", "production-candidate"}:
             validation_lane = "production-learning"
         elif risk == "high" or lifecycle_features.intersection(features):
             validation_lane = "evidence-led"
+        else:
+            validation_lane = "prototype"
         evidence.append(f"validation_lane:{validation_lane}")
+        evidence.append(f"delivery_policy:{DEFAULT_DELIVERY_POLICY_ID}")
+        evidence.append(f"delivery_lane:{DEFAULT_FACTORY_DELIVERY_LANE}")
 
-        confidence = 0.95 if website_type != "generic" else 0.65
         return GoalInterpretation(
             intent=intent,
             website_type=website_type,
@@ -360,6 +365,6 @@ class GoalInterpreter:
             forbidden=forbidden,
             references=references,
             authority=authority,
-            confidence=confidence,
+            confidence=0.95 if website_type != "generic" else 0.65,
             evidence=evidence,
         )
