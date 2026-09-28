@@ -77,23 +77,31 @@ def main() -> int:
     if not errors:
         manager = DevelopmentManager(ROOT, policy)
         for website_type in WEBSITE_TYPES:
-            context = {"intent": "redesign", "website_type": website_type, "mode": "interactive-prototype", "risk": "standard", "features": []}
+            context = {
+                "intent": "redesign",
+                "change_surface": "REDESIGN",
+                "website_type": website_type,
+                "mode": "interactive-prototype",
+                "risk": "standard",
+                "features": [],
+            }
             try:
                 resolved = manager.plan(context)
             except Exception as exc:
                 errors.append(f"failed to resolve {website_type}: {type(exc).__name__}: {exc}")
                 continue
-            if resolved.id != "professional-website-redesign":
-                errors.append(f"{website_type} resolved unexpected flow {resolved.id}")
+            expected_flow = "portfolio-career-system" if website_type == "portfolio" else "professional-website-redesign"
+            if resolved.id != expected_flow:
+                errors.append(f"{website_type} resolved unexpected flow {resolved.id}; expected {expected_flow}")
             if len(resolved.stages) < 4:
-                errors.append(f"{website_type} professional flow must resolve at least four stages")
+                errors.append(f"{website_type} resolved flow must expose at least four stages")
 
         try:
-            ecommerce = manager.plan({"intent": "redesign", "website_type": "ecommerce", "mode": "interactive-prototype", "risk": "standard", "features": ["search"]})
+            ecommerce = manager.plan({"intent": "redesign", "change_surface": "REDESIGN", "website_type": "ecommerce", "mode": "interactive-prototype", "risk": "standard", "features": ["search"]})
             research = next(stage for stage in ecommerce.stages if stage.id == "research")
             if "ecommerce-website" not in research.skills or "conversion-and-content" not in research.skills:
                 errors.append("ecommerce conditional routing did not activate domain/conversion skills")
-            decision = manager.replan(ecommerce, "GATE_FAIL", {"intent": "redesign", "website_type": "ecommerce", "mode": "interactive-prototype", "risk": "standard", "features": ["search"], "current_stage": "qa"}, replan_count=0)
+            decision = manager.replan(ecommerce, "GATE_FAIL", {"intent": "redesign", "change_surface": "REDESIGN", "website_type": "ecommerce", "mode": "interactive-prototype", "risk": "standard", "features": ["search"], "current_stage": "qa"}, replan_count=0)
             if not decision.accepted or decision.target_stage != "implementation":
                 errors.append("QA GATE_FAIL did not route back to implementation")
             if "ui-improvement" not in decision.add_skills:
@@ -106,7 +114,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print(f"Flow OS passed: {len(flow_ids)} flows, {len(referenced_skills)} referenced skills, {len(roles)} roles, {len(WEBSITE_TYPES)} professional website routing smokes")
+    print(f"Flow OS passed: {len(flow_ids)} flows, {len(referenced_skills)} referenced skills, {len(roles)} roles, {len(WEBSITE_TYPES)} routing smokes")
     return 0
 
 
