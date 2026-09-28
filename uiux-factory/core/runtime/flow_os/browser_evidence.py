@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,7 @@ from core.runtime.flow_os.evidence import EvidenceRecord
 
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+_VIEWPORT_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,31}$")
 
 
 class BrowserEvidenceError(RuntimeError):
@@ -26,6 +28,18 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _failure_detail(result: subprocess.CompletedProcess[str]) -> str:
+    parts: list[str] = []
+    stdout = str(result.stdout or "").strip()
+    stderr = str(result.stderr or "").strip()
+    if stdout:
+        parts.append("--- stdout ---\n" + stdout[-8000:])
+    if stderr:
+        parts.append("--- stderr ---\n" + stderr[-4000:])
+    detail = "\n".join(parts).strip()
+    return detail[-12000:] if detail else "(no subprocess output)"
+
+
 class PlaywrightBrowserEvidenceAdapter:
     """Capture or ingest real Playwright-rendered evidence into Flow OS evidence.
 
@@ -34,9 +48,20 @@ class PlaywrightBrowserEvidenceAdapter:
     runtime policy explicitly enables remote targets. Screenshot bytes are hashed and
     linked to their JSON observation so a gate can distinguish rendered proof from
     provider prose.
+
+    Cross-origin stylesheets may be represented by the QA harness as locally sanitized
+    empty CSS. They stay observable as a render limitation but are not a remote-network
+    success and do not by themselves invalidate an otherwise local browser render.
+
+    A13 adds an explicitly bounded multi-viewport capture lane. Existing callers that
+    omit ``viewports`` keep the original single desktop viewport behavior from the QA
+    Playwright config.
     """
 
     LOCAL_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+    MAX_VIEWPORTS = 6
+    MIN_VIEWPORT_EDGE = 240
+    MAX_VIEWPORT_EDGE = 4096
 
     def __init__(self, qa_root: Path, policy: dict[str, Any]) -> None:
         raw_root = Path(qa_root)
@@ -77,6 +102,45 @@ class PlaywrightBrowserEvidenceAdapter:
                 )
         return normalized
 
+    def _validate_viewports(self, viewports: list[dict[str, Any]] | None) -> list[dict[str, Any]] | None:
+        if viewports is None:
+            return None
+        if not isinstance(viewports, list) or not viewports or len(viewports) > self.MAX_VIEWPORTS:
+            raise BrowserEvidenceError(
+                f"viewports must contain between 1 and {self.MAX_VIEWPORTS} entries"
+            )
+        normalized: list[dict[str, Any]] = []
+        names: set[str] = set()
+        for raw in viewports:
+            if not isinstance(raw, dict):
+                raise BrowserEvidenceError("each browser evidence viewport must be an object")
+            name = str(raw.get("name", "")).strip().lower()
+            width = raw.get("width")
+            height = raw.get("height")
+            if not _VIEWPORT_NAME_RE.fullmatch(name):
+                raise BrowserEvidenceError(
+                    "browser evidence viewport name must match [a-z0-9][a-z0-9_-]{0,31}"
+                )
+            if name in names:
+                raise BrowserEvidenceError(f"browser evidence viewport names must be unique: {name}")
+            if isinstance(width, bool) or not isinstance(width, int):
+                raise BrowserEvidenceError(f"browser evidence viewport {name} width must be an integer")
+            if isinstance(height, bool) or not isinstance(height, int):
+                raise BrowserEvidenceError(f"browser evidence viewport {name} height must be an integer")
+            if not self.MIN_VIEWPORT_EDGE <= width <= self.MAX_VIEWPORT_EDGE:
+                raise BrowserEvidenceError(
+                    f"browser evidence viewport {name} width must be between "
+                    f"{self.MIN_VIEWPORT_EDGE} and {self.MAX_VIEWPORT_EDGE}"
+                )
+            if not self.MIN_VIEWPORT_EDGE <= height <= self.MAX_VIEWPORT_EDGE:
+                raise BrowserEvidenceError(
+                    f"browser evidence viewport {name} height must be between "
+                    f"{self.MIN_VIEWPORT_EDGE} and {self.MAX_VIEWPORT_EDGE}"
+                )
+            names.add(name)
+            normalized.append({"name": name, "width": width, "height": height})
+        return normalized
+
     def _artifact_root(self, artifacts_dir: Path | None) -> Path:
         raw = Path(artifacts_dir or (self.qa_root / "artifacts"))
         if raw.is_symlink():
@@ -88,9 +152,16 @@ class PlaywrightBrowserEvidenceAdapter:
             raise BrowserEvidenceError("browser artifact root must stay below qa_root") from exc
         return root
 
-    def capture(self, base_url: str, routes: list[str], artifacts_dir: Path | None = None) -> list[EvidenceRecord]:
+    def capture(
+        self,
+        base_url: str,
+        routes: list[str],
+        artifacts_dir: Path | None = None,
+        viewports: list[dict[str, Any]] | None = None,
+    ) -> list[EvidenceRecord]:
         base_url = self._validate_base_url(base_url)
         normalized = self._validate_routes(routes)
+        normalized_viewports = self._validate_viewports(viewports)
         output = self._artifact_root(artifacts_dir)
         output.mkdir(parents=True, exist_ok=True)
         env = {
@@ -102,6 +173,8 @@ class PlaywrightBrowserEvidenceAdapter:
         env["QA_ALLOWED_ORIGIN"] = f"{urlparse(base_url).scheme}://{urlparse(base_url).netloc}"
         env["QA_ROUTES"] = ",".join(normalized)
         env["QA_ARTIFACTS_DIR"] = str(output)
+        if normalized_viewports is not None:
+            env["QA_VIEWPORTS_JSON"] = json.dumps(normalized_viewports, separators=(",", ":"))
         result = subprocess.run(
             ["npm", "run", "test:browser", "--", "--workers=1"],
             cwd=self.qa_root,
@@ -112,8 +185,9 @@ class PlaywrightBrowserEvidenceAdapter:
             shell=False,
         )
         if result.returncode != 0:
-            detail = (result.stderr or result.stdout)[-6000:]
-            raise BrowserEvidenceError(f"Playwright browser capture failed ({result.returncode}): {detail}")
+            raise BrowserEvidenceError(
+                f"Playwright browser capture failed ({result.returncode}): {_failure_detail(result)}"
+            )
         return self.collect(output)
 
     def _safe_artifact(self, root: Path, raw: str, require_png: bool = False) -> Path:
@@ -153,8 +227,8 @@ class PlaywrightBrowserEvidenceAdapter:
         files = sorted(root.glob("browser-evidence-*.json"))
         if not files:
             raise BrowserEvidenceError("no browser-evidence-*.json artifacts found")
-        if len(files) > self.max_routes:
-            raise BrowserEvidenceError("browser evidence artifact count exceeds policy route limit")
+        if len(files) > self.max_routes * self.MAX_VIEWPORTS:
+            raise BrowserEvidenceError("browser evidence artifact count exceeds bounded route/viewport limit")
         for path in files:
             if path.is_symlink() or path.stat().st_size > self.max_artifact_bytes:
                 raise BrowserEvidenceError(f"unsafe browser evidence JSON: {path.name}")
@@ -170,6 +244,11 @@ class PlaywrightBrowserEvidenceAdapter:
             ]
             blocked_requests = [str(item) for item in list(payload.get("blockedRequests", []))]
             failed_requests = [str(item) for item in list(payload.get("failedRequests", []))]
+            sanitized_remote_stylesheets = [
+                dict(item)
+                for item in list(payload.get("sanitizedRemoteStylesheets", []))
+                if isinstance(item, dict)
+            ]
             final_url = str(payload.get("url", "")).strip()
             parsed_final = urlparse(final_url)
             invalid_final_url = parsed_final.scheme not in {"http", "https"} or not parsed_final.hostname
@@ -215,6 +294,10 @@ class PlaywrightBrowserEvidenceAdapter:
                         "console_errors": console_errors,
                         "blocked_requests": blocked_requests,
                         "failed_requests": failed_requests,
+                        "sanitized_remote_stylesheets": sanitized_remote_stylesheets,
+                        "render_limitations": (
+                            ["cross_origin_stylesheets_sanitized"] if sanitized_remote_stylesheets else []
+                        ),
                         "invalid_final_url": invalid_final_url,
                         "remote_final_url": remote_final,
                     },
