@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
+from core.orchestration.adaptive_surface import classify_change_surface
+
 
 DEFAULT_DELIVERY_POLICY_ID = "adaptive-prompt-os-v4"
 DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
@@ -79,6 +81,7 @@ class GoalProfile:
     risk: str
     features: tuple[str, ...] = field(default_factory=tuple)
     scope: tuple[str, ...] = field(default_factory=tuple)
+    change_surface: str = "PRODUCT"
     preserve: tuple[str, ...] = field(default_factory=tuple)
     forbidden: tuple[str, ...] = field(default_factory=tuple)
     references: tuple[str, ...] = field(default_factory=tuple)
@@ -100,6 +103,7 @@ class GoalProfile:
             "risk": self.risk,
             "features": list(self.features),
             "scope": list(self.scope),
+            "change_surface": self.change_surface,
             "preserve": list(self.preserve),
             "forbidden": list(self.forbidden),
             "references": list(self.references),
@@ -214,11 +218,17 @@ class GoalInterpreter:
         ("dashboard", ("dashboard", "bảng điều khiển")),
         ("checkout", ("checkout",)),
         ("pricing", ("pricing", "bảng giá")),
-        ("cards", ("cards", "card", "thẻ")),
+        ("cards", ("cards", "các card", "các thẻ")),
+        ("card", ("card", "thẻ")),
+        ("button", ("button", "cta", "nút")),
+        ("icon", ("icon", "biểu tượng")),
+        ("logo", ("logo",)),
+        ("input", ("input", "field", "ô nhập")),
         ("form", ("form", "biểu mẫu")),
         ("modal", ("modal", "dialog")),
         ("sidebar", ("sidebar",)),
         ("thumbnail", ("thumbnail",)),
+        ("image", ("image", "ảnh")),
         ("banner", ("banner",)),
         ("typography", ("typography", "kiểu chữ")),
         ("content", ("content", "copy", "nội dung")),
@@ -316,9 +326,11 @@ class GoalInterpreter:
             references = _extract_fragments(text, self.REFERENCE_PATTERNS)
         scope = self._scope(text, preserve, forbidden)
         authority = self._authority(text)
+        change_surface = classify_change_surface(text, intent, scope)
 
         if scope:
             evidence.append("scope:" + "|".join(scope))
+        evidence.append(f"change_surface:{change_surface}")
         if preserve:
             evidence.append("preserve:" + "|".join(preserve))
         if forbidden:
@@ -400,6 +412,7 @@ class GoalInterpreter:
             risk=risk,
             features=tuple(features),
             scope=scope,
+            change_surface=change_surface,
             preserve=preserve,
             forbidden=forbidden,
             references=references,

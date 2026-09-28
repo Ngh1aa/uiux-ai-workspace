@@ -18,6 +18,7 @@ REQUIRED = [
     ROOT / "runtime" / "TOOL-OBSERVATION-CONTRACT.md",
     ROOT / "runtime" / "runtime-policy.json",
     ROOT / "runtime" / "agent.py",
+    ROOT / "runtime" / "adaptive_surface.py",
     ROOT / "runtime" / "flow.py",
     ROOT / "runtime" / "manager.py",
     ROOT / "runtime" / "task_context.py",
@@ -25,6 +26,8 @@ REQUIRED = [
     ROOT / "schemas" / "flow.schema.json",
     ROOT / "flows" / "professional-website-redesign.json",
     ROOT / "flows" / "existing-ui-improvement.json",
+    ROOT / "flows" / "micro-ui-change.json",
+    ROOT / "flows" / "page-ui-work.json",
     ROOT / "scripts" / "validate-flows.py",
     ROOT / "integrations" / "playwright" / "capture.mjs",
     ROOT / "integrations" / "figma" / "component-map.example.json",
@@ -39,10 +42,13 @@ JSON_FILES = [
     ROOT / "schemas" / "flow.schema.json",
     ROOT / "flows" / "professional-website-redesign.json",
     ROOT / "flows" / "existing-ui-improvement.json",
+    ROOT / "flows" / "micro-ui-change.json",
+    ROOT / "flows" / "page-ui-work.json",
 ]
 
 PYTHON_FILES = [
     ROOT / "runtime" / "agent.py",
+    ROOT / "runtime" / "adaptive_surface.py",
     ROOT / "runtime" / "flow.py",
     ROOT / "runtime" / "manager.py",
     ROOT / "runtime" / "task_context.py",
@@ -106,6 +112,11 @@ def _run_flow_os_smoke(errors: list[str]) -> None:
         )
         if managed.flow.id != "professional-website-redesign":
             errors.append(f"development manager resolved wrong flow: {managed.flow.id}")
+        if managed.task_context.get("change_surface") != "PRODUCT":
+            errors.append(
+                "A3 classifier failed to keep a multi-feature ecommerce website build PRODUCT-sized: "
+                + repr(managed.task_context.get("change_surface"))
+            )
         if managed.active_stage != "research":
             errors.append(f"managed run did not start at research: {managed.active_stage}")
         if managed.task_context.get("website_type") != "ecommerce":
@@ -240,6 +251,7 @@ def main() -> int:
             errors.append("managed CLI help failed: " + (cli.stderr.strip() or cli.stdout.strip()))
         else:
             for flag in (
+                "--change-surface",
                 "--domain",
                 "--product-archetype",
                 "--validation-lane",
@@ -262,6 +274,8 @@ def main() -> int:
                         "--managed",
                         "--task",
                         "Redesign the product",
+                        "--change-surface",
+                        "PRODUCT",
                         "--website-type",
                         "saas",
                         "--domain",
@@ -287,6 +301,7 @@ def main() -> int:
                     payload = json.loads(cli_run.stdout)
                     context = payload.get("task_context", {})
                     expected = {
+                        "change_surface": "PRODUCT",
                         "website_type": "saas",
                         "domain": "financial-services",
                         "product_archetype": "payments-infrastructure",
@@ -369,7 +384,7 @@ def main() -> int:
         return 1
 
     print(
-        "Runtime foundation passed: goal-driven Flow OS + public managed CLI + managed lifecycle/replanning + human approval gates + "
+        "Runtime foundation passed: goal-driven adaptive Flow OS + public managed CLI + managed lifecycle/replanning + human approval gates + "
         "enforced role defaults/handoffs + context/permissions/trace/checkpoint + adapter/discovery syntax"
     )
     print(

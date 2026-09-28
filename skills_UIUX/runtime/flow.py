@@ -5,6 +5,8 @@ from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any, Iterable
 
+from runtime.adaptive_surface import CHANGE_SURFACES, default_change_surface_for_intent
+
 REPLAN_SIGNALS = {
     "GATE_FAIL",
     "BLOCKED",
@@ -16,6 +18,7 @@ REPLAN_SIGNALS = {
 
 CONTEXT_KEYS = {
     "intent",
+    "change_surface",
     "website_type",
     "domain",
     "product_archetype",
@@ -69,6 +72,18 @@ def validate_flow_document(doc: dict[str, Any]) -> list[str]:
         errors.append("schema_version must be 1")
     if not isinstance(doc.get("id"), str) or not doc.get("id"):
         errors.append("id must be a non-empty string")
+
+    match = doc.get("match", {})
+    if not isinstance(match, dict):
+        errors.append("match must be an object")
+    else:
+        surfaces = match.get("change_surfaces", [])
+        if not isinstance(surfaces, list) or any(not isinstance(item, str) for item in surfaces):
+            errors.append("match.change_surfaces must be an array of strings")
+        else:
+            unknown_surfaces = sorted(set(surfaces).difference(CHANGE_SURFACES))
+            if unknown_surfaces:
+                errors.append("unknown change surfaces: " + ", ".join(unknown_surfaces))
 
     stages = doc.get("stages")
     if not isinstance(stages, list) or not stages:
@@ -205,7 +220,7 @@ class ReplanDecision:
 
 
 class FlowResolver:
-    """Selects the best declarative flow for a task context."""
+    """Selects the smallest applicable declarative flow for a normalized task context."""
 
     def __init__(self, flows_dir: Path) -> None:
         self.flows_dir = flows_dir
@@ -222,10 +237,25 @@ class FlowResolver:
             flows.append((path, doc))
         return flows
 
+    @staticmethod
+    def normalize_context(context: dict[str, Any]) -> dict[str, Any]:
+        normalized = dict(context)
+        raw_surface = str(normalized.get("change_surface", "")).strip().upper()
+        if raw_surface:
+            if raw_surface not in CHANGE_SURFACES:
+                raise ValueError(f"unknown change_surface: {raw_surface}")
+            normalized["change_surface"] = raw_surface
+        else:
+            normalized["change_surface"] = default_change_surface_for_intent(
+                str(normalized.get("intent", "build"))
+            )
+        return normalized
+
     def _score(self, doc: dict[str, Any], context: dict[str, Any]) -> int | None:
         match = doc.get("match", {})
         score = int(match.get("priority", 0))
         for key, weight in (
+            ("change_surfaces", 20),
             ("intents", 12),
             ("website_types", 10),
             ("modes", 6),
@@ -249,6 +279,7 @@ class FlowResolver:
         return score
 
     def resolve(self, context: dict[str, Any]) -> tuple[Path, dict[str, Any], int]:
+        context = self.normalize_context(context)
         candidates: list[tuple[int, str, Path, dict[str, Any]]] = []
         for path, doc in self.load():
             score = self._score(doc, context)
@@ -420,11 +451,12 @@ class DevelopmentManager:
         additional_skills: list[str] | None = None,
         exclude_skills: list[str] | None = None,
     ) -> ResolvedFlow:
-        path, doc, score = self.flow_resolver.resolve(context)
+        effective_context = self.flow_resolver.normalize_context(context)
+        path, doc, score = self.flow_resolver.resolve(effective_context)
         stages = [
             self.skill_resolver.resolve_stage(
                 stage,
-                context,
+                effective_context,
                 additional_skills=additional_skills,
                 exclude_skills=exclude_skills,
             )
