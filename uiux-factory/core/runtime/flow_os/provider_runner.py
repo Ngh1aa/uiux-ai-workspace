@@ -4,9 +4,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from core.runtime.flow_os.agent import ToolSpec, TraceRecorder
+from core.runtime.flow_os.agent import ToolRegistry, ToolSpec, TraceRecorder
+from core.runtime.flow_os.evidence import evidence_from_tool, gate_evidence_errors, provider_claim_records
+from core.runtime.flow_os.file_tools import WorkspaceFileTools
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
 from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, load_context_documents
+from core.runtime.flow_os.target_runner import TargetRunner
+from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
 
 
 @dataclass(frozen=True)
@@ -30,60 +34,142 @@ class ProviderRunResult:
 
 
 class ProviderManagedRunner:
-    """Run model→tool→observation loops under the canonical managed controller."""
+    """Run model→tool→observation loops under the canonical managed controller.
+
+    A4.2–A4.5 guarantees for this provider-facing execution path:
+    - writable operations are redirected to a branch-scoped git worktree;
+    - target commands are argv-only, policy allowlisted and workspace-scoped;
+    - runtime tool observations become typed evidence while model prose remains claims;
+    - bounded search/list/replace/write tools share the same workspace boundary.
+    """
 
     def __init__(self, manager: ManagedFlowController, provider: ModelProvider) -> None:
         self.manager = manager
         self.harness = manager.harness
         self.provider = provider
         self.project_root = self.harness.project_root
-        self.write_spec = ToolSpec(
-            "write_project_file",
-            "Write a UTF-8 project source/config file inside the project root",
-            "LOW_WRITE",
-            "branch_write",
-            True,
-        )
-        self.write_spec.validate()
+        self.worktrees = WorktreeManager(self.project_root)
+        self.extra_specs = {
+            "write_project_file": ToolSpec(
+                "write_project_file",
+                "Write one bounded UTF-8 file inside the isolated branch worktree",
+                "LOW_WRITE",
+                "branch_write",
+                True,
+            ),
+            "replace_text": ToolSpec(
+                "replace_text",
+                "Replace an exact bounded text occurrence inside the isolated branch worktree",
+                "LOW_WRITE",
+                "branch_write",
+                True,
+            ),
+            "search_text": ToolSpec(
+                "search_text",
+                "Bounded recursive plain-text search with Safe Read filtering",
+                "READ",
+                "read_only",
+                False,
+            ),
+            "list_files_recursive": ToolSpec(
+                "list_files_recursive",
+                "Bounded recursive file listing with secret/symlink filtering",
+                "READ",
+                "read_only",
+                False,
+            ),
+            "run_target_command": ToolSpec(
+                "run_target_command",
+                "Run an allowlisted argv command inside the isolated branch worktree",
+                "LOW_WRITE",
+                "branch_write",
+                True,
+            ),
+        }
+        for spec in self.extra_specs.values():
+            spec.validate()
 
     def _set_managed_terminal(self, managed: ManagedWebsiteRun, state: str) -> None:
         managed.state = state
         self.manager._checkpoint_managed(managed)
 
-    def _safe_project_path(self, raw: str) -> Path:
-        path = (self.project_root / raw).resolve()
-        try:
-            path.relative_to(self.project_root.resolve())
-        except ValueError as exc:
-            raise ValueError(f"path escapes project root: {raw}") from exc
-        relative = path.relative_to(self.project_root.resolve())
-        forbidden_parts = {".git", ".uiux-agent-runs", "node_modules", ".next", "dist", "build"}
-        if any(part in forbidden_parts for part in relative.parts):
-            raise ValueError(f"write_project_file refuses generated/internal path: {raw}")
-        name = path.name.lower()
-        if name == ".env" or name.startswith(".env.") or name in {".npmrc", ".pypirc", ".netrc", "id_rsa", "id_ed25519"}:
-            raise ValueError(f"write_project_file refuses credential-bearing path: {raw}")
-        return path
+    def _manager_workspace(self, managed: ManagedWebsiteRun) -> WorkspaceMetadata | None:
+        manager_state = self.harness.resume(managed.manager_run_id)
+        raw = manager_state.context.get("workspace")
+        if not isinstance(raw, dict):
+            return None
+        return self.worktrees.validate_metadata(raw, expected_run_id=managed.manager_run_id)
 
-    def _write_project_file(self, path: str, content: str) -> dict[str, Any]:
-        resolved = self._safe_project_path(path)
-        resolved.parent.mkdir(parents=True, exist_ok=True)
-        resolved.write_text(content, encoding="utf-8")
-        return {
-            "path": str(resolved.relative_to(self.project_root)),
-            "bytes": len(content.encode("utf-8")),
-        }
+    def _ensure_workspace(self, managed: ManagedWebsiteRun, stage_state: Any) -> WorkspaceMetadata:
+        metadata = self._manager_workspace(managed)
+        if metadata is None:
+            metadata = self.worktrees.ensure(managed.manager_run_id)
+            manager_state = self.harness.resume(managed.manager_run_id)
+            manager_state.context["workspace"] = metadata.to_dict()
+            self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
+        stage_state.context["workspace"] = metadata.to_dict()
+        self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
+        return metadata
+
+    def _active_root(self, managed: ManagedWebsiteRun, stage_state: Any) -> Path:
+        raw = stage_state.context.get("workspace")
+        if isinstance(raw, dict):
+            return Path(
+                self.worktrees.validate_metadata(raw, expected_run_id=managed.manager_run_id).workspace_root
+            ).resolve()
+        metadata = self._manager_workspace(managed)
+        if metadata is not None:
+            stage_state.context["workspace"] = metadata.to_dict()
+            self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
+            return Path(metadata.workspace_root).resolve()
+        return self.project_root
+
+    def _registry_for(self, managed: ManagedWebsiteRun, stage_state: Any) -> ToolRegistry:
+        return ToolRegistry(self.harness.repo_root, self._active_root(managed, stage_state))
+
+    def _file_tools_for(
+        self,
+        managed: ManagedWebsiteRun,
+        stage_state: Any,
+        require_workspace: bool = False,
+    ) -> WorkspaceFileTools:
+        root = (
+            Path(self._ensure_workspace(managed, stage_state).workspace_root)
+            if require_workspace
+            else self._active_root(managed, stage_state)
+        )
+        return WorkspaceFileTools(root)
 
     def _tools(self, authority: str) -> list[dict[str, Any]]:
         arg_contracts = {
-            "read_text": {"path": "safe project-relative UTF-8 file path; secrets/symlinks/binary/oversize reads are refused"},
-            "list_files": {"path": "safe project-relative directory path; defaults to ."},
-            "write_artifact": {"path": "must be below docs/uiux/", "content": "UTF-8 content"},
+            "read_text": {"path": "safe project/worktree-relative UTF-8 file path"},
+            "list_files": {"path": "safe project/worktree-relative directory path; defaults to ."},
+            "write_artifact": {"path": "must be below docs/uiux/ in isolated worktree", "content": "UTF-8 content"},
             "run_validator": {"name": "validate-skills | validate-v2 | validate-runtime | validate-flows"},
             "release_action": {"action": "release intent; contract-only unless an external release adapter exists"},
-            "write_project_file": {"path": "project-relative source/config path", "content": "complete UTF-8 file content"},
+            "write_project_file": {"path": "workspace-relative source/config path", "content": "complete UTF-8 file content"},
+            "replace_text": {
+                "path": "workspace-relative UTF-8 file",
+                "old": "exact text to replace",
+                "new": "replacement text",
+                "expected_count": "positive exact occurrence count; defaults to 1",
+            },
+            "search_text": {
+                "query": "plain text; max 512 characters",
+                "path": "relative directory; defaults to .",
+                "regex": "must remain false; regex evaluation is disabled in the bounded runtime",
+                "case_sensitive": "boolean; defaults false",
+                "max_files": "1..1000",
+                "max_matches": "1..1000",
+            },
+            "list_files_recursive": {"path": "relative directory", "max_files": "1..1000"},
+            "run_target_command": {
+                "argv": "array matching one runtime-policy target_runner command prefix",
+                "cwd": "workspace-relative directory; defaults to .",
+                "timeout_seconds": "positive integer no larger than policy maximum",
+            },
         }
-        specs = list(self.harness.registry.specs.values()) + [self.write_spec]
+        specs = list(self.harness.registry.specs.values()) + list(self.extra_specs.values())
         result: list[dict[str, Any]] = []
         for spec in specs:
             allowed, reason = self.harness.permissions.authorize(spec, authority)
@@ -117,7 +203,7 @@ class ProviderManagedRunner:
         manager_state = self.harness.resume(managed.manager_run_id)
         return ProviderStageRequest(
             goal=manager_state.task,
-            project_root=str(self.project_root),
+            project_root=str(self._active_root(managed, stage_state)),
             flow_id=managed.flow.id,
             flow_revision=managed.flow.revision,
             stage_id=stage.id,
@@ -132,25 +218,58 @@ class ProviderManagedRunner:
             observations=list(observations[-24:]),
         )
 
+    def _spec_for(self, name: str, registry: ToolRegistry) -> ToolSpec:
+        if name in self.extra_specs:
+            return self.extra_specs[name]
+        spec = registry.specs.get(name)
+        if spec is None:
+            raise ValueError(f"provider requested unknown tool: {name}")
+        return spec
+
+    def _execute_one(
+        self,
+        managed: ManagedWebsiteRun,
+        stage_state: Any,
+        name: str,
+        args: dict[str, Any],
+    ) -> Any:
+        if name == "write_project_file":
+            return self._file_tools_for(managed, stage_state, require_workspace=True).write_text(**args)
+        if name == "replace_text":
+            return self._file_tools_for(managed, stage_state, require_workspace=True).replace_text(**args)
+        if name == "search_text":
+            return self._file_tools_for(managed, stage_state).search_text(**args)
+        if name == "list_files_recursive":
+            return self._file_tools_for(managed, stage_state).list_files_recursive(**args)
+        if name == "run_target_command":
+            metadata = self._ensure_workspace(managed, stage_state)
+            runner = TargetRunner(Path(metadata.workspace_root), self.harness.policy_doc)
+            return runner.run(**args).to_dict()
+        if name == "write_artifact":
+            metadata = self._ensure_workspace(managed, stage_state)
+            path = str(args.get("path", ""))
+            normalized = Path(path)
+            if normalized.is_absolute() or tuple(normalized.parts[:2]) != ("docs", "uiux"):
+                raise ValueError("write_artifact is restricted to docs/uiux/ in the isolated worktree")
+            return WorkspaceFileTools(Path(metadata.workspace_root)).write_text(path, str(args.get("content", "")))
+        registry = self._registry_for(managed, stage_state)
+        return registry.execute(name, args)
+
     def _execute_actions(
         self,
+        managed: ManagedWebsiteRun,
         stage_state: Any,
         actions: list[dict[str, Any]],
         trace: TraceRecorder,
         dry_run: bool,
     ) -> list[dict[str, Any]]:
         observations: list[dict[str, Any]] = []
+        stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
         for index, action in enumerate(actions):
             name = str(action["tool"])
             args = dict(action.get("args", {}))
-            if name == "write_project_file":
-                spec = self.write_spec
-                handler = self._write_project_file
-            else:
-                spec = self.harness.registry.specs.get(name)
-                if spec is None:
-                    raise ValueError(f"provider requested unknown tool: {name}")
-                handler = lambda **kwargs: self.harness.registry.execute(name, kwargs)
+            registry = self._registry_for(managed, stage_state)
+            spec = self._spec_for(name, registry)
             allowed, reason = self.harness.permissions.authorize(spec, stage_state.authority)
             trace.emit(
                 "provider.tool.permission",
@@ -163,14 +282,23 @@ class ProviderManagedRunner:
                 raise PermissionError(reason)
             if dry_run:
                 result: Any = {"dry_run": True, "tool": name, "args": args}
+                evidence = None
             else:
                 trace.emit("provider.tool.call", "START", tool=name, args=args)
-                result = handler(**args)
+                result = self._execute_one(managed, stage_state, name, args)
                 trace.emit("provider.tool.call", "OK", tool=name, result=result)
+                evidence = evidence_from_tool(stage.id, name, result)
+                records = list(stage_state.context.get("evidence_records", []))
+                records.append(evidence.to_dict())
+                stage_state.context["evidence_records"] = records[-128:]
+
             observation = {"tool": name, "result": result}
+            if evidence is not None:
+                observation["evidence_id"] = evidence.id
+                observation["evidence_type"] = evidence.type
             observations.append(observation)
             stage_state.completed_actions.append(f"provider:{index}:{name}")
-            if name in {"write_project_file", "write_artifact"} and isinstance(result, dict) and result.get("path"):
+            if name in {"write_project_file", "write_artifact", "replace_text"} and isinstance(result, dict) and result.get("path"):
                 artifact = str(result["path"])
                 if artifact not in stage_state.artifacts:
                     stage_state.artifacts.append(artifact)
@@ -180,6 +308,15 @@ class ProviderManagedRunner:
             self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
         return observations
 
+    def _typed_gate_errors(self, managed: ManagedWebsiteRun, stage_state: Any) -> list[str]:
+        stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
+        return gate_evidence_errors(
+            list(stage.gates),
+            stage.id,
+            list(stage_state.context.get("evidence_records", [])),
+            agent=stage.agent,
+        )
+
     def run_active_stage(
         self,
         managed: ManagedWebsiteRun,
@@ -188,11 +325,17 @@ class ProviderManagedRunner:
         dry_run: bool = False,
     ) -> ProviderRunResult:
         stage_state = self.manager.start_stage(managed)
+        inherited_workspace = self._manager_workspace(managed)
+        if inherited_workspace is not None:
+            stage_state.context["workspace"] = inherited_workspace.to_dict()
         stage_state.limitations = [
             item for item in stage_state.limitations if item != "model/provider reasoning is not bundled"
         ]
-        stage_state.limitations.append(
-            "provider execution is active; browser-rendered visual QA still requires a connected render/observation adapter"
+        stage_state.limitations.extend(
+            [
+                "provider execution is active; browser-rendered visual QA still requires a connected render/observation adapter",
+                "target command isolation is policy/cwd/env bounded, not an OS/container/network sandbox",
+            ]
         )
         trace = TraceRecorder(
             self.project_root / ".uiux-agent-runs" / stage_state.run_id / "trace.jsonl",
@@ -235,7 +378,9 @@ class ProviderManagedRunner:
             trace.emit("provider.call", "OK", response=response.to_dict())
             if response.actions:
                 try:
-                    observations.extend(self._execute_actions(stage_state, response.actions, trace, dry_run))
+                    observations.extend(
+                        self._execute_actions(managed, stage_state, response.actions, trace, dry_run)
+                    )
                 except Exception as exc:
                     trace.emit("provider.tool.error", "ERROR", error_type=type(exc).__name__, message=str(exc))
                     stage_state.state = "FAILED"
@@ -255,7 +400,9 @@ class ProviderManagedRunner:
 
             stage_state.context["provider"] = {"name": self.provider.name, "model": self.provider.model}
             stage_state.context["provider_summary"] = response.summary
-            stage_state.context["gate_evidence"] = list(response.evidence)
+            stage_state.context["provider_evidence_claims"] = provider_claim_records(
+                managed.active_stage, list(response.evidence)
+            )
             self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
 
             if response.status == "CONTINUE":
@@ -265,6 +412,40 @@ class ProviderManagedRunner:
                 continue
 
             if response.status == "PASS":
+                if dry_run:
+                    return ProviderRunResult(
+                        "DRY_RUN",
+                        managed.active_stage,
+                        turn,
+                        self.provider.name,
+                        self.provider.model,
+                        "dry-run does not satisfy runtime evidence gates",
+                    )
+                gate_errors = self._typed_gate_errors(managed, stage_state)
+                if gate_errors:
+                    trace.emit("provider.gate", "FAIL", errors=gate_errors)
+                    stage_state.state = "FAILED"
+                    stage_state.limitations.extend(gate_errors)
+                    self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
+                    if auto_replan:
+                        decision = self.manager.replan(managed, "GATE_FAIL")
+                        return ProviderRunResult(
+                            "REPLANNED" if decision.accepted else "FAIL",
+                            managed.active_stage,
+                            turn,
+                            self.provider.name,
+                            self.provider.model,
+                            "; ".join(gate_errors),
+                        )
+                    self._set_managed_terminal(managed, "FAILED")
+                    return ProviderRunResult(
+                        "FAIL",
+                        managed.active_stage,
+                        turn,
+                        self.provider.name,
+                        self.provider.model,
+                        "; ".join(gate_errors),
+                    )
                 stage_state.state = "COMPLETED"
                 self.harness.checkpoints.save(stage_state.run_id, stage_state.to_dict())
                 try:
@@ -355,7 +536,7 @@ class ProviderManagedRunner:
                 auto_replan=auto_replan,
                 dry_run=dry_run,
             )
-            if last.state in {"AWAITING_APPROVAL", "BLOCKED", "FAILED"} or managed.state == "COMPLETED":
+            if last.state in {"AWAITING_APPROVAL", "BLOCKED", "FAILED", "FAIL", "DRY_RUN"} or managed.state == "COMPLETED":
                 return ProviderRunResult(
                     managed.state if managed.state == "COMPLETED" else last.state,
                     managed.active_stage,
