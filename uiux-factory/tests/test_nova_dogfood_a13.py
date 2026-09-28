@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-import core.dogfood.real_project as dogfood_module
-from core.dogfood.real_project import RealProjectDogfoodRunner
+import core.dogfood.nova_real_project_legacy as dogfood_module
+from core.dogfood.nova_real_project_legacy import RealProjectDogfoodRunner
 from core.runtime.flow_os.browser_evidence import (
     BrowserEvidenceError,
     PlaywrightBrowserEvidenceAdapter,
