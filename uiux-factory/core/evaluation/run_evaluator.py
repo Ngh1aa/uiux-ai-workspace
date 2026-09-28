@@ -24,6 +24,14 @@ def _bounded(value: Any, limit: int = 96) -> str:
     return str(value or "").strip()[:limit]
 
 
+def _bounded_int(value: Any, upper: int = 10000) -> int:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError, OverflowError):
+        return 0
+    return min(max(0, parsed), upper)
+
+
 def _route_path(raw: Any) -> str:
     text = _bounded(raw, 512)
     if not text:
@@ -61,10 +69,10 @@ class RunEvaluation:
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "RunEvaluation":
         return cls(
-            schema_version=int(payload.get("schema_version", 1)),
+            schema_version=_bounded_int(payload.get("schema_version", 1), 100),
             run_id=_bounded(payload.get("run_id"), 128),
             flow_id=_bounded(payload.get("flow_id"), 128),
-            flow_revision=int(payload.get("flow_revision", 0)),
+            flow_revision=_bounded_int(payload.get("flow_revision", 0), 10000),
             managed_state=_bounded(payload.get("managed_state"), 32),
             outcome=_bounded(payload.get("outcome"), 32),
             evaluated_at=_bounded(payload.get("evaluated_at"), 64),
@@ -73,20 +81,24 @@ class RunEvaluation:
                 for key, value in dict(payload.get("signature", {})).items()
                 if _bounded(key, 64) and _bounded(value, 128)
             },
-            completed_stage_count=max(0, int(payload.get("completed_stage_count", 0))),
-            stage_count=max(0, int(payload.get("stage_count", 0))),
-            replan_count=max(0, int(payload.get("replan_count", 0))),
-            effective_evidence_count=max(0, int(payload.get("effective_evidence_count", 0))),
+            completed_stage_count=_bounded_int(payload.get("completed_stage_count", 0)),
+            stage_count=_bounded_int(payload.get("stage_count", 0)),
+            replan_count=_bounded_int(payload.get("replan_count", 0)),
+            effective_evidence_count=_bounded_int(payload.get("effective_evidence_count", 0), 100000),
             status_counts={
-                _bounded(key, 32): max(0, int(value))
+                _bounded(key, 32): _bounded_int(value, 100000)
                 for key, value in dict(payload.get("status_counts", {})).items()
             },
             evidence_type_counts={
-                _bounded(key, 64): max(0, int(value))
+                _bounded(key, 64): _bounded_int(value, 100000)
                 for key, value in dict(payload.get("evidence_type_counts", {})).items()
             },
-            passing_evidence_types=sorted({_bounded(item, 64) for item in payload.get("passing_evidence_types", []) if _bounded(item, 64)}),
-            failing_channels=sorted({_bounded(item, 256) for item in payload.get("failing_channels", []) if _bounded(item, 256)}),
+            passing_evidence_types=sorted(
+                {_bounded(item, 64) for item in payload.get("passing_evidence_types", []) if _bounded(item, 64)}
+            ),
+            failing_channels=sorted(
+                {_bounded(item, 256) for item in payload.get("failing_channels", []) if _bounded(item, 256)}
+            ),
             reasons=[_bounded(item, 256) for item in payload.get("reasons", []) if _bounded(item, 256)][:16],
             memory_eligible=bool(payload.get("memory_eligible", False)),
         )
@@ -154,6 +166,7 @@ class RunEvaluator:
         passing_types = sorted({record.type for record in effective if record.status == "PASS"})
         failures = [record for record in effective if record.status == "FAIL"]
         failing_channels = sorted({self.failure_channel(record) for record in failures})
+        has_pass = any(record.status == "PASS" for record in effective)
 
         state = _bounded(getattr(managed, "state", ""), 32) or "UNKNOWN"
         if failures:
@@ -165,30 +178,30 @@ class RunEvaluator:
         elif state == "BLOCKED":
             outcome = "blocked"
             reasons = ["managed lifecycle ended BLOCKED"]
-        elif state == "COMPLETED" and not effective:
+        elif state == "COMPLETED" and not has_pass:
             outcome = "insufficient_evidence"
-            reasons = ["managed lifecycle completed without trusted runtime evidence"]
+            reasons = ["managed lifecycle completed without trusted PASS evidence"]
         elif state == "COMPLETED":
             outcome = "passed"
-            reasons = ["managed lifecycle completed with no failing effective trusted evidence"]
+            reasons = ["managed lifecycle completed with trusted PASS evidence and no effective failure"]
         else:
             outcome = "incomplete"
             reasons = [f"managed lifecycle is not terminal: {state}"]
 
-        evidence_backed = bool(effective) or bool(failures)
+        evidence_backed = bool(effective)
         memory_eligible = state in TERMINAL_STATES and evidence_backed and outcome in {"passed", "failed", "blocked"}
         return RunEvaluation(
             schema_version=self.schema_version,
             run_id=_bounded(getattr(managed, "manager_run_id", ""), 128),
             flow_id=_bounded(getattr(getattr(managed, "flow", None), "id", ""), 128),
-            flow_revision=int(getattr(getattr(managed, "flow", None), "revision", 0)),
+            flow_revision=_bounded_int(getattr(getattr(managed, "flow", None), "revision", 0), 10000),
             managed_state=state,
             outcome=outcome,
             evaluated_at=datetime.now(timezone.utc).isoformat(),
             signature=self.signature(dict(getattr(managed, "task_context", {}))),
-            completed_stage_count=len(list(getattr(managed, "completed_stages", []))),
-            stage_count=len(list(getattr(getattr(managed, "flow", None), "stages", []))),
-            replan_count=max(0, int(getattr(managed, "replan_count", 0))),
+            completed_stage_count=_bounded_int(len(list(getattr(managed, "completed_stages", [])))),
+            stage_count=_bounded_int(len(list(getattr(getattr(managed, "flow", None), "stages", [])))),
+            replan_count=_bounded_int(getattr(managed, "replan_count", 0)),
             effective_evidence_count=len(effective),
             status_counts=dict(sorted(status_counts.items())),
             evidence_type_counts=dict(sorted(type_counts.items())),
