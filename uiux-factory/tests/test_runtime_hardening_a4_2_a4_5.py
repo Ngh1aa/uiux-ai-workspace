@@ -110,6 +110,7 @@ def test_a4_5_file_tools_bound_search_replace_and_secret_paths(tmp_path: Path) -
     root.mkdir()
     (root / "src").mkdir()
     (root / "src" / "a.txt").write_text("Hello Needle\nsecond\n", encoding="utf-8")
+    (root / "src" / "empty.txt").write_text("", encoding="utf-8")
     tools = WorkspaceFileTools(root)
 
     search = tools.search_text("needle", path="src")
@@ -120,13 +121,24 @@ def test_a4_5_file_tools_bound_search_replace_and_secret_paths(tmp_path: Path) -
     assert replaced["replacements"] == 1
     assert (root / "src" / "a.txt").read_text(encoding="utf-8") == "Hello World\nsecond\n"
 
+    empty_update = tools.write_text("src/empty.txt", "now populated")
+    assert empty_update["created"] is False
+    assert empty_update["before_sha256"] is not None
+
     listing = tools.list_files_recursive("src")
-    assert listing["items"] == ["src/a.txt"]
+    assert listing["items"] == ["src/a.txt", "src/empty.txt"]
 
     with pytest.raises(WorkspaceFileError):
         tools.write_text("../escape.txt", "no")
     with pytest.raises(WorkspaceFileError):
         tools.write_text(".env.local", "SECRET=x")
+    with pytest.raises(WorkspaceFileError, match="regex search is disabled"):
+        tools.search_text("N.*e", path="src", regex=True)
+
+    broken = root / "broken"
+    broken.symlink_to(root / "missing-target", target_is_directory=True)
+    with pytest.raises(WorkspaceFileError, match="symlink"):
+        tools.write_text("broken/escape.txt", "no")
 
 
 def test_a4_3_runner_is_argv_only_allowlisted_workspace_scoped_and_env_filtered(
