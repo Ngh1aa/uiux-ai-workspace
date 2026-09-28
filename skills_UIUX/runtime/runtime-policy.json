@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "authority_order": ["read_only", "branch_write", "external_write", "release"],
   "risk_defaults": {
     "READ": {"required_authority": "read_only", "automatic": true},
@@ -53,6 +53,14 @@
     "max_output_chars": 12000,
     "deploy_env_allowlist": ["VERCEL_TOKEN", "VERCEL_ORG_ID", "VERCEL_PROJECT_ID"]
   },
+  "evaluation_memory": {
+    "enabled": true,
+    "max_records": 200,
+    "max_recall_records": 20,
+    "min_signature_matches": 1,
+    "lock_timeout_seconds": 10,
+    "lock_stale_seconds": 60
+  },
   "roles": {
     "development": {
       "schema_version": 1,
@@ -103,6 +111,7 @@
     "Sandbox images are pre-provisioned by operators and are never pulled implicitly by the runtime.",
     "Automatic worktree merge is external_write authority, fast-forward-only, and allowed only after managed completion.",
     "Production deployment is release authority, requires explicit PRODUCTION confirmation, successful runtime checks and PASS browser-render evidence.",
-    "Provider claims are trace data, not gate evidence; gate evidence must originate from runtime observations."
+    "Provider claims are trace data, not gate evidence; gate evidence must originate from runtime observations.",
+    "Cross-run evaluation memory is project-scoped, bounded, evidence-derived and advisory only; it cannot change flow selection, authority, gates, current-run evidence or release decisions."
   ]
 }

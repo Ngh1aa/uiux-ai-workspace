@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from core.evaluation.run_evaluator import RunEvaluation, RunEvaluator
+from core.memory.evaluation_memory import EvaluationMemoryError, EvaluationMemoryStore
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
 from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
@@ -70,6 +72,12 @@ class ManagedFlowController:
         self.harness = harness
         self.planner = FlowPlanner(harness.repo_root, harness.policy_doc)
         self.goal_interpreter = GoalInterpreter()
+        self.run_evaluator = RunEvaluator()
+        self.evaluation_memory = EvaluationMemoryStore(harness.project_root, harness.policy_doc)
+
+    @staticmethod
+    def _memory_error(exc: Exception) -> str:
+        return f"{type(exc).__name__}: {str(exc)[:500]}"
 
     def interpret_goal(
         self,
@@ -124,6 +132,28 @@ class ManagedFlowController:
         state.context["task_context"] = dict(managed.task_context)
         state.context["managed_run"] = managed.to_dict()
         self.harness.checkpoints.save(state.run_id, state.to_dict())
+        if managed.state in {"COMPLETED", "FAILED", "BLOCKED"}:
+            self.record_evaluation(managed)
+
+    def record_evaluation(self, managed: ManagedWebsiteRun) -> RunEvaluation:
+        """Persist current evidence-derived outcome and, when eligible, learn it.
+
+        Memory is advisory, so a local memory corruption/lock/filesystem problem is
+        checkpointed as a diagnostic and never changes the managed terminal state.
+        """
+        evaluation = self.run_evaluator.evaluate(managed, self.harness)
+        manager_state = self.harness.resume(managed.manager_run_id)
+        manager_state.context["run_evaluation"] = evaluation.to_dict()
+        try:
+            recorded = self.evaluation_memory.record(evaluation)
+        except (EvaluationMemoryError, OSError) as exc:
+            recorded = False
+            manager_state.context["evaluation_memory_error"] = self._memory_error(exc)
+        else:
+            manager_state.context.pop("evaluation_memory_error", None)
+        manager_state.context["evaluation_memory_recorded"] = recorded
+        self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
+        return evaluation
 
     def resume(self, manager_run_id: str) -> ManagedWebsiteRun:
         state = self.harness.resume(manager_run_id)
@@ -162,7 +192,19 @@ class ManagedFlowController:
         additional_skills: list[str] | None = None,
         exclude_skills: list[str] | None = None,
     ) -> ManagedWebsiteRun:
+        # Flow selection is based only on the current task. Prior-run memory is attached
+        # after planning so advisory history can never steer authority/flow selection.
         flow = self.resolve_flow(task_context, additional_skills, exclude_skills)
+        enriched_context = dict(task_context)
+        signature = self.run_evaluator.signature(task_context)
+        memory_error: str | None = None
+        try:
+            insight = self.evaluation_memory.insight(flow_id=flow.id, signature=signature)
+        except (EvaluationMemoryError, OSError) as exc:
+            insight = None
+            memory_error = self._memory_error(exc)
+        if insight is not None:
+            enriched_context["prior_evaluation_insight"] = insight
         manager_state = self.harness.create_run(
             task,
             "development",
@@ -173,10 +215,16 @@ class ManagedFlowController:
         managed = ManagedWebsiteRun(
             manager_run_id=manager_state.run_id,
             flow=flow,
-            task_context=dict(task_context),
+            task_context=enriched_context,
             authority=authority,
             active_stage=flow.stages[0].id,
         )
+        if insight is not None:
+            manager_state.context["prior_evaluation_insight"] = insight
+        if memory_error is not None:
+            manager_state.context["evaluation_memory_error"] = memory_error
+        if insight is not None or memory_error is not None:
+            self.harness.checkpoints.save(manager_state.run_id, manager_state.to_dict())
         self._checkpoint_managed(managed)
         return managed
 
@@ -212,6 +260,9 @@ class ManagedFlowController:
         state.context["flow_revision"] = managed.flow.revision
         state.context["stage_id"] = stage.id
         state.context["stage_gates"] = list(stage.gates)
+        prior = managed.task_context.get("prior_evaluation_insight")
+        if isinstance(prior, dict):
+            state.context["prior_evaluation_insight"] = dict(prior)
         self.harness.checkpoints.save(state.run_id, state.to_dict())
 
         managed.active_stage = stage.id
@@ -291,7 +342,11 @@ class ManagedFlowController:
             raise ValueError(f"cannot apply replan from stage {stage_id}; active stage is {managed.active_stage}")
 
         context = dict(managed.task_context)
+        # Cross-run learning is advisory provider context only. It never participates in
+        # canonical replanning policy evaluation, even if a future flow adds a matching key.
+        context.pop("prior_evaluation_insight", None)
         context.update(context_updates or {})
+        context.pop("prior_evaluation_insight", None)
         context["current_stage"] = stage_id
         effective_count = managed.replan_count if replan_count is None else replan_count
         decision = self.planner.replan(
