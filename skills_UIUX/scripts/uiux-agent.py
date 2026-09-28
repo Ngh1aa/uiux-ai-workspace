@@ -7,13 +7,14 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+FACTORY_ROOT = ROOT.parent / "uiux-factory"
+if str(FACTORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(FACTORY_ROOT))
 
-from runtime.agent import ProviderNeutralAgentHarness
-from runtime.manager import DevelopmentManagerAgent
-from runtime.provider import create_provider
-from runtime.provider_runner import ProviderManagedRunner
+from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
+from core.runtime.flow_os.managed import ManagedFlowController
+from core.runtime.flow_os.provider import create_provider
+from core.runtime.flow_os.provider_runner import ProviderManagedRunner
 
 
 def _managed_overrides(args: argparse.Namespace) -> dict[str, object]:
@@ -39,7 +40,7 @@ def _actions_from_plan(path: str | None) -> list[dict[str, object]]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Provider-neutral skills_UIUX agent harness")
+    parser = argparse.ArgumentParser(description="Provider-neutral UIUX Factory Flow OS harness")
     parser.add_argument("--project", required=True)
     parser.add_argument("--task", default="UIUX task")
     parser.add_argument("--agent", choices=["development", "research", "implementation", "qa"], default="research")
@@ -52,7 +53,7 @@ def main() -> int:
     parser.add_argument("--resume")
     parser.add_argument("--dry-run", action="store_true")
 
-    parser.add_argument("--managed", action="store_true", help="Use the Development Manager declarative Flow OS")
+    parser.add_argument("--managed", action="store_true", help="Use the canonical declarative Factory Flow OS")
     parser.add_argument("--managed-run-id", help="Resume an existing managed website run")
     parser.add_argument("--intent", choices=["build", "redesign", "rebuild", "improve", "fix", "polish"], help="Optional override; otherwise inferred from --task")
     parser.add_argument("--change-surface", choices=["MICRO", "FOCUSED", "PAGE", "REDESIGN", "PRODUCT"], help="Optional A3 change-size override; otherwise inferred from Task Contract scope")
@@ -84,7 +85,7 @@ def main() -> int:
     harness = ProviderNeutralAgentHarness(ROOT, Path(args.project))
 
     if args.managed or args.managed_run_id:
-        manager = DevelopmentManagerAgent(harness)
+        manager = ManagedFlowController(harness)
         if args.managed_run_id:
             managed = manager.resume(args.managed_run_id)
         else:
