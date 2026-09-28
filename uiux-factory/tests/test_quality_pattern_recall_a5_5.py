@@ -139,15 +139,17 @@ def test_a5_5_managed_recall_attaches_only_after_flow_selection(tmp_path: Path) 
 
     assert "prior_evaluation_insight" not in captured_planning_context
     assert "prior_quality_insight" not in captured_planning_context
-    quality = managed.task_context.get("prior_quality_insight")
+    assert "prior_quality_insight" not in managed.task_context
+
+    manager_checkpoint = harness.resume(managed.manager_run_id)
+    quality = manager_checkpoint.context.get("prior_quality_insight")
     assert isinstance(quality, dict)
     assert quality["advisory_only"] is True
     assert quality["recurrent_attention_patterns"][0]["requirement_id"] == "RESPONSIVE-003"
 
     stage_state = manager.start_stage(managed)
     assert stage_state.context["prior_quality_insight"] == quality
-    manager_checkpoint = harness.resume(managed.manager_run_id)
-    assert manager_checkpoint.context["prior_quality_insight"] == quality
+    assert managed.task_context["prior_quality_insight"] == quality
 
 
 def test_a5_5_replan_strips_all_advisory_memory_even_from_context_updates(tmp_path: Path) -> None:
