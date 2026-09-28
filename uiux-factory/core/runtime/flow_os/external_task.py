@@ -138,7 +138,7 @@ def build_external_task_manifest(
         "features",
     }
     for key, value in dict(overrides or {}).items():
-        if key not in allowed_overrides or value in {None, ""}:
+        if key not in allowed_overrides or value is None or value == "":
             continue
         context[key] = value
 
