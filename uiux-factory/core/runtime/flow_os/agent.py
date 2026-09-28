@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from core.runtime.flow_os.safe_read import SafeReader
+from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
 
 
 AUTHORITY_ORDER = ("read_only", "branch_write", "external_write", "release")
@@ -309,12 +310,53 @@ class ProviderNeutralAgentHarness:
         self.permissions = PermissionGate(self.policy_path)
         self.registry = ToolRegistry(self.repo_root, self.project_root)
         self.checkpoints = LocalCheckpointStore(self.project_root / ".uiux-agent-runs")
+        self.worktrees = WorktreeManager(self.project_root)
 
     def _role(self, name: str) -> dict[str, Any]:
         roles = self.policy_doc.get("roles", {})
         if name not in roles:
             raise ValueError(f"unknown agent role: {name}")
         return roles[name]
+
+    def _workspace_owner(self, state: RunState) -> str:
+        return str(state.context.get("manager_run_id") or state.run_id)
+
+    def _workspace_from_state(self, state: RunState) -> WorkspaceMetadata | None:
+        raw = state.context.get("workspace")
+        if not isinstance(raw, dict):
+            return None
+        return self.worktrees.validate_metadata(raw, expected_run_id=self._workspace_owner(state))
+
+    def _ensure_workspace(self, state: RunState) -> WorkspaceMetadata:
+        metadata = self._workspace_from_state(state)
+        if metadata is None:
+            owner = self._workspace_owner(state)
+            if owner != state.run_id:
+                try:
+                    manager_state = self.resume(owner)
+                except (FileNotFoundError, TypeError, ValueError):
+                    manager_state = None
+                if manager_state is not None and isinstance(manager_state.context.get("workspace"), dict):
+                    metadata = self.worktrees.validate_metadata(
+                        dict(manager_state.context["workspace"]), expected_run_id=owner
+                    )
+            if metadata is None:
+                metadata = self.worktrees.ensure(owner)
+            if owner != state.run_id:
+                try:
+                    manager_state = self.resume(owner)
+                except (FileNotFoundError, TypeError, ValueError):
+                    manager_state = None
+                if manager_state is not None:
+                    manager_state.context["workspace"] = metadata.to_dict()
+                    self.checkpoints.save(manager_state.run_id, manager_state.to_dict())
+            state.context["workspace"] = metadata.to_dict()
+            self.checkpoints.save(state.run_id, state.to_dict())
+        return metadata
+
+    def _active_project_root(self, state: RunState) -> Path:
+        metadata = self._workspace_from_state(state)
+        return Path(metadata.workspace_root).resolve() if metadata is not None else self.project_root
 
     def create_run(
         self,
@@ -348,6 +390,7 @@ class ProviderNeutralAgentHarness:
                 "model/provider reasoning is not bundled",
                 "external MCP/Figma/Playwright integrations are optional adapters",
                 "local checkpoints are not distributed durable execution",
+                "branch-write actions require a clean git source checkout and execute in an isolated worktree",
             ],
         )
         self.checkpoints.save(state.run_id, state.to_dict())
@@ -382,11 +425,11 @@ class ProviderNeutralAgentHarness:
                     target_defaults = list(target_role.get("default_skills", []))
                     loaded_sources = list(state.context.get("loaded_sources", []))
                     state.context = build_context_manifest(
-                        self.project_root,
+                        self._active_project_root(state),
                         self.repo_root,
                         selected_skills=target_defaults,
                         explicit_sources=loaded_sources,
-                    )
+                    ) | ({"workspace": state.context["workspace"]} if "workspace" in state.context else {})
                     state.completed_actions.append(f"handoff:{target}")
                     trace.emit(
                         "agent.handoff",
@@ -421,11 +464,20 @@ class ProviderNeutralAgentHarness:
                 if dry_run:
                     result = {"dry_run": True, "tool": name}
                 else:
+                    if spec.side_effect and spec.required_authority == "branch_write":
+                        metadata = self._ensure_workspace(state)
+                        active_registry = ToolRegistry(self.repo_root, Path(metadata.workspace_root))
+                    else:
+                        active_registry = ToolRegistry(self.repo_root, self._active_project_root(state))
                     trace.emit("tool.call", "START", tool=name, args=args)
-                    result = self.registry.execute(name, args)
+                    result = active_registry.execute(name, args)
                     trace.emit("tool.call", "OK", tool=name, result=result)
 
                 state.completed_actions.append(f"{index}:{name}")
+                if name == "write_artifact" and isinstance(result, dict) and result.get("path"):
+                    artifact = str(result["path"])
+                    if artifact not in state.artifacts:
+                        state.artifacts.append(artifact)
                 self.checkpoints.save(state.run_id, state.to_dict())
 
             state.state = "COMPLETED"
