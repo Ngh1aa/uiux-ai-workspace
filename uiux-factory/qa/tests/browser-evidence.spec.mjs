@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+import path from 'node:path';
 
-fs.mkdirSync('artifacts', { recursive: true });
+const artifactsDir = path.resolve(process.env.QA_ARTIFACTS_DIR || 'artifacts');
+fs.mkdirSync(artifactsDir, { recursive: true });
 const routes = (process.env.QA_ROUTES || '/fixture/')
   .split(',')
   .map(route => route.trim())
@@ -37,20 +39,28 @@ for (const route of routes) {
       };
     });
     const dom = await evidenceRoot.evaluate(el => el.outerHTML);
+    const ariaSnapshot = await page.locator('body').ariaSnapshot();
+    const viewport = page.viewportSize() || {};
     const safeRoute = route.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'root';
-    await page.screenshot({ path: `artifacts/${safeRoute}-1440.png`, fullPage: true });
+    const screenshotName = `${safeRoute}-render.png`;
+    await page.screenshot({ path: path.join(artifactsDir, screenshotName), fullPage: true });
 
     const evidence = {
       route,
+      url: page.url(),
+      title: await page.title(),
+      viewport,
       hasMain,
       dom,
+      ariaSnapshot,
       box,
       computedStyle,
+      screenshot: screenshotName,
       consoleMessages,
       pageErrors
     };
     fs.writeFileSync(
-      `artifacts/browser-evidence-${safeRoute}.json`,
+      path.join(artifactsDir, `browser-evidence-${safeRoute}.json`),
       JSON.stringify(evidence, null, 2)
     );
 
