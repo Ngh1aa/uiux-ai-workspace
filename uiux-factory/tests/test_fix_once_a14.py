@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from core.dogfood.cross_project import compile_task_contract, project_profile
+from core.dogfood.cross_project import compile_task_contract, project_ids, project_profile
 from core.runtime.flow_os.flow import FlowResolver
 from core.runtime.flow_os.task_context import GoalInterpreter
 
@@ -31,6 +31,14 @@ def test_a14_cennext_focused_ia_workflow_does_not_expand_to_full_redesign() -> N
     )
     assert surface == "FOCUSED"
     assert flow_id == "existing-ui-improvement"
+
+
+def test_a14_luxroom_checkout_stays_page_bounded() -> None:
+    surface, flow_id = _flow_for(
+        "Improve the LuxRoom checkout experience while preserving the current luxury-minimal visual direction and the rest of the ecommerce structure."
+    )
+    assert surface == "PAGE"
+    assert flow_id == "page-ui-work"
 
 
 def test_a14_nova_dashboard_task_stays_page_bounded_without_full_redesign() -> None:
@@ -68,9 +76,16 @@ def test_a14_execution_boundary_is_orthogonal_to_ui_change_surface() -> None:
 def test_a14_project_profiles_do_not_control_canonical_surface() -> None:
     task = "Improve the hero section only while preserving the current structure."
     surfaces = set()
-    for project_id in ("nova", "lumen", "cennext"):
+    for project_id in project_ids():
         contract = compile_task_contract(project_profile(project_id), task_description=task)
         assert contract["change_boundary"] == "PRODUCT"
         surfaces.add(str(contract["change_surface"]))
 
     assert surfaces == {"FOCUSED"}
+
+
+def test_a14_registry_spans_distinct_product_archetypes() -> None:
+    profiles = [project_profile(project_id) for project_id in project_ids()]
+    assert set(project_ids()) >= {"nova", "lumen", "cennext", "luxroom"}
+    assert len({profile.archetype for profile in profiles}) == len(profiles)
+    assert len({profile.evidence_model for profile in profiles}) == len(profiles)

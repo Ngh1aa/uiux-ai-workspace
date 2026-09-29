@@ -28,44 +28,15 @@ permissions:
   contents: read
 
 jobs:
-  fix-once-validate-across-projects:
+  factory-regressions:
+    name: Factory regression contract
     runs-on: ubuntu-latest
     timeout-minutes: 12
-    env:
-      NOVA_SHA: e206f51f2fda006adcf52497d8b827e048e157ec
-      LUMEN_SHA: 219f3e49f9956290ef69a2e49cb91fefddd5f561
-      CENNEXT_SHA: 273403accf8979608fbb16dbe2741cedb0430fb6
-      NOVA_ROOT: ${{ github.workspace }}/.dogfood/Nova
-      LUMEN_ROOT: ${{ github.workspace }}/.dogfood/Lumen
-      CENNEXT_ROOT: ${{ github.workspace }}/.dogfood/CENNEXT
-      REPORT_ROOT: ${{ github.workspace }}/a14-artifacts
-
     steps:
       - name: Checkout Factory
         uses: actions/checkout@v6
         with:
           submodules: recursive
-
-      - name: Checkout pinned Nova
-        uses: actions/checkout@v6
-        with:
-          repository: Ngh1aa/Nova
-          ref: e206f51f2fda006adcf52497d8b827e048e157ec
-          path: .dogfood/Nova
-
-      - name: Checkout pinned Lumen
-        uses: actions/checkout@v6
-        with:
-          repository: Ngh1aa/Lumen
-          ref: 219f3e49f9956290ef69a2e49cb91fefddd5f561
-          path: .dogfood/Lumen
-
-      - name: Checkout pinned CENNEXT
-        uses: actions/checkout@v6
-        with:
-          repository: Ngh1aa/cennext-b2b-prototype
-          ref: 273403accf8979608fbb16dbe2741cedb0430fb6
-          path: .dogfood/CENNEXT
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -87,37 +58,137 @@ jobs:
             tests/test_fix_once_a14.py \
             tests/test_generic_real_project_a14.py
 
-      - name: Validate pinned Nova with generic runner
+  golden-regression:
+    name: Golden / ${{ matrix.project_id }}
+    needs: factory-regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project_id: nova
+            repository: Ngh1aa/Nova
+            golden_sha: e206f51f2fda006adcf52497d8b827e048e157ec
+          - project_id: lumen
+            repository: Ngh1aa/Lumen
+            golden_sha: 219f3e49f9956290ef69a2e49cb91fefddd5f561
+          - project_id: cennext
+            repository: Ngh1aa/cennext-b2b-prototype
+            golden_sha: 273403accf8979608fbb16dbe2741cedb0430fb6
+          - project_id: luxroom
+            repository: Ngh1aa/LuxRoom
+            golden_sha: 6ee5e8b9b7a671f33ad20493c436085bb287e3ca
+    env:
+      TARGET_ROOT: ${{ github.workspace }}/.dogfood/golden/${{ matrix.project_id }}
+      REPORT_ROOT: ${{ github.workspace }}/a14-artifacts/golden
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Checkout pinned golden target
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ matrix.repository }}
+          ref: ${{ matrix.golden_sha }}
+          path: .dogfood/golden/${{ matrix.project_id }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install Factory test dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Validate pinned golden project
         working-directory: uiux-factory
         run: |
           python scripts/run_cross_project_dogfood.py \
-            --project-id nova \
-            --project-root "$NOVA_ROOT" \
-            --expected-target-sha "$NOVA_SHA" \
-            --report "$REPORT_ROOT/nova.json"
+            --project-id "${{ matrix.project_id }}" \
+            --project-root "$TARGET_ROOT" \
+            --expected-target-sha "${{ matrix.golden_sha }}" \
+            --report "$REPORT_ROOT/${{ matrix.project_id }}.json"
 
-      - name: Validate pinned Lumen with generic runner
-        working-directory: uiux-factory
-        run: |
-          python scripts/run_cross_project_dogfood.py \
-            --project-id lumen \
-            --project-root "$LUMEN_ROOT" \
-            --expected-target-sha "$LUMEN_SHA" \
-            --report "$REPORT_ROOT/lumen.json"
-
-      - name: Validate pinned CENNEXT with generic runner
-        working-directory: uiux-factory
-        run: |
-          python scripts/run_cross_project_dogfood.py \
-            --project-id cennext \
-            --project-root "$CENNEXT_ROOT" \
-            --expected-target-sha "$CENNEXT_SHA" \
-            --report "$REPORT_ROOT/cennext.json"
-
-      - name: Upload A14 reports
+      - name: Upload golden report
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: a14-fix-once-${{ github.run_id }}
+          name: a14-golden-${{ matrix.project_id }}-${{ github.run_id }}
           if-no-files-found: warn
-          path: a14-artifacts/*.json
+          path: a14-artifacts/golden/${{ matrix.project_id }}.json
+
+  current-head-canary:
+    name: Canary / ${{ matrix.project_id }}@main
+    needs: factory-regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project_id: nova
+            repository: Ngh1aa/Nova
+          - project_id: lumen
+            repository: Ngh1aa/Lumen
+          - project_id: cennext
+            repository: Ngh1aa/cennext-b2b-prototype
+          - project_id: luxroom
+            repository: Ngh1aa/LuxRoom
+    env:
+      TARGET_ROOT: ${{ github.workspace }}/.dogfood/canary/${{ matrix.project_id }}
+      REPORT_ROOT: ${{ github.workspace }}/a14-artifacts/canary
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Checkout current target main
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ matrix.repository }}
+          ref: main
+          path: .dogfood/canary/${{ matrix.project_id }}
+
+      - name: Bind canary to checked-out head
+        id: target
+        shell: bash
+        run: |
+          sha="$(git -C "$TARGET_ROOT" rev-parse HEAD)"
+          test "${#sha}" -eq 40
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "Canary target: ${{ matrix.repository }}@$sha"
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install Factory test dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Validate current-head canary
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id "${{ matrix.project_id }}" \
+            --project-root "$TARGET_ROOT" \
+            --expected-target-sha "${{ steps.target.outputs.sha }}" \
+            --report "$REPORT_ROOT/${{ matrix.project_id }}.json"
+
+      - name: Upload canary report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: a14-canary-${{ matrix.project_id }}-${{ github.run_id }}
+          if-no-files-found: warn
+          path: a14-artifacts/canary/${{ matrix.project_id }}.json
