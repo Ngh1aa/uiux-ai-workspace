@@ -122,6 +122,15 @@ async function resolveScope(page, contract, state) {
   return { kind: 'iframe', target: frame };
 }
 
+function normalizeSemanticText(value, caseSensitive = false) {
+  const normalized = String(value ?? '').replace(/\s+/g, ' ').trim();
+  return caseSensitive ? normalized : normalized.toLocaleLowerCase();
+}
+
+export function semanticTextIncludes(actual, expected, caseSensitive = false) {
+  return normalizeSemanticText(actual, caseSensitive).includes(normalizeSemanticText(expected, caseSensitive));
+}
+
 async function runAssertion(scope, assertion) {
   if (assertion.type === 'selector') {
     const locator = scope.locator(assertion.selector).first();
@@ -131,8 +140,14 @@ async function runAssertion(scope, assertion) {
     return { type: 'selector', selector: assertion.selector, count, visible, passed };
   }
   if (assertion.type === 'text') {
-    const bodyText = await scope.locator('body').innerText().catch(() => '');
-    return { type: 'text', text: assertion.text, passed: bodyText.includes(String(assertion.text)) };
+    const selector = String(assertion.selector || 'body');
+    const locator = scope.locator(selector).first();
+    const count = await scope.locator(selector).count();
+    const visible = count > 0 ? await locator.isVisible().catch(() => false) : false;
+    const actual = count > 0 ? await locator.innerText().catch(() => '') : '';
+    const caseSensitive = assertion.case_sensitive === true;
+    const passed = count > 0 && (assertion.visible === false || visible) && semanticTextIncludes(actual, assertion.text, caseSensitive);
+    return { type: 'text', selector, text: assertion.text, case_sensitive: caseSensitive, count, visible, passed };
   }
   const locator = scope.locator(assertion.selector).first();
   const count = await scope.locator(assertion.selector).count();

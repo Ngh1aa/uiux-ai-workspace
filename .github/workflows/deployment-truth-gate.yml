@@ -1,0 +1,100 @@
+name: Deployment Truth Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Expected merged/release SHA"
+        required: true
+        type: string
+      deployment_sha:
+        description: "Provider-reported deployment source SHA"
+        required: false
+        default: ""
+        type: string
+      deployment_status:
+        description: "Provider-reported deployment status"
+        required: false
+        default: ""
+        type: string
+      production_url:
+        description: "Production URL/alias to probe"
+        required: false
+        default: ""
+        type: string
+      provider:
+        description: "Provider name (vercel, github-pages, netlify, generic...)"
+        required: false
+        default: "generic"
+        type: string
+      provider_text:
+        description: "Raw provider/check summary used for infrastructure classification"
+        required: false
+        default: ""
+        type: string
+      product_qa_passed:
+        description: "Whether product QA is already green"
+        required: true
+        default: true
+        type: boolean
+  workflow_call:
+    inputs:
+      expected_sha: { required: true, type: string }
+      deployment_sha: { required: false, default: "", type: string }
+      deployment_status: { required: false, default: "", type: string }
+      production_url: { required: false, default: "", type: string }
+      provider: { required: false, default: "generic", type: string }
+      provider_text: { required: false, default: "", type: string }
+      product_qa_passed: { required: false, default: true, type: boolean }
+    outputs:
+      classification:
+        description: "Canonical deployment truth classification"
+        value: ${{ jobs.verify.outputs.classification }}
+      verified:
+        description: "true only when deployment SHA/status/route all verify"
+        value: ${{ jobs.verify.outputs.verified }}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    outputs:
+      classification: ${{ steps.truth.outputs.classification }}
+      verified: ${{ steps.truth.outputs.verified }}
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify deployment truth
+        id: truth
+        working-directory: uiux-factory/qa
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          DEPLOYMENT_SHA: ${{ inputs.deployment_sha }}
+          DEPLOYMENT_STATUS: ${{ inputs.deployment_status }}
+          PRODUCTION_URL: ${{ inputs.production_url }}
+          DEPLOYMENT_PROVIDER: ${{ inputs.provider }}
+          DEPLOYMENT_PROVIDER_TEXT: ${{ inputs.provider_text }}
+          PRODUCT_QA_PASSED: ${{ inputs.product_qa_passed }}
+        run: |
+          mkdir -p artifacts/deployment-truth
+          set +e
+          node scripts/deployment-truth.mjs \
+            --output artifacts/deployment-truth/deployment-truth.json
+          EXIT_CODE=$?
+          set -e
+          cat artifacts/deployment-truth/deployment-truth.json
+          exit "$EXIT_CODE"
+      - name: Upload deployment truth evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-truth-evidence
+          path: uiux-factory/qa/artifacts/deployment-truth/
+          if-no-files-found: error
+          retention-days: 14

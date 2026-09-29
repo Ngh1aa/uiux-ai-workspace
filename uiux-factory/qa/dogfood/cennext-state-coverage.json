@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "name": "CENNEXT component-state library",
+  "entry_route": "/component-states.html",
+  "scope": "page",
+  "viewports": [
+    { "name": "desktop-1440", "width": 1440, "height": 1000 },
+    { "name": "tablet-768", "width": 768, "height": 1024 },
+    { "name": "mobile-390", "width": 390, "height": 844 }
+  ],
+  "states": [
+    {
+      "id": "normal",
+      "label": "Default",
+      "query": { "specimen": "default" },
+      "assertions": [
+        { "type": "selector", "selector": "#buttons .state-panel:nth-of-type(1) .demo-btn--primary" },
+        { "type": "text", "text": "Default → Hover → Pressed → Disabled" }
+      ],
+      "focus": "#buttons .state-panel:nth-of-type(1)"
+    },
+    {
+      "id": "disabled",
+      "label": "Disabled",
+      "query": { "specimen": "disabled" },
+      "assertions": [
+        { "type": "selector", "selector": "#buttons .state-panel:nth-of-type(4) .state-disabled" },
+        { "type": "text", "text": "38% opacity and no pointer action." }
+      ],
+      "focus": "#buttons .state-panel:nth-of-type(4)"
+    },
+    {
+      "id": "error",
+      "label": "Error",
+      "query": { "specimen": "error" },
+      "assertions": [
+        { "type": "selector", "selector": "#inputs .state-panel:nth-of-type(3) .state-error" },
+        { "type": "text", "text": "Enter a valid work email." }
+      ],
+      "focus": "#inputs .state-panel:nth-of-type(3)"
+    },
+    {
+      "id": "success",
+      "label": "Success",
+      "query": { "specimen": "success" },
+      "assertions": [
+        { "type": "selector", "selector": "#inputs .state-panel:nth-of-type(4) .state-success" },
+        { "type": "text", "text": "Contact detail verified." }
+      ],
+      "focus": "#inputs .state-panel:nth-of-type(4)"
+    },
+    {
+      "id": "edge",
+      "label": "Saved / selected edge",
+      "query": { "specimen": "saved" },
+      "assertions": [
+        { "type": "selector", "selector": ".service-card.state-saved" },
+        { "type": "text", "text": "Saved / shortlisted" }
+      ],
+      "focus": ".service-card.state-saved"
+    }
+  ],
+  "matrix": {
+    "states": ["disabled", "error", "success", "edge"],
+    "columns": 2,
+    "viewport": "desktop-1440",
+    "output": "state-coverage/state-matrix-2x2.png"
+  }
+}

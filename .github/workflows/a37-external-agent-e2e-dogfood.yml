@@ -1,0 +1,201 @@
+name: A37 External Agent E2E Dogfood
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/a37-external-agent-e2e-dogfood.yml"
+      - "uiux-factory/core/dogfood/a37-cennext.json"
+      - "uiux-factory/qa/**"
+      - "uiux-factory/core/provenance/**"
+      - "uiux-factory/core/contracts/release_evidence_schema.py"
+      - "skills_UIUX/scripts/github-external-agent-runner.py"
+      - "skills_UIUX/scripts/build-release-evidence.py"
+      - "uiux-factory/tests/test_a37_real_project_e2e.py"
+      - "docs/A37-REAL-PROJECT-E2E-DOGFOOD.md"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/a37-external-agent-e2e-dogfood.yml"
+      - "uiux-factory/core/dogfood/a37-cennext.json"
+      - "uiux-factory/qa/**"
+      - "uiux-factory/core/provenance/**"
+      - "uiux-factory/core/contracts/release_evidence_schema.py"
+      - "skills_UIUX/scripts/github-external-agent-runner.py"
+      - "skills_UIUX/scripts/build-release-evidence.py"
+      - "uiux-factory/tests/test_a37_real_project_e2e.py"
+      - "docs/A37-REAL-PROJECT-E2E-DOGFOOD.md"
+
+permissions:
+  contents: read
+
+jobs:
+  cennext-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      DOGFOOD_CONFIG: ${{ github.workspace }}/uiux-factory/core/dogfood/a37-cennext.json
+      TARGET_ROOT: ${{ github.workspace }}/.dogfood/CENNEXT
+      REPORT_ROOT: ${{ github.workspace }}/a37-artifacts
+      PACKET_ROOT: ${{ github.workspace }}/a37-artifacts/task-packet
+      QA_BASE_URL: http://127.0.0.1:4173
+
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Read pinned dogfood config
+        id: config
+        run: |
+          echo "repository=$(jq -r '.target_repository' "$DOGFOOD_CONFIG")" >> "$GITHUB_OUTPUT"
+          echo "sha=$(jq -r '.target_sha' "$DOGFOOD_CONFIG")" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout pinned CENNEXT
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ steps.config.outputs.repository }}
+          ref: ${{ steps.config.outputs.sha }}
+          path: .dogfood/CENNEXT
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install Factory dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "pydantic>=2.5.3,<3" "python-dotenv>=1,<2" -r uiux-factory/requirements-dev.txt
+          cd uiux-factory/qa
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Compile governed external-agent packet
+        run: |
+          mkdir -p "$REPORT_ROOT"
+          TARGET_REPOSITORY=$(jq -r '.target_repository' "$DOGFOOD_CONFIG")
+          TARGET_SHA=$(jq -r '.target_sha' "$DOGFOOD_CONFIG")
+          TASK=$(jq -r '.task' "$DOGFOOD_CONFIG")
+          AUTHORITY=$(jq -r '.authority' "$DOGFOOD_CONFIG")
+          ROUTES=$(jq -r '.routes | join(",")' "$DOGFOOD_CONFIG")
+          STATE_CONTRACT=$(jq -r '.state_contract' "$DOGFOOD_CONFIG")
+          python -B skills_UIUX/scripts/github-external-agent-runner.py \
+            --repository "$TARGET_REPOSITORY" \
+            --target-ref "$TARGET_SHA" \
+            --target-root "$TARGET_ROOT" \
+            --task "$TASK" \
+            --authority "$AUTHORITY" \
+            --qa-routes "$ROUTES" \
+            --state-contract "$STATE_CONTRACT" \
+            --acceptance "Use exact target SHA;verify real rendered target;do not fabricate missing loading state;do not claim deployment verification without provider SHA" \
+            --output-dir "$PACKET_ROOT"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          cfg=json.loads(Path(os.environ['DOGFOOD_CONFIG']).read_text())
+          run=json.loads((Path(os.environ['PACKET_ROOT'])/'github-external-agent-run.json').read_text())
+          assert run['target_snapshot']['checked_out_sha']==cfg['target_sha']
+          assert run['execution_boundary']['invokes_llm_provider'] is False
+          assert run['verification_plan']['state_coverage_contract']==cfg['state_contract']
+          PY
+
+      - name: Run existing real-project source audit
+        run: |
+          TARGET_SHA=$(jq -r '.target_sha' "$DOGFOOD_CONFIG")
+          python uiux-factory/scripts/run_cross_project_dogfood.py \
+            --project-id cennext \
+            --project-root "$TARGET_ROOT" \
+            --expected-target-sha "$TARGET_SHA" \
+            --report "$REPORT_ROOT/source-audit.json"
+
+      - name: Run rendered browser and semantic state evidence
+        working-directory: uiux-factory/qa
+        env:
+          QA_TARGET_DIR: ${{ github.workspace }}/.dogfood/CENNEXT
+          QA_ARTIFACTS_DIR: ${{ github.workspace }}/a37-artifacts
+          QA_ROUTES: /component-states.html
+          QA_VIEWPORTS_JSON: '[{"name":"desktop-1440","width":1440,"height":1000},{"name":"mobile-390","width":390,"height":844}]'
+        run: |
+          node scripts/serve-target.mjs > /tmp/a37-cennext-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          node scripts/wait-ready.mjs
+          npx playwright test tests/browser-evidence.spec.mjs
+          npm run test:state -- --contract "$GITHUB_WORKSPACE/uiux-factory/qa/dogfood/cennext-state-coverage.json"
+
+      - name: Record bounded deployment truth
+        working-directory: uiux-factory/qa
+        run: |
+          TARGET_SHA=$(jq -r '.target_sha' "$DOGFOOD_CONFIG")
+          EXPECTED_CLASS=$(jq -r '.expected_deployment_classification_without_provider_sha' "$DOGFOOD_CONFIG")
+          mkdir -p "$REPORT_ROOT/deployment-truth"
+          set +e
+          node scripts/deployment-truth.mjs \
+            --expected-sha "$TARGET_SHA" \
+            --product-qa-passed true \
+            --provider github-pages \
+            --output "$REPORT_ROOT/deployment-truth/deployment-truth.json"
+          EXIT_CODE=$?
+          set -e
+          ACTUAL_CLASS=$(jq -r '.classification' "$REPORT_ROOT/deployment-truth/deployment-truth.json")
+          if [ "$ACTUAL_CLASS" != "$EXPECTED_CLASS" ]; then
+            cat "$REPORT_ROOT/deployment-truth/deployment-truth.json"
+            echo "Expected deployment class $EXPECTED_CLASS, got $ACTUAL_CLASS" >&2
+            exit 1
+          fi
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "Deployment truth unexpectedly claimed VERIFIED without provider SHA" >&2
+            exit 1
+          fi
+
+      - name: Build release evidence registry
+        run: |
+          TARGET_REPOSITORY=$(jq -r '.target_repository' "$DOGFOOD_CONFIG")
+          TARGET_SHA=$(jq -r '.target_sha' "$DOGFOOD_CONFIG")
+          python -B skills_UIUX/scripts/build-release-evidence.py \
+            --repository "$TARGET_REPOSITORY" \
+            --target-sha "$TARGET_SHA" \
+            --artifact task_manifest="$PACKET_ROOT/external-task-manifest.json" \
+            --artifact source_audit="$REPORT_ROOT/source-audit.json" \
+            --artifact browser_qa="$REPORT_ROOT/browser-evidence-component-states-html-desktop-1440.json" \
+            --artifact browser_qa="$REPORT_ROOT/browser-evidence-component-states-html-mobile-390.json" \
+            --artifact state_coverage_report="$REPORT_ROOT/state-coverage/state-coverage-report.json" \
+            --artifact state_matrix="$REPORT_ROOT/state-coverage/state-matrix-2x2.png" \
+            --artifact deployment_truth="$REPORT_ROOT/deployment-truth/deployment-truth.json" \
+            --output "$REPORT_ROOT/uiux-evidence-manifest.json"
+
+      - name: Assert end-to-end evidence boundary
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          report=Path(os.environ['REPORT_ROOT'])
+          manifest=json.loads((report/'uiux-evidence-manifest.json').read_text())
+          claims={item['claim']: item['state'] for item in manifest['claims']}
+          assert manifest['release_classification']=='READY_BUT_NOT_DEPLOYED', manifest
+          assert claims['state_coverage']=='VERIFIED', claims
+          assert claims['browser_qa_artifacts']=='VERIFIED', claims
+          assert claims['deployment_truth']=='UNKNOWN', claims
+          assert claims['release_ready']=='UNKNOWN', claims
+          assert len(manifest['artifacts']) >= 7, manifest['artifacts']
+          PY
+
+      - name: Print server log on failure
+        if: failure()
+        run: cat /tmp/a37-cennext-server.log || true
+
+      - name: Upload A37 evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a37-cennext-e2e-evidence
+          path: a37-artifacts/
+          if-no-files-found: error
+          retention-days: 14
