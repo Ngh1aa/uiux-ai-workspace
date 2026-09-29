@@ -4,6 +4,7 @@ from core.dogfood.cross_project import (
     PROJECT_PROFILES,
     compile_task_contract,
     evaluate_cross_project_contract,
+    project_ids,
     project_profile,
     resolve_source_truth,
 )
@@ -31,8 +32,17 @@ CENNEXT_PATHS = {
     "motion-system.css",
 }
 
+LUXROOM_PATHS = {
+    "README.md",
+    "UI_UX_DESIGN_THINKING_GUIDE.md",
+    "index.html",
+    "detail.html",
+    "cart.html",
+    "checkout.html",
+}
 
-def test_a13_lumen_visual_art_direction_stays_product_boundary_without_nova_leakage() -> None:
+
+def test_a13_lumen_visual_art_direction_stays_product_boundary_without_cross_profile_leakage() -> None:
     profile = project_profile("lumen")
     report = evaluate_cross_project_contract(
         profile,
@@ -51,10 +61,10 @@ def test_a13_lumen_visual_art_direction_stays_product_boundary_without_nova_leak
     assert report["evidence_model"] == "composition-cultural-experience"
     assert report["source_truth"] == "PROJECT-CONTEXT.md"
     assert report["missing_evidence"] == []
-    assert report["nova_domain_leaks"] == []
+    assert report["cross_profile_leaks"] == []
 
 
-def test_a13_cennext_enterprise_ia_stays_product_boundary_without_fintech_assumptions() -> None:
+def test_a13_cennext_enterprise_ia_stays_product_boundary_without_foreign_assumptions() -> None:
     profile = project_profile("cennext")
     report = evaluate_cross_project_contract(
         profile,
@@ -73,11 +83,29 @@ def test_a13_cennext_enterprise_ia_stays_product_boundary_without_fintech_assump
     assert report["evidence_model"] == "ia-workflow-compliance"
     assert report["source_truth"] == "README.md"
     assert report["missing_evidence"] == []
-    assert report["nova_domain_leaks"] == []
+    assert report["cross_profile_leaks"] == []
+
+
+def test_a14_luxroom_ecommerce_checkout_stays_page_bounded_without_foreign_assumptions() -> None:
+    profile = project_profile("luxroom")
+    report = evaluate_cross_project_contract(
+        profile,
+        available_paths=LUXROOM_PATHS,
+        change_boundary="PRODUCT",
+    )
+
+    assert report["passed"] is True
+    assert report["contract"]["change_boundary"] == "PRODUCT"
+    assert report["contract"]["change_surface"] == "PAGE"
+    assert report["routing_intent"] == "ecommerce-checkout-clarity"
+    assert report["evidence_model"] == "catalog-cart-checkout-continuity"
+    assert report["source_truth"] == "README.md"
+    assert report["missing_evidence"] == []
+    assert report["cross_profile_leaks"] == []
 
 
 def test_a13_execution_boundary_is_domain_invariant_without_overwriting_ui_surface() -> None:
-    for project_id in ("nova", "lumen", "cennext"):
+    for project_id in project_ids():
         profile = project_profile(project_id)
         product = compile_task_contract(profile, change_boundary="PRODUCT")
         factory = compile_task_contract(profile, change_boundary="FACTORY")
@@ -110,11 +138,11 @@ def test_a14_path_normalization_preserves_dotfiles_and_removes_only_real_prefixe
 
 
 def test_a13_cross_project_profiles_do_not_share_one_generic_evidence_model() -> None:
-    profiles = [PROJECT_PROFILES[key] for key in ("nova", "lumen", "cennext")]
+    profiles = [PROJECT_PROFILES[key] for key in project_ids()]
 
-    assert len({profile.archetype for profile in profiles}) == 3
-    assert len({profile.routing_intent for profile in profiles}) == 3
-    assert len({profile.evidence_model for profile in profiles}) == 3
+    assert len({profile.archetype for profile in profiles}) == len(profiles)
+    assert len({profile.routing_intent for profile in profiles}) == len(profiles)
+    assert len({profile.evidence_model for profile in profiles}) == len(profiles)
     assert all(profile.expected_change_boundary == "PRODUCT" for profile in profiles)
 
 
