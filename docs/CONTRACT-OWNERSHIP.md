@@ -17,6 +17,9 @@ The workspace intentionally has several layers. They must **reference** each oth
 | Rendered UI acceptance | Target-project browser/test evidence | Supplement with critique; model self-report is not proof |
 | Lifecycle-state semantic acceptance | Target project's State Coverage contract + `uiux-factory/qa/scripts/state-coverage.mjs` | Declare state query/assertions/focus; cannot waive required semantic evidence after a rendered failure |
 | Infrastructure/release failure taxonomy | `uiux-factory/qa/scripts/infra-failure-classifier.mjs` | Add provider evidence text; do not relabel product QA failures as infra noise |
+| Deployment truth acceptance | `uiux-factory/qa/scripts/deployment-truth.mjs` + `.github/workflows/deployment-truth-gate.yml` | Supply provider/API deployment metadata and production URL; never manufacture provider SHA from the expected source SHA |
+| Release-level evidence registry | `uiux-factory/core/provenance/release_evidence_registry.py` + `core/contracts/release_evidence_schema.py` | Register/hash artifacts and derived claim state; never override the originating gate's evidence semantics |
+| Fine-grained evidence lineage | `uiux-factory/core/provenance/evidence_lineage.py` + evidence provenance contracts | Produce individually addressable evidence/spec links beneath the release registry |
 | Human research evidence | Real sessions/behavior with traceable evidence ledger | Plan, synthesize and label gaps; never fabricate evidence |
 
 ## Conflict rule
@@ -30,6 +33,8 @@ Examples:
 - A model says QA passed but no target browser evidence exists → state remains unverified.
 - A state URL says `state=empty` but the contract's Empty semantic marker is absent → State Coverage fails even if HTTP/console checks are green.
 - A provider reports `build-rate-limit / upgradeToPro` while rendered product QA is green → classify provider capacity separately; do not rewrite product code to manufacture a deployment PASS.
+- Deployment metadata points at a different SHA than the intended release → release is not `DEPLOYED_VERIFIED`, even if the production URL returns 200.
+- A release registry is missing a state/deployment artifact → the corresponding claim stays `UNKNOWN`; an artifact inventory is not permission to invent a PASS.
 - A case study claims user validation but there is no direct-user evidence ledger → label it hypothesis/planned, not validated.
 
 ## Minimal context profiles
