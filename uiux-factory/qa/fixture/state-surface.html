@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fixture Product Surface</title>
+  <style>*{box-sizing:border-box}body{margin:0;background:#fff;color:#171a21;font-family:system-ui,sans-serif}.shell{max-width:980px;margin:auto;padding:44px 24px}.card{border:1px solid #d8dce4;border-radius:18px;padding:28px;background:#fff;min-height:320px}.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#69707d}.card h1{font-size:clamp(32px,5vw,56px);margin:8px 0 12px}.card p{max-width:680px;line-height:1.55;color:#5f6672}.skeleton{display:grid;gap:12px}.skeleton i{display:block;height:18px;border-radius:8px;background:#e7eaf0}.skeleton i:first-child{width:72%;height:54px}.skeleton i:nth-child(2){width:48%}.error{border-color:#b52b3e;background:#fff5f6}.edge-list{max-height:190px;overflow:auto;border-top:1px solid #ddd}.edge-list div{padding:8px 0;border-bottom:1px solid #eee;font-size:12px}</style>
+</head>
+<body>
+  <main class="shell" id="root"></main>
+<script>
+  const params = new URLSearchParams(location.search);
+  const state = params.get('state') || 'normal';
+  const root = document.getElementById('root');
+  const views = {
+    normal: `<section class="card" data-state-evidence="normal"><div class="eyebrow">Normal state</div><h1>Product ready.</h1><p>Baseline product content for the QA fixture.</p></section>`,
+    empty: `<section class="card" data-state-evidence="empty"><div class="eyebrow">Empty state</div><h1>No records yet.</h1><p>The empty state explains why nothing is here and gives the user a safe next action.</p><button type="button">Create first record</button></section>`,
+    loading: `<section class="card" data-state-evidence="loading" aria-busy="true"><div class="eyebrow">Loading evidence</div><div class="skeleton" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p>Loading evidence remains inspectable while the simulated request is pending.</p></section>`,
+    error: `<section class="card error" data-state-evidence="error" role="alert"><div class="eyebrow">Error state</div><h1>Action not recorded.</h1><p>User work is preserved and the next recovery action is explicit.</p><button type="button">Retry safely</button></section>`,
+    edge: `<section class="card" data-state-evidence="edge"><div class="eyebrow">Edge-case state</div><h1>50 linked records</h1><p>Dense and unusually long data stays inside its owned region.</p><div class="edge-list">${Array.from({length:50},(_,i)=>`<div>Record ${String(i+1).padStart(2,'0')} · VERY-LONG-REFERENCE-${'X'.repeat(24)}-${i+1}</div>`).join('')}</div></section>`
+  };
+  root.innerHTML = views[state] || views.normal;
+</script>
+</body>
+</html>

@@ -44,11 +44,22 @@ Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.j
 ## Canonical execution surfaces
 
 - External/cloud collaborator: `skills_UIUX/scripts/prepare-external-task.py`
+- GitHub-native external collaborator control plane: `.github/workflows/external-agent-runner.yml`
 - Managed local/provider Flow OS: `skills_UIUX/scripts/uiux-agent.py`
 - Direct Factory pipeline: `uiux-factory/run.py`
 - Browser/accessibility/performance evidence: `uiux-factory/qa/`
+- Lifecycle State Coverage + semantic assertions + rendered matrix: `uiux-factory/qa/scripts/state-coverage.mjs`
+- Infra/release failure taxonomy: `uiux-factory/qa/scripts/infra-failure-classifier.mjs`
 - Flow definitions: `skills_UIUX/flows/*.json`
 - Skill capabilities: `skills_UIUX/<skill>/SKILL.md`
+
+## GitHub-native external collaborators
+
+When ChatGPT, Codex, Claude or another external collaborator can work through GitHub but cannot execute the Factory locally, use `GitHub Native External Agent Runner` from Actions (or call it as a reusable workflow). It checks out the exact target ref, compiles the governed task packet, records target SHA/source evidence, and can optionally run the State Coverage Gate when the target declares a contract.
+
+The workflow does **not** pretend to invoke an LLM provider. It creates the governed GitHub-native control plane around the external collaborator. Implementation still happens through the authorized collaborator; runtime/visual PASS still requires target evidence.
+
+Lifecycle-state projects can declare `uiux-state-coverage.json` (or another contract path) to verify state query → semantic marker → rendered evidence across desktop/tablet/mobile and automatically generate a 2×2 case-study matrix. See `docs/STATE-COVERAGE-INFRASTRUCTURE.md`.
 
 ## Human research
 

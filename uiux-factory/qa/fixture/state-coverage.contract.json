@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "name": "UIUX Factory QA Fixture",
+  "entry_route": "/fixture/state-lab.html",
+  "frame_selector": "#fixtureFrame",
+  "states": [
+    { "id": "normal", "label": "Normal", "scope": "iframe", "query": { "state": "normal" }, "assertions": [{ "type": "selector", "selector": "[data-state-evidence=\"normal\"]" }], "focus": "[data-state-evidence=\"normal\"]" },
+    { "id": "empty", "label": "Empty", "scope": "iframe", "query": { "state": "empty" }, "assertions": [{ "type": "selector", "selector": "[data-state-evidence=\"empty\"]" }, { "type": "text", "text": "No records yet." }], "focus": "[data-state-evidence=\"empty\"]" },
+    { "id": "loading", "label": "Loading", "scope": "iframe", "query": { "state": "loading", "pin": 1 }, "assertions": [{ "type": "selector", "selector": "[data-state-evidence=\"loading\"]" }, { "type": "attribute", "selector": "[data-state-evidence=\"loading\"]", "attribute": "aria-busy", "equals": "true" }], "focus": "[data-state-evidence=\"loading\"]" },
+    { "id": "error", "label": "Error", "scope": "iframe", "query": { "state": "error" }, "assertions": [{ "type": "selector", "selector": "[data-state-evidence=\"error\"]" }, { "type": "attribute", "selector": "[data-state-evidence=\"error\"]", "attribute": "role", "equals": "alert" }], "focus": "[data-state-evidence=\"error\"]" },
+    { "id": "edge", "label": "Edge", "scope": "iframe", "query": { "state": "edge" }, "assertions": [{ "type": "selector", "selector": "[data-state-evidence=\"edge\"]" }, { "type": "text", "text": "50 linked records" }], "focus": "[data-state-evidence=\"edge\"]" }
+  ],
+  "matrix": { "states": ["empty", "loading", "error", "edge"], "columns": 2, "viewport": "desktop-1440", "tile_width": 720, "tile_height": 460, "output": "state-coverage/state-matrix-2x2.png" }
+}
