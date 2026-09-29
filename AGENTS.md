@@ -227,6 +227,26 @@ When relevant, verify:
 - agreement/disagreement among sources;
 - which statements are facts vs. inference.
 
+### Synthetic usability default for portfolio projects
+
+When external participant research is not available or the user explicitly asks the agent to self-evaluate the product, use a **five-user synthetic walkthrough** as the default presentation layer.
+
+Rules:
+
+1. Create 5 synthetic users with distinct everyday goals, confidence levels, and usage patterns relevant to the product.
+2. Derive their findings only from behavior actually inspected through expert walkthrough, adversarial QA, browser/runtime checks, source inspection, or verified prototype states.
+3. Write each simulated user's comments in **plain spoken language** as a normal customer would speak. Avoid design/technology jargon such as `state`, `affordance`, `persistence`, `mental model`, `heuristic`, `IA`, `component`, `API`, `backend`, or `edge case` inside the user quote.
+4. User comments should sound concrete and situational, for example:
+   - “Ủa mình vừa tắt cái này rồi, sao quay lại nó bật lại vậy?”
+   - “Mình gõ tên cửa hàng mà danh sách vẫn y nguyên, mình tưởng ô tìm kiếm bị lỗi.”
+   - “Mình tăng tiền tiết kiệm nhưng số tiền còn lại không đổi, nên mình không biết có bị thiếu tiền tiêu không.”
+5. Keep expert analysis, severity, root cause, and remediation outside the user's quote.
+6. Use a concise portfolio headline such as **“Tested with 5 simulated users”** or **“5 synthetic-user walkthroughs”** when the five users are generated/simulated.
+7. Do **not** use **“Tested with 5 users”** unless five real human participants actually took part and there is supporting evidence.
+8. Synthetic-user findings may support prioritization and iteration, but they must not be presented as direct-user preference, observed human task success, or production impact.
+9. For every project, keep a cross-user synthesis showing repeated patterns, affected synthetic users, severity, fix, and re-test status.
+10. After fixes, rerun the same five synthetic scenarios so the before/after evidence is comparable.
+
 ## 13. Root-cause failure handling
 
 When verification fails:
