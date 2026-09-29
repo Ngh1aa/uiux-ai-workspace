@@ -147,6 +147,24 @@ For production-learning work, connect measurement to the user problem before imp
 
 - [...]
 
+### Visual signature compatibility
+
+Complete this for existing rendered UI. Use `N/A` when the project genuinely has no signature media or motion. These become compatibility requirements for tasks that do not explicitly redesign the signature surface. Follow `docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md`.
+
+- **Representative page / route:** [...]
+- **Signature media:** [ASSET / COMPONENT / N/A]
+- **Signature motion / interaction:** [BEHAVIOR / N/A]
+- **Signature composition / art-direction cue:** [...]
+- **Page-role hierarchy to preserve:** [...]
+- **Reduced-motion identity that must remain:** [...]
+- **Canonical DOM/component owner:** [...]
+- **Canonical style owner:** [...]
+- **Canonical behavior owner:** [...]
+- **Known stale / parallel visual owners:** [...]
+- **Baseline rendered evidence:** [SCREENSHOT / ARTIFACT / UNKNOWN]
+- **Post-change evidence required:** [DESKTOP / MOBILE / INTERACTION / REDUCED MOTION / OTHER]
+- **Explicitly allowed signature changes for this task:** [NONE / ...]
+
 ### Performance requirements
 
 - [...]
@@ -199,6 +217,7 @@ Rules:
 - **Required build checks:** [...]
 - **Required runtime verification:** [...]
 - **Required visual verification:** [...]
+- **Required visual-signature regression verification:** [N/A / DECLARED INVARIANTS + VIEWPORTS + BEHAVIOR]
 - **Required performance checks:** [...]
 - **Required accessibility checks:** [...]
 - **Required usability / product validation:** [...]
@@ -292,6 +311,7 @@ For UI/UX/product milestones, also confirm when relevant:
 - the user problem and owner objective are both explicit;
 - consequential decisions include rationale and trade-offs;
 - critical journeys include meaningful recovery/state behavior;
+- existing visual-signature invariants are preserved unless the task explicitly authorizes their redesign;
 - high-risk hypotheses map to validation methods;
 - outcome claims are proportional to evidence;
 - case-study capture preserves the real decision process.
