@@ -85,6 +85,7 @@ jobs:
           TASK=$(jq -r '.task' "$DOGFOOD_CONFIG")
           AUTHORITY=$(jq -r '.authority' "$DOGFOOD_CONFIG")
           ROUTES=$(jq -r '.routes | join(",")' "$DOGFOOD_CONFIG")
+          STATE_CONTRACT=$(jq -r '.state_contract' "$DOGFOOD_CONFIG")
           python -B skills_UIUX/scripts/github-external-agent-runner.py \
             --repository "$TARGET_REPOSITORY" \
             --target-ref "$TARGET_SHA" \
@@ -92,6 +93,7 @@ jobs:
             --task "$TASK" \
             --authority "$AUTHORITY" \
             --qa-routes "$ROUTES" \
+            --state-contract "$STATE_CONTRACT" \
             --acceptance "Use exact target SHA;verify real rendered target;do not fabricate missing loading state;do not claim deployment verification without provider SHA" \
             --output-dir "$PACKET_ROOT"
           python - <<'PY'
@@ -101,6 +103,7 @@ jobs:
           run=json.loads((Path(os.environ['PACKET_ROOT'])/'github-external-agent-run.json').read_text())
           assert run['target_snapshot']['checked_out_sha']==cfg['target_sha']
           assert run['execution_boundary']['invokes_llm_provider'] is False
+          assert run['verification_plan']['state_coverage_contract']==cfg['state_contract']
           PY
 
       - name: Run existing real-project source audit

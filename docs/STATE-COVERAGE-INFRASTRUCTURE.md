@@ -42,10 +42,12 @@ Default viewports are `1440×1000`, `768×1024` and `390×844`. A contract can o
 The gate supports three deterministic assertion types:
 
 - `selector` — selector must exist and be visible by default; optional `count_at_least` and `visible=false` are supported;
-- `text` — the selected page/frame body must contain the declared text;
+- `text` — visible rendered text must contain the declared semantic text after whitespace normalization; matching is case-insensitive by default so CSS `text-transform` cannot create a false negative. Set `case_sensitive=true` when casing is itself part of the acceptance contract. An optional `selector` narrows the text assertion to one visible region;
 - `attribute` — a selector attribute must `equals` or `contains` the declared value.
 
 Every non-normal state must declare at least one semantic assertion. This prevents `?state=empty` from passing while rendering Normal UI.
+
+A37 real-project dogfood caught an edge case here: CENNEXT visibly renders authored labels through CSS uppercase transformations. State Coverage verifies semantic content without confusing presentation casing with missing content, while still requiring the selected region to be visible.
 
 ## 3. Rendered gate and evidence
 

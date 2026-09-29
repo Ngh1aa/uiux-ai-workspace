@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validateContract } from '../scripts/state-coverage.mjs';
+import { semanticTextIncludes, validateContract } from '../scripts/state-coverage.mjs';
 
 const base = {
   schema_version: '1.0',
@@ -34,4 +34,17 @@ test('rejects a matrix that references unknown states', () => {
   const broken = structuredClone(base);
   broken.matrix.states.push('ghost');
   assert.throws(() => validateContract(broken), /unknown state/);
+});
+
+test('semantic text matching survives CSS text-transform casing and whitespace', () => {
+  assert.equal(
+    semanticTextIncludes('DEFAULT → HOVER\n→ PRESSED → DISABLED', 'Default → Hover → Pressed → Disabled'),
+    true,
+  );
+  assert.equal(semanticTextIncludes('SAVED / SHORTLISTED', 'Saved / shortlisted'), true);
+});
+
+test('semantic text can opt into case-sensitive matching', () => {
+  assert.equal(semanticTextIncludes('SAVED / SHORTLISTED', 'Saved / shortlisted', true), false);
+  assert.equal(semanticTextIncludes('Saved / shortlisted', 'Saved / shortlisted', true), true);
 });
