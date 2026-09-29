@@ -15,6 +15,7 @@ The workspace intentionally has several layers. They must **reference** each oth
 | GitHub-native external-collaborator control plane | `.github/workflows/external-agent-runner.yml` + `skills_UIUX/scripts/github-external-agent-runner.py` | Compile/transport the governed task packet and declared verification; never pretend to execute an LLM provider |
 | Target-project truth | Current target repository source, config, tests, runtime and approved project docs | Summarize with evidence labels |
 | Rendered UI acceptance | Target-project browser/test evidence | Supplement with critique; model self-report is not proof |
+| Visual-signature compatibility during non-redesign migrations | `docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md` + target-project declared invariants | Declare project-specific media/motion/composition/page-role invariants; never force a signature pattern that the project does not have |
 | Lifecycle-state semantic acceptance | Target project's State Coverage contract + `uiux-factory/qa/scripts/state-coverage.mjs` | Declare state query/assertions/focus; cannot waive required semantic evidence after a rendered failure |
 | Infrastructure/release failure taxonomy | `uiux-factory/qa/scripts/infra-failure-classifier.mjs` | Add provider evidence text; do not relabel product QA failures as infra noise |
 | Deployment truth acceptance | `uiux-factory/qa/scripts/deployment-truth.mjs` + `.github/workflows/deployment-truth-gate.yml` | Supply provider/API deployment metadata and production URL; never manufacture provider SHA from the expected source SHA |
@@ -31,6 +32,7 @@ Examples:
 - A prompt says “merge automatically” but runtime authority is `branch_write` → **do not merge**.
 - A skill says a site “should” use a pattern but project source/preserve constraint forbids it → preserve project truth.
 - A model says QA passed but no target browser evidence exists → state remains unverified.
+- A content/evidence migration makes copy and accessibility checks greener but silently removes an existing hero media/motion/composition invariant → rendered acceptance fails; repair the visual owner or record an explicitly authorized redesign.
 - A state URL says `state=empty` but the contract's Empty semantic marker is absent → State Coverage fails even if HTTP/console checks are green.
 - A provider reports `build-rate-limit / upgradeToPro` while rendered product QA is green → classify provider capacity separately; do not rewrite product code to manufacture a deployment PASS.
 - Deployment metadata points at a different SHA than the intended release → release is not `DEPLOYED_VERIFIED`, even if the production URL returns 200.
@@ -48,6 +50,8 @@ External collaborators should normally load only:
 5. the resolved Flow document
 6. active-stage skills
 7. target-project files/evidence needed for the current decision
+
+For a task that can change an existing rendered UI, Home/top-of-page composition, design-system rendering, media, motion, or a mass content/evidence migration, also load `docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md` and the target project's declared visual-signature invariants when they exist.
 
 Local runtime/provider execution may additionally load runtime-policy and implementation modules as required.
 
