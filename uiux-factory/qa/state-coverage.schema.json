@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uiux-factory.local/state-coverage.schema.json",
+  "title": "UIUX Factory State Coverage Contract",
+  "type": "object",
+  "required": ["schema_version", "name", "entry_route", "states"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "name": { "type": "string", "minLength": 1 },
+    "entry_route": { "type": "string", "pattern": "^/" },
+    "frame_selector": { "type": ["string", "null"] },
+    "scope": { "enum": ["page", "iframe"] },
+    "viewports": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "type": "object", "required": ["name", "width", "height"], "properties": { "name": { "type": "string" }, "width": { "type": "integer", "minimum": 240, "maximum": 4096 }, "height": { "type": "integer", "minimum": 240, "maximum": 4096 } } } },
+    "states": { "type": "array", "minItems": 1, "maxItems": 12, "items": { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" }, "label": { "type": "string" }, "scope": { "enum": ["page", "iframe"] }, "query": { "type": "object" }, "wait_ms": { "type": "number", "minimum": 0, "maximum": 5000 }, "focus": { "type": ["string", "null"] }, "assertions": { "type": "array", "items": { "type": "object", "required": ["type"], "properties": { "type": { "enum": ["selector", "text", "attribute"] }, "selector": { "type": "string" }, "text": { "type": "string" }, "visible": { "type": "boolean" }, "count_at_least": { "type": "integer", "minimum": 1 }, "attribute": { "type": "string" }, "equals": {}, "contains": {} } } } } } },
+    "matrix": { "oneOf": [{ "const": false }, { "type": "object", "properties": { "states": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "type": "string" } }, "columns": { "type": "integer", "minimum": 1, "maximum": 3 }, "viewport": { "type": "string" }, "tile_width": { "type": "integer", "minimum": 240 }, "tile_height": { "type": "integer", "minimum": 180 }, "gap": { "type": "integer", "minimum": 0 }, "padding": { "type": "integer", "minimum": 0 }, "output": { "type": "string" } } }] }
+  }
+}

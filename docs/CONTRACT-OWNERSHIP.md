@@ -12,8 +12,11 @@ The workspace intentionally has several layers. They must **reference** each oth
 | Flow selection, stage sequence, skills, gates, bounded replanning | `skills_UIUX/flows/*.json` + `uiux-factory/core/runtime/flow_os/flow.py` | Explain resolved flow; never invent a competing stage order |
 | Specialist capability knowledge | `skills_UIUX/<skill>/SKILL.md` | Load only when routed/required for the active stage |
 | Per-task external handoff/routing | `external-task-manifest.json` generated from current code | Record the resolved contract; never claim QA PASS |
+| GitHub-native external-collaborator control plane | `.github/workflows/external-agent-runner.yml` + `skills_UIUX/scripts/github-external-agent-runner.py` | Compile/transport the governed task packet and declared verification; never pretend to execute an LLM provider |
 | Target-project truth | Current target repository source, config, tests, runtime and approved project docs | Summarize with evidence labels |
 | Rendered UI acceptance | Target-project browser/test evidence | Supplement with critique; model self-report is not proof |
+| Lifecycle-state semantic acceptance | Target project's State Coverage contract + `uiux-factory/qa/scripts/state-coverage.mjs` | Declare state query/assertions/focus; cannot waive required semantic evidence after a rendered failure |
+| Infrastructure/release failure taxonomy | `uiux-factory/qa/scripts/infra-failure-classifier.mjs` | Add provider evidence text; do not relabel product QA failures as infra noise |
 | Human research evidence | Real sessions/behavior with traceable evidence ledger | Plan, synthesize and label gaps; never fabricate evidence |
 
 ## Conflict rule
@@ -25,6 +28,8 @@ Examples:
 - A prompt says “merge automatically” but runtime authority is `branch_write` → **do not merge**.
 - A skill says a site “should” use a pattern but project source/preserve constraint forbids it → preserve project truth.
 - A model says QA passed but no target browser evidence exists → state remains unverified.
+- A state URL says `state=empty` but the contract's Empty semantic marker is absent → State Coverage fails even if HTTP/console checks are green.
+- A provider reports `build-rate-limit / upgradeToPro` while rendered product QA is green → classify provider capacity separately; do not rewrite product code to manufacture a deployment PASS.
 - A case study claims user validation but there is no direct-user evidence ledger → label it hypothesis/planned, not validated.
 
 ## Minimal context profiles
