@@ -11,12 +11,13 @@ REPO_ROOT = FACTORY_ROOT.parent
 if str(FACTORY_ROOT) not in sys.path:
     sys.path.insert(0, str(FACTORY_ROOT))
 
+from core.dogfood.cross_project import project_ids  # noqa: E402
 from core.dogfood.real_project import RealProjectDogfoodError, RealProjectDogfoodRunner  # noqa: E402
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run A14 generic real-project dogfood")
-    parser.add_argument("--project-id", choices=("nova", "lumen", "cennext"), required=True)
+    parser.add_argument("--project-id", choices=project_ids(), required=True)
     parser.add_argument("--project-root", type=Path, required=True)
     parser.add_argument("--expected-target-sha", required=True)
     parser.add_argument("--report", type=Path, required=True)

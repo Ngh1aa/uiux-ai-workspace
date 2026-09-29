@@ -8,14 +8,6 @@ from core.runtime.flow_os.task_context import GoalInterpreter
 
 
 CHANGE_BOUNDARIES = {"PRODUCT", "FACTORY"}
-NOVA_LEAK_TOKENS = (
-    "vcb",
-    "fpt",
-    "hpg",
-    "financial-product-intelligence",
-    "consumer_fintech_personal_banking",
-    "missing_business_evidence",
-)
 
 
 @dataclass(frozen=True)
@@ -27,6 +19,11 @@ class ProjectDogfoodProfile:
     answers *how broad the UI change is* (MICRO/FOCUSED/PAGE/REDESIGN/PRODUCT).
     Expected surface/flow values are regression assertions only; they never override
     the canonical interpreter or router.
+
+    `isolation_tokens` are project-specific markers used only to prove that one
+    registered project's profile data has not leaked into another profile. They are
+    data, not routing logic, so adding a future project does not require editing the
+    generic runner.
     """
 
     project_id: str
@@ -41,6 +38,7 @@ class ProjectDogfoodProfile:
     expected_flow_id: str
     routing_intent: str
     evidence_model: str
+    isolation_tokens: tuple[str, ...] = ()
 
     def validate(self) -> None:
         if self.expected_change_boundary not in CHANGE_BOUNDARIES:
@@ -72,6 +70,7 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
         expected_flow_id="professional-website-redesign",
         routing_intent="product-trust-data",
         evidence_model="trust-data-regulatory",
+        isolation_tokens=("nova", "money horizon", "safe to spend"),
     ),
     "lumen": ProjectDogfoodProfile(
         project_id="lumen",
@@ -96,6 +95,7 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
         expected_flow_id="existing-ui-improvement",
         routing_intent="visual-art-direction",
         evidence_model="composition-cultural-experience",
+        isolation_tokens=("lumen", "drift", "cultural-experience"),
     ),
     "cennext": ProjectDogfoodProfile(
         project_id="cennext",
@@ -119,8 +119,37 @@ PROJECT_PROFILES: dict[str, ProjectDogfoodProfile] = {
         expected_flow_id="existing-ui-improvement",
         routing_intent="enterprise-ia-workflow",
         evidence_model="ia-workflow-compliance",
+        isolation_tokens=("cennext", "gainesville industrial", "industrial electric motor"),
+    ),
+    "luxroom": ProjectDogfoodProfile(
+        project_id="luxroom",
+        repo="Ngh1aa/LuxRoom",
+        repo_ref="main",
+        archetype="ecommerce-purchase-flow",
+        evidence_paths=(
+            "README.md",
+            "index.html",
+            "detail.html",
+            "cart.html",
+            "checkout.html",
+        ),
+        source_truth_candidates=("README.md", "UI_UX_DESIGN_THINKING_GUIDE.md"),
+        default_task=(
+            "Improve the LuxRoom checkout experience while preserving the current luxury-minimal "
+            "visual direction and the rest of the ecommerce structure."
+        ),
+        expected_change_boundary="PRODUCT",
+        expected_change_surface="PAGE",
+        expected_flow_id="page-ui-work",
+        routing_intent="ecommerce-checkout-clarity",
+        evidence_model="catalog-cart-checkout-continuity",
+        isolation_tokens=("luxroom", "saved room", "luxury-minimal"),
     ),
 }
+
+
+def project_ids() -> tuple[str, ...]:
+    return tuple(sorted(PROJECT_PROFILES))
 
 
 def project_profile(project_id: str) -> ProjectDogfoodProfile:
@@ -180,7 +209,14 @@ def compile_task_contract(
     return context
 
 
-def nova_domain_leaks(profile: ProjectDogfoodProfile) -> list[str]:
+def cross_profile_leaks(profile: ProjectDogfoodProfile) -> list[str]:
+    """Return markers from *other* registered profiles that leaked into this profile.
+
+    The isolation rule is registry-driven rather than Nova-specific. A future profile
+    can add its own markers without changing runner logic or introducing a new named
+    exception in the generic execution path.
+    """
+
     haystack = "\n".join(
         (
             profile.project_id,
@@ -193,9 +229,15 @@ def nova_domain_leaks(profile: ProjectDogfoodProfile) -> list[str]:
             *profile.source_truth_candidates,
         )
     ).lower()
-    if profile.project_id == "nova":
-        return []
-    return [token for token in NOVA_LEAK_TOKENS if token in haystack]
+    leaks: list[str] = []
+    for other_id, other in PROJECT_PROFILES.items():
+        if other_id == profile.project_id:
+            continue
+        for token in other.isolation_tokens:
+            marker = token.strip().lower()
+            if marker and marker in haystack:
+                leaks.append(f"{other_id}:{marker}")
+    return sorted(set(leaks))
 
 
 def evaluate_cross_project_contract(
@@ -213,7 +255,7 @@ def evaluate_cross_project_contract(
     )
     source_truth = resolve_source_truth(profile, available)
     missing_evidence = [path for path in profile.evidence_paths if path not in available]
-    leaks = nova_domain_leaks(profile)
+    leaks = cross_profile_leaks(profile)
     expected_boundary = (change_boundary or profile.expected_change_boundary).strip().upper()
     checks = {
         "explicit_change_boundary_preserved": contract["change_boundary"] == expected_boundary,
@@ -221,10 +263,10 @@ def evaluate_cross_project_contract(
         "adaptive_change_surface_expected": contract["change_surface"] == profile.expected_change_surface,
         "source_truth_resolved": source_truth is not None,
         "profile_evidence_grounded": not missing_evidence,
-        "no_nova_domain_leakage": not leaks,
+        "cross_profile_isolation": not leaks,
     }
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "phase": "A14-fix-once-validate-across-projects",
         "project": profile.project_id,
         "repo": profile.repo,
@@ -235,7 +277,7 @@ def evaluate_cross_project_contract(
         "contract": contract,
         "source_truth": source_truth,
         "missing_evidence": missing_evidence,
-        "nova_domain_leaks": leaks,
+        "cross_profile_leaks": leaks,
         "checks": checks,
         "passed": all(checks.values()),
         "truth_boundary": (
