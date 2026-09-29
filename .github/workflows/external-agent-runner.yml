@@ -87,6 +87,9 @@ jobs:
     steps:
       - name: Checkout Factory
         uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/uiux-ai-workspace
+          ref: main
       - name: Checkout target repository
         uses: actions/checkout@v6
         with:
@@ -132,6 +135,9 @@ jobs:
     steps:
       - name: Checkout Factory
         uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/uiux-ai-workspace
+          ref: main
       - name: Checkout target repository
         uses: actions/checkout@v6
         with:
