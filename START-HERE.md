@@ -50,6 +50,8 @@ Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.j
 - Browser/accessibility/performance evidence: `uiux-factory/qa/`
 - Lifecycle State Coverage + semantic assertions + rendered matrix: `uiux-factory/qa/scripts/state-coverage.mjs`
 - Infra/release failure taxonomy: `uiux-factory/qa/scripts/infra-failure-classifier.mjs`
+- Deployment truth: `uiux-factory/qa/scripts/deployment-truth.mjs` + `.github/workflows/deployment-truth-gate.yml`
+- Release evidence registry: `uiux-factory/core/provenance/release_evidence_registry.py` + `skills_UIUX/scripts/build-release-evidence.py`
 - Flow definitions: `skills_UIUX/flows/*.json`
 - Skill capabilities: `skills_UIUX/<skill>/SKILL.md`
 
@@ -61,9 +63,17 @@ The workflow does **not** pretend to invoke an LLM provider. It creates the gove
 
 Lifecycle-state projects can declare `uiux-state-coverage.json` (or another contract path) to verify state query → semantic marker → rendered evidence across desktop/tablet/mobile and automatically generate a 2×2 case-study matrix. See `docs/STATE-COVERAGE-INFRASTRUCTURE.md`.
 
+## Release proof
+
+A merged PR or green build is not release proof. Use A35 Deployment Truth when a release claim matters. `DEPLOYED_VERIFIED` requires the intended release SHA, provider-reported deployment SHA, a ready deployment status and a 2xx production route observation. Provider capacity/auth failures stay separate from product QA. See `docs/DEPLOYMENT-TRUTH.md`.
+
+Use A36 Release Evidence Registry to produce one integrity-hashed `uiux-evidence-manifest.json` that references task/source/browser/state/deployment artifacts without replacing their originating evidence owners. Missing evidence remains `UNKNOWN`. See `docs/EVIDENCE-REGISTRY.md`.
+
+A37 dogfoods these surfaces together against pinned CENNEXT target truth. It intentionally refuses to claim a verified deployment when trusted provider SHA metadata is absent. See `docs/A37-REAL-PROJECT-E2E-DOGFOOD.md`.
+
 ## Human research
 
-When a task needs real-user evidence, activate `research-evidence-pipeline` plus the existing research skills. If participant access does not exist, produce a plan/package and label the state `PLANNED_VALIDATION`, `BLOCKED_USER_EVIDENCE`, or `UNKNOWN`. Never invent sessions, quotes, counts, percentages, or findings.
+When a task needs real-user evidence, activate `research-evidence-pipeline` plus the existing research skills. If participant access does not exist, produce a plan/package and label the state `PLANNED_VALIDATION`, `BLOCKED_USER_EVIDENCE`, or `UNKNOWN`. Never invent sessions, quotes, counts, percentages or findings.
 
 ## Portfolio/career work
 

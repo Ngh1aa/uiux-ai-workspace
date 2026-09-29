@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uiux-factory.local/deployment-truth.schema.json",
+  "title": "UIUX Factory Deployment Truth Input",
+  "type": "object",
+  "required": ["expected_sha"],
+  "properties": {
+    "expected_sha": { "type": "string", "minLength": 7 },
+    "deployment_sha": { "type": "string" },
+    "deployment_status": { "type": "string" },
+    "production_url": { "type": "string", "format": "uri" },
+    "provider": { "type": "string" },
+    "provider_text": { "type": "string" },
+    "probe_status": { "type": "integer", "minimum": 100, "maximum": 599 },
+    "product_qa_passed": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

@@ -9,10 +9,15 @@ on:
       - "AGENTS.md"
       - "docs/CONTRACT-OWNERSHIP.md"
       - "docs/STATE-COVERAGE-INFRASTRUCTURE.md"
+      - "docs/DEPLOYMENT-TRUTH.md"
+      - "docs/EVIDENCE-REGISTRY.md"
+      - "docs/A37-REAL-PROJECT-E2E-DOGFOOD.md"
       - ".gitmodules"
       - ".github/workflows/uiux-factory-ci.yml"
       - ".github/workflows/external-task-manifest.yml"
       - ".github/workflows/external-agent-runner.yml"
+      - ".github/workflows/deployment-truth-gate.yml"
+      - ".github/workflows/a37-external-agent-e2e-dogfood.yml"
   pull_request:
     paths:
       - "uiux-factory/**"
@@ -21,10 +26,15 @@ on:
       - "AGENTS.md"
       - "docs/CONTRACT-OWNERSHIP.md"
       - "docs/STATE-COVERAGE-INFRASTRUCTURE.md"
+      - "docs/DEPLOYMENT-TRUTH.md"
+      - "docs/EVIDENCE-REGISTRY.md"
+      - "docs/A37-REAL-PROJECT-E2E-DOGFOOD.md"
       - ".gitmodules"
       - ".github/workflows/uiux-factory-ci.yml"
       - ".github/workflows/external-task-manifest.yml"
       - ".github/workflows/external-agent-runner.yml"
+      - ".github/workflows/deployment-truth-gate.yml"
+      - ".github/workflows/a37-external-agent-e2e-dogfood.yml"
 
 permissions:
   contents: read
@@ -59,7 +69,7 @@ jobs:
       - name: Compile active Python source tree
         run: |
           python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
-          python -m compileall -q ../skills_UIUX/runtime ../skills_UIUX/scripts/prepare-external-task.py ../skills_UIUX/scripts/github-external-agent-runner.py
+          python -m compileall -q ../skills_UIUX/runtime ../skills_UIUX/scripts/prepare-external-task.py ../skills_UIUX/scripts/github-external-agent-runner.py ../skills_UIUX/scripts/build-release-evidence.py
       - name: Validate Flow Agent OS contracts
         run: |
           python ../skills_UIUX/scripts/validate-flows.py

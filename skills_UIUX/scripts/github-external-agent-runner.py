@@ -73,10 +73,13 @@ def _handoff_markdown(run_doc: dict[str, object]) -> str:
         f"- Cloud QA workflow: `{verification['cloud_qa_workflow']}`",
         f"- State coverage contract: `{verification.get('state_coverage_contract') or 'not declared'}`",
         f"- State gate command: `{verification['state_gate_command']}`",
+        f"- Deployment truth gate: `{verification['deployment_truth_gate']}`",
+        f"- Release evidence registry: `{verification['release_evidence_registry']}`",
+        f"- Release evidence manifest: `{verification['release_evidence_manifest']}`",
         f"- Infra classifier: `{verification['infra_failure_classifier']}`", "",
         "## Failure taxonomy", "- " + "\n- ".join(FAILURE_CLASSES), "",
         "## Completion boundary",
-        "Audit the target source before mutation. Execute only within granted authority. Attach target runtime/rendered evidence before claiming PASS. Missing user evidence remains planned/blocked/unknown rather than fabricated.", "",
+        "Audit the target source before mutation. Execute only within granted authority. Attach target runtime/rendered evidence before claiming PASS. Missing user or deployment evidence remains planned/blocked/unknown rather than fabricated.", "",
     ])
     return "\n".join(lines)
 
@@ -120,6 +123,9 @@ def main() -> int:
             "state_coverage_contract": args.state_contract or None,
             "state_gate_command": "npm run test:state -- --contract <target-state-contract>",
             "matrix_artifact": "uiux-factory/qa/artifacts/state-coverage/state-matrix-2x2.png",
+            "deployment_truth_gate": "uiux-factory/qa/scripts/deployment-truth.mjs",
+            "release_evidence_registry": "skills_UIUX/scripts/build-release-evidence.py",
+            "release_evidence_manifest": "uiux-evidence-manifest.json",
             "infra_failure_classifier": "uiux-factory/qa/scripts/infra-failure-classifier.mjs",
             "failure_classes": FAILURE_CLASSES,
         },
