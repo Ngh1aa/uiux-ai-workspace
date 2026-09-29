@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>UIUX Factory State Coverage Fixture</title>
+  <style>html,body{height:100%;margin:0;font-family:system-ui,sans-serif;background:#eef1f5}.bar{height:64px;display:flex;align-items:center;padding:0 20px;background:#fff;border-bottom:1px solid #d9dde5}.bar strong{font-size:14px}.wrap{height:calc(100% - 65px)}iframe{width:100%;height:100%;border:0;background:#fff}</style>
+</head>
+<body>
+  <header class="bar"><strong>State Coverage Fixture</strong></header>
+  <div class="wrap"><iframe id="fixtureFrame" title="State coverage product surface"></iframe></div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const state = params.get('state') || 'normal';
+    const pin = params.get('pin');
+    const url = new URL('state-surface.html', location.href);
+    url.searchParams.set('state', state);
+    if (pin) url.searchParams.set('pin', pin);
+    document.getElementById('fixtureFrame').src = url;
+  </script>
+</body>
+</html>

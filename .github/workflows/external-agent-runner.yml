@@ -1,0 +1,199 @@
+name: GitHub Native External Agent Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_repository:
+        description: "Target repository in owner/name form"
+        required: true
+        type: string
+      target_ref:
+        description: "Target branch/tag/SHA; blank uses repository default"
+        required: false
+        default: ""
+        type: string
+      task:
+        description: "Natural-language task for the external AI collaborator"
+        required: true
+        type: string
+      authority:
+        description: "Maximum authority granted to the external collaborator"
+        required: true
+        default: "branch_write"
+        type: choice
+        options: [read_only, branch_write, external_write, release]
+      target_dir:
+        description: "Project root inside target repository; blank means root"
+        required: false
+        default: ""
+        type: string
+      qa_routes:
+        description: "Comma/newline-separated routes expected in rendered QA"
+        required: false
+        default: "/"
+        type: string
+      acceptance:
+        description: "Comma/newline-separated additional acceptance criteria"
+        required: false
+        default: ""
+        type: string
+      state_contract:
+        description: "Optional state coverage contract path inside target_dir"
+        required: false
+        default: ""
+        type: string
+      install_command:
+        description: "Optional target install command for state gate"
+        required: false
+        default: ""
+        type: string
+      build_command:
+        description: "Optional target build command for state gate"
+        required: false
+        default: ""
+        type: string
+      serve_command:
+        description: "Optional target preview command; blank uses static serving"
+        required: false
+        default: ""
+        type: string
+  workflow_call:
+    inputs:
+      target_repository: { required: true, type: string }
+      target_ref: { required: false, default: "", type: string }
+      task: { required: true, type: string }
+      authority: { required: false, default: "branch_write", type: string }
+      target_dir: { required: false, default: "", type: string }
+      qa_routes: { required: false, default: "/", type: string }
+      acceptance: { required: false, default: "", type: string }
+      state_contract: { required: false, default: "", type: string }
+      install_command: { required: false, default: "", type: string }
+      build_command: { required: false, default: "", type: string }
+      serve_command: { required: false, default: "", type: string }
+    secrets:
+      UIUX_TARGET_REPO_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: external-agent-${{ inputs.target_repository }}-${{ inputs.target_ref || 'default' }}
+  cancel-in-progress: false
+
+jobs:
+  prepare-task-packet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+      - name: Checkout target repository
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ inputs.target_repository }}
+          ref: ${{ inputs.target_ref }}
+          path: target-project
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN || github.token }}
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Compile governed external-agent packet
+        env:
+          TARGET_REPOSITORY: ${{ inputs.target_repository }}
+          TARGET_REF: ${{ inputs.target_ref }}
+          TASK: ${{ inputs.task }}
+          AUTHORITY: ${{ inputs.authority }}
+          QA_ROUTES: ${{ inputs.qa_routes }}
+          ACCEPTANCE: ${{ inputs.acceptance }}
+          STATE_CONTRACT: ${{ inputs.state_contract }}
+        run: |
+          python -B skills_UIUX/scripts/github-external-agent-runner.py \
+            --repository "$TARGET_REPOSITORY" \
+            --target-ref "$TARGET_REF" \
+            --target-root "$GITHUB_WORKSPACE/target-project" \
+            --task "$TASK" \
+            --authority "$AUTHORITY" \
+            --qa-routes "$QA_ROUTES" \
+            --acceptance "$ACCEPTANCE" \
+            --state-contract "$STATE_CONTRACT" \
+            --output-dir "$GITHUB_WORKSPACE/external-agent-packet"
+      - name: Upload external-agent task packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-agent-task-packet
+          path: external-agent-packet/
+          if-no-files-found: error
+          retention-days: 14
+
+  state-coverage-gate:
+    if: ${{ inputs.state_contract != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+      - name: Checkout target repository
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ inputs.target_repository }}
+          ref: ${{ inputs.target_ref }}
+          path: target-project
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN || github.token }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Factory QA dependencies
+        working-directory: uiux-factory/qa
+        run: npm ci --no-audit --no-fund
+      - name: Install Chromium
+        working-directory: uiux-factory/qa
+        run: npx playwright install --with-deps chromium
+      - name: Prepare and serve target
+        working-directory: uiux-factory/qa
+        env:
+          INPUT_TARGET_DIR: ${{ inputs.target_dir }}
+          QA_INSTALL_COMMAND: ${{ inputs.install_command }}
+          QA_BUILD_COMMAND: ${{ inputs.build_command }}
+          QA_SERVE_COMMAND: ${{ inputs.serve_command }}
+        run: |
+          TARGET_RELATIVE="${INPUT_TARGET_DIR#/}"
+          [ -n "$TARGET_RELATIVE" ] || TARGET_RELATIVE="."
+          export QA_TARGET_DIR="$GITHUB_WORKSPACE/target-project/$TARGET_RELATIVE"
+          export QA_BASE_URL="http://127.0.0.1:4173"
+          echo "QA_TARGET_DIR=$QA_TARGET_DIR" >> "$GITHUB_ENV"
+          echo "QA_BASE_URL=$QA_BASE_URL" >> "$GITHUB_ENV"
+          if [ -n "$QA_INSTALL_COMMAND" ]; then (cd "$QA_TARGET_DIR" && bash -lc "$QA_INSTALL_COMMAND"); fi
+          if [ -n "$QA_BUILD_COMMAND" ]; then (cd "$QA_TARGET_DIR" && bash -lc "$QA_BUILD_COMMAND"); fi
+          node scripts/serve-target.mjs > /tmp/uiux-external-agent-server.log 2>&1 &
+          echo $! > /tmp/uiux-external-agent-server.pid
+          node scripts/wait-ready.mjs
+      - name: Run semantic State Coverage Gate
+        working-directory: uiux-factory/qa
+        env:
+          STATE_CONTRACT: ${{ inputs.state_contract }}
+        run: |
+          CONTRACT_RELATIVE="${STATE_CONTRACT#/}"
+          CONTRACT_PATH="$QA_TARGET_DIR/$CONTRACT_RELATIVE"
+          set +e
+          npm run test:state -- --contract "$CONTRACT_PATH" 2>&1 | tee /tmp/uiux-state-gate.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          set -e
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            node scripts/infra-failure-classifier.mjs --source github-actions --status success --text "State Coverage Gate passed" --output artifacts/infra-failure-classification.json
+          else
+            node scripts/infra-failure-classifier.mjs --source github-actions --status failure --input /tmp/uiux-state-gate.log --output artifacts/infra-failure-classification.json
+          fi
+          exit "$EXIT_CODE"
+      - name: Print target server log on failure
+        if: failure()
+        working-directory: uiux-factory/qa
+        run: cat /tmp/uiux-external-agent-server.log || true
+      - name: Upload State Coverage evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-agent-state-coverage-evidence
+          path: uiux-factory/qa/artifacts/
+          if-no-files-found: warn
+          retention-days: 14
