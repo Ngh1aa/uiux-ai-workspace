@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 import core.provenance.evidence_lineage as evidence_lineage
 import core.provenance.release_evidence_registry as release_evidence_registry
 from core.brain_os.reasoning.evidence_graph import EvidenceGraphNode, EvidenceNodeKind
@@ -69,3 +71,30 @@ def release_evidence_node(record: ReleaseEvidenceArtifact) -> EvidenceGraphNode:
         canonical_trusted_flag=None,
         tags=[record.kind],
     )
+
+
+def canonical_evidence_index(
+    *,
+    runtime_records: Iterable[EvidenceRecord] = (),
+    provenance_records: Iterable[EvidenceProvenanceRecord] = (),
+    release_artifacts: Iterable[ReleaseEvidenceArtifact] = (),
+) -> dict[str, EvidenceGraphNode]:
+    """Build a read-only comparison index from canonical evidence owners.
+
+    The returned nodes are adapter projections only. This function does not persist
+    evidence, compute gate truth, change trusted flags or aggregate release readiness.
+    A duplicate projected node ID is rejected because ambiguous canonical identity
+    would make later integrity validation unsafe.
+    """
+
+    nodes = [
+        *(runtime_evidence_node(record) for record in runtime_records),
+        *(provenance_evidence_node(record) for record in provenance_records),
+        *(release_evidence_node(record) for record in release_artifacts),
+    ]
+    output: dict[str, EvidenceGraphNode] = {}
+    for node in nodes:
+        if node.node_id in output:
+            raise ValueError(f"duplicate canonical evidence projection: {node.node_id}")
+        output[node.node_id] = node
+    return output
