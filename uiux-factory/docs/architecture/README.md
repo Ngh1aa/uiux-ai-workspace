@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44 MERGED + A45.1 MERGED + A45.2 REPAIR LINEAGE GRAPH IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44 MERGED + A45.1 MERGED + A45.2 MERGED + A45.3 REPAIR PROPOSAL BENCHMARK IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@75fb4878e076c9ba556c0bc5472824f95961dce3`
+Current architecture baseline: `main@cdfbf158dfed38bec7fb3be6d070ffd7960a3af1`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -23,6 +23,7 @@ Read in this order:
 13. `A44-PRODUCT-TRUTH-CRITICS.md` — advisory Product, Runtime and Evidence/Truth critics backed by A41/A42/canonical runtime owners.
 14. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` — proposal-only bridge from unresolved critique issues into existing A41 repair/retest contracts.
 15. `A45-REPAIR-LINEAGE-GRAPH.md` — read-only projection of repair proposals into existing A42 EvidenceGraph relations without verification claims.
+16. `A45-REPAIR-PROPOSAL-BENCHMARK.md` — deterministic policy regression guard for proposal routing, retest requirements and false-verification prevention.
 
 ## Current architecture statement
 
@@ -261,6 +262,20 @@ The projection intentionally stops at the pending retest. It never creates `RETE
 
 A42 end-to-end lineage therefore remains incomplete until a later canonical retest actually produces valid evidence and a truthful verification relationship is added by the appropriate evidence path.
 
+## Repair proposal benchmark boundary
+
+A45.3 adds a read-only deterministic regression guard:
+
+```text
+benchmarks/repair-proposals-v1.json
+core/benchmarks/repair_proposal_regression.py
+scripts/validate_repair_proposal_benchmark.py
+```
+
+It locks critic → target-stage mapping, critic → retest evidence requirements, P0 human-approval behavior and proposal graph shape. Every benchmark case also asserts that repair planning remains `PROPOSED/PENDING`, carries no retest evidence, creates no `VERIFIED_BY`/`RETESTED_BY`, assigns no trusted flag and claims no execution/verification/authority effect.
+
+The benchmark never participates in routing or execution. Tests hash the A45.1/A45.2 production sources before/after benchmark evaluation to enforce the read-only boundary. The main UIUX Factory CI runs this validator alongside the existing product/routing benchmarks.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -275,4 +290,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A45.2 is green and merged, A45.3 should add a deterministic repair-proposal benchmark/policy guard covering critic → target stage → retest evidence mapping and graph shape, with explicit regression protection against accidental auto-execution or false verification semantics.
+A45 completes the advisory critique → repair-proposal → relationship-graph loop while deliberately stopping before execution. After A45.3 is green and merged, re-audit current architecture truth before defining the next numbered task; do not add repair execution or autonomous resolution without a separate explicit authority/evidence contract.
