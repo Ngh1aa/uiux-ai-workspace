@@ -35,6 +35,14 @@ def test_a39_visual_signature_contract_is_auto_routed_only_when_needed() -> None
     ).to_dict()
     assert VISUAL_SIGNATURE_CONTRACT in migration["canonical_sources"]
 
+    implicit_existing_visual_change = build_external_task_manifest(
+        SKILLS,
+        POLICY,
+        "Add motion to the hero",
+        "owner/product",
+    ).to_dict()
+    assert VISUAL_SIGNATURE_CONTRACT in implicit_existing_visual_change["canonical_sources"]
+
     new_build = build_external_task_manifest(
         SKILLS,
         POLICY,
@@ -43,6 +51,14 @@ def test_a39_visual_signature_contract_is_auto_routed_only_when_needed() -> None
     ).to_dict()
     assert VISUAL_SIGNATURE_CONTRACT not in new_build["canonical_sources"]
     assert new_build["evidence_boundary"]["visual_signature_guardrail_active"] is False
+
+    greenfield_visual_scope = build_external_task_manifest(
+        SKILLS,
+        POLICY,
+        "Build a new landing page with hero motion",
+        "owner/new-product",
+    ).to_dict()
+    assert VISUAL_SIGNATURE_CONTRACT not in greenfield_visual_scope["canonical_sources"]
 
     authorized_redesign = build_external_task_manifest(
         SKILLS,
