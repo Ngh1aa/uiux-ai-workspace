@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42.1 GRAPH + A42.2 INTEGRITY IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43.1 FLOW SELECTION IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@fc2f620fbd1ff4e197bbbfe022d5883b15481178`
+Current architecture baseline: `main@1b08c832f845ebc40c9f5e96aeb1d8f791648c72`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -16,6 +16,7 @@ Read in this order:
 6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — strict CritiqueIssue / RootCause / RepairDirective / RetestRequirement / RepairLink lineage contracts introduced by A41.2.
 7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` — adapter-first relationship graph over canonical runtime/provenance/release evidence IDs.
 8. `A42-EVIDENCE-INTEGRITY.md` — false-evidence protection, repair-lineage integrity and task-to-evidence lineage validation.
+9. `A43-FLOW-SELECTION-ENGINE.md` — Brain-facing adapter over canonical change-surface classification and FlowPlanner selection, with bounded adjacent escalation.
 
 ## Current architecture statement
 
@@ -92,6 +93,29 @@ False-evidence protection includes:
 - terminal retest evidence refs must resolve to canonical evidence nodes;
 - missing lineage is reported as incomplete rather than inferred.
 
+## Flow selection boundary
+
+A43.1 adds a Brain-facing adapter only:
+
+```text
+core/brain_os/adapters/flow_selection.py
+```
+
+Canonical owners remain:
+
+```text
+core/runtime/flow_os/adaptive_surface.py::classify_change_surface
+core/runtime/flow_os/flow.py::FlowPlanner
+```
+
+Brain may record the selected flow and propose a one-rung escalation:
+
+```text
+MICRO → FOCUSED → PAGE → REDESIGN → PRODUCT
+```
+
+but it cannot define a second `FlowPlanner`, skip arbitrary surface levels, mutate flow policy or execute the selected flow itself.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -106,4 +130,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A42.2 is green on final-head CI, A43.1 may implement the Flow Selection Engine over the canonical Flow OS: change-surface classification, smallest-flow-first routing and bounded escalation. It must not recreate FlowPlanner or move execution ownership into Brain OS.
+After A43.1 is green and merged, A43.2 should implement JIT Context Loader by adapting the existing `SkillResolver` plus canonical runtime context limits. It must not create a second skill router or let Brain/memory/provider output bypass routed-skill boundaries.
