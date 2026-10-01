@@ -1,17 +1,18 @@
 # Architecture Truth Index
 
-Status: **A40 RECONCILED + GUARDED CURRENT TRUTH**  
+Status: **A40 GUARDED + A41.1 BRAIN CONTRACTS IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Baseline: `main@304baefb6999e552708150a20e5c01491aa3663e`
+Current architecture baseline: `main@f5e90c02e3f83ba62a018fa967ec7e3a96f50bb3`
 
-This directory contains the current architecture truth for UIUX Factory / Flow OS evolution.
+This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
 Read in this order:
 
 1. `CURRENT-RUNTIME-MAP.md` — current executable topology, owners, evidence/memory surfaces and remaining convergence debt.
 2. `MIGRATION-BOUNDARIES.md` — active post-A4 architecture contract and Brain OS boundaries.
 3. `A40-ARCHITECTURE-RECONCILIATION.md` — A40.1 audit findings, capability/ownership matrix, duplicate-surface classification and roadmap corrections.
-4. `A40-ARCHITECTURE-GUARDRAILS.md` — A40.2 executable invariants that protect the reconciled architecture before Brain Core Contracts are introduced.
+4. `A40-ARCHITECTURE-GUARDRAILS.md` — A40.2 executable invariants that protect the reconciled architecture.
+5. `A41-BRAIN-CORE-CONTRACTS.md` — strict BrainTaskFrame / Uncertainty / Hypothesis / Decision data/control contracts introduced by A41.1.
 
 ## Current architecture statement
 
@@ -27,7 +28,7 @@ The full Factory product lifecycle remains under `uiux-factory/run.py` + `core/m
 
 ## Brain OS rule
 
-Future Brain OS work may add reasoning, hypothesis/decision contracts, critique orchestration, evidence relationships, richer memory and unified evaluation **above** the canonical runtime.
+Brain OS may add reasoning, hypothesis/decision contracts, critique orchestration, evidence relationships, richer memory and unified evaluation **above** the canonical runtime.
 
 It must not create a third execution runtime or a competing evidence/authority system.
 
@@ -37,7 +38,13 @@ A40.2 makes these boundaries executable through:
 uiux-factory/tests/test_architecture_guardrails_a40.py
 ```
 
-The guardrails cover canonical Flow OS ownership, compatibility-only legacy wrappers, trusted-evidence boundaries, advisory memory semantics and future Brain OS dependency restrictions.
+A41.1 is the first concrete Brain OS slice and is intentionally contract-only:
+
+```text
+uiux-factory/core/brain_os/contracts.py
+```
+
+The contracts contain reasoning/control state only. They do not own tools, providers, gates, merge/release authority or trusted-evidence semantics.
 
 ## Source-of-truth priority
 
@@ -53,4 +60,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A40.2 is green on CI, A41 may introduce Brain Core Contracts only. It must remain behind the A40 guardrails and must not introduce execution/provider/release ownership.
+After A41.1 is green on CI, A41.2 may add critique/repair data contracts only. Orchestration remains deferred to A44/A45 and evidence authority remains with existing runtime/provenance owners.
