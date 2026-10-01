@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "brain-routing-v1",
+  "version": "1.0.0",
+  "description": "Deterministic routing regression corpus for Task Contract surface, canonical flow selection and mandatory/JIT skill envelopes. This corpus measures routing only and never changes production routing.",
+  "cases": [
+    {"id":"micro-button-spacing","goal":"Fix button spacing","expected_surface":"MICRO","expected_flow":"micro-ui-change","stage_id":"qa","mandatory_contains":["ui-craft-and-visual-qa","web-ui-code-review","accessibility"],"jit_contains":[],"tags":["micro","atomic"]},
+    {"id":"micro-icon-vi","goal":"Sửa icon bị lệch","expected_surface":"MICRO","expected_flow":"micro-ui-change","tags":["micro","vi"]},
+    {"id":"micro-card-shadow","goal":"Polish card shadow","expected_surface":"MICRO","expected_flow":"micro-ui-change","tags":["micro","visual"]},
+    {"id":"micro-image-crop","goal":"Fix image crop","expected_surface":"MICRO","expected_flow":"micro-ui-change","tags":["micro","media"]},
+    {"id":"micro-portfolio-card","goal":"Fix one project card in my portfolio","expected_surface":"MICRO","expected_flow":"micro-ui-change","expected_website_type":"portfolio","tags":["micro","portfolio","narrow-before-broad"]},
+
+    {"id":"focused-hero","goal":"Improve hero section","expected_surface":"FOCUSED","expected_flow":"existing-ui-improvement","stage_id":"research","mandatory_contains":["ui-improvement"],"jit_contains":[],"tags":["focused","hero"]},
+    {"id":"focused-pricing","goal":"Improve pricing section","expected_surface":"FOCUSED","expected_flow":"existing-ui-improvement","tags":["focused","pricing"]},
+    {"id":"focused-mobile-nav","goal":"Fix mobile navigation","expected_surface":"FOCUSED","expected_flow":"existing-ui-improvement","tags":["focused","navigation"]},
+    {"id":"focused-form","goal":"Polish signup form","expected_surface":"FOCUSED","expected_flow":"existing-ui-improvement","tags":["focused","form"]},
+    {"id":"focused-portfolio-hero","goal":"Improve hero section on my portfolio","expected_surface":"FOCUSED","expected_flow":"existing-ui-improvement","expected_website_type":"portfolio","tags":["focused","portfolio","narrow-before-broad"]},
+
+    {"id":"page-landing","goal":"Build one landing page","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_website_type":"landing","stage_id":"research","mandatory_contains":["audience-intent-and-top-tasks","design-reference-research-and-benchmark"],"jit_contains":["landing-page","conversion-and-content"],"tags":["page","landing"]},
+    {"id":"page-homepage","goal":"Redesign homepage","expected_surface":"PAGE","expected_flow":"page-ui-work","tags":["page","homepage"]},
+    {"id":"page-dashboard","goal":"Improve dashboard screen","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_website_type":"saas","tags":["page","dashboard"]},
+    {"id":"page-checkout","goal":"Redesign checkout page","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_website_type":"ecommerce","tags":["page","checkout"]},
+    {"id":"page-fintech-landing","goal":"Redesign one fintech settlement landing page","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_domain":"financial-services","expected_website_type":"landing","stage_id":"research","mandatory_contains":["audience-intent-and-top-tasks"],"jit_contains":["financial-product-intelligence","trust-credibility-and-transparency","landing-page","conversion-and-content"],"tags":["page","fintech","finflow"]},
+    {"id":"page-industrial-landing","goal":"Redesign one industrial motor repair landing page","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_domain":"industrial-services","expected_website_type":"landing","tags":["page","industrial","cennext"]},
+    {"id":"page-ai-saas-landing","goal":"Build one AI SaaS landing page","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_domain":"ai-software","expected_website_type":"saas","tags":["page","ai","saas"]},
+
+    {"id":"redesign-corporate","goal":"Redesign the whole website for a corporate company","expected_surface":"REDESIGN","expected_flow":"professional-website-redesign","expected_website_type":"corporate","tags":["redesign","corporate"]},
+    {"id":"redesign-ecommerce","goal":"Rebuild entire website for an ecommerce store","expected_surface":"REDESIGN","expected_flow":"professional-website-redesign","expected_website_type":"ecommerce","tags":["redesign","ecommerce"]},
+    {"id":"redesign-portfolio","goal":"Redesign the whole portfolio website","expected_surface":"REDESIGN","expected_flow":"portfolio-career-system","expected_website_type":"portfolio","stage_id":"research","mandatory_contains":["portfolio-website","portfolio-career-positioning","information-architecture"],"jit_contains":[],"tags":["redesign","portfolio","career"]},
+    {"id":"redesign-corporate-vi","goal":"Thiết kế lại toàn bộ website công ty","expected_surface":"REDESIGN","expected_flow":"professional-website-redesign","expected_website_type":"corporate","tags":["redesign","vi","corporate"]},
+
+    {"id":"product-saas","goal":"Build a SaaS web app platform","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_website_type":"saas","tags":["product","saas"]},
+    {"id":"product-ecommerce","goal":"Build an ecommerce website store","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_website_type":"ecommerce","tags":["product","ecommerce"]},
+    {"id":"product-museum","goal":"Build an immersive digital museum website","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_domain":"art-culture","tags":["product","lumen","art-culture"]},
+    {"id":"product-ev","goal":"Build an EV charging platform","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_domain":"mobility-ev","tags":["product","mobility","ev"]},
+    {"id":"product-edtech","goal":"Build an EdTech learning platform","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_domain":"education-edtech","tags":["product","edtech"]},
+    {"id":"product-travel","goal":"Build a Huế travel guide website","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_domain":"travel-tourism","tags":["product","travel","hue"]},
+    {"id":"product-portfolio","goal":"Build a portfolio website showcase","expected_surface":"PRODUCT","expected_flow":"portfolio-career-system","expected_website_type":"portfolio","stage_id":"research","mandatory_contains":["portfolio-website","portfolio-career-positioning"],"jit_contains":[],"tags":["product","portfolio","career"]},
+    {"id":"product-fintech-infra","goal":"Build a B2B fintech multi-rail settlement platform","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_domain":"financial-services","tags":["product","fintech","payments"]},
+    {"id":"product-ai-native","goal":"Build an AI-native software platform","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_domain":"ai-software","expected_website_type":"saas","tags":["product","ai"]},
+
+    {"id":"page-production-dashboard","goal":"Prepare this SaaS dashboard screen as a production candidate","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_website_type":"saas","stage_id":"research","mandatory_contains":["audience-intent-and-top-tasks"],"jit_contains":["outcome-metrics-and-instrumentation"],"tags":["page","production-learning","dashboard"]},
+    {"id":"page-real-user-validation","goal":"Validate this SaaS landing page with real users","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_website_type":"saas","stage_id":"research","mandatory_contains":["audience-intent-and-top-tasks"],"jit_contains":["real-user-validation"],"tags":["page","evidence-led","user-validation"]}
+  ]
+}
