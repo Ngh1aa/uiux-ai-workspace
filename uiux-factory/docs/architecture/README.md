@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44.1 MERGED + A44.2 PRODUCT/TRUTH CRITICS IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44 MERGED + A45.1 REPAIR PROPOSAL ORCHESTRATOR IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@545d67a313ecbcf38ef907014765c65abf2ca802`
+Current architecture baseline: `main@0a8df3e969deaadeb36cf4ad216bbec9ec901252`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -21,6 +21,7 @@ Read in this order:
 11. `A43-ROUTING-BENCHMARK.md` — deterministic regression corpus for Task Contract surface → flow → mandatory/JIT skill routing.
 12. `A44-CORE-DESIGN-CRITICS.md` — advisory VisualBrain adapter plus bounded UX/IA, Design System and Accessibility critics.
 13. `A44-PRODUCT-TRUTH-CRITICS.md` — advisory Product, Runtime and Evidence/Truth critics backed by A41/A42/canonical runtime owners.
+14. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` — proposal-only bridge from unresolved critique issues into existing A41 repair/retest contracts.
 
 ## Current architecture statement
 
@@ -205,6 +206,38 @@ evidence_effect = none
 
 No critic can self-confirm a finding, self-pass a runtime gate or manufacture trusted evidence.
 
+## Repair proposal boundary
+
+A45.1 adds:
+
+```text
+core/brain_os/repair_orchestrator.py
+```
+
+For each unresolved critique issue it may create only existing A41 proposal objects:
+
+```text
+RootCause(PROPOSED)
+RepairDirective(PROPOSED)
+RetestRequirement(PENDING)
+RepairLink
+```
+
+The orchestrator uses deterministic IDs, preserves existing issue evidence refs without inventing new evidence, and can require human approval for P0 directives. It does not execute the repair or retest.
+
+Every `RepairProposalBundle` declares:
+
+```text
+advisory_only = true
+execution_effect = none
+acceptance_effect = none
+resolution_effect = none
+gate_effect = none
+evidence_effect = none
+```
+
+A45.1 cannot ACCEPT a directive, PASS a retest, RESOLVE an issue, run target commands, evaluate canonical gates, merge, deploy or release.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -219,4 +252,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A44.2 is green and merged, the next step is a bounded critique-to-repair orchestrator that creates A41 `RootCause`, `RepairDirective`, `RetestRequirement` and `RepairLink` proposals from critic observations. It must remain proposal-only and cannot execute repairs or resolve issues without canonical retest evidence.
+After A45.1 is green and merged, A45.2 should add a repair-lineage graph adapter that projects proposal bundles into the existing EvidenceGraph vocabulary (`CAUSED_BY`, `REPAIRED_BY`, `REQUIRES_RETEST`) without mutating canonical evidence or claiming that repair/retest execution occurred.
