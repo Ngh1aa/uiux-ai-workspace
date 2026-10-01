@@ -26,7 +26,7 @@
 
     {"id":"redesign-corporate","goal":"Redesign the whole website for a corporate company","expected_surface":"REDESIGN","expected_flow":"professional-website-redesign","expected_website_type":"corporate","tags":["redesign","corporate"]},
     {"id":"redesign-ecommerce","goal":"Rebuild entire website for an ecommerce store","expected_surface":"REDESIGN","expected_flow":"professional-website-redesign","expected_website_type":"ecommerce","tags":["redesign","ecommerce"]},
-    {"id":"redesign-portfolio","goal":"Redesign the whole portfolio website","expected_surface":"REDESIGN","expected_flow":"portfolio-career-system","expected_website_type":"portfolio","stage_id":"research","mandatory_contains":["portfolio-website","portfolio-career-positioning","information-architecture"],"jit_contains":[],"tags":["redesign","portfolio","career"]},
+    {"id":"redesign-portfolio","goal":"Redesign the whole portfolio website","expected_surface":"PRODUCT","expected_flow":"portfolio-career-system","expected_website_type":"portfolio","stage_id":"research","mandatory_contains":["portfolio-website","portfolio-career-positioning","information-architecture"],"jit_contains":[],"tags":["product","portfolio","career","broad-portfolio"]},
     {"id":"redesign-corporate-vi","goal":"Thiết kế lại toàn bộ website công ty","expected_surface":"REDESIGN","expected_flow":"professional-website-redesign","expected_website_type":"corporate","tags":["redesign","vi","corporate"]},
 
     {"id":"product-saas","goal":"Build a SaaS web app platform","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_website_type":"saas","tags":["product","saas"]},
