@@ -11,6 +11,7 @@ from core.runtime.flow_os.task_context import GoalInterpreter
 EXTERNAL_TASK_MANIFEST_VERSION = "1.0"
 EXTERNAL_TASK_STATUS = "READY_FOR_EXTERNAL_COLLABORATOR"
 AUTHORITY_ORDER = ("read_only", "branch_write", "external_write", "release")
+VISUAL_SIGNATURE_CONTRACT = "docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md"
 
 
 @dataclass(frozen=True)
@@ -105,6 +106,34 @@ def _research_packet(context: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _requires_visual_signature_contract(context: dict[str, Any], goal: str) -> bool:
+    """Route the signature contract only when existing rendered identity may be touched.
+
+    New builds and fully authorized redesigns should not pay this context cost by default.
+    Preserve/forbidden constraints reactivate the guardrail even during a redesign because
+    they explicitly declare compatibility boundaries that must survive the change.
+    """
+
+    intent = str(context.get("intent", "build"))
+    preserve = [str(value).strip() for value in context.get("preserve", []) if str(value).strip()]
+    forbidden = [str(value).strip() for value in context.get("forbidden", []) if str(value).strip()]
+    if preserve or forbidden:
+        return True
+    if intent in {"fix", "improve", "polish"}:
+        return True
+    if intent in {"redesign", "rebuild"}:
+        return False
+
+    normalized = " ".join(str(goal).lower().split())
+    existing_or_migration_terms = (
+        "existing", "current", "hiện tại", "đang có", "migration", "migrate", "refactor",
+        "content migration", "evidence migration", "metadata", "accessibility", "semantic repair",
+        "runtime consolidation", "framework migration", "design system migration", "token migration",
+        "mass edit", "mass update",
+    )
+    return any(term in normalized for term in existing_or_migration_terms)
+
+
 def build_external_task_manifest(
     library_root: Path,
     policy_doc: dict[str, Any],
@@ -166,14 +195,16 @@ def build_external_task_manifest(
         if str(gate.get("require", "")).strip()
     ]
     criteria = _unique(list(acceptance_criteria or []) + gate_criteria)
+    visual_signature_required = _requires_visual_signature_contract(context, cleaned_goal)
 
-    canonical_sources = [
+    canonical_sources = _unique([
         "START-HERE.md",
         "AGENTS.md",
         "docs/CONTRACT-OWNERSHIP.md",
+        *([VISUAL_SIGNATURE_CONTRACT] if visual_signature_required else []),
         "skills_UIUX/runtime/runtime-policy.json",
         flow.source,
-    ]
+    ])
 
     return ExternalTaskManifest(
         schema_version=EXTERNAL_TASK_MANIFEST_VERSION,
@@ -195,6 +226,7 @@ def build_external_task_manifest(
             "target_runtime_evidence_required_for_runtime_claims": True,
             "missing_user_evidence_must_remain_planned_blocked_or_unknown": True,
             "authority_never_exceeds_caller_or_task_language": True,
+            "visual_signature_guardrail_active": visual_signature_required,
             "preferred_repository_workflow": "feature branch -> implementation -> verification -> pull request -> merge",
         },
     )
