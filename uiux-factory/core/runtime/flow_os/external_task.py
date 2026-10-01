@@ -117,6 +117,8 @@ def _requires_visual_signature_contract(context: dict[str, Any], goal: str) -> b
     intent = str(context.get("intent", "build"))
     preserve = [str(value).strip() for value in context.get("preserve", []) if str(value).strip()]
     forbidden = [str(value).strip() for value in context.get("forbidden", []) if str(value).strip()]
+    features = {str(value).strip() for value in context.get("features", []) if str(value).strip()}
+    scope = {str(value).strip() for value in context.get("scope", []) if str(value).strip()}
     if preserve or forbidden:
         return True
     if intent in {"fix", "improve", "polish"}:
@@ -125,11 +127,27 @@ def _requires_visual_signature_contract(context: dict[str, Any], goal: str) -> b
         return False
 
     normalized = " ".join(str(goal).lower().split())
+    explicit_greenfield_terms = (
+        "from scratch", "greenfield", "brand-new", "brand new", "build a new website",
+        "build a new app", "build a new product", "new landing page", "new dashboard",
+        "tạo website mới", "xây website mới", "tạo app mới", "xây app mới", "sản phẩm mới",
+    )
+    if any(term in normalized for term in explicit_greenfield_terms):
+        return False
+
+    visual_signature_scopes = {
+        "mobile-nav", "navigation", "hero", "header", "footer", "landing-page", "homepage",
+        "cards", "card", "button", "icon", "logo", "modal", "sidebar", "thumbnail", "image",
+        "banner", "typography", "animation",
+    }
+    if visual_signature_scopes.intersection(scope) or "motion" in features:
+        return True
+
     existing_or_migration_terms = (
         "existing", "current", "hiện tại", "đang có", "migration", "migrate", "refactor",
         "content migration", "evidence migration", "metadata", "accessibility", "semantic repair",
-        "runtime consolidation", "framework migration", "design system migration", "token migration",
-        "mass edit", "mass update",
+        "runtime consolidation", "framework migration", "design system", "design-system", "token migration",
+        "mass edit", "mass update", "media replacement", "replace media",
     )
     return any(term in normalized for term in existing_or_migration_terms)
 
