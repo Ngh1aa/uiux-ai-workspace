@@ -18,6 +18,7 @@ from core.brain_os.reasoning.evidence_integrity import (
     validate_evidence_integrity,
     validate_repair_lineage_integrity,
 )
+from core.brain_os.reasoning.lineage_integrity import validate_end_to_end_lineage
 
 __all__ = [
     "EvidenceGraph",
@@ -29,6 +30,7 @@ __all__ = [
     "EvidenceRelation",
     "IntegrityCode",
     "IntegritySeverity",
+    "validate_end_to_end_lineage",
     "validate_evidence_integrity",
     "validate_repair_lineage_integrity",
 ]
