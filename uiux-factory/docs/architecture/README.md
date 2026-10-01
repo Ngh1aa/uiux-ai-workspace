@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44 MERGED + A45.1 REPAIR PROPOSAL ORCHESTRATOR IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44 MERGED + A45.1 MERGED + A45.2 REPAIR LINEAGE GRAPH IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@0a8df3e969deaadeb36cf4ad216bbec9ec901252`
+Current architecture baseline: `main@75fb4878e076c9ba556c0bc5472824f95961dce3`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -22,6 +22,7 @@ Read in this order:
 12. `A44-CORE-DESIGN-CRITICS.md` — advisory VisualBrain adapter plus bounded UX/IA, Design System and Accessibility critics.
 13. `A44-PRODUCT-TRUTH-CRITICS.md` — advisory Product, Runtime and Evidence/Truth critics backed by A41/A42/canonical runtime owners.
 14. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` — proposal-only bridge from unresolved critique issues into existing A41 repair/retest contracts.
+15. `A45-REPAIR-LINEAGE-GRAPH.md` — read-only projection of repair proposals into existing A42 EvidenceGraph relations without verification claims.
 
 ## Current architecture statement
 
@@ -238,6 +239,28 @@ evidence_effect = none
 
 A45.1 cannot ACCEPT a directive, PASS a retest, RESOLVE an issue, run target commands, evaluate canonical gates, merge, deploy or release.
 
+## Repair lineage graph boundary
+
+A45.2 adds:
+
+```text
+core/brain_os/adapters/repair_lineage.py
+```
+
+It projects one A45.1 proposal bundle into the existing A42 relationship model using only:
+
+```text
+CRITIQUE_ISSUE --CAUSED_BY--> ROOT_CAUSE
+ROOT_CAUSE --REPAIRED_BY--> REPAIR_DIRECTIVE
+REPAIR_DIRECTIVE --REQUIRES_RETEST--> RETEST_REQUIREMENT
+```
+
+The projection intentionally stops at the pending retest. It never creates `RETESTED_BY` or `VERIFIED_BY`, never creates canonical evidence nodes and never sets a trusted-evidence flag.
+
+`extend_graph_with_repair_proposal(...)` returns a new immutable graph, is idempotent for the same proposal and rejects identity collisions when an existing graph node/edge differs from the deterministic projection.
+
+A42 end-to-end lineage therefore remains incomplete until a later canonical retest actually produces valid evidence and a truthful verification relationship is added by the appropriate evidence path.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -252,4 +275,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A45.1 is green and merged, A45.2 should add a repair-lineage graph adapter that projects proposal bundles into the existing EvidenceGraph vocabulary (`CAUSED_BY`, `REPAIRED_BY`, `REQUIRES_RETEST`) without mutating canonical evidence or claiming that repair/retest execution occurred.
+After A45.2 is green and merged, A45.3 should add a deterministic repair-proposal benchmark/policy guard covering critic → target stage → retest evidence mapping and graph shape, with explicit regression protection against accidental auto-execution or false verification semantics.
