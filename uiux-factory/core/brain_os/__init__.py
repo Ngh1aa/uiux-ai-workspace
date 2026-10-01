@@ -28,6 +28,15 @@ from core.brain_os.critique_contracts import (
     RootCause,
     RootCauseStatus,
 )
+from core.brain_os.memory_contracts import (
+    BrainMemoryKind,
+    DecisionMemoryRecord,
+    HypothesisMemoryRecord,
+    RationaleMemoryRecord,
+    decision_memory,
+    hypothesis_memory,
+    rationale_memory,
+)
 from core.brain_os.reasoning.evidence_graph import (
     EvidenceGraph,
     EvidenceGraphEdge,
@@ -43,12 +52,14 @@ from core.brain_os.repair_orchestrator import (
 __all__ = [
     "BRAIN_CONTRACT_VERSION",
     "CRITIQUE_REPAIR_CONTRACT_VERSION",
+    "BrainMemoryKind",
     "BrainTaskFrame",
     "CritiqueIssue",
     "CritiqueIssueStatus",
     "CritiqueRepairOrchestrator",
     "CritiqueSeverity",
     "Decision",
+    "DecisionMemoryRecord",
     "DecisionStatus",
     "EvidenceGraph",
     "EvidenceGraphEdge",
@@ -56,7 +67,9 @@ __all__ = [
     "EvidenceNodeKind",
     "EvidenceRelation",
     "Hypothesis",
+    "HypothesisMemoryRecord",
     "HypothesisStatus",
+    "RationaleMemoryRecord",
     "RepairDirective",
     "RepairDirectiveStatus",
     "RepairLink",
@@ -68,4 +81,7 @@ __all__ = [
     "RootCauseStatus",
     "Uncertainty",
     "UncertaintyState",
+    "decision_memory",
+    "hypothesis_memory",
+    "rationale_memory",
 ]
