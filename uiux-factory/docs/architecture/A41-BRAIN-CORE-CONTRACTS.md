@@ -1,7 +1,8 @@
 # A41.1 — Brain Core Contracts
 
-Status: **IMPLEMENTED / VERIFICATION PENDING**  
+Status: **VERIFIED / MERGED TO MAIN**  
 Date: **2026-10-02**  
+Merged commit: `f6157fa339908ecce58062820a407e035353a8c7`  
 Depends on: A40.1 Architecture Reconciliation + A40.2 Architecture Guardrails
 
 ## 1. Purpose
@@ -138,9 +139,19 @@ Brain contract `evidence_refs` fields contain references only. They do not turn 
 
 Trust remains owned by existing evidence/provenance layers. Later A42 may relate hypothesis/decision IDs to current evidence IDs through adapters, but it must preserve existing trusted/untrusted semantics.
 
-## 6. Acceptance criteria
+## 6. Verification
 
-A41.1 is complete when:
+Final PR #79 head `db85ee410490668a2ed63e5a589af70fde502d52` passed:
+
+- `UIUX Factory CI #1067`;
+- `A20 UIUX Factory v1 Release Candidate #35`;
+- full Factory regression suite;
+- A20 structural/security audit;
+- Nova/Lumen/CENNEXT generic dogfood.
+
+PR #79 was then merged to `main` as `f6157fa339908ecce58062820a407e035353a8c7`.
+
+## 7. Acceptance criteria
 
 - [x] `BrainTaskFrame` exists as a strict immutable contract;
 - [x] `Uncertainty` implements KNOWN / INFERRED / PROPOSED / VALIDATED / BLOCKED / CONFLICTED;
@@ -152,11 +163,12 @@ A41.1 is complete when:
 - [x] contracts reject extra fields and invalid authority/change-surface values;
 - [x] Brain contracts serialize and round-trip;
 - [x] canonical A40 architecture guardrails remain applicable;
-- [ ] final PR head passes UIUX Factory CI and A20 release-candidate regression.
+- [x] final PR head passed UIUX Factory CI and A20 release-candidate regression;
+- [x] merged to `main`.
 
-## 7. Handoff
+## 8. Handoff
 
-After A41.1 is green, A41.2 should add the critique/repair contracts needed to connect future critics to bounded replanning:
+A41.2 adds the critique/repair contracts needed to connect future critics to bounded replanning:
 
 ```text
 CritiqueIssue
@@ -166,4 +178,4 @@ RepairLink
 RetestRequirement
 ```
 
-A41.2 must remain contract-only; orchestration belongs to A44/A45.
+A41.2 remains contract-only; orchestration belongs to A44/A45.
