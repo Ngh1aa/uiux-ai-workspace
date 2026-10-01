@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43.1 MERGED + A43.2 JIT CONTEXT IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43.1 MERGED + A43.2 MERGED + A43.3 ROUTING BENCHMARK IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@6e5ca03ba4b8d67637514a5191b5dc22f534c322`
+Current architecture baseline: `main@08cf45abb833d21261ed8a09c201a6d27c43cd3a`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -18,6 +18,7 @@ Read in this order:
 8. `A42-EVIDENCE-INTEGRITY.md` — false-evidence protection, repair-lineage integrity and task-to-evidence lineage validation.
 9. `A43-FLOW-SELECTION-ENGINE.md` — Brain-facing adapter over canonical change-surface classification and FlowPlanner selection, with bounded adjacent escalation.
 10. `A43-JIT-CONTEXT-LOADER.md` — read-only projection of canonical mandatory/JIT skill routing and runtime context budgets.
+11. `A43-ROUTING-BENCHMARK.md` — deterministic regression corpus for Task Contract surface → flow → mandatory/JIT skill routing.
 
 ## Current architecture statement
 
@@ -132,6 +133,20 @@ provider document policy ceiling
 
 It cannot add non-routed skills, raise budgets, change authority/gates/evidence or claim that a JIT activation actually occurred. Provider/runtime preflight remains authoritative.
 
+## Routing benchmark boundary
+
+A43.3 adds evaluation-only routing coverage:
+
+```text
+benchmarks/routing-v1.json
+core/benchmarks/routing_regression.py
+scripts/validate_routing_benchmark.py
+```
+
+The benchmark runs representative natural-language tasks through the production `GoalInterpreter`, canonical `FlowPlanner` and A43 JIT projection, then compares the result with reviewed expectations.
+
+It does not participate in routing, cannot mutate flow policy and records no execution authority. Tests hash `skills_UIUX/flows/*.json` before/after a benchmark run to enforce this read-only boundary.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -146,4 +161,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A43.2 is green and merged, A43.3 should add a Routing Benchmark over representative tasks, checking Task Contract surface → selected flow → mandatory/JIT skill envelope without becoming another router.
+After A43.3 is green and merged, A44.1 should add Core Design Critics by adapting existing VisualCritic and introducing bounded UX/IA, Design System and Accessibility critic contracts/implementations. Critics remain advisory and cannot self-pass runtime gates.
