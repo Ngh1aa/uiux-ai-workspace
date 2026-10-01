@@ -35,6 +35,10 @@ from core.brain_os.reasoning.evidence_graph import (
     EvidenceNodeKind,
     EvidenceRelation,
 )
+from core.brain_os.repair_orchestrator import (
+    CritiqueRepairOrchestrator,
+    RepairProposalBundle,
+)
 
 __all__ = [
     "BRAIN_CONTRACT_VERSION",
@@ -42,6 +46,7 @@ __all__ = [
     "BrainTaskFrame",
     "CritiqueIssue",
     "CritiqueIssueStatus",
+    "CritiqueRepairOrchestrator",
     "CritiqueSeverity",
     "Decision",
     "DecisionStatus",
@@ -55,6 +60,7 @@ __all__ = [
     "RepairDirective",
     "RepairDirectiveStatus",
     "RepairLink",
+    "RepairProposalBundle",
     "RetestRequirement",
     "RetestStatus",
     "Reversibility",
