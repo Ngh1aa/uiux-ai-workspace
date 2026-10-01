@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43.1 MERGED + A43.2 MERGED + A43.3 ROUTING BENCHMARK IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44.1 CORE DESIGN CRITICS IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@08cf45abb833d21261ed8a09c201a6d27c43cd3a`
+Current architecture baseline: `main@178480ad0ba5ec32173f13df7ead16ae196c0b17`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -19,6 +19,7 @@ Read in this order:
 9. `A43-FLOW-SELECTION-ENGINE.md` — Brain-facing adapter over canonical change-surface classification and FlowPlanner selection, with bounded adjacent escalation.
 10. `A43-JIT-CONTEXT-LOADER.md` — read-only projection of canonical mandatory/JIT skill routing and runtime context budgets.
 11. `A43-ROUTING-BENCHMARK.md` — deterministic regression corpus for Task Contract surface → flow → mandatory/JIT skill routing.
+12. `A44-CORE-DESIGN-CRITICS.md` — advisory VisualBrain adapter plus bounded UX/IA, Design System and Accessibility critics.
 
 ## Current architecture statement
 
@@ -147,6 +148,33 @@ The benchmark runs representative natural-language tasks through the production 
 
 It does not participate in routing, cannot mutate flow policy and records no execution authority. Tests hash `skills_UIUX/flows/*.json` before/after a benchmark run to enforce this read-only boundary.
 
+## Core critic boundary
+
+A44.1 adds advisory design critics under:
+
+```text
+core/brain_os/critics/core_design.py
+```
+
+The visual critic adapter reuses the actual existing primitive:
+
+```text
+core/orchestration/visual_brain.py::VisualBrain
+```
+
+and calls `evaluate()` only. It does not apply calibration or mutate source artifacts.
+
+The UX/IA, Design System and Accessibility critics inspect current structured contracts and emit only `CritiqueIssue(status=OBSERVED)`. Critic reports have no `passed` field and explicitly declare:
+
+```text
+advisory_only = true
+authority_effect = none
+gate_effect = none
+evidence_effect = none
+```
+
+No critic can self-confirm a finding, self-pass a runtime gate or manufacture trusted evidence.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -161,4 +189,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A43.3 is green and merged, A44.1 should add Core Design Critics by adapting existing VisualCritic and introducing bounded UX/IA, Design System and Accessibility critic contracts/implementations. Critics remain advisory and cannot self-pass runtime gates.
+After A44.1 is green and merged, A44.2 should add Product, Runtime and Evidence/Truth critics by reusing A42 integrity and current runtime artifacts. Those critics remain advisory and cannot duplicate evidence/gate authority.
