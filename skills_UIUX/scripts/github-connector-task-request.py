@@ -29,8 +29,8 @@ def _json_payload(body: str) -> dict[str, Any]:
         raise ValueError(f"missing request marker: {REQUEST_MARKER}")
 
     after_marker = body.split(REQUEST_MARKER, 1)[1].strip()
-    match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", after_marker, flags=re.IGNORECASE | re.DOTALL)
-    raw = match.group(1) if match else after_marker
+    match = re.search(r"```(?:json)?\s*(.*?)\s*```", after_marker, flags=re.IGNORECASE | re.DOTALL)
+    raw = match.group(1).strip() if match else after_marker
     try:
         payload = json.loads(raw)
     except json.JSONDecodeError as exc:
@@ -41,7 +41,7 @@ def _json_payload(body: str) -> dict[str, Any]:
 
 
 def _string_list(value: Any, field_name: str) -> list[str]:
-    if value in {None, ""}:
+    if value is None or value == "":
         return []
     if isinstance(value, str):
         candidates = value.replace("\r", "\n").replace(",", "\n").split("\n")
@@ -133,7 +133,11 @@ def main() -> int:
     args = parser.parse_args()
 
     body = Path(args.body_file).read_text(encoding="utf-8")
-    request = parse_request(body)
+    try:
+        request = parse_request(body)
+    except ValueError as exc:
+        parser.error(str(exc))
+
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(request, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
