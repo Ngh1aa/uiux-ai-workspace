@@ -79,5 +79,6 @@ jobs:
           python scripts/validate_benchmark_corpus.py
           python scripts/validate_routing_benchmark.py
           python scripts/validate_repair_proposal_benchmark.py
+          python scripts/validate_memory_boundary_benchmark.py
       - name: Run foundation tests
         run: python -m pytest -q tests
