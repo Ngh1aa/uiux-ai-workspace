@@ -1,7 +1,7 @@
-"""UIUX Brain OS control-plane contracts.
+"""UIUX Brain OS control-plane contracts and relationship views.
 
 Brain OS is a reasoning/control layer above the canonical Factory / Flow OS runtime.
-It does not own execution, provider, gate, merge or release authority.
+It does not own execution, provider, gate, evidence-trust, merge or release authority.
 """
 
 from core.brain_os.contracts import (
@@ -28,6 +28,13 @@ from core.brain_os.critique_contracts import (
     RootCause,
     RootCauseStatus,
 )
+from core.brain_os.reasoning.evidence_graph import (
+    EvidenceGraph,
+    EvidenceGraphEdge,
+    EvidenceGraphNode,
+    EvidenceNodeKind,
+    EvidenceRelation,
+)
 
 __all__ = [
     "BRAIN_CONTRACT_VERSION",
@@ -38,6 +45,11 @@ __all__ = [
     "CritiqueSeverity",
     "Decision",
     "DecisionStatus",
+    "EvidenceGraph",
+    "EvidenceGraphEdge",
+    "EvidenceGraphNode",
+    "EvidenceNodeKind",
+    "EvidenceRelation",
     "Hypothesis",
     "HypothesisStatus",
     "RepairDirective",
