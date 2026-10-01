@@ -15,6 +15,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONPATH: ${{ github.workspace }}/uiux-factory
+
 jobs:
   routing-contracts:
     runs-on: ubuntu-latest
