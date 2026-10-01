@@ -31,8 +31,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install test runner
-        run: python -m pip install --disable-pip-version-check pytest
+      - name: Install targeted test dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check
+          pytest "pydantic>=2.5.3,<3"
 
       - name: Run routing and external-collaborator regression tests
         run: >-
