@@ -43,7 +43,9 @@ class BrainMemoryStore:
         config = dict((policy or {}).get("brain_memory", {}))
         self.enabled = bool(config.get("enabled", True))
         self.max_records = int(config.get("max_records", 500))
-        self.max_recall_records = int(config.get("max_recall_records", 50))
+        self.max_recall_records = int(
+            config.get("max_recall_records", min(50, self.max_records))
+        )
         self.lock_timeout_seconds = float(config.get("lock_timeout_seconds", 10.0))
         self.lock_stale_seconds = float(config.get("lock_stale_seconds", 60.0))
         if not 1 <= self.max_records <= 5000:
