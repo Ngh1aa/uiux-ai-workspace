@@ -1,6 +1,6 @@
 # A40.2 — Architecture Guardrails
 
-Status: **IMPLEMENTED / CI-ENFORCED ON PR**  
+Status: **IMPLEMENTED / CI VERIFIED**  
 Date: **2026-10-02**  
 Depends on: `A40-ARCHITECTURE-RECONCILIATION.md`
 
@@ -155,11 +155,11 @@ A40.2 is complete when:
 - [x] future Brain modules cannot directly import execution/release authority surfaces;
 - [x] future Brain Evidence Graph is forced through an adapter to existing evidence/provenance primitives;
 - [x] Brain cannot add a third runtime/provider/release policy file;
-- [ ] PR CI is green on the final A40.2 head.
+- [x] `UIUX Factory CI #1058` and `A20 UIUX Factory v1 Release Candidate #32` passed on the A40.2 implementation head before this documentation-only closure commit.
 
 ## 6. Handoff to A41
 
-After the final A40.2 head passes CI, A41 may introduce only data/control contracts first:
+A41 may now introduce only data/control contracts first:
 
 ```text
 BrainTaskFrame
