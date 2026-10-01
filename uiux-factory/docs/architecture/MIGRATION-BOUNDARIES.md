@@ -1,138 +1,254 @@
-# A1 — Migration Boundaries
+# A40.1 — Post-A4 Architecture Boundaries
 
-Status: **ACTIVE MIGRATION CONTRACT**  
-Audit date: **2026-09-28**
+Status: **ACTIVE ARCHITECTURE CONTRACT**  
+Audit date: **2026-10-02**  
+Baseline: `main@304baefb6999e552708150a20e5c01491aa3663e`
 
-This document defines what A2+ may change without accidentally turning architecture cleanup into a rewrite.
+This document replaces the A1-era migration contract that described A4 consolidation as future work. A4 consolidation is now implemented and validated: `uiux-factory/core/runtime/flow_os/` is the shared executable Flow OS owner and `skills_UIUX/runtime/*.py` is compatibility-only Python surface.
 
-## 1. Canonical direction
+The purpose of this contract is now to protect the post-A4 architecture while Brain OS work begins.
 
-Target direction for later phases:
+## 1. Canonical direction now in force
 
 ```text
 uiux-factory/
 ├── canonical executable product/runtime
-├── orchestration
-├── providers
-├── tools
+├── product managers / specialist execution
+├── shared Flow OS runtime
+├── providers / tools / sandbox
 ├── browser/QA
+├── evidence / provenance
 ├── memory
 └── evaluation
 
 skills_UIUX/
-├── skills
+├── skills / methodology
 ├── flows
 ├── policies
 ├── schemas
-└── portable integration/reference contracts
+├── runtime-policy.json
+└── portable documentation / integration contracts
 ```
 
-A1 records this direction only. A4 owns the actual consolidation.
+A future Brain OS may add an intelligence/control layer under Factory, but it must consume these canonical owners rather than duplicate them.
 
-## 2. Preserve until A4 proves replacement
+## 2. Preserve current canonical owners
 
-Do not delete or bypass these surfaces before equivalent behavior is demonstrated by tests/evidence:
+Do not delete, bypass or silently fork these surfaces without equivalent evidence and migration tests:
 
 ```text
 uiux-factory/run.py
 uiux-factory/core/manager/
-uiux-factory/core/runtime/
+uiux-factory/core/runtime/flow_os/
+uiux-factory/core/orchestration/intelligent_flow.py
+uiux-factory/core/evaluation/
+uiux-factory/core/memory/
+uiux-factory/core/provenance/
 uiux-factory/qa/
-skills_UIUX/runtime/
 skills_UIUX/flows/
+skills_UIUX/runtime/runtime-policy.json
 skills_UIUX/scripts/uiux-agent.py
 ```
 
-The fact that two surfaces overlap is not permission to remove either one prematurely.
+`skills_UIUX/runtime/*.py` compatibility wrappers may be deprecated later, but new executable decision logic must not be added there.
 
-## 3. Skill ownership boundary
+## 3. Brain OS boundary
 
-UI/UX/domain knowledge belongs in `skills_UIUX`, not provider adapters or manager prompts.
+Brain OS is allowed to own:
 
-Providers may consume routed skills, but must not become the source of design methodology.
+- product/task framing above the current Task Contract;
+- bounded reasoning plans and next-best-action selection;
+- hypothesis/decision contracts;
+- uncertainty states;
+- memory recall/write orchestration under existing trust rules;
+- critique routing/synthesis;
+- evaluation aggregation/scorecards;
+- evidence graph adapters over existing evidence/provenance records.
 
-A future canonical runtime should depend on skill contracts rather than copy their knowledge into Python orchestration code.
+Brain OS must **not** own a new execution runtime.
 
-## 4. Flow ownership boundary
+The required direction is:
 
-Declarative stage order, required/conditional skills, gates and replanning rules belong in flow documents where practical.
+```text
+Brain OS
+→ canonical GoalInterpreter / FlowPlanner
+→ Factory manager or ManagedFlowController
+→ specialist execution / tools
+→ existing evidence + QA
+→ existing evaluation / memory
+```
 
-Managers own lifecycle enforcement, not specialist design knowledge.
+Brain OS must not execute an independent stage lifecycle beside Factory/Flow OS.
 
-Provider/model responses never own stage handoff authority.
+## 4. Skill and knowledge ownership boundary
 
-## 5. Provider boundary
+UI/UX/product/domain methodology belongs in `skills_UIUX` or a future declarative Knowledge OS, not provider adapters, manager prompts or Brain planner Python constants.
 
-Provider adapters own transport/model-specific request-response conversion only.
+Providers and Brain modules may consume routed knowledge, but they must not become the source of design methodology.
+
+A future Knowledge OS must have an explicit owner and retrieval contract; it must not silently turn memory into universal knowledge or duplicate `SKILL.md` content without a migration plan.
+
+## 5. Flow ownership boundary
+
+Declarative stage order, required/conditional skills, gates and bounded replanning rules belong in:
+
+```text
+skills_UIUX/flows/*.json
+uiux-factory/core/runtime/flow_os/flow.py
+```
+
+Factory detailed-stage mapping may remain in `core/orchestration/intelligent_flow.py` as an adapter.
+
+Brain OS may propose or request replanning only through the canonical planner/replanning interface. It must not invent a competing stage order.
+
+Provider/model output never owns stage handoff authority.
+
+## 6. Manager boundary
+
+There is one product-level Development Manager lineage under `uiux-factory/core/manager/`.
+
+`ManagedFlowController` is a lifecycle/checkpoint controller and must not evolve into a second product manager.
+
+Future Brain modules must coordinate with these owners instead of introducing `BrainDevelopmentManager`, `BrainRuntime`, or equivalent parallel orchestration classes unless the architecture is intentionally migrated and parity is proven first.
+
+## 7. Provider boundary
+
+Provider adapters own transport/model-specific request-response conversion and usage/cost metadata only.
 
 They must not own:
 
 - task classification;
+- change-surface selection;
 - stage order;
 - skill routing;
 - approval policy;
-- release authority;
-- evidence truth semantics.
+- evidence truth semantics;
+- merge/release authority.
 
-A4 must preserve the provider-neutral interface exposed by the managed runtime when consolidating execution surfaces.
-
-## 6. QA/evidence boundary
-
-Source inspection, generated code and model assertions are not rendered visual evidence.
-
-Keep these claim types separate:
+Two provider entry paths currently remain active:
 
 ```text
-code correctness → compile/test/runtime evidence
-UI behavior → browser evidence
-visual quality → screenshot/creative-review evidence
-accessibility → automated + manual/browser evidence as applicable
-release → deployment/workflow evidence
+uiux-factory/core/runtime/free_provider.py
+uiux-factory/core/runtime/flow_os/provider*.py
 ```
 
-Later A4.4 will make evidence machine-verifiable; A1 only freezes the semantics.
+Future work may converge them behind a common capability contract. It must not introduce a third provider policy surface.
 
-## 7. External integration boundary
+## 8. Evidence and provenance boundary
 
-MCP, Figma, browser adapters and release/deploy adapters are external capability surfaces.
+Do not create a second evidence truth system.
 
-They must use narrow allowlisted operations and existing authority rules. Do not introduce arbitrary shell/filesystem access to make an integration easier.
+Current evidence/provenance owners include:
 
-A5 must not begin until A4.1–A4.4 security/integrity blockers pass.
+```text
+uiux-factory/core/runtime/flow_os/evidence.py
+uiux-factory/core/runtime/flow_os/browser_evidence.py
+uiux-factory/core/provenance/evidence_lineage.py
+uiux-factory/core/provenance/release_evidence_registry.py
+uiux-factory/qa/
+```
 
-## 8. Compatibility boundary
+Future Brain OS Evidence Graph work must normalize/reference/adapt these records and add missing relationship types. It must not downgrade provenance or replace trusted runtime evidence with model-authored graph nodes.
 
-During migration:
+Keep claim types separate:
+
+```text
+model/provider statement → claim/advisory context
+code correctness         → compile/test/runtime evidence
+UI behavior              → browser evidence
+visual quality           → screenshot + creative/human review evidence
+accessibility            → automated + browser/manual evidence as applicable
+user validation          → direct-user evidence
+release                  → deployment/workflow evidence
+```
+
+## 9. Memory boundary
+
+Current evaluation memory is bounded, project-scoped and advisory.
+
+Future semantic/project/decision memory may expand stored types, but memory must never:
+
+- select or rewrite the flow by itself;
+- escalate authority;
+- satisfy a current-run gate;
+- become current-run evidence merely because it was stored previously;
+- approve merge/deploy/release;
+- override current project truth.
+
+Persistent memory writes must preserve schema versioning, project scope, atomicity, path safety and provenance.
+
+## 10. Critique boundary
+
+The current `VisualCritic` is an existing specialist capability and should be adapted into future critique orchestration.
+
+A future Critique Orchestrator may route multiple critics and synthesize root causes/repair directives, but:
+
+- a critic cannot self-PASS a gate;
+- a critic cannot rewrite another critic's evidence;
+- critique prose is not trusted runtime evidence by default;
+- changes to product/business direction require human authority;
+- existing visual-critic contracts require migration/adapters rather than incompatible duplicate schemas.
+
+## 11. Evaluation and benchmark boundary
+
+Existing benchmark/eval sources are versioned evidence, not disposable fixtures:
+
+```text
+uiux-factory/core/benchmarks/
+uiux-factory/benchmarks/corpus/
+skills_UIUX/scripts/eval-harness.py
+A13/A14/A20 workflows and tests
+```
+
+A future unified Brain scorecard may aggregate these surfaces, but must keep deterministic, model-assisted and human-review channels distinguishable.
+
+Do not silently mutate historical corpus truth to make a new architecture pass.
+
+## 12. External integration boundary
+
+GitHub, MCP, Figma, browser, deploy/release and other external capability surfaces must use narrow allowlisted operations and existing authority rules.
+
+The GitHub connector bridge is metadata-only ingress. It cannot introduce arbitrary install/build/serve commands or claim execution evidence by itself.
+
+External integrations must not become alternate policy/runtime owners merely because they provide transport.
+
+## 13. Compatibility boundary
+
+During Brain OS evolution:
 
 - keep existing CLI commands valid where feasible;
+- preserve canonical class identity tests;
 - prefer adapters/deprecation notices over abrupt removal;
-- preserve persisted run/checkpoint readability or provide an explicit migration path;
-- preserve existing flow IDs unless a schema/versioned migration is intentional;
+- preserve persisted run/checkpoint readability or provide a versioned migration;
+- preserve existing flow IDs unless migration is intentional;
 - keep `engine=external` truthful: handoff is not implementation PASS;
-- keep regression fixtures separate from product acceptance evidence.
+- keep regression fixtures separate from target acceptance evidence;
+- do not move executable logic back into `skills_UIUX/runtime/*.py` compatibility shims.
 
-## 9. Documentation truth boundary
+## 14. Documentation truth boundary
 
-Documents are classified by authority, not age alone.
-
-Runtime truth priority for architecture work:
+Architecture truth priority is:
 
 1. current source and executable tests;
-2. current root README / AGENTS contract;
-3. current runtime/flow documentation that matches source;
-4. active capability/QA docs;
-5. historical implementation plans and sprint notes.
+2. current root `AGENTS.md`, runtime policy and Contract Ownership map;
+3. `CURRENT-RUNTIME-MAP.md` and this active architecture contract;
+4. current Flow OS / QA / capability documentation that matches source;
+5. historical A-series implementation notes.
 
-Historical plans must not override current code.
+Historical plans describe how the repository got here. They do not override current code.
 
-## 10. A1 → A4 handoff
+## 15. A40.1 → A40.2 handoff
 
-A4 may start only from the following frozen facts:
+A40.2 should encode the following as executable architecture guardrails:
 
-- `uiux-factory` is the repository-declared canonical product source today;
-- `skills_UIUX/runtime` is an active, validated managed Flow OS surface today;
-- CI deliberately validates both surfaces today;
-- consolidation is therefore a migration problem, not a simple directory deletion;
-- the post-A4 target is one orchestration/runtime authority with reusable skills/flows remaining portable.
+- Flow OS executable owner remains `uiux-factory/core/runtime/flow_os/`;
+- legacy `skills_UIUX/runtime/*.py` stays compatibility-only;
+- declarative flows/skills/policy remain outside provider code;
+- Brain OS cannot mutate authority/gates/release directly;
+- Brain OS cannot become a third execution runtime;
+- current evidence/provenance primitives remain canonical inputs for any future Evidence Graph;
+- memory remains advisory and cannot satisfy current-run evidence gates;
+- provider/model claims cannot become trusted runtime evidence;
+- existing benchmark corpus truth cannot be rewritten silently.
 
-Any A4 proposal that cannot preserve the A1 baseline or provide equivalent evidence must be treated as a regression until proven otherwise.
+Any later A-step that violates these invariants must be treated as an architecture regression until an explicit migration with parity evidence is approved.
