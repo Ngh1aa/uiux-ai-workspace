@@ -24,6 +24,11 @@ from core.brain_os.adapters.jit_context import (
     project_stage_jit_context,
     request_jit_activation,
 )
+from core.brain_os.adapters.memory_context import (
+    MemoryReasoningContext,
+    MemoryRecallItem,
+    attach_memory_after_flow_selection,
+)
 from core.brain_os.adapters.repair_lineage import (
     RepairLineageFragment,
     extend_graph_with_repair_proposal,
@@ -39,8 +44,11 @@ __all__ = [
     "FlowSelectionDecision",
     "JITActivationRequest",
     "JITContextPlan",
+    "MemoryReasoningContext",
+    "MemoryRecallItem",
     "RepairLineageFragment",
     "SurfaceSource",
+    "attach_memory_after_flow_selection",
     "classify_smallest_surface",
     "extend_graph_with_repair_proposal",
     "project_repair_lineage",
