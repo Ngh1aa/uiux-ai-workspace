@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41.1 MERGED + A41.2 IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42.1 EVIDENCE GRAPH IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@f6157fa339908ecce58062820a407e035353a8c7`
+Current architecture baseline: `main@fc2f620fbd1ff4e197bbbfe022d5883b15481178`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -14,6 +14,7 @@ Read in this order:
 4. `A40-ARCHITECTURE-GUARDRAILS.md` — A40.2 executable invariants that protect the reconciled architecture.
 5. `A41-BRAIN-CORE-CONTRACTS.md` — strict BrainTaskFrame / Uncertainty / Hypothesis / Decision data/control contracts introduced by A41.1.
 6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — strict CritiqueIssue / RootCause / RepairDirective / RetestRequirement / RepairLink lineage contracts introduced by A41.2.
+7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` — adapter-first relationship graph over canonical runtime/provenance/release evidence IDs.
 
 ## Current architecture statement
 
@@ -39,7 +40,7 @@ A40.2 makes these boundaries executable through:
 uiux-factory/tests/test_architecture_guardrails_a40.py
 ```
 
-A41 now establishes contract-only reasoning state:
+A41 establishes contract-only reasoning state:
 
 ```text
 core/brain_os/contracts.py
@@ -48,14 +49,37 @@ core/brain_os/critique_contracts.py
 
 These contracts contain reasoning/control metadata only. They do not own tools, providers, gates, merge/release authority or trusted-evidence semantics.
 
-The critique/repair lineage is:
+A42.1 adds a relationship-only evidence layer:
 
 ```text
-CritiqueIssue → RootCause → RepairDirective → RetestRequirement
-                         \→ RepairLink records the relationship graph
+core/brain_os/reasoning/evidence_graph.py
+core/brain_os/adapters/evidence.py
 ```
 
-A `RepairDirective` is an instruction, not proof of execution. A `PASSED` retest or `RESOLVED` critique requires evidence references; runtime/provenance layers remain the authority for whether those references are trusted.
+The graph references canonical evidence owned by:
+
+```text
+core/runtime/flow_os/evidence.py
+core/provenance/evidence_lineage.py
+core/provenance/release_evidence_registry.py
+```
+
+It does not define a new evidence record, trusted-evidence type set, evidence store, release registry or gate evaluator.
+
+Current intended lineage is:
+
+```text
+Task
+→ Hypothesis
+→ Decision
+→ CritiqueIssue
+→ RootCause
+→ RepairDirective
+→ RetestRequirement
+→ canonical evidence reference
+```
+
+A graph edge records traceability only. It cannot prove execution, upgrade trust or mark a runtime gate passed.
 
 ## Source-of-truth priority
 
@@ -71,4 +95,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A41.2 is green on CI, A42 should begin Evidence Graph Foundation by adapting existing runtime/provenance evidence primitives. It must not create a second independent evidence authority/store.
+After A42.1 is green on CI, A42.2 should add Evidence Integrity: false-evidence protection and end-to-end lineage validation while preserving canonical trust/provenance ownership.
