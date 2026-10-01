@@ -1,6 +1,6 @@
 # Architecture Truth Index
 
-Status: **A40.1 RECONCILED CURRENT TRUTH**  
+Status: **A40 RECONCILED + GUARDED CURRENT TRUTH**  
 Audit date: **2026-10-02**  
 Baseline: `main@304baefb6999e552708150a20e5c01491aa3663e`
 
@@ -11,6 +11,7 @@ Read in this order:
 1. `CURRENT-RUNTIME-MAP.md` — current executable topology, owners, evidence/memory surfaces and remaining convergence debt.
 2. `MIGRATION-BOUNDARIES.md` — active post-A4 architecture contract and Brain OS boundaries.
 3. `A40-ARCHITECTURE-RECONCILIATION.md` — A40.1 audit findings, capability/ownership matrix, duplicate-surface classification and roadmap corrections.
+4. `A40-ARCHITECTURE-GUARDRAILS.md` — A40.2 executable invariants that protect the reconciled architecture before Brain Core Contracts are introduced.
 
 ## Current architecture statement
 
@@ -30,6 +31,14 @@ Future Brain OS work may add reasoning, hypothesis/decision contracts, critique 
 
 It must not create a third execution runtime or a competing evidence/authority system.
 
+A40.2 makes these boundaries executable through:
+
+```text
+uiux-factory/tests/test_architecture_guardrails_a40.py
+```
+
+The guardrails cover canonical Flow OS ownership, compatibility-only legacy wrappers, trusted-evidence boundaries, advisory memory semantics and future Brain OS dependency restrictions.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -44,4 +53,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-A40.2 should convert the A40.1 invariants into executable architecture regression tests before Brain Core Contracts are introduced.
+After A40.2 is green on CI, A41 may introduce Brain Core Contracts only. It must remain behind the A40 guardrails and must not introduce execution/provider/release ownership.
