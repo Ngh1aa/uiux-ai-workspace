@@ -24,6 +24,11 @@ from core.brain_os.adapters.jit_context import (
     project_stage_jit_context,
     request_jit_activation,
 )
+from core.brain_os.adapters.repair_lineage import (
+    RepairLineageFragment,
+    extend_graph_with_repair_proposal,
+    project_repair_lineage,
+)
 
 __all__ = [
     "CANONICAL_FLOW_OWNER",
@@ -34,8 +39,11 @@ __all__ = [
     "FlowSelectionDecision",
     "JITActivationRequest",
     "JITContextPlan",
+    "RepairLineageFragment",
     "SurfaceSource",
     "classify_smallest_surface",
+    "extend_graph_with_repair_proposal",
+    "project_repair_lineage",
     "project_stage_jit_context",
     "propose_bounded_escalation",
     "provenance_evidence_node",
