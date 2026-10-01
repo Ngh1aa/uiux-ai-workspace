@@ -146,6 +146,37 @@ class GoalInterpreter:
             "mto", "psp", "kyc", "aml", "sanctions", "reconciliation", "subledger",
             "wealth", "brokerage", "investment", "card issuing", "acquiring",
         )),
+        ("art-culture", (
+            "museum", "art museum", "gallery", "exhibition", "artwork", "art collection",
+            "cultural heritage", "visual archive", "artist discovery", "museum experience",
+            "bảo tàng", "phòng tranh", "triển lãm", "tác phẩm nghệ thuật", "di sản văn hóa",
+        )),
+        ("travel-tourism", (
+            "travel guide", "city guide", "destination guide", "tourism", "tourist", "itinerary",
+            "travel itinerary", "visitor guide", "travel destination", "local attractions",
+            "du lịch", "điểm đến", "cẩm nang du lịch", "lịch trình du lịch", "địa điểm tham quan",
+        )),
+        ("industrial-services", (
+            "industrial", "manufacturing", "engineering service", "engineering services",
+            "industrial maintenance", "industrial repair", "motor repair", "electric motor repair",
+            "machinery repair", "plant maintenance", "factory maintenance", "industrial equipment",
+            "công nghiệp", "sản xuất công nghiệp", "bảo trì công nghiệp", "sửa chữa động cơ", "nhà máy",
+        )),
+        ("mobility-ev", (
+            "smart mobility", "electric vehicle", "electric vehicles", "ev charging", "charging station",
+            "charging network", "vehicle charging", "fleet mobility", "automotive mobility",
+            "xe điện", "trạm sạc", "mạng lưới sạc", "di chuyển thông minh", "giao thông thông minh",
+        )),
+        ("ai-software", (
+            "artificial intelligence", "generative ai", "ai-native", "ai native", "ai product",
+            "ai platform", "ai saas", "machine learning", "large language model", "llm platform",
+            "ai copilot", "trí tuệ nhân tạo", "sản phẩm ai", "nền tảng ai",
+        )),
+        ("education-edtech", (
+            "edtech", "learning platform", "learning management system", "lms platform",
+            "online learning", "course platform", "digital classroom", "student learning",
+            "nền tảng học tập", "học trực tuyến", "lớp học số", "công nghệ giáo dục",
+        )),
     )
 
     FINANCIAL_ARCHETYPES = (
@@ -365,6 +396,6 @@ class GoalInterpreter:
             forbidden=forbidden,
             references=references,
             authority=authority,
-            confidence=0.95 if website_type != "generic" else 0.65,
+            confidence=0.95 if website_type != "generic" or domain != "generic" else 0.65,
             evidence=evidence,
         )

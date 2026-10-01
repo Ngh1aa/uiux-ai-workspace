@@ -13,6 +13,7 @@ The workspace intentionally has several layers. They must **reference** each oth
 | Specialist capability knowledge | `skills_UIUX/<skill>/SKILL.md` | Load only when routed/required for the active stage |
 | Per-task external handoff/routing | `external-task-manifest.json` generated from current code | Record the resolved contract; never claim QA PASS |
 | GitHub-native external-collaborator control plane | `.github/workflows/external-agent-runner.yml` + `skills_UIUX/scripts/github-external-agent-runner.py` | Compile/transport the governed task packet and declared verification; never pretend to execute an LLM provider |
+| GitHub-connector bounded ingress when direct workflow dispatch is unavailable | `.github/workflows/external-agent-connector-bridge.yml` + `skills_UIUX/scripts/github-connector-task-request.py` | Accept trusted issue metadata, validate a fixed request schema, then reuse the canonical external-agent runner; never accept install/build/serve shell commands from issue text |
 | Target-project truth | Current target repository source, config, tests, runtime and approved project docs | Summarize with evidence labels |
 | Rendered UI acceptance | Target-project browser/test evidence | Supplement with critique; model self-report is not proof |
 | Visual-signature compatibility during non-redesign migrations | `docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md` + target-project declared invariants | Declare project-specific media/motion/composition/page-role invariants; never force a signature pattern that the project does not have |
@@ -38,6 +39,7 @@ Examples:
 - Deployment metadata points at a different SHA than the intended release → release is not `DEPLOYED_VERIFIED`, even if the production URL returns 200.
 - A release registry is missing a state/deployment artifact → the corresponding claim stays `UNKNOWN`; an artifact inventory is not permission to invent a PASS.
 - A case study claims user validation but there is no direct-user evidence ledger → label it hypothesis/planned, not validated.
+- A connector task issue includes `install_command`, `build_command` or `serve_command` → reject the request at the bridge; connector ingress is metadata-only and cannot create an arbitrary shell execution path.
 
 ## Minimal context profiles
 
@@ -51,7 +53,7 @@ External collaborators should normally load only:
 6. active-stage skills
 7. target-project files/evidence needed for the current decision
 
-For a task that can change an existing rendered UI, Home/top-of-page composition, design-system rendering, media, motion, or a mass content/evidence migration, also load `docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md` and the target project's declared visual-signature invariants when they exist.
+For a task that can change an existing rendered UI, Home/top-of-page composition, design-system rendering, media, motion, or a mass content/evidence migration, also load `docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md` and the target project's declared visual-signature invariants when they exist. The external-task manifest automatically includes this contract in `canonical_sources` when the interpreted task indicates an existing-UI compatibility boundary; explicit full redesigns do not pay that context cost unless preserve/forbidden constraints reactivate it.
 
 Local runtime/provider execution may additionally load runtime-policy and implementation modules as required.
 

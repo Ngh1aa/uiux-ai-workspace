@@ -1,0 +1,102 @@
+name: GitHub Connector External Agent Bridge
+
+on:
+  issues:
+    types: [opened, edited, reopened, labeled]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: external-agent-connector-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  prepare-task-packet:
+    if: >-
+      (startsWith(github.event.issue.title, '[UIUX TASK]') || contains(github.event.issue.labels.*.name, 'uiux-agent-task')) &&
+      (github.event.issue.author_association == 'OWNER' || github.event.issue.author_association == 'MEMBER' || github.event.issue.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Parse bounded connector request
+        id: request
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          printf '%s' "$ISSUE_BODY" > "$RUNNER_TEMP/uiux-connector-request.md"
+          python -B skills_UIUX/scripts/github-connector-task-request.py \
+            --body-file "$RUNNER_TEMP/uiux-connector-request.md" \
+            --output "$RUNNER_TEMP/uiux-connector-request.json" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Checkout target repository
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ steps.request.outputs.target_repository }}
+          ref: ${{ steps.request.outputs.target_ref }}
+          path: target-project
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN || github.token }}
+
+      - name: Compile governed external-agent packet
+        env:
+          TARGET_REPOSITORY: ${{ steps.request.outputs.target_repository }}
+          TARGET_REF: ${{ steps.request.outputs.target_ref }}
+          TASK: ${{ steps.request.outputs.task }}
+          AUTHORITY: ${{ steps.request.outputs.authority }}
+          QA_ROUTES: ${{ steps.request.outputs.qa_routes }}
+          ACCEPTANCE: ${{ steps.request.outputs.acceptance }}
+          STATE_CONTRACT: ${{ steps.request.outputs.state_contract }}
+        run: |
+          python -B skills_UIUX/scripts/github-external-agent-runner.py \
+            --repository "$TARGET_REPOSITORY" \
+            --target-ref "$TARGET_REF" \
+            --target-root "$GITHUB_WORKSPACE/target-project" \
+            --task "$TASK" \
+            --authority "$AUTHORITY" \
+            --qa-routes "$QA_ROUTES" \
+            --acceptance "$ACCEPTANCE" \
+            --state-contract "$STATE_CONTRACT" \
+            --output-dir "$GITHUB_WORKSPACE/external-agent-packet"
+
+      - name: Preserve normalized connector request
+        run: cp "$RUNNER_TEMP/uiux-connector-request.json" "$GITHUB_WORKSPACE/external-agent-packet/connector-request.json"
+
+      - name: Upload external-agent task packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-agent-task-packet-${{ github.event.issue.number }}
+          path: external-agent-packet/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Comment with task-packet location
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `UIUX Factory compiled the governed external-agent task packet for this request.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\nArtifact: \`external-agent-task-packet-${context.issue.number}\`\n\nThis packet is a routing contract, not evidence that implementation or QA passed.`
+            });
+
+      - name: Comment on bridge failure
+        if: failure()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `UIUX Factory could not compile this connector request. Check the workflow run and request schema; no implementation or QA PASS is implied.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
