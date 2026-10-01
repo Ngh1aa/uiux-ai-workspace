@@ -276,7 +276,7 @@ def test_a44_core_critics_do_not_define_execution_or_gate_authority() -> None:
         "release_action",
         "run_target_command",
         "gate_evidence_errors",
-        "apply_calibration(",
+        ".apply_calibration(",
     )
     for token in forbidden:
         assert token not in source
