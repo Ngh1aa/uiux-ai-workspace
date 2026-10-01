@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41.1 BRAIN CONTRACTS IMPLEMENTED**  
+Status: **A40 GUARDED + A41.1 MERGED + A41.2 IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@f5e90c02e3f83ba62a018fa967ec7e3a96f50bb3`
+Current architecture baseline: `main@f6157fa339908ecce58062820a407e035353a8c7`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -13,6 +13,7 @@ Read in this order:
 3. `A40-ARCHITECTURE-RECONCILIATION.md` — A40.1 audit findings, capability/ownership matrix, duplicate-surface classification and roadmap corrections.
 4. `A40-ARCHITECTURE-GUARDRAILS.md` — A40.2 executable invariants that protect the reconciled architecture.
 5. `A41-BRAIN-CORE-CONTRACTS.md` — strict BrainTaskFrame / Uncertainty / Hypothesis / Decision data/control contracts introduced by A41.1.
+6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — strict CritiqueIssue / RootCause / RepairDirective / RetestRequirement / RepairLink lineage contracts introduced by A41.2.
 
 ## Current architecture statement
 
@@ -38,13 +39,23 @@ A40.2 makes these boundaries executable through:
 uiux-factory/tests/test_architecture_guardrails_a40.py
 ```
 
-A41.1 is the first concrete Brain OS slice and is intentionally contract-only:
+A41 now establishes contract-only reasoning state:
 
 ```text
-uiux-factory/core/brain_os/contracts.py
+core/brain_os/contracts.py
+core/brain_os/critique_contracts.py
 ```
 
-The contracts contain reasoning/control state only. They do not own tools, providers, gates, merge/release authority or trusted-evidence semantics.
+These contracts contain reasoning/control metadata only. They do not own tools, providers, gates, merge/release authority or trusted-evidence semantics.
+
+The critique/repair lineage is:
+
+```text
+CritiqueIssue → RootCause → RepairDirective → RetestRequirement
+                         \→ RepairLink records the relationship graph
+```
+
+A `RepairDirective` is an instruction, not proof of execution. A `PASSED` retest or `RESOLVED` critique requires evidence references; runtime/provenance layers remain the authority for whether those references are trusted.
 
 ## Source-of-truth priority
 
@@ -60,4 +71,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A41.1 is green on CI, A41.2 may add critique/repair data contracts only. Orchestration remains deferred to A44/A45 and evidence authority remains with existing runtime/provenance owners.
+After A41.2 is green on CI, A42 should begin Evidence Graph Foundation by adapting existing runtime/provenance evidence primitives. It must not create a second independent evidence authority/store.
