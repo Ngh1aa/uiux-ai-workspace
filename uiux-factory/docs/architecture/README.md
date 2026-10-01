@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43.1 FLOW SELECTION IMPLEMENTED**  
+Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43.1 MERGED + A43.2 JIT CONTEXT IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@1b08c832f845ebc40c9f5e96aeb1d8f791648c72`
+Current architecture baseline: `main@6e5ca03ba4b8d67637514a5191b5dc22f534c322`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
 
@@ -17,6 +17,7 @@ Read in this order:
 7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` — adapter-first relationship graph over canonical runtime/provenance/release evidence IDs.
 8. `A42-EVIDENCE-INTEGRITY.md` — false-evidence protection, repair-lineage integrity and task-to-evidence lineage validation.
 9. `A43-FLOW-SELECTION-ENGINE.md` — Brain-facing adapter over canonical change-surface classification and FlowPlanner selection, with bounded adjacent escalation.
+10. `A43-JIT-CONTEXT-LOADER.md` — read-only projection of canonical mandatory/JIT skill routing and runtime context budgets.
 
 ## Current architecture statement
 
@@ -85,14 +86,6 @@ Task
 
 A42.2 can validate that this lineage is internally truthful and complete. It cannot prove execution, upgrade trust, mark a runtime gate passed or declare release readiness.
 
-False-evidence protection includes:
-
-- graph evidence nodes must match canonical adapter projections;
-- reasoning/control nodes cannot assign themselves trusted-evidence flags;
-- provider claims remain untrusted and cannot terminate a `VERIFIED_BY` chain;
-- terminal retest evidence refs must resolve to canonical evidence nodes;
-- missing lineage is reported as incomplete rather than inferred.
-
 ## Flow selection boundary
 
 A43.1 adds a Brain-facing adapter only:
@@ -116,6 +109,29 @@ MICRO → FOCUSED → PAGE → REDESIGN → PRODUCT
 
 but it cannot define a second `FlowPlanner`, skip arbitrary surface levels, mutate flow policy or execute the selected flow itself.
 
+## JIT context boundary
+
+A43.2 adds a read-only Brain projection:
+
+```text
+core/brain_os/adapters/jit_context.py
+```
+
+The source data remains canonical `ResolvedStage` output from `SkillResolver`, plus operator-owned runtime policy.
+
+Brain may observe:
+
+```text
+mandatory/default skills
+routed JIT pool
+JIT provenance
+active/available JIT view
+count and section budgets
+provider document policy ceiling
+```
+
+It cannot add non-routed skills, raise budgets, change authority/gates/evidence or claim that a JIT activation actually occurred. Provider/runtime preflight remains authoritative.
+
 ## Source-of-truth priority
 
 When documents disagree:
@@ -130,4 +146,4 @@ Historical documents remain useful audit history, but do not override current co
 
 ## Next architecture task
 
-After A43.1 is green and merged, A43.2 should implement JIT Context Loader by adapting the existing `SkillResolver` plus canonical runtime context limits. It must not create a second skill router or let Brain/memory/provider output bypass routed-skill boundaries.
+After A43.2 is green and merged, A43.3 should add a Routing Benchmark over representative tasks, checking Task Contract surface → selected flow → mandatory/JIT skill envelope without becoming another router.
