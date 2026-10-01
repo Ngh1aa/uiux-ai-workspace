@@ -1,7 +1,8 @@
 # A41.2 — Critique & Repair Contracts
 
-Status: **IMPLEMENTED / VERIFICATION PENDING**  
+Status: **VERIFIED / MERGED TO MAIN**  
 Date: **2026-10-02**  
+Merged via: PR #80 → `main@fc2f620fbd1ff4e197bbbfe022d5883b15481178`  
 Depends on: A41.1 Brain Core Contracts + A40 Architecture Guardrails
 
 ## 1. Purpose
@@ -169,11 +170,11 @@ All `evidence_refs` are references only. The referenced evidence remains authori
 
 This prevents future critics from converting their own prose into evidence merely by putting a string into `evidence_refs`.
 
-A42 will later define adapter-backed relationships between Brain objects and existing evidence/provenance IDs.
+A42 defines adapter-backed relationships between Brain objects and existing evidence/provenance IDs.
 
 ## 6. Acceptance criteria
 
-A41.2 is complete when:
+A41.2 is complete:
 
 - [x] `CritiqueIssue` exists with severity/status/evidence semantics;
 - [x] confirmed/resolved issues require evidence;
@@ -186,10 +187,12 @@ A41.2 is complete when:
 - [x] terminal retest states require evidence;
 - [x] `RepairLink` requires complete issue → cause → directive → retest lineage;
 - [x] contracts serialize, round-trip, reject extras and remain immutable;
-- [ ] final PR head passes UIUX Factory CI and A20 release-candidate regression.
+- [x] UIUX Factory CI #1075 — SUCCESS;
+- [x] A20 release-candidate #37 — SUCCESS;
+- [x] full regression + Nova/Lumen/CENNEXT dogfood — SUCCESS.
 
 ## 7. Handoff
 
-After A41.2 is green, A42 should begin **Evidence Graph Foundation** as an adapter/relationship layer over existing evidence and provenance primitives.
+A42 begins **Evidence Graph Foundation** as an adapter/relationship layer over existing evidence and provenance primitives.
 
 A42 must not build a second independent evidence authority/store.
