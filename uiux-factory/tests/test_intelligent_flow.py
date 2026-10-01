@@ -94,7 +94,7 @@ def test_router_no_longer_defaults_every_unknown_goal_to_corporate() -> None:
     assert "project-context/SKILL.md" in selection.mandatory_paths
 
 
-def test_goal_interpreter_classifies_financial_domain_and_archetypes() -> None:
+def test_goal_interpreter_classifies_financial_and_cultural_domains() -> None:
     interpreter = GoalInterpreter()
 
     finflow = interpreter.interpret(
@@ -112,7 +112,7 @@ def test_goal_interpreter_classifies_financial_domain_and_archetypes() -> None:
     assert nova.product_archetype == "consumer-banking"
 
     lumen = interpreter.interpret("Create an immersive digital museum experience")
-    assert lumen.domain == "generic"
+    assert lumen.domain == "art-culture"
     assert lumen.product_archetype == "generic"
 
 
