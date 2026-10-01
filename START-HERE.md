@@ -8,7 +8,7 @@ Do **not** read the whole workspace.
 
 1. Read `AGENTS.md` for the universal operating/evidence contract.
 2. Read `docs/CONTRACT-OWNERSHIP.md` to know which file owns which decision.
-3. Build or recover one `external-task-manifest.json` using the command below, or follow its schema manually when the collaborator cannot execute the local CLI.
+3. Build or recover one `external-task-manifest.json` using the command below. If the collaborator cannot run the local CLI or dispatch Actions directly, use the bounded GitHub-connector ingress described below instead of manually re-implementing the routing logic.
 4. Load only the resolved Flow and the `SKILL.md` files listed for the **active stage**.
 5. Audit the target repository before editing it; project source is stronger evidence than filename assumptions.
 6. Work on a branch, verify with direct evidence, repair root causes, then open/merge a PR only when the relevant gates pass.
@@ -45,6 +45,7 @@ Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.j
 
 - External/cloud collaborator: `skills_UIUX/scripts/prepare-external-task.py`
 - GitHub-native external collaborator control plane: `.github/workflows/external-agent-runner.yml`
+- GitHub connector ingress when direct Actions dispatch is unavailable: `.github/workflows/external-agent-connector-bridge.yml` + `skills_UIUX/scripts/github-connector-task-request.py`
 - Managed local/provider Flow OS: `skills_UIUX/scripts/uiux-agent.py`
 - Direct Factory pipeline: `uiux-factory/run.py`
 - Browser/accessibility/performance evidence: `uiux-factory/qa/`
@@ -57,11 +58,34 @@ Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.j
 
 ## GitHub-native external collaborators
 
-When ChatGPT, Codex, Claude or another external collaborator can work through GitHub but cannot execute the Factory locally, use `GitHub Native External Agent Runner` from Actions (or call it as a reusable workflow). It checks out the exact target ref, compiles the governed task packet, records target SHA/source evidence, and can optionally run the State Coverage Gate when the target declares a contract.
+When ChatGPT, Codex, Claude or another external collaborator can work through GitHub but cannot execute the Factory locally, prefer the canonical `GitHub Native External Agent Runner` from Actions (or call it as a reusable workflow). It checks out the exact target ref, compiles the governed task packet, records target SHA/source evidence, and can optionally run the State Coverage Gate when the target declares a contract.
 
-The workflow does **not** pretend to invoke an LLM provider. It creates the governed GitHub-native control plane around the external collaborator. Implementation still happens through the authorized collaborator; runtime/visual PASS still requires target evidence.
+If the connected GitHub client can create/edit issues but cannot invoke `workflow_dispatch`, use the **GitHub Connector External Agent Bridge**. Create a trusted issue titled with the `[UIUX TASK]` prefix (or apply the `uiux-agent-task` label) and include this marker plus a JSON payload:
+
+````markdown
+<!-- uiux-external-agent-task:v1 -->
+```json
+{
+  "target_repository": "owner/repo",
+  "target_ref": "main",
+  "task": "Improve the existing dashboard cards while preserving current motion",
+  "authority": "branch_write",
+  "qa_routes": ["/"],
+  "acceptance": ["No layout overflow", "Rendered QA required"],
+  "state_contract": "uiux-state-coverage.json"
+}
+```
+````
+
+The bridge accepts **metadata only**. It intentionally rejects unknown fields such as `install_command`, `build_command` and `serve_command`, so issue text cannot create an arbitrary shell-execution path. The workflow validates the request, checks out the target repository, reuses `github-external-agent-runner.py`, uploads the governed packet as an artifact, and comments the run location on the issue. Private cross-repository targets may still require the repository secret `UIUX_TARGET_REPO_TOKEN`, the same trust boundary used by the existing runner.
+
+The runner and connector bridge do **not** pretend to invoke an LLM provider. They create the governed GitHub-native control plane around the external collaborator. Implementation still happens through the authorized collaborator; runtime/visual PASS still requires target evidence.
 
 Lifecycle-state projects can declare `uiux-state-coverage.json` (or another contract path) to verify state query → semantic marker → rendered evidence across desktop/tablet/mobile and automatically generate a 2×2 case-study matrix. See `docs/STATE-COVERAGE-INFRASTRUCTURE.md`.
+
+## Visual-signature routing
+
+The external-task manifest automatically adds `docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md` to `canonical_sources` when the interpreted task can modify an existing rendered UI or otherwise declares a compatibility boundary. New builds and explicitly authorized full redesigns do not load that contract by default; preserve/forbidden constraints reactivate it. This keeps context small without silently dropping protection for existing visual identity.
 
 ## Release proof
 
