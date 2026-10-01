@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "brain-repair-proposals-v1",
+  "version": "1.0.0",
+  "description": "Deterministic regression corpus for critique → repair proposal routing and graph shape. The benchmark is read-only and cannot execute repairs or create verification evidence.",
+  "cases": [
+    {"id":"visual-p1","critic":"visual","severity":"P1","expected_target_stage":"visual_composition","expected_evidence_types":["browser_render"],"expected_human_approval":false},
+    {"id":"visual-p0","critic":"visual","severity":"P0","expected_target_stage":"visual_composition","expected_evidence_types":["browser_render"],"expected_human_approval":true},
+    {"id":"ux-ia-p1","critic":"ux_ia","severity":"P1","expected_target_stage":"ux_strategy","expected_evidence_types":["browser_render"],"expected_human_approval":false},
+    {"id":"design-system-p1","critic":"design_system","severity":"P1","expected_target_stage":"design_system","expected_evidence_types":["validator_result"],"expected_human_approval":false},
+    {"id":"accessibility-p0","critic":"accessibility","severity":"P0","expected_target_stage":"qa","expected_evidence_types":["validator_result","browser_render"],"expected_human_approval":true},
+    {"id":"product-p1","critic":"product","severity":"P1","expected_target_stage":"product_strategy","expected_evidence_types":["artifact"],"expected_human_approval":false},
+    {"id":"runtime-p0","critic":"runtime","severity":"P0","expected_target_stage":"qa","expected_evidence_types":["validator_result"],"expected_human_approval":true},
+    {"id":"truth-p0","critic":"evidence_truth","severity":"P0","expected_target_stage":"qa","expected_evidence_types":["validator_result"],"expected_human_approval":true},
+    {"id":"unknown-p2","critic":"custom_critic","severity":"P2","expected_target_stage":"qa","expected_evidence_types":["validator_result"],"expected_human_approval":false}
+  ]
+}
