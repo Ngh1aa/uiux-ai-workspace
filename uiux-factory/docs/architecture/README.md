@@ -1,64 +1,63 @@
 # Architecture Truth Index
 
-Status: **A40 GUARDED + A41 MERGED + A42 MERGED + A43 MERGED + A44 MERGED + A45.1 MERGED + A45.2 MERGED + A45.3 REPAIR PROPOSAL BENCHMARK IMPLEMENTED**  
+Status: **A40 GUARDED + A41–A47 MERGED / CURRENT**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@cdfbf158dfed38bec7fb3be6d070ffd7960a3af1`
+Current architecture baseline: `main@38b11b347281cba8f8dd0b3cd6f99dcba62fdb95`
 
-This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution.
+This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
-Read in this order:
+## Read order
 
-1. `CURRENT-RUNTIME-MAP.md` — current executable topology, owners, evidence/memory surfaces and remaining convergence debt.
+1. `CURRENT-RUNTIME-MAP.md` — current executable topology, owners and remaining convergence debt.
 2. `MIGRATION-BOUNDARIES.md` — active post-A4 architecture contract and Brain OS boundaries.
-3. `A40-ARCHITECTURE-RECONCILIATION.md` — A40.1 audit findings, capability/ownership matrix, duplicate-surface classification and roadmap corrections.
-4. `A40-ARCHITECTURE-GUARDRAILS.md` — A40.2 executable invariants that protect the reconciled architecture.
-5. `A41-BRAIN-CORE-CONTRACTS.md` — strict BrainTaskFrame / Uncertainty / Hypothesis / Decision data/control contracts introduced by A41.1.
-6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — strict CritiqueIssue / RootCause / RepairDirective / RetestRequirement / RepairLink lineage contracts introduced by A41.2.
-7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` — adapter-first relationship graph over canonical runtime/provenance/release evidence IDs.
-8. `A42-EVIDENCE-INTEGRITY.md` — false-evidence protection, repair-lineage integrity and task-to-evidence lineage validation.
-9. `A43-FLOW-SELECTION-ENGINE.md` — Brain-facing adapter over canonical change-surface classification and FlowPlanner selection, with bounded adjacent escalation.
-10. `A43-JIT-CONTEXT-LOADER.md` — read-only projection of canonical mandatory/JIT skill routing and runtime context budgets.
-11. `A43-ROUTING-BENCHMARK.md` — deterministic regression corpus for Task Contract surface → flow → mandatory/JIT skill routing.
-12. `A44-CORE-DESIGN-CRITICS.md` — advisory VisualBrain adapter plus bounded UX/IA, Design System and Accessibility critics.
-13. `A44-PRODUCT-TRUTH-CRITICS.md` — advisory Product, Runtime and Evidence/Truth critics backed by A41/A42/canonical runtime owners.
-14. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` — proposal-only bridge from unresolved critique issues into existing A41 repair/retest contracts.
-15. `A45-REPAIR-LINEAGE-GRAPH.md` — read-only projection of repair proposals into existing A42 EvidenceGraph relations without verification claims.
-16. `A45-REPAIR-PROPOSAL-BENCHMARK.md` — deterministic policy regression guard for proposal routing, retest requirements and false-verification prevention.
+3. `A40-ARCHITECTURE-RECONCILIATION.md` — capability/ownership reconciliation.
+4. `A40-ARCHITECTURE-GUARDRAILS.md` — executable architecture invariants.
+5. `A41-BRAIN-CORE-CONTRACTS.md` — BrainTaskFrame / Uncertainty / Hypothesis / Decision contracts.
+6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — CritiqueIssue / RootCause / RepairDirective / RetestRequirement / RepairLink contracts.
+7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` — adapter-first relationship graph over canonical evidence IDs.
+8. `A42-EVIDENCE-INTEGRITY.md` — false-evidence and end-to-end lineage protection.
+9. `A43-FLOW-SELECTION-ENGINE.md` — Brain adapter over canonical change-surface / FlowPlanner selection.
+10. `A43-JIT-CONTEXT-LOADER.md` — read-only projection of mandatory/JIT skill routing.
+11. `A43-ROUTING-BENCHMARK.md` — deterministic routing regression corpus.
+12. `A44-CORE-DESIGN-CRITICS.md` — advisory Visual, UX/IA, Design System and Accessibility critics.
+13. `A44-PRODUCT-TRUTH-CRITICS.md` — advisory Product, Runtime and Evidence/Truth critics.
+14. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` — proposal-only critique → repair contracts.
+15. `A45-REPAIR-LINEAGE-GRAPH.md` — repair proposal projection into the A42 graph.
+16. `A45-REPAIR-PROPOSAL-BENCHMARK.md` — proposal-policy regression guard.
+17. `A46-TYPED-BRAIN-MEMORY.md` — typed project-scoped rationale / hypothesis / decision memory.
+18. `A46-MEMORY-RECALL-CONTEXT.md` — post-routing historical-memory context adapter.
+19. `A46-MEMORY-BOUNDARY-BENCHMARK.md` — memory scope / truth boundary regression guard.
+20. `A47-BRAIN-SCORECARD.md` — provenance-aware aggregation over canonical evaluation and advisory review channels.
+21. `A47-SCORECARD-BENCHMARK.md` — scorecard truth/provenance regression guard.
+22. `A48-ARCHITECTURE-TRUTH-RECONCILIATION.md` — post-A47 architecture truth reconciliation and remaining debt.
 
 ## Current architecture statement
 
-A4 runtime consolidation is implemented. The shared executable Flow OS owner is:
+A4 runtime consolidation remains in force. The single shared executable Flow OS owner is:
 
 ```text
 uiux-factory/core/runtime/flow_os/
 ```
 
-`skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas and runtime policy. Python modules under `skills_UIUX/runtime/` are compatibility shims, not a second executable Flow OS.
+`skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas and runtime policy. Python modules under `skills_UIUX/runtime/` are compatibility shims, not an independent runtime.
 
-The full Factory product lifecycle remains under `uiux-factory/run.py` + `core/manager/`, while the provider-neutral managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py`.
+The full Factory product lifecycle remains under `uiux-factory/run.py` + `core/manager/`; the provider-neutral managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py`.
 
-## Brain OS rule
+## Brain OS boundary
 
-Brain OS may add reasoning, hypothesis/decision contracts, critique orchestration, evidence relationships, richer memory and unified evaluation **above** the canonical runtime.
-
-It must not create a third execution runtime or a competing evidence/authority system.
-
-A40.2 makes these boundaries executable through:
+Brain OS is now an implemented bounded reasoning/control layer under:
 
 ```text
-uiux-factory/tests/test_architecture_guardrails_a40.py
+uiux-factory/core/brain_os/
 ```
 
-A41 establishes contract-only reasoning state:
+It adds contracts, adapters, critique, repair proposals, evidence relationships, typed semantic memory and scorecard aggregation **above** canonical runtime/evidence/evaluation owners. It is not a third execution runtime.
 
-```text
-core/brain_os/contracts.py
-core/brain_os/critique_contracts.py
-```
+It must not own provider execution, runtime gates, trusted-evidence semantics, merge/deploy/release authority or a competing stage lifecycle.
 
-These contracts contain reasoning/control metadata only. They do not own tools, providers, gates, merge/release authority or trusted-evidence semantics.
+## Evidence graph boundary
 
-A42 adds the evidence relationship + integrity layer:
+A42 relationship and integrity surfaces live under:
 
 ```text
 core/brain_os/reasoning/evidence_graph.py
@@ -67,214 +66,118 @@ core/brain_os/reasoning/evidence_integrity.py
 core/brain_os/reasoning/lineage_integrity.py
 ```
 
-The graph and integrity validators reference canonical evidence owned by:
+Canonical evidence truth remains owned by:
 
 ```text
 core/runtime/flow_os/evidence.py
 core/provenance/evidence_lineage.py
 core/provenance/release_evidence_registry.py
+uiux-factory/qa/
 ```
 
-They do not define a new evidence record, trusted-evidence type set, evidence store, release registry or gate evaluator.
+Brain graph nodes reference/adapt canonical evidence; they do not replace it or upgrade trust.
 
-Current intended lineage is:
+## Flow and JIT boundary
 
-```text
-Task
-→ Hypothesis
-→ Decision
-→ CritiqueIssue
-→ RootCause
-→ RepairDirective
-→ RetestRequirement
-→ canonical evidence reference
-```
-
-A42.2 can validate that this lineage is internally truthful and complete. It cannot prove execution, upgrade trust, mark a runtime gate passed or declare release readiness.
-
-## Flow selection boundary
-
-A43.1 adds a Brain-facing adapter only:
-
-```text
-core/brain_os/adapters/flow_selection.py
-```
-
-Canonical owners remain:
+A43 reuses canonical owners:
 
 ```text
 core/runtime/flow_os/adaptive_surface.py::classify_change_surface
 core/runtime/flow_os/flow.py::FlowPlanner
 ```
 
-Brain may record the selected flow and propose a one-rung escalation:
+Brain can record selection and propose only bounded adjacent escalation. JIT context projects routed mandatory/default/JIT skills and policy ceilings; it cannot add non-routed skills, raise budgets, change authority/gates/evidence or claim activation occurred.
+
+## Critique and repair boundary
+
+A44 implements advisory critics for:
 
 ```text
-MICRO → FOCUSED → PAGE → REDESIGN → PRODUCT
+Visual
+UX / IA
+Design System
+Accessibility
+Product
+Runtime
+Evidence / Truth
 ```
 
-but it cannot define a second `FlowPlanner`, skip arbitrary surface levels, mutate flow policy or execute the selected flow itself.
+Every critic issue begins as `OBSERVED`; reports have no PASS field and no authority/gate/evidence effect.
 
-## JIT context boundary
-
-A43.2 adds a read-only Brain projection:
+A45 connects unresolved observations to existing A41 proposal contracts:
 
 ```text
-core/brain_os/adapters/jit_context.py
+CritiqueIssue
+→ RootCause(PROPOSED)
+→ RepairDirective(PROPOSED)
+→ RetestRequirement(PENDING)
 ```
 
-The source data remains canonical `ResolvedStage` output from `SkillResolver`, plus operator-owned runtime policy.
+and projects only proposal relationships into the EvidenceGraph. It deliberately stops before execution/verification. No A45 surface can execute a repair, mark a retest PASS, resolve an issue or manufacture `VERIFIED_BY` evidence.
 
-Brain may observe:
+## Typed memory boundary
+
+A46 adds project-scoped typed historical memory:
 
 ```text
-mandatory/default skills
-routed JIT pool
-JIT provenance
-active/available JIT view
-count and section budgets
-provider document policy ceiling
+core/brain_os/memory_contracts.py
+core/memory/brain_memory.py
+core/brain_os/adapters/memory_context.py
 ```
 
-It cannot add non-routed skills, raise budgets, change authority/gates/evidence or claim that a JIT activation actually occurred. Provider/runtime preflight remains authoritative.
+Supported typed semantic records include design rationale, hypotheses and decisions. Memory requires provenance, uses bounded atomic project-scoped persistence, and is attached only after canonical flow selection.
 
-## Routing benchmark boundary
-
-A43.3 adds evaluation-only routing coverage:
+Memory remains historical/advisory context only:
 
 ```text
-benchmarks/routing-v1.json
-core/benchmarks/routing_regression.py
-scripts/validate_routing_benchmark.py
-```
-
-The benchmark runs representative natural-language tasks through the production `GoalInterpreter`, canonical `FlowPlanner` and A43 JIT projection, then compares the result with reviewed expectations.
-
-It does not participate in routing, cannot mutate flow policy and records no execution authority. Tests hash `skills_UIUX/flows/*.json` before/after a benchmark run to enforce this read-only boundary.
-
-## Core design critic boundary
-
-A44.1 adds advisory design critics under:
-
-```text
-core/brain_os/critics/core_design.py
-```
-
-The visual critic adapter reuses the actual existing primitive:
-
-```text
-core/orchestration/visual_brain.py::VisualBrain
-```
-
-and calls `evaluate()` only. It does not apply calibration or mutate source artifacts.
-
-The UX/IA, Design System and Accessibility critics inspect current structured contracts and emit only `CritiqueIssue(status=OBSERVED)`.
-
-## Product / truth critic boundary
-
-A44.2 adds:
-
-```text
-core/brain_os/critics/product_truth.py
-```
-
-The Product Critic reads A41 task/hypothesis/decision contracts and flags reasoning/governance gaps without selecting decisions or inventing product evidence.
-
-The Runtime Critic delegates current-state retry/supersession semantics to:
-
-```text
-core.runtime.flow_os.evidence.effective_evidence
-```
-
-It never calls the canonical gate evaluator and cannot turn review expectations into runtime gates.
-
-The Evidence/Truth Critic directly reuses:
-
-```text
-validate_evidence_integrity(...)
-validate_end_to_end_lineage(...)
-```
-
-A42 findings become `OBSERVED` critique issues only. No trust state is recomputed or upgraded.
-
-All A44 reports intentionally have no `passed` field and declare:
-
-```text
-advisory_only = true
+current_run_evidence = false
+flow_effect = none
 authority_effect = none
 gate_effect = none
 evidence_effect = none
 ```
 
-No critic can self-confirm a finding, self-pass a runtime gate or manufacture trusted evidence.
+It cannot select/replan a flow, activate skills, validate a hypothesis, select a decision, satisfy a current-run gate or approve merge/deploy/release.
 
-## Repair proposal boundary
+## Scorecard boundary
 
-A45.1 adds:
+Canonical terminal runtime evaluation remains owned by:
 
 ```text
-core/brain_os/repair_orchestrator.py
+core/evaluation/run_evaluator.py
 ```
 
-For each unresolved critique issue it may create only existing A41 proposal objects:
+A47 adds provenance-aware aggregation under:
 
 ```text
-RootCause(PROPOSED)
-RepairDirective(PROPOSED)
-RetestRequirement(PENDING)
-RepairLink
+core/brain_os/scorecard.py
 ```
 
-The orchestrator uses deterministic IDs, preserves existing issue evidence refs without inventing new evidence, and can require human approval for P0 directives. It does not execute the repair or retest.
+It consumes already-produced outputs from the canonical `RunEvaluation`, A44 critic reports and A42 integrity reports. It mirrors `RunEvaluation.outcome` verbatim and does not run/recompute those evaluators.
 
-Every `RepairProposalBundle` declares:
+The scorecard intentionally has no synthetic `passed`, release-readiness or numeric overall-score field. Critic and integrity channels remain distinguishable from the canonical runtime outcome.
 
-```text
-advisory_only = true
-execution_effect = none
-acceptance_effect = none
-resolution_effect = none
-gate_effect = none
-evidence_effect = none
-```
+## Regression and dogfood
 
-A45.1 cannot ACCEPT a directive, PASS a retest, RESOLVE an issue, run target commands, evaluate canonical gates, merge, deploy or release.
-
-## Repair lineage graph boundary
-
-A45.2 adds:
+Brain/runtime boundaries are protected by executable tests plus deterministic benchmark validators, including:
 
 ```text
-core/brain_os/adapters/repair_lineage.py
-```
-
-It projects one A45.1 proposal bundle into the existing A42 relationship model using only:
-
-```text
-CRITIQUE_ISSUE --CAUSED_BY--> ROOT_CAUSE
-ROOT_CAUSE --REPAIRED_BY--> REPAIR_DIRECTIVE
-REPAIR_DIRECTIVE --REQUIRES_RETEST--> RETEST_REQUIREMENT
-```
-
-The projection intentionally stops at the pending retest. It never creates `RETESTED_BY` or `VERIFIED_BY`, never creates canonical evidence nodes and never sets a trusted-evidence flag.
-
-`extend_graph_with_repair_proposal(...)` returns a new immutable graph, is idempotent for the same proposal and rejects identity collisions when an existing graph node/edge differs from the deterministic projection.
-
-A42 end-to-end lineage therefore remains incomplete until a later canonical retest actually produces valid evidence and a truthful verification relationship is added by the appropriate evidence path.
-
-## Repair proposal benchmark boundary
-
-A45.3 adds a read-only deterministic regression guard:
-
-```text
+benchmarks/routing-v1.json
 benchmarks/repair-proposals-v1.json
-core/benchmarks/repair_proposal_regression.py
-scripts/validate_repair_proposal_benchmark.py
+benchmarks/memory-boundary-v1.json
+benchmarks/scorecard-v1.json
 ```
 
-It locks critic → target-stage mapping, critic → retest evidence requirements, P0 human-approval behavior and proposal graph shape. Every benchmark case also asserts that repair planning remains `PROPOSED/PENDING`, carries no retest evidence, creates no `VERIFIED_BY`/`RETESTED_BY`, assigns no trusted flag and claims no execution/verification/authority effect.
+Main UIUX Factory CI runs these validators before the full pytest suite. A20 release-candidate verification continues to run full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood.
 
-The benchmark never participates in routing or execution. Tests hash the A45.1/A45.2 production sources before/after benchmark evaluation to enforce the read-only boundary. The main UIUX Factory CI runs this validator alongside the existing product/routing benchmarks.
+## Remaining architecture debt
+
+Two execution/convergence concerns remain active and must not be confused with duplicate Flow OS runtimes:
+
+1. Factory internal provider lane `core/runtime/free_provider.py` and managed provider-neutral `core/runtime/flow_os/provider*.py` expose different provider entry/capability shapes.
+2. Factory product execution (`run.py` + `core/manager/`) and managed CLI execution share routing/runtime owners but still expose distinct top-level lifecycle APIs.
+
+A broader declarative Knowledge OS is also not implemented as one canonical subsystem; methodology still correctly belongs to `skills_UIUX` rather than being copied into Brain/provider code.
 
 ## Source-of-truth priority
 
@@ -286,8 +189,6 @@ When documents disagree:
 4. current capability/QA docs that match source;
 5. historical A-series plans and implementation notes.
 
-Historical documents remain useful audit history, but do not override current code.
-
 ## Next architecture task
 
-A45 completes the advisory critique → repair-proposal → relationship-graph loop while deliberately stopping before execution. After A45.3 is green and merged, re-audit current architecture truth before defining the next numbered task; do not add repair execution or autonomous resolution without a separate explicit authority/evidence contract.
+After A48.1 is green and merged, A48.2 should audit and reconcile the **provider capability contract** between the Factory internal AI lane and canonical managed provider lane before changing execution. The goal is convergence through adapters/contracts where practical — not a third provider abstraction and not a blind replacement of working runtime paths.
