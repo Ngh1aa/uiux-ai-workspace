@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "proposal_id": "knowledge-edtech-canonical-promotion-proposal-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "phase": "A50.11",
+  "scope": "governance_review_only_no_index_mutation",
+  "candidate": {
+    "record_id": "knowledge.domain.edtech-lti-context-roles-services.v2",
+    "source_record_path": "skills_UIUX/knowledge/revisions/records/edtech-lti-context-roles-services-v2.json",
+    "source_content_path": "skills_UIUX/knowledge/revisions/content/edtech-lti-context-roles-services-v2.md",
+    "proposed_record_path": "skills_UIUX/knowledge/records/edtech-lti-context-roles-services-v2.json",
+    "proposed_content_path": "skills_UIUX/knowledge/content/edtech-lti-context-roles-services-v2.md",
+    "proposed_index_ref": "records/edtech-lti-context-roles-services-v2.json",
+    "domain": "education-edtech",
+    "expected_source_ref": "https://www.1edtech.org/standards/lti",
+    "expected_source_version": "LTI-1.3-current-with-LTI-Advantage-services-revision-2"
+  },
+  "historical_canary_evidence": {
+    "source_pr": 119,
+    "head_sha": "d25af8fe25b69a7fe3460acff323ffe6083d5aa9",
+    "merge_commit_sha": "335e2aefd03a5404493391823c33d10a1626e747",
+    "decision": "CANARY_PASS",
+    "prior_verdict": "ACCEPT_FOR_INDEX_TRIAL",
+    "promotion_proposal_allowed": true,
+    "retrieval_isolated": true,
+    "canonical_regression_clear": true,
+    "negative_domain_isolation_clear": true,
+    "context_budget_clear": true,
+    "rollback_verified": true,
+    "genai_hold_preserved": true
+  },
+  "current_baseline": {
+    "state_id": "knowledge-canonical-state-v2",
+    "canonical_index_expected_count": 4,
+    "candidate_must_be_unindexed": true,
+    "ev_canonical_apply_decision": "CANONICAL_APPLY_PASS"
+  },
+  "source_freshness": {
+    "status": "RECHECKED",
+    "checked_on": "2026-10-02",
+    "official_source": "1EdTech",
+    "current_core": "LTI 1.3",
+    "required_advantage_services": ["Assignment and Grade Services 2.0", "Names and Role Provisioning Services 2.0", "Deep Linking 2.0"],
+    "candidate_metadata_matches": true
+  },
+  "rollback": {
+    "restore_index_from_current_four_record_baseline": true,
+    "remove_only_future_edtech_canonical_assets": [
+      "skills_UIUX/knowledge/records/edtech-lti-context-roles-services-v2.json",
+      "skills_UIUX/knowledge/content/edtech-lti-context-roles-services-v2.md"
+    ],
+    "preserve_ev_canonical_record": true,
+    "preserve_revision_and_governance_history": true
+  },
+  "required_execution_controls": [
+    "owner_or_explicit_human_governance_approval",
+    "fresh_source_version_recheck",
+    "copy_content_to_canonical_namespace",
+    "rewrite_record_content_ref_to_canonical_path",
+    "validate_record_contract_before_index_change",
+    "add_exactly_one_canonical_index_ref",
+    "rerun_retrieval_cross_domain_regression",
+    "verify_context_budget",
+    "verify_rollback_plan",
+    "preserve_ev_canonical_record",
+    "preserve_vector_search_disabled",
+    "preserve_genai_freshness_hold"
+  ],
+  "governance": {
+    "allowed_review_verdicts": ["APPROVE_PROMOTION_TASK", "REVISE_PROPOSAL", "HOLD", "REJECT"],
+    "index_mutation_in_this_proposal": false,
+    "canonical_promotion_in_this_proposal": false,
+    "auto_promotion_allowed": false,
+    "promotion_execution_requires_separate_task": true,
+    "vector_search_change_allowed": false,
+    "product_evidence": false,
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  }
+}
