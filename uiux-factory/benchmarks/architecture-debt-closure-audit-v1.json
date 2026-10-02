@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "audit_id": "architecture-debt-closure-audit-v1",
+  "version": "1.0.0",
+  "phase": "Flow 3 / A53.3",
+  "checked_on": "2026-10-02",
+  "scope": "architecture_debt_closure_audit_only_no_runtime_mutation",
+  "classification_values": [
+    "CLOSED",
+    "INTENTIONAL_HOLD",
+    "NEW_ACTIONABLE_DEBT"
+  ],
+  "source_contracts": {
+    "runtime_convergence": "uiux-factory/benchmarks/runtime-compatibility-convergence-v1.json",
+    "provider_readiness": "uiux-factory/benchmarks/provider-default-migration-readiness-v1.json",
+    "provider_live_receipts": "uiux-factory/benchmarks/provider-live-trial-receipts-v1.json",
+    "lifecycle_mutation_readiness": "uiux-factory/benchmarks/lifecycle-mutation-convergence-readiness-v1.json",
+    "lifecycle_event_interop": "uiux-factory/benchmarks/lifecycle-event-interop-v1.json",
+    "knowledge_canonical_state": "uiux-factory/benchmarks/knowledge-canonical-state-v3.json",
+    "genai_freshness": "uiux-factory/benchmarks/knowledge-genai-nist-freshness-review-v1.json",
+    "compatibility_governance": "uiux-factory/benchmarks/compatibility-surface-governance-v1.json",
+    "runtime_policy": "skills_UIUX/runtime/runtime-policy.json",
+    "brain_scorecard": "uiux-factory/core/brain_os/scorecard.py",
+    "runtime_evaluator": "uiux-factory/core/evaluation/run_evaluator.py",
+    "runtime_evidence": "uiux-factory/core/runtime/flow_os/evidence.py",
+    "knowledge_index": "skills_UIUX/knowledge/index.json"
+  },
+  "areas": [
+    {
+      "id": "runtime_flow_os_single_owner",
+      "classification": "CLOSED",
+      "expected": {
+        "internal_consumer_files": 0,
+        "internal_consumer_imports": 0,
+        "shim_count": 8,
+        "shim_deletion_allowed": false,
+        "external_removal_safety_inferred": false
+      },
+      "closure_basis": "First-party callers use canonical core.runtime.flow_os.* imports; eight legacy wrappers remain thin governed compatibility shims rather than a shadow runtime."
+    },
+    {
+      "id": "provider_default_migration",
+      "classification": "INTENTIONAL_HOLD",
+      "expected": {
+        "current_default_lane": "legacy",
+        "collection_status": "NOT_RUN",
+        "live_receipt_count": 0,
+        "required_live_receipt_count": 8,
+        "default_change_allowed": false
+      },
+      "hold_trigger": "A real sanitized 8/8 Groq/Gemini x legacy/managed_compat x plain/JSON live matrix must pass before a separate provider-default migration governance task can open.",
+      "upgrade_blocker": false
+    },
+    {
+      "id": "lifecycle_mutation_convergence",
+      "classification": "INTENTIONAL_HOLD",
+      "expected": {
+        "factory_owner": "core.runtime.run_context.RunContext",
+        "managed_owner": "core.runtime.flow_os.managed.ManagedWebsiteRun",
+        "semantic_blocker_count": 6,
+        "event_interop_scope": "observation_only_no_lifecycle_mutation",
+        "runtime_transition_change_allowed": false
+      },
+      "hold_trigger": "A separate architecture decision may reopen mutation governance only after the six semantic blockers are actually eliminated or intentionally reconciled with explicit owner governance.",
+      "upgrade_blocker": false
+    },
+    {
+      "id": "brain_os_authority_boundary",
+      "classification": "CLOSED",
+      "expected": {
+        "canonical_runtime_outcome_owner": "core.evaluation.run_evaluator.RunEvaluator",
+        "scorecard_advisory_only": true,
+        "scorecard_authority_effect": "none",
+        "scorecard_gate_effect": "none",
+        "scorecard_evidence_effect": "none",
+        "scorecard_release_effect": "none",
+        "release_requires_explicit_user_project_authorization": true
+      },
+      "closure_basis": "Brain scorecard mirrors runtime evaluation and advisory channels without PASS/release authority; runtime policy keeps release authority explicit and human/project authorized."
+    },
+    {
+      "id": "knowledge_os_canonical_corpus",
+      "classification": "CLOSED",
+      "expected": {
+        "canonical_record_count": 5,
+        "vector_search_change_allowed": false,
+        "product_evidence": false,
+        "genai_candidate_status": "HOLD_FRESHNESS_REVIEW"
+      },
+      "closure_basis": "Canonical five-record Knowledge OS is explicit, bounded and advisory-only; current index must match the exact five-record state contract."
+    },
+    {
+      "id": "genai_nist_expansion",
+      "classification": "INTENTIONAL_HOLD",
+      "expected": {
+        "decision": "KEEP_HOLD_FRESHNESS_REVIEW",
+        "draft_creation_allowed": false,
+        "promotion_allowed": false,
+        "vector_search_change_allowed": false
+      },
+      "hold_trigger": "Re-review only when NIST publishes a revised AI RMF replacing 1.0 or explicitly states the active revision is complete/stable enough for profile-context reuse.",
+      "upgrade_blocker": false
+    },
+    {
+      "id": "vector_semantic_retrieval",
+      "classification": "INTENTIONAL_HOLD",
+      "expected": {
+        "vector_search_change_allowed": false,
+        "current_mode": "deterministic_metadata_retrieval"
+      },
+      "hold_trigger": "Future work requires an explicit product need plus benchmark evidence that deterministic bounded retrieval is insufficient; vector retrieval is not required for the current workspace upgrade to complete.",
+      "upgrade_blocker": false
+    },
+    {
+      "id": "evidence_and_terminal_evaluation",
+      "classification": "CLOSED",
+      "expected": {
+        "trusted_evidence_origin": "runtime",
+        "provider_claims_trusted": false,
+        "completed_without_pass_outcome": "insufficient_evidence",
+        "brain_can_upgrade_runtime_outcome": false
+      },
+      "closure_basis": "Trusted evidence is runtime-origin only; provider/model claims remain untrusted; RunEvaluator refuses to treat lifecycle completion without trusted PASS evidence as passed."
+    },
+    {
+      "id": "compatibility_surface_removal",
+      "classification": "INTENTIONAL_HOLD",
+      "expected": {
+        "deprecate_with_sunset": 8,
+        "open_removal_governance": 0,
+        "external_usage_status": "UNKNOWN",
+        "earliest_removal_review_date": "2026-12-31",
+        "shim_deletion_allowed": false
+      },
+      "hold_trigger": "Fresh removal-readiness audit no earlier than 2026-12-31, including external-usage/downstream-dependency evidence and an explicit owner-governed removal task.",
+      "upgrade_blocker": false
+    }
+  ],
+  "decision_policy": {
+    "source_or_boundary_regression": "HOLD_ARCHITECTURE_DEBT_AUDIT_REGRESSION",
+    "new_actionable_debt_present": "NEW_ACTIONABLE_DEBT_REQUIRES_BOUNDED_TASK",
+    "closed_and_intentional_holds_only": "ARCHITECTURE_DEBT_LEDGER_CLOSED_FOR_UPGRADE"
+  },
+  "governance": {
+    "new_feature_implementation_allowed": false,
+    "runtime_mutation_allowed": false,
+    "provider_default_change_allowed": false,
+    "lifecycle_state_owner_change_allowed": false,
+    "routing_change_allowed": false,
+    "knowledge_index_mutation_allowed": false,
+    "vector_search_change_allowed": false,
+    "compatibility_shim_deletion_allowed": false,
+    "evidence_authority_change_allowed": false,
+    "gate_authority_change_allowed": false,
+    "release_authority_change_allowed": false,
+    "product_evidence": false,
+    "execution_effect": "none",
+    "authority_effect": "none",
+    "gate_effect": "none",
+    "evidence_effect": "none",
+    "release_effect": "none",
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  },
+  "successor": {
+    "when_ledger_closed": "Flow 4 — Final Regression & Cross-project Dogfood",
+    "when_actionable_debt_present": "Open one bounded task per evidenced NEW_ACTIONABLE_DEBT before Flow 4"
+  }
+}
