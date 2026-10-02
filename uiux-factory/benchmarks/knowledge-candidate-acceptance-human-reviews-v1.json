@@ -2,7 +2,7 @@
   "schema_version": 1,
   "trial_id": "knowledge-candidate-acceptance-trial-v1",
   "review_version": "1.0.0",
-  "review_status": "PENDING",
+  "review_status": "COMPLETE",
   "review_policy": {
     "reviewer_type": "independent_human",
     "blind_first": true,
@@ -24,23 +24,53 @@
   "cases": [
     {
       "id": "edtech-lti-integration-boundaries",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "A",
+      "scores": {
+        "A": {
+          "correctness": 2,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        },
+        "B": {
+          "correctness": 1,
+          "specificity_actionability": 1,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        }
+      },
+      "rationale": "Output A gần như toàn bộ là chỉ dẫn kiểu 'hãy định nghĩa X' như hệ thống nào là nguồn đúng và điều gì xảy ra khi không khả dụng, nhưng không đưa ra trạng thái cụ thể hay lời hướng dẫn khôi phục; vì vậy decision_usefulness được chấm 1. Output B có điểm mạnh là các trạng thái rỗng, không khả dụng, thiếu quyền và lỗi kèm hướng dẫn không đổ lỗi cho người dùng, nhưng không gọi tên dịch vụ LTI, không nói LTI không quy định giao diện và không nêu hệ thống nào là nguồn đúng. A vẫn được ưu tiên tổng thể, nhưng lợi thế usefulness chưa rõ hơn B.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     },
     {
       "id": "ev-ocpp-charging-session-truth",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "B",
+      "scores": {
+        "A": {
+          "correctness": 1,
+          "specificity_actionability": 1,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        },
+        "B": {
+          "correctness": 2,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 2
+        }
+      },
+      "rationale": "Output A tách bạch khái niệm tốt và đặt điều kiện cho smart-charging/V2X nhưng không nhắc đến OCPP dù đề bài dựa trên OCPP; đồng thời không xử lý trường hợp quan sát bị trễ hoặc mâu thuẫn. Output B mạnh nhất ở trạng thái 'unknown/awaiting confirmation' và việc gắn mỗi trạng thái hiển thị với một quan sát cụ thể. Reviewer chấm correctness=2 cho B với lưu ý ban đầu rằng danh sách OCPP 2.1 cần được đối chiếu đặc tả chính thức trước khi coi là xác nhận hoàn toàn.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     }
   ]
 }
