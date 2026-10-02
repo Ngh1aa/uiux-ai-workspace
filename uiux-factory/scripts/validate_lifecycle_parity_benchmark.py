@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from core.benchmarks.lifecycle_parity_regression import evaluate_lifecycle_parity_corpus
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parents[1]
-    corpus = root / "benchmarks/lifecycle-parity-v1.json"
+    corpus = ROOT / "benchmarks/lifecycle-parity-v1.json"
     report = evaluate_lifecycle_parity_corpus(corpus)
 
     print(
