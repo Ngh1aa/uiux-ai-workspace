@@ -88,12 +88,19 @@ class KnowledgeRecord(BrainContractModel):
 
 
 class KnowledgeArchitecture(BrainContractModel):
-    """Read-only declaration of A50 Knowledge OS ownership boundaries."""
+    """Read-only declaration of current A50 Knowledge OS ownership boundaries."""
 
     schema_version: Literal["knowledge-architecture.v1"] = "knowledge-architecture.v1"
     declarative_owner: Literal["skills_UIUX/knowledge"] = "skills_UIUX/knowledge"
     schema_owner: Literal["skills_UIUX/schemas/knowledge-record.schema.json"] = (
         "skills_UIUX/schemas/knowledge-record.schema.json"
+    )
+    index_owner: Literal["skills_UIUX/knowledge/index.json"] = "skills_UIUX/knowledge/index.json"
+    retrieval_owner: Literal["core/brain_os/knowledge_retrieval.py"] = (
+        "core/brain_os/knowledge_retrieval.py"
+    )
+    context_adapter_owner: Literal["core/brain_os/adapters/knowledge_context.py"] = (
+        "core/brain_os/adapters/knowledge_context.py"
     )
     methodology_owner: Literal["skills_UIUX/<skill>/SKILL.md"] = "skills_UIUX/<skill>/SKILL.md"
     memory_owner: Literal["core/brain_os/memory_contracts.py + core/memory/"] = (
@@ -111,7 +118,8 @@ class KnowledgeArchitecture(BrainContractModel):
         KnowledgeCategory.PATTERN,
         KnowledgeCategory.PLATFORM,
     )
-    retrieval_implemented: Literal[False] = False
+    retrieval_implemented: Literal[True] = True
+    deterministic_metadata_first: Literal[True] = True
     vector_database_required: Literal[False] = False
     skill_body_duplication_allowed: Literal[False] = False
     advisory_only: Literal[True] = True
