@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-edtech-revision-trial-v1",
+  "mapping_version": "1.0.0",
+  "scope": "blind_mapping_not_for_reviewer_until_scoring_complete",
+  "knowledge_condition": "B",
+  "baseline_condition": "A"
+}
