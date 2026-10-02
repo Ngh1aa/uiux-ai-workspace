@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-edtech-canonical-promotion-shadow-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "phase": "A50.12",
+  "scope": "shadow_canonical_apply_no_repository_mutation",
+  "candidate": {
+    "record_id": "knowledge.domain.edtech-lti-context-roles-services.v2",
+    "revision_record_path": "skills_UIUX/knowledge/revisions/records/edtech-lti-context-roles-services-v2.json",
+    "revision_content_path": "skills_UIUX/knowledge/revisions/content/edtech-lti-context-roles-services-v2.md",
+    "canonical_record_relpath": "records/edtech-lti-context-roles-services-v2.json",
+    "canonical_content_relpath": "content/edtech-lti-context-roles-services-v2.md",
+    "canonical_content_ref": "skills_UIUX/knowledge/content/edtech-lti-context-roles-services-v2.md"
+  },
+  "governance": {
+    "required_proposal_decision": "APPROVED_FOR_EXPLICIT_PROMOTION_TASK",
+    "pre_shadow_canonical_count": 4,
+    "shadow_canonical_count": 5,
+    "pass_decision": "READY_FOR_CANONICAL_APPLY",
+    "fail_decision": "SHADOW_APPLY_FAIL",
+    "repository_index_mutation_allowed": false,
+    "repository_canonical_asset_creation_allowed": false,
+    "vector_search_change_allowed": false,
+    "product_evidence": false,
+    "genai_candidate_status": "HOLD_FRESHNESS_REVIEW"
+  }
+}
