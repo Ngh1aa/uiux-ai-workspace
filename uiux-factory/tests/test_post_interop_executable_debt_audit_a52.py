@@ -10,8 +10,31 @@ from core.benchmarks.post_interop_executable_debt_audit import (
 
 
 FACTORY = Path(__file__).resolve().parents[1]
-REPO = FACTORY.parent
 AUDIT = FACTORY / "benchmarks" / "post-interop-executable-debt-audit-v1.json"
+EXPECTED_CONSUMERS = {
+    "uiux-factory/tests/test_adaptive_flow.py": {"runtime.flow", "runtime.task_context"},
+    "uiux-factory/tests/test_canonical_runtime_a4.py": {
+        "runtime.flow",
+        "runtime.manager",
+        "runtime.task_context",
+    },
+    "uiux-factory/tests/test_runtime_lifecycle_context.py": {"runtime.flow", "runtime.task_context"},
+    "uiux-factory/tests/test_task_contract.py": {
+        "runtime.agent",
+        "runtime.flow",
+        "runtime.manager",
+        "runtime.task_context",
+    },
+    "skills_UIUX/scripts/context-manifest.py": {"runtime.agent"},
+    "skills_UIUX/scripts/validate-flows.py": {"runtime.flow"},
+    "skills_UIUX/scripts/validate-provider-runtime.py": {
+        "runtime.agent",
+        "runtime.manager",
+        "runtime.provider",
+        "runtime.provider_runner",
+    },
+    "skills_UIUX/scripts/validate-runtime-foundation.py": {"runtime.agent", "runtime.manager"},
+}
 
 
 def test_a52_3_current_audit_selects_compat_shim_retirement_readiness() -> None:
@@ -36,10 +59,9 @@ def test_a52_3_current_audit_selects_compat_shim_retirement_readiness() -> None:
     assert report.known_consumer_contract_clear is True
 
     consumers = {item.path: set(item.modules) for item in report.internal_consumers}
-    assert "skills_UIUX/scripts/validate-runtime-foundation.py" in consumers
-    assert {"runtime.agent", "runtime.manager"}.issubset(
-        consumers["skills_UIUX/scripts/validate-runtime-foundation.py"]
-    )
+    assert report.internal_consumer_file_count == 8
+    assert report.internal_consumer_import_count == 19
+    assert consumers == EXPECTED_CONSUMERS
 
 
 def test_a52_3_shim_contract_rejects_independent_logic(tmp_path: Path) -> None:
