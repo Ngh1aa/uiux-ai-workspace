@@ -74,7 +74,7 @@ jobs:
         run: |
           python ../skills_UIUX/scripts/validate-flows.py
           python ../skills_UIUX/scripts/validate-runtime-foundation.py
-      - name: Validate benchmark corpus
+      - name: Validate active benchmark corpus
         run: |
           python scripts/validate_benchmark_corpus.py
           python scripts/validate_routing_benchmark.py
@@ -85,15 +85,10 @@ jobs:
           python scripts/validate_lifecycle_parity_benchmark.py
           python scripts/validate_knowledge_retrieval_benchmark.py
           python scripts/validate_knowledge_project_dogfood.py
-          python scripts/validate_knowledge_usefulness_benchmark.py
           python scripts/validate_knowledge_value_trial.py
-          python scripts/validate_knowledge_expansion_proposal.py
-          python scripts/validate_knowledge_ready_candidate_drafts.py
-          python scripts/validate_knowledge_candidate_acceptance_trial.py
-          python scripts/validate_knowledge_edtech_revision_trial.py
-          python scripts/validate_knowledge_ev_controlled_index_trial.py
-          python scripts/validate_knowledge_edtech_controlled_index_trial.py
-          python scripts/validate_knowledge_ev_canonical_promotion_proposal.py
-          python scripts/validate_knowledge_ev_canonical_promotion_shadow.py
+          python scripts/validate_knowledge_ev_canonical_apply.py
+      # A50.4-A50.10B topology-bound validators remain in the repository as
+      # immutable pre-promotion governance evidence. They are intentionally not
+      # re-evaluated against the A50.10C four-record canonical topology.
       - name: Run foundation tests
         run: python -m pytest -q tests
