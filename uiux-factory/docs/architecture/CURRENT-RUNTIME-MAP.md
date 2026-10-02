@@ -76,6 +76,8 @@ A49 reconciles lifecycle meaning across Factory and managed surfaces using:
 INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
 ```
 
+Historical A48/A49 debt described the Factory and managed surfaces as **distinct top-level lifecycle APIs**. That phrase remains here as regression vocabulary: A49 now provides read-only lifecycle projection/parity across those surfaces, while mutation-level lifecycle unification is still intentionally deferred.
+
 `LifecycleProjection` is read-only observability. It does not introduce a third state machine or equate completion with release.
 
 Mutation-level lifecycle unification remains deferred pending a separate decision.
