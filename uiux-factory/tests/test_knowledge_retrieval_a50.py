@@ -18,7 +18,9 @@ EXPECTED_SEED = {
     "knowledge.domain.cultural-object-metadata-rights-iiif.v1",
     "knowledge.domain.industrial-motor-system-claims-doe.v1",
     "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+    "knowledge.domain.edtech-lti-context-roles-services.v2",
 }
+EXPECTED_CANONICAL_COUNT = len(EXPECTED_SEED)
 
 
 def _flow() -> FlowSelectionDecision:
@@ -98,7 +100,7 @@ def test_a50_canonical_index_has_exact_curated_corpus_and_valid_shape() -> None:
     indexed, _ = KnowledgeIndex(CANONICAL_KNOWLEDGE).load()
 
     assert manifest["schema_version"] == "knowledge-index.v1"
-    assert len(manifest["records"]) == 4
+    assert len(manifest["records"]) == EXPECTED_CANONICAL_COUNT
     assert {item.record.id for item in indexed} == EXPECTED_SEED
     assert schema["properties"]["records"]["maxItems"] == 5000
     assert schema["properties"]["records"]["uniqueItems"] is True
@@ -109,11 +111,11 @@ def test_a50_canonical_corpus_remains_advisory_and_cross_domain_isolated() -> No
         KnowledgeQuery(as_of="2026-10-02", domains=["financial-services"], stages=["implementation"])
     )
 
-    assert result.indexed_record_count == 4
+    assert result.indexed_record_count == EXPECTED_CANONICAL_COUNT
     assert [hit.record.id for hit in result.hits] == [
         "knowledge.domain.financial-currency-locale-formatting.v1"
     ]
-    assert sum(item.reason == "domain_mismatch" for item in result.exclusions) == 3
+    assert sum(item.reason == "domain_mismatch" for item in result.exclusions) == EXPECTED_CANONICAL_COUNT - 1
     assert result.vector_search_used is False
     assert result.current_run_evidence is False
     assert result.flow_effect == "none"
