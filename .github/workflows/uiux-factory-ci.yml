@@ -86,5 +86,6 @@ jobs:
           python scripts/validate_knowledge_retrieval_benchmark.py
           python scripts/validate_knowledge_project_dogfood.py
           python scripts/validate_knowledge_usefulness_benchmark.py
+          python scripts/validate_knowledge_value_trial.py
       - name: Run foundation tests
         run: python -m pytest -q tests
