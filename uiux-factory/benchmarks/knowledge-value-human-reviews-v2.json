@@ -2,7 +2,7 @@
   "schema_version": 1,
   "trial_id": "knowledge-value-trial-v2",
   "review_version": "2.0.0",
-  "review_status": "PENDING",
+  "review_status": "COMPLETE",
   "review_policy": {
     "reviewer_type": "independent_human",
     "blind_first": true,
@@ -24,33 +24,78 @@
   "cases": [
     {
       "id": "nova-amount-display",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "A",
+      "scores": {
+        "A": {
+          "correctness": 2,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 2
+        },
+        "B": {
+          "correctness": 1,
+          "specificity_actionability": 1,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        }
+      },
+      "rationale": "A nêu rõ đầu vào gồm giá trị + tiền tệ + locale và dùng API nhận biết locale cho dấu phân cách, vị trí ký hiệu và dạng số âm. Ma trận QA của A bao phủ từng tổ hợp locale/tiền tệ được hỗ trợ, thêm ca mơ hồ cùng ký hiệu, và so sánh giá trị tương đương giữa dashboard và dòng giao dịch. B vẫn an toàn và không bịa gì, nhưng bỏ qua cơ chế locale và chỉ có QA ở mức chung hơn.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     },
     {
       "id": "lumen-object-metadata",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "B",
+      "scores": {
+        "A": {
+          "correctness": 1,
+          "specificity_actionability": 1,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        },
+        "B": {
+          "correctness": 2,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 2
+        }
+      },
+      "rationale": "B tách tiêu đề, tóm tắt và metadata có thứ tự. B giữ tuyên bố ghi công bắt buộc riêng, tách trạng thái quyền khỏi metadata mô tả, tách nhà cung cấp khỏi người sáng tạo, và chỉ ánh xạ trường có thật. A hợp lý nhưng giống lời khuyên chung về metadata, và gộp ghi công với quyền sử dụng. Đây là case đối chứng, và điểm số tương tự vòng 1 sau khi đảo nhãn là dấu hiệu tốt cho tính nhất quán của mình.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     },
     {
       "id": "cennext-motor-claims",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "A",
+      "scores": {
+        "A": {
+          "correctness": 2,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 2
+        },
+        "B": {
+          "correctness": 1,
+          "specificity_actionability": 1,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        }
+      },
+      "rationale": "A kết hợp hai điểm mạnh: năm đối tượng tuyên bố, và lộ trình quyết định cụ thể từ tiếp nhận, đánh giá, phương án sửa/quấn lại/thay thế, điểm phê duyệt, thử nghiệm đến bàn giao. Lộ trình này được đặt điều kiện \"khi dữ liệu dự án hỗ trợ\", nên không bịa quy trình. A cũng nêu rõ các mô-đun chứng minh cụ thể như tài liệu thử nghiệm trước/sau và hồ sơ phê duyệt. B an toàn nhưng chung chung hơn và không phân biệt các đối tượng tuyên bố.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     }
   ]
 }
