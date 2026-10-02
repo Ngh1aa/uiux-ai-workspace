@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from core.benchmarks.scorecard_regression import evaluate_scorecard_benchmark
 
 
-ROOT = Path(__file__).resolve().parents[1]
 CORPUS = ROOT / "benchmarks" / "scorecard-v1.json"
 
 
