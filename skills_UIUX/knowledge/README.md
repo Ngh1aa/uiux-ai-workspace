@@ -1,49 +1,71 @@
 # UIUX Knowledge OS — Declarative Ownership
 
-Status: **A50.2 bounded deterministic retrieval implemented**
+Status: **A50.3 curated seed corpus + project retrieval dogfood**
 
 `skills_UIUX/knowledge/` is the canonical home for reusable declarative product/design knowledge that may be retrieved as context but is **not** itself a skill, project memory, current-run evidence, runtime policy or release authority.
 
-## Boundary: skill vs knowledge vs memory vs evidence
+## Boundary
 
 ```text
 SKILL
 = how to perform work
 = procedures, methods, checklists, execution guidance
-= canonical owner: skills_UIUX/<skill>/SKILL.md
+= owner: skills_UIUX/<skill>/SKILL.md
 
 KNOWLEDGE
-= reusable principles, factual/domain context, stable patterns and reference material
-= canonical owner: skills_UIUX/knowledge/
+= reusable principles, domain/reference context and stable patterns
+= owner: skills_UIUX/knowledge/
 
 MEMORY
-= what happened in a particular project/run: rationale, hypotheses, decisions, recurring history
-= canonical owners: core/brain_os/memory_contracts.py + core/memory/
+= what happened in a particular project/run
+= owners: core/brain_os/memory_contracts.py + core/memory/
 
 EVIDENCE
-= current observed/provenance-bearing truth used to support gates/evaluation
-= canonical owners: core/runtime/flow_os/evidence.py + core/provenance/ + uiux-factory/qa/
+= current observed/provenance-bearing truth used by runtime evaluation/gates
+= owners: core/runtime/flow_os/evidence.py + core/provenance/ + uiux-factory/qa/
 ```
 
-A knowledge record must never be promoted directly into trusted current-run evidence merely because it is curated, retrieved or high-confidence.
+Retrieved knowledge remains advisory. It never becomes trusted current-run evidence merely because it is curated, retrieved or high-confidence.
 
 ## Directory contract
 
 ```text
 skills_UIUX/knowledge/
 ├── README.md
-├── index.json              # canonical metadata index
-├── records/                # future KnowledgeRecord JSON metadata
-└── content/                # future focused reusable knowledge content
+├── index.json
+├── records/
+│   ├── financial-currency-locale-formatting.json
+│   ├── cultural-object-metadata-rights-iiif.json
+│   └── industrial-motor-system-claims-doe.json
+└── content/
+    ├── financial-currency-locale-formatting.md
+    ├── cultural-object-metadata-rights-iiif.md
+    └── industrial-motor-system-claims-doe.md
 ```
 
-`index.json` conforms to `skills_UIUX/schemas/knowledge-index.schema.json` and contains only relative paths to record metadata. The current canonical index is intentionally empty until knowledge content is actually curated.
+`index.json` conforms to `skills_UIUX/schemas/knowledge-index.schema.json`; every record conforms to `skills_UIUX/schemas/knowledge-record.schema.json`. `content_ref` must stay inside this knowledge root.
 
-Each metadata record conforms to `skills_UIUX/schemas/knowledge-record.schema.json`. `content_ref` must resolve to content inside `skills_UIUX/knowledge/`; traversal outside this root fails closed.
+## Curated seed v1
+
+A50.3 deliberately limits the canonical corpus to three records:
+
+| Domain | Record | Primary/authoritative source |
+| --- | --- | --- |
+| `financial-services` | locale- and currency-aware amount formatting | Unicode CLDR / UTS #35 Part 3 |
+| `art-culture` | cultural-object metadata, required statements, rights and provider concepts | IIIF Presentation API 3.0 |
+| `industrial-services` | motor-system context for repair/efficiency/performance claims | U.S. Department of Energy Motor Systems |
+
+The repository stores concise paraphrased reference material. It does not copy long source passages or turn the source into project evidence.
+
+## Why these records belong here
+
+The seed contains domain/reference facts rather than workflow instructions. Existing skill methodology remains canonical elsewhere, including financial workflow/state/evidence reasoning, media/art-direction procedure and accessibility workflow.
+
+Knowledge content must not add `SKILL.md` files or fork procedural sections such as `Workflow`, `Acceptance criteria` or numbered execution steps from active skills.
 
 ## Taxonomy
 
-Seven top-level knowledge categories are reserved:
+Seven top-level categories remain reserved:
 
 ```text
 foundations
@@ -55,35 +77,13 @@ pattern
 platform
 ```
 
-Suggested topic families:
+The A50.3 seed uses only `domain`. Taxonomy is retrieval metadata and must not duplicate Flow OS routing.
 
-- `foundations`: UX, interaction, IA, visual design, cognition, accessibility.
-- `product`: discovery, strategy, prioritization, experimentation, measurement.
-- `research`: interviews, usability, surveys, analytics interpretation, synthesis principles.
-- `management`: critique, facilitation, stakeholder alignment, design operations, governance.
-- `domain`: fintech, ecommerce, B2B, AI software, EdTech, mobility, travel, culture, industrial services.
-- `pattern`: onboarding, checkout, dashboard, search, forms, empty/error states, progressive disclosure.
-- `platform`: web, mobile, desktop and platform-specific interaction constraints.
+## Required truth flags
 
-Taxonomy is retrieval metadata. It must not hard-code flow/stage order or duplicate skill routing rules.
-
-## Canonical metadata contract
-
-Required record metadata includes:
+Every record remains fixed to:
 
 ```text
-id
-title
-category
-topic
-summary
-content_ref
-source_ref
-source_kind
-version
-updated_at
-freshness
-confidence
 advisory_only = true
 current_run_evidence = false
 authority_effect = none
@@ -92,25 +92,9 @@ evidence_effect = none
 release_effect = none
 ```
 
-Optional applicability metadata includes domains, stages and tags.
+`confidence` is curatorial confidence in the reusable reference, not evidence confidence.
 
-## Source and freshness
-
-Every record requires provenance through `source_ref` and `source_kind`.
-
-Freshness classifications:
-
-```text
-evergreen
-versioned
-time_sensitive
-```
-
-`confidence` describes curatorial confidence in the reusable reference; it is **not** evidence confidence and cannot satisfy a runtime gate.
-
-A50.2 applies a deterministic age gate to `time_sensitive` records using query `as_of` plus an explicit `time_sensitive_max_age_days` budget. This is only repository freshness filtering; it is **not** live web re-verification of the upstream source.
-
-## Retrieval contract
+## Retrieval
 
 Canonical implementation:
 
@@ -119,22 +103,9 @@ uiux-factory/core/brain_os/knowledge_retrieval.py
 uiux-factory/core/brain_os/adapters/knowledge_context.py
 ```
 
-Retrieval is:
+Retrieval is metadata-first, deterministic, post-flow-selection, provenance-bearing, context-bounded and vector-free. Domain and stage constraints are hard filters when both query and record declare them. Every delivered hit preserves source/content provenance and explicit truncation state.
 
-- metadata-first and deterministic;
-- executed only after a canonical `FlowSelectionDecision` exists;
-- hard-filtered by category/domain/stage when those constraints are supplied;
-- ranked by explicit domain/stage/tag/term matches with confidence only as a deterministic tie-breaker;
-- bounded by record count, per-item characters and total context characters;
-- provenance-bearing through index hash, record path, source reference and full content SHA-256;
-- explicit about truncation and exclusions;
-- vector-free.
-
-Retrieval can never select/replan a flow, activate an unrouted skill, write project memory, change authority, satisfy a gate, create trusted evidence, finalize a worktree or authorize release.
-
-## Context budget defaults
-
-A50.2 defaults:
+Current defaults:
 
 ```text
 record limit = 6
@@ -144,21 +115,33 @@ max total chars = 12,000
 time-sensitive max age = 30 days
 ```
 
-Callers may reduce or explicitly adjust budgets within the typed bounds. Retrieved content is truncated deterministically when a context budget requires it, and that truncation is surfaced in the result.
+## A50.3 project dogfood
+
+Main CI validates three project profiles:
+
+```text
+Nova     → financial-services → financial currency/locale record only
+Lumen    → art-culture        → IIIF cultural-object record only
+CENNEXT  → industrial-services → DOE motor-system record only
+```
+
+For each project, the other two records must be excluded by domain mismatch. This tests retrieval precision and isolation; it is not product-quality or user-validation evidence.
+
+## Source freshness
+
+- CLDR seed is pinned to stable 48.2 / UTS #35 Part 3.
+- IIIF seed is pinned to Presentation API 3.0.
+- DOE seed records the Motor Systems reference surface curated on 2026-10-02.
+
+All three are `versioned`. Current legal/regulatory/technical claims still require separate current-source verification when a real task depends on them.
 
 ## No vector database
 
-A50.2 intentionally uses no vector database or embeddings. Semantic acceleration remains deferred until deterministic retrieval has stable benchmark coverage plus useful real-project dogfood against a curated corpus.
-
-## Content ownership
-
-The canonical index is currently empty. A50.2 does **not** invent knowledge content merely to make retrieval appear populated.
-
-Future knowledge content should be authored as focused references under this directory. Do not bulk-copy existing `SKILL.md` bodies into knowledge files. When a topic is already procedural methodology in a skill, knowledge should link/reference the skill rather than fork its instructions.
+A50.3 still uses no vector database or embeddings. Vector retrieval remains deferred until deterministic retrieval usefulness is measured and corpus governance is proven.
 
 ## Governance
 
-A knowledge item can inform a design/product decision, but material decisions must still distinguish:
+Material decisions must continue to distinguish:
 
 ```text
 reusable knowledge
@@ -168,4 +151,4 @@ vs current evidence
 vs human decision
 ```
 
-This separation is a hard Brain OS architecture boundary.
+Adding more records requires an explicit source, scope, non-duplication rationale and retrieval-value reason. Corpus size is not a success metric.

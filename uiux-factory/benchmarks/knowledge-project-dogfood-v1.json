@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "knowledge-project-dogfood-v1",
+  "version": "1.0.0",
+  "scope": "curated_retrieval_profile_dogfood_not_product_or_user_validation_evidence",
+  "cases": [
+    {
+      "id": "nova-financial-implementation",
+      "repository": "https://github.com/Ngh1aa/Nova",
+      "goal": "Improve Nova consumer-finance money surfaces with trustworthy amount presentation.",
+      "domain": "financial-services",
+      "stage": "implementation",
+      "terms": ["currency", "amount", "money", "multi-currency"],
+      "expected_ids": ["knowledge.domain.financial-currency-locale-formatting.v1"]
+    },
+    {
+      "id": "lumen-cultural-object-research",
+      "repository": "https://github.com/Ngh1aa/Lumen",
+      "goal": "Improve Lumen cultural-object detail context, provenance and rights presentation.",
+      "domain": "art-culture",
+      "stage": "research",
+      "terms": ["museum", "metadata", "rights", "artwork"],
+      "expected_ids": ["knowledge.domain.cultural-object-metadata-rights-iiif.v1"]
+    },
+    {
+      "id": "cennext-industrial-research",
+      "repository": "https://github.com/Ngh1aa/cennext-b2b-prototype",
+      "goal": "Improve CENNEXT industrial motor repair content and technical-claim traceability.",
+      "domain": "industrial-services",
+      "stage": "research",
+      "terms": ["motor", "repair", "efficiency", "technical claims"],
+      "expected_ids": ["knowledge.domain.industrial-motor-system-claims-doe.v1"]
+    }
+  ]
+}

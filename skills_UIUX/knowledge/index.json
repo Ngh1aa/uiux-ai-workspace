@@ -1,4 +1,8 @@
 {
   "schema_version": "knowledge-index.v1",
-  "records": []
+  "records": [
+    "records/financial-currency-locale-formatting.json",
+    "records/cultural-object-metadata-rights-iiif.json",
+    "records/industrial-motor-system-claims-doe.json"
+  ]
 }
