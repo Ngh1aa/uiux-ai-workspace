@@ -14,25 +14,27 @@ EXPECTED_IDS = {
     "knowledge.domain.cultural-object-metadata-rights-iiif.v1",
     "knowledge.domain.industrial-motor-system-claims-doe.v1",
     "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+    "knowledge.domain.edtech-lti-context-roles-services.v2",
 }
 EXPECTED_SOURCE_HOSTS = {
     "www.unicode.org",
     "iiif.io",
     "www.energy.gov",
     "openchargealliance.org",
+    "www.1edtech.org",
 }
 
 
 def test_a50_canonical_corpus_is_small_traceable_and_domain_scoped() -> None:
     indexed, digest = KnowledgeIndex(KNOWLEDGE_ROOT).load()
 
-    assert len(indexed) == 4
+    assert len(indexed) == len(EXPECTED_IDS)
     assert len(digest) == 64
     assert {item.record.id for item in indexed} == EXPECTED_IDS
     assert {urlparse(item.record.source_ref).hostname for item in indexed} == EXPECTED_SOURCE_HOSTS
     assert all(item.record.category.value == "domain" for item in indexed)
     assert all(len(item.record.applicable_domains) == 1 for item in indexed)
-    assert len({item.record.applicable_domains[0] for item in indexed}) == 4
+    assert len({item.record.applicable_domains[0] for item in indexed}) == len(EXPECTED_IDS)
     assert all(item.record.current_run_evidence is False for item in indexed)
     assert all(item.record.authority_effect == "none" for item in indexed)
     assert all(item.record.gate_effect == "none" for item in indexed)
