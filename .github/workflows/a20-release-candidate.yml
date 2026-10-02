@@ -25,9 +25,11 @@ jobs:
       NOVA_SHA: e206f51f2fda006adcf52497d8b827e048e157ec
       LUMEN_SHA: 219f3e49f9956290ef69a2e49cb91fefddd5f561
       CENNEXT_SHA: 273403accf8979608fbb16dbe2741cedb0430fb6
+      LUXROOM_SHA: 37e6a8c4a2aecdb9cefd9fd4291b353252d5356b
       NOVA_ROOT: ${{ github.workspace }}/.dogfood/Nova
       LUMEN_ROOT: ${{ github.workspace }}/.dogfood/Lumen
       CENNEXT_ROOT: ${{ github.workspace }}/.dogfood/CENNEXT
+      LUXROOM_ROOT: ${{ github.workspace }}/.dogfood/LuxRoom
       REPORT_ROOT: ${{ github.workspace }}/a20-artifacts
 
     steps:
@@ -57,6 +59,13 @@ jobs:
           ref: 273403accf8979608fbb16dbe2741cedb0430fb6
           path: .dogfood/CENNEXT
 
+      - name: Checkout pinned LuxRoom
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/LuxRoom
+          ref: 37e6a8c4a2aecdb9cefd9fd4291b353252d5356b
+          path: .dogfood/LuxRoom
+
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -85,6 +94,7 @@ jobs:
           python ../skills_UIUX/scripts/validate-flows.py
           python ../skills_UIUX/scripts/validate-runtime-foundation.py
           python scripts/validate_benchmark_corpus.py --manifest "$REPORT_ROOT/benchmark-v2.json"
+          python scripts/validate_final_upgrade_regression.py
 
       - name: Run full Factory regression suite
         working-directory: uiux-factory
@@ -120,6 +130,22 @@ jobs:
             --project-root "$CENNEXT_ROOT" \
             --expected-target-sha "$CENNEXT_SHA" \
             --report "$REPORT_ROOT/cennext-generic.json"
+
+      - name: Dogfood pinned LuxRoom with generic runner
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_cross_project_dogfood.py \
+            --project-id luxroom \
+            --project-root "$LUXROOM_ROOT" \
+            --expected-target-sha "$LUXROOM_SHA" \
+            --report "$REPORT_ROOT/luxroom-generic.json"
+
+      - name: Aggregate Flow 4 final regression evidence
+        working-directory: uiux-factory
+        run: |
+          python scripts/validate_final_upgrade_regression.py \
+            --report-root "$REPORT_ROOT" \
+            --output "$REPORT_ROOT/flow4-final.json"
 
       - name: Upload A20 release evidence
         if: always()

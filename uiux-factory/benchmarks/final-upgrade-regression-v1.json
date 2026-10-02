@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "gate_id": "final-upgrade-regression-v1",
+  "version": "1.0.0",
+  "phase": "Flow 4 / A54.1",
+  "checked_on": "2026-10-02",
+  "scope": "final_regression_and_cross_project_dogfood_no_release_authority",
+  "flow3_contract": "uiux-factory/benchmarks/architecture-debt-closure-audit-v1.json",
+  "release_audit_report": "release-audit.json",
+  "projects": [
+    {
+      "project_id": "nova",
+      "repo": "Ngh1aa/Nova",
+      "expected_target_sha": "e206f51f2fda006adcf52497d8b827e048e157ec",
+      "report": "nova-generic.json"
+    },
+    {
+      "project_id": "lumen",
+      "repo": "Ngh1aa/Lumen",
+      "expected_target_sha": "219f3e49f9956290ef69a2e49cb91fefddd5f561",
+      "report": "lumen-generic.json"
+    },
+    {
+      "project_id": "cennext",
+      "repo": "Ngh1aa/cennext-b2b-prototype",
+      "expected_target_sha": "273403accf8979608fbb16dbe2741cedb0430fb6",
+      "report": "cennext-generic.json"
+    },
+    {
+      "project_id": "luxroom",
+      "repo": "Ngh1aa/LuxRoom",
+      "expected_target_sha": "37e6a8c4a2aecdb9cefd9fd4291b353252d5356b",
+      "report": "luxroom-generic.json"
+    }
+  ],
+  "required_flow3_state": {
+    "decision": "ARCHITECTURE_DEBT_LEDGER_CLOSED_FOR_UPGRADE",
+    "closed_count": 4,
+    "intentional_hold_count": 5,
+    "actionable_debt_count": 0,
+    "flow4_allowed": true
+  },
+  "required_generic_truth_boundary": {
+    "browser_status": "NOT_RUN",
+    "provider_reasoning_status": "NOT_RUN",
+    "human_review_status": "pending",
+    "human_review_verdict": null,
+    "release_status": "NOT_ATTEMPTED"
+  },
+  "decision_policy": {
+    "missing_or_incomplete_evidence": "HOLD_FINAL_REGRESSION_EVIDENCE_REQUIRED",
+    "failed_or_boundary_regression": "FINAL_REGRESSION_FAILED",
+    "all_required_evidence_passed": "WORKSPACE_UPGRADE_FINAL_REGRESSION_PASS"
+  },
+  "governance": {
+    "provider_default_change_allowed": false,
+    "lifecycle_state_owner_change_allowed": false,
+    "routing_change_allowed": false,
+    "knowledge_index_mutation_allowed": false,
+    "vector_search_change_allowed": false,
+    "compatibility_shim_deletion_allowed": false,
+    "evidence_authority_change_allowed": false,
+    "gate_authority_change_allowed": false,
+    "release_authority_change_allowed": false,
+    "product_evidence": false,
+    "execution_effect": "none",
+    "authority_effect": "none",
+    "gate_effect": "none",
+    "evidence_effect": "none",
+    "release_effect": "none",
+    "final_owner_review_status": "PENDING_AFTER_FLOW4_PASS"
+  }
+}
