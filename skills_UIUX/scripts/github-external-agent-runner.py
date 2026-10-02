@@ -15,7 +15,7 @@ if str(FACTORY_ROOT) not in sys.path:
 
 from core.runtime.flow_os.external_task import build_external_task_manifest
 
-RUNNER_SCHEMA_VERSION = "1.0"
+RUNNER_SCHEMA_VERSION = "1.1"
 FAILURE_CLASSES = [
     "PRODUCT_QA_FAILED", "PROVIDER_RATE_LIMITED", "AUTH_BLOCKED", "BUILD_FAILED",
     "DEPLOY_FAILED", "READY_BUT_NOT_DEPLOYED", "DEPLOYED_VERIFIED",
@@ -56,6 +56,10 @@ def _target_snapshot(target: Path, requested_ref: str) -> dict[str, object]:
 def _handoff_markdown(run_doc: dict[str, object]) -> str:
     manifest = run_doc["manifest"]
     verification = run_doc["verification_plan"]
+    task_contract = manifest.get("task_contract", {})
+    target_truth = task_contract.get("target_truth", {})
+    provenance = task_contract.get("routing_provenance", {})
+    fields = target_truth.get("fields", {}) if isinstance(target_truth, dict) else {}
     lines = [
         "# GitHub-native external-agent handoff", "",
         f"**Target:** `{manifest['target_repository']}`",
@@ -63,6 +67,11 @@ def _handoff_markdown(run_doc: dict[str, object]) -> str:
         f"**Authority:** `{manifest['authority']}`",
         f"**Status:** `{run_doc['status']}`", "",
         "> This packet is a routing contract, not evidence that implementation or QA passed.", "",
+        "## Target-truth routing",
+        f"- Probe status: `{target_truth.get('status', 'UNKNOWN') if isinstance(target_truth, dict) else 'UNKNOWN'}`",
+        f"- Sources: `{', '.join(target_truth.get('sources', [])) if isinstance(target_truth, dict) and target_truth.get('sources') else 'none'}`",
+        f"- Applied routing truth: `{json.dumps(fields, ensure_ascii=False, sort_keys=True)}`",
+        f"- Precedence: `{ ' > '.join(provenance.get('precedence', [])) if isinstance(provenance, dict) else 'unknown'}`", "",
         "## Ordered stages",
     ]
     for stage in manifest.get("stages", []):
@@ -79,7 +88,7 @@ def _handoff_markdown(run_doc: dict[str, object]) -> str:
         f"- Infra classifier: `{verification['infra_failure_classifier']}`", "",
         "## Failure taxonomy", "- " + "\n- ".join(FAILURE_CLASSES), "",
         "## Completion boundary",
-        "Audit the target source before mutation. Execute only within granted authority. Attach target runtime/rendered evidence before claiming PASS. Missing user or deployment evidence remains planned/blocked/unknown rather than fabricated.", "",
+        "Target truth influences routing only. It never grants authority or gate evidence. Audit the target source before mutation, execute only within granted authority, and attach target runtime/rendered evidence before claiming PASS. Missing user or deployment evidence remains planned/blocked/unknown rather than fabricated.", "",
     ])
     return "\n".join(lines)
 
@@ -102,10 +111,14 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     policy_doc = json.loads((SKILLS_ROOT / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
     manifest = build_external_task_manifest(
-        SKILLS_ROOT, policy_doc, args.task, args.repository,
+        SKILLS_ROOT,
+        policy_doc,
+        args.task,
+        args.repository,
         authority=args.authority,
         acceptance_criteria=_split_values(args.acceptance),
         qa_routes=_split_values(args.qa_routes),
+        target_root=target_root,
     ).to_dict()
 
     run_doc: dict[str, object] = {
@@ -115,6 +128,7 @@ def main() -> int:
             "invokes_llm_provider": False,
             "meaning": "GitHub Actions compiles the governed task packet and can run declared verification. The external AI collaborator remains responsible for target implementation within authority.",
             "manifest_is_not_qa_pass": True,
+            "target_truth_is_routing_only": True,
         },
         "manifest": manifest,
         "target_snapshot": _target_snapshot(target_root, args.target_ref),
@@ -138,6 +152,8 @@ def main() -> int:
         "status": run_doc["status"],
         "target_repository": manifest["target_repository"],
         "target_sha": run_doc["target_snapshot"]["checked_out_sha"],
+        "target_truth_status": manifest["task_contract"]["target_truth"]["status"],
+        "resolved_flow": manifest["resolved_flow"]["id"],
         "state_contract": args.state_contract or None,
         "output_dir": str(output_dir),
     }, ensure_ascii=False, indent=2))
