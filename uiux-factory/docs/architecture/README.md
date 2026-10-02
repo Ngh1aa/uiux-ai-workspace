@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A47 MERGED + A48.1–A48.4 MERGED + A48.5 PARITY BENCHMARK IMPLEMENTED**  
+Status: **A40–A47 MERGED + A48.1–A48.5 MERGED + A48.6 CONTROLLED PROVIDER LANE IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@834a84d7c6783f7889538c00cc96b0755a1da631`
+Current architecture baseline: `main@abc25946ca37d5b9f155056e616de120b093e9ad`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -13,101 +13,67 @@ This directory contains the current architecture truth for UIUX Factory / Flow O
 3. `A40-ARCHITECTURE-RECONCILIATION.md` — capability/ownership reconciliation.
 4. `A40-ARCHITECTURE-GUARDRAILS.md` — executable architecture invariants.
 5. `A41-BRAIN-CORE-CONTRACTS.md` — BrainTaskFrame / Uncertainty / Hypothesis / Decision contracts.
-6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — CritiqueIssue / RootCause / RepairDirective / RetestRequirement / RepairLink contracts.
+6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — critique / root-cause / repair / retest contracts.
 7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` — adapter-first relationship graph over canonical evidence IDs.
 8. `A42-EVIDENCE-INTEGRITY.md` — false-evidence and end-to-end lineage protection.
 9. `A43-FLOW-SELECTION-ENGINE.md` — Brain adapter over canonical change-surface / FlowPlanner selection.
 10. `A43-JIT-CONTEXT-LOADER.md` — read-only projection of mandatory/JIT skill routing.
 11. `A43-ROUTING-BENCHMARK.md` — deterministic routing regression corpus.
-12. `A44-CORE-DESIGN-CRITICS.md` — advisory Visual, UX/IA, Design System and Accessibility critics.
-13. `A44-PRODUCT-TRUTH-CRITICS.md` — advisory Product, Runtime and Evidence/Truth critics.
+12. `A44-CORE-DESIGN-CRITICS.md` — advisory core design critics.
+13. `A44-PRODUCT-TRUTH-CRITICS.md` — advisory Product / Runtime / Evidence critics.
 14. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` — proposal-only critique → repair contracts.
-15. `A45-REPAIR-LINEAGE-GRAPH.md` — repair proposal projection into the A42 graph.
+15. `A45-REPAIR-LINEAGE-GRAPH.md` — repair proposal projection into A42 graph.
 16. `A45-REPAIR-PROPOSAL-BENCHMARK.md` — proposal-policy regression guard.
 17. `A46-TYPED-BRAIN-MEMORY.md` — typed project-scoped rationale / hypothesis / decision memory.
 18. `A46-MEMORY-RECALL-CONTEXT.md` — post-routing historical-memory context adapter.
-19. `A46-MEMORY-BOUNDARY-BENCHMARK.md` — memory scope / truth boundary regression guard.
-20. `A47-BRAIN-SCORECARD.md` — provenance-aware aggregation over canonical evaluation and advisory review channels.
-21. `A47-SCORECARD-BENCHMARK.md` — scorecard truth/provenance regression guard.
-22. `A48-ARCHITECTURE-TRUTH-RECONCILIATION.md` — post-A47 architecture truth reconciliation and remaining debt.
-23. `A48-PROVIDER-CAPABILITY-RECONCILIATION.md` — executable parity/gap map for Factory and managed free-tier provider entry paths.
-24. `A48-PROVIDER-ARTIFACT-BRIDGE.md` — bounded optional raw-artifact field on the canonical managed provider response.
-25. `A48-MANAGED-PROVIDER-COMPAT-ADAPTER.md` — opt-in async Factory-completion adapter over existing managed providers.
-26. `A48-PROVIDER-PARITY-DOGFOOD.md` — deterministic provider-contract parity plus project-profile compatibility smoke.
+19. `A46-MEMORY-BOUNDARY-BENCHMARK.md` — memory boundary regression guard.
+20. `A47-BRAIN-SCORECARD.md` — provenance-aware evaluation/critic/integrity aggregation.
+21. `A47-SCORECARD-BENCHMARK.md` — scorecard truth/provenance guard.
+22. `A48-ARCHITECTURE-TRUTH-RECONCILIATION.md` — post-A47 architecture reconciliation.
+23. `A48-PROVIDER-CAPABILITY-RECONCILIATION.md` — Factory/managed provider capability map.
+24. `A48-PROVIDER-ARTIFACT-BRIDGE.md` — bounded optional raw-artifact carrier.
+25. `A48-MANAGED-PROVIDER-COMPAT-ADAPTER.md` — opt-in async Factory completion bridge.
+26. `A48-PROVIDER-PARITY-DOGFOOD.md` — deterministic provider parity + project-profile compatibility smoke.
+27. `A48-CONTROLLED-PROVIDER-LANE.md` — explicit manager opt-in lane with legacy default and run provenance.
 
 ## Current architecture statement
 
-A4 runtime consolidation remains in force. The single shared executable Flow OS owner is:
-
-```text
-uiux-factory/core/runtime/flow_os/
-```
-
-`skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas and runtime policy. Python modules under `skills_UIUX/runtime/` are compatibility shims, not an independent runtime.
+A4 runtime consolidation remains in force. The single shared executable Flow OS owner is `uiux-factory/core/runtime/flow_os/`. `skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas and runtime policy. Python modules under `skills_UIUX/runtime/` are compatibility shims, not an independent runtime.
 
 The full Factory product lifecycle remains under `uiux-factory/run.py` + `core/manager/`; the provider-neutral managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py`.
 
-## Brain OS boundary
+## Brain / evidence / evaluation boundary
 
-Brain OS is an implemented bounded reasoning/control layer under `uiux-factory/core/brain_os/`. It adds contracts, adapters, critique, repair proposals, evidence relationships, typed semantic memory and scorecard aggregation above canonical runtime/evidence/evaluation owners. It is not a third execution runtime.
-
-## Evidence / evaluation truth
-
-Canonical evidence truth remains owned by:
-
-```text
-core/runtime/flow_os/evidence.py
-core/provenance/evidence_lineage.py
-core/provenance/release_evidence_registry.py
-uiux-factory/qa/
-```
-
-Canonical terminal runtime evaluation remains owned by `core/evaluation/run_evaluator.py`. A42/A47 relationship, integrity and scorecard surfaces reference/aggregate these owners without replacing evidence truth or terminal runtime outcome.
-
-## Flow / JIT / critique / repair boundary
-
-A43 reuses canonical `classify_change_surface` and `FlowPlanner`; Brain can record selection and propose only bounded adjacent escalation. JIT context cannot add non-routed skills, raise budgets or claim activation occurred.
-
-A44 critics remain advisory-only. A45 repair synthesis creates only `PROPOSED/PENDING` repair lineage and deliberately stops before execution/verification. No Brain critic/repair surface can manufacture trusted evidence or runtime gate PASS.
-
-## Typed memory / scorecard boundary
-
-A46 typed historical memory is project-scoped, provenance-bearing and attached only after canonical flow selection. It cannot become current-run evidence, select/replan a flow or satisfy gates.
-
-A47 provenance-aware scorecard mirrors canonical `RunEvaluation.outcome` verbatim and keeps critic/integrity channels separate. It has no synthetic PASS, release-readiness or numeric overall score.
+Brain OS remains a bounded reasoning/control layer, not a third execution runtime. Canonical evidence remains owned by Flow OS/provenance/QA; canonical terminal evaluation remains `core/evaluation/run_evaluator.py`. Brain graph, critics, repair proposals, typed memory and scorecard cannot replace evidence truth or gate/release authority.
 
 ## Provider convergence boundary
 
-A48.2 records provider capability gaps and proves direct substitution unsafe. A48.3 adds the bounded optional raw `artifact` carrier to canonical `ProviderStageResponse` without changing evidence/gate truth.
+A48.2 mapped provider capability gaps. A48.3 added the bounded optional `artifact` carrier. A48.4 added `ManagedArtifactCompletionAdapter`, preserving Factory async `complete(...) -> str` while offloading synchronous managed providers and retaining shared context/call/token/timeout limits. A48.5 added deterministic offline parity plus Nova/Lumen/CENNEXT/LuxRoom profile smoke, explicitly not product evidence.
 
-A48.4 adds `ManagedArtifactCompletionAdapter`, preserving Factory async `complete(...) -> str` while offloading synchronous managed providers through `asyncio.to_thread(...)`. The adapter uses a dependency-light shared compatibility contract for context/call/token/timeout limits and lazy-loads the legacy transport only in explicit `from_env()` construction. It is **not wired into `core/manager/` by default**.
-
-A48.5 adds deterministic provider parity under:
+A48.6 adds the first manager-level selection contract:
 
 ```text
-benchmarks/provider-parity-v1.json
-core/benchmarks/provider_parity_regression.py
-scripts/validate_provider_parity_benchmark.py
+UIUX_FACTORY_PROVIDER_LANE
+unset / blank  -> legacy
+legacy         -> legacy
+managed-compat -> ManagedArtifactCompletionAdapter
+other          -> fail closed
 ```
 
-It checks legacy `complete()` shape by AST, representative plain/JSON/frontend artifact contracts, provider preference, transient fallback, malformed/authority-bearing carrier rejection and compatibility smoke for every registered Nova/Lumen/CENNEXT/LuxRoom dogfood profile.
+The default remains `legacy`. Managed compatibility is explicit opt-in only. There is no silent fallback, percentage rollout or automatic default migration.
 
-A48.5 output is explicitly scoped as:
+Every AI run records secret-free `provider-lane.json` provenance and mirrors it into `flow-plan.json`. Lane selection has `authority_effect=none`, `gate_effect=none`, `evidence_effect=none`, `release_effect=none`.
 
-```text
-offline_contract_parity_not_live_provider_or_product_evidence
-```
-
-It does not replace A13/A14/A20, browser/render QA, live-provider verification, real-user validation or product metrics.
+Provider transports remain lazy imports inside the AI branch. Template/external execution does not select an internal provider lane.
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity corpora before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. Provider/runtime changes also trigger A13 Nova and A14 golden/canary regression.
+Main UIUX Factory CI validates product/routing/repair/memory/scorecard/provider-parity corpora before full pytest. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. Provider/runtime changes trigger A13 Nova and A14 golden/canary regression where path filters apply.
 
 ## Remaining architecture debt
 
-1. Provider execution convergence is still **not default**. A48.6 may add controlled manager opt-in only after A48.5 final-head verification is green; default migration remains a separate decision.
-2. Factory product execution (`run.py` + `core/manager/`) and managed CLI execution share routing/runtime owners but still expose distinct top-level lifecycle APIs.
+1. Provider convergence is complete only at **controlled opt-in** level. The default remains legacy; any future default migration is a separate evidence-driven decision.
+2. Factory product execution (`run.py` + `core/manager/`) and managed CLI execution still expose distinct top-level lifecycle APIs despite sharing canonical routing/runtime owners.
 3. A broader declarative Knowledge OS is not implemented as one canonical subsystem; methodology remains correctly owned by `skills_UIUX`.
 
 ## Source-of-truth priority
@@ -122,4 +88,4 @@ When documents disagree:
 
 ## Next architecture task
 
-After A48.5 is green and merged, A48.6 may add a **controlled manager opt-in integration** with explicit feature flag, legacy default, immediate rollback and lane provenance. No provider default migration belongs in the same task.
+After A48.6 is green and merged, move to **A49.1 Lifecycle Contract Reconciliation**. Do not flip the provider default as part of A49.
