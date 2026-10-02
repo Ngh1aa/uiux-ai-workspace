@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-ev-controlled-index-trial-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "scope": "temporary_canary_index_not_canonical_promotion",
+  "candidate": {
+    "case_id": "ev-ocpp-canary",
+    "candidate_id": "a50-6-ev-ocpp",
+    "record_id": "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+    "record_path": "skills_UIUX/knowledge/drafts/records/ev-charging-ocpp-transaction-semantics.json",
+    "domain": "mobility-ev",
+    "stage": "design",
+    "terms": ["ocpp", "charging", "transaction", "v2x", "smart charging"],
+    "max_item_chars": 4000,
+    "max_total_chars": 8000
+  },
+  "canonical_regression_cases": [
+    {
+      "id": "nova-financial",
+      "domain": "financial-services",
+      "stage": "implementation",
+      "terms": ["currency", "locale", "formatting"],
+      "expected_record_id": "knowledge.domain.financial-currency-locale-formatting.v1"
+    },
+    {
+      "id": "lumen-art-culture",
+      "domain": "art-culture",
+      "stage": "research",
+      "terms": ["iiif", "metadata", "rights"],
+      "expected_record_id": "knowledge.domain.cultural-object-metadata-rights-iiif.v1"
+    },
+    {
+      "id": "cennext-industrial",
+      "domain": "industrial-services",
+      "stage": "research",
+      "terms": ["motor", "repair", "claims"],
+      "expected_record_id": "knowledge.domain.industrial-motor-system-claims-doe.v1"
+    }
+  ],
+  "negative_isolation_domains": ["education-edtech", "ai-software"],
+  "governance": {
+    "canonical_index_expected_count": 3,
+    "canary_index_expected_count": 4,
+    "required_prior_ev_verdict": "ACCEPT_FOR_INDEX_TRIAL",
+    "required_draft_decision": "KEEP_DRAFT",
+    "index_mutation_allowed": false,
+    "canonical_promotion_allowed": false,
+    "auto_promotion_allowed": false,
+    "vector_search_change_allowed": false,
+    "product_evidence": false,
+    "genai_candidate_status": "HOLD_FRESHNESS_REVIEW",
+    "pass_decision": "CANARY_PASS",
+    "fail_decision": "CANARY_FAIL"
+  }
+}
