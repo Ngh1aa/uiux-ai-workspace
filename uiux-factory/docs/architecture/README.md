@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A48.6 MERGED + A49.1 LIFECYCLE CONTRACT RECONCILIATION IMPLEMENTED**  
+Status: **A40–A49.1 MERGED + A49.2/A49.3 LIFECYCLE ADAPTER + PARITY IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@47c1aa143b14eb07ce68ae8387a51fcb14506025`
+Current architecture baseline: `main@05b71b52d182db9c8b3a31d56622af17eee08e50`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -36,16 +36,11 @@ This directory contains the current architecture truth for UIUX Factory / Flow O
 26. `A48-PROVIDER-PARITY-DOGFOOD.md` — deterministic provider-contract parity plus project-profile compatibility smoke.
 27. `A48-CONTROLLED-PROVIDER-INTEGRATION.md` — explicit manager lane selection, legacy default, rollback and provider-lane provenance.
 28. `A49-LIFECYCLE-CONTRACT-RECONCILIATION.md` — executable comparison contract for Factory product lifecycle vs managed checkpoint lifecycle.
+29. `A49-LIFECYCLE-ADAPTER-PARITY.md` — read-only lifecycle projection plus deterministic parity regression.
 
 ## Current architecture statement
 
-A4 runtime consolidation remains in force. The single shared executable Flow OS owner is:
-
-```text
-uiux-factory/core/runtime/flow_os/
-```
-
-`skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas and runtime policy. Python modules under `skills_UIUX/runtime/` are compatibility shims, not an independent runtime.
+A4 runtime consolidation remains in force. The single shared executable Flow OS owner is `uiux-factory/core/runtime/flow_os/`. `skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas and runtime policy. Python modules under `skills_UIUX/runtime/` are compatibility shims, not an independent runtime.
 
 The full Factory product lifecycle remains under `uiux-factory/run.py` + `core/manager/`; the provider-neutral managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py`.
 
@@ -55,64 +50,38 @@ Brain OS is an implemented bounded reasoning/control layer under `uiux-factory/c
 
 ## Evidence / evaluation truth
 
-Canonical evidence truth remains owned by:
-
-```text
-core/runtime/flow_os/evidence.py
-core/provenance/evidence_lineage.py
-core/provenance/release_evidence_registry.py
-uiux-factory/qa/
-```
-
-Canonical terminal runtime evaluation remains owned by `core/evaluation/run_evaluator.py`. A42/A47 relationship, integrity and scorecard surfaces reference/aggregate these owners without replacing evidence truth or terminal runtime outcome.
-
-## Flow / JIT / critique / repair boundary
-
-A43 reuses canonical `classify_change_surface` and `FlowPlanner`; Brain can record selection and propose only bounded adjacent escalation. JIT context cannot add non-routed skills, raise budgets or claim activation occurred.
-
-A44 critics remain advisory-only. A45 repair synthesis creates only `PROPOSED/PENDING` repair lineage and deliberately stops before execution/verification. No Brain critic/repair surface can manufacture trusted evidence or runtime gate PASS.
-
-## Typed memory / scorecard boundary
-
-A46 typed historical memory is project-scoped, provenance-bearing and attached only after canonical flow selection. It cannot become current-run evidence, select/replan a flow or satisfy gates.
-
-A47 provenance-aware scorecard mirrors canonical `RunEvaluation.outcome` verbatim and keeps critic/integrity channels separate. It has no synthetic PASS, release-readiness or numeric overall score.
+Canonical evidence truth remains owned by `core/runtime/flow_os/evidence.py`, `core/provenance/`, and `uiux-factory/qa/`. Canonical terminal runtime evaluation remains owned by `core/evaluation/run_evaluator.py`. Brain relationship/integrity/scorecard surfaces reference or aggregate those owners without replacing truth.
 
 ## Provider convergence boundary
 
-A48.2 records provider capability gaps and proves direct substitution unsafe. A48.3 adds the bounded optional raw `artifact` carrier to canonical `ProviderStageResponse` without changing evidence/gate truth.
+A48.2–A48.6 establish a controlled provider convergence path. `ManagedArtifactCompletionAdapter` preserves Factory async `complete(...) -> str`; provider parity is benchmarked offline; the Factory manager exposes `UIUX_FACTORY_PROVIDER_LANE=managed_compat` as an explicit opt-in while `legacy` remains default. There is no automatic cross-lane fallback, and provider-lane provenance has no evidence/gate/release authority.
 
-A48.4 adds `ManagedArtifactCompletionAdapter`, preserving Factory async `complete(...) -> str` while offloading synchronous managed providers through `asyncio.to_thread(...)`. A48.5 adds deterministic provider parity across representative artifacts and registered Nova/Lumen/CENNEXT/LuxRoom profiles.
+Provider default migration remains a separate governance decision requiring stronger live-provider evidence.
 
-A48.6 wires the adapter into the Factory manager behind:
+## Lifecycle reconciliation and projection boundary
 
-```text
-UIUX_FACTORY_PROVIDER_LANE=managed_compat
-```
-
-The default remains `legacy`; unknown values fail closed and there is no automatic cross-lane fallback. AI-engine runs persist secret-free `provider-lane.json` execution provenance with no evidence/gate/release authority. Provider default migration remains a separate governance decision requiring stronger live-provider evidence.
-
-## Lifecycle reconciliation boundary
-
-A49.1 adds the descriptive executable contract:
-
-```text
-core/runtime/lifecycle_reconciliation.py
-```
-
-It compares both supported top-level experiences through ten vocabulary phases:
+A49.1 defines the ten comparison phases:
 
 ```text
 INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
 ```
 
-This vocabulary is **not a new lifecycle runtime**. Factory remains an async product pipeline over `RunContext`; managed execution remains an explicit resumable/checkpoint lifecycle over `ManagedWebsiteRun` and resolved Flow stages.
+This remains a comparison vocabulary, not a third lifecycle runtime.
 
-A49.1 deliberately records non-parity instead of synthesizing false equivalence. In particular, Factory normal completion does not implicitly expose production deployment, while managed finalization/release remain separate `ProductionReleaseController` actions with explicit authority.
-
-The reconciliation contract has:
+A49.2 adds read-only projection under:
 
 ```text
+core/runtime/lifecycle_projection.py
+```
+
+Factory `RunContext`-like and Managed `ManagedWebsiteRun`-like snapshots can be projected into `LifecycleProjection` for observability/comparison only. The projection never executes, advances, replans, finalizes or releases either lifecycle.
+
+Unknown managed stages fail safe into `unmapped_native_stages` rather than being guessed. Factory completion never implies production release. Managed `state=COMPLETED` never implies workspace finalization or production release because those results belong to `ProductionReleaseController` outputs.
+
+The projection declares:
+
+```text
+projection_only = true
 execution_effect = none
 authority_effect = none
 gate_effect = none
@@ -120,14 +89,24 @@ evidence_effect = none
 release_effect = none
 ```
 
+A49.3 adds deterministic regression under:
+
+```text
+benchmarks/lifecycle-parity-v1.json
+core/benchmarks/lifecycle_parity_regression.py
+scripts/validate_lifecycle_parity_benchmark.py
+```
+
+The benchmark scope is explicitly `projection_parity_not_execution_or_release_evidence`. A PASS cannot prove equivalent real-run design quality, trusted evidence, runtime behavior or release readiness.
+
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity corpora before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. Provider/runtime changes also trigger A13 Nova and A14 golden/canary regression.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity corpora before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood.
 
 ## Remaining architecture debt
 
-1. Provider convergence has a controlled opt-in lane, but `legacy` remains the default. Any future default migration requires separate live-provider evidence and explicit governance.
-2. A49.1 has mapped top-level lifecycle non-parity; a future adapter may project common lifecycle events/status but must not create a third state machine or collapse release authority into completion.
+1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
+2. Lifecycle convergence is complete at the **read-only reconciliation/projection/parity layer**. No mutable shared lifecycle state machine has been introduced; any future mutation-level unification requires a separate architecture decision.
 3. A broader declarative Knowledge OS is not implemented as one canonical subsystem; methodology remains correctly owned by `skills_UIUX`.
 
 ## Source-of-truth priority
@@ -142,4 +121,4 @@ When documents disagree:
 
 ## Next architecture task
 
-After A49.1 is green and merged, combine **A49.2 + A49.3 — Lifecycle Adapter + Parity** if the implementation remains adapter-first: project read-only lifecycle events/status from the two existing state owners, benchmark equivalent transitions, and keep Factory/Managed execution owners unchanged. Do not introduce a third lifecycle state machine.
+After A49.2/A49.3 are green and merged, proceed to **A50.1 — Knowledge OS Architecture**. Define knowledge taxonomy/contracts/retrieval boundaries while preserving `skills_UIUX` as methodology owner, typed memory as project-history owner, and evidence as current-truth owner. Do not copy skill bodies into a parallel Knowledge OS.
