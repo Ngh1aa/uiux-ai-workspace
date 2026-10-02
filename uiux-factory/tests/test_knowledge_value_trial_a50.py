@@ -80,6 +80,25 @@ def _completed_positive_reviews(version: int, *, regression_case: str | None = N
     return payload
 
 
+def _pending_reviews(version: int) -> dict:
+    _, _, reviews_path = _paths(version)
+    payload = json.loads(reviews_path.read_text(encoding="utf-8"))
+    payload["review_status"] = "PENDING"
+    for case in payload["cases"]:
+        case.update(
+            {
+                "status": "PENDING",
+                "preferred_output": None,
+                "scores": None,
+                "rationale": None,
+                "material_regression": None,
+                "reviewer": None,
+                "reviewed_at": None,
+            }
+        )
+    return payload
+
+
 def test_a50_5_round_one_history_requires_revision_before_expansion() -> None:
     result = _result(1)
 
@@ -90,19 +109,26 @@ def test_a50_5_round_one_history_requires_revision_before_expansion() -> None:
     assert result.baseline_preferred_count == 0
     assert result.tie_count == 1
     assert result.material_regression_count == 0
+    assert result.joint_usefulness_win_count == 1
     assert result.expansion_recommendation == "REVISE_BEFORE_EXPANSION"
     assert result.expand_allowed is False
     assert result.auto_mutation_allowed is False
 
 
-def test_a50_5r_round_two_starts_pending_and_holds_expansion() -> None:
+def test_a50_5r_checked_in_round_two_supports_consider_expansion() -> None:
     result = _result(2)
 
     assert result.trial_id == "knowledge-value-trial-v2"
     assert result.case_count == 3
-    assert result.reviewed_case_count == 0
-    assert result.human_review_complete is False
-    assert result.expansion_recommendation == "HOLD_PENDING_HUMAN"
+    assert result.reviewed_case_count == 3
+    assert result.human_review_complete is True
+    assert result.knowledge_preferred_count == 3
+    assert result.baseline_preferred_count == 0
+    assert result.tie_count == 0
+    assert result.insufficient_count == 0
+    assert result.material_regression_count == 0
+    assert result.joint_usefulness_win_count == 3
+    assert result.expansion_recommendation == "CONSIDER_EXPANSION"
     assert result.expand_allowed is False
     assert result.auto_mutation_allowed is False
     assert result.current_run_evidence is False
@@ -155,6 +181,7 @@ def test_a50_5r_canonical_knowledge_files_include_revision_targets() -> None:
         "explicit project fallback",
         "qa matrix",
         "same-symbol currency ambiguity",
+        "multi-currency",
     ):
         assert concept in financial
 
@@ -171,8 +198,8 @@ def test_a50_5r_canonical_knowledge_files_include_revision_targets() -> None:
 
 
 def test_a50_5r_pending_review_rejects_fabricated_human_fields(tmp_path: Path) -> None:
-    trial, mapping, reviews_path = _paths(2)
-    reviews = json.loads(reviews_path.read_text(encoding="utf-8"))
+    trial, mapping, _ = _paths(2)
+    reviews = _pending_reviews(2)
     reviews["cases"][0]["reviewer"] = "pretend-human"
     review_path = _write_json(tmp_path / "reviews.json", reviews)
 
@@ -197,6 +224,7 @@ def test_a50_5r_positive_round_two_can_only_consider_expansion(tmp_path: Path) -
     assert result.knowledge_preferred_count == 3
     assert result.baseline_preferred_count == 0
     assert result.material_regression_count == 0
+    assert result.joint_usefulness_win_count == 3
     assert result.expansion_recommendation == "CONSIDER_EXPANSION"
     assert result.expand_allowed is False
     assert result.auto_mutation_allowed is False
