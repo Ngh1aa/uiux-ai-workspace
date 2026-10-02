@@ -208,7 +208,7 @@ def test_p0_readme_is_bounded_fallback_not_authority(tmp_path: Path) -> None:
     manifest = build_external_task_manifest(
         SKILLS,
         POLICY,
-        "Audit the current interface only.",
+        "Review only the current interface.",
         "owner/museum",
         authority="branch_write",
         target_root=target,
