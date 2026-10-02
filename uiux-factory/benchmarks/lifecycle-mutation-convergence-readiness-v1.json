@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "readiness_id": "lifecycle-mutation-convergence-readiness-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "scope": "readiness_only_no_lifecycle_mutation",
+  "state_owners": {
+    "factory": "core.runtime.run_context.RunContext",
+    "managed": "core.runtime.flow_os.managed.ManagedWebsiteRun"
+  },
+  "required_prerequisites": {
+    "lifecycle_projection_parity_must_pass": true,
+    "reconciliation_must_remain_read_only": true,
+    "existing_state_owners_must_remain_distinct": true,
+    "source_contracts_must_be_unambiguous": true
+  },
+  "current_semantic_blockers": [
+    "distinct_state_models",
+    "factory_append_only_chronology",
+    "managed_checkpoint_and_stage_lineage",
+    "managed_human_gate_semantics",
+    "replan_invalidation_semantics_non_parity",
+    "finalize_release_semantics_non_parity"
+  ],
+  "decision_policy": {
+    "prerequisite_regression": "HOLD_LIFECYCLE_CONVERGENCE_EVIDENCE_REQUIRED",
+    "semantic_blockers_present": "KEEP_SEPARATE_STATE_OWNERS_EVENT_INTEROP_REQUIRED",
+    "blockers_cleared_without_explicit_governance": "HOLD_EXPLICIT_MUTATION_GOVERNANCE_REQUIRED",
+    "blockers_cleared_with_explicit_governance": "READY_FOR_SEPARATE_MUTATION_GOVERNANCE"
+  },
+  "governance": {
+    "explicit_mutation_governance_opt_in": false,
+    "event_interop_proposal_allowed_when_current_audit_clear": true,
+    "state_owner_replacement_allowed_in_this_task": false,
+    "shared_mutable_state_allowed_in_this_task": false,
+    "runtime_transition_change_allowed_in_this_task": false,
+    "routing_change_allowed": false,
+    "provider_default_change_allowed": false,
+    "evidence_authority_change_allowed": false,
+    "gate_authority_change_allowed": false,
+    "finalize_release_authority_change_allowed": false,
+    "product_evidence": false,
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  }
+}
