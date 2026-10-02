@@ -18,6 +18,19 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 8. A50.3–A50.10B documents — historical seed, usefulness/value trials, candidate drafting/revision, controlled-index and promotion evidence.
 9. `A50-EV-CANONICAL-APPLY.md` — current EV canonical promotion state.
 
+Historical/current truth anchors retained for A48 regression coverage:
+
+```text
+A46-TYPED-BRAIN-MEMORY.md
+A46-MEMORY-RECALL-CONTEXT.md
+A46-MEMORY-BOUNDARY-BENCHMARK.md
+A47-BRAIN-SCORECARD.md
+A47-SCORECARD-BENCHMARK.md
+A48-ARCHITECTURE-TRUTH-RECONCILIATION.md
+```
+
+These filenames remain part of the architecture index because later A49/A50 truth builds on them; retaining the anchors does not make their historical topology assertions override current source/tests.
+
 ## Current architecture statement
 
 A4 runtime consolidation remains in force. The shared executable Flow OS owner is:
