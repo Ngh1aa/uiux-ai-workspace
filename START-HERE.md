@@ -8,7 +8,7 @@ Do **not** read the whole workspace.
 
 1. Read `AGENTS.md` for the universal operating/evidence contract.
 2. Read `docs/CONTRACT-OWNERSHIP.md` to know which file owns which decision.
-3. Build or recover one `external-task-manifest.json` using the command below. If the collaborator cannot run the local CLI or dispatch Actions directly, use the bounded GitHub-connector ingress described below instead of manually re-implementing the routing logic.
+3. Build or recover one `external-task-manifest.json`. When a checked-out target is available, pass its root so bounded project truth is probed **before** Flow resolution. If the collaborator cannot run the local CLI or dispatch Actions directly, use the bounded GitHub-connector ingress described below instead of manually re-implementing the routing logic.
 4. Load only the resolved Flow and the `SKILL.md` files listed for the **active stage**.
 5. Audit the target repository before editing it; project source is stronger evidence than filename assumptions.
 6. Work on a branch, verify with direct evidence, repair root causes, then open/merge a PR only when the relevant gates pass.
@@ -16,12 +16,39 @@ Do **not** read the whole workspace.
 ```bash
 python -B skills_UIUX/scripts/prepare-external-task.py \
   --repository owner/repo \
+  --target-root /path/to/checked-out-project \
   --task "Redesign the portfolio toward Product Designer and make AI workflow evidence inspectable" \
   --authority branch_write \
   --output external-task-manifest.json
 ```
 
+`--target-root` is optional for the lightweight CLI. If it is omitted, the manifest records `target_truth.status = NOT_PROVIDED` and routes from task inference rather than pretending target truth was inspected. The GitHub-native runner always passes its checked-out target root.
+
 The manifest is a **routing contract**, not proof that the target project passed QA. Its initial status is always `READY_FOR_EXTERNAL_COLLABORATOR`.
+
+## Target-truth-aware routing
+
+When a checked-out target exists, routing uses this bounded pipeline:
+
+```text
+TargetTruthProbe + GoalInterpreter
+→ truth-aware Task Contract
+→ explicit caller overrides
+→ final contract coherence
+→ FlowPlanner
+```
+
+The declared precedence is:
+
+```text
+explicit override > structured target-project truth > natural-language goal inference
+```
+
+The merge is conservative rather than a blind overlay. Structured project identity can correct generic task inference; project lifecycle metadata acts as a default and does not erase a stronger lifecycle request in the current task; README/package metadata is fallback-only. The final manifest records `target_truth` plus `routing_provenance` so every applied routing field is inspectable.
+
+Target truth is routing context only. It can contribute `website_type`, `domain`, `product_archetype`, `validation_lane`, `mode`, `risk` and known `features`. It cannot grant authority, provider selection, gate PASS, evidence status, merge permission, deploy permission or release authority. A project file saying `merge_and_deploy` therefore cannot escalate the collaborator.
+
+Canonical implementation: `uiux-factory/core/runtime/flow_os/target_truth.py`. Post-closure design note: `uiux-factory/docs/architecture/POST-CLOSURE-P0-TARGET-TRUTH-ROUTING.md`.
 
 ## Context loading rule
 
@@ -43,6 +70,7 @@ Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.j
 
 ## Canonical execution surfaces
 
+- Target-project routing truth: `uiux-factory/core/runtime/flow_os/target_truth.py`
 - External/cloud collaborator: `skills_UIUX/scripts/prepare-external-task.py`
 - GitHub-native external collaborator control plane: `.github/workflows/external-agent-runner.yml`
 - GitHub connector ingress when direct Actions dispatch is unavailable: `.github/workflows/external-agent-connector-bridge.yml` + `skills_UIUX/scripts/github-connector-task-request.py`
@@ -58,7 +86,7 @@ Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.j
 
 ## GitHub-native external collaborators
 
-When ChatGPT, Codex, Claude or another external collaborator can work through GitHub but cannot execute the Factory locally, prefer the canonical `GitHub Native External Agent Runner` from Actions (or call it as a reusable workflow). It checks out the exact target ref, compiles the governed task packet, records target SHA/source evidence, and can optionally run the State Coverage Gate when the target declares a contract.
+When ChatGPT, Codex, Claude or another external collaborator can work through GitHub but cannot execute the Factory locally, prefer the canonical `GitHub Native External Agent Runner` from Actions (or call it as a reusable workflow). It checks out the exact target ref, probes bounded routing truth from that checkout, compiles the governed task packet, records target SHA/source evidence, and can optionally run the State Coverage Gate when the target declares a contract.
 
 If the connected GitHub client can create/edit issues but cannot invoke `workflow_dispatch`, use the **GitHub Connector External Agent Bridge**. Create a trusted issue titled with the `[UIUX TASK]` prefix (or apply the `uiux-agent-task` label) and include this marker plus a JSON payload:
 
@@ -101,7 +129,7 @@ When a task needs real-user evidence, activate `research-evidence-pipeline` plus
 
 ## Portfolio/career work
 
-Full portfolio rebuilds and role-positioning upgrades route to `portfolio-career-system` when the task contract identifies `website_type=portfolio` and a REDESIGN/PRODUCT-sized surface. The flow covers recruiter narrative, identity/CV/link consistency, evidence boundaries, case-study product reasoning, technical proof, rendered QA, and research gaps.
+Full portfolio rebuilds and role-positioning upgrades route to `portfolio-career-system` when the task contract identifies `website_type=portfolio` and a REDESIGN/PRODUCT-sized surface. Target-project truth may supply the portfolio identity even when the current task text is terse. The flow covers recruiter narrative, identity/CV/link consistency, evidence boundaries, case-study product reasoning, technical proof, rendered QA, and research gaps.
 
 ## Completion rule
 
