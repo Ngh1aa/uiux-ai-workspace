@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.14 MERGED / FIVE-RECORD KNOWLEDGE OS / GENAI FRESHNESS HOLD EVIDENCED**  
+Status: **CURRENT THROUGH A52.1 / FIVE-RECORD KNOWLEDGE OS / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD**  
 Audit date: **2026-10-02**  
-Current merged architecture baseline: `main@f84a3f4a606ada958a1dfa0e9f1c23c409aafb4c`
+Baseline before A52.1: `main@f860a47b7c629974736f14c95eb13b7b9824f47f`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS. Current source and executable tests are authoritative when historical A-series notes describe an earlier topology.
 
@@ -19,6 +19,8 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 9. `A50-EV-CANONICAL-APPLY.md` — EV canonical apply history.
 10. `A50-EDTECH-CANONICAL-APPLY.md` — current five-record EdTech-inclusive canonical truth.
 11. `A50-GENAI-NIST-FRESHNESS-REVIEW.md` — current GenAI/NIST freshness HOLD evidence and re-review trigger.
+12. `A51-PROVIDER-DEFAULT-MIGRATION-READINESS.md` — provider-default live-evidence readiness gate; `legacy` remains default.
+13. `A52-LIFECYCLE-MUTATION-CONVERGENCE-READINESS.md` — mutation-level lifecycle readiness gate; current state owners remain separate.
 
 Historical/current truth anchors retained for A48 regression coverage:
 
@@ -94,7 +96,17 @@ A completed lifecycle without sufficient trusted PASS evidence remains insuffici
 
 ## Provider convergence boundary
 
-A48 established controlled convergence across **different provider entry/capability contracts**. `ManagedArtifactCompletionAdapter` preserves Factory completion shape; `UIUX_FACTORY_PROVIDER_LANE=managed_compat` is explicit opt-in and `legacy` remains default. There is no automatic cross-lane fallback. Offline provider parity is regression evidence only; default-lane migration remains a separate governance decision requiring live-provider evidence.
+A48 established controlled convergence across **different provider entry/capability contracts**. `ManagedArtifactCompletionAdapter` preserves Factory completion shape; `UIUX_FACTORY_PROVIDER_LANE=managed_compat` is explicit opt-in and `legacy` remains default. There is no automatic cross-lane fallback.
+
+A51.1 now provides the executable default-migration readiness gate. Current canonical live ledger remains:
+
+```text
+collection_status = NOT_RUN
+receipts = 0 / 8
+decision = KEEP_LEGACY_DEFAULT_LIVE_EVIDENCE_REQUIRED
+```
+
+Offline provider parity is clear, but no live-provider contract matrix exists yet. Therefore provider migration/default change/auto migration remain false. Live transport success, when eventually collected, still will not be product-quality or release evidence.
 
 ## Lifecycle boundary
 
@@ -104,7 +116,26 @@ A49 reconciles **distinct top-level lifecycle APIs** using:
 INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
 ```
 
-`LifecycleProjection` remains read-only observability. Mutation-level lifecycle unification remains a separate decision.
+`LifecycleProjection` remains read-only observability.
+
+A52.1 audits whether projection parity is enough to justify mutation-level unification. Current answer is no. Executable source still proves six material blockers:
+
+```text
+distinct_state_models
+factory_append_only_chronology
+managed_checkpoint_and_stage_lineage
+managed_human_gate_semantics
+replan_invalidation_semantics_non_parity
+finalize_release_semantics_non_parity
+```
+
+Current A52.1 decision:
+
+```text
+KEEP_SEPARATE_STATE_OWNERS_EVENT_INTEROP_REQUIRED
+```
+
+A clean A52.1 audit may only open a separate additive event-interoperability proposal. It does not authorize shared mutable lifecycle state, transition changes, state-owner replacement or release/evidence/gate authority changes.
 
 ## Knowledge OS boundary
 
@@ -214,9 +245,13 @@ scripts/validate_knowledge_genai_nist_freshness_review.py
 
 ## Regression and dogfood
 
-Active CI validates current five-record truth plus the A50.14 freshness HOLD:
+Active CI validates:
 
 ```text
+provider parity
+A51.1 provider-default migration readiness
+A49 lifecycle projection parity
+A52.1 lifecycle-mutation convergence readiness
 knowledge retrieval benchmark
 five-record project retrieval dogfood
 versioned knowledge-value history
@@ -248,8 +283,8 @@ Final retrospective owner review remains deferred until the broader `uiux-ai-wor
 
 ## Remaining architecture debt
 
-1. Provider convergence has a controlled opt-in lane, but `legacy` remains default because current parity evidence is offline-only; default migration requires a separate live-provider readiness/evidence path.
-2. Lifecycle convergence remains intentionally read-only at reconciliation/projection/parity level; mutation-level unification requires a separate decision.
+1. Provider default remains `legacy`; A51.1 is implemented but live evidence is `0/8`, so provider migration governance is not open.
+2. Lifecycle projection parity is clear, but A52.1 confirms direct mutation unification is not ready; the safe next step is additive event interoperability while preserving both state owners.
 3. GenAI/NIST is on an evidence-backed freshness HOLD with an explicit external re-review trigger; no active promotion work is allowed now.
 4. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace evidence acquisition.
 5. Vector/semantic retrieval remains deferred and disabled.
@@ -266,12 +301,12 @@ When documents disagree:
 
 ## Next architecture task
 
-The next bounded architecture task is:
+After A52.1 passes and merges, the next bounded architecture task is:
 
 ```text
-A51.1 — Provider Default Migration Readiness
+A52.2 — Lifecycle Event Interoperability Contract
 ```
 
-It must preserve `legacy` as the default while defining and validating the evidence required to consider `managed_compat` as a future default. Offline parity alone is insufficient. The task may add a fail-closed live-trial harness/receipt contract, but it must not require secrets in CI, persist credentials/prompts, silently fall back across lanes, or change routing/evidence/gate/release authority.
+It should define an additive normalized lifecycle event/receipt vocabulary across Factory event chronology and Managed checkpoint transitions without replacing either state owner. It must remain read-only/non-authoritative with respect to execution, routing, evidence, gates, finalize/release and provider selection.
 
-Lifecycle mutation convergence remains deferred until provider migration readiness has an explicit result. GenAI/NIST remains freshness-held. Vector search remains deferred.
+Provider default migration remains blocked on real A51.1 live receipts. GenAI/NIST remains freshness-held. Vector search remains deferred.
