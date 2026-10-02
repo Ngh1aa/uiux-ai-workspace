@@ -1,8 +1,8 @@
 # Current Runtime Map
 
-Status: **CURRENT THROUGH A50.10C**  
+Status: **CURRENT THROUGH A50.13 / FIVE-RECORD KNOWLEDGE OS**  
 Audit date: **2026-10-02**  
-Baseline: `main@538f3551445832291142f2c7d3d555284e69064d`
+Baseline: `main@52af7d738e46adafe0d0a61fd99bc95a0c0c473e`
 
 This map describes current executable ownership. Historical A-series plans may describe earlier gaps; current source/tests win when they disagree.
 
@@ -56,7 +56,7 @@ core/runtime/flow_os/provider_compat.py       bounded compatibility adapter surf
 
 A48 established explicit provider capability reconciliation, artifact bridging, parity dogfood and a controlled opt-in compatibility lane.
 
-Historical A48 used the phrase **different provider entry/capability contracts** to name the pre-convergence mismatch between the Factory legacy entry and the managed/provider-neutral surface. That phrase is retained as regression vocabulary; the current state is the controlled compatibility lane described below, not an unresolved duplicate-provider architecture.
+Historical A48 used **different provider entry/capability contracts** to name the pre-convergence mismatch between Factory legacy entry and managed/provider-neutral surface. Current state is the controlled compatibility lane, not duplicate provider authority.
 
 Current rule:
 
@@ -76,11 +76,9 @@ A49 reconciles lifecycle meaning across Factory and managed surfaces using:
 INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
 ```
 
-Historical A48/A49 debt described the Factory and managed surfaces as **distinct top-level lifecycle APIs**. That phrase remains here as regression vocabulary: A49 now provides read-only lifecycle projection/parity across those surfaces, while mutation-level lifecycle unification is still intentionally deferred.
+Historical A48/A49 debt described these surfaces as **distinct top-level lifecycle APIs**. A49 provides read-only lifecycle projection/parity; mutation-level lifecycle unification remains intentionally deferred.
 
-`LifecycleProjection` is read-only observability. It does not introduce a third state machine or equate completion with release.
-
-Mutation-level lifecycle unification remains deferred pending a separate decision.
+`LifecycleProjection` is read-only observability and does not introduce a third state machine or equate completion with release.
 
 ## 5. Evidence / provenance / QA
 
@@ -92,9 +90,7 @@ core/provenance/
 uiux-factory/qa/
 ```
 
-Browser/rendered QA remains the evidence-bearing path for visual/runtime claims when applicable.
-
-Brain/model/provider metadata cannot silently become trusted evidence.
+Browser/rendered QA remains evidence-bearing for visual/runtime claims when applicable. Brain/model/provider/knowledge metadata cannot silently become trusted evidence.
 
 ## 6. Terminal evaluation
 
@@ -104,7 +100,7 @@ Canonical terminal evaluator:
 core/evaluation/run_evaluator.py::RunEvaluator
 ```
 
-It derives outcomes from latest-effective trusted evidence. A completed lifecycle without sufficient trusted PASS evidence remains insufficient evidence.
+It derives outcomes from latest-effective trusted evidence. Completed lifecycle without sufficient trusted PASS evidence remains insufficient evidence.
 
 ## 7. Brain OS
 
@@ -114,7 +110,7 @@ Bounded reasoning/control owner:
 uiux-factory/core/brain_os/
 ```
 
-Implemented surfaces include:
+Implemented surfaces:
 
 ```text
 typed task/reasoning contracts
@@ -127,7 +123,7 @@ provenance-aware scorecard
 deterministic Knowledge OS retrieval
 ```
 
-Canonical implementation anchors retained for A48 architecture-regression coverage:
+Canonical A48 regression anchors:
 
 ```text
 core/brain_os/contracts.py
@@ -140,7 +136,7 @@ core/brain_os/adapters/memory_context.py
 core/brain_os/scorecard.py
 ```
 
-These anchors describe implemented owners, not additional runtimes. Brain OS is not a third execution runtime.
+These are owners inside the bounded Brain layer, not additional runtimes.
 
 ## 8. Memory
 
@@ -168,11 +164,11 @@ Current owner:
 core/brain_os/scorecard.py
 ```
 
-It aggregates canonical runtime evaluation + critic reports + evidence-integrity reports while preserving channel provenance. It has no synthetic PASS/release authority.
+It aggregates canonical runtime evaluation + critic + evidence-integrity reports while preserving provenance. It has no synthetic PASS/release authority.
 
 ## 10. Knowledge OS
 
-The declarative Knowledge OS **is implemented** and current.
+Declarative Knowledge OS is implemented and current.
 
 Canonical owners:
 
@@ -185,7 +181,7 @@ core/brain_os/knowledge_retrieval.py
 core/brain_os/adapters/knowledge_context.py
 ```
 
-Retrieval is:
+Retrieval remains:
 
 ```text
 post-flow-selection
@@ -197,33 +193,37 @@ vector-free
 advisory-only
 ```
 
-Current canonical corpus after A50.10C contains four domain records:
+Current canonical corpus after A50.13 contains five domain records:
 
 ```text
 financial-services
 art-culture
 industrial-services
 mobility-ev
+education-edtech
 ```
 
-The promoted EV record is:
+Canonical EV:
 
 ```text
 knowledge.domain.ev-charging-ocpp-transaction-semantics.v1
-source = Open Charge Alliance OCPP 2.1 Edition 2 / Errata 2026-06
+```
+
+Canonical EdTech:
+
+```text
+knowledge.domain.edtech-lti-context-roles-services.v2
 ```
 
 Current post-promotion truth contract:
 
 ```text
-uiux-factory/benchmarks/knowledge-canonical-state-v2.json
-uiux-factory/core/benchmarks/knowledge_ev_canonical_apply.py
-uiux-factory/scripts/validate_knowledge_ev_canonical_apply.py
+uiux-factory/benchmarks/knowledge-canonical-state-v3.json
+uiux-factory/core/benchmarks/knowledge_edtech_canonical_apply.py
+uiux-factory/scripts/validate_knowledge_edtech_canonical_apply.py
 ```
 
-A50.10C verifies exact four-record topology, content/record integrity, Nova/Lumen/CENNEXT/EV retrieval isolation, EdTech/AI negative isolation, context budget, rollback contract, vector-search-disabled state and GenAI HOLD.
-
-EdTech/LTI v2 has `CANARY_PASS` but remains unindexed pending its own promotion proposal/governance path.
+A50.13 verifies exact five-record topology, canonical content/record integrity, financial/art/industrial/EV/EdTech retrieval regression, AI negative isolation, context budgets, rollback contract, vector-disabled state, owner delegation and GenAI HOLD.
 
 GenAI/NIST remains `HOLD_FRESHNESS_REVIEW`.
 
@@ -245,17 +245,15 @@ skills_UIUX/scripts/eval-harness.py
 .github/workflows/uiux-factory-ci.yml
 ```
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, active four-record Knowledge OS truth and the full pytest suite.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, active five-record Knowledge OS truth and full pytest.
 
-Historical A50 topology-bound governance tests/validators are preserved but frozen after the EV canonical ref appears. This prevents valid three-record historical assertions from being misused as current four-record requirements.
+Historical topology-bound A50 governance/canary/shadow tests remain preserved but are frozen once their assumptions no longer represent current canonical topology.
 
-A20 remains the release-candidate regression/security/dogfood lane over pinned Nova, Lumen and CENNEXT. A13 remains the real Nova browser dogfood lane when path-triggered.
-
-Benchmark fixtures never substitute for target runtime/rendered evidence.
+A20 remains release-candidate regression/security/dogfood over pinned Nova, Lumen and CENNEXT. A13 remains real Nova browser dogfood when path-triggered.
 
 ## 12. External collaborator / GitHub control plane
 
-Bounded external collaboration:
+Bounded collaboration:
 
 ```text
 external collaborator
@@ -275,7 +273,7 @@ skills_UIUX/scripts/github-external-agent-runner.py
 skills_UIUX/scripts/github-connector-task-request.py
 ```
 
-These transport/compile governed work. They do not prove implementation or QA PASS by themselves.
+These transport/compile governed work; they do not prove implementation or QA PASS themselves.
 
 ## 13. Capability ownership snapshot
 
@@ -300,22 +298,21 @@ These transport/compile governed work. They do not prove implementation or QA PA
 
 ## 14. Standing owner delegation
 
-Current repository-owner continuation policy:
+Current continuation policy:
 
 ```text
 uiux-factory/benchmarks/governance-owner-delegation-v1.json
 ```
 
-It permits bounded follow-up work when mandatory gates pass. It explicitly forbids bypassing failed/missing checks or fabricating independent-human evidence. Final retrospective owner review remains deferred until the broader upgrade completes.
+It permits bounded follow-up work when mandatory gates pass. It forbids bypassing failed/missing checks or fabricating independent-human evidence. Final retrospective owner review remains deferred until the broader upgrade completes.
 
 ## 15. Remaining convergence / debt
 
 1. Provider default remains `legacy`; moving default requires stronger live-provider/governance evidence.
-2. Lifecycle parity is read-only; mutation-level convergence remains a separate decision.
-3. EdTech/LTI v2 has `CANARY_PASS` and is eligible for a bounded canonical-promotion proposal/governance path.
-4. GenAI/NIST remains freshness-held.
-5. Vector/semantic retrieval remains deferred and disabled.
-6. Time-sensitive factual/regulatory knowledge still requires current source verification.
+2. Lifecycle parity is read-only; mutation-level convergence remains separate.
+3. GenAI/NIST remains freshness-held and cannot enter acceptance/canary/promotion until dedicated source-freshness review clears it.
+4. Vector/semantic retrieval remains deferred and disabled.
+5. Time-sensitive factual/regulatory knowledge still requires current source verification.
 
 ## 16. Rules for next convergence work
 
@@ -331,17 +328,14 @@ Brain OS reasoning/control
 → advisory memory/scorecard/knowledge
 ```
 
-It must not:
-
-- create a third runtime or provider-policy abstraction;
-- copy skill methodology into Brain/provider constants;
-- let memory/model/critic/scorecard/knowledge claims satisfy runtime gates;
-- replace canonical evidence truth with model-authored records;
-- silently rewrite benchmark history;
-- treat compatibility shims as active owners.
+It must not create a third runtime/provider-policy abstraction, copy skill methodology into Brain/provider constants, let advisory channels satisfy runtime gates, replace evidence truth with model-authored records, silently rewrite benchmark history, or treat compatibility shims as active owners.
 
 ## 17. Next architecture task
 
-The next bounded Knowledge OS task is an **EdTech/LTI canonical-promotion proposal + governance review** based on the verified A50.9C `CANARY_PASS`.
+Next bounded Knowledge OS task:
 
-The proposal must preserve the current EV-inclusive four-record canonical baseline, recheck source freshness, verify rollback/cross-domain risk and keep index mutation disabled. Even an approval may only open a separate explicit EdTech promotion implementation task.
+```text
+GenAI/NIST freshness review only
+```
+
+The review must verify official current NIST source/version provenance and candidate scope. It must not index, canonicalize or promote GenAI knowledge. Any later acceptance/canary/promotion requires its own evidence-backed task.
