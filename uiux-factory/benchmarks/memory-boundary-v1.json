@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "brain-memory-boundary-v1",
+  "version": "1.0.0",
+  "description": "Deterministic regression corpus for project-scoped Brain memory recall boundaries. It verifies post-routing attachment and prevents historical memory from becoming current-run evidence or routing authority.",
+  "cases": [
+    {
+      "id": "historical-hypothesis-recall",
+      "operation": "recall",
+      "current_run_id": "run-current",
+      "records": [
+        {"kind":"hypothesis","source_run_id":"run-old","source_ref":"h-old","tags":["product"]}
+      ],
+      "filters": {"kinds":["hypothesis"],"tags":["product"],"limit":5},
+      "expected_source_refs": ["h-old"]
+    },
+    {
+      "id": "current-run-excluded",
+      "operation": "recall",
+      "current_run_id": "run-current",
+      "records": [
+        {"kind":"rationale","source_run_id":"run-current","source_ref":"r-current","tags":["fintech"]},
+        {"kind":"rationale","source_run_id":"run-old","source_ref":"r-old","tags":["fintech"]}
+      ],
+      "filters": {"tags":["fintech"],"limit":5},
+      "expected_source_refs": ["r-old"]
+    },
+    {
+      "id": "tag-filter-is-bounded",
+      "operation": "recall",
+      "current_run_id": "run-current",
+      "records": [
+        {"kind":"rationale","source_run_id":"run-a","source_ref":"r-fintech","tags":["fintech"]},
+        {"kind":"rationale","source_run_id":"run-b","source_ref":"r-art","tags":["art"]}
+      ],
+      "filters": {"tags":["fintech"],"limit":5},
+      "expected_source_refs": ["r-fintech"]
+    },
+    {
+      "id": "source-filter-is-bounded",
+      "operation": "recall",
+      "current_run_id": "run-current",
+      "records": [
+        {"kind":"decision","source_run_id":"run-a","source_ref":"d-a","tags":["product"]},
+        {"kind":"decision","source_run_id":"run-b","source_ref":"d-b","tags":["product"]}
+      ],
+      "filters": {"source_refs":["d-a"],"limit":5},
+      "expected_source_refs": ["d-a"]
+    },
+    {
+      "id": "recall-limit-newest-first",
+      "operation": "recall",
+      "current_run_id": "run-current",
+      "records": [
+        {"kind":"rationale","source_run_id":"run-a","source_ref":"r-1","tags":["system"]},
+        {"kind":"rationale","source_run_id":"run-b","source_ref":"r-2","tags":["system"]},
+        {"kind":"rationale","source_run_id":"run-c","source_ref":"r-3","tags":["system"]}
+      ],
+      "filters": {"tags":["system"],"limit":2},
+      "expected_source_refs": ["r-3","r-2"]
+    },
+    {
+      "id": "cross-project-write-rejected",
+      "operation": "cross_project_write_rejected",
+      "current_run_id": "run-current",
+      "records": [],
+      "filters": {},
+      "expected_source_refs": []
+    }
+  ]
+}
