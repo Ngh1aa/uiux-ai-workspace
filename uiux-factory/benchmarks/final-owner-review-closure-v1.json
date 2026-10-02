@@ -6,6 +6,7 @@
   "checked_on": "2026-10-03",
   "scope": "final_owner_governance_review_and_upgrade_closure_no_new_runtime_authority",
   "flow3_contract": "uiux-factory/benchmarks/architecture-debt-closure-audit-v1.json",
+  "flow4_contract": "uiux-factory/benchmarks/final-upgrade-regression-v1.json",
   "owner_delegation_contract": "uiux-factory/benchmarks/governance-owner-delegation-v1.json",
   "flow4_report": "flow4-final.json",
   "required_flow3_state": {
