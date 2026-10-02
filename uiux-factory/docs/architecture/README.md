@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A49.1 MERGED + A49.2/A49.3 LIFECYCLE ADAPTER + PARITY IMPLEMENTED**  
+Status: **A40–A49.3 MERGED + A50.1 KNOWLEDGE OS ARCHITECTURE IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@05b71b52d182db9c8b3a31d56622af17eee08e50`
+Current architecture baseline: `main@f3db05ddb1fedcd04ae3605c411af4a4bf5982c9`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -37,16 +37,17 @@ This directory contains the current architecture truth for UIUX Factory / Flow O
 27. `A48-CONTROLLED-PROVIDER-INTEGRATION.md` — explicit manager lane selection, legacy default, rollback and provider-lane provenance.
 28. `A49-LIFECYCLE-CONTRACT-RECONCILIATION.md` — executable comparison contract for Factory product lifecycle vs managed checkpoint lifecycle.
 29. `A49-LIFECYCLE-ADAPTER-PARITY.md` — read-only lifecycle projection plus deterministic parity regression.
+30. `A50-KNOWLEDGE-OS-ARCHITECTURE.md` — declarative knowledge taxonomy, ownership and truth-boundary contract.
 
 ## Current architecture statement
 
-A4 runtime consolidation remains in force. The single shared executable Flow OS owner is `uiux-factory/core/runtime/flow_os/`. `skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas and runtime policy. Python modules under `skills_UIUX/runtime/` are compatibility shims, not an independent runtime.
+A4 runtime consolidation remains in force. The single shared executable Flow OS owner is `uiux-factory/core/runtime/flow_os/`. `skills_UIUX/` remains the declarative owner for skills, flows, policies, schemas, runtime policy and reusable Knowledge OS metadata/content. Python modules under `skills_UIUX/runtime/` are compatibility shims, not an independent runtime.
 
 The full Factory product lifecycle remains under `uiux-factory/run.py` + `core/manager/`; the provider-neutral managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py`.
 
 ## Brain OS boundary
 
-Brain OS is an implemented bounded reasoning/control layer under `uiux-factory/core/brain_os/`. It adds contracts, adapters, critique, repair proposals, evidence relationships, typed semantic memory and scorecard aggregation above canonical runtime/evidence/evaluation owners. It is not a third execution runtime.
+Brain OS is an implemented bounded reasoning/control layer under `uiux-factory/core/brain_os/`. It adds contracts, adapters, critique, repair proposals, evidence relationships, typed semantic memory, scorecard aggregation and a typed Knowledge OS read model above canonical runtime/evidence/evaluation owners. It is not a third execution runtime and does not own declarative knowledge content.
 
 ## Evidence / evaluation truth
 
@@ -68,46 +69,65 @@ INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → R
 
 This remains a comparison vocabulary, not a third lifecycle runtime.
 
-A49.2 adds read-only projection under:
+A49.2 projects Factory `RunContext`-like and Managed `ManagedWebsiteRun`-like snapshots into `LifecycleProjection` for observability/comparison only. Unknown managed stages fail safe instead of being guessed. Factory completion never implies production release, and Managed completion never implies workspace finalization/release.
+
+A49.3 locks those semantics with deterministic lifecycle-parity regression. A PASS remains projection regression evidence only, not product/runtime/release evidence.
+
+## Knowledge OS boundary
+
+A50.1 establishes the declarative Knowledge OS owner:
 
 ```text
-core/runtime/lifecycle_projection.py
+skills_UIUX/knowledge/
 ```
 
-Factory `RunContext`-like and Managed `ManagedWebsiteRun`-like snapshots can be projected into `LifecycleProjection` for observability/comparison only. The projection never executes, advances, replans, finalizes or releases either lifecycle.
-
-Unknown managed stages fail safe into `unmapped_native_stages` rather than being guessed. Factory completion never implies production release. Managed `state=COMPLETED` never implies workspace finalization or production release because those results belong to `ProductionReleaseController` outputs.
-
-The projection declares:
+and metadata schema:
 
 ```text
-projection_only = true
-execution_effect = none
+skills_UIUX/schemas/knowledge-record.schema.json
+```
+
+The typed Brain read model lives at:
+
+```text
+core/brain_os/knowledge_contracts.py
+```
+
+The hard ownership split is:
+
+```text
+SKILL     = procedural methodology / how to perform work
+KNOWLEDGE = reusable principles, domain context, patterns and references
+MEMORY    = project/run-specific rationale, hypotheses, decisions and history
+EVIDENCE  = current provenance-bearing observed truth
+```
+
+Knowledge records are advisory-only and fixed to:
+
+```text
+current_run_evidence = false
 authority_effect = none
 gate_effect = none
 evidence_effect = none
 release_effect = none
 ```
 
-A49.3 adds deterministic regression under:
+A50.1 reserves seven categories: `foundations`, `product`, `research`, `management`, `domain`, `pattern`, `platform`.
 
-```text
-benchmarks/lifecycle-parity-v1.json
-core/benchmarks/lifecycle_parity_regression.py
-scripts/validate_lifecycle_parity_benchmark.py
-```
-
-The benchmark scope is explicitly `projection_parity_not_execution_or_release_evidence`. A PASS cannot prove equivalent real-run design quality, trusted evidence, runtime behavior or release readiness.
+A50.1 intentionally creates no knowledge corpus, no retrieval runtime and no vector database. Existing `SKILL.md` bodies must not be bulk-copied into the Knowledge OS. Project memory and current-run evidence IDs cannot become knowledge ownership refs.
 
 ## Regression and dogfood
 
 Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity corpora before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood.
 
+A50.1 adds architecture drift tests for knowledge ownership, taxonomy/schema parity, no memory/evidence ownership refs, no parallel `SKILL.md` corpus, and explicit `retrieval_implemented=false` / `vector_database_required=false`.
+
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
-2. Lifecycle convergence is complete at the **read-only reconciliation/projection/parity layer**. No mutable shared lifecycle state machine has been introduced; any future mutation-level unification requires a separate architecture decision.
-3. A broader declarative Knowledge OS is not implemented as one canonical subsystem; methodology remains correctly owned by `skills_UIUX`.
+2. Lifecycle convergence is complete at the **read-only reconciliation/projection/parity layer**. No mutable shared lifecycle state machine has been introduced; any mutation-level unification requires a separate architecture decision.
+3. Knowledge OS architecture/ownership is defined, but deterministic bounded retrieval, freshness enforcement, corpus validation and retrieval benchmarking are not implemented yet.
+4. Real reusable knowledge content has not been authored or validated; A50.1 intentionally avoids inventing a corpus.
 
 ## Source-of-truth priority
 
@@ -121,4 +141,4 @@ When documents disagree:
 
 ## Next architecture task
 
-After A49.2/A49.3 are green and merged, proceed to **A50.1 — Knowledge OS Architecture**. Define knowledge taxonomy/contracts/retrieval boundaries while preserving `skills_UIUX` as methodology owner, typed memory as project-history owner, and evidence as current-truth owner. Do not copy skill bodies into a parallel Knowledge OS.
+Proceed to **A50.2 — Bounded Knowledge Retrieval + Index** only after A50.1 is green and merged. Implement deterministic metadata-first retrieval after canonical task/flow context is known, with explicit freshness/context budgets and retrieval provenance. Keep knowledge advisory-only and do not introduce vector search until deterministic retrieval has regression coverage and real-project dogfood evidence.
