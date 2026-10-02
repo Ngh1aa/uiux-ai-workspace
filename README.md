@@ -1,23 +1,119 @@
 # UIUX AI Workspace
 
-UIUX Factory is a design-engineering operating system for moving a goal from **project truth → research/design decisions → implementation → rendered verification → repair → handoff/release** without treating model self-report as evidence.
+[![UIUX Factory CI](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/uiux-factory-ci.yml/badge.svg)](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/uiux-factory-ci.yml)
+[![A20 Release Candidate](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/a20-release-candidate.yml/badge.svg)](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/a20-release-candidate.yml)
+
+**UIUX Factory** is a design-engineering operating system for moving a product goal from **project truth → research/design decisions → implementation → rendered verification → repair → handoff/release** without treating model self-report as evidence.
+
+It is built for AI-assisted product/UI/UX work where the agent must remain grounded in the target repository, explicit authority, inspectable evidence and repeatable verification.
+
+## What this repository does
+
+- converts natural-language tasks into a typed Task Contract;
+- probes target-project truth before Flow resolution;
+- routes work through declarative UI/UX Flows and specialist skills;
+- keeps reasoning/memory/knowledge advisory rather than authoritative;
+- separates generated output from trusted runtime/browser evidence;
+- supports external collaborators such as ChatGPT, Codex, Claude and GitHub-connected agents;
+- verifies changes through GitHub Actions, browser/a11y/performance tooling and release-candidate regression;
+- preserves intentional architecture holds instead of manufacturing PASS states.
+
+## Current status
+
+The A50–A55 architecture-upgrade sequence is closed with explicit intentional holds rather than hidden unfinished work.
+
+Post-closure hardening currently includes:
+
+- **P0 — target-truth-aware routing:** checked-out project truth participates in Task Contract routing before Flow resolution;
+- **P1 — protected `main`:** server-side GitHub rules require a pull request, `foundation`, `release-candidate`, an up-to-date branch, and block deletion/force-pushes;
+- public-facing evidence language distinguishes scenario-based expert walkthroughs from real participant research.
+
+CI green means the relevant automated contracts/regressions passed. It does **not** by itself prove visual quality, real-user preference, product impact, accessibility of an untested target, or release readiness outside the evidence actually collected.
+
+## Architecture at a glance
+
+```mermaid
+flowchart TD
+    U[User goal] --> T[Target project truth]
+    T --> P[TargetTruthProbe]
+    U --> I[GoalInterpreter]
+    P --> C[Truth-aware Task Contract]
+    I --> C
+    C --> F[Flow Planner / Flow OS]
+    F --> S[Active specialist skills]
+    S --> X[Implementation / external collaborator / managed provider]
+    X --> E[Runtime + browser + provenance evidence]
+    E --> Q[QA / critics / repair]
+    Q -->|repair needed| X
+    Q --> V[Canonical evaluation]
+    V --> H[Handoff / merge / release within authority]
+
+    K[Knowledge OS] -. advisory .-> F
+    M[Memory] -. advisory .-> F
+    B[Brain OS reasoning] -. advisory/control .-> F
+```
+
+Canonical executable Flow OS owner:
+
+```text
+uiux-factory/core/runtime/flow_os/
+```
+
+The managed CLI uses that same canonical Flow OS and is **not a second Flow OS**.
 
 ## Start here
 
-For a human or external AI collaborator, read **`START-HERE.md` first**. Do not preload the whole repository.
+For a human or external AI collaborator, read **`START-HERE.md` first**. Do not preload the entire repository.
 
 Normative ownership is defined in `docs/CONTRACT-OWNERSHIP.md`:
 
 - `AGENTS.md` — universal operating/evidence contract;
 - `skills_UIUX/runtime/runtime-policy.json` — authority, tools, sandbox, provider and release policy;
 - `uiux-factory/core/runtime/flow_os/task_context.py` — natural-language Task Contract;
+- `uiux-factory/core/runtime/flow_os/target_truth.py` — bounded target-project routing truth;
 - `skills_UIUX/flows/*.json` + canonical Flow OS runtime — stage/skill/gate/replanning decisions;
 - `skills_UIUX/<skill>/SKILL.md` — specialist capability knowledge;
 - target-project source/runtime/tests — project truth and acceptance evidence.
 
+Current architecture truth lives in:
+
+```text
+uiux-factory/docs/architecture/README.md
+uiux-factory/docs/architecture/CURRENT-RUNTIME-MAP.md
+```
+
+Historical planning material lives under `docs/history/` and is never current architecture truth.
+
+## Evidence model
+
+The workspace keeps evidence classes separate on purpose:
+
+```text
+Generated output
+    ≠ verified implementation
+
+Model/provider claims
+    ≠ trusted runtime evidence
+
+Scenario-based expert walkthroughs
+    ≠ human participant research
+
+Lifecycle completion
+    ≠ release approval
+
+CI green
+    ≠ product quality by itself
+```
+
+Trusted current-run evidence is owned by the runtime/provenance/QA surfaces. Terminal evaluation is owned by `core/evaluation/run_evaluator.py`.
+
+When real-user evidence is unavailable, the default fallback for portfolio work is **5 scenario-based expert walkthroughs** / **5 simulated usage scenarios**. These may support prioritization and iteration, but they are not participant counts, human quotes, observed human task success or production impact.
+
+See `AGENTS.md` for the full evidence and validation contract.
+
 ## One-command external collaborator mode
 
-Use this when ChatGPT, Codex, Claude, another cloud model, or a GitHub-connected agent will perform the target-repository work instead of an internal Factory provider:
+Use this when ChatGPT, Codex, Claude, another cloud model, or a GitHub-connected agent will perform target-repository work instead of an internal Factory provider:
 
 ```bash
 python -B skills_UIUX/scripts/prepare-external-task.py \
@@ -25,11 +121,13 @@ python -B skills_UIUX/scripts/prepare-external-task.py \
   --task "Redesign the portfolio toward Product Designer and make AI workflow evidence inspectable" \
   --authority branch_write \
   --qa-route / \
+  --target-root /path/to/checked-out-project \
   --output external-task-manifest.json
 ```
 
-The command compiles the natural-language goal into:
+The command compiles the task into:
 
+- target-truth provenance;
 - Task Contract + effective authority;
 - resolved Flow;
 - ordered stages;
@@ -39,95 +137,17 @@ The command compiles the natural-language goal into:
 - research packet when evidence-led validation is required;
 - explicit evidence/claim boundaries.
 
-The initial status is always `READY_FOR_EXTERNAL_COLLABORATOR`. A generated manifest **never means implementation or QA passed**. The collaborator must still audit the target repository, work within authority, verify the actual changed target, repair failures and attach evidence.
-
-Machine-readable context loading profiles live in `skills_UIUX/runtime/context-routing.json`.
-
-## Portfolio / career positioning
-
-Broad portfolio builds, rebuilds and role-positioning upgrades now have a dedicated `portfolio-career-system` Flow. It treats the portfolio as a recruiter-facing product and checks:
-
-- primary target role and scan hierarchy;
-- public identity/GitHub/CV consistency;
-- flagship/supporting case routes;
-- case-study product reasoning and evidence classes;
-- inspectable AI-assisted workflow proof;
-- technical/framework claims against source;
-- link/CV/source hygiene;
-- desktop/mobile rendered recruiter paths;
-- user-research and outcome gaps without fabricated evidence.
-
-Narrow portfolio edits such as “fix this hero/card” still route to focused UI flows instead of invoking the full career system.
-
-## Real-user evidence pipeline
-
-Evidence-led work can use `research-evidence-pipeline` together with the existing validation/planning/synthesis skills. It provides reusable templates for:
-
-- decision-mapped research plans;
-- participant screeners;
-- interview guides;
-- usability-test scripts;
-- traceable JSONL evidence ledger records;
-- findings and decision logs.
-
-If participants are unavailable, the correct result is a runnable plan marked `PLANNED_VALIDATION` or `BLOCKED_USER_EVIDENCE` — never fictional participants, quotes, counts, percentages or findings.
-
-## Canonical product source
-
-The Factory runtime lives in:
+Routing precedence is bounded as:
 
 ```text
-uiux-factory/
+explicit caller override
+> structured target-project truth
+> natural-language goal inference
 ```
 
-Key surfaces:
+Target project files cannot grant merge/deploy/release authority or fabricate PASS evidence.
 
-```text
-uiux-factory/run.py
-uiux-factory/core/runtime/flow_os/
-uiux-factory/core/manager/development_manager.py
-uiux-factory/core/
-uiux-factory/qa/
-skills_UIUX/flows/
-skills_UIUX/runtime/runtime-policy.json
-.github/workflows/uiux-factory-ci.yml
-.github/workflows/cloud-qa-toolchain.yml
-```
-
-Active top-level surfaces:
-
-- `uiux-factory/` — canonical Factory runtime and cloud QA harness;
-- `skills_UIUX/` — shared UI/UX skills, flows and runtime policy;
-- `upstream/anthropics/` — pinned reference repositories; reference-only unless intentionally adapted;
-- `MetaGPT/` — vendored framework source; modify only for intentional framework integration;
-- `scripts/` — active repository utilities/migrations;
-- `docs/` — operating and architecture documentation;
-- `AGENTS.md` — universal operating contract;
-- `PROJECT-CONTEXT.template.md` — reusable project-context template.
-
-Historical backup copies are not active source and should not live beside canonical runtime files.
-
-## Cloud-first collaboration
-
-Preferred model:
-
-```text
-User goal
-→ Task Contract
-→ resolved Flow + active-stage skills
-→ external AI collaborator / managed provider
-→ target GitHub branch
-→ implementation
-→ GitHub Actions / target browser evidence
-→ accessibility / performance / media / creative review
-→ root-cause repair
-→ pull request
-→ merge/release within authority
-```
-
-GitHub Actions owns repeatable execution. `uiux-factory/qa/` provides Playwright/Chromium, axe-core, Lighthouse CI and Sharp-based evidence.
-
-The older direct `uiux-factory/run.py --engine external` handoff remains supported for Factory-pipeline runs. `skills_UIUX/scripts/prepare-external-task.py` is the lightweight route when the external collaborator needs a governed manifest without running the full generation pipeline.
+The initial manifest status is always `READY_FOR_EXTERNAL_COLLABORATOR`. A generated manifest never means implementation or QA passed.
 
 ## Managed Flow OS CLI
 
@@ -141,7 +161,7 @@ python -B skills_UIUX/scripts/uiux-agent.py \
   --authority branch_write
 ```
 
-Explicit project-truth overrides are available when inference should not decide:
+Explicit project-truth overrides remain available when inference should not decide:
 
 ```bash
 python -B skills_UIUX/scripts/uiux-agent.py \
@@ -157,6 +177,70 @@ python -B skills_UIUX/scripts/uiux-agent.py \
 ```
 
 See `skills_UIUX/FLOW-AGENT-OS.md` for lifecycle, provider, approval and replanning commands.
+
+## Core repository surfaces
+
+```text
+uiux-factory/                         canonical runtime, evaluators and QA
+skills_UIUX/                          declarative skills, flows, policy and knowledge
+uiux-factory/core/runtime/flow_os/    shared executable Flow OS
+uiux-factory/core/brain_os/           bounded reasoning/control layer
+uiux-factory/core/evaluation/         canonical terminal evaluation
+uiux-factory/qa/                      browser/a11y/performance/media evidence
+.github/workflows/                    repeatable CI, dogfood and release-candidate checks
+docs/                                 operating/evidence documentation
+docs/history/                         superseded planning/history only
+upstream/anthropics/                  pinned reference repositories
+MetaGPT/                              vendored framework source
+```
+
+Reference/vendor source is not runtime authority unless intentionally adapted.
+
+## Verification layers
+
+### Foundation
+
+`UIUX Factory CI` validates active architecture/routing/evidence contracts and the Python test suite.
+
+### Release candidate
+
+A20 runs full regression/security/dogfood and cross-project checks over pinned representative projects including Nova, Lumen, CENNEXT and LuxRoom.
+
+### Target/browser evidence
+
+When visual/runtime claims matter, use the Cloud QA toolchain or equivalent target browser evidence. Fixture smoke tests never prove another project passed QA.
+
+### Human/product evidence
+
+Real participant research, production analytics and product outcomes remain separate evidence classes. They cannot be synthesized from model output, scenarios or generic dogfood.
+
+## Cloud QA
+
+`Cloud QA Toolchain` audits the website that actually changed. For `workflow_dispatch`, provide the target repository/ref/root, routes and optional install/build/serve commands.
+
+The workflow:
+
+1. checks out the declared target in isolation;
+2. runs declared install/build steps;
+3. starts the preview server;
+4. waits for target routes;
+5. runs Playwright + axe on declared routes;
+6. runs Lighthouse against declared target URLs;
+7. uploads QA artifacts.
+
+The internal `/fixture/` is only a toolchain smoke test.
+
+For local/manual target harness:
+
+```bash
+cd uiux-factory/qa
+QA_TARGET_DIR=/absolute/path/to/project \
+QA_ROUTES=/,/about.html,/contact.html \
+QA_INSTALL_COMMAND='npm ci' \
+QA_BUILD_COMMAND='npm run build' \
+QA_SERVE_COMMAND='npm run preview -- --host 0.0.0.0 --port 4173' \
+node scripts/serve-target.mjs
+```
 
 ## Local development
 
@@ -174,49 +258,46 @@ Provider-backed direct pipeline work remains available when an approved provider
 python run.py "Design a distinctive ecommerce website" --engine ai --runtime-preset visual-first
 ```
 
-## Cloud QA
+## Repository governance
 
-`Cloud QA Toolchain` can audit the website that actually changed. For `workflow_dispatch` provide the target repository/ref/root, routes and optional install/build/serve commands.
+The protected default branch requires:
 
-The workflow:
-
-1. checks out the declared target in isolation;
-2. runs declared install/build steps;
-3. starts the preview server;
-4. waits for target routes;
-5. runs Playwright + axe on declared routes;
-6. runs Lighthouse against the declared target URLs;
-7. uploads QA artifacts.
-
-The internal `/fixture/` is only a toolchain smoke test. A green fixture never proves another target website passed QA.
-
-For local/manual target harness use:
-
-```bash
-cd uiux-factory/qa
-QA_TARGET_DIR=/absolute/path/to/project \
-QA_ROUTES=/,/about.html,/contact.html \
-QA_INSTALL_COMMAND='npm ci' \
-QA_BUILD_COMMAND='npm run build' \
-QA_SERVE_COMMAND='npm run preview -- --host 0.0.0.0 --port 4173' \
-node scripts/serve-target.mjs
+```text
+pull request
++ foundation
++ release-candidate
++ branch up to date
 ```
 
-## Change invariants
+The active repository ruleset also blocks default-branch deletion and non-fast-forward/force-push updates, with no routine bypass actor.
 
-Keep these green before expanding the pipeline:
+This server-side configuration is owned by GitHub repository settings; the repository text describes it but does not replace that enforcement.
 
-1. active Python source compiles;
-2. foundation tests pass;
-3. pinned skills/corpora verify;
-4. generated files cannot escape their owned root;
-5. cloud browser/a11y/performance/media QA remains executable;
-6. evidence/run artifacts stay truthful and inspectable;
-7. vendor/framework changes stay isolated and intentional;
-8. external-brain/manifests never claim rendered QA before target implementation exists;
-9. fixture evidence is never substituted for target evidence;
-10. authority never escalates implicitly;
-11. missing direct-user evidence remains planned, blocked or unknown rather than invented.
+## Intentional holds
+
+These are explicit non-blocking architecture/governance holds, not hidden PASS states:
+
+- provider-default migration still requires the real live-provider evidence matrix;
+- lifecycle mutation convergence remains separate while semantic blockers exist;
+- GenAI/NIST expansion waits for the official framework-status trigger;
+- vector/semantic retrieval remains optional until product need + benchmark evidence justify it;
+- compatibility-shim removal requires a fresh external/downstream audit no earlier than the governed review boundary.
+
+See `uiux-factory/docs/architecture/CURRENT-RUNTIME-MAP.md` for current details.
+
+## Historical documents
+
+Superseded plans are preserved under:
+
+```text
+docs/history/
+```
+
+They are useful for audit/history, but must not be used as current architecture/provider truth.
+
+## Licensing
+
+This public repository currently has **no declared software license**. Do not assume reuse/redistribution rights from repository visibility alone. A license should be selected explicitly by the repository owner before presenting the project as generally reusable open source.
 
 ## Capability upgrades
 

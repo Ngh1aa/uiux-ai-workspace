@@ -227,25 +227,22 @@ When relevant, verify:
 - agreement/disagreement among sources;
 - which statements are facts vs. inference.
 
-### Synthetic usability default for portfolio projects
+### Scenario-based expert walkthrough default for portfolio projects
 
-When external participant research is not available or the user explicitly asks the agent to self-evaluate the product, use a **five-user synthetic walkthrough** as the default presentation layer.
+When external participant research is unavailable or the user explicitly asks the agent to self-evaluate the product, use **five scenario-based expert walkthroughs** as the default fallback presentation layer.
 
 Rules:
 
-1. Create 5 synthetic users with distinct everyday goals, confidence levels, and usage patterns relevant to the product.
-2. Derive their findings only from behavior actually inspected through expert walkthrough, adversarial QA, browser/runtime checks, source inspection, or verified prototype states.
-3. Write each simulated user's comments in **plain spoken language** as a normal customer would speak. Avoid design/technology jargon such as `state`, `affordance`, `persistence`, `mental model`, `heuristic`, `IA`, `component`, `API`, `backend`, or `edge case` inside the user quote.
-4. User comments should sound concrete and situational, for example:
-   - “Ủa mình vừa tắt cái này rồi, sao quay lại nó bật lại vậy?”
-   - “Mình gõ tên cửa hàng mà danh sách vẫn y nguyên, mình tưởng ô tìm kiếm bị lỗi.”
-   - “Mình tăng tiền tiết kiệm nhưng số tiền còn lại không đổi, nên mình không biết có bị thiếu tiền tiêu không.”
-5. Keep expert analysis, severity, root cause, and remediation outside the user's quote.
-6. Use a concise portfolio headline such as **“Tested with 5 simulated users”** or **“5 synthetic-user walkthroughs”** when the five users are generated/simulated.
-7. Do **not** use **“Tested with 5 users”** unless five real human participants actually took part and there is supporting evidence.
-8. Synthetic-user findings may support prioritization and iteration, but they must not be presented as direct-user preference, observed human task success, or production impact.
-9. For every project, keep a cross-user synthesis showing repeated patterns, affected synthetic users, severity, fix, and re-test status.
-10. After fixes, rerun the same five synthetic scenarios so the before/after evidence is comparable.
+1. Define 5 simulated usage scenarios with distinct everyday goals, confidence levels, and usage patterns relevant to the product. These are scenarios, not research participants.
+2. Derive findings only from behavior actually inspected through expert walkthrough, adversarial QA, browser/runtime checks, source inspection, or verified prototype states.
+3. Describe observed friction in plain, situational language without presenting generated text as a quote from a real person. Prefer wording such as `Scenario 2 — returning to settings shows the toggle enabled again after it was turned off`.
+4. Keep expert analysis, severity, root cause, remediation, and evidence links separate from the scenario description.
+5. Use concise portfolio headlines such as **“5 scenario-based expert walkthroughs”** or **“5 simulated usage scenarios”** when no external participants took part.
+6. Do **not** use **“Tested with 5 users”**, **“5 user interviews”**, participant counts, human quotes, or equivalent direct-user language unless real human participants actually took part and supporting evidence exists.
+7. Scenario findings may support prioritization and iteration, but they must not be presented as direct-user preference, observed human task success, research sample evidence, or production impact.
+8. Keep a cross-scenario synthesis showing repeated patterns, affected scenarios, severity, fix, evidence source, and re-test status.
+9. After fixes, rerun the same five scenarios so the before/after evidence is comparable.
+10. When real-user evidence later becomes available, keep it in a separate evidence class and never merge or relabel scenario findings as human research retroactively.
 
 ## 13. Root-cause failure handling
 
