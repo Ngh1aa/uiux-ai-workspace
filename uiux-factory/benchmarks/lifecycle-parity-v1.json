@@ -1,0 +1,79 @@
+{
+  "schema_version": "lifecycle-parity.v1",
+  "cases": [
+    {
+      "id": "factory-created",
+      "surface": "factory",
+      "payload": {"status": "created", "active_stage": null, "completed_stages": [], "artifacts": {}},
+      "expect": {"INTAKE": "active", "RELEASE": "unavailable", "unmapped": []}
+    },
+    {
+      "id": "factory-design-active",
+      "surface": "factory",
+      "payload": {
+        "status": "running",
+        "active_stage": "design_system",
+        "completed_stages": ["reference_analysis", "research", "ux_ia", "art_direction", "design_contract"],
+        "artifacts": {"flow_plan": "/tmp/flow-plan.json"}
+      },
+      "expect": {"INTAKE": "completed", "INTERPRET": "completed", "PLAN": "completed", "RESEARCH": "completed", "DESIGN": "active", "RELEASE": "unavailable", "unmapped": []}
+    },
+    {
+      "id": "factory-completed-not-released",
+      "surface": "factory",
+      "payload": {
+        "status": "completed",
+        "active_stage": null,
+        "completed_stages": ["research", "design_system", "implementation", "browser_qa", "visual_qa"],
+        "artifacts": {"flow_plan": "/tmp/flow-plan.json"}
+      },
+      "expect": {"RESEARCH": "completed", "DESIGN": "completed", "IMPLEMENT": "completed", "QA": "completed", "FINALIZE": "completed", "RELEASE": "unavailable", "unmapped": []}
+    },
+    {
+      "id": "managed-research-active",
+      "surface": "managed",
+      "payload": {
+        "state": "RUNNING",
+        "active_stage": "research",
+        "completed_stages": [],
+        "replan_count": 0,
+        "flow": {"stages": [
+          {"id": "research", "agent": "research"},
+          {"id": "design", "agent": "development"},
+          {"id": "implementation", "agent": "implementation"},
+          {"id": "qa", "agent": "qa"}
+        ]}
+      },
+      "expect": {"INTAKE": "completed", "INTERPRET": "completed", "PLAN": "completed", "RESEARCH": "active", "FINALIZE": "unknown", "RELEASE": "unknown", "unmapped": []}
+    },
+    {
+      "id": "managed-replanned-design",
+      "surface": "managed",
+      "payload": {
+        "state": "REPLANNED",
+        "active_stage": "design",
+        "completed_stages": ["research"],
+        "replan_count": 1,
+        "flow": {"stages": [
+          {"id": "research", "agent": "research"},
+          {"id": "design", "agent": "development"},
+          {"id": "implementation", "agent": "implementation"},
+          {"id": "qa", "agent": "qa"}
+        ]}
+      },
+      "expect": {"RESEARCH": "completed", "DESIGN": "active", "REPLAN": "active", "FINALIZE": "unknown", "RELEASE": "unknown", "unmapped": []}
+    },
+    {
+      "id": "managed-unknown-stage-fails-safe",
+      "surface": "managed",
+      "payload": {
+        "state": "RUNNING",
+        "active_stage": "mystery",
+        "completed_stages": [],
+        "replan_count": 0,
+        "flow": {"stages": [{"id": "mystery", "agent": "custom"}]}
+      },
+      "expect": {"FINALIZE": "unknown", "RELEASE": "unknown", "unmapped": ["mystery"]}
+    }
+  ]
+}
