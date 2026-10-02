@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.4 MERGED + A50.5 MODEL-ASSISTED KNOWLEDGE VALUE TRIAL IMPLEMENTED / HUMAN REVIEW PENDING**  
+Status: **A40–A50.5 MERGED + A50.5R KNOWLEDGE REVISION / ROUND 2 IMPLEMENTED — HUMAN REVIEW PENDING**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@953a0d353d92be6b660e1a74d9adbf9d2c9dea8d`
+Current merged architecture baseline before A50.5R: `main@a95df7102dda40dae25a6032fff94017326664a2`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -41,7 +41,8 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 31. `A50-BOUNDED-KNOWLEDGE-RETRIEVAL.md` — deterministic post-routing retrieval/index.
 32. `A50-CURATED-SEED-KNOWLEDGE-DOGFOOD.md` — three-source seed governance and Nova/Lumen/CENNEXT retrieval dogfood.
 33. `A50-KNOWLEDGE-USEFULNESS-GOVERNANCE.md` — deterministic usefulness proxies and corpus expansion governance.
-34. `A50-KNOWLEDGE-VALUE-TRIAL.md` — model-assisted A/B trial, blind-first human review contract and expansion recommendation boundary.
+34. `A50-KNOWLEDGE-VALUE-TRIAL.md` — round-one model-assisted A/B trial, completed human review and `REVISE_BEFORE_EXPANSION` result.
+35. `A50-KNOWLEDGE-REVISION-ROUND2.md` — targeted Nova/CENNEXT knowledge revision and round-two blind trial contract.
 
 ## Current architecture statement
 
@@ -113,7 +114,7 @@ release_effect = none
 
 ### A50.3 canonical seed
 
-The canonical index contains exactly three curated records:
+The canonical index still contains exactly three curated records:
 
 ```text
 financial-services  → Unicode CLDR / UTS #35 number/currency reference
@@ -127,7 +128,7 @@ Main CI dogfoods retrieval against Nova, Lumen and CENNEXT. Each project must re
 
 ### A50.4 usefulness and corpus governance
 
-A50.4 does not infer model reasoning improvement from deterministic retrieval. It evaluates separate proxies:
+A50.4 evaluates deterministic proxies:
 
 ```text
 actionable_delta
@@ -138,9 +139,7 @@ provenance_clear
 context_budget_clear
 ```
 
-Each current seed must satisfy every proxy to receive deterministic `KEEP`; otherwise it derives `REVISE`.
-
-Allowed record decisions are only:
+Allowed record decisions remain:
 
 ```text
 KEEP
@@ -148,35 +147,64 @@ REVISE
 REMOVE
 ```
 
-A50.4 keeps global `expand_allowed = false` because deterministic checks cannot establish human usefulness or model-output improvement.
+Deterministic checks cannot establish human usefulness or model-output improvement, so they cannot authorize corpus expansion.
 
-### A50.5 model-assisted value trial
+### A50.5 round-one human result
 
-A50.5 captures paired advisory outputs under identical project/task/flow/stage context for Nova, Lumen and CENNEXT. Each case has one baseline condition and one knowledge-assisted condition, presented as A/B in a blind-first review packet.
+Round one compared baseline vs knowledge-assisted outputs for Nova, Lumen and CENNEXT under the same five-dimension rubric.
 
-Generation provenance is explicit:
-
-```text
-surface = user-directed ChatGPT session
-model = GPT-5.6 Sol
-runtime_provider_invoked = false
-```
-
-This is model-assisted trial material, not canonical provider-runtime evidence. No private chain-of-thought is stored.
-
-Blinding is explicitly **procedural repository blinding**, not cryptographic blinding. The condition mapping exists separately and reviewers are instructed not to open it until blind ratings are recorded.
-
-Human review dimensions are:
+The human review was completed before unblinding. After mapping was opened:
 
 ```text
-correctness
-specificity_actionability
-relevance_noise
-unsupported_claim_risk
-decision_usefulness
+Nova     → knowledge preferred
+Lumen    → knowledge preferred
+CENNEXT  → tie
+baseline preferred = 0
+material regressions = 0
 ```
 
-The checked-in review ledger remains `PENDING` with all human fields null. While any review is pending, governance must derive:
+However, only Lumen had the knowledge-assisted condition strictly higher on **both** `specificity_actionability` and `decision_usefulness`. The unchanged evaluator therefore derived:
+
+```text
+REVISE_BEFORE_EXPANSION
+```
+
+The threshold was not changed to fit the review result.
+
+### A50.5R revision and round-two trial
+
+A50.5R revises only the two underperforming existing records:
+
+```text
+Nova
+  locale/currency correctness retained
+  + shared formatting boundary
+  + explicit locale fallback
+  + concrete QA matrix
+
+CENNEXT
+  technical claim taxonomy retained
+  + buyer decision path
+  + traceable proof modules
+  + approval / repair-vs-replace decision support
+```
+
+Lumen remains the unchanged control.
+
+Round-two surfaces are versioned separately:
+
+```text
+benchmarks/knowledge-value-trial-v2.json
+benchmarks/knowledge-value-trial-mapping-v2.json
+benchmarks/knowledge-value-human-reviews-v2.json
+benchmarks/knowledge-value-review-packet-v2.md
+```
+
+Nova and CENNEXT keep their round-one baseline outputs exactly fixed. Only their knowledge-assisted outputs change. Lumen keeps the same control pair with A/B position swapped. This makes the revision effect more interpretable than regenerating both sides.
+
+Round-two blinding is still procedural, not cryptographic. Prior exposure to round-one outputs creates a documented same-reviewer carryover risk.
+
+Until the new human review is complete:
 
 ```text
 HOLD_PENDING_HUMAN
@@ -184,9 +212,21 @@ expand_allowed = false
 auto_mutation_allowed = false
 ```
 
-After all three reviews are completed, the evaluator may derive only `REVISE_BEFORE_EXPANSION` or `CONSIDER_EXPANSION`. Even `CONSIDER_EXPANSION` remains advisory and cannot mutate `skills_UIUX/knowledge/index.json` or add records.
+The positive threshold remains unchanged:
 
-Benchmark scope:
+```text
+material_regression_count = 0
+baseline_preferred_count = 0
+knowledge_preferred_count >= 2 of 3
+knowledge condition strictly stronger on both:
+  specificity_actionability
+  decision_usefulness
+in at least 2 of 3 cases
+```
+
+Even a later `CONSIDER_EXPANSION` remains advisory and cannot mutate the canonical index.
+
+Benchmark scope remains:
 
 ```text
 model_assisted_blind_pair_trial_not_human_or_product_evidence
@@ -194,16 +234,16 @@ model_assisted_blind_pair_trial_not_human_or_product_evidence
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance and the A50.5 knowledge-value trial before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance and both versioned knowledge-value trial states before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
 
-A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, non-fabricated human review fields and the corpus-expansion block.
+A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, non-fabricated human review fields, round-one history, round-two baseline preservation, mixed A/B mappings and the corpus-expansion block.
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence remains intentionally read-only at the reconciliation/projection/parity layer; mutation-level unification requires a separate decision.
-3. A50.5 model-assisted paired outputs exist, but the independent human review ledger is still pending; no human preference claim may be made yet.
-4. Broader Knowledge OS categories remain intentionally unpopulated and corpus expansion remains blocked until the A50.5 human verdict is complete.
+3. A50.5 round one established `REVISE_BEFORE_EXPANSION`; A50.5R round-two human review is pending.
+4. Broader Knowledge OS categories remain intentionally unpopulated and corpus expansion remains blocked until round two satisfies the unchanged governance threshold.
 5. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
 6. Vector/semantic retrieval remains deferred.
 
@@ -219,6 +259,6 @@ When documents disagree:
 
 ## Next architecture task
 
-Complete the **A50.5 independent human review pass** using `benchmarks/knowledge-value-review-packet-v1.md`. Update only `benchmarks/knowledge-value-human-reviews-v1.json` with the blind judgments first, then let the evaluator derive `CONSIDER_EXPANSION` or `REVISE_BEFORE_EXPANSION` without changing thresholds or the A/B mapping to fit a desired result.
+Complete the **A50.5R round-two human review** using `benchmarks/knowledge-value-review-packet-v2.md`. Update only `benchmarks/knowledge-value-human-reviews-v2.json` with blind judgments first, then let the unchanged evaluator derive `CONSIDER_EXPANSION` or `REVISE_BEFORE_EXPANSION`.
 
-Only if that human verdict supports expansion should a separate **A50.6 Corpus Expansion Proposal** be opened. Vector search remains deferred.
+Only if round two derives `CONSIDER_EXPANSION` should a separate **A50.6 Corpus Expansion Proposal** be opened. Vector search remains deferred.

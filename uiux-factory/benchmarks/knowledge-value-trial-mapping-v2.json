@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-value-trial-v2",
+  "mapping_version": "2.0.0",
+  "blinding": {
+    "mode": "procedural_repository_blind",
+    "cryptographically_blind": false,
+    "reviewer_instruction": "Review the round-two A/B packet without opening this mapping until ratings and rationale are recorded. Repository-level blinding is procedural, not cryptographic, and prior exposure to round-one outputs is a known carryover limitation."
+  },
+  "cases": [
+    {
+      "id": "nova-amount-display",
+      "output_a_condition": "with_retrieved_knowledge",
+      "output_b_condition": "without_retrieved_knowledge",
+      "knowledge_record_id": "knowledge.domain.financial-currency-locale-formatting.v1"
+    },
+    {
+      "id": "lumen-object-metadata",
+      "output_a_condition": "without_retrieved_knowledge",
+      "output_b_condition": "with_retrieved_knowledge",
+      "knowledge_record_id": "knowledge.domain.cultural-object-metadata-rights-iiif.v1"
+    },
+    {
+      "id": "cennext-motor-claims",
+      "output_a_condition": "with_retrieved_knowledge",
+      "output_b_condition": "without_retrieved_knowledge",
+      "knowledge_record_id": "knowledge.domain.industrial-motor-system-claims-doe.v1"
+    }
+  ],
+  "governance": {
+    "current_expansion_state": "HOLD",
+    "expand_allowed": false,
+    "reason": "A50.5R revised two existing knowledge records and created a round-two paired trial, but corpus expansion remains blocked until all round-two human reviews are completed and the unchanged governance threshold is satisfied."
+  }
+}

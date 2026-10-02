@@ -7,6 +7,10 @@ from typing import Any, Literal
 
 
 EXPECTED_SCOPE = "model_assisted_blind_pair_trial_not_human_or_product_evidence"
+SUPPORTED_TRIAL_IDS = {
+    "knowledge-value-trial-v1",
+    "knowledge-value-trial-v2",
+}
 EXPECTED_CASES = {
     "nova-amount-display": "knowledge.domain.financial-currency-locale-formatting.v1",
     "lumen-object-metadata": "knowledge.domain.cultural-object-metadata-rights-iiif.v1",
@@ -54,8 +58,8 @@ def _normalized_output(lines: list[str]) -> tuple[str, ...]:
 
 
 def _validate_trial_packet(trial: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    if trial.get("trial_id") != "knowledge-value-trial-v1":
-        raise ValueError("unexpected knowledge value trial id")
+    if trial.get("trial_id") not in SUPPORTED_TRIAL_IDS:
+        raise ValueError("unsupported knowledge value trial id")
     if trial.get("scope") != EXPECTED_SCOPE:
         raise ValueError("knowledge value trial scope must remain advisory-only")
 
@@ -95,8 +99,13 @@ def _validate_trial_packet(trial: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return by_id
 
 
-def _validate_mapping(mapping: dict[str, Any], trial_cases: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
-    if mapping.get("trial_id") != "knowledge-value-trial-v1":
+def _validate_mapping(
+    mapping: dict[str, Any],
+    trial_cases: dict[str, dict[str, Any]],
+    *,
+    trial_id: str,
+) -> dict[str, dict[str, Any]]:
+    if mapping.get("trial_id") != trial_id:
         raise ValueError("trial mapping id mismatch")
     blind = mapping.get("blinding") or {}
     if blind.get("mode") != "procedural_repository_blind":
@@ -125,7 +134,7 @@ def _validate_mapping(mapping: dict[str, Any], trial_cases: dict[str, dict[str, 
     if governance.get("expand_allowed") is not False:
         raise ValueError("A50.5 mapping may not directly allow corpus expansion")
     if governance.get("current_expansion_state") != "HOLD":
-        raise ValueError("checked-in A50.5 mapping must remain HOLD until independent human review")
+        raise ValueError("checked-in A50.5 mapping must remain HOLD until governance explicitly changes")
     return by_id
 
 
@@ -149,8 +158,10 @@ def _validate_scores(case_id: str, scores: Any) -> dict[str, dict[str, int]]:
 def _validate_reviews(
     reviews: dict[str, Any],
     trial_cases: dict[str, dict[str, Any]],
+    *,
+    trial_id: str,
 ) -> dict[str, dict[str, Any]]:
-    if reviews.get("trial_id") != "knowledge-value-trial-v1":
+    if reviews.get("trial_id") != trial_id:
         raise ValueError("human review ledger trial id mismatch")
     policy = reviews.get("review_policy") or {}
     if policy.get("reviewer_type") != "independent_human" or policy.get("blind_first") is not True:
@@ -202,8 +213,9 @@ def evaluate_knowledge_value_trial(
     reviews = _load(reviews_path)
 
     trial_cases = _validate_trial_packet(trial)
-    mapping_cases = _validate_mapping(mapping, trial_cases)
-    review_cases = _validate_reviews(reviews, trial_cases)
+    trial_id = str(trial["trial_id"])
+    mapping_cases = _validate_mapping(mapping, trial_cases, trial_id=trial_id)
+    review_cases = _validate_reviews(reviews, trial_cases, trial_id=trial_id)
 
     knowledge_preferred = 0
     baseline_preferred = 0
@@ -258,7 +270,7 @@ def evaluate_knowledge_value_trial(
         recommendation = "REVISE_BEFORE_EXPANSION"
 
     return TrialGovernanceResult(
-        trial_id=trial["trial_id"],
+        trial_id=trial_id,
         case_count=len(trial_cases),
         human_review_complete=complete,
         reviewed_case_count=reviewed,

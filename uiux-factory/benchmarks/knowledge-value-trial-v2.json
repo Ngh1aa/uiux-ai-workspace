@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-value-trial-v2",
+  "version": "2.0.0",
+  "scope": "model_assisted_blind_pair_trial_not_human_or_product_evidence",
+  "generation": {
+    "surface": "user-directed ChatGPT session",
+    "model": "GPT-5.6 Sol",
+    "generated_on": "2026-10-02",
+    "runtime_provider_invoked": false,
+    "round": 2,
+    "revision_basis": "A50.5 completed human review: strengthen Nova implementation/QA actionability and CENNEXT buyer decision/proof actionability while preserving domain correctness; Lumen remains the unchanged control domain.",
+    "method_note": "Nova and CENNEXT baseline outputs are held fixed from round 1 so the paired comparison isolates the revised knowledge-assisted condition. Lumen reuses the prior control pair with labels swapped. Same-reviewer carryover remains a known procedural-blinding limitation.",
+    "note": "Paired advisory samples were captured in the same assistant session. No private chain-of-thought is stored. The samples are not runtime evidence and are not independently reproducible provider runs."
+  },
+  "rubric": [
+    "correctness",
+    "specificity_actionability",
+    "relevance_noise",
+    "unsupported_claim_risk",
+    "decision_usefulness"
+  ],
+  "cases": [
+    {
+      "id": "nova-amount-display",
+      "repository": "https://github.com/Ngh1aa/Nova",
+      "domain": "financial-services",
+      "flow_id": "professional-website-redesign",
+      "stage": "implementation",
+      "task": "Review Nova amount-display behavior for dashboard and transaction surfaces in a multi-currency context. Produce implementation decisions and QA checks without inventing which locales or currencies the product supports.",
+      "output_a": [
+        "Use one shared money-formatting boundary across equivalent dashboard totals, cards, tables and transaction rows, with numeric value + currency + locale/display context as explicit inputs rather than deriving currency from punctuation or a symbol string.",
+        "Format with locale/currency-aware number data or APIs for decimal/grouping separators, currency placement and negative forms. Use the product's resolved display locale when project truth defines one; otherwise require an explicit project fallback instead of silently relying on browser-default punctuation.",
+        "Create a QA matrix covering positive, zero, negative, large grouped and representative decimal values across each project-supported locale/currency combination, plus at least one non-default currency and a same-symbol ambiguity case when applicable; compare equivalent values across dashboard totals and transaction rows for consistency.",
+        "Keep currency identity visible where a localized symbol is ambiguous in the actual product context; use a project-approved disambiguation treatment such as an explicit currency code rather than guessing from the symbol.",
+        "Treat this formatter as presentation-only: rounding, exchange-rate, tax/accounting rules and the supported locale/currency set remain separate product truth and must not be changed or inferred by a formatting implementation."
+      ],
+      "output_b": [
+        "Use one shared money-formatting utility rather than formatting amounts independently inside cards, tables and transaction rows.",
+        "Pass the transaction/account currency into the formatter and use the user's resolved display locale when the product has one; otherwise use the project's explicit fallback rather than browser punctuation assumptions.",
+        "QA positive, zero, negative, large-value and decimal amounts across dashboard totals and transaction rows, including at least one non-default currency example.",
+        "Keep currency identity visible when two currencies could otherwise look ambiguous; do not rely on a bare symbol if project truth shows that ambiguity is possible.",
+        "Do not change rounding, exchange-rate or accounting behavior as part of a visual formatting fix unless those rules are documented elsewhere in the product."
+      ]
+    },
+    {
+      "id": "lumen-object-metadata",
+      "repository": "https://github.com/Ngh1aa/Lumen",
+      "domain": "art-culture",
+      "flow_id": "professional-website-redesign",
+      "stage": "research",
+      "task": "Define the information structure for a Lumen artwork-detail metadata area using only fields the collection actually provides. Preserve attribution and rights meaning without forcing the project to implement any particular collection protocol.",
+      "output_a": [
+        "Structure the detail area around title, artist/creator, date, medium, dimensions and source/collection fields when they are actually available.",
+        "Put long descriptive copy in a separate description block so the metadata list stays scannable.",
+        "Show attribution, credit-line or copyright/rights information near the artwork and avoid rewriting legal or ownership language supplied by the collection.",
+        "If the collection identifies the institution or provider, show it as provenance rather than making it look like the artist or creator.",
+        "Omit unknown fields or mark them unavailable according to the product's content policy; do not invent dates, rights or ownership details to make the layout feel complete."
+      ],
+      "output_b": [
+        "Separate the artwork's human-readable label/title from its short summary and from the ordered descriptive metadata shown to visitors.",
+        "Keep publisher-required attribution or ownership text as its own required statement when the source provides one instead of burying it in a decorative caption.",
+        "Represent rights/license status separately from descriptive metadata, and preserve provider identity separately from creator or attribution text when the source distinguishes them.",
+        "Map only fields that exist in project/source truth; missing required-statement, rights or provider data should not be invented to fill the layout.",
+        "Lumen can still use its own visual hierarchy and immersive art direction; the reference model constrains semantic separation, not the page composition or a requirement to implement IIIF."
+      ]
+    },
+    {
+      "id": "cennext-motor-claims",
+      "repository": "https://github.com/Ngh1aa/cennext-b2b-prototype",
+      "domain": "industrial-services",
+      "flow_id": "page-ui-work",
+      "stage": "research",
+      "task": "Define a credibility-safe claim framework for CENNEXT's industrial motor repair page. Keep the page useful for buyers while avoiding unsupported claims that a repair automatically improves efficiency or guarantees a business outcome.",
+      "output_a": [
+        "Distinguish the claim object before writing copy: motor component condition, motor/drive efficiency, load or system performance, repair/rewind quality, and the repair-versus-replace decision. Keep a repair action separate from any claim of measured efficiency, uptime, reliability or savings.",
+        "Attach every performance or savings statement to the project evidence actually available, such as inspection findings, test results, repair specifications, equipment data, operating conditions or another traceable source; no repair or rewind action should automatically become an efficiency-gain claim.",
+        "Make the buyer decision path visible when project truth supports it: reported problem/intake → assessment basis → documented finding → repair/rewind/replace options as applicable → customer approval point → performed work → test/verification evidence → return-to-service or follow-up information.",
+        "Prefer proof modules that expose traceable service evidence—inspection findings, before/after test documentation, repair scope/specification, measured condition, process checkpoints, qualified limitations and approval records—rather than generic trust badges or unsupported superlatives.",
+        "Frame repair-versus-replace as a decision requiring qualified assessment and current equipment facts. Explain what evidence the buyer receives and what still requires customer approval, while keeping business outcomes such as uptime, reliability, energy use and system performance distinct from the service itself."
+      ],
+      "output_b": [
+        "Separate service claims from outcome claims: describe what CENNEXT inspects, repairs, tests or documents, then state uptime, reliability, energy or savings outcomes only when project evidence supports them.",
+        "Attach technical claims to a traceable basis such as inspection findings, test results, repair specifications, equipment data or documented operating conditions.",
+        "Avoid guaranteed efficiency, savings or reliability language unless the project has evidence that supports that exact promise and scope.",
+        "Make the recovery/decision path visible: what the customer receives after assessment, what requires approval, and when repair versus replacement is discussed.",
+        "Use proof modules such as test documentation, process steps, service scope and qualified limitations instead of generic trust badges or unsupported superlatives."
+      ]
+    }
+  ]
+}
