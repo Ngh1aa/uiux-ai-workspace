@@ -17,6 +17,7 @@ from core.brain_os.knowledge_retrieval import (
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_KNOWLEDGE = REPO_ROOT / "skills_UIUX/knowledge"
+INDEX_SCHEMA = REPO_ROOT / "skills_UIUX/schemas/knowledge-index.schema.json"
 
 
 def _flow() -> FlowSelectionDecision:
@@ -89,6 +90,16 @@ def _manifest(knowledge: Path, refs: list[str]) -> None:
         json.dumps({"schema_version": "knowledge-index.v1", "records": refs}, indent=2),
         encoding="utf-8",
     )
+
+
+def test_a50_canonical_index_contract_is_empty_but_validly_shaped() -> None:
+    manifest = json.loads((CANONICAL_KNOWLEDGE / "index.json").read_text(encoding="utf-8"))
+    schema = json.loads(INDEX_SCHEMA.read_text(encoding="utf-8"))
+
+    assert manifest == {"schema_version": "knowledge-index.v1", "records": []}
+    assert schema["properties"]["schema_version"]["const"] == "knowledge-index.v1"
+    assert schema["properties"]["records"]["maxItems"] == 5000
+    assert schema["properties"]["records"]["uniqueItems"] is True
 
 
 def test_a50_canonical_empty_index_is_valid_and_advisory_only() -> None:
