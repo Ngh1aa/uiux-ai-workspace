@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.5R MERGED/IMPLEMENTED — ROUND 2 HUMAN REVIEW COMPLETE / `CONSIDER_EXPANSION`**  
+Status: **A40–A50.5R MERGED + A50.6 CORPUS EXPANSION PROPOSAL IMPLEMENTED / VERIFICATION PENDING**  
 Audit date: **2026-10-02**  
-Current merged architecture baseline before this review commit: `main@c55cb70ff4fb2be44efbedcda8d219ea538f0359`
+Current merged architecture baseline: `main@6f60739f7ae79bed44ba27fde7fc9f90ec5a5793`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -43,6 +43,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 33. `A50-KNOWLEDGE-USEFULNESS-GOVERNANCE.md` — deterministic usefulness proxies and corpus expansion governance.
 34. `A50-KNOWLEDGE-VALUE-TRIAL.md` — two versioned model-assisted A/B trials and their human governance results.
 35. `A50-KNOWLEDGE-REVISION-ROUND2.md` — targeted Nova/CENNEXT revision and completed round-two verdict.
+36. `A50-KNOWLEDGE-CORPUS-EXPANSION-PROPOSAL.md` — bounded proposal-only source/ownership review for potential corpus growth.
 
 ## Current architecture statement
 
@@ -210,33 +211,62 @@ The unchanged evaluator therefore derives:
 CONSIDER_EXPANSION
 ```
 
-This recommendation is advisory only. It does not mutate the canonical index and does not authorize automatic corpus growth:
+This recommendation is advisory only:
 
 ```text
 expand_allowed = false
 auto_mutation_allowed = false
 ```
 
-A separate **A50.6 Corpus Expansion Proposal** is now permitted as the next governance/design task.
+### A50.6 proposal-only corpus expansion
 
-Benchmark scope remains:
+A50.6 does not mutate the corpus. It adds an executable proposal review for exactly three unpopulated domain candidates:
 
 ```text
-model_assisted_blind_pair_trial_not_human_or_product_evidence
+education-edtech → LTI 1.3 / LTI Advantage context
+mobility-ev      → OCPP 2.1 Edition 2 charging-system context
+ai-software      → NIST AI 600-1 Generative AI risk context
+```
+
+Canonical proposal status at implementation time:
+
+```text
+EdTech/LTI   → READY_FOR_CONTENT_DRAFT
+EV/OCPP      → READY_FOR_CONTENT_DRAFT
+GenAI/NIST   → HOLD_FRESHNESS_REVIEW
+```
+
+The GenAI candidate is held because NIST states AI RMF 1.0 is being revised in 2026. Proposal symmetry is not a goal; truthful freshness handling is.
+
+Executable guard surfaces:
+
+```text
+benchmarks/knowledge-expansion-proposal-v1.json
+core/benchmarks/knowledge_expansion_proposal.py
+scripts/validate_knowledge_expansion_proposal.py
+tests/test_knowledge_expansion_proposal_a50.py
+```
+
+A50.6 independently re-evaluates the A50.5R trigger and verifies that the canonical knowledge index remains exactly three records. It forbids index/record/vector mutation and prevents time-sensitive/high-risk candidates from being marked READY.
+
+Benchmark scope:
+
+```text
+proposal_only_no_index_or_record_mutation
 ```
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance and both versioned knowledge-value trial histories before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance, both versioned knowledge-value trial histories and the A50.6 expansion proposal before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
 
-A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, non-fabricated human review fields, round-one history, round-two baseline preservation, mixed A/B mappings, completed v2 review counts and the no-auto-mutation boundary.
+A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, completed human review histories, proposal trigger integrity, skill-owner paths and the no-auto-mutation boundary.
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence remains intentionally read-only at the reconciliation/projection/parity layer; mutation-level unification requires a separate decision.
-3. A50.5R now permits an A50.6 expansion proposal, but no fourth record/category is accepted yet and the canonical index remains three records.
-4. Broader Knowledge OS categories remain intentionally unpopulated pending explicit A50.6 source/ownership/value review.
+3. A50.6 has two READY content-draft candidates, but no fourth/fifth canonical record is accepted yet and the index remains exactly three records.
+4. The GenAI/NIST candidate remains on freshness HOLD while AI RMF 1.0 is under active revision.
 5. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
 6. Vector/semantic retrieval remains deferred.
 
@@ -252,8 +282,6 @@ When documents disagree:
 
 ## Next architecture task
 
-Begin **A50.6 — Corpus Expansion Proposal**.
+After A50.6 proposal verification, draft **only the two READY candidates** (EdTech/LTI and EV/OCPP) on a separate implementation branch. Keep GenAI/NIST on HOLD until freshness is re-verified.
 
-A50.6 must remain proposal-only at first: identify bounded candidate records/categories, source provenance, knowledge-vs-skill ownership, duplication risk, freshness class, target domains/stages and expected retrieval value. Do not mutate `skills_UIUX/knowledge/index.json` until a later explicit implementation change accepts individual candidates.
-
-Vector search remains deferred.
+Before any later index mutation, each draft must pass source/version review, knowledge-vs-skill duplication checks, deterministic retrieval/domain-isolation tests and bounded usefulness evaluation. Vector search remains deferred.
