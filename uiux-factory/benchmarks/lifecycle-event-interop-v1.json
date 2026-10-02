@@ -1,0 +1,178 @@
+{
+  "schema_version": "lifecycle-event-interop.v1",
+  "scope": "observation_only_no_lifecycle_mutation",
+  "cases": [
+    {
+      "id": "factory-native-chronology",
+      "surface": "factory",
+      "factory_events": [
+        {"seq": 1, "type": "run.created", "run_id": "factory-1", "timestamp": "2026-10-02T00:00:00+00:00", "stage": null, "agent": null, "data": {"runtime_preset": "standard"}},
+        {"seq": 2, "type": "stage.started", "run_id": "factory-1", "timestamp": "2026-10-02T00:00:01+00:00", "stage": "design_contract", "agent": null, "data": {}},
+        {"seq": 3, "type": "stage.completed", "run_id": "factory-1", "timestamp": "2026-10-02T00:00:02+00:00", "stage": "design_contract", "agent": null, "data": {}},
+        {"seq": 4, "type": "run.completed", "run_id": "factory-1", "timestamp": "2026-10-02T00:00:03+00:00", "stage": null, "agent": null, "data": {}}
+      ],
+      "expect": {
+        "kinds": ["run_started", "stage_started", "stage_completed", "run_completed"],
+        "phases": ["INTAKE", "DESIGN", "DESIGN", "FINALIZE"],
+        "chronology_strength": "durable_append_only",
+        "source_seqs": [1, 2, 3, 4],
+        "source_timestamps_present": true
+      }
+    },
+    {
+      "id": "factory-fork-and-unknown-fail-safe",
+      "surface": "factory",
+      "factory_events": [
+        {"seq": 1, "type": "session.forked", "run_id": "factory-child", "timestamp": "2026-10-02T00:01:00+00:00", "stage": null, "agent": null, "data": {"source_run_id": "factory-parent", "source_boundary": 3}},
+        {"seq": 2, "type": "custom.future.event", "run_id": "factory-child", "timestamp": "2026-10-02T00:01:01+00:00", "stage": "custom", "agent": null, "data": {"x": 1}}
+      ],
+      "expect": {
+        "kinds": ["run_forked", "native_event_observed"],
+        "phases": [null, null],
+        "chronology_strength": "durable_append_only",
+        "source_seqs": [1, 2],
+        "source_timestamps_present": true
+      }
+    },
+    {
+      "id": "managed-initial-checkpoint-does-not-fabricate-start",
+      "surface": "managed",
+      "previous": null,
+      "current": {
+        "manager_run_id": "managed-1",
+        "flow": {"id": "flow-1", "revision": 1, "stages": [{"id": "design", "agent": "development", "gates": []}]},
+        "task_context": {},
+        "authority": "branch_write",
+        "active_stage": "design",
+        "state": "READY",
+        "replan_count": 0,
+        "completed_stages": [],
+        "stage_runs": {},
+        "replan_history": [],
+        "approved_gates": []
+      },
+      "expect": {
+        "kinds": ["native_event_observed"],
+        "phases": [null],
+        "chronology_strength": "derived_checkpoint_delta",
+        "source_seqs": [null],
+        "source_timestamps_present": false
+      }
+    },
+    {
+      "id": "managed-stage-run-delta",
+      "surface": "managed",
+      "previous": {
+        "manager_run_id": "managed-2",
+        "flow": {"id": "flow-2", "revision": 1, "stages": [{"id": "design", "agent": "development", "gates": []}]},
+        "task_context": {}, "authority": "branch_write", "active_stage": "design", "state": "READY", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {}, "replan_history": [], "approved_gates": []
+      },
+      "current": {
+        "manager_run_id": "managed-2",
+        "flow": {"id": "flow-2", "revision": 1, "stages": [{"id": "design", "agent": "development", "gates": []}]},
+        "task_context": {}, "authority": "branch_write", "active_stage": "design", "state": "RUNNING", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {"design": ["stage-run-1"]}, "replan_history": [], "approved_gates": []
+      },
+      "expect": {
+        "kinds": ["stage_started"],
+        "phases": ["DESIGN"],
+        "chronology_strength": "derived_checkpoint_delta",
+        "source_seqs": [null],
+        "source_timestamps_present": false
+      }
+    },
+    {
+      "id": "managed-human-approval-required",
+      "surface": "managed",
+      "previous": {
+        "manager_run_id": "managed-3",
+        "flow": {"id": "flow-3", "revision": 1, "stages": [{"id": "qa", "agent": "qa", "gates": [{"id": "visual-signoff", "approval": "human"}]}]},
+        "task_context": {"approval_mode": "manual"}, "authority": "branch_write", "active_stage": "qa", "state": "RUNNING", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {"qa": ["qa-run-1"]}, "replan_history": [], "approved_gates": []
+      },
+      "current": {
+        "manager_run_id": "managed-3",
+        "flow": {"id": "flow-3", "revision": 1, "stages": [{"id": "qa", "agent": "qa", "gates": [{"id": "visual-signoff", "approval": "human"}]}]},
+        "task_context": {"approval_mode": "manual"}, "authority": "branch_write", "active_stage": "qa", "state": "AWAITING_APPROVAL", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {"qa": ["qa-run-1"]}, "replan_history": [], "approved_gates": []
+      },
+      "expect": {
+        "kinds": ["approval_required"],
+        "phases": ["QA"],
+        "chronology_strength": "derived_checkpoint_delta",
+        "source_seqs": [null],
+        "source_timestamps_present": false
+      }
+    },
+    {
+      "id": "managed-human-approval-granted",
+      "surface": "managed",
+      "previous": {
+        "manager_run_id": "managed-4",
+        "flow": {"id": "flow-4", "revision": 1, "stages": [{"id": "qa", "agent": "qa", "gates": [{"id": "visual-signoff", "approval": "human"}]}]},
+        "task_context": {"approval_mode": "manual"}, "authority": "branch_write", "active_stage": "qa", "state": "AWAITING_APPROVAL", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {"qa": ["qa-run-1"]}, "replan_history": [], "approved_gates": []
+      },
+      "current": {
+        "manager_run_id": "managed-4",
+        "flow": {"id": "flow-4", "revision": 1, "stages": [{"id": "qa", "agent": "qa", "gates": [{"id": "visual-signoff", "approval": "human"}]}]},
+        "task_context": {"approval_mode": "manual"}, "authority": "branch_write", "active_stage": "qa", "state": "AWAITING_APPROVAL", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {"qa": ["qa-run-1"]}, "replan_history": [], "approved_gates": ["visual-signoff"]
+      },
+      "expect": {
+        "kinds": ["approval_granted"],
+        "phases": ["QA"],
+        "chronology_strength": "derived_checkpoint_delta",
+        "source_seqs": [null],
+        "source_timestamps_present": false
+      }
+    },
+    {
+      "id": "managed-replan-delta",
+      "surface": "managed",
+      "previous": {
+        "manager_run_id": "managed-5",
+        "flow": {"id": "flow-5", "revision": 1, "stages": [{"id": "design", "agent": "development", "gates": []}]},
+        "task_context": {}, "authority": "branch_write", "active_stage": "design", "state": "RUNNING", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {"design": ["design-run-1"]}, "replan_history": [], "approved_gates": []
+      },
+      "current": {
+        "manager_run_id": "managed-5",
+        "flow": {"id": "flow-5", "revision": 2, "stages": [{"id": "design", "agent": "development", "gates": []}]},
+        "task_context": {}, "authority": "branch_write", "active_stage": "design", "state": "REPLANNED", "replan_count": 1,
+        "completed_stages": [], "stage_runs": {"design": ["design-run-1"]}, "replan_history": [{"accepted": true, "target_stage": "design"}], "approved_gates": []
+      },
+      "expect": {
+        "kinds": ["replan_applied"],
+        "phases": ["REPLAN"],
+        "chronology_strength": "derived_checkpoint_delta",
+        "source_seqs": [null],
+        "source_timestamps_present": false
+      }
+    },
+    {
+      "id": "managed-stage-and-run-complete-not-release",
+      "surface": "managed",
+      "previous": {
+        "manager_run_id": "managed-6",
+        "flow": {"id": "flow-6", "revision": 1, "stages": [{"id": "qa", "agent": "qa", "gates": []}]},
+        "task_context": {}, "authority": "branch_write", "active_stage": "qa", "state": "RUNNING", "replan_count": 0,
+        "completed_stages": [], "stage_runs": {"qa": ["qa-run-1"]}, "replan_history": [], "approved_gates": []
+      },
+      "current": {
+        "manager_run_id": "managed-6",
+        "flow": {"id": "flow-6", "revision": 1, "stages": [{"id": "qa", "agent": "qa", "gates": []}]},
+        "task_context": {}, "authority": "branch_write", "active_stage": "qa", "state": "COMPLETED", "replan_count": 0,
+        "completed_stages": ["qa"], "stage_runs": {"qa": ["qa-run-1"]}, "replan_history": [], "approved_gates": []
+      },
+      "expect": {
+        "kinds": ["stage_completed", "run_completed"],
+        "phases": ["QA", null],
+        "chronology_strength": "derived_checkpoint_delta",
+        "source_seqs": [null, null],
+        "source_timestamps_present": false
+      }
+    }
+  ]
+}
