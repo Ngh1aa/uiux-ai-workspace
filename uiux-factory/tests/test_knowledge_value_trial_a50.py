@@ -41,7 +41,25 @@ def _write_json(path: Path, payload: dict) -> Path:
     return path
 
 
-def _completed_reviews(*, regression_case: str | None = None) -> dict:
+def _pending_reviews() -> dict:
+    payload = json.loads(REVIEWS.read_text(encoding="utf-8"))
+    payload["review_status"] = "PENDING"
+    for case in payload["cases"]:
+        case.update(
+            {
+                "status": "PENDING",
+                "preferred_output": None,
+                "scores": None,
+                "rationale": None,
+                "material_regression": None,
+                "reviewer": None,
+                "reviewed_at": None,
+            }
+        )
+    return payload
+
+
+def _completed_positive_reviews(*, regression_case: str | None = None) -> dict:
     payload = json.loads(REVIEWS.read_text(encoding="utf-8"))
     payload["review_status"] = "COMPLETE"
     for case in payload["cases"]:
@@ -52,8 +70,6 @@ def _completed_reviews(*, regression_case: str | None = None) -> dict:
             baseline_label: {dimension: 1 for dimension in DIMENSIONS},
             knowledge_label: {dimension: 2 for dimension in DIMENSIONS},
         }
-        # Lower unsupported-claim-risk score would be ambiguous because the dimension asks
-        # whether the output avoids risk, so a larger score remains better on every channel.
         case.update(
             {
                 "status": "REVIEWED",
@@ -62,19 +78,23 @@ def _completed_reviews(*, regression_case: str | None = None) -> dict:
                 "rationale": "Knowledge-labelled output was more specific and decision-useful without adding unsupported claims.",
                 "material_regression": case_id == regression_case,
                 "reviewer": "independent-reviewer",
-                "reviewed_at": "2026-10-02T13:45:00+07:00",
+                "reviewed_at": "2026-10-02",
             }
         )
     return payload
 
 
-def test_a50_5_checked_in_state_holds_for_pending_human_review() -> None:
+def test_a50_5_checked_in_human_review_requires_revision_before_expansion() -> None:
     result = _canonical_result()
 
     assert result.case_count == 3
-    assert result.reviewed_case_count == 0
-    assert result.human_review_complete is False
-    assert result.expansion_recommendation == "HOLD_PENDING_HUMAN"
+    assert result.reviewed_case_count == 3
+    assert result.human_review_complete is True
+    assert result.knowledge_preferred_count == 2
+    assert result.baseline_preferred_count == 0
+    assert result.tie_count == 1
+    assert result.material_regression_count == 0
+    assert result.expansion_recommendation == "REVISE_BEFORE_EXPANSION"
     assert result.expand_allowed is False
     assert result.auto_mutation_allowed is False
     assert result.current_run_evidence is False
@@ -82,7 +102,7 @@ def test_a50_5_checked_in_state_holds_for_pending_human_review() -> None:
 
 
 def test_a50_5_pending_review_rejects_fabricated_human_fields(tmp_path: Path) -> None:
-    reviews = json.loads(REVIEWS.read_text(encoding="utf-8"))
+    reviews = _pending_reviews()
     reviews["cases"][0]["reviewer"] = "pretend-human"
     review_path = _write_json(tmp_path / "reviews.json", reviews)
 
@@ -95,7 +115,7 @@ def test_a50_5_pending_review_rejects_fabricated_human_fields(tmp_path: Path) ->
 
 
 def test_a50_5_complete_positive_review_can_only_consider_expansion(tmp_path: Path) -> None:
-    review_path = _write_json(tmp_path / "reviews.json", _completed_reviews())
+    review_path = _write_json(tmp_path / "reviews.json", _completed_positive_reviews())
     result = evaluate_knowledge_value_trial(
         trial_path=TRIAL,
         mapping_path=MAPPING,
@@ -114,7 +134,7 @@ def test_a50_5_complete_positive_review_can_only_consider_expansion(tmp_path: Pa
 def test_a50_5_material_regression_blocks_expansion_recommendation(tmp_path: Path) -> None:
     review_path = _write_json(
         tmp_path / "reviews.json",
-        _completed_reviews(regression_case="lumen-object-metadata"),
+        _completed_positive_reviews(regression_case="lumen-object-metadata"),
     )
     result = evaluate_knowledge_value_trial(
         trial_path=TRIAL,
