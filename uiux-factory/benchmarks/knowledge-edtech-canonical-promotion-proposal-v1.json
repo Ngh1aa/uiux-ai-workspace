@@ -44,6 +44,15 @@
     "required_advantage_services": ["Assignment and Grade Services 2.0", "Names and Role Provisioning Services 2.0", "Deep Linking 2.0"],
     "candidate_metadata_matches": true
   },
+  "rollback": {
+    "restore_index_from_current_four_record_baseline": true,
+    "remove_only_future_edtech_canonical_assets": [
+      "skills_UIUX/knowledge/records/edtech-lti-context-roles-services-v2.json",
+      "skills_UIUX/knowledge/content/edtech-lti-context-roles-services-v2.md"
+    ],
+    "preserve_ev_canonical_record": true,
+    "preserve_revision_and_governance_history": true
+  },
   "required_execution_controls": [
     "owner_or_explicit_human_governance_approval",
     "fresh_source_version_recheck",
