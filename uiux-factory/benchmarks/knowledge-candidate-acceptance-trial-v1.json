@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-candidate-acceptance-trial-v1",
+  "version": "1.0.0",
+  "scope": "model_assisted_blind_candidate_acceptance_trial_not_product_evidence",
+  "generation": {
+    "surface": "user-directed ChatGPT session",
+    "model": "GPT-5.6 Sol",
+    "generated_on": "2026-10-02",
+    "runtime_provider_invoked": false,
+    "source_task": "A50.8 Candidate Acceptance Trial",
+    "note": "Paired advisory samples were authored in the same assistant session. No private chain-of-thought is stored. Samples are not runtime, user-validation or product evidence and do not authorize index mutation."
+  },
+  "rubric": [
+    "correctness",
+    "specificity_actionability",
+    "relevance_noise",
+    "unsupported_claim_risk",
+    "decision_usefulness"
+  ],
+  "cases": [
+    {
+      "id": "edtech-lti-integration-boundaries",
+      "candidate_id": "a50-6-edtech-lti",
+      "draft_record_id": "knowledge.domain.edtech-lti-context-roles-services.v1",
+      "domain": "education-edtech",
+      "flow_id": "professional-website-redesign",
+      "stage": "design",
+      "task": "Define product and UX decisions for an LMS experience that launches an external learning tool. Keep platform/tool ownership, course context, roles, roster access, assignment/grade exchange and content selection understandable without inventing which LTI services the project actually supports or claiming that LTI mandates a specific UI.",
+      "output_a": [
+        "Model the integration boundary explicitly as learning platform/LMS versus external tool. Treat launch context and user roles as integration context, not as proof that the product grants a particular permission or displays a particular control.",
+        "When project truth confirms LTI Advantage services, keep their ownership distinct: NRPS can inform names/roles roster context, AGS can inform assignment/line-item/grade exchange expectations, and Deep Linking can inform tool-provided content selection. Do not show those capabilities as available merely because the integration uses LTI 1.3.",
+        "For each supported integration capability, define which system is authoritative for the state the user sees, what happens when the capability is unavailable or not configured, and which user role is allowed to initiate the action according to project configuration rather than a guessed role model.",
+        "Keep launch, roster/context access, content selection and grade exchange as separate product concerns. A successful tool launch must not be presented as proof that roster provisioning or grade return is configured successfully.",
+        "QA the supported service set against project truth and integration configuration. LTI supplies protocol/service semantics; it does not prescribe the page layout, interaction pattern, institutional role taxonomy or security policy of this product."
+      ],
+      "output_b": [
+        "Treat the LMS and external learning tool as separate systems and make it clear which side owns the content or action the user is working with.",
+        "Document the course/class context and user role needed for each integration action rather than assuming every instructor or learner sees the same controls.",
+        "Separate launching the external tool, choosing content, accessing roster information and sending grades so one successful action is not mistaken for proof that all integration capabilities work.",
+        "Define empty, unavailable, permission and failure states for integration actions, with recovery guidance that does not blame the user for configuration problems.",
+        "Validate every displayed capability against the project's actual integration configuration and avoid claiming support for roster, grades or content selection unless the implementation confirms it."
+      ]
+    },
+    {
+      "id": "ev-ocpp-charging-session-truth",
+      "candidate_id": "a50-6-ev-ocpp",
+      "draft_record_id": "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+      "domain": "mobility-ev",
+      "flow_id": "professional-website-redesign",
+      "stage": "design",
+      "task": "Define charging-session states and product claims for an EV charging app/dashboard. Keep user-visible progress useful while avoiding the mistake of collapsing charging-station/backend protocol truth into generic loading/payment states or assuming every OCPP 2.1 capability is supported by the deployed system.",
+      "output_a": [
+        "Separate the user journey into connection/authorization, charging progress, interruption or stop, completion and payment/receipt concerns according to the project's actual system model. Do not use a single spinner or payment state as a substitute for charging-system truth.",
+        "Identify which backend or station observation supports each user-visible state, and mark states unavailable when the project cannot distinguish them reliably instead of inventing precision.",
+        "Treat smart-charging, bidirectional/V2X or energy-management features as optional capabilities that require explicit implementation evidence before they appear in the UI or marketing copy.",
+        "Keep charging completion, payment settlement and connector availability as separate concerns so a successful payment does not imply that energy transfer started or completed successfully.",
+        "QA interrupted, delayed, stopped and completed sessions against the project's real station/backend behavior, with recovery wording that reflects what the system actually knows."
+      ],
+      "output_b": [
+        "Use OCPP as charging-station/backend context rather than as a UI state machine. Product states should map to observations the deployed charging system can actually provide, while transaction/protocol semantics remain separate from payment presentation and generic loading feedback.",
+        "Keep charging-session truth distinct from adjacent concerns: station/connector availability, authorization, energy-transfer progress, transaction interruption/completion and payment/receipt status should not silently prove one another unless project evidence explicitly links them.",
+        "Treat OCPP 2.1 capabilities such as ISO 15118-20-related support, bidirectional/V2X, DER control and richer smart-charging behavior as conditional product context. Their presence in the standard is not proof that a charger, backend or deployment supports them.",
+        "For each visible charging state, record the station/backend observation that justifies it and define what the UI says when the observation is delayed, unavailable or contradictory. Prefer an explicit unknown/awaiting-confirmation state over false certainty.",
+        "QA session interruption, stop/completion, delayed backend updates and capability-gated features against the deployed protocol/backend configuration. OCPP reference knowledge constrains terminology and system boundaries; it does not authorize electrical, certification, billing or interoperability claims."
+      ]
+    }
+  ]
+}
