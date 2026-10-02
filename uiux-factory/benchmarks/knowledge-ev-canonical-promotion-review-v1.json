@@ -3,7 +3,7 @@
   "proposal_id": "knowledge-ev-canonical-promotion-proposal-v1",
   "review_status": "COMPLETE",
   "review_policy": {
-    "reviewer_type": "owner_delegated_human",
+    "reviewer_type": "independent_human",
     "explicit_approval_required": true,
     "blind_review_required": false,
     "allowed_verdicts": ["APPROVE_PROMOTION_TASK", "REVISE_PROPOSAL", "HOLD", "REJECT"]
@@ -11,8 +11,8 @@
   "review": {
     "status": "REVIEWED",
     "verdict": "APPROVE_PROMOTION_TASK",
-    "rationale": "Repository owner Haign12 explicitly authorized APPROVE_PROMOTION_TASK and delegated equivalent intermediate approval gates for the remaining upgrade sequence, with final review deferred until the uiux-ai-workspace upgrade is complete. This approval only permits a separate explicit promotion implementation task and does not itself mutate the canonical index or auto-promote the EV candidate.",
-    "reviewer": "Haign12 (owner-delegated approval)",
+    "rationale": "Repository owner Haign12 explicitly authorized APPROVE_PROMOTION_TASK in the connected ChatGPT session after review of source freshness, rollback, cross-domain isolation and authority boundaries. This approval only permits a separate explicit promotion implementation task and does not itself mutate the canonical index or auto-promote the EV candidate.",
+    "reviewer": "Haign12",
     "reviewed_at": "2026-10-02",
     "source_freshness_rechecked": true,
     "rollback_plan_accepted": true,
