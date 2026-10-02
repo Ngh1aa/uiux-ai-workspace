@@ -12,7 +12,13 @@ from core.runtime.flow_os.provider import (
     ProviderStageRequest,
     ProviderStageResponse,
 )
-from core.runtime.free_provider import FreeProvider, ProviderError
+from core.runtime.provider_compat_contract import (
+    PROVIDER_CONTEXT_CHAR_LIMIT,
+    PROVIDER_MAX_CALLS_PER_RUN,
+    PROVIDER_STAGE_MAX_TOKENS,
+    PROVIDER_STAGE_TIMEOUT,
+    ProviderError,
+)
 
 
 _TRANSIENT_ERROR_MARKERS = (
@@ -35,7 +41,7 @@ class ManagedArtifactCompletionAdapter:
     deliberately not wired into the Factory manager by A48.4.
     """
 
-    MAX_CALLS_PER_RUN = FreeProvider.MAX_CALLS_PER_RUN
+    MAX_CALLS_PER_RUN = PROVIDER_MAX_CALLS_PER_RUN
 
     def __init__(
         self,
@@ -54,13 +60,15 @@ class ManagedArtifactCompletionAdapter:
 
     @classmethod
     def from_env(cls, root: Path) -> "ManagedArtifactCompletionAdapter":
-        """Reuse the existing Factory free-tier configuration policy.
+        """Reuse the existing Factory free-tier configuration policy lazily.
 
-        This performs no provider network call. ``FreeProvider.from_env`` remains
-        the current owner of free-tier opt-in/model/key validation during the
-        migration window; A48.4 only converts the validated configs into the
-        canonical managed Groq/Gemini provider adapters.
+        ``FreeProvider`` owns the current free-tier opt-in/model/key validation,
+        but importing it also imports the aiohttp transport. Keep that import
+        inside this explicit opt-in construction path so canonical Flow OS module
+        import remains dependency-light.
         """
+
+        from core.runtime.free_provider import FreeProvider
 
         legacy = FreeProvider.from_env(root)
         providers: list[ModelProvider] = [
@@ -171,8 +179,8 @@ class ManagedArtifactCompletionAdapter:
         *,
         stage: str,
     ) -> ProviderStageResponse:
-        max_tokens = FreeProvider.STAGE_MAX_TOKENS.get(stage, 8000)
-        timeout_sec = FreeProvider.STAGE_TIMEOUT.get(stage, 120)
+        max_tokens = PROVIDER_STAGE_MAX_TOKENS.get(stage, 8000)
+        timeout_sec = PROVIDER_STAGE_TIMEOUT.get(stage, 120)
 
         def invoke() -> ProviderStageResponse:
             previous_tokens = getattr(provider, "max_output_tokens", None)
@@ -206,7 +214,7 @@ class ManagedArtifactCompletionAdapter:
         *,
         json_mode: bool = False,
     ) -> str:
-        if len(system) + len(prompt) > 80000:
+        if len(system) + len(prompt) > PROVIDER_CONTEXT_CHAR_LIMIT:
             raise ProviderError("Context vượt giới hạn 80.000 ký tự; hãy rút gọn brief/context.")
 
         request = self._request(
