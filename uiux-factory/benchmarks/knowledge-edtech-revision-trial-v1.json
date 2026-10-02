@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-edtech-revision-trial-v1",
+  "version": "1.0.0",
+  "scope": "single_candidate_blind_revision_trial_not_product_evidence",
+  "generation": {
+    "surface": "user-directed ChatGPT session",
+    "model": "GPT-5.6 Sol",
+    "generated_on": "2026-10-02",
+    "runtime_provider_invoked": false,
+    "source_task": "A50.9A EdTech Draft Revision",
+    "note": "The A50.8 baseline output is held fixed. The revised knowledge-assisted sample reflects only the v2 EdTech draft. No private chain-of-thought is stored; neither sample is runtime/product evidence."
+  },
+  "rubric": [
+    "correctness",
+    "specificity_actionability",
+    "relevance_noise",
+    "unsupported_claim_risk",
+    "decision_usefulness"
+  ],
+  "case": {
+    "id": "edtech-lti-integration-boundaries-revision-v2",
+    "candidate_id": "a50-6-edtech-lti",
+    "prior_record_id": "knowledge.domain.edtech-lti-context-roles-services.v1",
+    "revised_record_id": "knowledge.domain.edtech-lti-context-roles-services.v2",
+    "domain": "education-edtech",
+    "flow_id": "professional-website-redesign",
+    "stage": "design",
+    "task": "Define product and UX decisions for an LMS experience that launches an external learning tool. Make service ownership, concrete states and recovery behavior useful to the design team without inventing which LTI services, roles or retry actions the project actually supports.",
+    "output_a": [
+      "Treat the LMS and external learning tool as separate systems and make it clear which side owns the content or action the user is working with.",
+      "Document the course/class context and user role needed for each integration action rather than assuming every instructor or learner sees the same controls.",
+      "Separate launching the external tool, choosing content, accessing roster information and sending grades so one successful action is not mistaken for proof that all integration capabilities work.",
+      "Define empty, unavailable, permission and failure states for integration actions, with recovery guidance that does not blame the user for configuration problems.",
+      "Validate every displayed capability against the project's actual integration configuration and avoid claiming support for roster, grades or content selection unless the implementation confirms it."
+    ],
+    "output_b": [
+      "Model launch, NRPS roster/context access, Deep Linking content selection and AGS grade exchange as separate capability tracks. A successful LTI launch proves only launch success; it must not imply that roster, content selection or grade return are configured.",
+      "Use concrete states only when project truth can distinguish them: launch can be ready/launched/unavailable/failed; roster can be available/unavailable/role-limited/error; content selection can be available/unavailable/cancelled/failed/selected; grade exchange can be available/unavailable/pending/succeeded/failed.",
+      "Attach each visible state to an authoritative integration observation and required configured service. For example, roster_available requires confirmed NRPS availability for the current context/role, content_selected requires a usable Deep Linking result, and grade_send_succeeded requires a project-backed AGS exchange result rather than a local grade value.",
+      "For recovery, distinguish not configured, role/context limited, temporary failure and unknown when the implementation can tell them apart. Preserve LMS/course context, use the configured admin/support path for configuration-owned failures, and show retry/resubmit only when the implementation supports repeating that operation safely.",
+      "Keep LTI semantics as a truth boundary rather than a UI prescription: do not infer AGS, NRPS or Deep Linking support from LTI 1.3 alone, do not blame the user for configuration-owned failure, and prefer an explicit unknown/unconfirmed state over false success."
+    ]
+  }
+}
