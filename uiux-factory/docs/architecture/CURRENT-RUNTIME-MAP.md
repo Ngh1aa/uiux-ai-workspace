@@ -57,6 +57,8 @@ core/runtime/flow_os/factory_provider_adapter.py bounded compatibility adapter
 
 A48 established explicit provider capability reconciliation, artifact bridging, parity dogfood and a controlled opt-in compatibility lane.
 
+Historical A48 described the pre-convergence mismatch as **different provider entry/capability contracts**. That phrase remains an architecture regression anchor; current state is the bounded compatibility lane, not duplicate provider authority.
+
 Current rule:
 
 ```text
@@ -94,6 +96,8 @@ A49 reconciles lifecycle meaning across Factory and managed surfaces using:
 ```text
 INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
 ```
+
+Historical A48/A49 debt described the Factory and managed surfaces as **distinct top-level lifecycle APIs**. A49 made their meaning comparable through read-only projection/parity; it did not erase their separate mutation owners.
 
 `LifecycleProjection` remains read-only observability and does not introduce a third state machine or equate completion with release.
 
