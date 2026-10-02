@@ -1,13 +1,11 @@
 # A50.5 — Human/Model-Assisted Knowledge Value Trial
 
-Status: **MODEL-ASSISTED TRIAL IMPLEMENTED — INDEPENDENT HUMAN REVIEW PENDING**  
+Status: **ROUND 1 COMPLETE — REVISE BEFORE EXPANSION**  
 Date: **2026-10-02**
 
 ## Purpose
 
-A50.5 moves beyond A50.4 deterministic retrieval/usefulness proxies by creating representative paired outputs for the same task/flow context **with** and **without** the currently retrieved seed knowledge.
-
-It does not fabricate a human verdict. The checked-in state must remain blocked from corpus expansion until an independent reviewer records blind-first judgments.
+A50.5 moves beyond deterministic retrieval/usefulness proxies by comparing representative paired outputs for the same task/flow context **with** and **without** retrieved Knowledge OS context, then requiring a separate blind-first human review.
 
 Trial scope:
 
@@ -15,11 +13,11 @@ Trial scope:
 model_assisted_blind_pair_trial_not_human_or_product_evidence
 ```
 
-## Why this is not a live provider benchmark
+The trial is governance evidence about knowledge usefulness only. It is not runtime evidence, product evidence, release evidence or proof that hidden model reasoning improved.
 
-The repository has a managed provider compatibility lane, but provider execution is opt-in and environment-dependent. A50.5 does not assume CI has API keys and does not silently convert a ChatGPT conversation into canonical runtime-provider evidence.
+## Generation boundary
 
-The paired samples in this phase are captured as advisory model-assisted artifacts from the user-directed ChatGPT session and declare:
+Round-one paired samples were captured as advisory artifacts from the user-directed ChatGPT session:
 
 ```text
 generation surface = user-directed ChatGPT session
@@ -29,11 +27,9 @@ current_run_evidence = false
 product_evidence = false
 ```
 
-No chain-of-thought is stored.
+No private chain-of-thought is stored.
 
 ## Representative cases
-
-The trial covers the same three materially different domains used by A50.3/A50.4:
 
 ```text
 Nova    / financial-services  / implementation
@@ -41,30 +37,16 @@ Lumen   / art-culture         / research
 CENNEXT / industrial-services / research
 ```
 
-For each case, the task/flow/stage context is fixed and two reviewable outputs are stored as `A` and `B`. One is the baseline condition without the retrieved Knowledge OS record; the other is the knowledge-assisted condition.
+Each case has a baseline condition and a knowledge-assisted condition presented as A/B. The mapping is stored separately. Blinding is **procedural repository blinding**, not cryptographic blinding.
 
-The knowledge label alternates across cases so the reviewer cannot assume that the same letter always means the same condition.
-
-## Blinding model
-
-A50.5 uses **procedural repository blinding**, not cryptographic blinding.
-
-Review packet:
+Canonical round-one surfaces:
 
 ```text
-benchmarks/knowledge-value-review-packet-v1.md
 benchmarks/knowledge-value-trial-v1.json
-```
-
-Condition mapping:
-
-```text
 benchmarks/knowledge-value-trial-mapping-v1.json
+benchmarks/knowledge-value-human-reviews-v1.json
+benchmarks/knowledge-value-review-packet-v1.md
 ```
-
-A reviewer is instructed not to open the mapping until all blind scores/preferences/rationales are recorded.
-
-Because the mapping exists in the same repository, this must never be described as cryptographically blind or tamper-proof.
 
 ## Human review rubric
 
@@ -78,7 +60,7 @@ unsupported_claim_risk
 decision_usefulness
 ```
 
-Then the reviewer records:
+The reviewer then records:
 
 ```text
 preferred_output = A | B | TIE | INSUFFICIENT
@@ -88,15 +70,7 @@ reviewer
 reviewed_at
 ```
 
-The review ledger is:
-
-```text
-benchmarks/knowledge-value-human-reviews-v1.json
-```
-
-The checked-in A50.5 baseline contains three `PENDING` reviews with all human fields null. Tests reject fabricated reviewer data on a pending case.
-
-## Governance states
+## Governance evaluator
 
 Canonical evaluator:
 
@@ -112,23 +86,7 @@ REVISE_BEFORE_EXPANSION
 CONSIDER_EXPANSION
 ```
 
-### HOLD_PENDING_HUMAN
-
-Used whenever all three independent human reviews are not complete.
-
-This is the required checked-in baseline for A50.5.
-
-### REVISE_BEFORE_EXPANSION
-
-Used after complete review when the conditions for a positive expansion recommendation are not met, including a material regression, a baseline preference, or insufficient decision-usefulness improvement.
-
-This state does not automatically remove a seed record. It means the record/query/trial must be inspected before expanding the corpus.
-
-### CONSIDER_EXPANSION
-
-This is the strongest possible A50.5 recommendation, and it is still advisory.
-
-The evaluator requires all reviews complete plus:
+A positive expansion recommendation requires all reviews complete plus:
 
 ```text
 material_regression_count = 0
@@ -140,79 +98,93 @@ knowledge condition strictly stronger on both:
 in at least 2 of 3 cases
 ```
 
-Even then:
+Even `CONSIDER_EXPANSION` remains advisory:
 
 ```text
 expand_allowed = false
 auto_mutation_allowed = false
 ```
 
-Adding a fourth record or new category still requires a separate explicit source/ownership review and repository change.
+## Round-one human result
+
+The blind-first human review was completed and committed without changing the mapping or threshold.
+
+After unblinding:
+
+```text
+Nova     knowledge condition = B
+Lumen    knowledge condition = A
+CENNEXT  knowledge condition = B
+```
+
+Recorded preferences:
+
+```text
+Nova     → B / knowledge preferred
+Lumen    → A / knowledge preferred
+CENNEXT  → TIE
+```
+
+Derived counts:
+
+```text
+knowledge_preferred_count = 2
+baseline_preferred_count = 0
+tie_count = 1
+material_regression_count = 0
+```
+
+However, only Lumen had the knowledge-assisted condition strictly stronger on **both** `specificity_actionability` and `decision_usefulness`. Nova's knowledge condition improved conceptual correctness but lost some decision usefulness versus the baseline; CENNEXT's knowledge condition improved conceptual precision but tied overall because the baseline was more buyer-actionable.
+
+Therefore the canonical round-one result is:
+
+```text
+REVISE_BEFORE_EXPANSION
+```
+
+The threshold was not weakened to fit the result.
+
+## Revision implication
+
+Round one identified two bounded revision targets:
+
+```text
+Nova
+  preserve locale/currency correctness
+  + shared formatter boundary
+  + explicit fallback behavior
+  + concrete QA matrix
+
+CENNEXT
+  preserve technical claim taxonomy
+  + buyer decision path
+  + traceable proof modules
+  + customer approval / repair-vs-replace decision support
+```
+
+Lumen remains the control because its knowledge-assisted output already met the combined specificity/actionability + decision-usefulness threshold.
+
+These changes are implemented and re-tested separately in **A50.5R — Knowledge Revision Pass / Round 2**. Round-one files remain immutable historical evidence of the prior governance outcome.
 
 ## Truth boundary
 
-A50.5 can establish that:
+A50.5 establishes that:
 
-- representative paired model outputs exist;
-- task/flow/stage context is fixed per pair;
+- paired advisory outputs exist;
 - the condition mapping is explicit and mixed across A/B labels;
-- human-review fields are not fabricated;
-- future complete human reviews can be converted into bounded governance states;
-- corpus mutation remains impossible through this evaluator.
+- human review provenance is recorded separately;
+- the round-one human verdict is complete;
+- the round-one result is `REVISE_BEFORE_EXPANSION`;
+- corpus mutation remains impossible through the evaluator.
 
 A50.5 does **not** establish that:
 
-- the knowledge corpus improves real user outcomes;
-- a human reviewer currently prefers the knowledge-assisted outputs;
-- the model's hidden reasoning improved;
-- the source facts are fresh for every future project;
-- a runtime gate passed;
-- a release is safe;
-- the corpus should automatically expand.
+- real user outcomes improved;
+- hidden model reasoning improved;
+- the corpus should automatically expand;
+- a runtime/release gate passed;
+- source facts remain current forever.
 
-## Implementation surfaces
+## Next task
 
-```text
-benchmarks/knowledge-value-trial-v1.json
-benchmarks/knowledge-value-trial-mapping-v1.json
-benchmarks/knowledge-value-human-reviews-v1.json
-benchmarks/knowledge-value-review-packet-v1.md
-core/benchmarks/knowledge_value_trial.py
-scripts/validate_knowledge_value_trial.py
-tests/test_knowledge_value_trial_a50.py
-```
-
-Main CI validates the checked-in trial before the full pytest suite.
-
-## Completion boundary
-
-A50.5 has two distinct completion levels:
-
-### Engineering implementation complete
-
-```text
-paired artifacts captured
-blind-first packet present
-condition mapping present
-human review ledger present
-fail-closed evaluator implemented
-governance regression in CI
-full Factory regression green
-```
-
-### Human value verdict complete
-
-Requires an independent human to review all three cases and commit the review ledger. Until then:
-
-```text
-human_review_complete = false
-expansion_recommendation = HOLD_PENDING_HUMAN
-```
-
-This distinction prevents the engineering task from fabricating the human evidence it was explicitly designed to obtain.
-
-## Next task after engineering merge
-
-Perform the **A50.5 human review pass** using `knowledge-value-review-packet-v1.md`, then update only the review ledger first. Let the evaluator derive `CONSIDER_EXPANSION` or `REVISE_BEFORE_EXPANSION`; do not edit the mapping, seed records or threshold to fit the desired outcome.
-
-If and only if the human verdict supports it, the next architecture task may define a bounded **A50.6 Corpus Expansion Proposal**. Vector search remains deferred until corpus breadth and deterministic retrieval actually justify it.
+Proceed through **A50.5R round-two blind review**. Only if the unchanged evaluator derives `CONSIDER_EXPANSION` after a complete round-two human review should a separate **A50.6 Corpus Expansion Proposal** be opened. Vector search remains deferred.
