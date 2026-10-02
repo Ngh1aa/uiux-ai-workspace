@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "proposal_id": "knowledge-edtech-canonical-promotion-proposal-v1",
+  "review_status": "COMPLETE",
+  "review_policy": {
+    "reviewer_type": "owner_delegated_governance",
+    "delegation_id": "governance-owner-delegation-2026-10-02",
+    "explicit_approval_required": true,
+    "allowed_verdicts": ["APPROVE_PROMOTION_TASK", "REVISE_PROPOSAL", "HOLD", "REJECT"]
+  },
+  "review": {
+    "status": "REVIEWED",
+    "verdict": "APPROVE_PROMOTION_TASK",
+    "rationale": "Repository owner Haign12 explicitly preauthorized continuation and equivalent intermediate approvals for subsequent uiux-ai-workspace upgrade tasks after required checks pass. A50.11 source freshness, current four-record baseline, historical A50.9C canary evidence, rollback/cross-domain risk and authority boundaries are required to pass before this verdict is actionable. This verdict only opens a separate EdTech canonical implementation task and does not mutate the index or auto-promote the candidate.",
+    "reviewer": "Haign12 (standing owner delegation)",
+    "reviewed_at": "2026-10-02",
+    "source_freshness_rechecked": true,
+    "rollback_plan_accepted": true,
+    "cross_domain_risk_accepted": true,
+    "current_four_record_baseline_accepted": true
+  }
+}
