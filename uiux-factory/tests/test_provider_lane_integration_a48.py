@@ -115,6 +115,35 @@ def test_a48_manager_builds_managed_adapter_only_when_explicitly_selected(
     assert source == "explicit"
 
 
+def test_a48_managed_selection_failure_never_falls_back_to_legacy(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manager = _manager(tmp_path)
+    legacy_calls: list[Path] = []
+    monkeypatch.setenv(FACTORY_PROVIDER_LANE_ENV, "managed_compat")
+
+    def managed_failure(root: Path):
+        raise RuntimeError("managed compatibility unavailable")
+
+    def legacy_factory(root: Path):
+        legacy_calls.append(root)
+        return _LegacyProvider()
+
+    monkeypatch.setattr(
+        "core.runtime.flow_os.factory_provider_adapter.ManagedArtifactCompletionAdapter.from_env",
+        managed_failure,
+    )
+    monkeypatch.setattr(
+        "core.runtime.free_provider.FreeProvider.from_env",
+        legacy_factory,
+    )
+
+    with pytest.raises(RuntimeError, match="managed compatibility unavailable"):
+        manager._create_ai_provider()
+    assert legacy_calls == []
+
+
 def test_a48_provider_lane_provenance_is_secret_free_and_non_authoritative(tmp_path: Path) -> None:
     manager = _manager(tmp_path)
     run_dir = tmp_path / "run"
