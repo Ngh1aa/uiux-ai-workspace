@@ -1,6 +1,6 @@
 # A50.5 — Human/Model-Assisted Knowledge Value Trial
 
-Status: **ROUND 1 COMPLETE — REVISE BEFORE EXPANSION**  
+Status: **ROUND 1 COMPLETE — REVISE BEFORE EXPANSION; ROUND 2 COMPLETE — CONSIDER EXPANSION**  
 Date: **2026-10-02**
 
 ## Purpose
@@ -17,7 +17,7 @@ The trial is governance evidence about knowledge usefulness only. It is not runt
 
 ## Generation boundary
 
-Round-one paired samples were captured as advisory artifacts from the user-directed ChatGPT session:
+Paired samples are advisory artifacts from the user-directed ChatGPT session:
 
 ```text
 generation surface = user-directed ChatGPT session
@@ -39,13 +39,22 @@ CENNEXT / industrial-services / research
 
 Each case has a baseline condition and a knowledge-assisted condition presented as A/B. The mapping is stored separately. Blinding is **procedural repository blinding**, not cryptographic blinding.
 
-Canonical round-one surfaces:
+Round-one surfaces:
 
 ```text
 benchmarks/knowledge-value-trial-v1.json
 benchmarks/knowledge-value-trial-mapping-v1.json
 benchmarks/knowledge-value-human-reviews-v1.json
 benchmarks/knowledge-value-review-packet-v1.md
+```
+
+Round-two surfaces:
+
+```text
+benchmarks/knowledge-value-trial-v2.json
+benchmarks/knowledge-value-trial-mapping-v2.json
+benchmarks/knowledge-value-human-reviews-v2.json
+benchmarks/knowledge-value-review-packet-v2.md
 ```
 
 ## Human review rubric
@@ -98,6 +107,12 @@ knowledge condition strictly stronger on both:
 in at least 2 of 3 cases
 ```
 
+The evaluator exposes the latter count as:
+
+```text
+joint_usefulness_win_count
+```
+
 Even `CONSIDER_EXPANSION` remains advisory:
 
 ```text
@@ -132,59 +147,83 @@ knowledge_preferred_count = 2
 baseline_preferred_count = 0
 tie_count = 1
 material_regression_count = 0
+joint_usefulness_win_count = 1
 ```
 
-However, only Lumen had the knowledge-assisted condition strictly stronger on **both** `specificity_actionability` and `decision_usefulness`. Nova's knowledge condition improved conceptual correctness but lost some decision usefulness versus the baseline; CENNEXT's knowledge condition improved conceptual precision but tied overall because the baseline was more buyer-actionable.
-
-Therefore the canonical round-one result is:
+Therefore the canonical round-one result remains:
 
 ```text
 REVISE_BEFORE_EXPANSION
 ```
 
-The threshold was not weakened to fit the result.
+## Round-two revision trial result
 
-## Revision implication
+A50.5R revised only the two underperforming existing records (Nova and CENNEXT), preserved their round-one baselines exactly, kept Lumen as the unchanged control, mixed A/B labels again, and retained the same governance threshold.
 
-Round one identified two bounded revision targets:
+The reviewer completed all three round-two blind judgments before opening the v2 mapping.
+
+After unblinding:
 
 ```text
-Nova
-  preserve locale/currency correctness
-  + shared formatter boundary
-  + explicit fallback behavior
-  + concrete QA matrix
-
-CENNEXT
-  preserve technical claim taxonomy
-  + buyer decision path
-  + traceable proof modules
-  + customer approval / repair-vs-replace decision support
+Nova     knowledge condition = A
+Lumen    knowledge condition = B
+CENNEXT  knowledge condition = A
 ```
 
-Lumen remains the control because its knowledge-assisted output already met the combined specificity/actionability + decision-usefulness threshold.
+Recorded preferences:
 
-These changes are implemented and re-tested separately in **A50.5R — Knowledge Revision Pass / Round 2**. Round-one files remain immutable historical evidence of the prior governance outcome.
+```text
+Nova     → A / knowledge preferred
+Lumen    → B / knowledge preferred
+CENNEXT  → A / knowledge preferred
+```
+
+Derived counts:
+
+```text
+human_review_complete = true
+reviewed_case_count = 3
+knowledge_preferred_count = 3
+baseline_preferred_count = 0
+tie_count = 0
+insufficient_count = 0
+material_regression_count = 0
+joint_usefulness_win_count = 3
+```
+
+The unchanged evaluator therefore derives:
+
+```text
+CONSIDER_EXPANSION
+```
+
+This means the revision crossed the governance threshold; it does **not** mean the corpus may mutate automatically.
 
 ## Truth boundary
 
-A50.5 establishes that:
+A50.5/A50.5R establishes that:
 
 - paired advisory outputs exist;
-- the condition mapping is explicit and mixed across A/B labels;
+- the condition mappings are explicit and mixed across A/B labels;
 - human review provenance is recorded separately;
-- the round-one human verdict is complete;
-- the round-one result is `REVISE_BEFORE_EXPANSION`;
+- round one remains immutable historical `REVISE_BEFORE_EXPANSION` evidence;
+- round two is complete and derives `CONSIDER_EXPANSION` under the unchanged threshold;
+- the round-two knowledge condition is preferred 3/3 with 3/3 joint specificity/actionability + decision-usefulness wins and no material regressions;
 - corpus mutation remains impossible through the evaluator.
 
-A50.5 does **not** establish that:
+A50.5/A50.5R does **not** establish that:
 
 - real user outcomes improved;
 - hidden model reasoning improved;
-- the corpus should automatically expand;
+- source facts remain current forever;
 - a runtime/release gate passed;
-- source facts remain current forever.
+- an arbitrary fourth record is safe or useful;
+- vector search is justified.
 
 ## Next task
 
-Proceed through **A50.5R round-two blind review**. Only if the unchanged evaluator derives `CONSIDER_EXPANSION` after a complete round-two human review should a separate **A50.6 Corpus Expansion Proposal** be opened. Vector search remains deferred.
+Open **A50.6 — Corpus Expansion Proposal**.
+
+A50.6 is a proposal/governance phase, not automatic corpus growth. Candidate records must receive explicit source, ownership, duplication, freshness, scope and retrieval-value review before any later accepted implementation mutates the canonical index.
+
+Vector search remains deferred.
