@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "audit_id": "post-interop-executable-debt-audit-v1",
+  "version": "1.0.0",
+  "phase": "A52.3",
+  "checked_on": "2026-10-02",
+  "scope": "architecture_debt_selection_only_no_runtime_mutation",
+  "source_contracts": {
+    "provider_readiness": "uiux-factory/benchmarks/provider-default-migration-readiness-v1.json",
+    "provider_live_receipts": "uiux-factory/benchmarks/provider-live-trial-receipts-v1.json",
+    "lifecycle_mutation_readiness": "uiux-factory/benchmarks/lifecycle-mutation-convergence-readiness-v1.json",
+    "lifecycle_event_interop": "uiux-factory/benchmarks/lifecycle-event-interop-v1.json",
+    "genai_freshness": "uiux-factory/benchmarks/knowledge-genai-nist-freshness-review-v1.json",
+    "knowledge_canonical_state": "uiux-factory/benchmarks/knowledge-canonical-state-v3.json"
+  },
+  "blocked_or_deferred_debts": {
+    "provider_default_migration": {
+      "expected_default_lane": "legacy",
+      "expected_collection_status": "NOT_RUN",
+      "expected_live_receipt_count": 0,
+      "selection_eligible": false,
+      "reason": "external live-provider contract evidence is incomplete"
+    },
+    "lifecycle_mutation_convergence": {
+      "expected_blockers": [
+        "distinct_state_models",
+        "factory_append_only_chronology",
+        "managed_checkpoint_and_stage_lineage",
+        "managed_human_gate_semantics",
+        "replan_invalidation_semantics_non_parity",
+        "finalize_release_semantics_non_parity"
+      ],
+      "selection_eligible": false,
+      "reason": "all A52.1 mutation blockers remain and explicit mutation governance is closed"
+    },
+    "genai_nist_expansion": {
+      "expected_decision": "KEEP_HOLD_FRESHNESS_REVIEW",
+      "selection_eligible": false,
+      "reason": "official NIST framework status-change trigger has not opened a drafting/promotion path"
+    },
+    "vector_semantic_retrieval": {
+      "expected_vector_search_change_allowed": false,
+      "selection_eligible": false,
+      "reason": "canonical Knowledge OS governance keeps vector/semantic retrieval deferred"
+    }
+  },
+  "compatibility_shims": {
+    "scan_roots": [
+      "uiux-factory",
+      "skills_UIUX/scripts"
+    ],
+    "expected_shims": [
+      {
+        "path": "skills_UIUX/runtime/adaptive_surface.py",
+        "module": "runtime.adaptive_surface",
+        "canonical_module": "core.runtime.flow_os.adaptive_surface"
+      },
+      {
+        "path": "skills_UIUX/runtime/agent.py",
+        "module": "runtime.agent",
+        "canonical_module": "core.runtime.flow_os.agent"
+      },
+      {
+        "path": "skills_UIUX/runtime/flow.py",
+        "module": "runtime.flow",
+        "canonical_module": "core.runtime.flow_os.flow"
+      },
+      {
+        "path": "skills_UIUX/runtime/manager.py",
+        "module": "runtime.manager",
+        "canonical_module": "core.runtime.flow_os.managed"
+      },
+      {
+        "path": "skills_UIUX/runtime/mcp_server.py",
+        "module": "runtime.mcp_server",
+        "canonical_module": "core.runtime.flow_os.mcp_server"
+      },
+      {
+        "path": "skills_UIUX/runtime/provider.py",
+        "module": "runtime.provider",
+        "canonical_module": "core.runtime.flow_os.provider"
+      },
+      {
+        "path": "skills_UIUX/runtime/provider_runner.py",
+        "module": "runtime.provider_runner",
+        "canonical_module": "core.runtime.flow_os.provider_runner"
+      },
+      {
+        "path": "skills_UIUX/runtime/task_context.py",
+        "module": "runtime.task_context",
+        "canonical_module": "core.runtime.flow_os.task_context"
+      }
+    ],
+    "required_known_internal_consumers": [
+      {
+        "path": "uiux-factory/tests/test_adaptive_flow.py",
+        "modules": ["runtime.flow", "runtime.task_context"]
+      },
+      {
+        "path": "uiux-factory/tests/test_canonical_runtime_a4.py",
+        "modules": ["runtime.flow", "runtime.manager", "runtime.task_context"]
+      },
+      {
+        "path": "uiux-factory/tests/test_runtime_lifecycle_context.py",
+        "modules": ["runtime.flow", "runtime.task_context"]
+      },
+      {
+        "path": "uiux-factory/tests/test_task_contract.py",
+        "modules": ["runtime.agent", "runtime.flow", "runtime.manager", "runtime.task_context"]
+      },
+      {
+        "path": "skills_UIUX/scripts/context-manifest.py",
+        "modules": ["runtime.agent"]
+      },
+      {
+        "path": "skills_UIUX/scripts/validate-flows.py",
+        "modules": ["runtime.flow"]
+      },
+      {
+        "path": "skills_UIUX/scripts/validate-provider-runtime.py",
+        "modules": ["runtime.agent", "runtime.manager", "runtime.provider", "runtime.provider_runner"]
+      },
+      {
+        "path": "skills_UIUX/scripts/validate-runtime-foundation.py",
+        "modules": ["runtime.agent", "runtime.manager"]
+      }
+    ],
+    "expected_internal_consumer_file_count": 8,
+    "expected_internal_consumer_import_count": 19,
+    "selection_policy": {
+      "internal_consumers_present": "SELECT_COMPAT_SHIM_RETIREMENT_READINESS",
+      "no_internal_consumers": "SELECT_COMPAT_SHIM_REMOVAL_GOVERNANCE"
+    }
+  },
+  "decision_policy": {
+    "shim_contract_regression": "HOLD_COMPAT_SHIM_ARCHITECTURE_REGRESSION",
+    "source_truth_drift": "HOLD_EXECUTABLE_DEBT_TRUTH_DRIFT",
+    "consumer_census_drift": "HOLD_COMPAT_SHIM_CONSUMER_CENSUS_DRIFT",
+    "no_unblocked_internal_debt": "HOLD_NO_UNBLOCKED_INTERNAL_EXECUTABLE_DEBT"
+  },
+  "governance": {
+    "runtime_mutation_allowed": false,
+    "shim_deletion_allowed": false,
+    "provider_default_change_allowed": false,
+    "lifecycle_state_owner_change_allowed": false,
+    "routing_change_allowed": false,
+    "genai_promotion_allowed": false,
+    "vector_search_change_allowed": false,
+    "execution_effect": "none",
+    "authority_effect": "none",
+    "gate_effect": "none",
+    "evidence_effect": "none",
+    "release_effect": "none",
+    "product_evidence": false,
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  }
+}
