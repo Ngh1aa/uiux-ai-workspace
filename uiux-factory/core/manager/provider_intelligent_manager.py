@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
+from typing import Any
 
 from core.contracts.design_context_schema import DesignContext
 from core.manager.intelligent_manager import IntelligentDevelopmentManager
@@ -10,6 +12,11 @@ from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 from core.orchestration.reference_intelligence import ReferenceIntelligencePlanner
 from core.orchestration.skill_governance import FlowReplanner, SkillGovernanceSnapshot
 from core.runtime.harness_runtime import HarnessInspiredRuntime
+from core.runtime.provider_compat_contract import (
+    FACTORY_PROVIDER_LANE_ENV,
+    build_provider_lane_provenance,
+    resolve_factory_provider_lane,
+)
 from core.runtime.run_context import RunContext
 from core.team.intelligent_team_runner import IntelligentTeamRunner
 
@@ -60,6 +67,51 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
                 "DesignContext.brain='external' must use engine='external'; internal providers "
                 "must not silently replace the declared external brain."
             )
+
+    @staticmethod
+    def _resolve_provider_lane(env: dict[str, str] | None = None) -> tuple[str, str]:
+        return resolve_factory_provider_lane(os.environ if env is None else env)
+
+    def _create_ai_provider(self) -> tuple[Any, str, str]:
+        lane, selection_source = self._resolve_provider_lane()
+        if lane == "legacy":
+            from core.runtime.free_provider import FreeProvider
+
+            provider = FreeProvider.from_env(self.root)
+            return provider, lane, selection_source
+
+        from core.runtime.flow_os.factory_provider_adapter import ManagedArtifactCompletionAdapter
+
+        provider = ManagedArtifactCompletionAdapter.from_env(self.root)
+        return provider, lane, selection_source
+
+    def _write_provider_lane_provenance(
+        self,
+        context: RunContext,
+        *,
+        provider: Any,
+        lane: str,
+        selection_source: str,
+    ) -> Path:
+        payload = build_provider_lane_provenance(
+            provider=provider,
+            lane=lane,
+            selection_source=selection_source,
+        )
+        path = Path(context.run_dir) / "provider-lane.json"
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        context.add_artifact("provider_lane", path)
+        context.event_bus().emit(
+            "provider.lane_selected",
+            data={
+                "lane": lane,
+                "selection_source": selection_source,
+                "provider_class": payload["provider_class"],
+                "automatic_cross_lane_fallback": False,
+                "provenance": str(path),
+            },
+        )
+        return path
 
     def _run_external_handoff(self, context: RunContext) -> Path:
         target = context.design_context.target
@@ -143,10 +195,14 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
 
             provider = None
             if engine == "ai":
-                from core.runtime.free_provider import FreeProvider
-
-                provider = FreeProvider.from_env(self.root)
+                provider, provider_lane, provider_selection = self._create_ai_provider()
                 self.team_runner.set_provider(provider)
+                self._write_provider_lane_provenance(
+                    context,
+                    provider=provider,
+                    lane=provider_lane,
+                    selection_source=provider_selection,
+                )
 
             print(f"\n[DevelopmentManager] Run ID: {context.run_id}")
             print(f"[DevelopmentManager] Goal received: {goal}")

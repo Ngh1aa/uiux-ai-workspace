@@ -254,12 +254,17 @@ def test_a48_adapter_module_does_not_import_legacy_transport_at_module_scope() -
     assert "from core.runtime.free_provider import FreeProvider" in source
 
 
-def test_a48_adapter_is_not_wired_into_factory_manager_by_default() -> None:
+def test_a48_adapter_manager_integration_remains_explicit_opt_in_with_legacy_default() -> None:
     manager_source = (
         Path(__file__).resolve().parents[1]
         / "core/manager/provider_intelligent_manager.py"
     ).read_text(encoding="utf-8")
 
-    assert "from core.runtime.free_provider import FreeProvider" in manager_source
+    assert "from core.runtime.provider_compat_contract import (" in manager_source
+    assert "FACTORY_PROVIDER_LANE_ENV" in manager_source
+    assert "resolve_factory_provider_lane" in manager_source
+    assert 'if lane == "legacy":' in manager_source
     assert "FreeProvider.from_env(self.root)" in manager_source
-    assert "ManagedArtifactCompletionAdapter" not in manager_source
+    assert "ManagedArtifactCompletionAdapter.from_env(self.root)" in manager_source
+    assert "build_provider_lane_provenance" in manager_source
+    assert "automatic_cross_lane_fallback" in manager_source

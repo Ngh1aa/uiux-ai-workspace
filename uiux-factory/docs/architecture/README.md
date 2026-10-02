@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A47 MERGED + A48.1–A48.4 MERGED + A48.5 PARITY BENCHMARK IMPLEMENTED**  
+Status: **A40–A47 MERGED + A48.1–A48.5 MERGED + A48.6 CONTROLLED PROVIDER INTEGRATION IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@834a84d7c6783f7889538c00cc96b0755a1da631`
+Current architecture baseline: `main@abc25946ca37d5b9f155056e616de120b093e9ad`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -34,6 +34,7 @@ This directory contains the current architecture truth for UIUX Factory / Flow O
 24. `A48-PROVIDER-ARTIFACT-BRIDGE.md` — bounded optional raw-artifact field on the canonical managed provider response.
 25. `A48-MANAGED-PROVIDER-COMPAT-ADAPTER.md` — opt-in async Factory-completion adapter over existing managed providers.
 26. `A48-PROVIDER-PARITY-DOGFOOD.md` — deterministic provider-contract parity plus project-profile compatibility smoke.
+27. `A48-CONTROLLED-PROVIDER-INTEGRATION.md` — explicit manager lane selection, legacy default, rollback and provider-lane provenance.
 
 ## Current architecture statement
 
@@ -80,7 +81,7 @@ A47 provenance-aware scorecard mirrors canonical `RunEvaluation.outcome` verbati
 
 A48.2 records provider capability gaps and proves direct substitution unsafe. A48.3 adds the bounded optional raw `artifact` carrier to canonical `ProviderStageResponse` without changing evidence/gate truth.
 
-A48.4 adds `ManagedArtifactCompletionAdapter`, preserving Factory async `complete(...) -> str` while offloading synchronous managed providers through `asyncio.to_thread(...)`. The adapter uses a dependency-light shared compatibility contract for context/call/token/timeout limits and lazy-loads the legacy transport only in explicit `from_env()` construction. It is **not wired into `core/manager/` by default**.
+A48.4 adds `ManagedArtifactCompletionAdapter`, preserving Factory async `complete(...) -> str` while offloading synchronous managed providers through `asyncio.to_thread(...)`. The adapter uses a dependency-light shared compatibility contract for context/call/token/timeout limits and lazy-loads the legacy transport only in explicit `from_env()` construction.
 
 A48.5 adds deterministic provider parity under:
 
@@ -98,7 +99,15 @@ A48.5 output is explicitly scoped as:
 offline_contract_parity_not_live_provider_or_product_evidence
 ```
 
-It does not replace A13/A14/A20, browser/render QA, live-provider verification, real-user validation or product metrics.
+A48.6 wires the compatibility adapter into the Factory manager behind one explicit migration flag:
+
+```text
+UIUX_FACTORY_PROVIDER_LANE=managed_compat
+```
+
+The default remains `legacy` when the flag is absent. Allowed values are only `legacy` and `managed_compat`; unknown values fail closed. There is no automatic cross-lane fallback. AI-engine runs persist secret-free `provider-lane.json` execution provenance, but that artifact has no evidence/gate/release authority.
+
+Provider default migration remains a separate governance decision requiring stronger live-provider evidence; A48.6 does not make it.
 
 ## Regression and dogfood
 
@@ -106,7 +115,7 @@ Main UIUX Factory CI validates deterministic product/routing/repair/memory/score
 
 ## Remaining architecture debt
 
-1. Provider execution convergence is still **not default**. A48.6 may add controlled manager opt-in only after A48.5 final-head verification is green; default migration remains a separate decision.
+1. Provider convergence now has a controlled opt-in lane, but `legacy` remains the default. Any future default migration requires separate live-provider evidence and an explicit governance decision.
 2. Factory product execution (`run.py` + `core/manager/`) and managed CLI execution share routing/runtime owners but still expose distinct top-level lifecycle APIs.
 3. A broader declarative Knowledge OS is not implemented as one canonical subsystem; methodology remains correctly owned by `skills_UIUX`.
 
@@ -122,4 +131,4 @@ When documents disagree:
 
 ## Next architecture task
 
-After A48.5 is green and merged, A48.6 may add a **controlled manager opt-in integration** with explicit feature flag, legacy default, immediate rollback and lane provenance. No provider default migration belongs in the same task.
+After A48.6 is green and merged, move to **A49.1 — Lifecycle Contract Reconciliation**. Map Factory and managed top-level lifecycle phases, inputs/outputs, evidence, authority and side effects before attempting any lifecycle adapter. Do not combine provider default migration with lifecycle convergence.
