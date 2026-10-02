@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "review_id": "knowledge-genai-nist-freshness-review-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "phase": "A50.14",
+  "scope": "freshness_governance_only_no_draft_or_index_mutation",
+  "candidate_id": "a50-6-genai-nist",
+  "candidate_record_id": "knowledge.domain.genai-risk-context-nist-ai-600-1.v1",
+  "source_receipts": [
+    {
+      "source": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "publisher": "NIST",
+      "finding": "NIST AI 600-1 remains the official Generative AI Profile resource; publication date July 26, 2024; page updated April 8, 2026."
+    },
+    {
+      "source": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "publisher": "NIST",
+      "finding": "NIST states AI RMF 1.0 is being revised as part of the White House AI Action Plan."
+    },
+    {
+      "source": "https://airc.nist.gov/airmf-resources/airmf/?version=published",
+      "publisher": "NIST AIRC",
+      "finding": "The AI RMF 1.0 is being updated and a revised version is in progress."
+    }
+  ],
+  "freshness_assessment": {
+    "ai_600_1_official_and_current_resource": true,
+    "ai_rmf_1_0_revision_in_progress": true,
+    "candidate_revision_caveat_still_accurate": true,
+    "framework_dependency_stable_enough_for_drafting": false,
+    "freshness_risk": "HIGH"
+  },
+  "decision": "KEEP_HOLD_FRESHNESS_REVIEW",
+  "rationale": "NIST AI 600-1 remains a valid official GenAI Profile, but its companion AI RMF 1.0 is still under active revision. The candidate caveat remains accurate, yet the dependency is not stable enough to open a content-draft, canary or promotion path without risking immediately stale framing.",
+  "re_review_trigger": {
+    "type": "official_nist_framework_status_change",
+    "condition": "Re-review when NIST publishes a revised AI RMF replacing 1.0 or explicitly states the active revision is complete/stable enough for profile-context reuse."
+  },
+  "governance": {
+    "canonical_index_expected_count": 5,
+    "candidate_must_remain_unindexed": true,
+    "draft_creation_allowed": false,
+    "canonical_record_creation_allowed": false,
+    "index_mutation_allowed": false,
+    "acceptance_trial_allowed": false,
+    "canary_allowed": false,
+    "promotion_allowed": false,
+    "vector_search_change_allowed": false,
+    "product_evidence": false,
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  }
+}
