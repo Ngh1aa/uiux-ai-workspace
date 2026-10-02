@@ -95,6 +95,7 @@ jobs:
           python ../skills_UIUX/scripts/validate-runtime-foundation.py
           python scripts/validate_benchmark_corpus.py --manifest "$REPORT_ROOT/benchmark-v2.json"
           python scripts/validate_final_upgrade_regression.py
+          python scripts/validate_final_owner_review_closure.py
 
       - name: Run full Factory regression suite
         working-directory: uiux-factory
@@ -146,6 +147,13 @@ jobs:
           python scripts/validate_final_upgrade_regression.py \
             --report-root "$REPORT_ROOT" \
             --output "$REPORT_ROOT/flow4-final.json"
+
+      - name: Aggregate Flow 5 final owner review closure
+        working-directory: uiux-factory
+        run: |
+          python scripts/validate_final_owner_review_closure.py \
+            --flow4-report "$REPORT_ROOT/flow4-final.json" \
+            --output "$REPORT_ROOT/flow5-closure.json"
 
       - name: Upload A20 release evidence
         if: always()
