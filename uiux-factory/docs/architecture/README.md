@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A47 MERGED + A48.1–A48.2 MERGED + A48.3 ARTIFACT BRIDGE IMPLEMENTED**  
+Status: **A40–A47 MERGED + A48.1–A48.3 MERGED + A48.4 COMPATIBILITY ADAPTER IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@da42c1d222edca440943be02671432247dd4a91c`
+Current architecture baseline: `main@244ec6ff8c2fe74d5103f83cebaa6cdab00d8eeb`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -32,6 +32,7 @@ This directory contains the current architecture truth for UIUX Factory / Flow O
 22. `A48-ARCHITECTURE-TRUTH-RECONCILIATION.md` — post-A47 architecture truth reconciliation and remaining debt.
 23. `A48-PROVIDER-CAPABILITY-RECONCILIATION.md` — executable parity/gap map for Factory and managed free-tier provider entry paths.
 24. `A48-PROVIDER-ARTIFACT-BRIDGE.md` — bounded optional raw-artifact field on the canonical managed provider response.
+25. `A48-MANAGED-PROVIDER-COMPAT-ADAPTER.md` — opt-in async Factory-completion adapter over existing managed providers.
 
 ## Current architecture statement
 
@@ -104,33 +105,30 @@ It mirrors canonical `RunEvaluation.outcome` verbatim and keeps critic/integrity
 
 ## Provider convergence boundary
 
-A48.2 adds a read-only parity/gap contract under:
+A48.2 records the current provider capability gaps and proves direct substitution is unsafe. A48.3 adds the missing bounded optional raw `artifact` carrier to canonical `ProviderStageResponse` without changing evidence/gate truth.
+
+A48.4 adds the opt-in migration bridge:
 
 ```text
-core/runtime/flow_os/provider_capabilities.py
+core/runtime/flow_os/factory_provider_adapter.py
+::ManagedArtifactCompletionAdapter
 ```
 
-It describes the two current free-tier entry paths without executing either provider:
+The adapter preserves the Factory async `complete(...) -> str` caller shape while delegating synchronous `run_stage(...)` work through `asyncio.to_thread(...)`. It reuses Factory context/call budgets, provider ordering, bounded retry/fallback and history semantics.
+
+Compatibility responses are strictly local neutral carriers:
 
 ```text
-Factory: async FreeProvider.complete(...) -> raw artifact text
-Managed: sync OpenAICompatibleFreeTierProvider.run_stage(...) -> ProviderStageResponse
+status = CONTINUE
+actions = []
+evidence = []
+replan_signal = null
+artifact = raw output
 ```
 
-Both support explicitly enabled Groq/Gemini free-tier transport, but direct object substitution remains unsafe. The Factory lane depends on async raw-artifact completion, optional JSON mode, stage-specific budgets, multi-provider fallback and provider call history. The managed lane owns typed `ProviderStageRequest/ProviderStageResponse`, structured status/actions/evidence and managed replan semantics.
+The carrier status never reaches `ManagedFlowController` as a lifecycle decision. Any PASS/FAIL/BLOCKED, tool action, evidence or replan signal in compatibility mode fails closed.
 
-A48.2 records `direct_substitution_safe=false` and `adapter_required=true` and is merged/verified. It does not add a third provider runner/transport.
-
-A48.3 extends the canonical `ProviderStageResponse` with an optional bounded raw `artifact` field. Legacy responses remain valid and preserve their old serialized shape when no artifact is present. Artifact content is untrusted provider output only:
-
-```text
-artifact != evidence
-artifact != gate PASS
-artifact != trusted observation
-artifact != release readiness
-```
-
-No Factory provider, manager, fallback/default path or network transport changes in A48.3.
+A48.4 is **not wired into `core/manager/` by default**. The current Factory manager still constructs `FreeProvider.from_env(...)`; therefore current default production behavior remains unchanged.
 
 ## Regression and dogfood
 
@@ -138,7 +136,7 @@ Main UIUX Factory CI validates deterministic product/routing/repair/memory/score
 
 ## Remaining architecture debt
 
-1. Provider **execution** convergence is not complete. A48.2 proves capability gaps and A48.3 provides the missing bounded artifact carrier; A48.4 still needs an opt-in async compatibility adapter before any default changes.
+1. Provider execution convergence is still opt-in only. A48.5 must prove parity/dogfood across representative Factory completion contracts before manager/default integration is considered.
 2. Factory product execution (`run.py` + `core/manager/`) and managed CLI execution share routing/runtime owners but still expose distinct top-level lifecycle APIs.
 3. A broader declarative Knowledge OS is not implemented as one canonical subsystem; methodology remains correctly owned by `skills_UIUX`.
 
@@ -154,4 +152,4 @@ When documents disagree:
 
 ## Next architecture task
 
-After A48.3 is green and merged, A48.4 should implement an **opt-in async compatibility adapter** that preserves the Factory `complete(...) -> str` call contract while delegating through the managed provider response/artifact envelope. It must preserve async safety, Factory call-budget/history behavior and managed evidence/tool semantics. No manager default change belongs in A48.4.
+After A48.4 is green and merged, A48.5 should run **provider parity + opt-in dogfood** across plain text, JSON artifacts, frontend bundle contracts, invalid output, transient failures and call-budget/history behavior. No manager/default migration should occur until that evidence is green.
