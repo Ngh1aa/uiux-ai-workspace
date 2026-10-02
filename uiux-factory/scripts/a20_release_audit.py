@@ -75,8 +75,8 @@ def build_report() -> dict[str, Any]:
             "Nova rendered regression coverage is explicitly named and isolated from the generic runner",
         ),
         "a15_generic_runner_not_project_named": _check(
-            all(token not in generic_runner for token in ("Nova", "Lumen", "CENNEXT")),
-            "generic real-project runner contains no named-project branches",
+            all(token not in generic_runner for token in ("Nova", "Lumen", "CENNEXT", "LuxRoom")),
+            "generic real-project runner contains no named-project branches across the four-project Flow 4 matrix",
         ),
         "a16_autonomous_lifecycle": _check(
             (FACTORY_ROOT / "core" / "runtime" / "flow_os" / "autonomous.py").is_file()
