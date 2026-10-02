@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.13 MERGED / EV + EDTECH CANONICAL / FIVE-RECORD KNOWLEDGE OS**  
+Status: **A40–A50.14 MERGED / FIVE-RECORD KNOWLEDGE OS / GENAI FRESHNESS HOLD EVIDENCED**  
 Audit date: **2026-10-02**  
-Current merged architecture baseline: `main@52af7d738e46adafe0d0a61fd99bc95a0c0c473e`
+Current merged architecture baseline: `main@f84a3f4a606ada958a1dfa0e9f1c23c409aafb4c`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS. Current source and executable tests are authoritative when historical A-series notes describe an earlier topology.
 
@@ -18,6 +18,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 8. A50.3–A50.12 — seed/value trials, candidate drafting/revision, canaries, governance and shadow-apply evidence.
 9. `A50-EV-CANONICAL-APPLY.md` — EV canonical apply history.
 10. `A50-EDTECH-CANONICAL-APPLY.md` — current five-record EdTech-inclusive canonical truth.
+11. `A50-GENAI-NIST-FRESHNESS-REVIEW.md` — current GenAI/NIST freshness HOLD evidence and re-review trigger.
 
 Historical/current truth anchors retained for A48 regression coverage:
 
@@ -42,7 +43,7 @@ uiux-factory/core/runtime/flow_os/
 
 `skills_UIUX/` owns declarative skills, flows, policy, schemas and reusable Knowledge OS content/metadata. Python under `skills_UIUX/runtime/` is compatibility-only, not an independent runtime.
 
-The Factory lifecycle remains under `uiux-factory/run.py` + `core/manager/`; the managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py`.
+The Factory lifecycle remains under `uiux-factory/run.py` + `core/manager/`; the managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py` and is **not a second Flow OS**.
 
 ## Brain OS boundary
 
@@ -93,7 +94,7 @@ A completed lifecycle without sufficient trusted PASS evidence remains insuffici
 
 ## Provider convergence boundary
 
-A48 established controlled convergence across **different provider entry/capability contracts**. `ManagedArtifactCompletionAdapter` preserves Factory completion shape; `UIUX_FACTORY_PROVIDER_LANE=managed_compat` is explicit opt-in and `legacy` remains default. There is no automatic cross-lane fallback. Default-lane migration remains a separate governance decision requiring stronger live-provider evidence.
+A48 established controlled convergence across **different provider entry/capability contracts**. `ManagedArtifactCompletionAdapter` preserves Factory completion shape; `UIUX_FACTORY_PROVIDER_LANE=managed_compat` is explicit opt-in and `legacy` remains default. There is no automatic cross-lane fallback. Offline provider parity is regression evidence only; default-lane migration remains a separate governance decision requiring live-provider evidence.
 
 ## Lifecycle boundary
 
@@ -140,9 +141,9 @@ evidence_effect = none
 release_effect = none
 ```
 
-## A50 current canonical truth
+## A50 canonical truth
 
-The corpus now contains exactly **five** canonical records:
+The corpus contains exactly **five** canonical records:
 
 ```text
 financial-services  → Unicode CLDR / UTS #35 number/currency reference
@@ -152,7 +153,7 @@ mobility-ev         → Open Charge Alliance OCPP 2.1 Edition 2 / Errata 2026-06
 education-edtech     → 1EdTech LTI 1.3 + LTI Advantage service/state boundaries
 ```
 
-Current executable truth:
+Current executable canonical-state truth:
 
 ```text
 benchmarks/knowledge-canonical-state-v3.json
@@ -190,23 +191,37 @@ It remains advisory-only and does not become product evidence merely because it 
 
 ## GenAI/NIST status
 
-The GenAI/NIST candidate remains:
+A50.14 completed an official-source freshness review and derived:
 
 ```text
-HOLD_FRESHNESS_REVIEW
+KEEP_HOLD_FRESHNESS_REVIEW
+freshness_risk = HIGH
+canonical_index_expected_count = 5
+promotion_allowed = false
 ```
 
-No canonical record, index mutation or product evidence is authorized while freshness review remains unresolved.
+NIST AI 600-1 remains an official GenAI Profile resource, while AI RMF 1.0 remains under active revision. The existing revision caveat is still accurate, but the dependency is not stable enough to open drafting, acceptance, canary or promotion work.
+
+Re-review only when NIST publishes a revised AI RMF replacing 1.0 or explicitly states the active revision is complete/stable enough for profile-context reuse. Until then there is no GenAI follow-up promotion task.
+
+Executable freshness truth:
+
+```text
+benchmarks/knowledge-genai-nist-freshness-review-v1.json
+core/benchmarks/knowledge_genai_nist_freshness_review.py
+scripts/validate_knowledge_genai_nist_freshness_review.py
+```
 
 ## Regression and dogfood
 
-Active CI now validates current five-record truth:
+Active CI validates current five-record truth plus the A50.14 freshness HOLD:
 
 ```text
 knowledge retrieval benchmark
 five-record project retrieval dogfood
 versioned knowledge-value history
 A50.13 canonical-state validator
+A50.14 GenAI/NIST freshness validator
 full pytest suite
 ```
 
@@ -233,9 +248,9 @@ Final retrospective owner review remains deferred until the broader `uiux-ai-wor
 
 ## Remaining architecture debt
 
-1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
+1. Provider convergence has a controlled opt-in lane, but `legacy` remains default because current parity evidence is offline-only; default migration requires a separate live-provider readiness/evidence path.
 2. Lifecycle convergence remains intentionally read-only at reconciliation/projection/parity level; mutation-level unification requires a separate decision.
-3. GenAI/NIST remains on freshness HOLD and requires a dedicated source-freshness review before any acceptance/canary/promotion path can exist.
+3. GenAI/NIST is on an evidence-backed freshness HOLD with an explicit external re-review trigger; no active promotion work is allowed now.
 4. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace evidence acquisition.
 5. Vector/semantic retrieval remains deferred and disabled.
 
@@ -251,12 +266,12 @@ When documents disagree:
 
 ## Next architecture task
 
-The next bounded A50 task is:
+The next bounded architecture task is:
 
 ```text
-GenAI/NIST freshness review only
+A51.1 — Provider Default Migration Readiness
 ```
 
-It must verify current official NIST source/version provenance and whether the existing candidate scope remains accurate. This review must **not** canonicalize, index, or promote GenAI knowledge. Any later acceptance/canary/promotion work requires a separate evidence-backed path.
+It must preserve `legacy` as the default while defining and validating the evidence required to consider `managed_compat` as a future default. Offline parity alone is insufficient. The task may add a fail-closed live-trial harness/receipt contract, but it must not require secrets in CI, persist credentials/prompts, silently fall back across lanes, or change routing/evidence/gate/release authority.
 
-Vector search remains deferred.
+Lifecycle mutation convergence remains deferred until provider migration readiness has an explicit result. GenAI/NIST remains freshness-held. Vector search remains deferred.
