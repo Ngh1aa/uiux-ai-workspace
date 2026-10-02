@@ -69,7 +69,7 @@ jobs:
       - name: Compile active Python source tree
         run: |
           python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
-          python -m compileall -q scripts/validate_provider_default_migration_readiness.py scripts/run_provider_live_trial.py scripts/validate_lifecycle_mutation_convergence_readiness.py scripts/validate_lifecycle_event_interop.py scripts/validate_runtime_compatibility_convergence.py scripts/validate_compatibility_surface_governance.py scripts/validate_architecture_debt_closure_audit.py
+          python -m compileall -q scripts/validate_provider_default_migration_readiness.py scripts/run_provider_live_trial.py scripts/validate_lifecycle_mutation_convergence_readiness.py scripts/validate_lifecycle_event_interop.py scripts/validate_runtime_compatibility_convergence.py scripts/validate_compatibility_surface_governance.py scripts/validate_architecture_debt_closure_audit.py scripts/validate_final_upgrade_regression.py
           python -m compileall -q ../skills_UIUX/runtime ../skills_UIUX/scripts/prepare-external-task.py ../skills_UIUX/scripts/github-external-agent-runner.py ../skills_UIUX/scripts/build-release-evidence.py
       - name: Validate Flow Agent OS contracts
         run: |
@@ -95,10 +95,12 @@ jobs:
           python scripts/validate_runtime_compatibility_convergence.py
           python scripts/validate_compatibility_surface_governance.py
           python scripts/validate_architecture_debt_closure_audit.py
+          python scripts/validate_final_upgrade_regression.py
       # Historical A50 validators and the A52.3 8/19 consumer-selection audit remain
       # immutable evidence. Active CI validates current Knowledge OS truth,
       # provider/lifecycle holds, A52.2 event interop, Flow 1 / A53.1 zero-consumer
-      # convergence, Flow 2 / A53.2 compatibility-surface sunset governance, and
-      # Flow 3 / A53.3 architecture-debt closure classification.
+      # convergence, Flow 2 / A53.2 compatibility-surface sunset governance,
+      # Flow 3 / A53.3 architecture-debt closure, and the Flow 4 final-regression
+      # contract. External project receipts remain an A20 responsibility.
       - name: Run foundation tests
         run: python -m pytest -q tests
