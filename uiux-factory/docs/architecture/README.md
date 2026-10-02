@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.5R MERGED + A50.6 CORPUS EXPANSION PROPOSAL IMPLEMENTED / VERIFICATION PENDING**  
+Status: **A40–A50.6 MERGED + A50.7 READY-CANDIDATE DRAFT VALIDATION IMPLEMENTED / VERIFICATION PENDING**  
 Audit date: **2026-10-02**  
-Current merged architecture baseline: `main@6f60739f7ae79bed44ba27fde7fc9f90ec5a5793`
+Current merged architecture baseline: `main@438fdaeb0125a893691558bddd3de02cb4d15d53`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -44,6 +44,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 34. `A50-KNOWLEDGE-VALUE-TRIAL.md` — two versioned model-assisted A/B trials and their human governance results.
 35. `A50-KNOWLEDGE-REVISION-ROUND2.md` — targeted Nova/CENNEXT revision and completed round-two verdict.
 36. `A50-KNOWLEDGE-CORPUS-EXPANSION-PROPOSAL.md` — bounded proposal-only source/ownership review for potential corpus growth.
+37. `A50-KNOWLEDGE-READY-CANDIDATE-DRAFT-VALIDATION.md` — two READY drafts, shadow-index retrieval/isolation and bounded usefulness proxy.
 
 ## Current architecture statement
 
@@ -220,7 +221,7 @@ auto_mutation_allowed = false
 
 ### A50.6 proposal-only corpus expansion
 
-A50.6 does not mutate the corpus. It adds an executable proposal review for exactly three unpopulated domain candidates:
+A50.6 is merged and verified. It does not mutate the corpus. It adds an executable proposal review for exactly three unpopulated domain candidates:
 
 ```text
 education-edtech → LTI 1.3 / LTI Advantage context
@@ -228,7 +229,7 @@ mobility-ev      → OCPP 2.1 Edition 2 charging-system context
 ai-software      → NIST AI 600-1 Generative AI risk context
 ```
 
-Canonical proposal status at implementation time:
+Canonical proposal status:
 
 ```text
 EdTech/LTI   → READY_FOR_CONTENT_DRAFT
@@ -255,20 +256,67 @@ Benchmark scope:
 proposal_only_no_index_or_record_mutation
 ```
 
+### A50.7 READY candidate drafts
+
+A50.7 drafts only the two A50.6 READY candidates under `skills_UIUX/knowledge/drafts/`:
+
+```text
+EdTech/LTI draft
+EV/OCPP draft
+```
+
+GenAI/NIST remains HOLD and has no A50.7 draft record.
+
+A50.7 does not add either draft to the canonical index. Instead it copies the Knowledge OS tree to a temporary workspace and runs the real `KnowledgeIndex` + `KnowledgeRetriever` through a five-record shadow index:
+
+```text
+3 canonical + 2 drafts = 5 shadow records
+```
+
+For each draft, validation requires:
+
+```text
+proposal alignment
+draft parses as KnowledgeRecord
+canonical_unindexed = true
+actionable_delta = true
+skill_duplication_clear = true
+domain_specificity = true
+retrieval_noise_clear = true
+provenance_clear = true
+context_budget_clear = true
+vector_search_used = false
+```
+
+Expected positive draft decision:
+
+```text
+KEEP_DRAFT
+```
+
+`KEEP_DRAFT` is not canonical `KEEP`, not corpus acceptance and not proof of human/model usefulness. A50.7 explicitly keeps canonical acceptance and index mutation blocked.
+
+Benchmark scope:
+
+```text
+draft_validation_shadow_index_not_canonical_acceptance
+```
+
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance, both versioned knowledge-value trial histories and the A50.6 expansion proposal before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance, both versioned knowledge-value trial histories, the A50.6 expansion proposal and the A50.7 draft/shadow-index validator before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
 
-A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, completed human review histories, proposal trigger integrity, skill-owner paths and the no-auto-mutation boundary.
+A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, completed human review histories, proposal trigger integrity, skill-owner paths, draft metadata/provenance alignment, shadow-index isolation and the no-auto-mutation boundary.
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence remains intentionally read-only at the reconciliation/projection/parity layer; mutation-level unification requires a separate decision.
-3. A50.6 has two READY content-draft candidates, but no fourth/fifth canonical record is accepted yet and the index remains exactly three records.
+3. A50.7 has two unindexed READY-candidate drafts, but no fourth/fifth canonical record is accepted yet and the index remains exactly three records.
 4. The GenAI/NIST candidate remains on freshness HOLD while AI RMF 1.0 is under active revision.
-5. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
-6. Vector/semantic retrieval remains deferred.
+5. Deterministic `KEEP_DRAFT` does not establish model-output/human usefulness for EdTech or EV; candidate acceptance requires a separate governance decision/trial.
+6. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
+7. Vector/semantic retrieval remains deferred.
 
 ## Source-of-truth priority
 
@@ -282,6 +330,6 @@ When documents disagree:
 
 ## Next architecture task
 
-After A50.6 proposal verification, draft **only the two READY candidates** (EdTech/LTI and EV/OCPP) on a separate implementation branch. Keep GenAI/NIST on HOLD until freshness is re-verified.
+After A50.7 verification, begin **A50.8 — Candidate Acceptance Trial** as a separate governance task.
 
-Before any later index mutation, each draft must pass source/version review, knowledge-vs-skill duplication checks, deterministic retrieval/domain-isolation tests and bounded usefulness evaluation. Vector search remains deferred.
+A50.8 should decide per draft whether to `ACCEPT_FOR_INDEX_TRIAL`, `REVISE_DRAFT`, `HOLD` or `REJECT`. It must not mutate `skills_UIUX/knowledge/index.json` merely because A50.7 returns `KEEP_DRAFT`. Decide first what additional model-assisted/human usefulness evidence is required for EdTech and EV; only a later explicit implementation change may add accepted candidates to the canonical index. Vector search remains deferred.
