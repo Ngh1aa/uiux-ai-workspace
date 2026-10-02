@@ -4,6 +4,7 @@
     "records/financial-currency-locale-formatting.json",
     "records/cultural-object-metadata-rights-iiif.json",
     "records/industrial-motor-system-claims-doe.json",
-    "records/ev-charging-ocpp-transaction-semantics.json"
+    "records/ev-charging-ocpp-transaction-semantics.json",
+    "records/edtech-lti-context-roles-services-v2.json"
   ]
 }
