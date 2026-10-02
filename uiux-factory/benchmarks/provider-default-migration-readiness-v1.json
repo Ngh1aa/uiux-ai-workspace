@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "readiness_id": "provider-default-migration-readiness-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "scope": "readiness_contract_only_no_default_migration",
+  "current_default_lane": "legacy",
+  "candidate_lane": "managed_compat",
+  "supported_providers": [
+    "groq",
+    "gemini"
+  ],
+  "trial_modes": [
+    {
+      "mode_id": "plain_text",
+      "stage": "research",
+      "json_mode": false
+    },
+    {
+      "mode_id": "json_object",
+      "stage": "implementation",
+      "json_mode": true
+    }
+  ],
+  "requirements": {
+    "offline_provider_parity_must_pass": true,
+    "empty_env_must_resolve_to_legacy": true,
+    "managed_compat_must_remain_explicit_opt_in": true,
+    "invalid_lane_must_fail_closed": true,
+    "automatic_cross_lane_fallback_must_remain_false": true,
+    "all_provider_lane_mode_receipts_required": true,
+    "all_live_receipts_must_pass_contract": true,
+    "receipt_payloads_must_be_secret_and_content_free": true
+  },
+  "decision_policy": {
+    "incomplete_or_failed_live_evidence": "KEEP_LEGACY_DEFAULT_LIVE_EVIDENCE_REQUIRED",
+    "complete_live_contract_evidence": "READY_FOR_DEFAULT_MIGRATION_GOVERNANCE"
+  },
+  "governance": {
+    "default_change_allowed_in_this_task": false,
+    "provider_migration_allowed_in_this_task": false,
+    "auto_migration_allowed": false,
+    "billing_or_account_change_allowed": false,
+    "routing_change_allowed": false,
+    "skill_activation_change_allowed": false,
+    "evidence_authority_change_allowed": false,
+    "gate_authority_change_allowed": false,
+    "release_authority_change_allowed": false,
+    "product_evidence": false,
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  }
+}
