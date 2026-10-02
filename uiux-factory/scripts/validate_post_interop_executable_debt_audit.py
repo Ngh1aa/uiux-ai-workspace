@@ -18,7 +18,32 @@ from core.benchmarks.post_interop_executable_debt_audit import (
 DEFAULT_AUDIT = ROOT / "benchmarks" / "post-interop-executable-debt-audit-v1.json"
 EXPECTED_DECISION = "SELECT_COMPAT_SHIM_RETIREMENT_READINESS"
 EXPECTED_NEXT_PACKAGE = "A53.1 — Runtime Compatibility Shim Retirement Readiness"
-EXPECTED_KNOWN_CONSUMER = "skills_UIUX/scripts/validate-runtime-foundation.py"
+EXPECTED_CONSUMER_FILE_COUNT = 8
+EXPECTED_CONSUMER_IMPORT_COUNT = 19
+EXPECTED_CONSUMERS = {
+    "uiux-factory/tests/test_adaptive_flow.py": {"runtime.flow", "runtime.task_context"},
+    "uiux-factory/tests/test_canonical_runtime_a4.py": {
+        "runtime.flow",
+        "runtime.manager",
+        "runtime.task_context",
+    },
+    "uiux-factory/tests/test_runtime_lifecycle_context.py": {"runtime.flow", "runtime.task_context"},
+    "uiux-factory/tests/test_task_contract.py": {
+        "runtime.agent",
+        "runtime.flow",
+        "runtime.manager",
+        "runtime.task_context",
+    },
+    "skills_UIUX/scripts/context-manifest.py": {"runtime.agent"},
+    "skills_UIUX/scripts/validate-flows.py": {"runtime.flow"},
+    "skills_UIUX/scripts/validate-provider-runtime.py": {
+        "runtime.agent",
+        "runtime.manager",
+        "runtime.provider",
+        "runtime.provider_runner",
+    },
+    "skills_UIUX/scripts/validate-runtime-foundation.py": {"runtime.agent", "runtime.manager"},
+}
 
 
 def main() -> int:
@@ -80,7 +105,7 @@ def main() -> int:
         report.evidence_effect,
         report.release_effect,
     )
-    consumer_paths = {item.path for item in report.internal_consumers}
+    actual_consumers = {item.path: set(item.modules) for item in report.internal_consumers}
 
     if report.decision != EXPECTED_DECISION:
         return 1
@@ -108,9 +133,11 @@ def main() -> int:
         return 1
     if report.shim_count != 8:
         return 1
-    if report.internal_consumer_file_count < 1 or report.internal_consumer_import_count < 2:
+    if report.internal_consumer_file_count != EXPECTED_CONSUMER_FILE_COUNT:
         return 1
-    if EXPECTED_KNOWN_CONSUMER not in consumer_paths:
+    if report.internal_consumer_import_count != EXPECTED_CONSUMER_IMPORT_COUNT:
+        return 1
+    if actual_consumers != EXPECTED_CONSUMERS:
         return 1
     if any(forbidden):
         return 1
