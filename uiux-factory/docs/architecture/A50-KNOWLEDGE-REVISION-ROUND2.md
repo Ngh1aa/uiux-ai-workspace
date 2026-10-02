@@ -1,6 +1,6 @@
 # A50.5R — Knowledge Revision Pass / Round 2
 
-Status: **IMPLEMENTED — ROUND-TWO HUMAN REVIEW PENDING**  
+Status: **COMPLETE — ROUND-TWO HUMAN REVIEW DERIVED `CONSIDER_EXPANSION`**  
 Date: **2026-10-02**
 
 ## Why A50.5R exists
@@ -13,7 +13,7 @@ The human review identified a specific pattern:
 - Lumen knowledge context already improved both specificity/actionability and decision usefulness.
 - CENNEXT knowledge context improved technical claim precision but the baseline remained stronger on buyer journey and proof presentation.
 
-A50.5R therefore revises **only the two underperforming existing records**. It does not expand the corpus.
+A50.5R therefore revised **only the two underperforming existing records**. It did not expand the corpus.
 
 ## Revision targets
 
@@ -26,6 +26,7 @@ numeric value + currency + locale/display context
 locale-aware decimal/grouping rules
 currency placement / negative forms
 same-symbol ambiguity
+multi-currency presentation context
 presentation != accounting/exchange/tax policy
 ```
 
@@ -44,7 +45,7 @@ Canonical record remains:
 knowledge.domain.financial-currency-locale-formatting.v1
 ```
 
-The source standard remains Unicode CLDR / UTS #35. The knowledge ID is not replaced because the domain fact model did not change; the curated application guidance was revised in place and `updated_at` was refreshed.
+The source standard remains Unicode CLDR / UTS #35. The knowledge ID was not replaced because the domain fact model did not change; the curated application guidance was revised in place.
 
 ### CENNEXT / industrial motor claims
 
@@ -109,7 +110,7 @@ benchmarks/knowledge-value-review-packet-v2.md
 Method:
 
 1. Nova and CENNEXT keep the **round-one baseline outputs unchanged**.
-2. Only their knowledge-assisted outputs are regenerated from the revised records.
+2. Only their knowledge-assisted outputs change.
 3. Lumen is the unchanged control pair.
 4. A/B labels are swapped/mixed relative to round one.
 5. The same five-dimension human rubric and the same governance threshold remain unchanged.
@@ -120,7 +121,7 @@ This isolates the effect of the revision better than regenerating both sides.
 
 Round two remains **procedurally repository blind**, not cryptographically blind.
 
-The original reviewer has seen round-one outputs, so same-reviewer carryover memory is a known limitation. The trial mitigates but cannot eliminate that limitation by:
+The reviewer had seen round-one outputs, so same-reviewer carryover memory is a known limitation. The trial mitigates but cannot eliminate that limitation by:
 
 - swapping A/B positions;
 - keeping the condition mapping separate;
@@ -129,37 +130,73 @@ The original reviewer has seen round-one outputs, so same-reviewer carryover mem
 
 No claim of independent randomized experimentation is made.
 
-## Round-two governance
+## Round-two human result
 
-Before human review:
+The reviewer completed all three blind-first judgments before opening the v2 mapping.
+
+After unblinding:
 
 ```text
-human_review_complete = false
-expansion_recommendation = HOLD_PENDING_HUMAN
+Nova     knowledge condition = A
+Lumen    knowledge condition = B
+CENNEXT  knowledge condition = A
+```
+
+Recorded preferences:
+
+```text
+Nova     → A / knowledge preferred
+Lumen    → B / knowledge preferred
+CENNEXT  → A / knowledge preferred
+```
+
+Derived counts:
+
+```text
+human_review_complete = true
+reviewed_case_count = 3
+knowledge_preferred_count = 3
+baseline_preferred_count = 0
+tie_count = 0
+insufficient_count = 0
+material_regression_count = 0
+joint_usefulness_win_count = 3
+```
+
+The unchanged evaluator therefore derives:
+
+```text
+CONSIDER_EXPANSION
+```
+
+The threshold was not changed to fit the result.
+
+## Governance boundary
+
+`CONSIDER_EXPANSION` is **not** permission to mutate the corpus automatically.
+
+The canonical evaluator still returns:
+
+```text
 expand_allowed = false
 auto_mutation_allowed = false
+current_run_evidence = false
+product_evidence = false
 ```
 
-A50.6 may be proposed only if the existing evaluator later derives `CONSIDER_EXPANSION`:
+A50.5R establishes enough governance evidence to open an **A50.6 Corpus Expansion Proposal**, not to add records directly.
 
-```text
-material_regression_count = 0
-baseline_preferred_count = 0
-knowledge_preferred_count >= 2 of 3
-knowledge condition strictly stronger on both:
-  specificity_actionability
-  decision_usefulness
-in at least 2 of 3 cases
-```
-
-The threshold is intentionally unchanged from round one.
+A50.6 must still perform source/ownership/duplication/scope review for every proposed record or category before any canonical index change.
 
 ## Regression contract
 
 CI must preserve all of the following:
 
 - round-one review remains complete and derives `REVISE_BEFORE_EXPANSION`;
-- round-two review remains pending until a new human review is committed;
+- round-two review remains complete and derives `CONSIDER_EXPANSION`;
+- round-two human preferences remain 3/3 knowledge, 0 baseline, 0 ties;
+- round-two joint specificity/actionability + decision-usefulness wins remain 3/3;
+- material regressions remain zero;
 - Nova and CENNEXT round-two baseline outputs exactly equal their round-one baseline outputs;
 - Lumen remains the unchanged control pair;
 - revised Nova output includes shared formatting boundary, explicit fallback and QA matrix;
@@ -167,16 +204,12 @@ CI must preserve all of the following:
 - A/B mapping remains mixed and does not overclaim cryptographic blinding;
 - cross-version review ledgers cannot be mixed;
 - knowledge still has no evidence/gate/release authority;
-- corpus remains exactly three records.
+- corpus remains exactly three records until an explicit A50.6 change is separately accepted.
 
 ## Next step
 
-After this engineering PR is green and merged, perform the blind review using:
+Open **A50.6 — Corpus Expansion Proposal** as a governance/design task only.
 
-```text
-uiux-factory/benchmarks/knowledge-value-review-packet-v2.md
-```
+A50.6 may propose candidate domains/records, but must not mutate `skills_UIUX/knowledge/index.json` unless each candidate passes explicit source, ownership, duplication, freshness, scope and retrieval-value review in a later accepted implementation step.
 
-Do not open `knowledge-value-trial-mapping-v2.json` before completing the scores, preference, rationale and material-regression judgment for all three cases.
-
-If round two derives `CONSIDER_EXPANSION`, the next task may be **A50.6 — Corpus Expansion Proposal**. Otherwise, keep the corpus fixed and inspect the remaining knowledge/retrieval weakness instead of weakening the threshold.
+Vector search remains deferred until corpus breadth and deterministic retrieval justify it.
