@@ -69,7 +69,7 @@ jobs:
       - name: Compile active Python source tree
         run: |
           python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
-          python -m compileall -q scripts/validate_provider_default_migration_readiness.py scripts/run_provider_live_trial.py scripts/validate_lifecycle_mutation_convergence_readiness.py
+          python -m compileall -q scripts/validate_provider_default_migration_readiness.py scripts/run_provider_live_trial.py scripts/validate_lifecycle_mutation_convergence_readiness.py scripts/validate_lifecycle_event_interop.py
           python -m compileall -q ../skills_UIUX/runtime ../skills_UIUX/scripts/prepare-external-task.py ../skills_UIUX/scripts/github-external-agent-runner.py ../skills_UIUX/scripts/build-release-evidence.py
       - name: Validate Flow Agent OS contracts
         run: |
@@ -86,6 +86,7 @@ jobs:
           python scripts/validate_provider_default_migration_readiness.py
           python scripts/validate_lifecycle_parity_benchmark.py
           python scripts/validate_lifecycle_mutation_convergence_readiness.py
+          python scripts/validate_lifecycle_event_interop.py
           python scripts/validate_knowledge_retrieval_benchmark.py
           python scripts/validate_knowledge_project_dogfood.py
           python scripts/validate_knowledge_value_trial.py
@@ -93,6 +94,6 @@ jobs:
           python scripts/validate_knowledge_genai_nist_freshness_review.py
       # Historical A50 validators remain immutable governance evidence. Active CI
       # validates current five-record Knowledge OS truth, the GenAI freshness HOLD,
-      # A51.1 provider-migration readiness, and A52.1 lifecycle-mutation readiness.
+      # A51.1 provider readiness, A52.1 mutation readiness and A52.2 event interop.
       - name: Run foundation tests
         run: python -m pytest -q tests

@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **CURRENT THROUGH A52.1 / FIVE-RECORD KNOWLEDGE OS / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD**  
+Status: **CURRENT THROUGH A52.2 / FIVE-RECORD KNOWLEDGE OS / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD**  
 Audit date: **2026-10-02**  
-Baseline before A52.1: `main@f860a47b7c629974736f14c95eb13b7b9824f47f`
+Baseline before A52.2: `main@6412519700d0e7e8841d1bf5c5c1349a0b0d41ad`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS. Current source and executable tests are authoritative when historical A-series notes describe an earlier topology.
 
@@ -21,6 +21,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 11. `A50-GENAI-NIST-FRESHNESS-REVIEW.md` — current GenAI/NIST freshness HOLD evidence and re-review trigger.
 12. `A51-PROVIDER-DEFAULT-MIGRATION-READINESS.md` — provider-default live-evidence readiness gate; `legacy` remains default.
 13. `A52-LIFECYCLE-MUTATION-CONVERGENCE-READINESS.md` — mutation-level lifecycle readiness gate; current state owners remain separate.
+14. `A52-LIFECYCLE-EVENT-INTEROPERABILITY.md` — read-only event/receipt interoperability over the two existing lifecycle owners.
 
 Historical/current truth anchors retained for A48 regression coverage:
 
@@ -98,7 +99,7 @@ A completed lifecycle without sufficient trusted PASS evidence remains insuffici
 
 A48 established controlled convergence across **different provider entry/capability contracts**. `ManagedArtifactCompletionAdapter` preserves Factory completion shape; `UIUX_FACTORY_PROVIDER_LANE=managed_compat` is explicit opt-in and `legacy` remains default. There is no automatic cross-lane fallback.
 
-A51.1 now provides the executable default-migration readiness gate. Current canonical live ledger remains:
+A51.1 provides the executable default-migration readiness gate. Current canonical live ledger remains:
 
 ```text
 collection_status = NOT_RUN
@@ -129,13 +130,44 @@ replan_invalidation_semantics_non_parity
 finalize_release_semantics_non_parity
 ```
 
-Current A52.1 decision:
+Current A52.1 decision remains:
 
 ```text
 KEEP_SEPARATE_STATE_OWNERS_EVENT_INTEROP_REQUIRED
 ```
 
-A clean A52.1 audit may only open a separate additive event-interoperability proposal. It does not authorize shared mutable lifecycle state, transition changes, state-owner replacement or release/evidence/gate authority changes.
+A52.2 implements that allowed bounded follow-up through:
+
+```text
+core/runtime/lifecycle_event_interop.py
+benchmarks/lifecycle-event-interop-v1.json
+core/benchmarks/lifecycle_event_interop_regression.py
+scripts/validate_lifecycle_event_interop.py
+```
+
+The shared object is an **observation receipt**, not shared mutable state.
+
+Chronology strength remains explicit:
+
+```text
+Factory -> durable_append_only
+Managed -> derived_checkpoint_delta
+```
+
+Factory receipts preserve native `seq` and `timestamp`. Managed receipts never fabricate either value; they carry previous/current checkpoint hashes and `projection_order_only=true` instead.
+
+Every receipt remains:
+
+```text
+observation_only = true
+execution_effect = none
+authority_effect = none
+gate_effect = none
+evidence_effect = none
+release_effect = none
+```
+
+Managed `COMPLETED` is normalized only as managed run completion and does not imply `FINALIZE` or `RELEASE`. Approval receipts observe gate state changes but do not satisfy human approvals. A52.2 does not clear any A52.1 blocker or authorize mutation convergence.
 
 ## Knowledge OS boundary
 
@@ -252,6 +284,7 @@ provider parity
 A51.1 provider-default migration readiness
 A49 lifecycle projection parity
 A52.1 lifecycle-mutation convergence readiness
+A52.2 lifecycle-event interoperability
 knowledge retrieval benchmark
 five-record project retrieval dogfood
 versioned knowledge-value history
@@ -284,7 +317,7 @@ Final retrospective owner review remains deferred until the broader `uiux-ai-wor
 ## Remaining architecture debt
 
 1. Provider default remains `legacy`; A51.1 is implemented but live evidence is `0/8`, so provider migration governance is not open.
-2. Lifecycle projection parity is clear, but A52.1 confirms direct mutation unification is not ready; the safe next step is additive event interoperability while preserving both state owners.
+2. A52.2 provides safe event observability across lifecycle owners, but all six A52.1 mutation blockers remain; no direct lifecycle mutation/unification governance is open.
 3. GenAI/NIST is on an evidence-backed freshness HOLD with an explicit external re-review trigger; no active promotion work is allowed now.
 4. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace evidence acquisition.
 5. Vector/semantic retrieval remains deferred and disabled.
@@ -301,12 +334,6 @@ When documents disagree:
 
 ## Next architecture task
 
-After A52.1 passes and merges, the next bounded architecture task is:
+A52.2 deliberately does **not** auto-authorize a mutation-convergence successor. Once A52.2 is green and merged, the next architecture package must be selected from current executable debt rather than inferred from numbering.
 
-```text
-A52.2 — Lifecycle Event Interoperability Contract
-```
-
-It should define an additive normalized lifecycle event/receipt vocabulary across Factory event chronology and Managed checkpoint transitions without replacing either state owner. It must remain read-only/non-authoritative with respect to execution, routing, evidence, gates, finalize/release and provider selection.
-
-Provider default migration remains blocked on real A51.1 live receipts. GenAI/NIST remains freshness-held. Vector search remains deferred.
+Any future lifecycle task may consume A52.2 receipts for observability/regression, but a mutation-level trial requires separate explicit governance and evidence that addresses the six A52.1 blockers. Provider default migration remains blocked on real A51.1 live receipts. GenAI/NIST remains freshness-held. Vector search remains deferred.
