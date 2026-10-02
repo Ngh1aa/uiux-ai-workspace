@@ -57,15 +57,23 @@ def _write_reviews(tmp_path: Path, cases: list[dict]) -> Path:
     return path
 
 
-def test_pending_human_review_holds_both_candidates_and_preserves_boundaries() -> None:
+def test_canonical_human_review_derives_one_revision_and_one_index_trial_candidate() -> None:
     report = _evaluate(BENCHMARKS / "knowledge-candidate-acceptance-human-reviews-v1.json")
-    assert report.human_review_complete is False
-    assert report.reviewed_case_count == 0
-    assert report.accepted_for_index_trial_count == 0
-    assert report.revise_draft_count == 0
-    assert report.hold_count == 2
+    assert report.human_review_complete is True
+    assert report.reviewed_case_count == 2
+    assert report.accepted_for_index_trial_count == 1
+    assert report.revise_draft_count == 1
+    assert report.hold_count == 0
     assert report.reject_count == 0
-    assert {case.verdict for case in report.cases} == {"HOLD"}
+    by_id = {case.case_id: case for case in report.cases}
+    assert by_id["edtech-lti-integration-boundaries"].verdict == "REVISE_DRAFT"
+    assert by_id["edtech-lti-integration-boundaries"].joint_usefulness_win is False
+    assert by_id["edtech-lti-integration-boundaries"].correctness_guard_clear is True
+    assert by_id["edtech-lti-integration-boundaries"].unsupported_claim_risk_guard_clear is True
+    assert by_id["ev-ocpp-charging-session-truth"].verdict == "ACCEPT_FOR_INDEX_TRIAL"
+    assert by_id["ev-ocpp-charging-session-truth"].joint_usefulness_win is True
+    assert by_id["ev-ocpp-charging-session-truth"].correctness_guard_clear is True
+    assert by_id["ev-ocpp-charging-session-truth"].unsupported_claim_risk_guard_clear is True
     assert report.index_mutation_allowed is False
     assert report.canonical_acceptance_allowed is False
     assert report.auto_promotion_allowed is False
