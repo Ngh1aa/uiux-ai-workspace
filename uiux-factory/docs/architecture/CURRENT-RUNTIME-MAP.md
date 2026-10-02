@@ -1,10 +1,10 @@
 # Current Runtime Map
 
-Status: **CURRENT THROUGH FLOW 4 / A54.1 / FINAL REGRESSION PASS / FINAL OWNER REVIEW NEXT**  
-Audit date: **2026-10-02**  
-Baseline before Flow 4 / A54.1: `main@aa48aa49313d5accfb4acf674e38f42441c4c6d2`
+Status: **CURRENT THROUGH FLOW 5 / A55.1 / WORKSPACE UPGRADE CLOSED WITH INTENTIONAL HOLDS**  
+Audit date: **2026-10-03**  
+Baseline before Flow 5 / A55.1: `main@7e75fc27780e4ded5fed59f51fdad893ad4f6ddf`
 
-This map describes current executable ownership, explicit holds and the final cross-project regression boundary. Historical A-series plans remain audit history; current source/tests and exact-head CI evidence are authoritative.
+This map describes current executable ownership, explicit holds and the completed bounded upgrade-closure boundary. Historical A-series plans remain audit history; current source/tests and exact-head CI evidence are authoritative.
 
 ## 1. Product entry and shared Flow OS
 
@@ -110,7 +110,7 @@ auto_migration_allowed = false
 product_evidence = false
 ```
 
-Flow 4 preserves this as an intentional hold.
+Flow 5 preserves this as an intentional hold.
 
 ## 4. Lifecycle layer
 
@@ -328,7 +328,49 @@ release.status = NOT_ATTEMPTED
 
 This prevents cross-project dogfood from manufacturing browser, provider-quality, human-review, deploy or release evidence.
 
-## 11. Regression surfaces
+## 11. Flow 5 final owner review and upgrade closure
+
+Executable owner set:
+
+```text
+benchmarks/final-owner-review-closure-v1.json
+core/benchmarks/final_owner_review_closure.py
+scripts/validate_final_owner_review_closure.py
+tests/test_final_owner_review_closure_a55.py
+.github/workflows/uiux-factory-ci.yml
+.github/workflows/a20-release-candidate.yml
+```
+
+Repository-only CI intentionally derives:
+
+```text
+HOLD_FINAL_OWNER_REVIEW_EVIDENCE_REQUIRED
+```
+
+because the real `flow4-final.json` receipt exists only in the A20 evidence lane. A20 feeds that exact Flow 4 receipt into Flow 5 and cross-checks all four project IDs/SHAs, Flow 3 ledger truth, the five hold triggers, owner delegation, repository-hygiene receipt and every non-authority boundary.
+
+Proven A20 closure state:
+
+```text
+WORKSPACE_UPGRADE_CLOSED_WITH_INTENTIONAL_HOLDS
+flow3_clear = true
+flow4_contract_clear = true
+flow4_report_present = true
+flow4_clear = true
+intentional_holds_preserved = true
+owner_delegation_clear = true
+owner_review_source_clear = true
+repository_hygiene_receipt_clear = true
+governance_boundary_clear = true
+final_owner_review_completed = true
+upgrade_closed = true
+future_hold_triggers_preserved = true
+independent_human_review_claimed = false
+```
+
+The five intentional holds remain active and non-blocking for this closed upgrade. Closure does not grant provider migration, lifecycle unification, GenAI promotion, vector retrieval activation or compatibility-wrapper deletion.
+
+## 12. Regression surfaces
 
 Active regression owners include:
 
@@ -347,13 +389,14 @@ uiux-factory/benchmarks/runtime-compatibility-convergence-v1.json
 uiux-factory/benchmarks/compatibility-surface-governance-v1.json
 uiux-factory/benchmarks/architecture-debt-closure-audit-v1.json
 uiux-factory/benchmarks/final-upgrade-regression-v1.json
+uiux-factory/benchmarks/final-owner-review-closure-v1.json
 .github/workflows/uiux-factory-ci.yml
 .github/workflows/a20-release-candidate.yml
 ```
 
-UIUX Factory CI owns repository-local regression. A20 owns pinned real-project final evidence.
+UIUX Factory CI owns repository-local regression and fail-closed contract validation. A20 owns pinned real-project final evidence and the resulting Flow 5 closure receipt.
 
-## 12. Standing owner delegation
+## 13. Standing owner delegation
 
 Current delegation artifact:
 
@@ -361,21 +404,31 @@ Current delegation artifact:
 uiux-factory/benchmarks/governance-owner-delegation-v1.json
 ```
 
-Mandatory failures cannot be bypassed. Independent-human evidence cannot be fabricated. Protected history, secrets and permissions remain outside delegated continuation.
+Mandatory failures cannot be bypassed. Independent-human evidence cannot be fabricated. Protected history, secrets and permissions remain outside delegated continuation. The delegation artifact retains the historical requirement for a final retrospective owner review; Flow 5's closure receipt records that the owner-governance review completed after Flow 4 evidence became valid.
 
-## 13. Upgrade closure boundary
+## 14. Upgrade closure boundary
 
-Flow 4 PASS means the bounded regression/dogfood phase is complete. It does not itself constitute the broad owner verdict that was deferred throughout the architecture upgrade.
-
-Only after exact-final-head Flow 4 PASS may the next step run:
+Current bounded upgrade decision:
 
 ```text
-Final Broad Owner Review / Upgrade Closure
+WORKSPACE_UPGRADE_CLOSED_WITH_INTENTIONAL_HOLDS
 ```
 
-The five intentional holds survive Flow 4 and reopen only when their own explicit evidence triggers are met.
+There is no next numbered task in this upgrade sequence. Future work begins only from a new owner product/architecture goal or an explicit hold trigger with its required evidence.
 
-## 14. Future convergence rules
+The five holds remain:
+
+```text
+provider_default_migration
+lifecycle_mutation_convergence
+genai_nist_expansion
+vector_semantic_retrieval
+compatibility_surface_removal
+```
+
+They are not silently cleared by upgrade closure and must not be treated as permission for automatic mutation.
+
+## 15. Future convergence rules
 
 Future work must preserve:
 
