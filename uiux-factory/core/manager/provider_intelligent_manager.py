@@ -12,12 +12,13 @@ from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 from core.orchestration.reference_intelligence import ReferenceIntelligencePlanner
 from core.orchestration.skill_governance import FlowReplanner, SkillGovernanceSnapshot
 from core.runtime.harness_runtime import HarnessInspiredRuntime
+from core.runtime.provider_compat_contract import (
+    FACTORY_PROVIDER_LANE_ENV,
+    build_provider_lane_provenance,
+    resolve_factory_provider_lane,
+)
 from core.runtime.run_context import RunContext
 from core.team.intelligent_team_runner import IntelligentTeamRunner
-
-
-FACTORY_PROVIDER_LANE_ENV = "UIUX_FACTORY_PROVIDER_LANE"
-FACTORY_PROVIDER_LANES = frozenset({"legacy", "managed_compat"})
 
 
 class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
@@ -69,16 +70,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
 
     @staticmethod
     def _resolve_provider_lane(env: dict[str, str] | None = None) -> tuple[str, str]:
-        source = os.environ if env is None else env
-        raw = str(source.get(FACTORY_PROVIDER_LANE_ENV, "")).strip().lower()
-        if not raw:
-            return "legacy", "default"
-        if raw not in FACTORY_PROVIDER_LANES:
-            allowed = ", ".join(sorted(FACTORY_PROVIDER_LANES))
-            raise ValueError(
-                f"Unknown {FACTORY_PROVIDER_LANE_ENV}={raw!r}; expected one of: {allowed}."
-            )
-        return raw, "explicit"
+        return resolve_factory_provider_lane(os.environ if env is None else env)
 
     def _create_ai_provider(self) -> tuple[Any, str, str]:
         lane, selection_source = self._resolve_provider_lane()
@@ -93,19 +85,6 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
         provider = ManagedArtifactCompletionAdapter.from_env(self.root)
         return provider, lane, selection_source
 
-    @staticmethod
-    def _provider_descriptors(provider: Any) -> list[dict[str, str]]:
-        descriptors: list[dict[str, str]] = []
-        raw_items = getattr(provider, "configs", None)
-        if raw_items is None:
-            raw_items = getattr(provider, "providers", [])
-        for item in list(raw_items or [])[:8]:
-            name = str(getattr(item, "name", "")).strip()
-            model = str(getattr(item, "model", "")).strip()
-            if name or model:
-                descriptors.append({"name": name, "model": model})
-        return descriptors
-
     def _write_provider_lane_provenance(
         self,
         context: RunContext,
@@ -114,32 +93,11 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
         lane: str,
         selection_source: str,
     ) -> Path:
-        if lane not in FACTORY_PROVIDER_LANES:
-            raise ValueError(f"Cannot persist unknown provider lane: {lane!r}")
-        provider_class = f"{provider.__class__.__module__}.{provider.__class__.__name__}"
-        payload = {
-            "schema_version": "provider-lane.v1",
-            "engine": "ai",
-            "lane": lane,
-            "selection_source": selection_source,
-            "feature_flag": FACTORY_PROVIDER_LANE_ENV,
-            "legacy_default_preserved": lane == "legacy" and selection_source == "default",
-            "provider_class": provider_class,
-            "providers": self._provider_descriptors(provider),
-            "automatic_cross_lane_fallback": False,
-            "rollback": {
-                "action": f"unset {FACTORY_PROVIDER_LANE_ENV} or set it to legacy for the next run",
-                "changes_current_run": False,
-            },
-            "authority_effect": "none",
-            "gate_effect": "none",
-            "evidence_effect": "none",
-            "release_effect": "none",
-            "rule": (
-                "Provider-lane provenance records execution selection only. It is not runtime evidence, "
-                "cannot satisfy gates, and cannot authorize merge/deploy/release."
-            ),
-        }
+        payload = build_provider_lane_provenance(
+            provider=provider,
+            lane=lane,
+            selection_source=selection_source,
+        )
         path = Path(context.run_dir) / "provider-lane.json"
         path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         context.add_artifact("provider_lane", path)
@@ -148,7 +106,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             data={
                 "lane": lane,
                 "selection_source": selection_source,
-                "provider_class": provider_class,
+                "provider_class": payload["provider_class"],
                 "automatic_cross_lane_fallback": False,
                 "provenance": str(path),
             },
