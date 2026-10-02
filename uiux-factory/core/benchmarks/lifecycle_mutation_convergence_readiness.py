@@ -189,7 +189,7 @@ def _source_contract() -> tuple[bool, bool, dict[str, bool]]:
             "_event_bus" in factory_fields
             and "RunEventBus" in factory_source
             and "events.jsonl" in factory_source
-            and "project_run_state" not in factory_source
+            and "project_run_state" in factory_source
             and callable(getattr(RunContext, "projected_state", None))
         ),
         "managed_checkpoint_and_stage_lineage": (
