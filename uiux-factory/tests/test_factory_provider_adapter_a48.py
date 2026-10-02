@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import asyncio
 import threading
 from pathlib import Path
@@ -8,7 +9,12 @@ import pytest
 
 from core.runtime.flow_os.factory_provider_adapter import ManagedArtifactCompletionAdapter
 from core.runtime.flow_os.provider import ProviderStageResponse
-from core.runtime.free_provider import FreeProvider, ProviderError
+from core.runtime.provider_compat_contract import (
+    PROVIDER_MAX_CALLS_PER_RUN,
+    PROVIDER_STAGE_MAX_TOKENS,
+    PROVIDER_STAGE_TIMEOUT,
+    ProviderError,
+)
 
 
 class FakeManagedProvider:
@@ -83,8 +89,8 @@ def test_a48_adapter_applies_factory_stage_limits_only_during_managed_call(tmp_p
 
     assert provider.observed_limits == [
         (
-            FreeProvider.STAGE_MAX_TOKENS["implementation"],
-            FreeProvider.STAGE_TIMEOUT["implementation"],
+            PROVIDER_STAGE_MAX_TOKENS["implementation"],
+            PROVIDER_STAGE_TIMEOUT["implementation"],
         )
     ]
     assert provider.max_output_tokens == 111
@@ -218,6 +224,7 @@ def test_a48_adapter_honors_existing_stage_preference_and_call_budget(tmp_path: 
     assert result == "gemini"
     assert groq.requests == []
     assert len(gemini.requests) == 1
+    assert adapter.MAX_CALLS_PER_RUN == PROVIDER_MAX_CALLS_PER_RUN
 
     adapter.calls = adapter.MAX_CALLS_PER_RUN
     with pytest.raises(ProviderError, match="giới hạn"):
@@ -231,6 +238,20 @@ def test_a48_adapter_rejects_context_over_factory_limit(tmp_path: Path) -> None:
     with pytest.raises(ProviderError, match="80.000"):
         asyncio.run(adapter.complete("research", "s" * 40001, "p" * 40000))
     assert provider.requests == []
+
+
+def test_a48_adapter_module_does_not_import_legacy_transport_at_module_scope() -> None:
+    adapter_path = (
+        Path(__file__).resolve().parents[1]
+        / "core/runtime/flow_os/factory_provider_adapter.py"
+    )
+    tree = ast.parse(adapter_path.read_text(encoding="utf-8"))
+    module_imports = [node for node in tree.body if isinstance(node, ast.ImportFrom)]
+
+    assert all(node.module != "core.runtime.free_provider" for node in module_imports)
+    source = adapter_path.read_text(encoding="utf-8")
+    assert "from core.runtime.provider_compat_contract import" in source
+    assert "from core.runtime.free_provider import FreeProvider" in source
 
 
 def test_a48_adapter_is_not_wired_into_factory_manager_by_default() -> None:
