@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "proposal_id": "knowledge-ev-canonical-promotion-proposal-v1",
+  "review_status": "PENDING",
+  "review_policy": {
+    "reviewer_type": "independent_human",
+    "explicit_approval_required": true,
+    "blind_review_required": false,
+    "allowed_verdicts": ["APPROVE_PROMOTION_TASK", "REVISE_PROPOSAL", "HOLD", "REJECT"]
+  },
+  "review": {
+    "status": "PENDING",
+    "verdict": null,
+    "rationale": null,
+    "reviewer": null,
+    "reviewed_at": null,
+    "source_freshness_rechecked": null,
+    "rollback_plan_accepted": null,
+    "cross_domain_risk_accepted": null
+  }
+}
