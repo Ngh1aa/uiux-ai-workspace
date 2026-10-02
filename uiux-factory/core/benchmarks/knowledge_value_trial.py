@@ -38,6 +38,7 @@ class TrialGovernanceResult:
     tie_count: int
     insufficient_count: int
     material_regression_count: int
+    joint_usefulness_win_count: int
     expansion_recommendation: Literal[
         "HOLD_PENDING_HUMAN",
         "REVISE_BEFORE_EXPANSION",
@@ -279,5 +280,6 @@ def evaluate_knowledge_value_trial(
         tie_count=ties,
         insufficient_count=insufficient,
         material_regression_count=regressions,
+        joint_usefulness_win_count=usefulness_wins,
         expansion_recommendation=recommendation,
     )
