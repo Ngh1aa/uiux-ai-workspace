@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.2 MERGED + A50.3 CURATED SEED KNOWLEDGE / PROJECT DOGFOOD IMPLEMENTED**  
+Status: **A40–A50.3 MERGED + A50.4 KNOWLEDGE USEFULNESS / CORPUS GOVERNANCE IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@2516b85e0e0f3fb6d7792470b867152b3220f47d`
+Current architecture baseline: `main@da4a5d912358b9d29b042a0748b8447a1100a88b`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -40,6 +40,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 30. `A50-KNOWLEDGE-OS-ARCHITECTURE.md` — knowledge ownership/taxonomy.
 31. `A50-BOUNDED-KNOWLEDGE-RETRIEVAL.md` — deterministic post-routing retrieval/index.
 32. `A50-CURATED-SEED-KNOWLEDGE-DOGFOOD.md` — three-source seed governance and Nova/Lumen/CENNEXT retrieval dogfood.
+33. `A50-KNOWLEDGE-USEFULNESS-GOVERNANCE.md` — deterministic usefulness proxies and corpus expansion governance.
 
 ## Current architecture statement
 
@@ -111,7 +112,7 @@ release_effect = none
 
 ### A50.3 canonical seed
 
-The canonical index now contains exactly three curated records:
+The canonical index contains exactly three curated records:
 
 ```text
 financial-services  → Unicode CLDR / UTS #35 number/currency reference
@@ -121,32 +122,51 @@ industrial-services → U.S. DOE Motor Systems repair/system-performance referen
 
 The corpus is deliberately small. It stores concise paraphrased domain/reference context, not copied source articles and not skill procedures.
 
-Existing methodology remains outside Knowledge OS, including financial workflow/state/evidence reasoning, asset/art-direction procedure and accessibility workflow. Regression guards reject a parallel `SKILL.md` corpus and common procedural skill-section structure in seed content.
+Main CI dogfoods retrieval against Nova, Lumen and CENNEXT. Each project must retrieve only its intended domain record while the other two records are excluded by `domain_mismatch`.
 
-### A50.3 project dogfood
+### A50.4 usefulness and corpus governance
 
-Main CI evaluates the canonical corpus against three project profiles:
+A50.4 does not infer model reasoning improvement from deterministic retrieval. It evaluates separate proxies:
 
 ```text
-Nova    / financial-services  / implementation → financial record only
-Lumen   / art-culture         / research       → IIIF record only
-CENNEXT / industrial-services / research       → DOE record only
+actionable_delta
+domain_specificity
+skill_duplication_clear
+retrieval_noise_clear
+provenance_clear
+context_budget_clear
 ```
 
-For each case, the other two records must be excluded by `domain_mismatch`. The dogfood measures retrieval precision/isolation only; it is not product-quality, user-validation or product-outcome evidence.
+Each current seed must satisfy every proxy to receive deterministic `KEEP`; otherwise it derives `REVISE`.
+
+Allowed record decisions are only:
+
+```text
+KEEP
+REVISE
+REMOVE
+```
+
+`EXPAND` is deliberately absent and global `expand_allowed = false`. Deterministic checks can establish context fit, provenance, boundedness and low duplication/noise, but cannot establish model reasoning improvement or human usefulness. Corpus expansion therefore requires a separate human/model-assisted usefulness trial.
+
+Benchmark scope remains:
+
+```text
+deterministic_context_usefulness_proxy_not_model_reasoning_or_product_evidence
+```
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora plus curated project retrieval dogfood before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood and knowledge-usefulness governance before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
 
-A50 regression now covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior and post-routing flow immutability.
+A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries and the corpus-expansion block.
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence remains intentionally read-only at the reconciliation/projection/parity layer; mutation-level unification requires a separate decision.
-3. Knowledge OS has only three curated domain records. Broader categories are intentionally unpopulated until usefulness/noise/duplication are measured.
-4. Project dogfood proves deterministic retrieval fit for selected contexts, not whether reasoning or product outcomes improve.
+3. The three seed records have deterministic usefulness proxies only; no human/model-assisted with-vs-without trial has yet established that they materially improve reasoning/output quality.
+4. Broader Knowledge OS categories remain intentionally unpopulated and corpus expansion is blocked.
 5. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
 6. Vector/semantic retrieval remains deferred.
 
@@ -162,4 +182,4 @@ When documents disagree:
 
 ## Next architecture task
 
-Proceed to **A50.4 — Knowledge Usefulness Evaluation + Corpus Governance** only after A50.3 is green and merged. Compare representative context/reasoning with vs without the seed, measure actionability and duplication/noise, and make explicit KEEP / REVISE / REMOVE / EXPAND decisions before adding broader knowledge. Vector search remains deferred.
+Proceed to **A50.5 — Human/Model-Assisted Knowledge Value Trial** only after A50.4 is green and merged. Compare representative outputs with vs without retrieved knowledge under the same task/flow context, record human usefulness judgments separately from deterministic metrics, and only then consider an `EXPAND` recommendation. Vector search remains deferred.
