@@ -237,6 +237,16 @@ async def _collect(root: Path) -> dict[str, Any]:
     }
 
 
+def _trial_exit_code(payload: dict[str, Any]) -> int:
+    receipts = payload.get("receipts")
+    if not isinstance(receipts, list):
+        return 1
+    required_count = len(SUPPORTED_PROVIDERS) * len(LANES) * len(TRIALS)
+    if payload.get("collection_status") != "COMPLETE" or len(receipts) != required_count:
+        return 1
+    return 0 if all(row.get("success") is True and row.get("contract_valid") is True for row in receipts) else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run explicit A51.1 live provider transport trials and write sanitized receipts"
@@ -271,7 +281,7 @@ def main() -> int:
         "prompt bodies, response bodies and credentials are not persisted."
     )
     print("No provider default, governance decision, merge/release authority or product evidence was changed.")
-    return 0 if total and passed == total else 1
+    return _trial_exit_code(payload)
 
 
 if __name__ == "__main__":
