@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 from core.orchestration.intelligent_flow import GoalInterpreter as FactoryAdapterGoalInterpreter
@@ -15,20 +14,13 @@ from core.runtime.flow_os.task_context import GoalInterpreter as CanonicalGoalIn
 FACTORY = Path(__file__).resolve().parents[1]
 WORKSPACE = FACTORY.parent
 SKILLS = WORKSPACE / "skills_UIUX"
-if str(SKILLS) not in sys.path:
-    sys.path.insert(0, str(SKILLS))
-
-from runtime.flow import DevelopmentManager as LegacyFlowManager
-from runtime.manager import DevelopmentManagerAgent as LegacyManagedController
-from runtime.task_context import GoalInterpreter as LegacyGoalInterpreter
 
 
 def test_a4_canonical_runtime_owner_is_factory() -> None:
     assert CANONICAL_RUNTIME_OWNER == "uiux-factory/core/runtime/flow_os"
     assert FactoryAdapterGoalInterpreter is CanonicalGoalInterpreter
-    assert LegacyGoalInterpreter is CanonicalGoalInterpreter
-    assert LegacyFlowManager is FlowPlanner
-    assert LegacyManagedController is ManagedFlowController
+    assert FlowPlanner.__module__ == "core.runtime.flow_os.flow"
+    assert ManagedFlowController.__module__ == "core.runtime.flow_os.managed"
 
 
 def test_a4_canonical_planner_is_shared_by_factory_adapter() -> None:
@@ -71,6 +63,11 @@ def test_a4_legacy_runtime_python_files_are_only_compatibility_shims() -> None:
         assert target in source, filename
         for definition in forbidden_definitions:
             assert definition not in source, (filename, definition)
+
+    flow_source = (SKILLS / "runtime" / "flow.py").read_text(encoding="utf-8")
+    manager_source = (SKILLS / "runtime" / "manager.py").read_text(encoding="utf-8")
+    assert "FlowPlanner as DevelopmentManager" in flow_source
+    assert "ManagedFlowController as DevelopmentManagerAgent" in manager_source
 
 
 def test_a4_official_managed_cli_imports_factory_runtime_directly() -> None:

@@ -9,8 +9,9 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+FACTORY_ROOT = ROOT.parent / "uiux-factory"
+if str(FACTORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(FACTORY_ROOT))
 
 REQUIRED = [
     ROOT / "RUNTIME-FOUNDATION.md",
@@ -83,8 +84,8 @@ def _git_fixture(project: Path) -> None:
 
 
 def _run_flow_os_smoke(errors: list[str]) -> None:
-    from runtime.agent import PermissionGate, ProviderNeutralAgentHarness, ToolRegistry
-    from runtime.manager import DevelopmentManagerAgent
+    from core.runtime.flow_os.agent import PermissionGate, ProviderNeutralAgentHarness, ToolRegistry
+    from core.runtime.flow_os.managed import ManagedFlowController as DevelopmentManagerAgent
 
     with tempfile.TemporaryDirectory() as tmp:
         project = Path(tmp) / "project"

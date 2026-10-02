@@ -8,13 +8,14 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+FACTORY_ROOT = ROOT.parent / "uiux-factory"
+if str(FACTORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(FACTORY_ROOT))
 
-from runtime.agent import ProviderNeutralAgentHarness
-from runtime.manager import DevelopmentManagerAgent
-from runtime.provider import ProviderStageResponse, ScriptedProvider
-from runtime.provider_runner import ProviderManagedRunner
+from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
+from core.runtime.flow_os.managed import ManagedFlowController as DevelopmentManagerAgent
+from core.runtime.flow_os.provider import ProviderStageResponse, ScriptedProvider
+from core.runtime.flow_os.provider_runner import ProviderManagedRunner
 
 
 def main() -> int:
