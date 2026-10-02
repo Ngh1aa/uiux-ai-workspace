@@ -69,6 +69,7 @@ jobs:
       - name: Compile active Python source tree
         run: |
           python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
+          python -m compileall -q scripts/validate_provider_default_migration_readiness.py scripts/run_provider_live_trial.py
           python -m compileall -q ../skills_UIUX/runtime ../skills_UIUX/scripts/prepare-external-task.py ../skills_UIUX/scripts/github-external-agent-runner.py ../skills_UIUX/scripts/build-release-evidence.py
       - name: Validate Flow Agent OS contracts
         run: |
@@ -82,14 +83,15 @@ jobs:
           python scripts/validate_memory_boundary_benchmark.py
           python scripts/validate_scorecard_benchmark.py
           python scripts/validate_provider_parity_benchmark.py
+          python scripts/validate_provider_default_migration_readiness.py
           python scripts/validate_lifecycle_parity_benchmark.py
           python scripts/validate_knowledge_retrieval_benchmark.py
           python scripts/validate_knowledge_project_dogfood.py
           python scripts/validate_knowledge_value_trial.py
           python scripts/validate_knowledge_edtech_canonical_apply.py
           python scripts/validate_knowledge_genai_nist_freshness_review.py
-      # Pre-promotion A50 validators remain in the repository as immutable
-      # governance evidence. Active CI validates the latest five-record
-      # post-EdTech canonical topology plus the non-mutating GenAI freshness HOLD.
+      # Historical A50 validators remain immutable governance evidence. Active CI
+      # validates current five-record Knowledge OS truth, the GenAI freshness HOLD,
+      # and A51.1 provider-migration readiness without requiring live credentials.
       - name: Run foundation tests
         run: python -m pytest -q tests
