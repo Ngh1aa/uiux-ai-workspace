@@ -260,9 +260,11 @@ def test_a48_adapter_manager_integration_remains_explicit_opt_in_with_legacy_def
         / "core/manager/provider_intelligent_manager.py"
     ).read_text(encoding="utf-8")
 
-    assert 'FACTORY_PROVIDER_LANE_ENV = "UIUX_FACTORY_PROVIDER_LANE"' in manager_source
-    assert 'return "legacy", "default"' in manager_source
+    assert "from core.runtime.provider_compat_contract import (" in manager_source
+    assert "FACTORY_PROVIDER_LANE_ENV" in manager_source
+    assert "resolve_factory_provider_lane" in manager_source
     assert 'if lane == "legacy":' in manager_source
     assert "FreeProvider.from_env(self.root)" in manager_source
     assert "ManagedArtifactCompletionAdapter.from_env(self.root)" in manager_source
+    assert "build_provider_lane_provenance" in manager_source
     assert "automatic_cross_lane_fallback" in manager_source
