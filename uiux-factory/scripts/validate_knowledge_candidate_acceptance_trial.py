@@ -40,13 +40,16 @@ def main() -> int:
     print(f"vector_search_change_allowed={report.vector_search_change_allowed}")
     print(f"product_evidence={report.product_evidence}")
 
-    expected_pending = (
-        report.reviewed_case_count == 0
-        and report.accepted_for_index_trial_count == 0
-        and report.revise_draft_count == 0
-        and report.hold_count == 2
+    verdicts = {case.case_id: case.verdict for case in report.cases}
+    expected_reviewed = (
+        report.reviewed_case_count == 2
+        and report.accepted_for_index_trial_count == 1
+        and report.revise_draft_count == 1
+        and report.hold_count == 0
         and report.reject_count == 0
-        and report.human_review_complete is False
+        and report.human_review_complete is True
+        and verdicts.get("edtech-lti-integration-boundaries") == "REVISE_DRAFT"
+        and verdicts.get("ev-ocpp-charging-session-truth") == "ACCEPT_FOR_INDEX_TRIAL"
     )
     boundaries = (
         report.index_mutation_allowed is False
@@ -55,7 +58,7 @@ def main() -> int:
         and report.vector_search_change_allowed is False
         and report.product_evidence is False
     )
-    return 0 if expected_pending and boundaries else 1
+    return 0 if expected_reviewed and boundaries else 1
 
 
 if __name__ == "__main__":
