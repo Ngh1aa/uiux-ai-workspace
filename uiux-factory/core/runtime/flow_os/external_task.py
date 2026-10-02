@@ -5,13 +5,15 @@ from pathlib import Path
 from typing import Any
 
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow
+from core.runtime.flow_os.target_truth import ROUTING_FIELDS, TargetTruthProbe
 from core.runtime.flow_os.task_context import GoalInterpreter
 
 
-EXTERNAL_TASK_MANIFEST_VERSION = "1.0"
+EXTERNAL_TASK_MANIFEST_VERSION = "1.1"
 EXTERNAL_TASK_STATUS = "READY_FOR_EXTERNAL_COLLABORATOR"
 AUTHORITY_ORDER = ("read_only", "branch_write", "external_write", "release")
 VISUAL_SIGNATURE_CONTRACT = "docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md"
+ROUTING_PRECEDENCE = ("explicit_override", "target_project_truth", "goal_inference")
 
 
 @dataclass(frozen=True)
@@ -152,39 +154,27 @@ def _requires_visual_signature_contract(context: dict[str, Any], goal: str) -> b
     return any(term in normalized for term in existing_or_migration_terms)
 
 
-def build_external_task_manifest(
-    library_root: Path,
-    policy_doc: dict[str, Any],
+def _truth_aware_context(
     goal: str,
-    target_repository: str,
     *,
-    authority: str = "branch_write",
-    overrides: dict[str, Any] | None = None,
-    acceptance_criteria: list[str] | None = None,
-    qa_routes: list[str] | None = None,
-) -> ExternalTaskManifest:
-    """Resolve one natural-language goal into a bounded external-collaborator routing contract.
+    target_root: Path | str | None,
+    overrides: dict[str, Any] | None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Compile goal inference, then target truth, then explicit caller overrides.
 
-    This function intentionally performs no target-repository mutation and emits no PASS state.
-    The external collaborator must still audit the target source, execute the active stages and
-    attach target-project verification evidence.
+    Target truth can affect routing metadata only. Authority remains owned by task language
+    plus the caller authority cap in `build_external_task_manifest`.
     """
 
-    cleaned_repository = str(target_repository).strip()
-    cleaned_goal = str(goal).strip()
-    if not cleaned_repository:
-        raise ValueError("target_repository is required")
-    if not cleaned_goal:
-        raise ValueError("goal is required")
+    context = GoalInterpreter().interpret(goal).to_context()
+    field_sources = {field_name: "goal_inference" for field_name in ROUTING_FIELDS}
 
-    interpreter = GoalInterpreter()
-    interpreted = interpreter.interpret(cleaned_goal)
-    context = interpreted.to_context()
-    inferred_task_authority = str(context.get("authority", "unspecified"))
-    effective_authority = _effective_authority(authority, inferred_task_authority)
-    context["requested_authority"] = inferred_task_authority
-    context["effective_authority"] = effective_authority
-    context["authority"] = effective_authority
+    truth = TargetTruthProbe(target_root).probe()
+    for field_name, value in truth.fields.items():
+        if field_name not in ROUTING_FIELDS:
+            continue
+        context[field_name] = value
+        field_sources[field_name] = "target_project_truth"
 
     allowed_overrides = {
         "intent",
@@ -197,10 +187,61 @@ def build_external_task_manifest(
         "risk",
         "features",
     }
+    explicit_fields: list[str] = []
     for key, value in dict(overrides or {}).items():
         if key not in allowed_overrides or value is None or value == "":
             continue
         context[key] = value
+        explicit_fields.append(key)
+        if key in ROUTING_FIELDS:
+            field_sources[key] = "explicit_override"
+
+    context["target_truth"] = truth.to_dict()
+    context["routing_provenance"] = {
+        "precedence": list(ROUTING_PRECEDENCE),
+        "field_sources": field_sources,
+        "explicit_override_fields": sorted(explicit_fields),
+        "target_truth_applied_before_flow_resolution": True,
+    }
+    return context, truth.to_dict()
+
+
+def build_external_task_manifest(
+    library_root: Path,
+    policy_doc: dict[str, Any],
+    goal: str,
+    target_repository: str,
+    *,
+    authority: str = "branch_write",
+    overrides: dict[str, Any] | None = None,
+    acceptance_criteria: list[str] | None = None,
+    qa_routes: list[str] | None = None,
+    target_root: Path | str | None = None,
+) -> ExternalTaskManifest:
+    """Resolve one external task from goal + bounded target truth into a Flow contract.
+
+    Precedence is explicit caller override > structured target-project truth > natural-language
+    goal inference. Target truth never grants authority and this function performs no target
+    mutation or QA PASS claim.
+    """
+
+    cleaned_repository = str(target_repository).strip()
+    cleaned_goal = str(goal).strip()
+    if not cleaned_repository:
+        raise ValueError("target_repository is required")
+    if not cleaned_goal:
+        raise ValueError("goal is required")
+
+    context, truth = _truth_aware_context(
+        cleaned_goal,
+        target_root=target_root,
+        overrides=overrides,
+    )
+    inferred_task_authority = str(context.get("authority", "unspecified"))
+    effective_authority = _effective_authority(authority, inferred_task_authority)
+    context["requested_authority"] = inferred_task_authority
+    context["effective_authority"] = effective_authority
+    context["authority"] = effective_authority
 
     planner = FlowPlanner(Path(library_root), policy_doc)
     flow = planner.plan(context)
@@ -244,6 +285,10 @@ def build_external_task_manifest(
             "target_runtime_evidence_required_for_runtime_claims": True,
             "missing_user_evidence_must_remain_planned_blocked_or_unknown": True,
             "authority_never_exceeds_caller_or_task_language": True,
+            "target_truth_never_grants_authority_or_evidence": True,
+            "target_truth_status": truth["status"],
+            "target_truth_probed_before_flow_resolution": target_root is not None,
+            "routing_precedence": list(ROUTING_PRECEDENCE),
             "visual_signature_guardrail_active": visual_signature_required,
             "preferred_repository_workflow": "feature branch -> implementation -> verification -> pull request -> merge",
         },
