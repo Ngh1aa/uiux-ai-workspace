@@ -1,6 +1,6 @@
 # A50.9B — EV Controlled Index Trial
 
-Status: **IMPLEMENTED / VERIFICATION PENDING**  
+Status: **VERIFIED / CANARY_PASS**  
 Date: **2026-10-02**
 
 ## Trigger
@@ -46,7 +46,7 @@ A50.9B fails closed unless:
 
 ### EV isolation
 
-The real `KnowledgeRetriever` runs against the four-record canary index for a mobility/EV design query. Expected result:
+The real `KnowledgeRetriever` runs against the four-record canary index for a mobility/EV design query. Verified result:
 
 ```text
 hits = [EV/OCPP record]
@@ -63,7 +63,7 @@ canonical 3-record index
 canary 4-record index
 ```
 
-The hit IDs must remain identical. The EV record must be excluded by `domain_mismatch` for every canonical domain query.
+The hit IDs remain identical. The EV record is excluded by `domain_mismatch` for every canonical-domain query.
 
 ### Negative cross-domain isolation
 
@@ -74,7 +74,7 @@ education-edtech
 ai-software
 ```
 
-Neither domain may retrieve the EV record or any unrelated canonical record.
+Neither domain retrieves the EV record or any unrelated canonical record.
 
 ## Usefulness evidence
 
@@ -102,13 +102,12 @@ canary-index.json   = canonical refs + EV draft ref
 rollback-index.json = original canonical refs only
 ```
 
-Rollback passes only if:
+Verified rollback result:
 
 - rollback index loads exactly the original canonical record IDs;
-- canonical `index.json` bytes are unchanged after the trial;
-- canonical hash before == canonical hash after.
-
-The temporary workspace is then discarded.
+- canonical `index.json` bytes remain unchanged after the trial;
+- canonical hash before equals canonical hash after;
+- the temporary workspace is discarded.
 
 ## Decision
 
@@ -119,16 +118,19 @@ CANARY_PASS
 CANARY_FAIL
 ```
 
-`CANARY_PASS` requires all checks to pass:
+Final verified result:
 
-- prior human/usefulness acceptance clear;
-- EV retrieval isolated;
-- canonical retrieval regression clear;
-- negative-domain isolation clear;
-- EV context stays inside configured budget;
-- rollback verified;
-- GenAI HOLD preserved;
-- canary index remains exactly four records.
+```text
+CANARY_PASS
+usefulness_evidence_clear = true
+ev_retrieval_isolated = true
+canonical_retrieval_regression_clear = true
+negative_domain_isolation_clear = true
+context_budget_clear = true
+rollback_verified = true
+genai_hold_preserved = true
+promotion_proposal_allowed = true
+```
 
 ## Authority boundary
 
@@ -150,6 +152,20 @@ product_evidence = true
 
 A separate explicit promotion proposal/governance task is required before any canonical index mutation.
 
+## Verification
+
+Functional head `10c171f97ce65e4c5e69a090acafa2467435e0e1` passed:
+
+- UIUX Factory CI #1479 — SUCCESS
+  - A50.9B validator — `CANARY_PASS`
+  - 639 foundation tests passed
+- A20 UIUX Factory v1 Release Candidate #138 — SUCCESS
+  - full Factory regression — SUCCESS
+  - structural/security audit — SUCCESS
+  - pinned Nova/Lumen/CENNEXT dogfood — SUCCESS
+
+A first CI attempt correctly caught an evaluator implementation bug: `KnowledgeIndex.load()` returns internal indexed-record wrappers rather than raw `KnowledgeRecord` objects. The evaluator was fixed to read `item.record.id` and canonical exclusion `record_ref`; no canary threshold or regression case was weakened.
+
 ## GenAI boundary
 
 GenAI/NIST is not part of this canary and remains:
@@ -157,3 +173,7 @@ GenAI/NIST is not part of this canary and remains:
 ```text
 HOLD_FRESHNESS_REVIEW
 ```
+
+## Next step
+
+A50.9B permits only a separate canonical-promotion proposal. The canonical corpus remains three records until an explicit later governance task authorizes and verifies an index mutation.
