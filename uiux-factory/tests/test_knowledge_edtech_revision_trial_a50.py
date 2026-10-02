@@ -103,11 +103,14 @@ def test_a50_9a_material_regression_rejects(tmp_path: Path) -> None:
     assert report.verdict == "REJECT"
 
 
-def test_a50_9a_preserves_history_and_packet_blinding() -> None:
+def test_a50_9a_preserves_history_revision_namespace_and_packet_blinding() -> None:
     assert (KNOWLEDGE / "drafts/records/edtech-lti-context-roles-services.json").is_file()
     assert (KNOWLEDGE / "drafts/content/edtech-lti-context-roles-services.md").is_file()
-    assert (KNOWLEDGE / "drafts/records/edtech-lti-context-roles-services-v2.json").is_file()
-    assert (KNOWLEDGE / "drafts/content/edtech-lti-context-roles-services-v2.md").is_file()
+    assert (KNOWLEDGE / "revisions/records/edtech-lti-context-roles-services-v2.json").is_file()
+    assert (KNOWLEDGE / "revisions/content/edtech-lti-context-roles-services-v2.md").is_file()
+
+    # A50.7 historical draft namespace remains exactly its original two record drafts.
+    assert len(list((KNOWLEDGE / "drafts/records").glob("*.json"))) == 2
 
     packet = (BENCHMARKS / "knowledge-edtech-revision-review-packet-v1.md").read_text(encoding="utf-8")
     assert "knowledge_condition" not in packet
@@ -116,4 +119,4 @@ def test_a50_9a_preserves_history_and_packet_blinding() -> None:
 
     index = json.loads((KNOWLEDGE / "index.json").read_text(encoding="utf-8"))
     assert len(index["records"]) == 3
-    assert all("drafts/" not in ref for ref in index["records"])
+    assert all(not ref.startswith(("drafts/", "revisions/")) for ref in index["records"])
