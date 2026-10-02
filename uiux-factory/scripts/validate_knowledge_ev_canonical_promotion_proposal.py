@@ -41,15 +41,18 @@ def main() -> int:
     print(f"product_evidence={report.product_evidence}")
 
     expected = (
-        report.decision == "GOVERNANCE_REVIEW_REQUIRED"
+        report.decision == "APPROVED_FOR_EXPLICIT_PROMOTION_TASK"
         and report.canary_decision == "CANARY_PASS"
         and report.canary_promotion_proposal_allowed is True
         and report.proposal_preconditions_clear is True
         and report.candidate_unindexed is True
         and report.canonical_index_count == 3
-        and report.review_status == "PENDING"
-        and report.review_verdict is None
-        and report.separate_promotion_task_allowed is False
+        and report.review_status == "REVIEWED"
+        and report.review_verdict == "APPROVE_PROMOTION_TASK"
+        and report.source_freshness_rechecked is True
+        and report.rollback_plan_accepted is True
+        and report.cross_domain_risk_accepted is True
+        and report.separate_promotion_task_allowed is True
         and report.index_mutation_allowed is False
         and report.canonical_promotion_in_this_proposal is False
         and report.auto_promotion_allowed is False
