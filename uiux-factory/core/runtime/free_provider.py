@@ -12,16 +12,20 @@ from pathlib import Path
 import aiohttp
 from dotenv import dotenv_values
 
+from core.runtime.provider_compat_contract import (
+    PROVIDER_CONTEXT_CHAR_LIMIT,
+    PROVIDER_MAX_CALLS_PER_RUN,
+    PROVIDER_STAGE_MAX_TOKENS,
+    PROVIDER_STAGE_TIMEOUT,
+    ProviderError,
+)
+
 
 ENDPOINTS = {
     "groq": "https://api.groq.com/openai/v1/chat/completions",
     "gemini": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
 }
 KEY_NAMES = {"groq": "GROQ_API_KEY", "gemini": "GEMINI_API_KEY"}
-
-
-class ProviderError(RuntimeError):
-    pass
 
 
 @dataclass(frozen=True)
@@ -62,23 +66,12 @@ class FreeProvider:
             configs.append(ProviderConfig(name, model, key))
         return cls(configs, env)
 
-    # Stage-specific max_tokens: heavy generation stages get more room.
-    STAGE_MAX_TOKENS: dict[str, int] = {
-        "implementation": 12000,
-        "repair": 12000,
-        "visual_composition": 8000,
-        "art_direction": 8000,
-    }
-    # Heavy stages need longer timeouts.
-    STAGE_TIMEOUT: dict[str, int] = {
-        "implementation": 180,
-        "repair": 180,
-        "visual_composition": 120,
-    }
-    MAX_CALLS_PER_RUN = 20
+    STAGE_MAX_TOKENS = PROVIDER_STAGE_MAX_TOKENS
+    STAGE_TIMEOUT = PROVIDER_STAGE_TIMEOUT
+    MAX_CALLS_PER_RUN = PROVIDER_MAX_CALLS_PER_RUN
 
     async def complete(self, stage: str, system: str, prompt: str, *, json_mode: bool = False) -> str:
-        if len(system) + len(prompt) > 80000:
+        if len(system) + len(prompt) > PROVIDER_CONTEXT_CHAR_LIMIT:
             raise ProviderError("Context vượt giới hạn 80.000 ký tự; hãy rút gọn brief/context.")
         preferred = self.env.get(f"UIUX_PROVIDER_{stage.upper()}")
         configs = list(self.configs)
