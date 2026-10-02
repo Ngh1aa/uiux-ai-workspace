@@ -1,8 +1,8 @@
 # Current Runtime Map
 
-Status: **CURRENT THROUGH A50.14 / FIVE-RECORD KNOWLEDGE OS / GENAI HOLD EVIDENCED**  
+Status: **CURRENT THROUGH A52.1 / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD**  
 Audit date: **2026-10-02**  
-Baseline: `main@f84a3f4a606ada958a1dfa0e9f1c23c409aafb4c`
+Baseline before A52.1: `main@f860a47b7c629974736f14c95eb13b7b9824f47f`
 
 This map describes current executable ownership. Historical A-series plans may describe earlier gaps; current source/tests win when they disagree.
 
@@ -57,7 +57,7 @@ core/runtime/flow_os/factory_provider_adapter.py bounded compatibility adapter
 
 A48 established explicit provider capability reconciliation, artifact bridging, parity dogfood and a controlled opt-in compatibility lane.
 
-Historical A48 used **different provider entry/capability contracts** to name the pre-convergence mismatch between Factory legacy entry and managed/provider-neutral surface. Current state is the controlled compatibility lane, not duplicate provider authority.
+Historical A48 described the pre-convergence mismatch as **different provider entry/capability contracts**. That phrase remains an architecture regression anchor; current state is the bounded compatibility lane, not duplicate provider authority.
 
 Current rule:
 
@@ -67,7 +67,27 @@ managed_compat = explicit opt-in
 no automatic cross-lane fallback
 ```
 
-Offline parity preserves the caller contract but is explicitly not live-provider or product evidence. Moving the default requires a separate live-provider readiness/evidence decision.
+A51.1 adds the fail-closed live-provider readiness layer:
+
+```text
+benchmarks/provider-default-migration-readiness-v1.json
+benchmarks/provider-live-trial-receipts-v1.json
+core/benchmarks/provider_default_migration_readiness.py
+scripts/validate_provider_default_migration_readiness.py
+scripts/run_provider_live_trial.py
+```
+
+Current A51.1 truth:
+
+```text
+collection_status = NOT_RUN
+receipts = 0 / 8
+decision = KEEP_LEGACY_DEFAULT_LIVE_EVIDENCE_REQUIRED
+migration_governance_allowed = false
+default_change_allowed = false
+```
+
+Offline parity preserves the caller contract but is not live-provider or product evidence. A future live trial is operator-explicit and cannot persist secrets, prompt/system bodies or response bodies.
 
 ## 4. Lifecycle layer
 
@@ -77,9 +97,45 @@ A49 reconciles lifecycle meaning across Factory and managed surfaces using:
 INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
 ```
 
-Historical A48/A49 debt described these surfaces as **distinct top-level lifecycle APIs**. A49 provides read-only lifecycle projection/parity; mutation-level lifecycle unification remains intentionally deferred.
+Historical A48/A49 debt described the Factory and managed surfaces as **distinct top-level lifecycle APIs**. A49 made their meaning comparable through read-only projection/parity; it did not erase their separate mutation owners.
 
-`LifecycleProjection` is read-only observability and does not introduce a third state machine or equate completion with release.
+`LifecycleProjection` remains read-only observability and does not introduce a third state machine or equate completion with release.
+
+Current state owners remain intentionally distinct:
+
+```text
+Factory -> core.runtime.run_context.RunContext
+Managed -> core.runtime.flow_os.managed.ManagedWebsiteRun
+```
+
+A52.1 now evaluates mutation-level convergence readiness rather than assuming projection parity implies state-machine parity:
+
+```text
+benchmarks/lifecycle-mutation-convergence-readiness-v1.json
+core/benchmarks/lifecycle_mutation_convergence_readiness.py
+scripts/validate_lifecycle_mutation_convergence_readiness.py
+```
+
+Current audited mutation blockers:
+
+```text
+distinct_state_models
+factory_append_only_chronology
+managed_checkpoint_and_stage_lineage
+managed_human_gate_semantics
+replan_invalidation_semantics_non_parity
+finalize_release_semantics_non_parity
+```
+
+Expected/current A52.1 decision:
+
+```text
+KEEP_SEPARATE_STATE_OWNERS_EVENT_INTEROP_REQUIRED
+event_interop_proposal_allowed = true
+mutation_governance_allowed = false
+```
+
+This permits only a later additive lifecycle-event interoperability proposal. It does not authorize replacing `RunContext`, replacing `ManagedWebsiteRun`, sharing mutable state, changing transitions, or changing release/evidence/gate authority.
 
 ## 5. Evidence / provenance / QA
 
@@ -124,7 +180,7 @@ provenance-aware scorecard
 deterministic Knowledge OS retrieval
 ```
 
-Canonical A48 regression anchors:
+Canonical implementation anchors:
 
 ```text
 core/brain_os/contracts.py
@@ -234,7 +290,7 @@ uiux-factory/core/benchmarks/knowledge_genai_nist_freshness_review.py
 uiux-factory/scripts/validate_knowledge_genai_nist_freshness_review.py
 ```
 
-GenAI/NIST now has an evidence-backed `KEEP_HOLD_FRESHNESS_REVIEW` decision. It remains unindexed, uncanonicalized, non-evidence-bearing and non-promotable until the explicit NIST framework status-change trigger occurs.
+GenAI/NIST has an evidence-backed `KEEP_HOLD_FRESHNESS_REVIEW` decision. It remains unindexed, uncanonicalized, non-evidence-bearing and non-promotable until the explicit NIST framework status-change trigger occurs.
 
 ## 11. Benchmarks / regression / dogfood
 
@@ -247,6 +303,9 @@ uiux-factory/benchmarks/repair-proposals-v1.json
 uiux-factory/benchmarks/memory-boundary-v1.json
 uiux-factory/benchmarks/scorecard-v1.json
 uiux-factory/benchmarks/provider-parity-v1.json
+uiux-factory/benchmarks/provider-default-migration-readiness-v1.json
+uiux-factory/benchmarks/lifecycle-parity-v1.json
+uiux-factory/benchmarks/lifecycle-mutation-convergence-readiness-v1.json
 uiux-factory/core/benchmarks/
 skills_UIUX/scripts/eval-harness.py
 .github/workflows/a13-*.yml
@@ -255,7 +314,7 @@ skills_UIUX/scripts/eval-harness.py
 .github/workflows/uiux-factory-ci.yml
 ```
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, active five-record Knowledge OS truth, A50.14 freshness HOLD and full pytest.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, A51.1 provider migration readiness, A52.1 lifecycle mutation readiness, active five-record Knowledge OS truth, A50.14 freshness HOLD and full pytest.
 
 Historical topology-bound A50 governance/canary/shadow tests remain preserved but are frozen once their assumptions no longer represent current canonical topology.
 
@@ -289,13 +348,17 @@ These transport/compile governed work; they do not prove implementation or QA PA
 
 | Capability | Current owner | Classification |
 |---|---|---|
-| Product entry lifecycle | `run.py` + `core/manager/` | KEEP |
+| Product entry lifecycle | `run.py` + `core/manager/` + `RunContext` | KEEP / FACTORY MUTATION OWNER |
+| Managed lifecycle checkpoints | `core/runtime/flow_os/managed.py` | KEEP / MANAGED MUTATION OWNER |
+| Lifecycle projection | `core/runtime/lifecycle_projection.py` | KEEP / READ-ONLY |
+| Lifecycle mutation readiness | A52.1 benchmark/evaluator | IMPLEMENTED / NON-AUTHORITATIVE |
 | Task interpretation / flow planning | `core/runtime/flow_os/` | KEEP / CANONICAL |
 | Skills / methodology | `skills_UIUX/<skill>/SKILL.md` | KEEP / DECLARATIVE |
 | Runtime policy | `skills_UIUX/runtime/runtime-policy.json` | KEEP |
 | `skills_UIUX/runtime/*.py` | compatibility shims | DEPRECATE LATER / NO NEW LOGIC |
 | Factory provider lane | `core/runtime/free_provider.py` | ADAPT / LEGACY DEFAULT |
 | Provider compatibility contract | `core/runtime/provider_compat_contract.py` | IMPLEMENTED / BOUNDED |
+| Provider default readiness | A51.1 benchmark/evaluator | IMPLEMENTED / LIVE EVIDENCE HOLD |
 | Provider-neutral contracts | `core/runtime/flow_os/provider*.py` | KEEP / CANONICAL CONTRACT |
 | Runtime evidence | `core/runtime/flow_os/evidence.py` | KEEP |
 | Provenance | `core/provenance/` | KEEP |
@@ -319,8 +382,8 @@ It permits bounded follow-up work when mandatory gates pass. It forbids bypassin
 
 ## 15. Remaining convergence / debt
 
-1. Provider default remains `legacy`; moving default requires live-provider readiness evidence beyond the existing offline parity benchmark.
-2. Lifecycle parity is read-only; mutation-level convergence remains separate.
+1. Provider default remains `legacy`; A51.1 live evidence is `0/8`, so no provider-default migration governance is open.
+2. Lifecycle mutation unification remains blocked by six A52.1 semantic differences; only additive event interoperability is eligible as the next bounded lifecycle proposal.
 3. GenAI/NIST is freshness-held with an explicit official-source re-review trigger; no active promotion path exists now.
 4. Vector/semantic retrieval remains deferred and disabled.
 5. Time-sensitive factual/regulatory knowledge still requires current source verification.
@@ -341,12 +404,24 @@ Brain OS reasoning/control
 
 It must not create a third runtime/provider-policy abstraction, copy skill methodology into Brain/provider constants, let advisory channels satisfy runtime gates, replace evidence truth with model-authored records, silently rewrite benchmark history, or treat compatibility shims as active owners.
 
+Lifecycle convergence work additionally must not make a normalized event vocabulary into a shared mutation engine by accident.
+
 ## 17. Next architecture task
 
-Next bounded task:
+After A52.1 passes and merges, next bounded task:
 
 ```text
-A51.1 — Provider Default Migration Readiness
+A52.2 — Lifecycle Event Interoperability Contract
 ```
 
-This task must keep `legacy` as the default and define a fail-closed live-provider evidence path for evaluating `managed_compat`. It must not put credentials into repository artifacts or CI requirements, must not persist prompt/response bodies as evidence, and must not infer product quality from provider transport success. Default migration may only become a later explicit governance task after sufficient live receipts exist.
+That task may normalize read-only lifecycle events/receipts across Factory append-only chronology and Managed checkpoint transitions for observability/regression. It must preserve both mutation owners and have:
+
+```text
+execution_effect = none
+authority_effect = none
+gate_effect = none
+evidence_effect = none
+release_effect = none
+```
+
+Provider migration remains separately blocked on A51.1 live evidence. GenAI/NIST remains freshness-held. Vector search remains deferred.
