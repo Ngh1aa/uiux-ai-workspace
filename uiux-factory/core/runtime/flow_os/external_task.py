@@ -191,6 +191,12 @@ def _apply_target_truth(
         if _is_fallback_truth(truth, field_name):
             if field_name not in _STABLE_TRUTH_FIELDS:
                 continue
+            if field_name == "product_archetype":
+                fallback_domain = fields.get("domain")
+                final_domain = context.get("domain")
+                if fallback_domain not in {None, "", "generic"} and final_domain != fallback_domain:
+                    merge_diagnostics.append("fallback_not_applied:product_archetype:domain_mismatch")
+                    continue
             if context.get(field_name) not in {None, "", "generic"}:
                 merge_diagnostics.append(f"fallback_not_applied:{field_name}:goal_inference_is_specific")
                 continue
