@@ -70,6 +70,7 @@ class KnowledgeRecord(BrainContractModel):
     authority_effect: Literal["none"] = "none"
     gate_effect: Literal["none"] = "none"
     evidence_effect: Literal["none"] = "none"
+    release_effect: Literal["none"] = "none"
 
     @field_validator("applicable_domains", "applicable_stages", "tags")
     @classmethod
@@ -78,10 +79,11 @@ class KnowledgeRecord(BrainContractModel):
 
     @model_validator(mode="after")
     def _validate_reference_boundaries(self) -> "KnowledgeRecord":
-        if self.content_ref.startswith("BM-") or self.source_ref.startswith("BM-"):
+        refs = (self.content_ref, self.source_ref)
+        if any(ref.startswith("BM-") for ref in refs):
             raise ValueError("knowledge records cannot use Brain-memory IDs as content/source ownership")
-        if self.content_ref.startswith("EVID-"):
-            raise ValueError("knowledge content_ref cannot be a current-run evidence ID")
+        if any(ref.startswith("EVID-") for ref in refs):
+            raise ValueError("knowledge records cannot use current-run evidence IDs as content/source ownership")
         return self
 
 
@@ -116,6 +118,7 @@ class KnowledgeArchitecture(BrainContractModel):
     authority_effect: Literal["none"] = "none"
     gate_effect: Literal["none"] = "none"
     evidence_effect: Literal["none"] = "none"
+    release_effect: Literal["none"] = "none"
 
 
 def current_knowledge_architecture() -> KnowledgeArchitecture:
