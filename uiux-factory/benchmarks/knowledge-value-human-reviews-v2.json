@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-value-trial-v2",
+  "review_version": "2.0.0",
+  "review_status": "PENDING",
+  "review_policy": {
+    "reviewer_type": "independent_human",
+    "blind_first": true,
+    "allowed_preferences": ["A", "B", "TIE", "INSUFFICIENT"],
+    "score_scale": [0, 1, 2],
+    "score_meaning": {
+      "0": "material weakness or harmful regression",
+      "1": "acceptable / no meaningful advantage",
+      "2": "materially stronger for the stated task"
+    },
+    "dimensions": [
+      "correctness",
+      "specificity_actionability",
+      "relevance_noise",
+      "unsupported_claim_risk",
+      "decision_usefulness"
+    ]
+  },
+  "cases": [
+    {
+      "id": "nova-amount-display",
+      "status": "PENDING",
+      "preferred_output": null,
+      "scores": null,
+      "rationale": null,
+      "material_regression": null,
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "lumen-object-metadata",
+      "status": "PENDING",
+      "preferred_output": null,
+      "scores": null,
+      "rationale": null,
+      "material_regression": null,
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "cennext-motor-claims",
+      "status": "PENDING",
+      "preferred_output": null,
+      "scores": null,
+      "rationale": null,
+      "material_regression": null,
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  ]
+}
