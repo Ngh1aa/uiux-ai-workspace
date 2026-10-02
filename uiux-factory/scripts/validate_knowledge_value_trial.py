@@ -23,10 +23,16 @@ def main() -> int:
 
     if result.case_count != 3:
         raise SystemExit("A50.5 trial must contain exactly three representative project cases")
-    if result.expansion_recommendation != "HOLD_PENDING_HUMAN":
+    if result.human_review_complete is not True or result.reviewed_case_count != 3:
+        raise SystemExit("checked-in A50.5 human review must be complete for all three project cases")
+    if result.expansion_recommendation != "REVISE_BEFORE_EXPANSION":
         raise SystemExit(
-            "checked-in A50.5 baseline must remain HOLD_PENDING_HUMAN until independent human reviews are committed"
+            "checked-in A50.5 human review must preserve the derived REVISE_BEFORE_EXPANSION governance result"
         )
+    if result.knowledge_preferred_count != 2 or result.baseline_preferred_count != 0 or result.tie_count != 1:
+        raise SystemExit("A50.5 preference counts drifted from the recorded blind human review")
+    if result.material_regression_count != 0:
+        raise SystemExit("recorded A50.5 human review contains no material regression")
     if result.expand_allowed is not False or result.auto_mutation_allowed is not False:
         raise SystemExit("A50.5 must not directly allow corpus expansion or mutation")
     if result.current_run_evidence is not False or result.product_evidence is not False:
@@ -35,10 +41,11 @@ def main() -> int:
     print(
         "knowledge value trial PASSED: "
         f"cases={result.case_count} reviewed={result.reviewed_case_count} "
+        f"knowledge_preferred={result.knowledge_preferred_count} ties={result.tie_count} "
         f"recommendation={result.expansion_recommendation} "
         "expand_allowed=false auto_mutation_allowed=false"
     )
-    print("scope=model_assisted_blind_pair_trial_not_human_or_product_evidence")
+    print("scope=model_assisted_blind_pair_trial_with_completed_human_review_not_product_evidence")
     return 0
 
 

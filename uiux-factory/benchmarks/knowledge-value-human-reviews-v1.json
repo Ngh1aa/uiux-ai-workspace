@@ -2,7 +2,7 @@
   "schema_version": 1,
   "trial_id": "knowledge-value-trial-v1",
   "review_version": "1.0.0",
-  "review_status": "PENDING",
+  "review_status": "COMPLETE",
   "review_policy": {
     "reviewer_type": "independent_human",
     "blind_first": true,
@@ -24,33 +24,78 @@
   "cases": [
     {
       "id": "nova-amount-display",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "B",
+      "scores": {
+        "A": {
+          "correctness": 1,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 2
+        },
+        "B": {
+          "correctness": 2,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        }
+      },
+      "rationale": "Cả hai đều không bịa locale hay tiền tệ được hỗ trợ và đều coi định dạng chỉ là phần trình bày. A dễ hành động hơn nhờ có tiện ích dùng chung, locale dự phòng tường minh và ma trận QA cụ thể. B đúng hơn về cơ chế locale: dùng API nhận biết locale, không giả định vị trí ký hiệu, xử lý dạng số âm, và đầu vào gồm giá trị + tiền tệ + locale. A không nhắc đến dấu phân cách, vị trí ký hiệu hay dạng số âm, nên B nhỉnh hơn một chút.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     },
     {
       "id": "lumen-object-metadata",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "A",
+      "scores": {
+        "A": {
+          "correctness": 2,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 2
+        },
+        "B": {
+          "correctness": 1,
+          "specificity_actionability": 1,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        }
+      },
+      "rationale": "A tách tiêu đề, tóm tắt và metadata có thứ tự. A giữ tuyên bố ghi công bắt buộc riêng, tách trạng thái quyền khỏi metadata mô tả, tách nhà cung cấp khỏi người sáng tạo, và chỉ ánh xạ trường có thật. B hợp lý nhưng giống lời khuyên chung về metadata bảo tàng. B gộp ghi công với quyền sử dụng và không nói phải giữ tuyên bố bắt buộc thành một phần tử riêng. B yếu hơn ở mức bỏ lỡ cơ hội, chưa phải hồi quy.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     },
     {
       "id": "cennext-motor-claims",
-      "status": "PENDING",
-      "preferred_output": null,
-      "scores": null,
-      "rationale": null,
-      "material_regression": null,
-      "reviewer": null,
-      "reviewed_at": null
+      "status": "REVIEWED",
+      "preferred_output": "TIE",
+      "scores": {
+        "A": {
+          "correctness": 1,
+          "specificity_actionability": 2,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 2
+        },
+        "B": {
+          "correctness": 2,
+          "specificity_actionability": 1,
+          "relevance_noise": 2,
+          "unsupported_claim_risk": 2,
+          "decision_usefulness": 1
+        }
+      },
+      "rationale": "B có công cụ khái niệm sắc hơn: năm đối tượng tuyên bố, và việc sửa chữa không tự động là tuyên bố tăng hiệu suất. A hữu ích hơn cho người mua: có lộ trình phục hồi/ra quyết định hiển thị rõ, mô-đun chứng minh và giới hạn có điều kiện. Cả hai đều yêu cầu cơ sở truy vết được và tránh ngôn ngữ đảm bảo. Nếu coi trọng độ chính xác khái niệm hơn thì nghiêng về B, còn nếu coi trọng hành trình người mua thì nghiêng về A. Kết quả là TIE vì hai hướng bù trừ nhau.",
+      "material_regression": false,
+      "reviewer": "human_user_blind_review",
+      "reviewed_at": "2026-10-02"
     }
   ]
 }
