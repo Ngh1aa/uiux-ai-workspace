@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **CURRENT THROUGH A52.2 / FIVE-RECORD KNOWLEDGE OS / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD**  
+Status: **CURRENT THROUGH A52.3 / FIVE-RECORD KNOWLEDGE OS / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD / COMPAT-SHIM RETIREMENT READINESS SELECTED**  
 Audit date: **2026-10-02**  
-Baseline before A52.2: `main@6412519700d0e7e8841d1bf5c5c1349a0b0d41ad`
+Baseline before A52.3: `main@c8818fd9b616e9dd4dfe9d70bda79d930448a383`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS. Current source and executable tests are authoritative when historical A-series notes describe an earlier topology.
 
@@ -22,6 +22,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 12. `A51-PROVIDER-DEFAULT-MIGRATION-READINESS.md` — provider-default live-evidence readiness gate; `legacy` remains default.
 13. `A52-LIFECYCLE-MUTATION-CONVERGENCE-READINESS.md` — mutation-level lifecycle readiness gate; current state owners remain separate.
 14. `A52-LIFECYCLE-EVENT-INTEROPERABILITY.md` — read-only event/receipt interoperability over the two existing lifecycle owners.
+15. `A52-POST-INTEROP-EXECUTABLE-DEBT-AUDIT.md` — evidence-driven executable-debt selection and exact compatibility-consumer census.
 
 Historical/current truth anchors retained for A48 regression coverage:
 
@@ -47,6 +48,8 @@ uiux-factory/core/runtime/flow_os/
 `skills_UIUX/` owns declarative skills, flows, policy, schemas and reusable Knowledge OS content/metadata. Python under `skills_UIUX/runtime/` is compatibility-only, not an independent runtime.
 
 The Factory lifecycle remains under `uiux-factory/run.py` + `core/manager/`; the managed CLI uses the same canonical Flow OS through `skills_UIUX/scripts/uiux-agent.py` and is **not a second Flow OS**.
+
+A52.3 confirms all eight `skills_UIUX/runtime/*.py` wrappers remain thin compatibility shims with no independent runtime/decision logic. They cannot be removed yet because the current exact first-party census is **8 consumer files / 19 deprecated `runtime.*` imports**.
 
 ## Brain OS boundary
 
@@ -109,6 +112,8 @@ decision = KEEP_LEGACY_DEFAULT_LIVE_EVIDENCE_REQUIRED
 
 Offline provider parity is clear, but no live-provider contract matrix exists yet. Therefore provider migration/default change/auto migration remain false. Live transport success, when eventually collected, still will not be product-quality or release evidence.
 
+A52.3 re-evaluates this debt and keeps it excluded from next-package selection while the live matrix remains empty.
+
 ## Lifecycle boundary
 
 A49 reconciles **distinct top-level lifecycle APIs** using:
@@ -168,6 +173,45 @@ release_effect = none
 ```
 
 Managed `COMPLETED` is normalized only as managed run completion and does not imply `FINALIZE` or `RELEASE`. Approval receipts observe gate state changes but do not satisfy human approvals. A52.2 does not clear any A52.1 blocker or authorize mutation convergence.
+
+A52.3 re-checks those six blockers and keeps direct lifecycle mutation/unification excluded from successor selection.
+
+## A52.3 executable debt selection
+
+A52.3 implements a read-only selector over current executable debt:
+
+```text
+benchmarks/post-interop-executable-debt-audit-v1.json
+core/benchmarks/post_interop_executable_debt_audit.py
+scripts/validate_post_interop_executable_debt_audit.py
+```
+
+It checks provider/lifecycle/Knowledge governance, validates the eight deprecated compatibility shims remain thin, and scans active first-party Python imports using AST rather than documentation guesses.
+
+Current exact census:
+
+```text
+shim_count = 8
+shim_contract_clear = true
+internal_consumer_files = 8
+internal_consumer_imports = 19
+```
+
+The exact file/module map is now regression-locked; drift fails validation.
+
+Derived decision:
+
+```text
+SELECT_COMPAT_SHIM_RETIREMENT_READINESS
+```
+
+Selected next bounded package:
+
+```text
+A53.1 — Runtime Compatibility Shim Retirement Readiness
+```
+
+A52.3 itself authorizes no shim deletion or runtime/provider/lifecycle/knowledge mutation.
 
 ## Knowledge OS boundary
 
@@ -275,6 +319,8 @@ core/benchmarks/knowledge_genai_nist_freshness_review.py
 scripts/validate_knowledge_genai_nist_freshness_review.py
 ```
 
+A52.3 confirms this HOLD and `vector_search_change_allowed=false`, so neither GenAI promotion nor vector retrieval is selected next.
+
 ## Regression and dogfood
 
 Active CI validates:
@@ -285,6 +331,7 @@ A51.1 provider-default migration readiness
 A49 lifecycle projection parity
 A52.1 lifecycle-mutation convergence readiness
 A52.2 lifecycle-event interoperability
+A52.3 post-interop executable-debt selection
 knowledge retrieval benchmark
 five-record project retrieval dogfood
 versioned knowledge-value history
@@ -319,8 +366,9 @@ Final retrospective owner review remains deferred until the broader `uiux-ai-wor
 1. Provider default remains `legacy`; A51.1 is implemented but live evidence is `0/8`, so provider migration governance is not open.
 2. A52.2 provides safe event observability across lifecycle owners, but all six A52.1 mutation blockers remain; no direct lifecycle mutation/unification governance is open.
 3. GenAI/NIST is on an evidence-backed freshness HOLD with an explicit external re-review trigger; no active promotion work is allowed now.
-4. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace evidence acquisition.
-5. Vector/semantic retrieval remains deferred and disabled.
+4. Vector/semantic retrieval remains deferred and disabled.
+5. Eight deprecated `skills_UIUX/runtime/*.py` compatibility shims remain necessary for current first-party consumers. A52.3 measures 8 consumer files / 19 imports and selects retirement readiness rather than deletion.
+6. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace evidence acquisition.
 
 ## Source-of-truth priority
 
@@ -334,6 +382,12 @@ When documents disagree:
 
 ## Next architecture task
 
-A52.2 deliberately does **not** auto-authorize a mutation-convergence successor. Once A52.2 is green and merged, the next architecture package must be selected from current executable debt rather than inferred from numbering.
+A52.3 has now selected the next bounded package from executable evidence:
 
-Any future lifecycle task may consume A52.2 receipts for observability/regression, but a mutation-level trial requires separate explicit governance and evidence that addresses the six A52.1 blockers. Provider default migration remains blocked on real A51.1 live receipts. GenAI/NIST remains freshness-held. Vector search remains deferred.
+```text
+A53.1 — Runtime Compatibility Shim Retirement Readiness
+```
+
+A53.1 may audit and migrate first-party `runtime.*` consumers to canonical `core.runtime.flow_os.*` imports under compatibility/parity evidence. It must not delete compatibility shims automatically; zero first-party consumers would be necessary but not sufficient evidence for external removal safety.
+
+Provider default migration remains blocked on real A51.1 live receipts. Direct lifecycle mutation remains blocked by the six A52.1 blockers. GenAI/NIST remains freshness-held. Vector search remains deferred.
