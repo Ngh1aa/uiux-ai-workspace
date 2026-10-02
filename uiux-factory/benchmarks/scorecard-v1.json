@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "insufficient-zero-findings",
+      "runtime_outcome": "insufficient_evidence",
+      "critic_severities": [],
+      "integrity_state": "valid",
+      "expected_runtime_outcome": "insufficient_evidence",
+      "expected_p0": 0,
+      "expected_integrity_valid": true,
+      "expected_rejected": false
+    },
+    {
+      "id": "passed-p0-advisory",
+      "runtime_outcome": "passed",
+      "critic_severities": ["P0"],
+      "integrity_state": "valid",
+      "expected_runtime_outcome": "passed",
+      "expected_p0": 1,
+      "expected_integrity_valid": true,
+      "expected_rejected": false
+    },
+    {
+      "id": "failed-mixed-critique",
+      "runtime_outcome": "failed",
+      "critic_severities": ["P1", "P2", "P1"],
+      "integrity_state": "valid",
+      "expected_runtime_outcome": "failed",
+      "expected_p0": 0,
+      "expected_integrity_valid": true,
+      "expected_rejected": false
+    },
+    {
+      "id": "blocked-lineage-warning",
+      "runtime_outcome": "blocked",
+      "critic_severities": [],
+      "integrity_state": "warning",
+      "expected_runtime_outcome": "blocked",
+      "expected_p0": 0,
+      "expected_integrity_valid": true,
+      "expected_rejected": false
+    },
+    {
+      "id": "passed-integrity-error-remains-runtime-passed",
+      "runtime_outcome": "passed",
+      "critic_severities": [],
+      "integrity_state": "error",
+      "expected_runtime_outcome": "passed",
+      "expected_p0": 0,
+      "expected_integrity_valid": false,
+      "expected_rejected": false
+    },
+    {
+      "id": "duplicate-source-provenance-rejected",
+      "runtime_outcome": "passed",
+      "critic_severities": ["P1"],
+      "integrity_state": "valid",
+      "expected_runtime_outcome": "passed",
+      "expected_p0": 0,
+      "expected_integrity_valid": true,
+      "duplicate_source_ref": true,
+      "expected_rejected": true
+    }
+  ]
+}
