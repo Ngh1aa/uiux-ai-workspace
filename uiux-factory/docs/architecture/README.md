@@ -1,28 +1,29 @@
 # Architecture Truth Index
 
-Status: **CURRENT THROUGH FLOW 3 / A53.3 / ARCHITECTURE DEBT LEDGER CLOSED FOR UPGRADE / FIVE-RECORD KNOWLEDGE OS**  
+Status: **CURRENT THROUGH FLOW 4 / A54.1 / FINAL REGRESSION PASS / FIVE-RECORD KNOWLEDGE OS / FINAL OWNER REVIEW NEXT**  
 Audit date: **2026-10-02**  
-Baseline before Flow 3 / A53.3: `main@9dacfd966cac7656bec01cf8cd290842a38b54cd`
+Baseline before Flow 4 / A54.1: `main@aa48aa49313d5accfb4acf674e38f42441c4c6d2`
 
-This directory is the current architecture truth for UIUX Factory / Flow OS / Brain OS. Current executable source, active validators and tests win when historical notes describe an earlier topology.
+This directory is the current architecture truth for UIUX Factory / Flow OS / Brain OS. Current executable source, validators, CI receipts and tests win when historical notes describe an earlier topology.
 
 ## Read order
 
-1. `CURRENT-RUNTIME-MAP.md` — current executable topology, ownership, explicit holds and upgrade-closure state.
+1. `CURRENT-RUNTIME-MAP.md` — current executable topology, ownership and explicit holds.
 2. `MIGRATION-BOUNDARIES.md` — runtime/Brain ownership boundaries.
 3. `A40-ARCHITECTURE-RECONCILIATION.md` + `A40-ARCHITECTURE-GUARDRAILS.md` — architecture invariants.
 4. A41–A47 — Brain contracts, routing/JIT, critics/repair, memory, evidence relationships and scorecard.
 5. A48 — provider capability reconciliation and architecture-truth history.
 6. A49 — lifecycle contract reconciliation and read-only projection parity.
-7. A50 — Knowledge OS architecture, bounded retrieval, value/canary/promotion history and current five-record state.
-8. `A50-GENAI-NIST-FRESHNESS-REVIEW.md` — current GenAI/NIST freshness HOLD and official-source trigger.
-9. `A51-PROVIDER-DEFAULT-MIGRATION-READINESS.md` — live-evidence gate; `legacy` remains default.
-10. `A52-LIFECYCLE-MUTATION-CONVERGENCE-READINESS.md` — six semantic blockers and separate mutation owners.
-11. `A52-LIFECYCLE-EVENT-INTEROPERABILITY.md` — observation-only lifecycle event receipts.
-12. `A52-POST-INTEROP-EXECUTABLE-DEBT-AUDIT.md` — historical 8/19 compatibility-consumer selection evidence.
-13. `A53-RUNTIME-COMPATIBILITY-CONVERGENCE.md` — Flow 1, first-party deprecated-import convergence to 0/0.
-14. `A53-COMPATIBILITY-SURFACE-GOVERNANCE.md` — Flow 2, eight-shim criteria-based sunset governance.
-15. `A53-ARCHITECTURE-DEBT-CLOSURE-AUDIT.md` — Flow 3, current architecture-debt classification and Flow 4 readiness.
+7. A50 — Knowledge OS architecture, bounded retrieval and current five-record canonical state.
+8. `A50-GENAI-NIST-FRESHNESS-REVIEW.md` — current GenAI/NIST freshness HOLD.
+9. `A51-PROVIDER-DEFAULT-MIGRATION-READINESS.md` — provider live-evidence HOLD; `legacy` remains default.
+10. `A52-LIFECYCLE-MUTATION-CONVERGENCE-READINESS.md` — six semantic blockers and separate lifecycle mutation owners.
+11. `A52-LIFECYCLE-EVENT-INTEROPERABILITY.md` — observation-only lifecycle receipts.
+12. `A52-POST-INTEROP-EXECUTABLE-DEBT-AUDIT.md` — historical executable-debt selection evidence.
+13. `A53-RUNTIME-COMPATIBILITY-CONVERGENCE.md` — Flow 1, first-party compatibility convergence to 0/0.
+14. `A53-COMPATIBILITY-SURFACE-GOVERNANCE.md` — Flow 2, criteria-based eight-shim sunset governance.
+15. `A53-ARCHITECTURE-DEBT-CLOSURE-AUDIT.md` — Flow 3, 4 CLOSED / 5 INTENTIONAL_HOLD / 0 NEW_ACTIONABLE_DEBT.
+16. `A54-FINAL-REGRESSION-CROSS-PROJECT-DOGFOOD.md` — Flow 4, four-project exact-SHA final regression gate.
 
 Historical/current truth anchors retained for A48 regression coverage:
 
@@ -35,17 +36,17 @@ A47-SCORECARD-BENCHMARK.md
 A48-ARCHITECTURE-TRUTH-RECONCILIATION.md
 ```
 
-## Current architecture statement
+## Current executable ownership
 
-Shared executable Flow OS owner:
+Shared Flow OS owner:
 
 ```text
 uiux-factory/core/runtime/flow_os/
 ```
 
-`skills_UIUX/` owns declarative skills, flows, runtime policy, schemas and reusable Knowledge OS content. Python under `skills_UIUX/runtime/` is compatibility-only and is not an independent runtime.
+`skills_UIUX/` owns declarative skills, flows, runtime policy, schemas and reusable Knowledge OS content. Python under `skills_UIUX/runtime/` is compatibility-only and is not independent runtime authority.
 
-Canonical current-run evidence owner:
+Canonical current-run evidence truth:
 
 ```text
 core/runtime/flow_os/evidence.py
@@ -59,19 +60,11 @@ Canonical terminal evaluator:
 core/evaluation/run_evaluator.py
 ```
 
-A completed lifecycle without sufficient trusted PASS evidence remains `insufficient_evidence`; model/provider/Brain/Knowledge/observation channels cannot manufacture a PASS or release.
+Lifecycle completion without sufficient trusted PASS evidence remains `insufficient_evidence`; provider/model/Brain/Knowledge/observation channels cannot manufacture PASS or release authority.
 
-## Flow 1 / A53.1 — first-party runtime compatibility convergence
+## Flow 1 / A53.1
 
-Historical A52.3 census:
-
-```text
-8 compatibility shims
-8 first-party consumer files
-19 deprecated runtime.* imports
-```
-
-Flow 1 migrated known first-party consumers to canonical `core.runtime.flow_os.*` imports while retaining all eight thin wrappers.
+Historical A52.3 compatibility census was 8 first-party consumer files / 19 deprecated `runtime.*` imports. Flow 1 migrated all known first-party consumers to canonical `core.runtime.flow_os.*` imports while retaining all eight thin wrappers.
 
 Current truth:
 
@@ -84,86 +77,129 @@ identity_checks_clear = true
 FIRST_PARTY_RUNTIME_COMPAT_CONVERGENCE_PASS
 ```
 
-Zero internal consumers does not establish external removal safety.
+## Flow 2 / A53.2
 
-## Flow 2 / A53.2 — compatibility surface governance
-
-All eight public compatibility wrappers are classified:
+All eight public wrappers remain `DEPRECATE_WITH_SUNSET`:
 
 ```text
 retain_indefinitely = 0
 deprecate_with_sunset = 8
 open_removal_governance = 0
 external_usage_status = UNKNOWN
+earliest_removal_review_date = 2026-12-31
+removal_governance_open = false
+shim_deletion_allowed = false
 ```
 
-Current decision:
+Zero internal consumers does not prove external removal safety.
+
+## Flow 3 / A53.3
+
+Current architecture-debt ledger:
 
 ```text
-DEPRECATE_WITH_SUNSET_REMOVAL_GOVERNANCE_CLOSED
-```
-
-Public observation window begins 2026-10-02. Earliest fresh removal-governance review is 2026-12-31. That is a review boundary, never an automatic deletion date. A later task must refresh external/downstream usage evidence and explicitly open owner-governed removal work before deletion can even be proposed.
-
-## Flow 3 / A53.3 — architecture debt closure audit
-
-Flow 3 audits remaining architecture state without implementing speculative features. Every area must be exactly one of:
-
-```text
-CLOSED
-INTENTIONAL_HOLD
-NEW_ACTIONABLE_DEBT
-```
-
-Current executable ledger:
-
-| Area | Classification | Current truth / trigger |
-|---|---|---|
-| Runtime / Flow OS single owner | `CLOSED` | Canonical runtime is `core.runtime.flow_os.*`; first-party deprecated-import census is 0/0. |
-| Provider default migration | `INTENTIONAL_HOLD` | `legacy` remains default; real sanitized A51.1 8/8 live-provider matrix is required before separate migration governance. |
-| Lifecycle mutation convergence | `INTENTIONAL_HOLD` | Factory and managed mutation owners remain distinct; six A52.1 semantic blockers remain. |
-| Brain OS authority boundary | `CLOSED` | Brain scorecard/advisory channels have no PASS, evidence, gate or release authority. |
-| Knowledge OS canonical corpus | `CLOSED` | Exactly five canonical records; deterministic metadata-first retrieval; advisory-only and vector-free. |
-| GenAI/NIST expansion | `INTENTIONAL_HOLD` | Re-review only on explicit official NIST framework-status change. |
-| Vector / semantic retrieval | `INTENTIONAL_HOLD` | Optional future capability; requires product need + benchmark evidence that deterministic bounded retrieval is insufficient. |
-| Evidence + terminal evaluation | `CLOSED` | Trusted evidence is runtime-origin; lifecycle completion without trusted PASS remains insufficient evidence. |
-| Compatibility-surface removal | `INTENTIONAL_HOLD` | Fresh review no earlier than 2026-12-31 plus external/downstream audit and explicit owner removal task. |
-
-Expected aggregate:
-
-```text
-closed = 4
-intentional_holds = 5
-new_actionable_debt = 0
+CLOSED = 4
+INTENTIONAL_HOLD = 5
+NEW_ACTIONABLE_DEBT = 0
 ARCHITECTURE_DEBT_LEDGER_CLOSED_FOR_UPGRADE
 ```
 
-The five holds are explicit safety/external-dependency boundaries and are **not blockers for completing the current workspace upgrade**. They must not be converted into invented work merely to make the ledger visually empty.
+Closed areas:
+
+1. Runtime / Flow OS canonical ownership.
+2. Brain OS authority boundary.
+3. Five-record canonical Knowledge OS baseline.
+4. Evidence and terminal-evaluation ownership.
+
+Intentional non-blocking holds:
+
+1. Provider-default migration — real sanitized A51.1 8/8 live matrix required.
+2. Lifecycle mutation convergence — six A52.1 semantic blockers remain.
+3. GenAI/NIST expansion — official NIST framework-status trigger required.
+4. Vector/semantic retrieval — explicit product need + comparative benchmark required.
+5. Compatibility-shim removal — fresh external/downstream audit no earlier than 2026-12-31 plus explicit owner removal task.
+
+## Flow 4 / A54.1
 
 Executable owner set:
 
 ```text
-benchmarks/architecture-debt-closure-audit-v1.json
-core/benchmarks/architecture_debt_closure_audit.py
-scripts/validate_architecture_debt_closure_audit.py
-tests/test_architecture_debt_closure_audit_a53.py
+benchmarks/final-upgrade-regression-v1.json
+core/benchmarks/final_upgrade_regression.py
+scripts/validate_final_upgrade_regression.py
+tests/test_final_upgrade_regression_a54.py
+.github/workflows/a20-release-candidate.yml
 ```
+
+Representative exact-SHA matrix:
+
+```text
+Nova     e206f51f2fda006adcf52497d8b827e048e157ec
+Lumen    219f3e49f9956290ef69a2e49cb91fefddd5f561
+CENNEXT  273403accf8979608fbb16dbe2741cedb0430fb6
+LuxRoom  37e6a8c4a2aecdb9cefd9fd4291b353252d5356b
+```
+
+Repository-only CI intentionally derives:
+
+```text
+HOLD_FINAL_REGRESSION_EVIDENCE_REQUIRED
+```
+
+because external project receipts do not exist in that lane. A20 checks out all four pinned projects, runs project-agnostic dogfood, runs structural/security audit, and then aggregates the real JSON receipts.
+
+The required final decision is:
+
+```text
+WORKSPACE_UPGRADE_FINAL_REGRESSION_PASS
+```
+
+A valid Flow 4 PASS requires:
+
+```text
+Flow 3 remains 4 CLOSED / 5 INTENTIONAL_HOLD / 0 NEW_ACTIONABLE_DEBT
+release audit passed
+Nova dogfood passed exact SHA / expected Flow / truth boundary
+Lumen dogfood passed exact SHA / expected Flow / truth boundary
+CENNEXT dogfood passed exact SHA / expected Flow / truth boundary
+LuxRoom dogfood passed exact SHA / expected Flow / truth boundary
+projects = 4 / 4
+```
+
+Generic dogfood remains deliberately bounded:
+
+```text
+browser.status = NOT_RUN
+provider_reasoning.status = NOT_RUN
+human_review.status = pending
+human_review.verdict = null
+release.status = NOT_ATTEMPTED
+```
+
+Flow 4 therefore validates source grounding, task-contract inference, declarative Flow routing and cross-project isolation without fabricating browser, provider-quality, aesthetic-human-review, usability, deploy or release evidence.
 
 ## Provider boundary
 
-A48 established controlled compatibility across **different provider entry/capability contracts**. `legacy` remains default and `managed_compat` remains explicit opt-in; there is no automatic cross-lane fallback.
-
-A51.1 current live state:
+A48 historically reconciled **different provider entry/capability contracts**. Current anchors remain:
 
 ```text
-collection_status = NOT_RUN
-receipts = 0 / 8
-decision = KEEP_LEGACY_DEFAULT_LIVE_EVIDENCE_REQUIRED
-default_change_allowed = false
-provider_migration_allowed = false
+core/runtime/free_provider.py
+core/runtime/provider_compat_contract.py
+core/runtime/flow_os/provider*.py
+core/runtime/flow_os/factory_provider_adapter.py
 ```
 
-Offline parity is regression evidence, not live-provider/product evidence. Flow 3 therefore classifies provider-default migration as an intentional, non-blocking HOLD rather than actionable debt.
+Current provider truth remains:
+
+```text
+legacy = default
+managed_compat = explicit opt-in
+no automatic cross-lane fallback
+A51.1 live receipts = 0 / 8
+KEEP_LEGACY_DEFAULT_LIVE_EVIDENCE_REQUIRED
+```
+
+Flow 4 does not clear this hold.
 
 ## Lifecycle boundary
 
@@ -174,9 +210,9 @@ Factory -> core.runtime.run_context.RunContext
 Managed -> core.runtime.flow_os.managed.ManagedWebsiteRun
 ```
 
-The managed CLI uses the canonical Flow OS and is **not a second Flow OS**.
+The managed CLI shares canonical Flow OS and is **not a second Flow OS**.
 
-Six A52.1 blockers remain explicit:
+Six A52.1 blockers remain:
 
 ```text
 distinct_state_models
@@ -187,21 +223,11 @@ replan_invalidation_semantics_non_parity
 finalize_release_semantics_non_parity
 ```
 
-A52.2 event interoperability is observation-only:
-
-```text
-execution_effect = none
-authority_effect = none
-gate_effect = none
-evidence_effect = none
-release_effect = none
-```
-
-It does not create shared mutable lifecycle state or authorize mutation convergence.
+A52.2 event interoperability remains observation-only with execution/authority/gate/evidence/release effects all `none`.
 
 ## Brain OS boundary
 
-Brain OS remains a bounded reasoning/control layer, not a third runtime. Current implementation anchors include:
+Brain OS remains a bounded reasoning/control layer, not a third runtime. Implemented anchors include:
 
 ```text
 core/brain_os/contracts.py
@@ -214,18 +240,11 @@ core/brain_os/adapters/memory_context.py
 core/brain_os/scorecard.py
 ```
 
-Memory, critique, repair proposals, scorecards and retrieved knowledge remain advisory/proposal channels and cannot override `core/evaluation/run_evaluator.py`.
+Memory, critique, repair proposals, scorecards and retrieved knowledge remain advisory/proposal channels and cannot override canonical runtime evaluation.
 
 ## Knowledge OS boundary
 
-```text
-SKILL     = procedural methodology
-KNOWLEDGE = reusable reference/domain context
-MEMORY    = project/run rationale and history
-EVIDENCE  = current provenance-bearing observed truth
-```
-
-Canonical Knowledge OS owners:
+Canonical owners:
 
 ```text
 skills_UIUX/knowledge/
@@ -235,7 +254,7 @@ core/brain_os/knowledge_retrieval.py
 core/brain_os/adapters/knowledge_context.py
 ```
 
-Current canonical index contains exactly five records:
+The canonical corpus remains exactly five records:
 
 ```text
 financial-services
@@ -245,80 +264,36 @@ mobility-ev
 education-edtech
 ```
 
-Retrieval remains deterministic, metadata-first, context-bounded, provenance-bearing, advisory-only and vector-free.
-
-GenAI/NIST remains:
-
-```text
-KEEP_HOLD_FRESHNESS_REVIEW
-promotion_allowed = false
-vector_search_change_allowed = false
-```
-
-Vector retrieval is intentionally optional, not a hidden prerequisite for completing this upgrade.
-
-## Regression and dogfood
-
-Active CI validates:
-
-```text
-routing / repair / memory / scorecard benchmarks
-provider parity
-A51.1 provider-default readiness
-A49 lifecycle projection parity
-A52.1 lifecycle mutation readiness
-A52.2 lifecycle event interoperability
-Flow 1 / A53.1 runtime compatibility convergence
-Flow 2 / A53.2 compatibility surface governance
-Flow 3 / A53.3 architecture debt closure
-five-record Knowledge OS retrieval and project dogfood
-A50.13 canonical-state truth
-A50.14 GenAI/NIST freshness HOLD
-full pytest suite
-```
-
-A20 remains release-candidate regression/security/dogfood over pinned Nova, Lumen and CENNEXT. A13 remains real Nova browser dogfood when path-triggered.
+Retrieval remains deterministic metadata-first, bounded, provenance-bearing, advisory-only and vector-free. GenAI/NIST remains `KEEP_HOLD_FRESHNESS_REVIEW`.
 
 ## Standing owner delegation
 
-Canonical artifact:
+Canonical delegation remains:
 
 ```text
 benchmarks/governance-owner-delegation-v1.json
 ```
 
-Repository owner `Haign12` permits bounded continuation after mandatory gates pass. Delegation does not allow failed/missing checks to be bypassed, independent-human evidence to be fabricated, protected history to be rewritten, or secrets/permissions to be changed.
+Mandatory failures may not be bypassed; independent-human review cannot be fabricated; protected history, secrets and repository permissions remain outside delegated continuation.
 
-Final retrospective owner review remains deferred until the broader `uiux-ai-workspace` upgrade is complete.
+## Final owner review boundary
 
-## Current intentional holds
+Flow 4 PASS is the trigger that allows the previously deferred broad owner review to begin. Flow 4 itself does not fabricate or pre-record that final owner verdict.
 
-These are explicit and non-blocking for this upgrade:
+Current successor after exact-final-head Flow 4 PASS:
 
-1. Provider default migration — requires real sanitized 8/8 live-provider evidence plus separate migration governance.
-2. Lifecycle mutation convergence — requires actual resolution/reconciliation of all six semantic blockers.
-3. GenAI/NIST expansion — depends on the official NIST framework-status trigger.
-4. Vector/semantic retrieval — requires explicit product need plus comparative benchmark evidence.
-5. Compatibility-shim removal — fresh external/downstream audit no earlier than 2026-12-31 and explicit owner removal task.
+```text
+Final Broad Owner Review / Upgrade Closure
+```
 
-No other architecture debt is currently classified `NEW_ACTIONABLE_DEBT` by Flow 3.
+The five intentional holds remain explicit after upgrade regression completion and are reopened only by their own evidence triggers.
 
 ## Source-of-truth priority
 
 When documents disagree:
 
 1. current executable source and tests;
-2. root `AGENTS.md`, runtime policy and ownership contracts;
-3. this architecture truth set;
-4. current capability/QA docs matching source;
+2. exact-head CI/A20 evidence;
+3. root `AGENTS.md`, runtime policy and ownership contracts;
+4. this architecture truth set;
 5. historical A-series notes.
-
-## Next architecture task
-
-When Flow 3 passes on the exact final PR head, the next bounded flow is:
-
-```text
-Flow 4 — Final Regression & Cross-project Dogfood
-```
-
-Flow 4 must validate the completed upgrade across representative projects; it must not silently clear the five intentional holds or turn them into product/release evidence.
