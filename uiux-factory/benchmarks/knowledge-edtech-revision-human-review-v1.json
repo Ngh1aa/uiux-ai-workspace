@@ -2,7 +2,7 @@
   "schema_version": 1,
   "trial_id": "knowledge-edtech-revision-trial-v1",
   "review_version": "1.0.0",
-  "review_status": "PENDING",
+  "review_status": "COMPLETE",
   "review_policy": {
     "reviewer_type": "independent_human",
     "blind_first": true,
@@ -18,12 +18,27 @@
   },
   "case": {
     "id": "edtech-lti-integration-boundaries-revision-v2",
-    "status": "PENDING",
-    "preferred_output": null,
-    "scores": null,
-    "rationale": null,
-    "material_regression": null,
-    "reviewer": null,
-    "reviewed_at": null
+    "status": "REVIEWED",
+    "preferred_output": "B",
+    "scores": {
+      "A": {
+        "correctness": 1,
+        "specificity_actionability": 1,
+        "relevance_noise": 2,
+        "unsupported_claim_risk": 2,
+        "decision_usefulness": 1
+      },
+      "B": {
+        "correctness": 2,
+        "specificity_actionability": 2,
+        "relevance_noise": 2,
+        "unsupported_claim_risk": 2,
+        "decision_usefulness": 2
+      }
+    },
+    "rationale": "B calls out NRPS, Deep Linking and AGS correctly and makes explicit that one successful launch only proves the launch path. It provides concrete service states, conditional on project truth being able to distinguish them, and ties states to authoritative observations such as grade_send_succeeded requiring a real AGS result rather than a local grade. It also distinguishes not configured, role/context limited, temporary failure and unknown in recovery guidance. A is directionally correct and safe but remains at the separation-principle level, leaving the design team to infer the state set and verification source. Remaining weakness: B does not explicitly name an empty state or identify which role initiates each action as clearly as the older A50.8 packet, but this is a small loss and not a material regression. The richer state list could be misread as implementation specification, although B conditions it on project truth. Bias check: after discounting B's greater length and terminology density, its advantage remains concrete decisions, state/evidence mapping and retry boundaries rather than presentation alone.",
+    "material_regression": false,
+    "reviewer": "independent_human_user",
+    "reviewed_at": "2026-10-02"
   }
 }
