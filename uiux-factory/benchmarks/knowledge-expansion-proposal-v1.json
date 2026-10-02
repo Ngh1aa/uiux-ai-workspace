@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "proposal_id": "knowledge-expansion-proposal-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "scope": "proposal_only_no_index_or_record_mutation",
+  "trigger": {
+    "trial_id": "knowledge-value-trial-v2",
+    "required_recommendation": "CONSIDER_EXPANSION",
+    "required_knowledge_preferred_count": 3,
+    "required_joint_usefulness_win_count": 3,
+    "required_material_regression_count": 0
+  },
+  "governance": {
+    "index_mutation_allowed": false,
+    "record_creation_allowed": false,
+    "vector_search_change_allowed": false,
+    "current_run_evidence": false,
+    "product_evidence": false,
+    "authority_effect": "none",
+    "gate_effect": "none",
+    "release_effect": "none",
+    "next_action": "candidate_review_only"
+  },
+  "candidates": [
+    {
+      "candidate_id": "a50-6-edtech-lti",
+      "proposed_record_id": "knowledge.domain.edtech-lti-context-roles-services.v1",
+      "title": "EdTech integrations: LTI 1.3 context, roles and service boundaries",
+      "category": "domain",
+      "domain": "education-edtech",
+      "topic": "lti-1.3-platform-tool-context",
+      "source_ref": "https://www.1edtech.org/standards/lti",
+      "source_kind": "standard",
+      "source_version": "LTI-1.3-current-with-LTI-Advantage-services",
+      "source_checked_on": "2026-10-02",
+      "freshness": "versioned",
+      "target_stages": ["research", "design", "implementation", "qa"],
+      "knowledge_scope": [
+        "LTI distinguishes a learning platform/LMS from a remote learning tool and standardizes their integration boundary.",
+        "LTI 1.3 uses a modernized security model and carries institutional/course context plus user role information without making those concepts a UI workflow.",
+        "LTI Advantage services add bounded concepts for names/roles provisioning, assignment/grade services and deep linking that can inform product terminology, state ownership and integration expectations."
+      ],
+      "excluded_methodology": [
+        "education website information architecture, admissions journeys or content strategy",
+        "authentication implementation or security engineering procedure",
+        "generic product discovery, UX flow or QA methodology"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/education-website/SKILL.md",
+        "skills_UIUX/security-and-privacy/SKILL.md"
+      ],
+      "duplication_risk": "LOW",
+      "freshness_risk": "LOW",
+      "expected_retrieval_value": "Adds protocol-level vocabulary and data/service boundaries for EdTech integration tasks that the existing education website playbook does not own.",
+      "proposal_status": "READY_FOR_CONTENT_DRAFT",
+      "authority_effect": "none",
+      "gate_effect": "none",
+      "evidence_effect": "none",
+      "release_effect": "none"
+    },
+    {
+      "candidate_id": "a50-6-ev-ocpp",
+      "proposed_record_id": "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+      "title": "EV charging: OCPP 2.1 transaction and charging-system semantics",
+      "category": "domain",
+      "domain": "mobility-ev",
+      "topic": "ocpp-2.1-transaction-semantics",
+      "source_ref": "https://openchargealliance.org/my-oca/ocpp/",
+      "source_kind": "standard",
+      "source_version": "OCPP-2.1-Edition-2-Errata-2026-06",
+      "source_checked_on": "2026-10-02",
+      "freshness": "versioned",
+      "target_stages": ["research", "design", "qa"],
+      "knowledge_scope": [
+        "OCPP is the charging-station/backend protocol context, so product states should not silently collapse protocol/system concepts into generic loading or payment states.",
+        "OCPP 2.1 Edition 2 is the current 2.1 package on the Open Charge Alliance download surface and includes accumulated errata plus certification/test material.",
+        "OCPP 2.1 adds capabilities around ISO 15118-20, bidirectional charging/V2X, distributed energy resources and smart-charging behavior that may affect which charging/session concepts need explicit product truth."
+      ],
+      "excluded_methodology": [
+        "generic state inventory, progress UI or error-recovery workflow",
+        "multi-stage approval/workflow design methodology",
+        "electrical engineering, charger installation or interoperability certification procedure"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/state-feedback-and-error-recovery/SKILL.md",
+        "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"
+      ],
+      "duplication_risk": "LOW",
+      "freshness_risk": "MEDIUM",
+      "expected_retrieval_value": "Adds EV-charging protocol semantics and current-version context so mobility product work can distinguish real charging-system concepts from generic UX states without turning OCPP into a UI recipe.",
+      "proposal_status": "READY_FOR_CONTENT_DRAFT",
+      "authority_effect": "none",
+      "gate_effect": "none",
+      "evidence_effect": "none",
+      "release_effect": "none"
+    },
+    {
+      "candidate_id": "a50-6-genai-nist",
+      "proposed_record_id": "knowledge.domain.genai-risk-context-nist-ai-600-1.v1",
+      "title": "Generative AI products: NIST AI 600-1 risk-context vocabulary",
+      "category": "domain",
+      "domain": "ai-software",
+      "topic": "genai-risk-context-nist-ai-600-1",
+      "source_ref": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "source_kind": "external_reference",
+      "source_version": "NIST-AI-600-1-2024-with-2026-framework-revision-caveat",
+      "source_checked_on": "2026-10-02",
+      "freshness": "time_sensitive",
+      "target_stages": ["research", "design", "qa"],
+      "knowledge_scope": [
+        "NIST AI 600-1 is a cross-sector companion profile for generative-AI risks and risk-management actions, not a product-design workflow or compliance certificate.",
+        "The profile can supply reusable risk/context vocabulary for AI product framing while project-specific legal, safety and policy truth remains external evidence.",
+        "NIST states that AI RMF 1.0 is being revised in 2026, so any future canonical record based on this profile requires a freshness check before drafting or use in a time-sensitive claim."
+      ],
+      "excluded_methodology": [
+        "human-AI interaction workflow for mental models, correction, confidence, override or graceful failure",
+        "AI coding-agent implementation guardrails",
+        "generic trust/transparency UI methodology or regulatory compliance advice"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/human-ai-interaction-design/SKILL.md",
+        "skills_UIUX/ai-agent-coding-guardrails/SKILL.md",
+        "skills_UIUX/trust-credibility-and-transparency/SKILL.md"
+      ],
+      "duplication_risk": "MEDIUM",
+      "freshness_risk": "HIGH",
+      "expected_retrieval_value": "Could add authoritative GenAI risk vocabulary that complements, rather than replaces, human-AI interaction methodology, but the active AI RMF revision makes immediate canonicalization premature.",
+      "proposal_status": "HOLD_FRESHNESS_REVIEW",
+      "authority_effect": "none",
+      "gate_effect": "none",
+      "evidence_effect": "none",
+      "release_effect": "none"
+    }
+  ]
+}
