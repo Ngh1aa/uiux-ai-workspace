@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from core.benchmarks.knowledge_value_trial import evaluate_knowledge_value_trial
 
 
-ROOT = Path(__file__).resolve().parents[1]
 BENCHMARKS = ROOT / "benchmarks"
 
 
-def main() -> None:
+def main() -> int:
     result = evaluate_knowledge_value_trial(
         trial_path=BENCHMARKS / "knowledge-value-trial-v1.json",
         mapping_path=BENCHMARKS / "knowledge-value-trial-mapping-v1.json",
@@ -34,7 +39,8 @@ def main() -> None:
         "expand_allowed=false auto_mutation_allowed=false"
     )
     print("scope=model_assisted_blind_pair_trial_not_human_or_product_evidence")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
