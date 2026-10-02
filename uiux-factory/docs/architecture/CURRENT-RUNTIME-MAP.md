@@ -21,7 +21,7 @@ Provider-neutral managed entry:
 skills_UIUX/scripts/uiux-agent.py
 ```
 
-Both route through the canonical Flow OS owner instead of maintaining independent routing logic.
+Both route through the canonical Flow OS owner instead of maintaining independent routing logic. The managed/provider-neutral surface is **not a second Flow OS**; `uiux-factory/core/runtime/flow_os/` remains the shared executable owner.
 
 ## 2. Canonical Flow OS
 
