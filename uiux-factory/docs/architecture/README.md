@@ -141,6 +141,12 @@ It cannot select/replan a flow, activate skills, validate a hypothesis, select a
 
 ## Scorecard boundary
 
+Canonical terminal runtime evaluation remains owned by:
+
+```text
+core/evaluation/run_evaluator.py
+```
+
 A47 adds provenance-aware aggregation under:
 
 ```text
