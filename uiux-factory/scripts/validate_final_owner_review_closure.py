@@ -35,6 +35,7 @@ def main() -> int:
     print(f"Flow 5 owner review closure: decision={report.decision}")
     print(f"scope={report.scope}")
     print(f"flow3_clear={report.flow3_clear}")
+    print(f"flow4_contract_clear={report.flow4_contract_clear}")
     print(f"flow4_report_present={report.flow4_report_present}")
     print(f"flow4_clear={report.flow4_clear}")
     print(f"intentional_holds_preserved={report.intentional_holds_preserved}")
@@ -81,6 +82,7 @@ def main() -> int:
     base_clear = all(
         (
             report.flow3_clear,
+            report.flow4_contract_clear,
             report.intentional_holds_preserved,
             report.intentional_hold_ids == EXPECTED_HOLD_IDS,
             report.owner_delegation_clear,
