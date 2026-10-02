@@ -1,6 +1,6 @@
 # A52.3 — Post-Interop Executable Debt Audit
 
-Status: **IMPLEMENTED / VERIFICATION PENDING**  
+Status: **VERIFIED**  
 Date: **2026-10-02**  
 Baseline: `main@c8818fd9b616e9dd4dfe9d70bda79d930448a383`  
 Depends on: A52.2 Lifecycle Event Interoperability Contract
@@ -228,6 +228,25 @@ A52.3 audit
 
 External users/integrations must not be assumed absent merely because first-party consumer count eventually reaches zero.
 
+## Verification evidence
+
+Verified functional head before this documentation-only status update:
+
+```text
+head = 7fe788769e9928b461d8df3e04963b67ef85b341
+UIUX Factory CI #1666 = SUCCESS
+A20 UIUX Factory v1 Release Candidate #195 = SUCCESS
+A52.3 decision = SELECT_COMPAT_SHIM_RETIREMENT_READINESS
+consumer census = 8 files / 19 imports
+shim_count = 8
+shim_contract_clear = true
+source_truth_clear = true
+governance_boundary_clear = true
+full pytest = 635 passed / 50 skipped
+```
+
+The final documentation-only head must pass the same CI/A20 gates before merge.
+
 ## Acceptance criteria
 
 - [x] current blocked/deferred architecture candidates are derived from executable governance;
@@ -238,9 +257,9 @@ External users/integrations must not be assumed absent merely because first-part
 - [x] census is encoded as an exact regression contract;
 - [x] A53.1 is selected from evidence rather than phase numbering;
 - [x] A52.3 authorizes no runtime/provider/lifecycle/knowledge mutation;
-- [ ] exact final PR head passes UIUX Factory CI;
-- [ ] exact final PR head passes A20 regression/security/dogfood;
-- [ ] PR is mergeable.
+- [x] functional PR head passes UIUX Factory CI;
+- [x] functional PR head passes A20 regression/security/dogfood;
+- [x] PR is mergeable before final documentation-only verification.
 
 ## Handoff
 
