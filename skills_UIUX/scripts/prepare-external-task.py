@@ -43,6 +43,13 @@ def main() -> int:
     parser.add_argument("--repository", required=True, help="Target repository, normally owner/name or its GitHub URL")
     parser.add_argument("--task", required=True, help="Natural-language goal for the external collaborator")
     parser.add_argument(
+        "--target-root",
+        help=(
+            "Optional checked-out target-project root. When supplied, bounded project truth is "
+            "probed before Flow resolution. Without it, routing truthfully falls back to goal inference."
+        ),
+    )
+    parser.add_argument(
         "--authority",
         choices=["read_only", "branch_write", "external_write", "release"],
         default="branch_write",
@@ -64,6 +71,7 @@ def main() -> int:
 
     policy_path = SKILLS_ROOT / "runtime" / "runtime-policy.json"
     policy_doc = json.loads(policy_path.read_text(encoding="utf-8"))
+    target_root = Path(args.target_root).resolve() if args.target_root else None
     manifest = build_external_task_manifest(
         SKILLS_ROOT,
         policy_doc,
@@ -73,6 +81,7 @@ def main() -> int:
         overrides=_overrides(args),
         acceptance_criteria=list(args.acceptance),
         qa_routes=list(args.qa_route),
+        target_root=target_root,
     )
     payload = json.dumps(manifest.to_dict(), ensure_ascii=False, indent=2) + "\n"
 
