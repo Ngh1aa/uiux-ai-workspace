@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
+from typing import Any
 
 from core.contracts.design_context_schema import DesignContext
 from core.manager.intelligent_manager import IntelligentDevelopmentManager
@@ -12,6 +14,10 @@ from core.orchestration.skill_governance import FlowReplanner, SkillGovernanceSn
 from core.runtime.harness_runtime import HarnessInspiredRuntime
 from core.runtime.run_context import RunContext
 from core.team.intelligent_team_runner import IntelligentTeamRunner
+
+
+FACTORY_PROVIDER_LANE_ENV = "UIUX_FACTORY_PROVIDER_LANE"
+FACTORY_PROVIDER_LANES = frozenset({"legacy", "managed_compat"})
 
 
 class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
@@ -60,6 +66,94 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
                 "DesignContext.brain='external' must use engine='external'; internal providers "
                 "must not silently replace the declared external brain."
             )
+
+    @staticmethod
+    def _resolve_provider_lane(env: dict[str, str] | None = None) -> tuple[str, str]:
+        source = os.environ if env is None else env
+        raw = str(source.get(FACTORY_PROVIDER_LANE_ENV, "")).strip().lower()
+        if not raw:
+            return "legacy", "default"
+        if raw not in FACTORY_PROVIDER_LANES:
+            allowed = ", ".join(sorted(FACTORY_PROVIDER_LANES))
+            raise ValueError(
+                f"Unknown {FACTORY_PROVIDER_LANE_ENV}={raw!r}; expected one of: {allowed}."
+            )
+        return raw, "explicit"
+
+    def _create_ai_provider(self) -> tuple[Any, str, str]:
+        lane, selection_source = self._resolve_provider_lane()
+        if lane == "legacy":
+            from core.runtime.free_provider import FreeProvider
+
+            provider = FreeProvider.from_env(self.root)
+            return provider, lane, selection_source
+
+        from core.runtime.flow_os.factory_provider_adapter import ManagedArtifactCompletionAdapter
+
+        provider = ManagedArtifactCompletionAdapter.from_env(self.root)
+        return provider, lane, selection_source
+
+    @staticmethod
+    def _provider_descriptors(provider: Any) -> list[dict[str, str]]:
+        descriptors: list[dict[str, str]] = []
+        raw_items = getattr(provider, "configs", None)
+        if raw_items is None:
+            raw_items = getattr(provider, "providers", [])
+        for item in list(raw_items or [])[:8]:
+            name = str(getattr(item, "name", "")).strip()
+            model = str(getattr(item, "model", "")).strip()
+            if name or model:
+                descriptors.append({"name": name, "model": model})
+        return descriptors
+
+    def _write_provider_lane_provenance(
+        self,
+        context: RunContext,
+        *,
+        provider: Any,
+        lane: str,
+        selection_source: str,
+    ) -> Path:
+        if lane not in FACTORY_PROVIDER_LANES:
+            raise ValueError(f"Cannot persist unknown provider lane: {lane!r}")
+        provider_class = f"{provider.__class__.__module__}.{provider.__class__.__name__}"
+        payload = {
+            "schema_version": "provider-lane.v1",
+            "engine": "ai",
+            "lane": lane,
+            "selection_source": selection_source,
+            "feature_flag": FACTORY_PROVIDER_LANE_ENV,
+            "legacy_default_preserved": lane == "legacy" and selection_source == "default",
+            "provider_class": provider_class,
+            "providers": self._provider_descriptors(provider),
+            "automatic_cross_lane_fallback": False,
+            "rollback": {
+                "action": f"unset {FACTORY_PROVIDER_LANE_ENV} or set it to legacy for the next run",
+                "changes_current_run": False,
+            },
+            "authority_effect": "none",
+            "gate_effect": "none",
+            "evidence_effect": "none",
+            "release_effect": "none",
+            "rule": (
+                "Provider-lane provenance records execution selection only. It is not runtime evidence, "
+                "cannot satisfy gates, and cannot authorize merge/deploy/release."
+            ),
+        }
+        path = Path(context.run_dir) / "provider-lane.json"
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        context.add_artifact("provider_lane", path)
+        context.event_bus().emit(
+            "provider.lane_selected",
+            data={
+                "lane": lane,
+                "selection_source": selection_source,
+                "provider_class": provider_class,
+                "automatic_cross_lane_fallback": False,
+                "provenance": str(path),
+            },
+        )
+        return path
 
     def _run_external_handoff(self, context: RunContext) -> Path:
         target = context.design_context.target
@@ -143,10 +237,14 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
 
             provider = None
             if engine == "ai":
-                from core.runtime.free_provider import FreeProvider
-
-                provider = FreeProvider.from_env(self.root)
+                provider, provider_lane, provider_selection = self._create_ai_provider()
                 self.team_runner.set_provider(provider)
+                self._write_provider_lane_provenance(
+                    context,
+                    provider=provider,
+                    lane=provider_lane,
+                    selection_source=provider_selection,
+                )
 
             print(f"\n[DevelopmentManager] Run ID: {context.run_id}")
             print(f"[DevelopmentManager] Goal received: {goal}")
