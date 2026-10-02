@@ -204,15 +204,15 @@ def evaluate_knowledge_edtech_revision_trial(
     canonical_refs = index_payload.get("records")
     if index_payload.get("schema_version") != "knowledge-index.v1" or not isinstance(canonical_refs, list) or len(canonical_refs) != 3:
         raise KnowledgeEdtechRevisionError("canonical Knowledge OS index must remain exactly three records")
-    if any(str(ref).startswith("drafts/") for ref in canonical_refs):
-        raise KnowledgeEdtechRevisionError("canonical index must not reference drafts")
+    if any(str(ref).startswith(("drafts/", "revisions/")) for ref in canonical_refs):
+        raise KnowledgeEdtechRevisionError("canonical index must not reference draft/revision records")
 
-    record_path = knowledge_root / "drafts/records/edtech-lti-context-roles-services-v2.json"
-    content_path = knowledge_root / "drafts/content/edtech-lti-context-roles-services-v2.md"
+    record_path = knowledge_root / "revisions/records/edtech-lti-context-roles-services-v2.json"
+    content_path = knowledge_root / "revisions/content/edtech-lti-context-roles-services-v2.md"
     record = KnowledgeRecord.model_validate(_load_json(record_path))
     if record.id != case["revised_record_id"] or record.id != "knowledge.domain.edtech-lti-context-roles-services.v2":
         raise KnowledgeEdtechRevisionError("revised EdTech record id drifted")
-    if record.content_ref != "skills_UIUX/knowledge/drafts/content/edtech-lti-context-roles-services-v2.md":
+    if record.content_ref != "skills_UIUX/knowledge/revisions/content/edtech-lti-context-roles-services-v2.md":
         raise KnowledgeEdtechRevisionError("revised EdTech content_ref drifted")
     if record.applicable_domains != ["education-edtech"] or "design" not in record.applicable_stages:
         raise KnowledgeEdtechRevisionError("revised EdTech domain/stage drifted")
@@ -243,7 +243,7 @@ def evaluate_knowledge_edtech_revision_trial(
     with TemporaryDirectory(prefix="a50-9a-shadow-") as temp_dir:
         shadow_root = Path(temp_dir) / "skills_UIUX/knowledge"
         shutil.copytree(knowledge_root, shadow_root)
-        shadow_refs = [*canonical_refs, "drafts/records/edtech-lti-context-roles-services-v2.json"]
+        shadow_refs = [*canonical_refs, "revisions/records/edtech-lti-context-roles-services-v2.json"]
         (shadow_root / "shadow-index.json").write_text(
             json.dumps({"schema_version": "knowledge-index.v1", "records": shadow_refs}, indent=2) + "\n",
             encoding="utf-8",
