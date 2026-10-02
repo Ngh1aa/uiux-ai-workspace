@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.3 MERGED + A50.4 KNOWLEDGE USEFULNESS / CORPUS GOVERNANCE IMPLEMENTED**  
+Status: **A40–A50.4 MERGED + A50.5 MODEL-ASSISTED KNOWLEDGE VALUE TRIAL IMPLEMENTED / HUMAN REVIEW PENDING**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@da4a5d912358b9d29b042a0748b8447a1100a88b`
+Current architecture baseline: `main@953a0d353d92be6b660e1a74d9adbf9d2c9dea8d`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -41,6 +41,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 31. `A50-BOUNDED-KNOWLEDGE-RETRIEVAL.md` — deterministic post-routing retrieval/index.
 32. `A50-CURATED-SEED-KNOWLEDGE-DOGFOOD.md` — three-source seed governance and Nova/Lumen/CENNEXT retrieval dogfood.
 33. `A50-KNOWLEDGE-USEFULNESS-GOVERNANCE.md` — deterministic usefulness proxies and corpus expansion governance.
+34. `A50-KNOWLEDGE-VALUE-TRIAL.md` — model-assisted A/B trial, blind-first human review contract and expansion recommendation boundary.
 
 ## Current architecture statement
 
@@ -147,26 +148,62 @@ REVISE
 REMOVE
 ```
 
-`EXPAND` is deliberately absent and global `expand_allowed = false`. Deterministic checks can establish context fit, provenance, boundedness and low duplication/noise, but cannot establish model reasoning improvement or human usefulness. Corpus expansion therefore requires a separate human/model-assisted usefulness trial.
+A50.4 keeps global `expand_allowed = false` because deterministic checks cannot establish human usefulness or model-output improvement.
 
-Benchmark scope remains:
+### A50.5 model-assisted value trial
+
+A50.5 captures paired advisory outputs under identical project/task/flow/stage context for Nova, Lumen and CENNEXT. Each case has one baseline condition and one knowledge-assisted condition, presented as A/B in a blind-first review packet.
+
+Generation provenance is explicit:
 
 ```text
-deterministic_context_usefulness_proxy_not_model_reasoning_or_product_evidence
+surface = user-directed ChatGPT session
+model = GPT-5.6 Sol
+runtime_provider_invoked = false
+```
+
+This is model-assisted trial material, not canonical provider-runtime evidence. No private chain-of-thought is stored.
+
+Blinding is explicitly **procedural repository blinding**, not cryptographic blinding. The condition mapping exists separately and reviewers are instructed not to open it until blind ratings are recorded.
+
+Human review dimensions are:
+
+```text
+correctness
+specificity_actionability
+relevance_noise
+unsupported_claim_risk
+decision_usefulness
+```
+
+The checked-in review ledger remains `PENDING` with all human fields null. While any review is pending, governance must derive:
+
+```text
+HOLD_PENDING_HUMAN
+expand_allowed = false
+auto_mutation_allowed = false
+```
+
+After all three reviews are completed, the evaluator may derive only `REVISE_BEFORE_EXPANSION` or `CONSIDER_EXPANSION`. Even `CONSIDER_EXPANSION` remains advisory and cannot mutate `skills_UIUX/knowledge/index.json` or add records.
+
+Benchmark scope:
+
+```text
+model_assisted_blind_pair_trial_not_human_or_product_evidence
 ```
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood and knowledge-usefulness governance before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance and the A50.5 knowledge-value trial before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
 
-A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries and the corpus-expansion block.
+A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, non-fabricated human review fields and the corpus-expansion block.
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence remains intentionally read-only at the reconciliation/projection/parity layer; mutation-level unification requires a separate decision.
-3. The three seed records have deterministic usefulness proxies only; no human/model-assisted with-vs-without trial has yet established that they materially improve reasoning/output quality.
-4. Broader Knowledge OS categories remain intentionally unpopulated and corpus expansion is blocked.
+3. A50.5 model-assisted paired outputs exist, but the independent human review ledger is still pending; no human preference claim may be made yet.
+4. Broader Knowledge OS categories remain intentionally unpopulated and corpus expansion remains blocked until the A50.5 human verdict is complete.
 5. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
 6. Vector/semantic retrieval remains deferred.
 
@@ -182,4 +219,6 @@ When documents disagree:
 
 ## Next architecture task
 
-Proceed to **A50.5 — Human/Model-Assisted Knowledge Value Trial** only after A50.4 is green and merged. Compare representative outputs with vs without retrieved knowledge under the same task/flow context, record human usefulness judgments separately from deterministic metrics, and only then consider an `EXPAND` recommendation. Vector search remains deferred.
+Complete the **A50.5 independent human review pass** using `benchmarks/knowledge-value-review-packet-v1.md`. Update only `benchmarks/knowledge-value-human-reviews-v1.json` with the blind judgments first, then let the evaluator derive `CONSIDER_EXPANSION` or `REVISE_BEFORE_EXPANSION` without changing thresholds or the A/B mapping to fit a desired result.
+
+Only if that human verdict supports expansion should a separate **A50.6 Corpus Expansion Proposal** be opened. Vector search remains deferred.

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-value-trial-v1",
+  "mapping_version": "1.0.0",
+  "blinding": {
+    "mode": "procedural_repository_blind",
+    "cryptographically_blind": false,
+    "reviewer_instruction": "Review the A/B packet without opening this mapping until ratings and rationale are recorded. Repository-level blinding is procedural, not cryptographic."
+  },
+  "cases": [
+    {
+      "id": "nova-amount-display",
+      "output_a_condition": "without_retrieved_knowledge",
+      "output_b_condition": "with_retrieved_knowledge",
+      "knowledge_record_id": "knowledge.domain.financial-currency-locale-formatting.v1"
+    },
+    {
+      "id": "lumen-object-metadata",
+      "output_a_condition": "with_retrieved_knowledge",
+      "output_b_condition": "without_retrieved_knowledge",
+      "knowledge_record_id": "knowledge.domain.cultural-object-metadata-rights-iiif.v1"
+    },
+    {
+      "id": "cennext-motor-claims",
+      "output_a_condition": "without_retrieved_knowledge",
+      "output_b_condition": "with_retrieved_knowledge",
+      "knowledge_record_id": "knowledge.domain.industrial-motor-system-claims-doe.v1"
+    }
+  ],
+  "governance": {
+    "current_expansion_state": "HOLD",
+    "expand_allowed": false,
+    "reason": "Model-assisted paired artifacts exist, but no independent human usefulness verdict has been recorded. A50.4 deterministic KEEP decisions do not satisfy the human-review requirement."
+  }
+}
