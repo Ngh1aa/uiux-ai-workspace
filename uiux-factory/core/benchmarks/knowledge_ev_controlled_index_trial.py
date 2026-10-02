@@ -197,7 +197,7 @@ def evaluate_knowledge_ev_controlled_index_trial(
 
     canonical_index = KnowledgeIndex(knowledge_root)
     canonical_records, _canonical_digest = canonical_index.load()
-    canonical_ids = [record.id for record in canonical_records]
+    canonical_ids = [item.record.id for item in canonical_records]
     if len(canonical_ids) != 3 or len(set(canonical_ids)) != 3:
         raise KnowledgeEvControlledIndexError("canonical index ids drifted")
     canonical_retriever = KnowledgeRetriever(canonical_index)
@@ -240,7 +240,7 @@ def evaluate_knowledge_ev_controlled_index_trial(
         canary_count = len(canary_records)
         if canary_count != governance["canary_index_expected_count"]:
             raise KnowledgeEvControlledIndexError("A50.9B canary index must contain exactly four records")
-        if len({record.id for record in canary_records}) != canary_count:
+        if len({item.record.id for item in canary_records}) != canary_count:
             raise KnowledgeEvControlledIndexError("A50.9B canary index contains duplicate ids")
         canary_retriever = KnowledgeRetriever(canary_index)
 
@@ -281,7 +281,7 @@ def evaluate_knowledge_ev_controlled_index_trial(
             canary_hit_ids = [hit.record.id for hit in canary_result.hits]
             if canonical_hit_ids != [expected_id] or canary_hit_ids != canonical_hit_ids:
                 canonical_retrieval_regression_clear = False
-            if not any(item.record_id == ev_record.id and item.reason == "domain_mismatch" for item in canary_result.exclusions):
+            if not any(item.record_ref == ev_ref and item.reason == "domain_mismatch" for item in canary_result.exclusions):
                 canonical_retrieval_regression_clear = False
             if canonical_result.vector_search_used or canary_result.vector_search_used:
                 canonical_retrieval_regression_clear = False
@@ -303,7 +303,7 @@ def evaluate_knowledge_ev_controlled_index_trial(
             encoding="utf-8",
         )
         rollback_records, _rollback_digest = KnowledgeIndex(shadow_root, manifest_name="rollback-index.json").load()
-        rollback_ids = [record.id for record in rollback_records]
+        rollback_ids = [item.record.id for item in rollback_records]
         rollback_verified = rollback_ids == canonical_ids
 
     canonical_bytes_after = canonical_index_path.read_bytes()
