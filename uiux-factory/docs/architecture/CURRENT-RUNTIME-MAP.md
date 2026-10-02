@@ -1,8 +1,8 @@
 # Current Runtime Map
 
-Status: **CURRENT THROUGH A52.1 / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD**  
+Status: **CURRENT THROUGH A52.2 / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD**  
 Audit date: **2026-10-02**  
-Baseline before A52.1: `main@f860a47b7c629974736f14c95eb13b7b9824f47f`
+Baseline before A52.2: `main@6412519700d0e7e8841d1bf5c5c1349a0b0d41ad`
 
 This map describes current executable ownership. Historical A-series plans may describe earlier gaps; current source/tests win when they disagree.
 
@@ -101,14 +101,14 @@ Historical A48/A49 debt described the Factory and managed surfaces as **distinct
 
 `LifecycleProjection` remains read-only observability and does not introduce a third state machine or equate completion with release.
 
-Current state owners remain intentionally distinct:
+Current mutation owners remain intentionally distinct:
 
 ```text
 Factory -> core.runtime.run_context.RunContext
 Managed -> core.runtime.flow_os.managed.ManagedWebsiteRun
 ```
 
-A52.1 now evaluates mutation-level convergence readiness rather than assuming projection parity implies state-machine parity:
+A52.1 evaluates mutation-level convergence readiness rather than assuming projection parity implies state-machine parity:
 
 ```text
 benchmarks/lifecycle-mutation-convergence-readiness-v1.json
@@ -116,7 +116,7 @@ core/benchmarks/lifecycle_mutation_convergence_readiness.py
 scripts/validate_lifecycle_mutation_convergence_readiness.py
 ```
 
-Current audited mutation blockers:
+Current audited mutation blockers remain:
 
 ```text
 distinct_state_models
@@ -127,7 +127,7 @@ replan_invalidation_semantics_non_parity
 finalize_release_semantics_non_parity
 ```
 
-Expected/current A52.1 decision:
+A52.1 decision remains:
 
 ```text
 KEEP_SEPARATE_STATE_OWNERS_EVENT_INTEROP_REQUIRED
@@ -135,7 +135,39 @@ event_interop_proposal_allowed = true
 mutation_governance_allowed = false
 ```
 
-This permits only a later additive lifecycle-event interoperability proposal. It does not authorize replacing `RunContext`, replacing `ManagedWebsiteRun`, sharing mutable state, changing transitions, or changing release/evidence/gate authority.
+A52.2 implements only that additive interoperability allowance:
+
+```text
+core/runtime/lifecycle_event_interop.py
+benchmarks/lifecycle-event-interop-v1.json
+core/benchmarks/lifecycle_event_interop_regression.py
+scripts/validate_lifecycle_event_interop.py
+```
+
+Normalized `LifecycleEventReceipt` values are observation-only. They do not own transitions.
+
+Chronology remains intentionally asymmetric:
+
+```text
+Factory -> durable_append_only
+Managed -> derived_checkpoint_delta
+```
+
+Factory receipts preserve native event `seq` and `timestamp`. Managed receipts never fabricate those fields; they carry checkpoint hashes and deterministic projection ordering only.
+
+Interop vocabulary covers safely derivable run/stage start/completion, failure/block, replan, human-approval observation, fork and unknown/native fallback. Unknown events fail safe as `native_event_observed`.
+
+Managed completion remains distinct from finalize/release. Approval receipts do not satisfy gates. All receipts keep:
+
+```text
+execution_effect = none
+authority_effect = none
+gate_effect = none
+evidence_effect = none
+release_effect = none
+```
+
+A52.2 does not clear the six A52.1 mutation blockers and does not open mutation governance.
 
 ## 5. Evidence / provenance / QA
 
@@ -147,7 +179,7 @@ core/provenance/
 uiux-factory/qa/
 ```
 
-Browser/rendered QA remains evidence-bearing for visual/runtime claims when applicable. Brain/model/provider/knowledge metadata cannot silently become trusted evidence.
+Browser/rendered QA remains evidence-bearing for visual/runtime claims when applicable. Brain/model/provider/knowledge/lifecycle-observation metadata cannot silently become trusted evidence.
 
 ## 6. Terminal evaluation
 
@@ -306,6 +338,7 @@ uiux-factory/benchmarks/provider-parity-v1.json
 uiux-factory/benchmarks/provider-default-migration-readiness-v1.json
 uiux-factory/benchmarks/lifecycle-parity-v1.json
 uiux-factory/benchmarks/lifecycle-mutation-convergence-readiness-v1.json
+uiux-factory/benchmarks/lifecycle-event-interop-v1.json
 uiux-factory/core/benchmarks/
 skills_UIUX/scripts/eval-harness.py
 .github/workflows/a13-*.yml
@@ -314,7 +347,7 @@ skills_UIUX/scripts/eval-harness.py
 .github/workflows/uiux-factory-ci.yml
 ```
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, A51.1 provider migration readiness, A52.1 lifecycle mutation readiness, active five-record Knowledge OS truth, A50.14 freshness HOLD and full pytest.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, A51.1 provider migration readiness, A52.1 lifecycle mutation readiness, A52.2 lifecycle event interoperability, active five-record Knowledge OS truth, A50.14 freshness HOLD and full pytest.
 
 Historical topology-bound A50 governance/canary/shadow tests remain preserved but are frozen once their assumptions no longer represent current canonical topology.
 
@@ -352,6 +385,7 @@ These transport/compile governed work; they do not prove implementation or QA PA
 | Managed lifecycle checkpoints | `core/runtime/flow_os/managed.py` | KEEP / MANAGED MUTATION OWNER |
 | Lifecycle projection | `core/runtime/lifecycle_projection.py` | KEEP / READ-ONLY |
 | Lifecycle mutation readiness | A52.1 benchmark/evaluator | IMPLEMENTED / NON-AUTHORITATIVE |
+| Lifecycle event interoperability | `core/runtime/lifecycle_event_interop.py` | IMPLEMENTED / OBSERVATION-ONLY |
 | Task interpretation / flow planning | `core/runtime/flow_os/` | KEEP / CANONICAL |
 | Skills / methodology | `skills_UIUX/<skill>/SKILL.md` | KEEP / DECLARATIVE |
 | Runtime policy | `skills_UIUX/runtime/runtime-policy.json` | KEEP |
@@ -383,7 +417,7 @@ It permits bounded follow-up work when mandatory gates pass. It forbids bypassin
 ## 15. Remaining convergence / debt
 
 1. Provider default remains `legacy`; A51.1 live evidence is `0/8`, so no provider-default migration governance is open.
-2. Lifecycle mutation unification remains blocked by six A52.1 semantic differences; only additive event interoperability is eligible as the next bounded lifecycle proposal.
+2. Lifecycle event interoperability is implemented as read-only observation, but direct mutation unification remains blocked by all six A52.1 semantic differences.
 3. GenAI/NIST is freshness-held with an explicit official-source re-review trigger; no active promotion path exists now.
 4. Vector/semantic retrieval remains deferred and disabled.
 5. Time-sensitive factual/regulatory knowledge still requires current source verification.
@@ -402,26 +436,12 @@ Brain OS reasoning/control
 → advisory memory/scorecard/knowledge
 ```
 
-It must not create a third runtime/provider-policy abstraction, copy skill methodology into Brain/provider constants, let advisory channels satisfy runtime gates, replace evidence truth with model-authored records, silently rewrite benchmark history, or treat compatibility shims as active owners.
+It must not create a third runtime/provider-policy abstraction, copy skill methodology into Brain/provider constants, let advisory/observation channels satisfy runtime gates, replace evidence truth with model-authored records, silently rewrite benchmark history, or treat compatibility shims as active owners.
 
-Lifecycle convergence work additionally must not make a normalized event vocabulary into a shared mutation engine by accident.
+Lifecycle convergence work additionally must not make the normalized event vocabulary into a shared mutation engine by accident.
 
 ## 17. Next architecture task
 
-After A52.1 passes and merges, next bounded task:
+A52.2 does not auto-authorize a lifecycle-mutation successor. After A52.2 is green and merged, choose the next package from current executable debt and explicit governance rather than numbering alone.
 
-```text
-A52.2 — Lifecycle Event Interoperability Contract
-```
-
-That task may normalize read-only lifecycle events/receipts across Factory append-only chronology and Managed checkpoint transitions for observability/regression. It must preserve both mutation owners and have:
-
-```text
-execution_effect = none
-authority_effect = none
-gate_effect = none
-evidence_effect = none
-release_effect = none
-```
-
-Provider migration remains separately blocked on A51.1 live evidence. GenAI/NIST remains freshness-held. Vector search remains deferred.
+A future lifecycle package may use A52.2 receipts for observability/regression, but direct mutation work still requires separate evidence addressing the six A52.1 blockers. Provider migration remains separately blocked on A51.1 live evidence. GenAI/NIST remains freshness-held. Vector search remains deferred.
