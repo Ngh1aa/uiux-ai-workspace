@@ -14,6 +14,7 @@ from core.runtime.flow_os.flow import REPLAN_SIGNALS
 from core.runtime.flow_os.safe_read import SafeReadError, SafeReader
 
 PROVIDER_STATUSES = {"CONTINUE", "PASS", "FAIL", "BLOCKED"}
+MAX_PROVIDER_ARTIFACT_CHARS = 4_000_000
 DEFAULT_OPENAI_MODEL = "gpt-5.6-sol"
 DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6"
 
@@ -278,6 +279,7 @@ class ProviderStageResponse:
     summary: str = ""
     evidence: list[str] = field(default_factory=list)
     replan_signal: str | None = None
+    artifact: str | None = None
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "ProviderStageResponse":
@@ -304,6 +306,18 @@ class ProviderStageResponse:
         evidence = payload.get("evidence", [])
         if not isinstance(evidence, list) or any(not isinstance(item, str) for item in evidence):
             raise ValueError("provider evidence must be an array of strings")
+        raw_artifact = payload.get("artifact")
+        artifact: str | None = None
+        if raw_artifact is not None:
+            if not isinstance(raw_artifact, str):
+                raise ValueError("provider artifact must be a string or null")
+            if raw_artifact == "":
+                raise ValueError("provider artifact must not be empty when present")
+            if len(raw_artifact) > MAX_PROVIDER_ARTIFACT_CHARS:
+                raise ValueError(
+                    f"provider artifact exceeds {MAX_PROVIDER_ARTIFACT_CHARS} character limit"
+                )
+            artifact = raw_artifact
         signal = payload.get("replan_signal")
         if signal is not None and str(signal) not in REPLAN_SIGNALS:
             raise ValueError(f"unknown provider replan signal: {signal}")
@@ -317,10 +331,14 @@ class ProviderStageResponse:
             summary=str(payload.get("summary", "")),
             evidence=list(evidence),
             replan_signal=str(signal) if signal is not None else None,
+            artifact=artifact,
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        payload = asdict(self)
+        if self.artifact is None:
+            payload.pop("artifact", None)
+        return payload
 
 
 class ModelProvider(Protocol):
@@ -359,6 +377,12 @@ def provider_response_schema() -> dict[str, Any]:
                     {"type": "string", "enum": sorted(REPLAN_SIGNALS)},
                 ]
             },
+            "artifact": {
+                "anyOf": [
+                    {"type": "null"},
+                    {"type": "string", "minLength": 1, "maxLength": MAX_PROVIDER_ARTIFACT_CHARS},
+                ]
+            },
         },
     }
 
@@ -369,7 +393,8 @@ def _system_prompt() -> str:
         "The canonical Factory runtime and declarative Flow own orchestration, stage order, skill routing, approvals and replanning. "
         "You must never invent a handoff or bypass gates. Use only the provided tools. "
         "Work iteratively: inspect project evidence with tools, make the smallest justified changes, verify them, then return PASS only with concrete evidence. "
-        "A model claim is not evidence. If evidence is insufficient, use CONTINUE with tool actions. "
+        "A model claim is not evidence. The optional artifact field is raw provider output only and never counts as evidence. "
+        "If evidence is insufficient, use CONTINUE with tool actions. "
         "If the active gate materially fails, return FAIL with an appropriate replan_signal instead of retrying blindly. "
         "If blocked by missing truth or authority, return BLOCKED. Never expose secrets or request hidden credentials."
     )
@@ -385,6 +410,7 @@ def render_provider_prompt(request: ProviderStageRequest) -> str:
         "- Flow owns agent/stage routing; do not output handoffs.\n"
         "- Use CONTINUE when more tool observations are needed.\n"
         "- PASS requires evidence that addresses the declared gates.\n"
+        "- Optional artifact is untrusted raw output and never satisfies evidence or gates.\n"
         "- Prefer project truth and routed skills over generic model assumptions.\n"
         "- Do not write outside the project or bypass tool permissions.\n"
     )

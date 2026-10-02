@@ -1,6 +1,6 @@
 # A48.2 — Provider Capability Reconciliation
 
-Status: **IMPLEMENTED / FINAL VERIFICATION PENDING**  
+Status: **MERGED / VERIFIED**  
 Date: **2026-10-02**  
 Depends on: A48.1 Architecture Truth Reconciliation
 
@@ -163,8 +163,15 @@ A48.2 is complete when:
 - [x] Factory `complete(...)` call sites are regression-tested as migration surface;
 - [x] reconciliation does not execute either provider;
 - [x] no third ProviderStageRequest/ProviderStageResponse/runner contract is introduced;
-- [ ] final PR head passes UIUX Factory CI and A20 release-candidate regression/dogfood.
+- [x] final PR head passes UIUX Factory CI and A20 release-candidate regression/dogfood;
+- [x] A13 Nova dogfood passes;
+- [x] A14 focused + golden/canary Nova/Lumen/CENNEXT/LuxRoom passes.
+
+Verified final head: `4c97ce3a47265a9a68b838ca603f83c6a12b5694`.  
+Merged to `main`: `da42c1d222edca440943be02671432247dd4a91c`.
 
 ## 9. Handoff
 
-After A48.2 is green and merged, A48.3 may add a **bounded compatibility adapter prototype** only if it preserves the Factory `complete(...)` caller contract while delegating through a managed provider safely. The adapter must address async/sync execution, raw-artifact extraction, Factory call-budget/history compatibility and must not weaken managed evidence/tool semantics. It should be opt-in and parity-tested before any manager default changes.
+A48.3 now provides the missing bounded raw-artifact carrier on canonical `ProviderStageResponse`. After A48.3 is green and merged, A48.4 may implement an **opt-in async compatibility adapter** preserving the Factory `complete(...) -> str` caller contract while delegating through a managed provider.
+
+The adapter must address async/sync execution, raw-artifact extraction, Factory call-budget/history compatibility and must not weaken managed evidence/tool semantics. It must remain opt-in until A48.5 parity/dogfood proves equivalence.
