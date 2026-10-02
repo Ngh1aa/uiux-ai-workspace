@@ -1,6 +1,6 @@
 # A48.4 — Managed Provider Compatibility Adapter
 
-Status: **IMPLEMENTED / FINAL VERIFICATION PENDING**  
+Status: **MERGED / VERIFIED**  
 Date: **2026-10-02**  
 Depends on: A48.3 Provider Artifact Bridge Contract
 
@@ -72,23 +72,37 @@ Any `PASS`, `FAIL`, `BLOCKED`, tool action, evidence item or replan signal in co
 
 ## 4. Factory parity retained
 
-The adapter retains the current Factory behavior that callers rely on:
+A48.4 extracted the dependency-light compatibility values into:
+
+```text
+core/runtime/provider_compat_contract.py
+```
+
+Both the legacy `FreeProvider` and compatibility adapter consume the same:
+
+```text
+PROVIDER_CONTEXT_CHAR_LIMIT
+PROVIDER_MAX_CALLS_PER_RUN
+PROVIDER_STAGE_MAX_TOKENS
+PROVIDER_STAGE_TIMEOUT
+ProviderError
+```
+
+This preserves the established Factory 80k context ceiling, 20-call run ceiling and stage token/timeout budgets without forcing canonical Flow OS imports to load the legacy `aiohttp` transport.
+
+The adapter also retains:
 
 - async `complete(...)` interface;
-- 80,000-character combined context limit;
-- stage-specific token budgets from `FreeProvider.STAGE_MAX_TOKENS`;
-- stage-specific timeout budgets from `FreeProvider.STAGE_TIMEOUT`;
-- `MAX_CALLS_PER_RUN` from `FreeProvider`;
 - stage-specific preferred-provider ordering through `UIUX_PROVIDER_<STAGE>`;
 - one retry on transient/network/timeout failures before moving to the next configured provider;
 - per-attempt `calls` and `history` records used by Factory run artifacts;
-- JSON mode requires the returned artifact to decode to a JSON object.
+- JSON mode requiring the returned artifact to decode to a JSON object.
 
 Temporary managed-provider token/timeout values are restored after each call.
 
-## 5. Configuration bridge
+## 5. Configuration bridge and import boundary
 
-`ManagedArtifactCompletionAdapter.from_env(root)` deliberately reuses:
+`ManagedArtifactCompletionAdapter.from_env(root)` reuses:
 
 ```text
 FreeProvider.from_env(root)
@@ -96,9 +110,9 @@ FreeProvider.from_env(root)
 
 for the current free-tier opt-in, key, model and provider-list validation. The already-validated configs are then converted to canonical `OpenAICompatibleFreeTierProvider` instances.
 
-This avoids creating a third free-tier configuration policy during migration.
+`FreeProvider` is imported **lazily inside `from_env()`**. The adapter has no module-scope import of `core.runtime.free_provider`, so importing canonical Flow OS does not pull `aiohttp` into the foundation dependency graph.
 
-No network call occurs during adapter construction.
+This avoids both a third free-tier configuration policy and transport dependency leakage.
 
 ## 6. Truth / authority boundary
 
@@ -138,25 +152,28 @@ by default.
 
 A48.4 therefore changes no current production/default execution path.
 
-## 8. Acceptance criteria
+## 8. Verification
 
-A48.4 is complete when:
+Final head `e32ec3ec78a26947ab372456eed7d1e1ca547002` passed:
 
-- [x] adapter preserves async `complete(...) -> str` shape;
-- [x] synchronous managed provider work runs off the Factory event-loop thread;
-- [x] canonical A48.3 artifact field carries raw completion text;
-- [x] JSON mode rejects non-object artifacts;
-- [x] Factory stage token/timeout limits are applied then restored;
-- [x] Factory call budget/history semantics remain available;
-- [x] preferred-provider ordering is preserved;
-- [x] transient retry/fallback is bounded;
-- [x] managed PASS/FAIL/BLOCKED cannot be reinterpreted as completion success;
-- [x] tool/evidence/replan-bearing carrier responses fail closed;
-- [x] manager default path remains unchanged;
-- [ ] final PR head passes UIUX Factory CI, A20, A13 and A14.
+- UIUX Factory CI #1251;
+- A20 UIUX Factory v1 Release Candidate #91;
+- A13 Nova Real-Project Dogfood #52;
+- A14 Fix Once Validate Across Projects #42;
+- A14 focused regressions;
+- A14 golden Nova/Lumen/CENNEXT/LuxRoom;
+- A14 current-head canary Nova/Lumen/CENNEXT/LuxRoom.
+
+Merged to `main` at:
+
+```text
+834a84d7c6783f7889538c00cc96b0755a1da631
+```
+
+The first foundation attempt correctly exposed the module-scope `aiohttp` dependency leak. The fix extracted the shared compatibility contract and added a regression test rather than adding `aiohttp` to canonical foundation dependencies or weakening CI.
 
 ## 9. Handoff
 
-A48.5 should validate parity rather than change defaults. It should exercise the existing Factory provider and the compatibility adapter against the same representative completion contracts (plain text, JSON stage artifacts, frontend bundle, malformed output, transient failures, call budgets/history) and dogfood the opt-in bridge on representative projects.
+A48.5 validates parity rather than changing defaults. It exercises representative Factory completion contracts and performs deterministic compatibility smoke across Nova/Lumen/CENNEXT/LuxRoom task profiles while keeping the result explicitly separate from product/rendered evidence.
 
-Only after A48.5 proves acceptable parity should A48.6 consider a controlled manager opt-in integration or default migration.
+Only after A48.5 proves acceptable parity should A48.6 consider a controlled manager opt-in integration.

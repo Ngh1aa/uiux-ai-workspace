@@ -1,0 +1,102 @@
+{
+  "version": "1.0.0",
+  "scope": "offline_contract_parity_not_live_provider_or_product_evidence",
+  "cases": [
+    {
+      "id": "plain-markdown-artifact",
+      "mode": "success",
+      "stage": "research",
+      "json_mode": false,
+      "artifact": "# Research\nEvidence-backed summary.",
+      "expected_provider": "groq",
+      "expected_calls": 1
+    },
+    {
+      "id": "design-contract-json",
+      "mode": "success",
+      "stage": "design_contract",
+      "json_mode": true,
+      "artifact": "{\"version\":1,\"decisions\":[\"preserve hierarchy\"]}",
+      "expected_provider": "groq",
+      "expected_calls": 1
+    },
+    {
+      "id": "frontend-bundle-json",
+      "mode": "success",
+      "stage": "implementation",
+      "json_mode": true,
+      "artifact": "{\"files\":{\"index.html\":\"<main>Parity</main>\",\"styles.css\":\"body{}\"}}",
+      "expected_provider": "groq",
+      "expected_calls": 1
+    },
+    {
+      "id": "preferred-provider-order",
+      "mode": "success",
+      "stage": "research",
+      "json_mode": false,
+      "artifact": "preferred gemini artifact",
+      "preferred_provider": "gemini",
+      "expected_provider": "gemini",
+      "expected_calls": 1
+    },
+    {
+      "id": "transient-fallback",
+      "mode": "transient_fallback",
+      "stage": "research",
+      "json_mode": false,
+      "artifact": "fallback artifact",
+      "expected_provider": "gemini",
+      "expected_calls": 3
+    },
+    {
+      "id": "malformed-json-rejected",
+      "mode": "invalid_json",
+      "stage": "implementation",
+      "json_mode": true,
+      "artifact": "[]",
+      "expected_error": "JSON artifact must be an object"
+    },
+    {
+      "id": "lifecycle-pass-rejected",
+      "mode": "lifecycle_pass",
+      "stage": "research",
+      "json_mode": false,
+      "artifact": "must not escape",
+      "expected_error": "must return CONTINUE"
+    },
+    {
+      "id": "evidence-bearing-carrier-rejected",
+      "mode": "evidence_carrier",
+      "stage": "research",
+      "json_mode": false,
+      "artifact": "must not become evidence",
+      "expected_error": "cannot be promoted into evidence"
+    }
+  ],
+  "project_smokes": [
+    {
+      "id": "nova-provider-compat-smoke",
+      "project_id": "nova",
+      "expected_surface": "PRODUCT",
+      "expected_flow": "professional-website-redesign"
+    },
+    {
+      "id": "lumen-provider-compat-smoke",
+      "project_id": "lumen",
+      "expected_surface": "FOCUSED",
+      "expected_flow": "existing-ui-improvement"
+    },
+    {
+      "id": "cennext-provider-compat-smoke",
+      "project_id": "cennext",
+      "expected_surface": "FOCUSED",
+      "expected_flow": "existing-ui-improvement"
+    },
+    {
+      "id": "luxroom-provider-compat-smoke",
+      "project_id": "luxroom",
+      "expected_surface": "PAGE",
+      "expected_flow": "page-ui-work"
+    }
+  ]
+}
