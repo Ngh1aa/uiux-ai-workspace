@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.6 MERGED + A50.7 READY-CANDIDATE DRAFT VALIDATION IMPLEMENTED / VERIFICATION PENDING**  
+Status: **A40–A50.7 MERGED + A50.8 CANDIDATE ACCEPTANCE TRIAL IMPLEMENTED / HUMAN REVIEW PENDING**  
 Audit date: **2026-10-02**  
-Current merged architecture baseline: `main@438fdaeb0125a893691558bddd3de02cb4d15d53`
+Current merged architecture baseline: `main@b052eb38f467082dfd979eca044c6bfa1a620ccd`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -45,6 +45,7 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 35. `A50-KNOWLEDGE-REVISION-ROUND2.md` — targeted Nova/CENNEXT revision and completed round-two verdict.
 36. `A50-KNOWLEDGE-CORPUS-EXPANSION-PROPOSAL.md` — bounded proposal-only source/ownership review for potential corpus growth.
 37. `A50-KNOWLEDGE-READY-CANDIDATE-DRAFT-VALIDATION.md` — two READY drafts, shadow-index retrieval/isolation and bounded usefulness proxy.
+38. `A50-KNOWLEDGE-CANDIDATE-ACCEPTANCE-TRIAL.md` — blind model-assisted/human acceptance governance before any index trial.
 
 ## Current architecture statement
 
@@ -239,82 +240,79 @@ GenAI/NIST   → HOLD_FRESHNESS_REVIEW
 
 The GenAI candidate is held because NIST states AI RMF 1.0 is being revised in 2026. Proposal symmetry is not a goal; truthful freshness handling is.
 
-Executable guard surfaces:
-
-```text
-benchmarks/knowledge-expansion-proposal-v1.json
-core/benchmarks/knowledge_expansion_proposal.py
-scripts/validate_knowledge_expansion_proposal.py
-tests/test_knowledge_expansion_proposal_a50.py
-```
-
-A50.6 independently re-evaluates the A50.5R trigger and verifies that the canonical knowledge index remains exactly three records. It forbids index/record/vector mutation and prevents time-sensitive/high-risk candidates from being marked READY.
-
-Benchmark scope:
-
-```text
-proposal_only_no_index_or_record_mutation
-```
+A50.6 verifies that the canonical knowledge index remains exactly three records and forbids index/record/vector mutation.
 
 ### A50.7 READY candidate drafts
 
-A50.7 drafts only the two A50.6 READY candidates under `skills_UIUX/knowledge/drafts/`:
-
-```text
-EdTech/LTI draft
-EV/OCPP draft
-```
-
-GenAI/NIST remains HOLD and has no A50.7 draft record.
-
-A50.7 does not add either draft to the canonical index. Instead it copies the Knowledge OS tree to a temporary workspace and runs the real `KnowledgeIndex` + `KnowledgeRetriever` through a five-record shadow index:
+A50.7 is merged and verified. It drafts only the two READY candidates under `skills_UIUX/knowledge/drafts/` and runs the real retriever against a temporary five-record shadow index:
 
 ```text
 3 canonical + 2 drafts = 5 shadow records
 ```
 
-For each draft, validation requires:
+Final A50.7 result:
 
 ```text
-proposal alignment
-draft parses as KnowledgeRecord
-canonical_unindexed = true
-actionable_delta = true
-skill_duplication_clear = true
-domain_specificity = true
-retrieval_noise_clear = true
-provenance_clear = true
-context_budget_clear = true
-vector_search_used = false
+KEEP_DRAFT = 2
+REVISE_DRAFT = 0
+canonical index = 3
+canonical_acceptance_allowed = false
+human_usefulness_claimed = false
 ```
 
-Expected positive draft decision:
+`KEEP_DRAFT` is not canonical `KEEP`, not corpus acceptance and not proof of human/model usefulness.
+
+### A50.8 candidate acceptance trial
+
+A50.8 adds a blind model-assisted paired trial for the two A50.7 drafts and requires independent human review before any acceptance verdict can be derived.
+
+Allowed verdicts:
 
 ```text
-KEEP_DRAFT
+ACCEPT_FOR_INDEX_TRIAL
+REVISE_DRAFT
+HOLD
+REJECT
 ```
 
-`KEEP_DRAFT` is not canonical `KEEP`, not corpus acceptance and not proof of human/model usefulness. A50.7 explicitly keeps canonical acceptance and index mutation blocked.
-
-Benchmark scope:
+Fail-closed initial state:
 
 ```text
-draft_validation_shadow_index_not_canonical_acceptance
+reviewed = 0/2
+ACCEPT_FOR_INDEX_TRIAL = 0
+REVISE_DRAFT = 0
+HOLD = 2
+REJECT = 0
+human_review_complete = false
 ```
+
+Acceptance requires the knowledge-assisted output to be human-preferred, show no material regression, be non-worse on correctness and unsupported-claim risk, and be strictly better on both specificity/actionability and decision usefulness.
+
+Even `ACCEPT_FOR_INDEX_TRIAL` does not authorize canonical promotion:
+
+```text
+index_mutation_allowed = false
+canonical_acceptance_allowed = false
+auto_promotion_allowed = false
+vector_search_change_allowed = false
+product_evidence = false
+```
+
+The review packet intentionally hides the condition mapping until scoring is complete.
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance, both versioned knowledge-value trial histories, the A50.6 expansion proposal and the A50.7 draft/shadow-index validator before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance, both versioned knowledge-value trial histories, A50.6 expansion proposal, A50.7 draft/shadow-index validation and the A50.8 acceptance-trial pending state before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
 
-A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, completed human review histories, proposal trigger integrity, skill-owner paths, draft metadata/provenance alignment, shadow-index isolation and the no-auto-mutation boundary.
+A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, completed human review histories, proposal trigger integrity, skill-owner paths, draft metadata/provenance alignment, shadow-index isolation, blind acceptance mapping, all four A50.8 verdict paths and the no-auto-promotion boundary.
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence remains intentionally read-only at the reconciliation/projection/parity layer; mutation-level unification requires a separate decision.
-3. A50.7 has two unindexed READY-candidate drafts, but no fourth/fifth canonical record is accepted yet and the index remains exactly three records.
+3. A50.8 human review is pending; EdTech and EV remain unindexed drafts and the canonical index remains exactly three records.
 4. The GenAI/NIST candidate remains on freshness HOLD while AI RMF 1.0 is under active revision.
-5. Deterministic `KEEP_DRAFT` does not establish model-output/human usefulness for EdTech or EV; candidate acceptance requires a separate governance decision/trial.
+5. An `ACCEPT_FOR_INDEX_TRIAL` verdict, if later earned, still requires a separate controlled index-trial implementation before any canonical corpus mutation.
 6. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
 7. Vector/semantic retrieval remains deferred.
 
@@ -330,6 +328,10 @@ When documents disagree:
 
 ## Next architecture task
 
-After A50.7 verification, begin **A50.8 — Candidate Acceptance Trial** as a separate governance task.
+Complete the independent human review in:
 
-A50.8 should decide per draft whether to `ACCEPT_FOR_INDEX_TRIAL`, `REVISE_DRAFT`, `HOLD` or `REJECT`. It must not mutate `skills_UIUX/knowledge/index.json` merely because A50.7 returns `KEEP_DRAFT`. Decide first what additional model-assisted/human usefulness evidence is required for EdTech and EV; only a later explicit implementation change may add accepted candidates to the canonical index. Vector search remains deferred.
+```text
+benchmarks/knowledge-candidate-acceptance-review-packet-v1.md
+```
+
+Do not open `knowledge-candidate-acceptance-mapping-v1.json` until both EdTech and EV cases are scored. After review, update the human-review ledger, run the unchanged evaluator and derive one of the four candidate verdicts. Do not mutate `skills_UIUX/knowledge/index.json` during the review step. Vector search remains deferred.
