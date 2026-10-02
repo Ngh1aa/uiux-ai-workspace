@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A47 MERGED + A48.1–A48.5 MERGED + A48.6 CONTROLLED PROVIDER INTEGRATION IMPLEMENTED**  
+Status: **A40–A48.6 MERGED + A49.1 LIFECYCLE CONTRACT RECONCILIATION IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@abc25946ca37d5b9f155056e616de120b093e9ad`
+Current architecture baseline: `main@47c1aa143b14eb07ce68ae8387a51fcb14506025`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -35,6 +35,7 @@ This directory contains the current architecture truth for UIUX Factory / Flow O
 25. `A48-MANAGED-PROVIDER-COMPAT-ADAPTER.md` — opt-in async Factory-completion adapter over existing managed providers.
 26. `A48-PROVIDER-PARITY-DOGFOOD.md` — deterministic provider-contract parity plus project-profile compatibility smoke.
 27. `A48-CONTROLLED-PROVIDER-INTEGRATION.md` — explicit manager lane selection, legacy default, rollback and provider-lane provenance.
+28. `A49-LIFECYCLE-CONTRACT-RECONCILIATION.md` — executable comparison contract for Factory product lifecycle vs managed checkpoint lifecycle.
 
 ## Current architecture statement
 
@@ -81,33 +82,43 @@ A47 provenance-aware scorecard mirrors canonical `RunEvaluation.outcome` verbati
 
 A48.2 records provider capability gaps and proves direct substitution unsafe. A48.3 adds the bounded optional raw `artifact` carrier to canonical `ProviderStageResponse` without changing evidence/gate truth.
 
-A48.4 adds `ManagedArtifactCompletionAdapter`, preserving Factory async `complete(...) -> str` while offloading synchronous managed providers through `asyncio.to_thread(...)`. The adapter uses a dependency-light shared compatibility contract for context/call/token/timeout limits and lazy-loads the legacy transport only in explicit `from_env()` construction.
+A48.4 adds `ManagedArtifactCompletionAdapter`, preserving Factory async `complete(...) -> str` while offloading synchronous managed providers through `asyncio.to_thread(...)`. A48.5 adds deterministic provider parity across representative artifacts and registered Nova/Lumen/CENNEXT/LuxRoom profiles.
 
-A48.5 adds deterministic provider parity under:
-
-```text
-benchmarks/provider-parity-v1.json
-core/benchmarks/provider_parity_regression.py
-scripts/validate_provider_parity_benchmark.py
-```
-
-It checks legacy `complete()` shape by AST, representative plain/JSON/frontend artifact contracts, provider preference, transient fallback, malformed/authority-bearing carrier rejection and compatibility smoke for every registered Nova/Lumen/CENNEXT/LuxRoom dogfood profile.
-
-A48.5 output is explicitly scoped as:
-
-```text
-offline_contract_parity_not_live_provider_or_product_evidence
-```
-
-A48.6 wires the compatibility adapter into the Factory manager behind one explicit migration flag:
+A48.6 wires the adapter into the Factory manager behind:
 
 ```text
 UIUX_FACTORY_PROVIDER_LANE=managed_compat
 ```
 
-The default remains `legacy` when the flag is absent. Allowed values are only `legacy` and `managed_compat`; unknown values fail closed. There is no automatic cross-lane fallback. AI-engine runs persist secret-free `provider-lane.json` execution provenance, but that artifact has no evidence/gate/release authority.
+The default remains `legacy`; unknown values fail closed and there is no automatic cross-lane fallback. AI-engine runs persist secret-free `provider-lane.json` execution provenance with no evidence/gate/release authority. Provider default migration remains a separate governance decision requiring stronger live-provider evidence.
 
-Provider default migration remains a separate governance decision requiring stronger live-provider evidence; A48.6 does not make it.
+## Lifecycle reconciliation boundary
+
+A49.1 adds the descriptive executable contract:
+
+```text
+core/runtime/lifecycle_reconciliation.py
+```
+
+It compares both supported top-level experiences through ten vocabulary phases:
+
+```text
+INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
+```
+
+This vocabulary is **not a new lifecycle runtime**. Factory remains an async product pipeline over `RunContext`; managed execution remains an explicit resumable/checkpoint lifecycle over `ManagedWebsiteRun` and resolved Flow stages.
+
+A49.1 deliberately records non-parity instead of synthesizing false equivalence. In particular, Factory normal completion does not implicitly expose production deployment, while managed finalization/release remain separate `ProductionReleaseController` actions with explicit authority.
+
+The reconciliation contract has:
+
+```text
+execution_effect = none
+authority_effect = none
+gate_effect = none
+evidence_effect = none
+release_effect = none
+```
 
 ## Regression and dogfood
 
@@ -115,8 +126,8 @@ Main UIUX Factory CI validates deterministic product/routing/repair/memory/score
 
 ## Remaining architecture debt
 
-1. Provider convergence now has a controlled opt-in lane, but `legacy` remains the default. Any future default migration requires separate live-provider evidence and an explicit governance decision.
-2. Factory product execution (`run.py` + `core/manager/`) and managed CLI execution share routing/runtime owners but still expose distinct top-level lifecycle APIs.
+1. Provider convergence has a controlled opt-in lane, but `legacy` remains the default. Any future default migration requires separate live-provider evidence and explicit governance.
+2. A49.1 has mapped top-level lifecycle non-parity; a future adapter may project common lifecycle events/status but must not create a third state machine or collapse release authority into completion.
 3. A broader declarative Knowledge OS is not implemented as one canonical subsystem; methodology remains correctly owned by `skills_UIUX`.
 
 ## Source-of-truth priority
@@ -131,4 +142,4 @@ When documents disagree:
 
 ## Next architecture task
 
-After A48.6 is green and merged, move to **A49.1 — Lifecycle Contract Reconciliation**. Map Factory and managed top-level lifecycle phases, inputs/outputs, evidence, authority and side effects before attempting any lifecycle adapter. Do not combine provider default migration with lifecycle convergence.
+After A49.1 is green and merged, combine **A49.2 + A49.3 — Lifecycle Adapter + Parity** if the implementation remains adapter-first: project read-only lifecycle events/status from the two existing state owners, benchmark equivalent transitions, and keep Factory/Managed execution owners unchanged. Do not introduce a third lifecycle state machine.
