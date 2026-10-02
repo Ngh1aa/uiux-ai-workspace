@@ -82,5 +82,6 @@ jobs:
           python scripts/validate_memory_boundary_benchmark.py
           python scripts/validate_scorecard_benchmark.py
           python scripts/validate_provider_parity_benchmark.py
+          python scripts/validate_lifecycle_parity_benchmark.py
       - name: Run foundation tests
         run: python -m pytest -q tests
