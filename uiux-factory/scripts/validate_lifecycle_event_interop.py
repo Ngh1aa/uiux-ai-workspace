@@ -1,12 +1,16 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from core.benchmarks.lifecycle_event_interop_regression import evaluate_lifecycle_event_interop_corpus
 
 
-FACTORY = Path(__file__).resolve().parents[1]
-CORPUS = FACTORY / "benchmarks" / "lifecycle-event-interop-v1.json"
+CORPUS = ROOT / "benchmarks" / "lifecycle-event-interop-v1.json"
 EXPECTED_CASES = 8
 
 
