@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "implementation_id": "knowledge-ev-canonical-promotion-shadow-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "scope": "shadow_apply_only_no_repository_canonical_mutation",
+  "candidate": {
+    "record_id": "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+    "source_record_path": "skills_UIUX/knowledge/drafts/records/ev-charging-ocpp-transaction-semantics.json",
+    "source_content_path": "skills_UIUX/knowledge/drafts/content/ev-charging-ocpp-transaction-semantics.md",
+    "canonical_record_path": "skills_UIUX/knowledge/records/ev-charging-ocpp-transaction-semantics.json",
+    "canonical_content_path": "skills_UIUX/knowledge/content/ev-charging-ocpp-transaction-semantics.md",
+    "canonical_index_ref": "records/ev-charging-ocpp-transaction-semantics.json",
+    "domain": "mobility-ev",
+    "stage": "design",
+    "terms": ["ocpp", "transaction", "charging station", "csms", "bidirectional"],
+    "max_item_chars": 5500,
+    "max_total_chars": 7000
+  },
+  "source_freshness_evidence": {
+    "source_url": "https://openchargealliance.org/my-oca/ocpp/",
+    "observed_version": "OCPP-2.1-Edition-2-Errata-2026-06",
+    "observed_label": "OCPP 2.1 Edition 2 Errata 2026-06",
+    "checked_on": "2026-10-02",
+    "evidence_kind": "official_source_web_recheck"
+  },
+  "required_preconditions": {
+    "canary_decision": "CANARY_PASS",
+    "promotion_proposal_id": "knowledge-ev-canonical-promotion-proposal-v1",
+    "owner_delegation_id": "governance-owner-delegation-2026-10-02",
+    "canonical_index_expected_count": 3,
+    "candidate_must_be_unindexed": true,
+    "genai_candidate_status": "HOLD_FRESHNESS_REVIEW"
+  },
+  "canonical_regression_cases": [
+    {
+      "id": "nova-financial",
+      "domain": "financial-services",
+      "stage": "implementation",
+      "terms": ["currency", "locale", "formatting"],
+      "expected_record_id": "knowledge.domain.financial-currency-locale-formatting.v1"
+    },
+    {
+      "id": "lumen-art-culture",
+      "domain": "art-culture",
+      "stage": "research",
+      "terms": ["iiif", "metadata", "rights"],
+      "expected_record_id": "knowledge.domain.cultural-object-metadata-rights-iiif.v1"
+    },
+    {
+      "id": "cennext-industrial",
+      "domain": "industrial-services",
+      "stage": "research",
+      "terms": ["motor", "repair", "claims"],
+      "expected_record_id": "knowledge.domain.industrial-motor-system-claims-doe.v1"
+    }
+  ],
+  "negative_isolation_domains": ["education-edtech", "ai-software"],
+  "post_promotion_migration": {
+    "next_phase": "A50.10C",
+    "historical_three_record_validators_must_transition_before_repository_apply": true,
+    "historical_validators": [
+      "validate_knowledge_ev_controlled_index_trial.py",
+      "validate_knowledge_edtech_controlled_index_trial.py",
+      "validate_knowledge_ev_canonical_promotion_proposal.py"
+    ]
+  },
+  "governance": {
+    "pass_decision": "READY_FOR_CANONICAL_APPLY",
+    "fail_decision": "SHADOW_APPLY_FAIL",
+    "repository_index_mutation_allowed": false,
+    "repository_canonical_assets_commit_allowed": false,
+    "auto_promotion_in_this_phase": false,
+    "vector_search_change_allowed": false,
+    "product_evidence": false,
+    "final_owner_review_deferred": true
+  }
+}
