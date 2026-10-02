@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "contract_id": "compatibility-surface-governance-v1",
+  "version": "1.0.0",
+  "phase": "Flow 2 / A53.2",
+  "checked_on": "2026-10-02",
+  "scope": "public_compatibility_surface_deprecation_governance_no_deletion",
+  "flow1_input": "uiux-factory/benchmarks/runtime-compatibility-convergence-v1.json",
+  "repository_exposure": {
+    "visibility": "public",
+    "visibility_observed_on": "2026-10-02",
+    "github_releases_observed": 0,
+    "release_inventory_observed_on": "2026-10-02",
+    "root_python_package_metadata_present": false,
+    "external_usage_status": "UNKNOWN",
+    "public_code_search": {
+      "observed_on": "2026-10-02",
+      "queries": [
+        "DevelopmentManagerAgent runtime.manager",
+        "DevelopmentManager runtime.flow"
+      ],
+      "hit_count": 0,
+      "evidence_class": "NON_AUTHORITATIVE_DISCOVERY_ONLY",
+      "zero_hits_prove_zero_external_users": false
+    }
+  },
+  "public_guidance_paths": [
+    "README.md",
+    "START-HERE.md",
+    "skills_UIUX/runtime/README.md",
+    "skills_UIUX/FLOW-AGENT-OS.md"
+  ],
+  "deprecation_policy": {
+    "status": "DEPRECATED",
+    "strategy": "CRITERIA_BASED_SUNSET",
+    "governance_notice_date": "2026-10-02",
+    "minimum_public_observation_days": 90,
+    "earliest_removal_review_date": "2026-12-31",
+    "automatic_deletion": false,
+    "import_time_warning_added": false,
+    "public_notice_path": "skills_UIUX/runtime/README.md",
+    "required_notice_markers": [
+      "## Compatibility sunset governance",
+      "Earliest removal-governance review: **2026-12-31**",
+      "zero first-party consumers is necessary but not sufficient",
+      "external usage remains UNKNOWN",
+      "No shim is deleted automatically on or after that date"
+    ]
+  },
+  "compatibility_shims": [
+    {
+      "path": "skills_UIUX/runtime/adaptive_surface.py",
+      "module": "runtime.adaptive_surface",
+      "canonical_module": "core.runtime.flow_os.adaptive_surface",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    },
+    {
+      "path": "skills_UIUX/runtime/agent.py",
+      "module": "runtime.agent",
+      "canonical_module": "core.runtime.flow_os.agent",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    },
+    {
+      "path": "skills_UIUX/runtime/flow.py",
+      "module": "runtime.flow",
+      "canonical_module": "core.runtime.flow_os.flow",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    },
+    {
+      "path": "skills_UIUX/runtime/manager.py",
+      "module": "runtime.manager",
+      "canonical_module": "core.runtime.flow_os.managed",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    },
+    {
+      "path": "skills_UIUX/runtime/mcp_server.py",
+      "module": "runtime.mcp_server",
+      "canonical_module": "core.runtime.flow_os.mcp_server",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    },
+    {
+      "path": "skills_UIUX/runtime/provider.py",
+      "module": "runtime.provider",
+      "canonical_module": "core.runtime.flow_os.provider",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    },
+    {
+      "path": "skills_UIUX/runtime/provider_runner.py",
+      "module": "runtime.provider_runner",
+      "canonical_module": "core.runtime.flow_os.provider_runner",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    },
+    {
+      "path": "skills_UIUX/runtime/task_context.py",
+      "module": "runtime.task_context",
+      "canonical_module": "core.runtime.flow_os.task_context",
+      "classification": "DEPRECATE_WITH_SUNSET"
+    }
+  ],
+  "removal_governance": {
+    "explicit_removal_governance_opt_in": false,
+    "observation_window_elapsed": false,
+    "external_usage_audit_complete": false,
+    "no_known_supported_downstream_dependency": false,
+    "explicit_owner_removal_task": false,
+    "automatic_open_allowed": false,
+    "required_conditions": [
+      "flow1_zero_internal_consumers",
+      "shim_identity_and_thin_wrapper_parity_preserved",
+      "canonical_public_guidance_only",
+      "minimum_public_observation_window_elapsed",
+      "explicit_external_usage_audit_complete",
+      "no_known_supported_downstream_dependency",
+      "explicit_owner_removal_task"
+    ]
+  },
+  "governance": {
+    "shim_deletion_allowed": false,
+    "removal_governance_open": false,
+    "external_removal_safety_inferred": false,
+    "runtime_behavior_change_allowed": false,
+    "import_warning_behavior_change_allowed": false,
+    "provider_default_change_allowed": false,
+    "lifecycle_state_owner_change_allowed": false,
+    "routing_change_allowed": false,
+    "evidence_authority_change_allowed": false,
+    "gate_authority_change_allowed": false,
+    "release_authority_change_allowed": false,
+    "product_evidence": false,
+    "execution_effect": "none",
+    "authority_effect": "none",
+    "gate_effect": "none",
+    "evidence_effect": "none",
+    "release_effect": "none",
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  }
+}
