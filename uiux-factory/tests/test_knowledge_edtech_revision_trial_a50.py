@@ -28,7 +28,14 @@ def _evaluate(reviews_path: Path):
     )
 
 
-def _scores(correctness: int, specificity: int, usefulness: int, *, relevance: int = 2, risk: int = 2) -> dict[str, int]:
+def _scores(
+    correctness: int,
+    specificity: int,
+    usefulness: int,
+    *,
+    relevance: int = 2,
+    risk: int = 2,
+) -> dict[str, int]:
     return {
         "correctness": correctness,
         "specificity_actionability": specificity,
@@ -38,8 +45,17 @@ def _scores(correctness: int, specificity: int, usefulness: int, *, relevance: i
     }
 
 
-def _review_file(tmp_path: Path, *, preferred: str, a: dict[str, int], b: dict[str, int], regression: bool = False) -> Path:
-    payload = json.loads((BENCHMARKS / "knowledge-edtech-revision-human-review-v1.json").read_text(encoding="utf-8"))
+def _review_file(
+    tmp_path: Path,
+    *,
+    preferred: str,
+    a: dict[str, int],
+    b: dict[str, int],
+    regression: bool = False,
+) -> Path:
+    payload = json.loads(
+        (BENCHMARKS / "knowledge-edtech-revision-human-review-v1.json").read_text(encoding="utf-8")
+    )
     payload["review_status"] = "COMPLETE"
     payload["case"] = {
         "id": "edtech-lti-integration-boundaries-revision-v2",
@@ -56,21 +72,59 @@ def _review_file(tmp_path: Path, *, preferred: str, a: dict[str, int], b: dict[s
     return path
 
 
-def test_a50_9a_pending_review_holds_and_revision_is_unindexed() -> None:
+def _pending_review_file(tmp_path: Path) -> Path:
+    payload = json.loads(
+        (BENCHMARKS / "knowledge-edtech-revision-human-review-v1.json").read_text(encoding="utf-8")
+    )
+    payload["review_status"] = "PENDING"
+    payload["case"] = {
+        "id": "edtech-lti-integration-boundaries-revision-v2",
+        "status": "PENDING",
+        "preferred_output": None,
+        "scores": None,
+        "rationale": None,
+        "material_regression": None,
+        "reviewer": None,
+        "reviewed_at": None,
+    }
+    path = tmp_path / "pending-review.json"
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+def test_a50_9a_completed_review_accepts_for_index_trial_and_revision_is_unindexed() -> None:
     report = _evaluate(BENCHMARKS / "knowledge-edtech-revision-human-review-v1.json")
     assert report.prior_verdict == "REVISE_DRAFT"
     assert report.revised_record_id == "knowledge.domain.edtech-lti-context-roles-services.v2"
     assert report.revised_record_unindexed is True
     assert report.shadow_retrieval_isolated is True
     assert report.required_state_guidance_present is True
-    assert report.human_review_complete is False
-    assert report.verdict == "HOLD"
+    assert report.human_review_complete is True
+    assert report.preferred_output == "B"
+    assert report.knowledge_condition == "B"
+    assert report.baseline_condition == "A"
+    assert report.material_regression is False
+    assert report.verdict == "ACCEPT_FOR_INDEX_TRIAL"
+    assert report.joint_usefulness_win is True
+    assert report.correctness_guard_clear is True
+    assert report.unsupported_claim_risk_guard_clear is True
     assert report.canonical_index_count == 3
     assert report.index_mutation_allowed is False
     assert report.canonical_acceptance_allowed is False
     assert report.auto_promotion_allowed is False
     assert report.vector_search_change_allowed is False
     assert report.product_evidence is False
+
+
+def test_a50_9a_pending_review_still_holds(tmp_path: Path) -> None:
+    report = _evaluate(_pending_review_file(tmp_path))
+    assert report.human_review_complete is False
+    assert report.preferred_output is None
+    assert report.material_regression is None
+    assert report.verdict == "HOLD"
+    assert report.joint_usefulness_win is False
+    assert report.correctness_guard_clear is False
+    assert report.unsupported_claim_risk_guard_clear is False
 
 
 def test_a50_9a_strict_usefulness_win_can_only_accept_for_index_trial(tmp_path: Path) -> None:
@@ -112,7 +166,9 @@ def test_a50_9a_preserves_history_revision_namespace_and_packet_blinding() -> No
     # A50.7 historical draft namespace remains exactly its original two record drafts.
     assert len(list((KNOWLEDGE / "drafts/records").glob("*.json"))) == 2
 
-    packet = (BENCHMARKS / "knowledge-edtech-revision-review-packet-v1.md").read_text(encoding="utf-8")
+    packet = (BENCHMARKS / "knowledge-edtech-revision-review-packet-v1.md").read_text(
+        encoding="utf-8"
+    )
     assert "knowledge_condition" not in packet
     assert "baseline_condition" not in packet
     assert "knowledge-edtech-revision-mapping-v1.json" in packet

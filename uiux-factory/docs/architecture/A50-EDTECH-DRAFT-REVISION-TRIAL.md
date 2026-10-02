@@ -1,6 +1,6 @@
 # A50.9A — EdTech Draft Revision + Blind Acceptance Retry
 
-Status: **IMPLEMENTED / HUMAN REVIEW PENDING**  
+Status: **VERIFIED / HUMAN REVIEW COMPLETE / ACCEPT_FOR_INDEX_TRIAL**  
 Date: **2026-10-02**
 
 ## Trigger
@@ -46,7 +46,7 @@ This remains domain/reference knowledge. Generic error/retry methodology still b
 
 ## Blind retry
 
-A50.9A creates a new single-case blind A/B trial:
+A50.9A uses a single-case blind A/B trial:
 
 ```text
 benchmarks/knowledge-edtech-revision-trial-v1.json
@@ -55,9 +55,68 @@ benchmarks/knowledge-edtech-revision-human-review-v1.json
 benchmarks/knowledge-edtech-revision-review-packet-v1.md
 ```
 
-The A50.8 baseline is held fixed exactly. Only the knowledge-assisted condition changes, so the trial measures the revision rather than a moving baseline.
+The A50.8 baseline was held fixed exactly. Only the knowledge-assisted condition changed, so the trial measured the revision rather than a moving baseline.
 
-The mapping stays separate from the review packet. Human review remains required before unblinding.
+The mapping remained separate from the review packet until scoring was complete.
+
+## Human review result
+
+The independent blind-first review completed with:
+
+```text
+Preferred output: B
+Material regression: false
+
+A:
+correctness = 1
+specificity_actionability = 1
+relevance_noise = 2
+unsupported_claim_risk = 2
+decision_usefulness = 1
+
+B:
+correctness = 2
+specificity_actionability = 2
+relevance_noise = 2
+unsupported_claim_risk = 2
+decision_usefulness = 2
+```
+
+After scoring, the mapping was opened:
+
+```text
+knowledge condition = B
+baseline condition = A
+```
+
+The human rationale identified the main improvement as decision-useful specificity rather than terminology density: the knowledge condition names NRPS, Deep Linking and AGS, makes explicit that a successful launch proves only the launch path, gives concrete service states only when project truth can distinguish them, ties visible state to an authoritative observation, and separates configuration/role limitations from temporary failure and unknown states.
+
+The review also recorded two remaining caveats that do not rise to material regression:
+
+- the revised output does not explicitly name a generic `empty state`;
+- it does not identify role initiators as explicitly as the older A50.8 packet.
+
+Those gaps remain useful future-hardening inputs but do not invalidate this revision trial.
+
+## Deep Linking cancellation verification
+
+A50.9A separately checked the reviewer's uncertainty around the product-level state:
+
+```text
+content_selection_cancelled
+```
+
+The current 1EdTech Deep Linking specification supports the underlying distinction: a user/platform workflow may be cancelled before resource-link creation, and a Deep Linking Response may contain no selected/created items.
+
+However, the LTI protocol does not define a literal protocol status named `cancelled`.
+
+Therefore the A50.9A interpretation remains:
+
+```text
+content_selection_cancelled = product-level derived state
+```
+
+It is valid only when project/implementation truth can actually distinguish cancellation from no selection, error, or another return path. The record must not present it as a normative LTI protocol status.
 
 ## Acceptance policy
 
@@ -81,13 +140,17 @@ knowledge specificity_actionability > baseline
 knowledge decision_usefulness > baseline
 ```
 
-Pending review derives `HOLD`.
+The completed review satisfies every guard, so the unchanged evaluator derives:
+
+```text
+ACCEPT_FOR_INDEX_TRIAL
+```
 
 ## Engineering guards
 
-The evaluator also requires:
+The evaluator also verifies:
 
-- merged A50.8 EdTech verdict is still `REVISE_DRAFT`;
+- merged A50.8 EdTech verdict remains `REVISE_DRAFT`;
 - A50.8 baseline is preserved exactly;
 - v1 EdTech draft/history remains present;
 - v2 draft validates as `KnowledgeRecord`;
@@ -97,9 +160,18 @@ The evaluator also requires:
 - required concrete state/recovery concepts exist in the v2 content;
 - vector search remains unused.
 
+Canonical-state tests now assert the completed human result while retaining separate fixture coverage for:
+
+```text
+PENDING → HOLD
+baseline preferred → REVISE_DRAFT
+material regression → REJECT
+strict joint usefulness win → ACCEPT_FOR_INDEX_TRIAL
+```
+
 ## Authority boundary
 
-A50.9A never enables:
+A50.9A still never enables:
 
 ```text
 index_mutation_allowed = false
@@ -109,14 +181,17 @@ vector_search_change_allowed = false
 product_evidence = false
 ```
 
-Even a later `ACCEPT_FOR_INDEX_TRIAL` result only permits a controlled index-trial task. It does not promote the EdTech record into the canonical index.
+`ACCEPT_FOR_INDEX_TRIAL` permits only a separate controlled index-trial task. It does not promote the EdTech record into the canonical index.
 
 ## Next step
 
-After engineering verification, an independent human reviews:
+EdTech may now enter a controlled index trial equivalent in rigor to the EV A50.9B canary:
 
-```text
-benchmarks/knowledge-edtech-revision-review-packet-v1.md
-```
+- temporary/shadow index only;
+- canonical retrieval regression;
+- cross-domain isolation;
+- context-budget check;
+- rollback verification;
+- explicit no-auto-promotion boundary.
 
-Do not open the mapping until scoring is complete.
+Canonical `skills_UIUX/knowledge/index.json` remains unchanged until a later explicit promotion/governance decision.
