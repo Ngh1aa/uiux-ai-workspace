@@ -1,20 +1,16 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 from core.orchestration.intelligent_flow import GoalInterpreter as FactoryGoalInterpreter
+from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
+from core.runtime.flow_os.flow import FlowResolver
+from core.runtime.flow_os.managed import ManagedFlowController as DevelopmentManagerAgent
+from core.runtime.flow_os.task_context import GoalInterpreter as ManagedGoalInterpreter
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT.parent / "skills_UIUX"
-if str(SKILLS) not in sys.path:
-    sys.path.insert(0, str(SKILLS))
-
-from runtime.agent import ProviderNeutralAgentHarness
-from runtime.flow import FlowResolver
-from runtime.manager import DevelopmentManagerAgent
-from runtime.task_context import GoalInterpreter as ManagedGoalInterpreter
 
 
 def test_a2_intents_are_consistent_across_factory_and_managed_runtime() -> None:
