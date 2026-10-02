@@ -76,9 +76,9 @@ def evaluate_knowledge_project_dogfood(
 
     index = KnowledgeIndex(knowledge_root)
     indexed, index_hash = index.load()
-    if len(indexed) != 3:
+    if len(indexed) != 4:
         raise KnowledgeProjectDogfoodError(
-            f"A50.3 seed corpus must remain deliberately small: expected 3 records, got {len(indexed)}"
+            f"A50.10C canonical corpus must contain exactly 4 records, got {len(indexed)}"
         )
     retriever = KnowledgeRetriever(index)
     results: list[KnowledgeProjectDogfoodResult] = []
@@ -107,8 +107,8 @@ def evaluate_knowledge_project_dogfood(
             "expected_only": actual == expected,
             "cross_domain_excluded": sum(
                 1 for item in retrieval.exclusions if item.reason == "domain_mismatch"
-            ) == 2,
-            "three_record_seed": retrieval.indexed_record_count == 3,
+            ) == 3,
+            "four_record_corpus": retrieval.indexed_record_count == 4,
             "no_vector": retrieval.vector_search_used is False,
             "not_evidence": retrieval.current_run_evidence is False,
             "flow_effect_none": retrieval.flow_effect == "none",
