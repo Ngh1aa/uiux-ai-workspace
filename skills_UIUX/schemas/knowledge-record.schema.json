@@ -22,7 +22,8 @@
     "current_run_evidence",
     "authority_effect",
     "gate_effect",
-    "evidence_effect"
+    "evidence_effect",
+    "release_effect"
   ],
   "properties": {
     "schema_version": {"const": "knowledge-record.v1"},
@@ -66,6 +67,7 @@
     "current_run_evidence": {"const": false},
     "authority_effect": {"const": "none"},
     "gate_effect": {"const": "none"},
-    "evidence_effect": {"const": "none"}
+    "evidence_effect": {"const": "none"},
+    "release_effect": {"const": "none"}
   }
 }
