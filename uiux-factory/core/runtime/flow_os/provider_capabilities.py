@@ -24,6 +24,7 @@ class ProviderCapabilityProfile(ProviderCapabilityModel):
     owner: str = Field(min_length=1, max_length=256)
     entrypoint: str = Field(min_length=1, max_length=256)
     interface_kind: Literal["factory_complete", "managed_stage"]
+    async_entrypoint: bool
     request_contract: str = Field(min_length=1, max_length=512)
     response_contract: str = Field(min_length=1, max_length=512)
     provider_names: tuple[str, ...]
@@ -77,6 +78,8 @@ def _assert_current_entrypoints() -> None:
         raise RuntimeError(
             "FreeProvider.complete signature changed; refresh provider capability reconciliation"
         )
+    if not inspect.iscoroutinefunction(FreeProvider.complete):
+        raise RuntimeError("FreeProvider.complete async contract changed; refresh reconciliation")
 
     managed_signature = inspect.signature(OpenAICompatibleFreeTierProvider.run_stage)
     managed_params = tuple(managed_signature.parameters)
@@ -84,6 +87,8 @@ def _assert_current_entrypoints() -> None:
         raise RuntimeError(
             "OpenAICompatibleFreeTierProvider.run_stage signature changed; refresh provider capability reconciliation"
         )
+    if inspect.iscoroutinefunction(OpenAICompatibleFreeTierProvider.run_stage):
+        raise RuntimeError("managed run_stage async contract changed; refresh reconciliation")
 
 
 def factory_free_provider_profile() -> ProviderCapabilityProfile:
@@ -93,6 +98,7 @@ def factory_free_provider_profile() -> ProviderCapabilityProfile:
         owner="core.runtime.free_provider.FreeProvider",
         entrypoint="core.runtime.free_provider.FreeProvider.complete",
         interface_kind="factory_complete",
+        async_entrypoint=True,
         request_contract="stage + system + prompt + optional json_mode",
         response_contract="raw provider text/artifact string",
         provider_names=("groq", "gemini"),
@@ -119,6 +125,7 @@ def managed_free_tier_provider_profile() -> ProviderCapabilityProfile:
             "OpenAICompatibleFreeTierProvider.run_stage"
         ),
         interface_kind="managed_stage",
+        async_entrypoint=False,
         request_contract="core.runtime.flow_os.provider.ProviderStageRequest",
         response_contract="core.runtime.flow_os.provider.ProviderStageResponse",
         provider_names=("groq", "gemini"),
@@ -154,7 +161,7 @@ def reconcile_free_tier_provider_capabilities() -> ProviderCapabilityReconciliat
             "provider/model output has no gate or release authority",
         ),
         factory_only_capabilities=(
-            "raw artifact completion interface",
+            "async raw artifact completion interface",
             "optional json response mode",
             "stage-specific token/time budgets",
             "ordered multi-provider fallback",
@@ -162,6 +169,7 @@ def reconcile_free_tier_provider_capabilities() -> ProviderCapabilityReconciliat
             "provider call history used by Factory artifacts",
         ),
         managed_only_capabilities=(
+            "synchronous typed managed-stage interface",
             "typed ProviderStageRequest",
             "typed ProviderStageResponse",
             "structured CONTINUE/PASS/FAIL/BLOCKED status",
@@ -172,7 +180,7 @@ def reconcile_free_tier_provider_capabilities() -> ProviderCapabilityReconciliat
         ),
         migration_blockers=(
             "Factory callers depend on async complete(stage, system, prompt, json_mode) returning raw artifact text",
-            "Managed providers consume ProviderStageRequest and return structured ProviderStageResponse",
+            "Managed run_stage is synchronous and returns structured ProviderStageResponse",
             "Factory observation/refinement loops parse their own response contracts above complete()",
             "AIFrontendBuilder expects a complete JSON frontend bundle rather than a managed-stage envelope",
             "Factory provider budget/history semantics are currently stored on the provider instance",
