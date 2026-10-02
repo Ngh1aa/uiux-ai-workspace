@@ -109,5 +109,44 @@ def test_a48_managed_lane_provenance_remains_non_authoritative() -> None:
 
 
 def test_a48_provider_lane_provenance_rejects_unknown_lane_or_selection_source() -> None:
-    with pytest.raises(ValueError, match="unknown provider lane|unknown", match=None):
-        pass
+    with pytest.raises(ValueError, match="Cannot persist unknown provider lane"):
+        build_provider_lane_provenance(
+            provider=_LegacyProvider(),
+            lane="auto",
+            selection_source="explicit",
+        )
+    with pytest.raises(ValueError, match="Unknown provider lane selection source"):
+        build_provider_lane_provenance(
+            provider=_LegacyProvider(),
+            lane="legacy",
+            selection_source="implicit",
+        )
+
+
+def test_a48_manager_source_keeps_legacy_default_and_explicit_managed_lane() -> None:
+    source = _manager_source()
+
+    assert "resolve_factory_provider_lane" in source
+    assert 'if lane == "legacy":' in source
+    assert "FreeProvider.from_env(self.root)" in source
+    assert "ManagedArtifactCompletionAdapter.from_env(self.root)" in source
+    assert "build_provider_lane_provenance" in source
+    assert '"provider-lane.json"' in source
+    assert '"provider.lane_selected"' in source
+
+
+def test_a48_manager_provider_creation_has_no_silent_cross_lane_fallback() -> None:
+    method = _class_method(_manager_tree(), "_create_ai_provider")
+
+    # No try/except in provider construction: a managed-lane failure propagates
+    # instead of silently switching to the legacy lane.
+    assert not any(isinstance(node, ast.Try) for node in ast.walk(method))
+    returns = [node for node in ast.walk(method) if isinstance(node, ast.Return)]
+    assert len(returns) >= 2
+
+
+def test_a48_provider_lane_is_selected_only_for_ai_engine_runs() -> None:
+    source = _manager_source()
+    marker = 'if engine == "ai":\n                provider, provider_lane, provider_selection = self._create_ai_provider()'
+    assert marker in source
+    assert 'if engine == "external":' in source
