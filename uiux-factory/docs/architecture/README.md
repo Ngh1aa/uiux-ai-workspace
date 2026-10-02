@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A50.8 MERGED + A50.9A EDTECH REVISION IMPLEMENTED / HUMAN REVIEW PENDING**  
+Status: **A40–A50.9B MERGED + A50.9A HUMAN REVIEW COMPLETE / ACCEPT_FOR_INDEX_TRIAL**  
 Audit date: **2026-10-02**  
-Current merged architecture baseline: `main@100eaa63455c0405d12bb74d9d150b8b279ecdad`
+Current merged architecture baseline: `main@de8a466bfa3d6b71d4a648ce36763c33ba011ec3`
 
 This directory contains current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -46,7 +46,8 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 36. `A50-KNOWLEDGE-CORPUS-EXPANSION-PROPOSAL.md` — bounded proposal-only source/ownership review for potential corpus growth.
 37. `A50-KNOWLEDGE-READY-CANDIDATE-DRAFT-VALIDATION.md` — two READY drafts, shadow-index retrieval/isolation and bounded usefulness proxy.
 38. `A50-KNOWLEDGE-CANDIDATE-ACCEPTANCE-TRIAL.md` — completed blind candidate acceptance review before any index trial.
-39. `A50-EDTECH-DRAFT-REVISION-TRIAL.md` — versioned EdTech v2 revision with concrete states/recovery and blind acceptance retry.
+39. `A50-EDTECH-DRAFT-REVISION-TRIAL.md` — versioned EdTech v2 revision with concrete states/recovery and completed blind acceptance retry.
+40. `A50-EV-CONTROLLED-INDEX-TRIAL.md` — verified EV canary index trial, rollback and cross-domain regression checks.
 
 ## Current architecture statement
 
@@ -291,9 +292,9 @@ product_evidence = false
 
 The canonical index remains exactly three records.
 
-### A50.9A EdTech revision retry
+### A50.9A completed EdTech revision retry
 
-A50.9A preserves the v1 EdTech draft/history and adds a v2 draft with concrete launch/NRPS/Deep Linking/AGS state and recovery boundaries.
+A50.9A preserves the v1 EdTech draft/history and adds a v2 revision with concrete launch/NRPS/Deep Linking/AGS state and recovery boundaries.
 
 Engineering guards require:
 
@@ -307,26 +308,86 @@ canonical index = 3
 vector search = false
 ```
 
-A new single-case blind A/B trial is pending independent human review. Until review completes, the v2 candidate derives `HOLD` and all mutation/acceptance authority remains false.
+The independent blind-first human review completed with:
 
-### A50.9B EV controlled index trial
+```text
+Preferred output = B
+knowledge condition = B
+baseline condition = A
+material regression = false
 
-EV has earned only `ACCEPT_FOR_INDEX_TRIAL`. A separate controlled canary/shadow index implementation is required before any canonical promotion. That trial must verify rollback, canonical retrieval regression, cross-domain isolation and usefulness evidence while preserving the three-record canonical index.
+A: correctness 1 / specificity 1 / relevance 2 / risk 2 / usefulness 1
+B: correctness 2 / specificity 2 / relevance 2 / risk 2 / usefulness 2
+```
+
+The unchanged evaluator therefore derives:
+
+```text
+ACCEPT_FOR_INDEX_TRIAL
+```
+
+The reviewer's main remaining caveats are that the revision does not explicitly name a generic empty state and does not identify role initiators as explicitly as the older A50.8 packet. These were judged minor and not material regressions.
+
+Deep Linking verification also clarifies that `content_selection_cancelled` is a product-level derived state, not a literal protocol status. The 1EdTech workflow permits cancellation/no-selection paths, but the state may only be used when project/implementation truth can actually distinguish that outcome.
+
+All mutation/acceptance authority remains false:
+
+```text
+index_mutation_allowed = false
+canonical_acceptance_allowed = false
+auto_promotion_allowed = false
+vector_search_change_allowed = false
+product_evidence = false
+```
+
+### A50.9B verified EV controlled index trial
+
+A50.9B is merged and verified. The temporary canary topology was:
+
+```text
+3 canonical records + EV/OCPP draft = 4-record canary
+```
+
+The real retriever produced:
+
+```text
+decision = CANARY_PASS
+usefulness_evidence_clear = true
+ev_retrieval_isolated = true
+canonical_retrieval_regression_clear = true
+negative_domain_isolation_clear = true
+context_budget_clear = true
+rollback_verified = true
+genai_hold_preserved = true
+promotion_proposal_allowed = true
+```
+
+The canary did not change canonical `skills_UIUX/knowledge/index.json`. Nova/Lumen/CENNEXT retrieval remained unchanged with EV present, EdTech/AI negative-domain queries did not leak into EV, and rollback restored the exact canonical record set with the canonical index bytes/hash unchanged.
+
+`CANARY_PASS` still does not authorize canonical promotion:
+
+```text
+index_mutation_allowed = false
+canonical_promotion_allowed = false
+auto_promotion_allowed = false
+vector_search_change_allowed = false
+product_evidence = false
+```
 
 GenAI/NIST remains `HOLD_FRESHNESS_REVIEW`.
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance, both versioned knowledge-value trial histories, A50.6 expansion proposal, A50.7 draft/shadow-index validation, the completed A50.8 acceptance result and the A50.9A revision pending state before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora, curated project retrieval dogfood, knowledge-usefulness governance, both versioned knowledge-value trial histories, A50.6 expansion proposal, A50.7 draft/shadow-index validation, the completed A50.8 acceptance result, the completed A50.9A EdTech human result and the A50.9B EV canary before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood. A13 continues real Nova browser dogfood when path-triggered.
 
-A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, completed human review histories, proposal trigger integrity, skill-owner paths, draft metadata/provenance alignment, shadow-index isolation, blind acceptance mapping, all four A50.8 verdict paths, A50.9A v1-history preservation and the no-auto-promotion boundary.
+A50 regression covers source provenance, exact three-record seed governance, knowledge-vs-skill separation, cross-domain isolation, freshness, context budgets, traversal fail-closed behavior, post-routing flow immutability, usefulness proxy boundaries, paired-trial provenance, completed human review histories, proposal trigger integrity, skill-owner paths, draft metadata/provenance alignment, shadow-index isolation, blind acceptance mapping, all four A50.8 verdict paths, A50.9A v1-history preservation, completed-review and pending-review branches, A50.9B rollback/cross-domain regression and the no-auto-promotion boundary.
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence remains intentionally read-only at the reconciliation/projection/parity layer; mutation-level unification requires a separate decision.
-3. A50.9A EdTech v2 human review is pending; both EdTech versions remain unindexed.
-4. EV/OCPP earned `ACCEPT_FOR_INDEX_TRIAL` but still requires A50.9B controlled canary/shadow index validation before any canonical promotion.
+3. EdTech/LTI v2 now has `ACCEPT_FOR_INDEX_TRIAL` but remains unindexed until a separate controlled canary/shadow index trial passes.
+4. EV/OCPP has `CANARY_PASS`; canonical promotion still requires a separate explicit promotion proposal/governance decision.
 5. The GenAI/NIST candidate remains on freshness HOLD while AI RMF 1.0 is under active revision.
 6. Time-sensitive factual/regulatory claims still require current source verification; Knowledge OS does not replace research/evidence acquisition.
 7. Vector/semantic retrieval remains deferred.
@@ -343,9 +404,9 @@ When documents disagree:
 
 ## Next architecture task
 
-Two bounded follow-ups are active:
+Two bounded follow-ups are now eligible:
 
-1. complete independent human review of `benchmarks/knowledge-edtech-revision-review-packet-v1.md` before opening its mapping;
-2. implement A50.9B EV controlled index trial with rollback, retrieval regression and cross-domain isolation while keeping `skills_UIUX/knowledge/index.json` unchanged.
+1. run an EdTech controlled index trial with the same rollback, canonical-regression, cross-domain-isolation and usefulness boundaries proven by A50.9B;
+2. prepare an EV canonical-promotion proposal/governance review based on the verified `CANARY_PASS`, without mutating `skills_UIUX/knowledge/index.json` until that decision is explicitly approved.
 
 GenAI/NIST remains on freshness HOLD. Vector search remains deferred.

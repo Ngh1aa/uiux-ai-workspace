@@ -35,6 +35,9 @@ def main() -> int:
     print(f"revised_record_unindexed={report.revised_record_unindexed}")
     print(f"shadow_retrieval_isolated={report.shadow_retrieval_isolated}")
     print(f"required_state_guidance_present={report.required_state_guidance_present}")
+    print(f"joint_usefulness_win={report.joint_usefulness_win}")
+    print(f"correctness_guard_clear={report.correctness_guard_clear}")
+    print(f"unsupported_claim_risk_guard_clear={report.unsupported_claim_risk_guard_clear}")
     print(f"index_mutation_allowed={report.index_mutation_allowed}")
     print(f"canonical_acceptance_allowed={report.canonical_acceptance_allowed}")
     print(f"auto_promotion_allowed={report.auto_promotion_allowed}")
@@ -46,8 +49,15 @@ def main() -> int:
         and report.revised_record_unindexed is True
         and report.shadow_retrieval_isolated is True
         and report.required_state_guidance_present is True
-        and report.human_review_complete is False
-        and report.verdict == "HOLD"
+        and report.human_review_complete is True
+        and report.preferred_output == "B"
+        and report.knowledge_condition == "B"
+        and report.baseline_condition == "A"
+        and report.material_regression is False
+        and report.verdict == "ACCEPT_FOR_INDEX_TRIAL"
+        and report.joint_usefulness_win is True
+        and report.correctness_guard_clear is True
+        and report.unsupported_claim_risk_guard_clear is True
         and report.canonical_index_count == 3
         and report.index_mutation_allowed is False
         and report.canonical_acceptance_allowed is False
