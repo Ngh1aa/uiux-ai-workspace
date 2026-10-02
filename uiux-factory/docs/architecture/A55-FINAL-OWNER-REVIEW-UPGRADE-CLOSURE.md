@@ -1,6 +1,6 @@
 # A55.1 — Flow 5 Final Broad Owner Review & Upgrade Closure
 
-Status: **ACTIVE / FINAL OWNER GOVERNANCE GATE / NO NEW RUNTIME AUTHORITY**  
+Status: **CLOSED / WORKSPACE_UPGRADE_CLOSED_WITH_INTENTIONAL_HOLDS / NO NEW RUNTIME AUTHORITY**  
 Audit date: **2026-10-03**
 
 ## Purpose
@@ -8,6 +8,29 @@ Audit date: **2026-10-03**
 Flow 5 is the final retrospective governance step for the current `uiux-ai-workspace` upgrade. It exists because the owner review was explicitly deferred throughout A50–A54 until the workspace upgrade had complete bounded regression evidence.
 
 Flow 5 does **not** add runtime capability and does **not** reinterpret regression evidence as product validation. It only closes the current upgrade when the exact Flow 4 A20 receipt is present and every current architecture/authority boundary still holds.
+
+## Verified closure state
+
+The Flow 5 implementation has produced the required A20 closure receipt from a real Flow 4 final-regression receipt:
+
+```text
+WORKSPACE_UPGRADE_CLOSED_WITH_INTENTIONAL_HOLDS
+flow3_clear = true
+flow4_contract_clear = true
+flow4_report_present = true
+flow4_clear = true
+intentional_holds_preserved = true
+owner_delegation_clear = true
+owner_review_source_clear = true
+repository_hygiene_receipt_clear = true
+governance_boundary_clear = true
+final_owner_review_completed = true
+upgrade_closed = true
+future_hold_triggers_preserved = true
+independent_human_review_claimed = false
+```
+
+This status remains conditional on the executable gate continuing to pass. Repository-only CI intentionally derives the evidence-missing HOLD because it does not possess the A20 artifact; A20 is the lane that proves closure from the real receipt chain.
 
 ## Owner review source
 
@@ -113,7 +136,7 @@ Flow 5 also cross-checks all four project IDs and exact pinned SHAs against the 
 
 ## Intentional holds preserved at closure
 
-The upgrade may close while these five items remain explicit non-blocking holds:
+The upgrade closes while these five items remain explicit non-blocking holds:
 
 1. `provider_default_migration`
    - current default remains `legacy`;
