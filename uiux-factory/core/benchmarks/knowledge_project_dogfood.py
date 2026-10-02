@@ -10,6 +10,7 @@ from core.brain_os.knowledge_retrieval import KnowledgeIndex, KnowledgeQuery, Kn
 
 
 SCHEMA_VERSION = 1
+EXPECTED_CANONICAL_RECORD_COUNT = 5
 
 
 class KnowledgeProjectDogfoodError(ValueError):
@@ -76,9 +77,10 @@ def evaluate_knowledge_project_dogfood(
 
     index = KnowledgeIndex(knowledge_root)
     indexed, index_hash = index.load()
-    if len(indexed) != 4:
+    if len(indexed) != EXPECTED_CANONICAL_RECORD_COUNT:
         raise KnowledgeProjectDogfoodError(
-            f"A50.10C canonical corpus must contain exactly 4 records, got {len(indexed)}"
+            "current canonical corpus must contain exactly "
+            f"{EXPECTED_CANONICAL_RECORD_COUNT} records, got {len(indexed)}"
         )
     retriever = KnowledgeRetriever(index)
     results: list[KnowledgeProjectDogfoodResult] = []
@@ -107,8 +109,8 @@ def evaluate_knowledge_project_dogfood(
             "expected_only": actual == expected,
             "cross_domain_excluded": sum(
                 1 for item in retrieval.exclusions if item.reason == "domain_mismatch"
-            ) == 3,
-            "four_record_corpus": retrieval.indexed_record_count == 4,
+            ) == EXPECTED_CANONICAL_RECORD_COUNT - 1,
+            "current_canonical_corpus": retrieval.indexed_record_count == EXPECTED_CANONICAL_RECORD_COUNT,
             "no_vector": retrieval.vector_search_used is False,
             "not_evidence": retrieval.current_run_evidence is False,
             "flow_effect_none": retrieval.flow_effect == "none",
