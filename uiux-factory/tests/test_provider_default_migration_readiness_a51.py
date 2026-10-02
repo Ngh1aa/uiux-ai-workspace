@@ -9,6 +9,7 @@ from core.benchmarks.provider_default_migration_readiness import (
     ProviderMigrationReadinessError,
     evaluate_provider_default_migration_readiness,
 )
+from scripts.run_provider_live_trial import _trial_exit_code
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -154,3 +155,18 @@ def test_a51_failed_receipt_keeps_legacy_even_when_collection_is_complete(tmp_pa
     assert report.failed_matrix
     assert report.decision == "KEEP_LEGACY_DEFAULT_LIVE_EVIDENCE_REQUIRED"
     assert report.migration_governance_allowed is False
+
+
+def test_a51_live_runner_exit_code_fails_closed_on_partial_or_failed_matrix() -> None:
+    complete = _complete_receipt_set()
+    assert _trial_exit_code(complete) == 0
+
+    partial = _complete_receipt_set()
+    partial["collection_status"] = "PARTIAL"
+    partial["receipts"].pop()
+    assert _trial_exit_code(partial) == 1
+
+    failed = _complete_receipt_set()
+    failed["receipts"][0]["success"] = False
+    failed["receipts"][0]["contract_valid"] = False
+    assert _trial_exit_code(failed) == 1
