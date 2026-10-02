@@ -69,7 +69,7 @@ jobs:
       - name: Compile active Python source tree
         run: |
           python -m compileall -q core run.py creator.py apps/bridge/creative_review.py
-          python -m compileall -q scripts/validate_provider_default_migration_readiness.py scripts/run_provider_live_trial.py scripts/validate_lifecycle_mutation_convergence_readiness.py scripts/validate_lifecycle_event_interop.py scripts/validate_post_interop_executable_debt_audit.py
+          python -m compileall -q scripts/validate_provider_default_migration_readiness.py scripts/run_provider_live_trial.py scripts/validate_lifecycle_mutation_convergence_readiness.py scripts/validate_lifecycle_event_interop.py scripts/validate_runtime_compatibility_convergence.py
           python -m compileall -q ../skills_UIUX/runtime ../skills_UIUX/scripts/prepare-external-task.py ../skills_UIUX/scripts/github-external-agent-runner.py ../skills_UIUX/scripts/build-release-evidence.py
       - name: Validate Flow Agent OS contracts
         run: |
@@ -92,9 +92,10 @@ jobs:
           python scripts/validate_knowledge_value_trial.py
           python scripts/validate_knowledge_edtech_canonical_apply.py
           python scripts/validate_knowledge_genai_nist_freshness_review.py
-          python scripts/validate_post_interop_executable_debt_audit.py
-      # Historical A50 validators remain immutable governance evidence. Active CI
-      # validates current Knowledge OS truth, provider/lifecycle holds, A52.2 interop,
-      # and the A52.3 evidence-driven executable-debt selection audit.
+          python scripts/validate_runtime_compatibility_convergence.py
+      # Historical A50 validators and the A52.3 8/19 consumer-selection audit remain
+      # immutable evidence. Active CI validates current Knowledge OS truth,
+      # provider/lifecycle holds, A52.2 event interop and Flow 1 / A53.1 zero-consumer
+      # runtime compatibility convergence.
       - name: Run foundation tests
         run: python -m pytest -q tests

@@ -1,18 +1,15 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 from core.orchestration.intelligent_flow import GoalInterpreter as FactoryGoalInterpreter
+from core.runtime.flow_os.flow import FlowPlanner as DevelopmentManager
+from core.runtime.flow_os.task_context import GoalInterpreter as RuntimeGoalInterpreter
 
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
-sys.path.insert(0, str(WORKSPACE / "skills_UIUX"))
-
-from runtime.flow import DevelopmentManager  # noqa: E402
-from runtime.task_context import GoalInterpreter as RuntimeGoalInterpreter  # noqa: E402
 
 
 def test_factory_and_managed_runtime_goal_interpreters_stay_in_parity() -> None:
