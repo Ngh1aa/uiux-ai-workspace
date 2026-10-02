@@ -17,6 +17,7 @@ EXPECTED_SEED = {
     "knowledge.domain.financial-currency-locale-formatting.v1",
     "knowledge.domain.cultural-object-metadata-rights-iiif.v1",
     "knowledge.domain.industrial-motor-system-claims-doe.v1",
+    "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
 }
 
 
@@ -91,28 +92,28 @@ def _manifest(knowledge: Path, refs: list[str]) -> None:
     )
 
 
-def test_a50_canonical_index_has_exact_curated_seed_and_valid_shape() -> None:
+def test_a50_canonical_index_has_exact_curated_corpus_and_valid_shape() -> None:
     manifest = json.loads((CANONICAL_KNOWLEDGE / "index.json").read_text(encoding="utf-8"))
     schema = json.loads(INDEX_SCHEMA.read_text(encoding="utf-8"))
     indexed, _ = KnowledgeIndex(CANONICAL_KNOWLEDGE).load()
 
     assert manifest["schema_version"] == "knowledge-index.v1"
-    assert len(manifest["records"]) == 3
+    assert len(manifest["records"]) == 4
     assert {item.record.id for item in indexed} == EXPECTED_SEED
     assert schema["properties"]["records"]["maxItems"] == 5000
     assert schema["properties"]["records"]["uniqueItems"] is True
 
 
-def test_a50_canonical_seed_remains_advisory_and_cross_domain_isolated() -> None:
+def test_a50_canonical_corpus_remains_advisory_and_cross_domain_isolated() -> None:
     result = KnowledgeRetriever(KnowledgeIndex(CANONICAL_KNOWLEDGE)).retrieve(
         KnowledgeQuery(as_of="2026-10-02", domains=["financial-services"], stages=["implementation"])
     )
 
-    assert result.indexed_record_count == 3
+    assert result.indexed_record_count == 4
     assert [hit.record.id for hit in result.hits] == [
         "knowledge.domain.financial-currency-locale-formatting.v1"
     ]
-    assert sum(item.reason == "domain_mismatch" for item in result.exclusions) == 2
+    assert sum(item.reason == "domain_mismatch" for item in result.exclusions) == 3
     assert result.vector_search_used is False
     assert result.current_run_evidence is False
     assert result.flow_effect == "none"
