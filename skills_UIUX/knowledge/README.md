@@ -81,6 +81,7 @@ current_run_evidence = false
 authority_effect = none
 gate_effect = none
 evidence_effect = none
+release_effect = none
 ```
 
 Optional applicability metadata includes domains, stages and tags.
@@ -117,7 +118,7 @@ The future A50.2 retriever must:
 - retrieve only a bounded number of relevant knowledge records;
 - preserve record/source provenance;
 - respect stage/domain/context budgets;
-- never select a flow, activate an unrouted skill, change authority, satisfy a gate or create trusted evidence;
+- never select a flow, activate an unrouted skill, change authority, satisfy a gate, create trusted evidence or authorize release;
 - fail safe when knowledge is stale, missing or ambiguous.
 
 ## No vector-database requirement
