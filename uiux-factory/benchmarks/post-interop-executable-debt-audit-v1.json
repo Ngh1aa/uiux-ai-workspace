@@ -93,13 +93,40 @@
     ],
     "required_known_internal_consumers": [
       {
+        "path": "uiux-factory/tests/test_adaptive_flow.py",
+        "modules": ["runtime.flow", "runtime.task_context"]
+      },
+      {
+        "path": "uiux-factory/tests/test_canonical_runtime_a4.py",
+        "modules": ["runtime.flow", "runtime.manager", "runtime.task_context"]
+      },
+      {
+        "path": "uiux-factory/tests/test_runtime_lifecycle_context.py",
+        "modules": ["runtime.flow", "runtime.task_context"]
+      },
+      {
+        "path": "uiux-factory/tests/test_task_contract.py",
+        "modules": ["runtime.agent", "runtime.flow", "runtime.manager", "runtime.task_context"]
+      },
+      {
+        "path": "skills_UIUX/scripts/context-manifest.py",
+        "modules": ["runtime.agent"]
+      },
+      {
+        "path": "skills_UIUX/scripts/validate-flows.py",
+        "modules": ["runtime.flow"]
+      },
+      {
+        "path": "skills_UIUX/scripts/validate-provider-runtime.py",
+        "modules": ["runtime.agent", "runtime.manager", "runtime.provider", "runtime.provider_runner"]
+      },
+      {
         "path": "skills_UIUX/scripts/validate-runtime-foundation.py",
-        "modules": [
-          "runtime.agent",
-          "runtime.manager"
-        ]
+        "modules": ["runtime.agent", "runtime.manager"]
       }
     ],
+    "expected_internal_consumer_file_count": 8,
+    "expected_internal_consumer_import_count": 19,
     "selection_policy": {
       "internal_consumers_present": "SELECT_COMPAT_SHIM_RETIREMENT_READINESS",
       "no_internal_consumers": "SELECT_COMPAT_SHIM_REMOVAL_GOVERNANCE"
