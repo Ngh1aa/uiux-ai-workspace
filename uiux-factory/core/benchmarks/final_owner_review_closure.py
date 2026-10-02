@@ -8,6 +8,7 @@ from typing import Any
 from core.benchmarks.architecture_debt_closure_audit import (
     evaluate_architecture_debt_closure_audit,
 )
+from core.benchmarks.final_upgrade_regression import evaluate_final_upgrade_regression
 
 
 EXPECTED_HOLD_IDS = (
@@ -30,6 +31,7 @@ class FinalOwnerReviewClosureReport:
     decision: str
     scope: str
     flow3_clear: bool
+    flow4_contract_clear: bool
     flow4_report_present: bool
     flow4_clear: bool
     intentional_holds_preserved: bool
@@ -83,6 +85,7 @@ def _validate_contract(contract: dict[str, Any]) -> None:
         "checked_on",
         "scope",
         "flow3_contract",
+        "flow4_contract",
         "owner_delegation_contract",
         "flow4_report",
         "required_flow3_state",
@@ -211,7 +214,11 @@ def _owner_delegation_clear(payload: dict[str, Any]) -> bool:
     )
 
 
-def _flow4_clear(payload: dict[str, Any], required: dict[str, Any]) -> bool:
+def _flow4_clear(
+    payload: dict[str, Any],
+    required: dict[str, Any],
+    expected_projects: tuple[tuple[str, str], ...],
+) -> bool:
     for key, expected in required.items():
         if payload.get(key) != expected:
             return False
@@ -225,8 +232,10 @@ def _flow4_clear(payload: dict[str, Any], required: dict[str, Any]) -> bool:
         return False
     if tuple(str(item.get("project_id", "")) for item in projects) != EXPECTED_PROJECT_IDS:
         return False
-    for item in projects:
+    for item, (expected_id, expected_sha) in zip(projects, expected_projects, strict=True):
         if not isinstance(item, dict):
+            return False
+        if item.get("project_id") != expected_id or item.get("expected_target_sha") != expected_sha:
             return False
         if not all(
             item.get(key) is True
@@ -296,6 +305,28 @@ def evaluate_final_owner_review_closure(
         )
     )
 
+    flow4_contract_path = repo_root / str(contract["flow4_contract"])
+    flow4_contract_report = evaluate_final_upgrade_regression(flow4_contract_path)
+    flow4_contract_payload = _read_json(flow4_contract_path)
+    flow4_projects_raw = flow4_contract_payload.get("projects")
+    if not isinstance(flow4_projects_raw, list):
+        raise FinalOwnerReviewClosureError("Flow 4 project contract missing")
+    expected_projects = tuple(
+        (str(item.get("project_id", "")), str(item.get("expected_target_sha", "")))
+        for item in flow4_projects_raw
+    )
+    flow4_contract_clear = all(
+        (
+            flow4_contract_report.decision == "HOLD_FINAL_REGRESSION_EVIDENCE_REQUIRED",
+            flow4_contract_report.flow3_clear,
+            flow4_contract_report.contract_clear,
+            flow4_contract_report.governance_boundary_clear,
+            flow4_contract_report.evidence_complete is False,
+            flow4_contract_report.required_project_count == 4,
+            tuple(item[0] for item in expected_projects) == EXPECTED_PROJECT_IDS,
+        )
+    )
+
     delegation_path = repo_root / str(contract["owner_delegation_contract"])
     owner_delegation_clear = delegation_path.is_file() and _owner_delegation_clear(
         _read_json(delegation_path)
@@ -316,11 +347,13 @@ def evaluate_final_owner_review_closure(
         flow4_clear = _flow4_clear(
             _read_json(Path(flow4_report_path).resolve()),
             dict(contract["required_flow4_state"]),
+            expected_projects,
         )
 
     base_clear = all(
         (
             flow3_clear,
+            flow4_contract_clear,
             intentional_holds_preserved,
             owner_delegation_clear,
             owner_review_source_clear,
@@ -345,6 +378,7 @@ def evaluate_final_owner_review_closure(
         decision=decision,
         scope=str(contract["scope"]),
         flow3_clear=flow3_clear,
+        flow4_contract_clear=flow4_contract_clear,
         flow4_report_present=flow4_present,
         flow4_clear=flow4_clear,
         intentional_holds_preserved=intentional_holds_preserved,
