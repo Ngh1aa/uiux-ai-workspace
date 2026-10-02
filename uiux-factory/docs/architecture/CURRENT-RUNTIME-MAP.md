@@ -1,90 +1,29 @@
-# A40.1 — Current Runtime Map v2
+# A48.1 — Current Runtime Map v3
 
 Status: **CURRENT ARCHITECTURE TRUTH**  
 Audit date: **2026-10-02**  
 Baseline branch: `main`  
-Baseline commit: `304baefb6999e552708150a20e5c01491aa3663e`
+Baseline commit: `38b11b347281cba8f8dd0b3cd6f99dcba62fdb95`
 
-This document reconciles the repository after A4–A39 work. It replaces the A1-era topology description that was frozen at `0d564b184ab54017caedb85e9074822ff74a1c17`.
+This document reconciles the repository after A40–A47. It supersedes the A40.1 v2 map wherever that map described Brain OS, critique, typed memory or unified scorecard work as future/unimplemented.
 
-The A1 baseline remains a historical regression reference only. Current source and executable tests are authoritative when older A-series prose conflicts with this map.
+Current source and executable tests remain authoritative when historical A-series prose disagrees with this map.
 
-## 1. Reconciliation summary
+## 1. Runtime ownership
 
-Between the historical A1 baseline and this audit baseline, `main` advanced by 92 commits. The most important architectural change is that A4 runtime consolidation is no longer future work:
-
-```text
-uiux-factory/core/runtime/flow_os/
-```
-
-is now the **single executable owner** for the shared Flow OS runtime.
-
-Python modules under:
-
-```text
-skills_UIUX/runtime/*.py
-```
-
-are compatibility shims or declarative/runtime documentation inputs. They are not an independent executable Flow OS.
-
-The repository therefore has **multiple supported entry/control surfaces, but one shared Flow OS execution owner**.
-
-## 2. Canonical product entrypoint
-
-The repository-level product source remains:
-
-```text
-uiux-factory/
-```
-
-Primary local Factory entrypoint:
-
-```text
-uiux-factory/run.py
-```
-
-Current product path:
-
-```text
-uiux-factory/run.py
-→ CreativeDirectorDevelopmentManager
-→ VisualBrainDevelopmentManager / DevelopmentManager lineage
-→ ProfessionalWebsiteFlow adapter
-→ canonical GoalInterpreter + FlowPlanner
-→ Factory specialist stages
-→ implementation / browser QA / visual QA / repair
-```
-
-`run.py` still owns the standard local Factory lifecycle and exclusive `RunLock`. It supports the Factory `ai` and `external` implementation lanes plus revision flows.
-
-## 3. Canonical shared Flow OS runtime
-
-Executable shared runtime ownership is:
+The shared executable Flow OS owner remains:
 
 ```text
 uiux-factory/core/runtime/flow_os/
 ```
 
-This package owns executable behavior for:
+This package owns executable task interpretation, change-surface classification, flow planning, skill resolution, managed lifecycle/checkpoints, provider-neutral managed loops, bounded tools/sandboxing, runtime evidence, browser-evidence integration and finalize/release authority boundaries.
 
-- natural-language Task Contract interpretation;
-- change-surface classification;
-- declarative flow selection and skill resolution;
-- managed lifecycle/checkpoint progression and bounded replanning;
-- provider-neutral managed agent/provider loops;
-- safe reads, bounded file tools and isolated worktree behavior;
-- sandboxed target command execution;
-- typed runtime evidence and gate semantics;
-- browser-render evidence ingestion/capture;
-- external-task packet compilation;
-- explicit finalize/release authority boundaries;
-- optional MCP/control adapters.
+`skills_UIUX/runtime/*.py` remains compatibility-only. New executable decision logic must not be added there.
 
-The canonical runtime owner is asserted by `tests/test_canonical_runtime_a4.py`.
+## 2. Declarative knowledge / policy ownership
 
-## 4. Declarative knowledge, flow and policy ownership
-
-`skills_UIUX/` remains authoritative for reusable declarative design/product knowledge and configuration:
+`skills_UIUX/` remains authoritative for reusable declarative methodology and configuration:
 
 ```text
 skills_UIUX/flows/*.json
@@ -95,16 +34,25 @@ skills_UIUX/runtime/runtime-policy.json
 skills_UIUX/runtime/*.md
 ```
 
-The split is deliberate:
+The split remains:
 
 ```text
 skills_UIUX   → declarative knowledge / flow / policy contracts
-uiux-factory  → executable runtime / orchestration / evidence / QA
+uiux-factory  → executable runtime / orchestration / evidence / QA / Brain adapters
 ```
 
-Executable Python decision logic must not migrate back into `skills_UIUX/runtime/`.
+## 3. Product and managed execution surfaces
 
-## 5. Managed CLI and compatibility surface
+The primary Factory product path remains:
+
+```text
+uiux-factory/run.py
+→ core/manager/
+→ core/orchestration/intelligent_flow.py
+→ canonical GoalInterpreter / FlowPlanner
+→ specialist stages
+→ implementation / browser QA / visual QA / repair
+```
 
 The public managed CLI remains:
 
@@ -112,44 +60,13 @@ The public managed CLI remains:
 skills_UIUX/scripts/uiux-agent.py
 ```
 
-but it imports the canonical `core.runtime.flow_os.*` implementations directly.
+and imports the canonical `core.runtime.flow_os.*` runtime.
 
-Legacy Python files under `skills_UIUX/runtime/` remain for compatibility. They bootstrap/re-export Factory symbols and must not define independent GoalInterpreter, FlowPlanner, managed controller, provider runner, agent harness, evaluation engine or memory engine.
+These are two supported execution experiences sharing canonical routing/runtime owners. They do **not** yet expose one identical top-level lifecycle API; that remains an adapter/convergence concern, not a second Flow OS.
 
-Canonical identity tests verify that legacy names resolve to the Factory runtime classes.
+## 4. Provider surfaces
 
-## 6. Manager and orchestration boundaries
-
-There is one authoritative product-level manager lineage under:
-
-```text
-uiux-factory/core/manager/
-```
-
-`DevelopmentManager` owns the detailed Factory A→Z specialist-stage lifecycle.
-
-`uiux-factory/core/orchestration/intelligent_flow.py` is an adapter over the canonical Flow OS planner. It maps canonical high-level stages such as:
-
-```text
-research → design → implementation → qa
-```
-
-onto the Factory's more detailed specialist stages. It does not own a competing GoalInterpreter or flow-selection algorithm.
-
-`ManagedFlowController` in Flow OS is a managed lifecycle/checkpoint controller for the managed CLI. It is not a second product-level Development Manager.
-
-### Remaining execution-surface distinction
-
-Two supported execution experiences remain:
-
-1. the full Factory product lifecycle through `uiux-factory/run.py`;
-2. the provider-neutral managed Flow OS CLI through `skills_UIUX/scripts/uiux-agent.py`.
-
-They share canonical task interpretation and flow planning but do not yet expose one identical top-level lifecycle API. This is an **adapter/convergence concern**, not evidence of two independent Flow OS implementations.
-
-## 7. Provider surfaces
-
-Provider transport remains an area with more than one active path:
+Two provider entry paths remain active.
 
 ### Factory internal AI lane
 
@@ -157,122 +74,198 @@ Provider transport remains an area with more than one active path:
 uiux-factory/core/runtime/free_provider.py
 ```
 
-is still used by the Factory product manager for its internal `ai` implementation lane.
+`FreeProvider.complete(...)` is used by the Factory internal AI implementation lane and returns provider text after its own free-tier transport/retry/fallback handling.
 
-### Managed/provider-neutral Flow OS lane
-
-Provider-neutral managed behavior lives under:
+### Managed provider-neutral lane
 
 ```text
-uiux-factory/core/runtime/flow_os/provider*.py
+uiux-factory/core/runtime/flow_os/provider.py
+uiux-factory/core/runtime/flow_os/provider_*.py
+uiux-factory/core/runtime/flow_os/free_tier_provider.py
 ```
 
-The two paths must not be mistaken for two flow runtimes. However, future Brain OS/provider work should converge their capability contract where practical instead of adding a third provider abstraction.
+This lane uses canonical typed `ProviderStageRequest` / `ProviderStageResponse` contracts and enforces managed-stage tool/evidence/replan semantics.
 
-Provider/model output never owns stage order, authority, gate truth, merge or release decisions.
+The paths are **not** two flow runtimes, but their provider capability shapes differ. Future convergence must reuse/adapt the canonical managed contracts where practical and must not introduce a third provider-policy surface.
 
-## 8. Evidence and provenance stack
+Provider/model output never owns stage order, authority, gate truth, evidence trust, merge or release decisions.
 
-The repository already contains multiple complementary evidence primitives.
+## 5. Evidence / provenance / QA truth
 
-### Runtime evidence
-
-```text
-uiux-factory/core/runtime/flow_os/evidence.py
-uiux-factory/core/runtime/flow_os/browser_evidence.py
-uiux-factory/core/runtime/flow_os/browser_observation.py
-```
-
-These own typed managed-run evidence and browser evidence integration.
-
-### Fine-grained provenance
+Canonical evidence truth remains distributed intentionally across complementary owners:
 
 ```text
-uiux-factory/core/provenance/evidence_lineage.py
-uiux-factory/core/provenance/release_evidence_registry.py
-uiux-factory/core/contracts/evidence_provenance_schema.py
-```
-
-Fine-grained evidence lineage already creates stable, individually addressable evidence records for browser/reference facts. Future Brain OS Evidence Graph work must **adapt and extend these primitives**, not create a competing evidence truth system.
-
-### QA ground truth
-
-```text
+core/runtime/flow_os/evidence.py
+core/runtime/flow_os/browser_evidence.py
+core/runtime/flow_os/browser_observation.py
+core/provenance/evidence_lineage.py
+core/provenance/release_evidence_registry.py
+core/contracts/evidence_provenance_schema.py
 uiux-factory/qa/
-.github/workflows/cloud-qa-toolchain.yml
-.github/workflows/post-render-evaluator-smoke.yml
 ```
 
-plus newer state/deployment truth workflows provide rendered/runtime acceptance evidence.
+Brain OS does not replace these owners.
 
-A manifest, provider summary, model claim or generated artifact inventory is not equivalent to target runtime/rendered evidence.
-
-## 9. Evaluation and memory
-
-Canonical executable evaluation behavior lives under:
+A42 adds relationship and integrity views under:
 
 ```text
-uiux-factory/core/evaluation/
+core/brain_os/reasoning/evidence_graph.py
+core/brain_os/adapters/evidence.py
+core/brain_os/reasoning/evidence_integrity.py
+core/brain_os/reasoning/lineage_integrity.py
 ```
 
-`RunEvaluator` derives terminal run outcomes from latest-effective trusted runtime evidence. A completed lifecycle without trusted PASS evidence is `insufficient_evidence`, not PASS.
+These surfaces reference/adapt canonical evidence IDs and validate lineage. They cannot upgrade trust, mark runtime gates passed or declare release readiness.
 
-Project-scoped advisory memory lives under:
+## 6. Brain OS reasoning/control layer
+
+Brain OS is now implemented as a bounded control/reasoning layer under:
 
 ```text
-uiux-factory/core/memory/
+uiux-factory/core/brain_os/
 ```
 
-`EvaluationMemoryStore` persists bounded evidence-derived outcomes and normalized quality patterns below the target project's `.uiux-agent-runs/memory/` area.
-
-Current memory is deliberately advisory:
-
-- it is attached after flow selection;
-- it cannot select/modify flow;
-- it cannot change authority;
-- it cannot satisfy gates;
-- it cannot become current-run evidence;
-- it cannot approve merge/release.
-
-Semantic design rationale, hypothesis/decision memory and generalized knowledge retrieval remain future Brain OS capabilities rather than current runtime truth.
-
-## 10. Critique surface
-
-A real visual critic already exists under:
+Implemented slices include:
 
 ```text
-uiux-factory/core/agents/visual_critic.py
+A41 — task / uncertainty / hypothesis / decision + critique/repair contracts
+A42 — evidence relationship graph + integrity / lineage validation
+A43 — canonical flow-selection adapter + JIT context projection + routing benchmark
+A44 — advisory design/product/runtime/evidence critics
+A45 — proposal-only root-cause / repair / retest synthesis + graph projection + benchmark
+A46 — typed project-scoped semantic memory + post-routing recall + benchmark
+A47 — provenance-aware scorecard aggregation + benchmark
 ```
 
-and is grounded in browser/design evidence rather than pixel/DOM proxy claims alone.
+Brain OS remains above/through canonical owners and is **not** an execution runtime.
 
-The repository does **not** yet have the proposed unified Brain OS Critique Orchestrator covering Product, UX/IA, Design System, Accessibility, Runtime and Evidence/Truth critics with one repair graph. Future critique work should adapt the current VisualCritic rather than replace it with an incompatible parallel schema.
+## 7. Critique and repair
 
-## 11. Benchmarks, regression and dogfood
-
-Current evaluation/regression surfaces include:
+A44 provides advisory critics for:
 
 ```text
-uiux-factory/core/benchmarks/
+Visual
+UX / IA
+Design System
+Accessibility
+Product
+Runtime
+Evidence / Truth
+```
+
+Critic findings start as `OBSERVED`; critic reports do not PASS runtime gates or create trusted evidence.
+
+A45 adds proposal-only repair synthesis:
+
+```text
+CritiqueIssue
+→ RootCause(PROPOSED)
+→ RepairDirective(PROPOSED)
+→ RetestRequirement(PENDING)
+```
+
+and projects only:
+
+```text
+CAUSED_BY
+REPAIRED_BY
+REQUIRES_RETEST
+```
+
+into the EvidenceGraph. It deliberately creates no `VERIFIED_BY`/`RETESTED_BY` relationship and executes no repair/retest.
+
+## 8. Evaluation and typed memory
+
+Canonical terminal runtime evaluation remains:
+
+```text
+core/evaluation/run_evaluator.py::RunEvaluator
+```
+
+It derives run outcomes from latest-effective trusted runtime evidence. A completed lifecycle without sufficient trusted PASS evidence remains `insufficient_evidence`.
+
+Evaluation/pattern memory remains under:
+
+```text
+core/memory/evaluation_memory.py
+```
+
+A46 additionally implements typed project-scoped historical Brain memory:
+
+```text
+core/brain_os/memory_contracts.py
+core/memory/brain_memory.py
+core/brain_os/adapters/memory_context.py
+```
+
+Typed memory includes rationale, hypothesis and decision records with explicit provenance. Recall is attached only after canonical flow selection and excludes current-run memory from historical context.
+
+All memory remains advisory:
+
+```text
+current_run_evidence = false
+flow_effect = none
+authority_effect = none
+gate_effect = none
+evidence_effect = none
+```
+
+It cannot select/replan flows, activate skills, validate hypotheses, select decisions, satisfy current-run gates or approve merge/deploy/release.
+
+A broader general-purpose declarative Knowledge OS is still not implemented as one canonical subsystem; reusable methodology continues to belong in `skills_UIUX`.
+
+## 9. Provenance-aware Brain scorecard
+
+A47 implements:
+
+```text
+core/brain_os/scorecard.py
+```
+
+The scorecard aggregates already-produced channels:
+
+```text
+canonical RunEvaluation
++ A44 critic reports
++ A42 integrity reports
+→ BrainScorecard
+```
+
+It mirrors the canonical runtime outcome verbatim and keeps critic/integrity channels separate. It intentionally has no synthetic PASS flag, release-readiness flag or numeric overall score.
+
+The scorecard has no authority/gate/evidence/release effect and does not call `RunEvaluator.evaluate`, runtime gates or release controllers.
+
+## 10. Benchmarks / regression / dogfood
+
+Current regression surfaces include:
+
+```text
 uiux-factory/benchmarks/corpus/
+uiux-factory/benchmarks/routing-v1.json
+uiux-factory/benchmarks/repair-proposals-v1.json
+uiux-factory/benchmarks/memory-boundary-v1.json
+uiux-factory/benchmarks/scorecard-v1.json
+uiux-factory/core/benchmarks/
 skills_UIUX/scripts/eval-harness.py
 .github/workflows/a13-*.yml
 .github/workflows/a14-fix-once-validate-across-projects.yml
 .github/workflows/a20-release-candidate.yml
 ```
 
-The repository therefore already has domain regression, real-project dogfood and provider-neutral reliability primitives. A future unified Brain OS benchmark should aggregate/adapt these existing sources instead of silently replacing their corpus truth.
+Main UIUX Factory CI validates the deterministic benchmark corpora before running the full pytest suite. A20 remains the release-candidate regression/security/dogfood lane over pinned Nova, Lumen and CENNEXT.
 
-## 12. External collaborator / GitHub control plane
+Benchmark fixtures never substitute for target runtime/rendered evidence.
 
-The external-collaborator path is now an explicit control plane:
+## 11. External collaborator / GitHub control plane
+
+External collaboration remains a bounded control plane:
 
 ```text
 external collaborator
 → bounded task metadata / manifest
 → canonical Flow OS interpretation
-→ target repository branch / PR
-→ GitHub Actions / browser evidence
+→ target branch / PR
+→ Actions / browser evidence
 → review / repair / release authority
 ```
 
@@ -285,82 +278,74 @@ skills_UIUX/scripts/github-external-agent-runner.py
 skills_UIUX/scripts/github-connector-task-request.py
 ```
 
-These compile/transport governed work. They do not by themselves constitute LLM execution or product QA PASS.
+These compile/transport governed work. They do not by themselves prove implementation or QA PASS.
 
-## 13. MetaGPT boundary
+## 12. Capability ownership snapshot
 
-`MetaGPT/` remains vendored framework/dependency source used by parts of the specialist role/team implementation. It is not the canonical UI/UX methodology owner, Flow OS owner, product manager, knowledge store or future Brain OS.
-
-## 14. Capability ownership snapshot
-
-| Capability | Current canonical owner | A40.1 classification |
+| Capability | Current owner | Current classification |
 |---|---|---|
 | Product entry lifecycle | `uiux-factory/run.py` + `core/manager/` | KEEP |
-| Shared Task Contract / Goal interpretation | `core/runtime/flow_os/task_context.py` | KEEP |
+| Task interpretation | `core/runtime/flow_os/task_context.py` | KEEP |
 | Flow planning / bounded replanning | `core/runtime/flow_os/flow.py` + `skills_UIUX/flows/*.json` | KEEP |
-| Skills / design methodology | `skills_UIUX/<skill>/SKILL.md` | KEEP |
+| Skills / methodology | `skills_UIUX/<skill>/SKILL.md` | KEEP |
 | Runtime authority/policy | `skills_UIUX/runtime/runtime-policy.json` consumed by Factory | KEEP |
 | Managed Flow OS runtime | `core/runtime/flow_os/` | KEEP |
-| `skills_UIUX/runtime/*.py` legacy runtime names | compatibility shims | DEPRECATE LATER; DO NOT ADD LOGIC |
-| Detailed Factory stage mapping | `core/orchestration/intelligent_flow.py` | KEEP / ADAPT |
+| `skills_UIUX/runtime/*.py` | compatibility shims | DEPRECATE LATER; DO NOT ADD LOGIC |
 | Product Development Manager | `core/manager/` | KEEP |
 | Managed lifecycle/checkpoints | `core/runtime/flow_os/managed.py` | KEEP / ADAPT |
 | Factory internal provider lane | `core/runtime/free_provider.py` | ADAPT / CONVERGE |
-| Managed provider-neutral lane | `core/runtime/flow_os/provider*.py` | KEEP |
+| Managed provider-neutral lane | `core/runtime/flow_os/provider*.py` | KEEP / CANONICAL CONTRACT |
 | Runtime evidence | `core/runtime/flow_os/evidence.py` | KEEP |
-| Fine-grained evidence provenance | `core/provenance/evidence_lineage.py` | KEEP / EXTEND |
-| Release evidence registry | `core/provenance/release_evidence_registry.py` | KEEP |
-| Browser/render QA | `uiux-factory/qa/` + Flow OS browser adapters | KEEP |
-| Terminal evaluation | `core/evaluation/run_evaluator.py` | KEEP / EXTEND |
-| Advisory evaluation memory | `core/memory/evaluation_memory.py` | KEEP / EXTEND |
-| Visual critique | `core/agents/visual_critic.py` | ADAPT into future critique orchestration |
-| Brain OS reasoning/control layer | not implemented | NEW, future; MUST NOT become a runtime |
-| Semantic Knowledge OS | not implemented as one canonical subsystem | NEW, future |
-| Unified multi-critic orchestrator | not implemented | NEW, future |
-| Unified Brain benchmark scorecard | not implemented | NEW, future; aggregate existing evals |
+| Evidence provenance | `core/provenance/` | KEEP |
+| Browser/render QA | `uiux-factory/qa/` + Flow OS adapters | KEEP |
+| Terminal evaluation | `core/evaluation/run_evaluator.py` | KEEP |
+| Evaluation/pattern memory | `core/memory/evaluation_memory.py` | KEEP |
+| Brain reasoning/control contracts | `core/brain_os/contracts.py` + adapters | IMPLEMENTED / BOUNDED |
+| Multi-discipline critics | `core/brain_os/critics/` | IMPLEMENTED / ADVISORY |
+| Repair synthesis | `core/brain_os/repair_orchestrator.py` | IMPLEMENTED / PROPOSAL ONLY |
+| Typed semantic project memory | `core/brain_os/memory_contracts.py` + `core/memory/brain_memory.py` | IMPLEMENTED / ADVISORY |
+| Brain scorecard | `core/brain_os/scorecard.py` | IMPLEMENTED / AGGREGATION ONLY |
+| General declarative Knowledge OS | not implemented as one subsystem | FUTURE / DO NOT DUPLICATE `skills_UIUX` |
 
-## 15. Duplicate/overlap audit
+## 13. Remaining convergence / debt
 
-### Resolved by A4
+Resolved since A40 v2:
 
-- `skills_UIUX/runtime` no longer owns an independent executable Flow OS.
-- Goal interpretation and FlowPlanner class identity are shared.
-- the managed CLI imports Factory Flow OS directly.
+- Brain reasoning/control contracts are implemented without adding a third runtime.
+- Evidence Graph adapters/integrity exist over canonical evidence owners.
+- Multi-discipline critics and proposal-only repair synthesis exist.
+- Typed rationale/hypothesis/decision memory exists with project scope and provenance.
+- A provenance-aware Brain scorecard exists without competing gate truth.
 
-### Intentional adapters, not duplicates
+Active execution/convergence debt is now narrower:
 
-- `ProfessionalWebsiteFlow` maps high-level canonical stages to detailed Factory specialist stages.
-- `ManagedFlowController` manages checkpointed CLI lifecycle while the product DevelopmentManager owns the full Factory product lifecycle.
-- Flow OS browser adapters and the larger `uiux-factory/qa/` harness operate at different integration depths but share the same truth boundary: rendered/runtime evidence must be explicit.
+1. `core/runtime/free_provider.py` and `core/runtime/flow_os/provider*.py` expose different provider entry/capability contracts.
+2. Factory product execution and managed CLI execution still expose distinct top-level lifecycle APIs despite sharing canonical routing/runtime owners.
+3. Architecture documents must continue to track source/test truth; A48 adds regression coverage against reintroducing resolved “not implemented” claims.
 
-### Remaining convergence/debt
+## 14. Rules for next convergence work
 
-1. Factory internal `free_provider.py` and Flow OS provider-neutral adapters expose different provider entry paths.
-2. Factory product execution and the managed CLI share routing but still expose distinct top-level lifecycle APIs.
-3. Evidence is strong but distributed across runtime evidence, provenance lineage, release registry and QA artifacts; Brain OS needs an adapter graph, not another source of truth.
-4. Memory is currently evaluation/pattern oriented; design rationale, hypotheses and decisions are not yet a typed persistent memory layer.
-5. Visual critique exists, but multi-discipline critique orchestration and repair synthesis do not.
-6. Benchmarks/evals exist in several layers and do not yet produce one provenance-aware Brain OS scorecard.
-
-## 16. A40.1 rule for Brain OS work
-
-Future Brain OS implementation must build **above and through** the canonical owners documented here:
+Future work must continue:
 
 ```text
 Brain OS reasoning/control
 → canonical GoalInterpreter / FlowPlanner
-→ existing Factory / ManagedFlowController execution
+→ Factory manager or ManagedFlowController
+→ specialist execution / tools
 → existing evidence + QA
-→ existing evaluation/memory
+→ canonical evaluation + advisory memory/scorecard
 ```
 
 It must not:
 
 - create a third execution runtime;
-- copy `skills_UIUX` methodology into Python planner prompts;
-- create a competing evidence truth model when adapters can extend current evidence/provenance primitives;
-- allow memory/model claims to satisfy gates;
-- treat compatibility shims as active implementation owners;
-- silently replace benchmark corpus truth.
+- create a third provider-policy abstraction;
+- copy `skills_UIUX` methodology into provider/Brain constants;
+- let memory/model/critic/scorecard claims satisfy runtime gates;
+- replace canonical evidence truth with Brain-authored records;
+- silently rewrite benchmark corpus truth;
+- treat compatibility shims as active implementation owners.
 
-A40.2 should turn these boundaries into executable architecture guardrail tests before Brain Core Contracts are introduced.
+## 15. Next architecture task
+
+A48.2 should map the two current provider entry paths into one explicit **provider capability reconciliation contract** before changing execution. The first objective is parity/adapter tests, not immediate deletion or replacement of either working lane.
