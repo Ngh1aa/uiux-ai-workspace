@@ -94,5 +94,6 @@ jobs:
           python scripts/validate_knowledge_ev_controlled_index_trial.py
           python scripts/validate_knowledge_edtech_controlled_index_trial.py
           python scripts/validate_knowledge_ev_canonical_promotion_proposal.py
+          python scripts/validate_knowledge_ev_canonical_promotion_shadow.py
       - name: Run foundation tests
         run: python -m pytest -q tests
