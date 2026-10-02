@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "knowledge-ready-candidate-drafts-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "scope": "draft_validation_shadow_index_not_canonical_acceptance",
+  "governance": {
+    "canonical_index_expected_count": 3,
+    "draft_record_expected_count": 2,
+    "shadow_index_expected_count": 5,
+    "index_mutation_allowed": false,
+    "canonical_acceptance_allowed": false,
+    "vector_search_change_allowed": false,
+    "human_usefulness_claim_allowed": false,
+    "genai_candidate_status": "HOLD_FRESHNESS_REVIEW",
+    "next_action": "draft_review_only"
+  },
+  "cases": [
+    {
+      "id": "a50-7-edtech-lti-draft",
+      "candidate_id": "a50-6-edtech-lti",
+      "draft_record_path": "skills_UIUX/knowledge/drafts/records/edtech-lti-context-roles-services.json",
+      "draft_content_path": "skills_UIUX/knowledge/drafts/content/edtech-lti-context-roles-services.md",
+      "expected_record_id": "knowledge.domain.edtech-lti-context-roles-services.v1",
+      "expected_source_host": "www.1edtech.org",
+      "domain": "education-edtech",
+      "stage": "design",
+      "terms": ["lti", "platform", "tool", "roles", "grades", "deep linking"],
+      "required_actionable_concepts": [
+        "learning platform",
+        "external learning tool",
+        "launch context",
+        "user role",
+        "assignment and grade services",
+        "names and role provisioning services",
+        "deep linking"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/education-website/SKILL.md",
+        "skills_UIUX/security-and-privacy/SKILL.md"
+      ],
+      "expected_proxy_decision": "KEEP_DRAFT"
+    },
+    {
+      "id": "a50-7-ev-ocpp-draft",
+      "candidate_id": "a50-6-ev-ocpp",
+      "draft_record_path": "skills_UIUX/knowledge/drafts/records/ev-charging-ocpp-transaction-semantics.json",
+      "draft_content_path": "skills_UIUX/knowledge/drafts/content/ev-charging-ocpp-transaction-semantics.md",
+      "expected_record_id": "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+      "expected_source_host": "openchargealliance.org",
+      "domain": "mobility-ev",
+      "stage": "design",
+      "terms": ["ocpp", "charging station", "csms", "transaction", "v2x", "smart charging"],
+      "required_actionable_concepts": [
+        "charging station",
+        "charging station management system",
+        "transaction",
+        "iso 15118-20",
+        "bidirectional charging",
+        "distributed energy resource",
+        "smart charging"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/state-feedback-and-error-recovery/SKILL.md",
+        "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"
+      ],
+      "expected_proxy_decision": "KEEP_DRAFT"
+    }
+  ]
+}
