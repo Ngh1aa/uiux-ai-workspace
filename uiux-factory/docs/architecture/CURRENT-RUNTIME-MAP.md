@@ -1,8 +1,8 @@
 # Current Runtime Map
 
-Status: **CURRENT THROUGH FLOW 1 / A53.1 / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD / FIRST-PARTY RUNTIME COMPAT CONVERGED**  
+Status: **CURRENT THROUGH FLOW 2 / A53.2 / PROVIDER LIVE-EVIDENCE HOLD / LIFECYCLE MUTATION HOLD / COMPATIBILITY SUNSET GOVERNED**  
 Audit date: **2026-10-02**  
-Baseline before Flow 1 / A53.1: `main@537c999d16fa6eee5df776725d69a29807313411`
+Baseline before Flow 2 / A53.2: `main@a9313567da25059a580c4f86fb7d58161d5820c6`
 
 This map describes current executable ownership. Historical A-series plans may describe earlier gaps; current source/tests win when they disagree.
 
@@ -62,7 +62,20 @@ shim_contract_clear = true
 identity_checks_clear = true
 ```
 
-The shims remain present because zero first-party consumers does not prove that external integrations are absent. Flow 1 authorizes no shim deletion.
+Flow 2 / A53.2 governs the retained public surface rather than deleting it:
+
+```text
+retain_indefinitely = 0
+deprecate_with_sunset = 8
+open_removal_governance = 0
+external_usage_status = UNKNOWN
+observation_window_days = 90
+earliest_removal_review_date = 2026-12-31
+removal_governance_open = false
+shim_deletion_allowed = false
+```
+
+Zero first-party consumers is necessary but not sufficient evidence that external integrations are absent. The shims remain thin, public compatibility-only wrappers during the observation window.
 
 ## 3. Provider layer
 
@@ -109,7 +122,7 @@ default_change_allowed = false
 
 Offline parity preserves the caller contract but is not live-provider or product evidence. A future live trial is operator-explicit and cannot persist secrets, prompt/system bodies or response bodies.
 
-A52.3 re-checked this state and excluded provider-default migration from successor selection while live receipts remain `0/8`. Flow 1 changes no provider lane/default behavior.
+A52.3 re-checked this state and excluded provider-default migration from successor selection while live receipts remain `0/8`. Flow 1 and Flow 2 change no provider lane/default behavior.
 
 ## 4. Lifecycle layer
 
@@ -189,9 +202,9 @@ evidence_effect = none
 release_effect = none
 ```
 
-A52.2 does not clear the six A52.1 mutation blockers and does not open mutation governance. A52.3 re-checks the same six blockers and therefore excludes direct lifecycle mutation convergence from the next bounded package. Flow 1 changes no lifecycle state owner or transition.
+A52.2 does not clear the six A52.1 mutation blockers and does not open mutation governance. A52.3 re-checks the same six blockers and therefore excludes direct lifecycle mutation convergence from the next bounded package. Flow 1 and Flow 2 change no lifecycle state owner or transition.
 
-## 5. Post-interop debt selection and runtime compatibility convergence
+## 5. Post-interop debt selection, runtime convergence and compatibility governance
 
 A52.3 added the audit-only selector:
 
@@ -222,7 +235,7 @@ scripts/validate_runtime_compatibility_convergence.py
 tests/test_runtime_compatibility_convergence_a53.py
 ```
 
-Flow 1 migrates the eight selected first-party consumers to canonical imports and verifies compatibility identity for all symbols used by those callers, including:
+Flow 1 migrated the eight selected first-party consumers to canonical imports and verifies compatibility identity for all symbols used by those callers, including:
 
 ```text
 DevelopmentManager -> FlowPlanner
@@ -241,7 +254,7 @@ GoalInterpreter
 
 The four migrated `skills_UIUX/scripts` consumers use the same canonical Factory-root bootstrap as the managed CLI.
 
-Current decision:
+Flow 1 decision:
 
 ```text
 FIRST_PARTY_RUNTIME_COMPAT_CONVERGENCE_PASS
@@ -260,7 +273,42 @@ script_bootstrap_clear = true
 governance_boundary_clear = true
 ```
 
-Flow 1 does **not** authorize shim deletion, runtime mutation, provider-default change, lifecycle state-owner change, routing change, evidence/gate/release authority change, GenAI promotion or vector-search activation. Its execution/authority/gate/evidence/release effects are all `none`.
+Flow 2 / A53.2 current-state owners:
+
+```text
+benchmarks/compatibility-surface-governance-v1.json
+core/benchmarks/compatibility_surface_governance.py
+scripts/validate_compatibility_surface_governance.py
+tests/test_compatibility_surface_governance_a53.py
+```
+
+Flow 2 classifies all eight public wrappers `DEPRECATE_WITH_SUNSET`. Public-code discovery returned zero hits for the strongest legacy aliases on 2026-10-02, but that discovery is explicitly non-authoritative. External usage remains `UNKNOWN`.
+
+The repository had no GitHub Releases at the audit point and no root Python package metadata establishing a semver removal boundary, so the sunset uses a minimum 90-day public observation window instead of inventing a version boundary.
+
+Current Flow 2 decision:
+
+```text
+DEPRECATE_WITH_SUNSET_REMOVAL_GOVERNANCE_CLOSED
+```
+
+Current removal boundary:
+
+```text
+retain_indefinitely = 0
+deprecate_with_sunset = 8
+open_removal_governance = 0
+earliest_removal_review_date = 2026-12-31
+observation_window_elapsed = false
+external_usage_audit_complete = false
+no_known_supported_downstream_dependency = false
+explicit_owner_removal_task = false
+removal_governance_open = false
+shim_deletion_allowed = false
+external_removal_safety_inferred = false
+```
+
+Flow 1 and Flow 2 do **not** authorize runtime mutation, provider-default change, lifecycle state-owner change, routing change, evidence/gate/release authority change, GenAI promotion or vector-search activation. Their execution/authority/gate/evidence/release effects remain `none`.
 
 ## 6. Evidence / provenance / QA
 
@@ -417,7 +465,7 @@ uiux-factory/scripts/validate_knowledge_genai_nist_freshness_review.py
 
 GenAI/NIST has an evidence-backed `KEEP_HOLD_FRESHNESS_REVIEW` decision. It remains unindexed, uncanonicalized, non-evidence-bearing and non-promotable until the explicit NIST framework status-change trigger occurs.
 
-A52.3 re-checks both the freshness HOLD and `vector_search_change_allowed=false`, so neither became the selected successor debt package. Flow 1 leaves those boundaries unchanged.
+A52.3 re-checks both the freshness HOLD and `vector_search_change_allowed=false`, so neither became the selected successor debt package. Flow 1 and Flow 2 leave those boundaries unchanged.
 
 ## 12. Benchmarks / regression / dogfood
 
@@ -436,6 +484,7 @@ uiux-factory/benchmarks/lifecycle-mutation-convergence-readiness-v1.json
 uiux-factory/benchmarks/lifecycle-event-interop-v1.json
 uiux-factory/benchmarks/post-interop-executable-debt-audit-v1.json
 uiux-factory/benchmarks/runtime-compatibility-convergence-v1.json
+uiux-factory/benchmarks/compatibility-surface-governance-v1.json
 uiux-factory/core/benchmarks/
 skills_UIUX/scripts/eval-harness.py
 .github/workflows/a13-*.yml
@@ -444,7 +493,7 @@ skills_UIUX/scripts/eval-harness.py
 .github/workflows/uiux-factory-ci.yml
 ```
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, A51.1 provider migration readiness, A52.1 lifecycle mutation readiness, A52.2 lifecycle event interoperability, Flow 1 / A53.1 runtime compatibility convergence, active five-record Knowledge OS truth, A50.14 freshness HOLD and full pytest.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, A51.1 provider migration readiness, A52.1 lifecycle mutation readiness, A52.2 lifecycle event interoperability, Flow 1 / A53.1 runtime compatibility convergence, Flow 2 / A53.2 compatibility surface governance, active five-record Knowledge OS truth, A50.14 freshness HOLD and full pytest.
 
 A52.3 remains historical debt-selection evidence; its 8/19 current-census validator is removed from active current-state CI after convergence. Historical topology-bound A50 governance/canary/shadow tests likewise remain preserved but frozen once their assumptions no longer represent current canonical topology.
 
@@ -485,10 +534,11 @@ These transport/compile governed work; they do not prove implementation or QA PA
 | Lifecycle event interoperability | `core/runtime/lifecycle_event_interop.py` | IMPLEMENTED / OBSERVATION-ONLY |
 | Post-interop executable debt selection | A52.3 benchmark/evaluator | HISTORICAL / AUDIT-ONLY |
 | First-party runtime compatibility convergence | A53.1 benchmark/evaluator | IMPLEMENTED / CURRENT ZERO-CONSUMER GATE |
+| Compatibility surface governance | A53.2 benchmark/evaluator | IMPLEMENTED / DEPRECATED WITH SUNSET / REMOVAL CLOSED |
 | Task interpretation / flow planning | `core/runtime/flow_os/` | KEEP / CANONICAL |
 | Skills / methodology | `skills_UIUX/<skill>/SKILL.md` | KEEP / DECLARATIVE |
 | Runtime policy | `skills_UIUX/runtime/runtime-policy.json` | KEEP |
-| `skills_UIUX/runtime/*.py` | compatibility shims | RETAINED / ZERO FIRST-PARTY CONSUMERS / NO DELETION AUTHORITY |
+| `skills_UIUX/runtime/*.py` | compatibility shims | DEPRECATED WITH SUNSET / REVIEW NOT BEFORE 2026-12-31 / NO DELETION AUTHORITY |
 | Factory provider lane | `core/runtime/free_provider.py` | ADAPT / LEGACY DEFAULT |
 | Provider compatibility contract | `core/runtime/provider_compat_contract.py` | IMPLEMENTED / BOUNDED |
 | Provider default readiness | A51.1 benchmark/evaluator | IMPLEMENTED / LIVE EVIDENCE HOLD |
@@ -519,7 +569,7 @@ It permits bounded follow-up work when mandatory gates pass. It forbids bypassin
 2. Lifecycle event interoperability is implemented as read-only observation, but direct mutation unification remains blocked by all six A52.1 semantic differences.
 3. GenAI/NIST is freshness-held with an explicit official-source re-review trigger; no active promotion path exists now.
 4. Vector/semantic retrieval remains deferred and disabled.
-5. First-party `runtime.*` compatibility-import debt is closed at 0 files / 0 imports. Eight deprecated shim files remain as a retained compatibility surface pending external-safety governance.
+5. First-party `runtime.*` compatibility-import debt is closed at 0 files / 0 imports. Eight public shim files remain under a documented criteria-based sunset; removal governance is closed and the earliest fresh removal-readiness review is 2026-12-31.
 6. Time-sensitive factual/regulatory knowledge still requires current source verification.
 
 ## 17. Rules for next convergence work
@@ -540,18 +590,18 @@ It must not create a third runtime/provider-policy abstraction, copy skill metho
 
 Lifecycle convergence work additionally must not make the normalized event vocabulary into a shared mutation engine by accident.
 
-Compatibility-surface governance must preserve the now-zero first-party census, keep shims logic-free, and treat zero internal consumers as necessary but not sufficient evidence for external removal safety.
+Compatibility-surface governance must preserve the zero first-party census, keep shims logic-free, treat zero internal consumers as necessary but not sufficient evidence for external removal safety, and never interpret the sunset review date as automatic deletion authority.
 
 ## 18. Next architecture task
 
-Flow 1 / A53.1 completed first-party canonical-import convergence with current census 0 files / 0 imports while retaining all eight compatibility shims.
+Flow 2 / A53.2 governs all eight retained compatibility shims as `DEPRECATE_WITH_SUNSET` while keeping removal governance closed.
 
-The next bounded flow is:
+The next compatibility-surface action is:
 
 ```text
-Flow 2 — Compatibility Surface Governance
+Fresh removal-readiness audit no earlier than 2026-12-31
 ```
 
-Flow 2 must decide whether each retained compatibility path should remain indefinitely, enter a documented deprecation/sunset path, or become eligible for a separately governed removal task. No shim may be deleted merely because first-party consumers reached zero.
+That later audit must refresh external-usage/downstream-dependency evidence and explicitly open a bounded owner-governed removal task before any file deletion can be proposed.
 
 Provider migration remains separately blocked on A51.1 live evidence. Direct lifecycle mutation remains blocked by the six A52.1 differences. GenAI/NIST remains freshness-held. Vector search remains deferred.

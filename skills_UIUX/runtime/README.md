@@ -54,6 +54,50 @@ runtime.manager.DevelopmentManagerAgent
 
 This compatibility naming does not create a second Development Manager. The authoritative product-level Development Manager remains in `uiux-factory/core/manager/`.
 
+## Compatibility sunset governance
+
+Flow 1 removed all known first-party imports of the deprecated Python wrappers, but **zero first-party consumers is necessary but not sufficient** evidence for deletion. This repository is public, the compatibility surface has been documented for existing imports, and external usage remains UNKNOWN. Public code search is discovery-only; zero search hits do not prove that no downstream consumer exists.
+
+All eight wrappers are therefore classified as **deprecated with a criteria-based sunset**. They are not classified for indefinite retention, and removal governance is not open yet.
+
+Earliest removal-governance review: **2026-12-31**.
+
+That date is a review boundary after a minimum 90-day public observation window, not a removal event. **No shim is deleted automatically on or after that date.** A later removal-governance task must separately prove all of the following:
+
+- the first-party AST census is still zero;
+- thin-wrapper and symbol/class identity parity still passes;
+- public guidance uses canonical imports rather than recommending the legacy modules;
+- the minimum observation window has elapsed;
+- an explicit external-usage audit has been completed;
+- there is no known supported downstream dependency that still requires the wrappers;
+- the repository owner explicitly opens a bounded removal task;
+- mandatory CI/A20 gates pass on the exact removal-task head.
+
+No import-time `DeprecationWarning` is added by this governance step because warning behavior itself can affect consumers and test environments.
+
+Canonical migration map:
+
+```text
+runtime.adaptive_surface → core.runtime.flow_os.adaptive_surface
+runtime.agent            → core.runtime.flow_os.agent
+runtime.flow             → core.runtime.flow_os.flow
+runtime.manager          → core.runtime.flow_os.managed
+runtime.mcp_server       → core.runtime.flow_os.mcp_server
+runtime.provider         → core.runtime.flow_os.provider
+runtime.provider_runner  → core.runtime.flow_os.provider_runner
+runtime.task_context     → core.runtime.flow_os.task_context
+```
+
+Compatibility aliases remain available during the observation window:
+
+```text
+runtime.flow.DevelopmentManager
+→ core.runtime.flow_os.flow.FlowPlanner
+
+runtime.manager.DevelopmentManagerAgent
+→ core.runtime.flow_os.managed.ManagedFlowController
+```
+
 ## Flow OS boundary
 
 ```text
