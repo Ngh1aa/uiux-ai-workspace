@@ -87,8 +87,9 @@ jobs:
           python scripts/validate_knowledge_project_dogfood.py
           python scripts/validate_knowledge_value_trial.py
           python scripts/validate_knowledge_edtech_canonical_apply.py
+          python scripts/validate_knowledge_genai_nist_freshness_review.py
       # Pre-promotion A50 validators remain in the repository as immutable
       # governance evidence. Active CI validates the latest five-record
-      # post-EdTech canonical topology instead of replaying stale 3/4-record gates.
+      # post-EdTech canonical topology plus the non-mutating GenAI freshness HOLD.
       - name: Run foundation tests
         run: python -m pytest -q tests
