@@ -6,10 +6,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+FACTORY_ROOT = ROOT.parent / "uiux-factory"
+if str(FACTORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(FACTORY_ROOT))
 
-from runtime.flow import DevelopmentManager, validate_flow_document
+from core.runtime.flow_os.flow import FlowPlanner as DevelopmentManager
+from core.runtime.flow_os.flow import validate_flow_document
 
 WEBSITE_TYPES = ["corporate", "ecommerce", "education", "government", "hospitality", "news", "real-estate", "saas", "startup", "portfolio", "nonprofit", "landing"]
 
