@@ -48,12 +48,22 @@ from core.brain_os.repair_orchestrator import (
     CritiqueRepairOrchestrator,
     RepairProposalBundle,
 )
+from core.brain_os.scorecard import (
+    BrainScorecard,
+    CriticScorecardChannel,
+    IntegrityScorecardChannel,
+    ScorecardCriticInput,
+    ScorecardIntegrityInput,
+    build_brain_scorecard,
+)
 
 __all__ = [
     "BRAIN_CONTRACT_VERSION",
     "CRITIQUE_REPAIR_CONTRACT_VERSION",
     "BrainMemoryKind",
+    "BrainScorecard",
     "BrainTaskFrame",
+    "CriticScorecardChannel",
     "CritiqueIssue",
     "CritiqueIssueStatus",
     "CritiqueRepairOrchestrator",
@@ -69,6 +79,7 @@ __all__ = [
     "Hypothesis",
     "HypothesisMemoryRecord",
     "HypothesisStatus",
+    "IntegrityScorecardChannel",
     "RationaleMemoryRecord",
     "RepairDirective",
     "RepairDirectiveStatus",
@@ -79,8 +90,11 @@ __all__ = [
     "Reversibility",
     "RootCause",
     "RootCauseStatus",
+    "ScorecardCriticInput",
+    "ScorecardIntegrityInput",
     "Uncertainty",
     "UncertaintyState",
+    "build_brain_scorecard",
     "decision_memory",
     "hypothesis_memory",
     "rationale_memory",
