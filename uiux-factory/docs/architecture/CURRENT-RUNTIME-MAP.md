@@ -1,8 +1,8 @@
 # Current Runtime Map
 
-Status: **CURRENT THROUGH A50.13 / FIVE-RECORD KNOWLEDGE OS**  
+Status: **CURRENT THROUGH A50.14 / FIVE-RECORD KNOWLEDGE OS / GENAI HOLD EVIDENCED**  
 Audit date: **2026-10-02**  
-Baseline: `main@52af7d738e46adafe0d0a61fd99bc95a0c0c473e`
+Baseline: `main@f84a3f4a606ada958a1dfa0e9f1c23c409aafb4c`
 
 This map describes current executable ownership. Historical A-series plans may describe earlier gaps; current source/tests win when they disagree.
 
@@ -49,9 +49,10 @@ skills_UIUX/<skill>/SKILL.md
 Current provider surfaces:
 
 ```text
-core/runtime/free_provider.py                 Factory legacy lane
-core/runtime/flow_os/provider*.py             provider-neutral managed contracts
-core/runtime/flow_os/provider_compat.py       bounded compatibility adapter surfaces
+core/runtime/free_provider.py                    Factory legacy lane
+core/runtime/provider_compat_contract.py         lane/shared compatibility contract
+core/runtime/flow_os/provider*.py                provider-neutral managed contracts
+core/runtime/flow_os/factory_provider_adapter.py bounded compatibility adapter
 ```
 
 A48 established explicit provider capability reconciliation, artifact bridging, parity dogfood and a controlled opt-in compatibility lane.
@@ -66,7 +67,7 @@ managed_compat = explicit opt-in
 no automatic cross-lane fallback
 ```
 
-Moving the default requires separate live-provider/governance evidence.
+Offline parity preserves the caller contract but is explicitly not live-provider or product evidence. Moving the default requires a separate live-provider readiness/evidence decision.
 
 ## 4. Lifecycle layer
 
@@ -193,7 +194,7 @@ vector-free
 advisory-only
 ```
 
-Current canonical corpus after A50.13 contains five domain records:
+Current canonical corpus contains five domain records:
 
 ```text
 financial-services
@@ -225,7 +226,15 @@ uiux-factory/scripts/validate_knowledge_edtech_canonical_apply.py
 
 A50.13 verifies exact five-record topology, canonical content/record integrity, financial/art/industrial/EV/EdTech retrieval regression, AI negative isolation, context budgets, rollback contract, vector-disabled state, owner delegation and GenAI HOLD.
 
-GenAI/NIST remains `HOLD_FRESHNESS_REVIEW`.
+A50.14 freshness truth:
+
+```text
+uiux-factory/benchmarks/knowledge-genai-nist-freshness-review-v1.json
+uiux-factory/core/benchmarks/knowledge_genai_nist_freshness_review.py
+uiux-factory/scripts/validate_knowledge_genai_nist_freshness_review.py
+```
+
+GenAI/NIST now has an evidence-backed `KEEP_HOLD_FRESHNESS_REVIEW` decision. It remains unindexed, uncanonicalized, non-evidence-bearing and non-promotable until the explicit NIST framework status-change trigger occurs.
 
 ## 11. Benchmarks / regression / dogfood
 
@@ -237,6 +246,7 @@ uiux-factory/benchmarks/routing-v1.json
 uiux-factory/benchmarks/repair-proposals-v1.json
 uiux-factory/benchmarks/memory-boundary-v1.json
 uiux-factory/benchmarks/scorecard-v1.json
+uiux-factory/benchmarks/provider-parity-v1.json
 uiux-factory/core/benchmarks/
 skills_UIUX/scripts/eval-harness.py
 .github/workflows/a13-*.yml
@@ -245,7 +255,7 @@ skills_UIUX/scripts/eval-harness.py
 .github/workflows/uiux-factory-ci.yml
 ```
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, active five-record Knowledge OS truth and full pytest.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider/lifecycle/retrieval contracts, active five-record Knowledge OS truth, A50.14 freshness HOLD and full pytest.
 
 Historical topology-bound A50 governance/canary/shadow tests remain preserved but are frozen once their assumptions no longer represent current canonical topology.
 
@@ -285,6 +295,7 @@ These transport/compile governed work; they do not prove implementation or QA PA
 | Runtime policy | `skills_UIUX/runtime/runtime-policy.json` | KEEP |
 | `skills_UIUX/runtime/*.py` | compatibility shims | DEPRECATE LATER / NO NEW LOGIC |
 | Factory provider lane | `core/runtime/free_provider.py` | ADAPT / LEGACY DEFAULT |
+| Provider compatibility contract | `core/runtime/provider_compat_contract.py` | IMPLEMENTED / BOUNDED |
 | Provider-neutral contracts | `core/runtime/flow_os/provider*.py` | KEEP / CANONICAL CONTRACT |
 | Runtime evidence | `core/runtime/flow_os/evidence.py` | KEEP |
 | Provenance | `core/provenance/` | KEEP |
@@ -308,9 +319,9 @@ It permits bounded follow-up work when mandatory gates pass. It forbids bypassin
 
 ## 15. Remaining convergence / debt
 
-1. Provider default remains `legacy`; moving default requires stronger live-provider/governance evidence.
+1. Provider default remains `legacy`; moving default requires live-provider readiness evidence beyond the existing offline parity benchmark.
 2. Lifecycle parity is read-only; mutation-level convergence remains separate.
-3. GenAI/NIST remains freshness-held and cannot enter acceptance/canary/promotion until dedicated source-freshness review clears it.
+3. GenAI/NIST is freshness-held with an explicit official-source re-review trigger; no active promotion path exists now.
 4. Vector/semantic retrieval remains deferred and disabled.
 5. Time-sensitive factual/regulatory knowledge still requires current source verification.
 
@@ -332,10 +343,10 @@ It must not create a third runtime/provider-policy abstraction, copy skill metho
 
 ## 17. Next architecture task
 
-Next bounded Knowledge OS task:
+Next bounded task:
 
 ```text
-GenAI/NIST freshness review only
+A51.1 — Provider Default Migration Readiness
 ```
 
-The review must verify official current NIST source/version provenance and candidate scope. It must not index, canonicalize or promote GenAI knowledge. Any later acceptance/canary/promotion requires its own evidence-backed task.
+This task must keep `legacy` as the default and define a fail-closed live-provider evidence path for evaluating `managed_compat`. It must not put credentials into repository artifacts or CI requirements, must not persist prompt/response bodies as evidence, and must not infer product quality from provider transport success. Default migration may only become a later explicit governance task after sufficient live receipts exist.
