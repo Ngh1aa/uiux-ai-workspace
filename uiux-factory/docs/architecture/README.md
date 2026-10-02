@@ -14,17 +14,32 @@ This directory contains current architecture truth for UIUX Factory / Flow OS / 
 4. `A40-ARCHITECTURE-GUARDRAILS.md` — executable architecture invariants.
 5. `A41-BRAIN-CORE-CONTRACTS.md` — BrainTaskFrame / Uncertainty / Hypothesis / Decision contracts.
 6. `A41-CRITIQUE-REPAIR-CONTRACTS.md` — critique / root-cause / repair / retest contracts.
-7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` + `A42-EVIDENCE-INTEGRITY.md` — evidence relationships and truth protection.
-8. `A43-FLOW-SELECTION-ENGINE.md` + `A43-JIT-CONTEXT-LOADER.md` + `A43-ROUTING-BENCHMARK.md` — canonical routing adapters and regression.
-9. `A44-CORE-DESIGN-CRITICS.md` + `A44-PRODUCT-TRUTH-CRITICS.md` — advisory critic pack.
-10. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` + repair lineage/benchmark docs — proposal-only repair path.
-11. `A46-TYPED-BRAIN-MEMORY.md` + recall/boundary docs — project-scoped advisory memory.
-12. `A47-BRAIN-SCORECARD.md` + benchmark — provenance-aware evaluation aggregation.
-13. `A48-*` — provider reconciliation, artifact bridge, compatibility adapter, parity and controlled integration.
-14. `A49-LIFECYCLE-CONTRACT-RECONCILIATION.md` + `A49-LIFECYCLE-ADAPTER-PARITY.md` — read-only lifecycle comparison/projection.
-15. `A50-KNOWLEDGE-OS-ARCHITECTURE.md` — knowledge ownership/taxonomy.
-16. `A50-BOUNDED-KNOWLEDGE-RETRIEVAL.md` — deterministic post-routing retrieval/index.
-17. `A50-CURATED-SEED-KNOWLEDGE-DOGFOOD.md` — three-source seed governance and Nova/Lumen/CENNEXT retrieval dogfood.
+7. `A42-EVIDENCE-GRAPH-FOUNDATION.md` — evidence relationship graph.
+8. `A42-EVIDENCE-INTEGRITY.md` — evidence truth protection.
+9. `A43-FLOW-SELECTION-ENGINE.md` — canonical routing adapter.
+10. `A43-JIT-CONTEXT-LOADER.md` — mandatory/JIT skill projection.
+11. `A43-ROUTING-BENCHMARK.md` — routing regression corpus.
+12. `A44-CORE-DESIGN-CRITICS.md` — core design critic pack.
+13. `A44-PRODUCT-TRUTH-CRITICS.md` — product/runtime/evidence critic pack.
+14. `A45-CRITIQUE-REPAIR-ORCHESTRATOR.md` — proposal-only repair orchestration.
+15. `A45-REPAIR-LINEAGE-GRAPH.md` — proposed repair lineage projection.
+16. `A45-REPAIR-PROPOSAL-BENCHMARK.md` — repair policy regression.
+17. `A46-TYPED-BRAIN-MEMORY.md` — typed advisory memory contracts.
+18. `A46-MEMORY-RECALL-CONTEXT.md` — post-routing historical-memory context.
+19. `A46-MEMORY-BOUNDARY-BENCHMARK.md` — memory truth/scope regression.
+20. `A47-BRAIN-SCORECARD.md` — provenance-aware scorecard aggregation.
+21. `A47-SCORECARD-BENCHMARK.md` — scorecard truth regression.
+22. `A48-ARCHITECTURE-TRUTH-RECONCILIATION.md` — post-A47 architecture reconciliation.
+23. `A48-PROVIDER-CAPABILITY-RECONCILIATION.md` — provider capability gap map.
+24. `A48-PROVIDER-ARTIFACT-BRIDGE.md` — bounded raw artifact carrier.
+25. `A48-MANAGED-PROVIDER-COMPAT-ADAPTER.md` — async Factory completion adapter.
+26. `A48-PROVIDER-PARITY-DOGFOOD.md` — deterministic provider parity + project-profile smoke.
+27. `A48-CONTROLLED-PROVIDER-INTEGRATION.md` — explicit managed provider lane and rollback.
+28. `A49-LIFECYCLE-CONTRACT-RECONCILIATION.md` — Factory vs managed lifecycle comparison contract.
+29. `A49-LIFECYCLE-ADAPTER-PARITY.md` — read-only lifecycle projection + parity regression.
+30. `A50-KNOWLEDGE-OS-ARCHITECTURE.md` — knowledge ownership/taxonomy.
+31. `A50-BOUNDED-KNOWLEDGE-RETRIEVAL.md` — deterministic post-routing retrieval/index.
+32. `A50-CURATED-SEED-KNOWLEDGE-DOGFOOD.md` — three-source seed governance and Nova/Lumen/CENNEXT retrieval dogfood.
 
 ## Current architecture statement
 
