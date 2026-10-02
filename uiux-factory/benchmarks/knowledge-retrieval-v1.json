@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "knowledge-retrieval-v1",
+  "version": "1.0.0",
+  "scope": "deterministic_metadata_retrieval_not_product_or_runtime_evidence",
+  "cases": [
+    {
+      "id": "fintech-qa-prefers-specific",
+      "query": {
+        "as_of": "2026-10-02",
+        "domains": ["financial-services"],
+        "stages": ["qa"],
+        "tags": ["trust"],
+        "terms": ["error"],
+        "limit": 3,
+        "max_item_chars": 1000,
+        "max_total_chars": 3000,
+        "time_sensitive_max_age_days": 30
+      },
+      "records": [
+        {
+          "id": "knowledge.pattern.fintech-error",
+          "category": "pattern",
+          "domains": ["financial-services"],
+          "stages": ["qa"],
+          "tags": ["trust", "error"],
+          "freshness": "versioned",
+          "updated_at": "2026-09-20",
+          "confidence": 0.7,
+          "content": "Fintech error recovery and trust guidance."
+        },
+        {
+          "id": "knowledge.foundation.general",
+          "category": "foundations",
+          "domains": [],
+          "stages": [],
+          "tags": [],
+          "freshness": "evergreen",
+          "updated_at": "2026-01-01",
+          "confidence": 0.99,
+          "content": "General UX foundations."
+        },
+        {
+          "id": "knowledge.pattern.ecommerce-error",
+          "category": "pattern",
+          "domains": ["ecommerce"],
+          "stages": ["qa"],
+          "tags": ["error"],
+          "freshness": "versioned",
+          "updated_at": "2026-09-20",
+          "confidence": 0.95,
+          "content": "Ecommerce error guidance."
+        }
+      ],
+      "expected_ids": ["knowledge.pattern.fintech-error", "knowledge.foundation.general"],
+      "expected_excluded_reasons": ["domain_mismatch"]
+    },
+    {
+      "id": "time-sensitive-stale-filtered",
+      "query": {
+        "as_of": "2026-10-02",
+        "domains": [],
+        "stages": [],
+        "tags": [],
+        "terms": [],
+        "limit": 3,
+        "max_item_chars": 1000,
+        "max_total_chars": 3000,
+        "time_sensitive_max_age_days": 30
+      },
+      "records": [
+        {
+          "id": "knowledge.domain.stale-rule",
+          "category": "domain",
+          "domains": [],
+          "stages": [],
+          "tags": [],
+          "freshness": "time_sensitive",
+          "updated_at": "2026-08-01",
+          "confidence": 0.9,
+          "content": "Old time-sensitive rule."
+        },
+        {
+          "id": "knowledge.domain.fresh-rule",
+          "category": "domain",
+          "domains": [],
+          "stages": [],
+          "tags": [],
+          "freshness": "time_sensitive",
+          "updated_at": "2026-09-25",
+          "confidence": 0.8,
+          "content": "Fresh time-sensitive rule."
+        }
+      ],
+      "expected_ids": ["knowledge.domain.fresh-rule"],
+      "expected_excluded_reasons": ["stale_time_sensitive"]
+    },
+    {
+      "id": "category-filter-is-hard-boundary",
+      "query": {
+        "as_of": "2026-10-02",
+        "categories": ["research"],
+        "domains": [],
+        "stages": ["research"],
+        "tags": [],
+        "terms": [],
+        "limit": 3,
+        "max_item_chars": 1000,
+        "max_total_chars": 3000,
+        "time_sensitive_max_age_days": 30
+      },
+      "records": [
+        {
+          "id": "knowledge.research.interviews",
+          "category": "research",
+          "domains": [],
+          "stages": ["research"],
+          "tags": [],
+          "freshness": "evergreen",
+          "updated_at": "2026-01-01",
+          "confidence": 0.8,
+          "content": "Interview research principles."
+        },
+        {
+          "id": "knowledge.pattern.onboarding",
+          "category": "pattern",
+          "domains": [],
+          "stages": ["research"],
+          "tags": [],
+          "freshness": "evergreen",
+          "updated_at": "2026-01-01",
+          "confidence": 0.99,
+          "content": "Onboarding pattern principles."
+        }
+      ],
+      "expected_ids": ["knowledge.research.interviews"],
+      "expected_excluded_reasons": ["category_mismatch"]
+    },
+    {
+      "id": "content-budget-is-explicit",
+      "query": {
+        "as_of": "2026-10-02",
+        "domains": [],
+        "stages": [],
+        "tags": [],
+        "terms": [],
+        "limit": 2,
+        "max_item_chars": 400,
+        "max_total_chars": 600,
+        "time_sensitive_max_age_days": 30
+      },
+      "records": [
+        {
+          "id": "knowledge.pattern.long-one",
+          "category": "pattern",
+          "domains": [],
+          "stages": [],
+          "tags": [],
+          "freshness": "evergreen",
+          "updated_at": "2026-01-01",
+          "confidence": 0.9,
+          "content_repeat": {"char": "A", "count": 1000}
+        },
+        {
+          "id": "knowledge.pattern.long-two",
+          "category": "pattern",
+          "domains": [],
+          "stages": [],
+          "tags": [],
+          "freshness": "evergreen",
+          "updated_at": "2026-01-01",
+          "confidence": 0.8,
+          "content_repeat": {"char": "B", "count": 1000}
+        }
+      ],
+      "expected_ids": ["knowledge.pattern.long-one", "knowledge.pattern.long-two"],
+      "expected_delivered_chars": [400, 200],
+      "expected_excluded_reasons": []
+    },
+    {
+      "id": "record-limit-is-bounded",
+      "query": {
+        "as_of": "2026-10-02",
+        "domains": [],
+        "stages": [],
+        "tags": [],
+        "terms": [],
+        "limit": 1,
+        "max_item_chars": 1000,
+        "max_total_chars": 3000,
+        "time_sensitive_max_age_days": 30
+      },
+      "records": [
+        {
+          "id": "knowledge.product.first",
+          "category": "product",
+          "domains": [],
+          "stages": [],
+          "tags": [],
+          "freshness": "evergreen",
+          "updated_at": "2026-01-01",
+          "confidence": 0.9,
+          "content": "First product principle."
+        },
+        {
+          "id": "knowledge.product.second",
+          "category": "product",
+          "domains": [],
+          "stages": [],
+          "tags": [],
+          "freshness": "evergreen",
+          "updated_at": "2026-01-01",
+          "confidence": 0.8,
+          "content": "Second product principle."
+        }
+      ],
+      "expected_ids": ["knowledge.product.first"],
+      "expected_excluded_reasons": ["limit_reached"]
+    }
+  ]
+}
