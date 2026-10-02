@@ -1,6 +1,12 @@
+#!/usr/bin/env python3
 from __future__ import annotations
 
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from core.benchmarks.architecture_debt_closure_audit import (
     evaluate_architecture_debt_closure_audit,
@@ -11,8 +17,7 @@ EXPECTED_DECISION = "ARCHITECTURE_DEBT_LEDGER_CLOSED_FOR_UPGRADE"
 
 
 def main() -> int:
-    factory_root = Path(__file__).resolve().parents[1]
-    audit_path = factory_root / "benchmarks/architecture-debt-closure-audit-v1.json"
+    audit_path = ROOT / "benchmarks/architecture-debt-closure-audit-v1.json"
     report = evaluate_architecture_debt_closure_audit(audit_path)
 
     print(f"Flow 3 architecture debt closure: decision={report.decision}")
