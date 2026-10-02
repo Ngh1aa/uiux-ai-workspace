@@ -1,8 +1,8 @@
 # Architecture Truth Index
 
-Status: **A40–A49.3 MERGED + A50.1 KNOWLEDGE OS ARCHITECTURE IMPLEMENTED**  
+Status: **A40–A50.1 MERGED + A50.2 BOUNDED KNOWLEDGE RETRIEVAL IMPLEMENTED**  
 Audit date: **2026-10-02**  
-Current architecture baseline: `main@f3db05ddb1fedcd04ae3605c411af4a4bf5982c9`
+Current architecture baseline: `main@ca8f9d09318c14fdc0386b0691dffd8c4664242e`
 
 This directory contains the current architecture truth for UIUX Factory / Flow OS / Brain OS evolution. Current source and executable tests remain authoritative when older A-series prose disagrees with this index.
 
@@ -38,6 +38,7 @@ This directory contains the current architecture truth for UIUX Factory / Flow O
 28. `A49-LIFECYCLE-CONTRACT-RECONCILIATION.md` — executable comparison contract for Factory product lifecycle vs managed checkpoint lifecycle.
 29. `A49-LIFECYCLE-ADAPTER-PARITY.md` — read-only lifecycle projection plus deterministic parity regression.
 30. `A50-KNOWLEDGE-OS-ARCHITECTURE.md` — declarative knowledge taxonomy, ownership and truth-boundary contract.
+31. `A50-BOUNDED-KNOWLEDGE-RETRIEVAL.md` — deterministic post-routing index/retrieval, freshness and context-budget contract.
 
 ## Current architecture statement
 
@@ -47,11 +48,11 @@ The full Factory product lifecycle remains under `uiux-factory/run.py` + `core/m
 
 ## Brain OS boundary
 
-Brain OS is an implemented bounded reasoning/control layer under `uiux-factory/core/brain_os/`. It adds contracts, adapters, critique, repair proposals, evidence relationships, typed semantic memory, scorecard aggregation and a typed Knowledge OS read model above canonical runtime/evidence/evaluation owners. It is not a third execution runtime and does not own declarative knowledge content.
+Brain OS is an implemented bounded reasoning/control layer under `uiux-factory/core/brain_os/`. It adds contracts, adapters, critique, repair proposals, evidence relationships, typed semantic memory, scorecard aggregation and a typed deterministic Knowledge OS retrieval view above canonical runtime/evidence/evaluation owners. It is not a third execution runtime and does not own declarative knowledge content.
 
 ## Evidence / evaluation truth
 
-Canonical evidence truth remains owned by `core/runtime/flow_os/evidence.py`, `core/provenance/`, and `uiux-factory/qa/`. Canonical terminal runtime evaluation remains owned by `core/evaluation/run_evaluator.py`. Brain relationship/integrity/scorecard surfaces reference or aggregate those owners without replacing truth.
+Canonical evidence truth remains owned by `core/runtime/flow_os/evidence.py`, `core/provenance/`, and `uiux-factory/qa/`. Canonical terminal runtime evaluation remains owned by `core/evaluation/run_evaluator.py`. Brain relationship/integrity/scorecard/knowledge surfaces reference or aggregate canonical owners without replacing current truth.
 
 ## Provider convergence boundary
 
@@ -61,13 +62,7 @@ Provider default migration remains a separate governance decision requiring stro
 
 ## Lifecycle reconciliation and projection boundary
 
-A49.1 defines the ten comparison phases:
-
-```text
-INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE
-```
-
-This remains a comparison vocabulary, not a third lifecycle runtime.
+A49.1 defines the comparison phases `INTAKE → INTERPRET → PLAN → RESEARCH → DESIGN → IMPLEMENT → QA → REPLAN → FINALIZE → RELEASE`; this remains a vocabulary, not a third lifecycle runtime.
 
 A49.2 projects Factory `RunContext`-like and Managed `ManagedWebsiteRun`-like snapshots into `LifecycleProjection` for observability/comparison only. Unknown managed stages fail safe instead of being guessed. Factory completion never implies production release, and Managed completion never implies workspace finalization/release.
 
@@ -75,25 +70,7 @@ A49.3 locks those semantics with deterministic lifecycle-parity regression. A PA
 
 ## Knowledge OS boundary
 
-A50.1 establishes the declarative Knowledge OS owner:
-
-```text
-skills_UIUX/knowledge/
-```
-
-and metadata schema:
-
-```text
-skills_UIUX/schemas/knowledge-record.schema.json
-```
-
-The typed Brain read model lives at:
-
-```text
-core/brain_os/knowledge_contracts.py
-```
-
-The hard ownership split is:
+A50.1 established the hard ownership split:
 
 ```text
 SKILL     = procedural methodology / how to perform work
@@ -102,32 +79,65 @@ MEMORY    = project/run-specific rationale, hypotheses, decisions and history
 EVIDENCE  = current provenance-bearing observed truth
 ```
 
-Knowledge records are advisory-only and fixed to:
+Canonical declarative owner:
 
 ```text
+skills_UIUX/knowledge/
+```
+
+A50.2 adds the canonical empty index and deterministic retrieval layer:
+
+```text
+skills_UIUX/knowledge/index.json
+skills_UIUX/schemas/knowledge-index.schema.json
+core/brain_os/knowledge_retrieval.py
+core/brain_os/adapters/knowledge_context.py
+```
+
+The canonical index is intentionally empty until reusable content is actually curated. Benchmark fixtures live outside the canonical corpus.
+
+Retrieval is allowed only after a `FlowSelectionDecision` exists and a concrete stage is known. Category/domain/stage constraints are hard filters when supplied. Eligible records use transparent deterministic domain/stage/tag/term relevance points, with curatorial confidence only as a tie-breaker.
+
+`time_sensitive` records are filtered by explicit `as_of` + `time_sensitive_max_age_days`; this is repository freshness filtering, not live source verification.
+
+Context is bounded by record count, per-record characters and total characters. Every hit preserves record/source provenance, full-content SHA-256, delivered/source character counts and explicit truncation state.
+
+All Knowledge OS retrieval surfaces remain:
+
+```text
+advisory_only = true
 current_run_evidence = false
+deterministic_metadata_first = true
+vector_search_used = false
+flow_effect = none
+skill_activation_effect = none
 authority_effect = none
 gate_effect = none
 evidence_effect = none
 release_effect = none
 ```
 
-A50.1 reserves seven categories: `foundations`, `product`, `research`, `management`, `domain`, `pattern`, `platform`.
-
-A50.1 intentionally creates no knowledge corpus, no retrieval runtime and no vector database. Existing `SKILL.md` bodies must not be bulk-copied into the Knowledge OS. Project memory and current-run evidence IDs cannot become knowledge ownership refs.
+A50.2 does not auto-wire retrieval into all manager/provider stages and does not create or activate a knowledge corpus by itself.
 
 ## Regression and dogfood
 
-Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity corpora before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood.
+Main UIUX Factory CI validates deterministic product/routing/repair/memory/scorecard/provider-parity/lifecycle-parity/knowledge-retrieval corpora before the full pytest suite. A20 continues full regression, structural/security audit and pinned Nova/Lumen/CENNEXT dogfood.
 
-A50.1 adds architecture drift tests for knowledge ownership, taxonomy/schema parity, no memory/evidence ownership refs, no parallel `SKILL.md` corpus, and explicit `retrieval_implemented=false` / `vector_database_required=false`.
+A50.2 tests additionally cover canonical empty-index shape, deterministic domain/stage ranking, stale time-sensitive exclusion, explicit context truncation, path-traversal fail-closed behavior, and post-routing flow immutability.
+
+Knowledge retrieval benchmark scope is explicitly:
+
+```text
+deterministic_metadata_retrieval_not_product_or_runtime_evidence
+```
 
 ## Remaining architecture debt
 
 1. Provider convergence has a controlled opt-in lane, but `legacy` remains default pending separate live-provider/governance evidence.
 2. Lifecycle convergence is complete at the **read-only reconciliation/projection/parity layer**. No mutable shared lifecycle state machine has been introduced; any mutation-level unification requires a separate architecture decision.
-3. Knowledge OS architecture/ownership is defined, but deterministic bounded retrieval, freshness enforcement, corpus validation and retrieval benchmarking are not implemented yet.
-4. Real reusable knowledge content has not been authored or validated; A50.1 intentionally avoids inventing a corpus.
+3. Knowledge retrieval infrastructure exists, but the canonical knowledge index intentionally has no real records yet.
+4. Retrieval usefulness, duplication risk and domain/stage fit have not yet been dogfooded against a human-curated corpus on materially different real projects.
+5. Time-sensitive freshness is age-based only; current external factual claims still require appropriate source verification.
 
 ## Source-of-truth priority
 
@@ -141,4 +151,4 @@ When documents disagree:
 
 ## Next architecture task
 
-Proceed to **A50.2 — Bounded Knowledge Retrieval + Index** only after A50.1 is green and merged. Implement deterministic metadata-first retrieval after canonical task/flow context is known, with explicit freshness/context budgets and retrieval provenance. Keep knowledge advisory-only and do not introduce vector search until deterministic retrieval has regression coverage and real-project dogfood evidence.
+Proceed to **A50.3 — Curated Seed Knowledge + Real-Project Retrieval Dogfood** only after A50.2 is green and merged. Add a deliberately small, traceable corpus and measure whether retrieval materially improves context on Nova, Lumen and CENNEXT without duplicating existing skill methodology. Keep vector search deferred until deterministic retrieval usefulness is proven.

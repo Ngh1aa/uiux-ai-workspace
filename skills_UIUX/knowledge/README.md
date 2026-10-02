@@ -1,8 +1,8 @@
 # UIUX Knowledge OS — Declarative Ownership
 
-Status: **A50.1 architecture contract**
+Status: **A50.2 bounded deterministic retrieval implemented**
 
-`skills_UIUX/knowledge/` is the canonical home for reusable declarative product/design knowledge that should be retrieved as context but is **not** itself a skill, project memory, current-run evidence, runtime policy or release authority.
+`skills_UIUX/knowledge/` is the canonical home for reusable declarative product/design knowledge that may be retrieved as context but is **not** itself a skill, project memory, current-run evidence, runtime policy or release authority.
 
 ## Boundary: skill vs knowledge vs memory vs evidence
 
@@ -25,11 +25,25 @@ EVIDENCE
 = canonical owners: core/runtime/flow_os/evidence.py + core/provenance/ + uiux-factory/qa/
 ```
 
-A knowledge record must never be promoted directly into trusted current-run evidence merely because it is curated or high-confidence.
+A knowledge record must never be promoted directly into trusted current-run evidence merely because it is curated, retrieved or high-confidence.
+
+## Directory contract
+
+```text
+skills_UIUX/knowledge/
+├── README.md
+├── index.json              # canonical metadata index
+├── records/                # future KnowledgeRecord JSON metadata
+└── content/                # future focused reusable knowledge content
+```
+
+`index.json` conforms to `skills_UIUX/schemas/knowledge-index.schema.json` and contains only relative paths to record metadata. The current canonical index is intentionally empty until knowledge content is actually curated.
+
+Each metadata record conforms to `skills_UIUX/schemas/knowledge-record.schema.json`. `content_ref` must resolve to content inside `skills_UIUX/knowledge/`; traversal outside this root fails closed.
 
 ## Taxonomy
 
-A50.1 reserves seven top-level knowledge categories:
+Seven top-level knowledge categories are reserved:
 
 ```text
 foundations
@@ -51,17 +65,11 @@ Suggested topic families:
 - `pattern`: onboarding, checkout, dashboard, search, forms, empty/error states, progressive disclosure.
 - `platform`: web, mobile, desktop and platform-specific interaction constraints.
 
-Taxonomy is metadata for retrieval. It must not hard-code flow/stage order or duplicate skill routing rules.
+Taxonomy is retrieval metadata. It must not hard-code flow/stage order or duplicate skill routing rules.
 
 ## Canonical metadata contract
 
-Knowledge records must conform to:
-
-```text
-skills_UIUX/schemas/knowledge-record.schema.json
-```
-
-Required metadata includes:
+Required record metadata includes:
 
 ```text
 id
@@ -86,12 +94,6 @@ release_effect = none
 
 Optional applicability metadata includes domains, stages and tags.
 
-## Content ownership
-
-A50.1 intentionally creates **no knowledge corpus yet**.
-
-Future knowledge content should be authored as focused references under this directory and indexed/retrieved just-in-time. Do not bulk-copy existing `SKILL.md` bodies into knowledge files. When a topic is already procedural methodology in a skill, knowledge should link/reference the skill where appropriate rather than fork its instructions.
-
 ## Source and freshness
 
 Every record requires provenance through `source_ref` and `source_kind`.
@@ -104,26 +106,55 @@ versioned
 time_sensitive
 ```
 
-`confidence` describes the curatorial confidence in the reusable reference; it is **not** evidence confidence and cannot satisfy a runtime gate.
+`confidence` describes curatorial confidence in the reusable reference; it is **not** evidence confidence and cannot satisfy a runtime gate.
 
-Time-sensitive knowledge must later be eligible for freshness filtering/revalidation before retrieval. A50.1 only defines the metadata; A50.2 will implement bounded retrieval policy.
+A50.2 applies a deterministic age gate to `time_sensitive` records using query `as_of` plus an explicit `time_sensitive_max_age_days` budget. This is only repository freshness filtering; it is **not** live web re-verification of the upstream source.
 
-## Retrieval boundary
+## Retrieval contract
 
-A50.1 does not implement retrieval.
+Canonical implementation:
 
-The future A50.2 retriever must:
+```text
+uiux-factory/core/brain_os/knowledge_retrieval.py
+uiux-factory/core/brain_os/adapters/knowledge_context.py
+```
 
-- run after canonical task/flow context is known;
-- retrieve only a bounded number of relevant knowledge records;
-- preserve record/source provenance;
-- respect stage/domain/context budgets;
-- never select a flow, activate an unrouted skill, change authority, satisfy a gate, create trusted evidence or authorize release;
-- fail safe when knowledge is stale, missing or ambiguous.
+Retrieval is:
 
-## No vector-database requirement
+- metadata-first and deterministic;
+- executed only after a canonical `FlowSelectionDecision` exists;
+- hard-filtered by category/domain/stage when those constraints are supplied;
+- ranked by explicit domain/stage/tag/term matches with confidence only as a deterministic tie-breaker;
+- bounded by record count, per-item characters and total context characters;
+- provenance-bearing through index hash, record path, source reference and full content SHA-256;
+- explicit about truncation and exclusions;
+- vector-free.
 
-A50.1 does not introduce a vector database. A deterministic metadata/index path should be proven first. Embeddings, if added later, may accelerate retrieval but must never become truth or override project/runtime evidence.
+Retrieval can never select/replan a flow, activate an unrouted skill, write project memory, change authority, satisfy a gate, create trusted evidence, finalize a worktree or authorize release.
+
+## Context budget defaults
+
+A50.2 defaults:
+
+```text
+record limit = 6
+hard record limit = 12
+max chars per item = 4,000
+max total chars = 12,000
+time-sensitive max age = 30 days
+```
+
+Callers may reduce or explicitly adjust budgets within the typed bounds. Retrieved content is truncated deterministically when a context budget requires it, and that truncation is surfaced in the result.
+
+## No vector database
+
+A50.2 intentionally uses no vector database or embeddings. Semantic acceleration remains deferred until deterministic retrieval has stable benchmark coverage plus useful real-project dogfood against a curated corpus.
+
+## Content ownership
+
+The canonical index is currently empty. A50.2 does **not** invent knowledge content merely to make retrieval appear populated.
+
+Future knowledge content should be authored as focused references under this directory. Do not bulk-copy existing `SKILL.md` bodies into knowledge files. When a topic is already procedural methodology in a skill, knowledge should link/reference the skill rather than fork its instructions.
 
 ## Governance
 

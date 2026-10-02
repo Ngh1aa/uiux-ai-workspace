@@ -47,8 +47,12 @@ def test_a50_architecture_preserves_owner_and_non_authority_boundaries() -> None
 
     assert isinstance(architecture, KnowledgeArchitecture)
     assert architecture.declarative_owner == "skills_UIUX/knowledge"
+    assert architecture.index_owner == "skills_UIUX/knowledge/index.json"
+    assert architecture.retrieval_owner == "core/brain_os/knowledge_retrieval.py"
+    assert architecture.context_adapter_owner == "core/brain_os/adapters/knowledge_context.py"
     assert architecture.methodology_owner == "skills_UIUX/<skill>/SKILL.md"
-    assert architecture.retrieval_implemented is False
+    assert architecture.retrieval_implemented is True
+    assert architecture.deterministic_metadata_first is True
     assert architecture.vector_database_required is False
     assert architecture.skill_body_duplication_allowed is False
     assert architecture.advisory_only is True
@@ -99,4 +103,5 @@ def test_a50_knowledge_rejects_memory_and_current_evidence_ownership(field: str,
 
 def test_a50_knowledge_directory_does_not_fork_skill_methodology() -> None:
     assert (KNOWLEDGE_ROOT / "README.md").is_file()
+    assert (KNOWLEDGE_ROOT / "index.json").is_file()
     assert not list(KNOWLEDGE_ROOT.rglob("SKILL.md"))
