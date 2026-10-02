@@ -10,6 +10,12 @@ from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 from core.orchestration.reference_intelligence import ReferenceIntelligencePlanner
 from core.orchestration.skill_governance import FlowReplanner, SkillGovernanceSnapshot
 from core.runtime.harness_runtime import HarnessInspiredRuntime
+from core.runtime.provider_lane import (
+    LEGACY_PROVIDER_LANE,
+    MANAGED_COMPAT_PROVIDER_LANE,
+    provider_lane_provenance,
+    resolve_factory_provider_lane,
+)
 from core.runtime.run_context import RunContext
 from core.team.intelligent_team_runner import IntelligentTeamRunner
 
@@ -41,6 +47,11 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
         path = Path(raw)
         payload = json.loads(path.read_text(encoding="utf-8"))
         payload["runtime"] = self.runtime.snapshot(context)
+        lane_raw = context.artifacts.get("provider_lane")
+        if lane_raw:
+            lane_path = Path(lane_raw)
+            if lane_path.is_file():
+                payload["provider_lane"] = json.loads(lane_path.read_text(encoding="utf-8"))
         path.write_text(
             json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
@@ -142,15 +153,44 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             self.runtime.require(context, "skills.compose")
 
             provider = None
+            lane_decision = None
             if engine == "ai":
-                from core.runtime.free_provider import FreeProvider
+                lane_decision = resolve_factory_provider_lane()
+                if lane_decision.lane == LEGACY_PROVIDER_LANE:
+                    from core.runtime.free_provider import FreeProvider
 
-                provider = FreeProvider.from_env(self.root)
+                    provider = FreeProvider.from_env(self.root)
+                elif lane_decision.lane == MANAGED_COMPAT_PROVIDER_LANE:
+                    from core.runtime.flow_os.factory_provider_adapter import (
+                        ManagedArtifactCompletionAdapter,
+                    )
+
+                    provider = ManagedArtifactCompletionAdapter.from_env(self.root)
+                else:  # defensive; resolver already fails closed on unknown values
+                    raise RuntimeError(f"Unsupported provider lane: {lane_decision.lane}")
+
                 self.team_runner.set_provider(provider)
+                lane_payload = provider_lane_provenance(lane_decision)
+                lane_path = self._write(
+                    context,
+                    "provider_lane",
+                    "provider-lane.json",
+                    json.dumps(lane_payload, indent=2, ensure_ascii=False) + "\n",
+                )
+                context.event_bus().emit(
+                    "provider.lane_selected",
+                    data={
+                        "lane": lane_decision.lane,
+                        "explicit_opt_in": lane_decision.explicit_opt_in,
+                        "artifact": str(lane_path),
+                    },
+                )
 
             print(f"\n[DevelopmentManager] Run ID: {context.run_id}")
             print(f"[DevelopmentManager] Goal received: {goal}")
             print(f"[DevelopmentManager] Engine: {engine}")
+            if lane_decision is not None:
+                print(f"[DevelopmentManager] Provider lane: {lane_decision.lane}")
             print(f"[DevelopmentManager] Runtime preset: {context.runtime_preset}")
             self.print_flow()
 
