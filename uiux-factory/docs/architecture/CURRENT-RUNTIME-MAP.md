@@ -1,10 +1,11 @@
 # Current Runtime Map
 
-Status: **CURRENT THROUGH FLOW 5 / A55.1 / WORKSPACE UPGRADE CLOSED WITH INTENTIONAL HOLDS**  
+Status: **A55.1 CLOSED / POST-CLOSURE HARDENING CURRENT THROUGH P3 / WORKSPACE UPGRADE CLOSED WITH INTENTIONAL HOLDS**  
 Audit date: **2026-10-03**  
-Baseline before Flow 5 / A55.1: `main@7e75fc27780e4ded5fed59f51fdad893ad4f6ddf`
+Baseline before Flow 5 / A55.1: `main@7e75fc27780e4ded5fed59f51fdad893ad4f6ddf`  
+Post-closure hardening baseline before P3: `main@4f8cf53b03164140561cd0c08ef3ce42158bad27`
 
-This map describes current executable ownership, explicit holds and the completed bounded upgrade-closure boundary. Historical A-series plans remain audit history; current source/tests and exact-head CI evidence are authoritative.
+This map describes current executable ownership, explicit holds, the completed bounded upgrade-closure boundary, and post-closure productization/reliability hardening. Historical A-series plans remain audit history; current source/tests and exact-head CI evidence are authoritative.
 
 ## 1. Product entry and shared Flow OS
 
@@ -428,7 +429,97 @@ compatibility_surface_removal
 
 They are not silently cleared by upgrade closure and must not be treated as permission for automatic mutation.
 
-## 15. Future convergence rules
+## 15. Post-closure Productization / Reliability Hardening
+
+Post-closure P0–P3 improve real-world use without reopening A50–A55 or granting new authority.
+
+### P0 — target-truth-aware routing
+
+Current external-task routing path:
+
+```text
+checked-out target repository
+→ TargetTruthProbe
+
+current task text
+→ GoalInterpreter
+
+TargetTruthProbe + GoalInterpreter
+→ truth-aware Task Contract
+→ explicit caller overrides
+→ final contract coherence
+→ FlowPlanner
+```
+
+Canonical owners:
+
+```text
+core/runtime/flow_os/target_truth.py
+core/runtime/flow_os/external_task.py
+skills_UIUX/scripts/github-external-agent-runner.py
+skills_UIUX/scripts/prepare-external-task.py
+```
+
+Routing precedence is:
+
+```text
+explicit caller override
+> structured target-project truth
+> natural-language goal inference
+```
+
+Target truth is bounded to routing metadata only:
+
+```text
+website_type
+domain
+product_archetype
+validation_lane
+mode
+risk
+features
+```
+
+It cannot grant provider/model selection, gate/evidence verdicts, merge/deploy permission, release authorization or any other authority. Target-truth provenance records authority/evidence/release effects as `none`.
+
+Structured project truth is read from `.uiux-profile.json` and project-context files before fallback metadata. README/package metadata remains fallback-only and cannot overwrite a stronger specific task identity.
+
+### P1 — protected-main server-side governance
+
+GitHub repository ruleset `Protect main` is active for the default branch. Normal changes to `main` require a pull request plus exact-head GitHub Actions checks:
+
+```text
+foundation
+release-candidate
+```
+
+The ruleset requires the branch to be up to date and blocks deletion/non-fast-forward force pushes. Routine bypass actors are not part of the normal owner/developer path. This is server-side repository governance, not runtime authority.
+
+### P2 — public presentation/evidence hygiene
+
+Public guidance uses `scenario-based expert walkthroughs` / `simulated usage scenarios` rather than synthetic-user framing that could be mistaken for participant research. Superseded planning material lives under `docs/history/`; the root README exposes current architecture/evidence boundaries without claiming that CI proves visual quality, human preference, product impact or release readiness.
+
+### P3 — target-truth size reliability + truth sync
+
+`TargetTruthProbe` now detects source overflow by reading at most `MAX_SOURCE_CHARS + 1` characters:
+
+```text
+.uiux-profile.json oversized
+→ fail closed with explicit size-limit error
+→ never truncate structured JSON and misreport it as malformed
+
+package.json oversized fallback
+→ ignore with explicit oversized-fallback diagnostic
+
+README / project-context unstructured text
+→ bounded truncation remains allowed
+```
+
+Malformed in-limit `.uiux-profile.json` still fails closed as malformed. Symlink escape protection, routing precedence and all non-authority boundaries remain unchanged.
+
+P0–P3 do not clear or weaken any of the five A55 intentional holds.
+
+## 16. Future convergence rules
 
 Future work must preserve:
 
