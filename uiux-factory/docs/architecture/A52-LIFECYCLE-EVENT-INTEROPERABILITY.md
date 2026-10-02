@@ -1,6 +1,6 @@
 # A52.2 — Lifecycle Event Interoperability Contract
 
-Status: **IMPLEMENTED / VERIFICATION PENDING**  
+Status: **IMPLEMENTED / VERIFIED**  
 Date: **2026-10-02**  
 Depends on: A52.1 Lifecycle Mutation Convergence Readiness
 
@@ -231,6 +231,21 @@ A52.2 does not:
 - deploy production;
 - open mutation-level convergence governance.
 
+## Verification
+
+Executable verification immediately before the final documentation-only status commit established:
+
+```text
+UIUX Factory CI #1649 = SUCCESS
+A20 UIUX Factory v1 Release Candidate #186 = SUCCESS
+A52.2 interoperability corpus = 8/8 PASS
+source_inputs_unchanged = true
+authority_boundaries_clear = true
+pytest = 631 passed / 50 skipped
+```
+
+The final documentation-only head must independently rerun the same mandatory CI/A20 gates before merge. No executable lifecycle or authority code is changed by this status update.
+
 ## Acceptance criteria
 
 - [x] one observation receipt schema covers both lifecycle surfaces;
@@ -242,9 +257,9 @@ A52.2 does not:
 - [x] stage-run lineage rewrite fails closed;
 - [x] deterministic corpus + validator + tests exist;
 - [x] active UIUX Factory CI invokes A52.2 validation;
-- [ ] final PR head passes UIUX Factory CI;
-- [ ] final PR head passes A20 regression/security/dogfood;
-- [ ] PR is mergeable.
+- [x] executable PR head passes UIUX Factory CI;
+- [x] executable PR head passes A20 regression/security/dogfood;
+- [x] PR is mergeable before final documentation-only verification.
 
 ## Handoff
 
