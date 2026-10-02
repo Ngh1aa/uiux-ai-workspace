@@ -10,6 +10,7 @@ from core.benchmarks.knowledge_value_trial import evaluate_knowledge_value_trial
 
 
 ROOT = Path(__file__).resolve().parents[1]
+WORKSPACE = ROOT.parent
 BENCHMARKS = ROOT / "benchmarks"
 DIMENSIONS = (
     "correctness",
@@ -143,6 +144,30 @@ def test_a50_5r_revised_outputs_cover_human_review_gaps() -> None:
         "efficiency-gain",
     ):
         assert concept in cennext
+
+
+def test_a50_5r_canonical_knowledge_files_include_revision_targets() -> None:
+    financial = (
+        WORKSPACE / "skills_UIUX/knowledge/content/financial-currency-locale-formatting.md"
+    ).read_text(encoding="utf-8").lower()
+    for concept in (
+        "shared amount-formatting boundary",
+        "explicit project fallback",
+        "qa matrix",
+        "same-symbol currency ambiguity",
+    ):
+        assert concept in financial
+
+    industrial = (
+        WORKSPACE / "skills_UIUX/knowledge/content/industrial-motor-system-claims-doe.md"
+    ).read_text(encoding="utf-8").lower()
+    for concept in (
+        "buyer-facing sequence",
+        "proof modules",
+        "customer approval",
+        "repair-versus-replace",
+    ):
+        assert concept in industrial
 
 
 def test_a50_5r_pending_review_rejects_fabricated_human_fields(tmp_path: Path) -> None:
