@@ -79,6 +79,7 @@ def _canonical_website_type(value: object) -> str | None:
     for candidate, terms in GoalInterpreter.WEBSITE_TYPES:
         if _contains(text, tuple(term.lower() for term in terms)):
             return candidate
+    # Project templates often use broad type labels rather than Factory website-type names.
     aliases = {
         "web": "generic",
         "website": "generic",
@@ -114,6 +115,7 @@ def _canonical_product_archetype(value: object, *, domain_hint: object = None) -
     for candidate, terms in GoalInterpreter.FINANCIAL_ARCHETYPES:
         if _contains(combined, tuple(term.lower() for term in terms)):
             return candidate
+    # Common project-profile vocabulary can be more specific than the canonical financial archetype.
     if ("consumer" in combined or "personal" in combined) and ("bank" in combined or "banking" in combined):
         return "consumer-banking"
     if raw_slug:
@@ -345,6 +347,7 @@ class TargetTruthProbe:
                 raw_doc=payload,
             )
 
+        # A specific project profile may encode archetype semantics inside `domain` only.
         if "product_archetype" not in fields and not _is_unknown(payload.get("domain")):
             derived = _canonical_product_archetype(None, domain_hint=payload.get("domain"))
             if derived:
