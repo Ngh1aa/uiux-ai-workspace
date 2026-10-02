@@ -55,7 +55,7 @@ jobs:
         working-directory: uiux-factory
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements-dev.txt
+          python -m pip install "pydantic>=2.5.3,<3" "python-dotenv>=1,<2" -r requirements-dev.txt
 
       - name: Run A14 focused regressions
         working-directory: uiux-factory
@@ -113,7 +113,7 @@ jobs:
         working-directory: uiux-factory
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements-dev.txt
+          python -m pip install "pydantic>=2.5.3,<3" "python-dotenv>=1,<2" -r requirements-dev.txt
 
       - name: Validate pinned golden project
         working-directory: uiux-factory
@@ -183,7 +183,7 @@ jobs:
         working-directory: uiux-factory
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements-dev.txt
+          python -m pip install "pydantic>=2.5.3,<3" "python-dotenv>=1,<2" -r requirements-dev.txt
 
       - name: Validate current-head canary
         working-directory: uiux-factory
