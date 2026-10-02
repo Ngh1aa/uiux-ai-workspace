@@ -88,6 +88,7 @@ jobs:
           python scripts/validate_knowledge_value_trial.py
           python scripts/validate_knowledge_ev_canonical_apply.py
           python scripts/validate_knowledge_edtech_canonical_promotion_proposal.py
+          python scripts/validate_knowledge_edtech_canonical_promotion_shadow.py
       # A50.4-A50.10B topology-bound validators remain in the repository as
       # immutable pre-promotion governance evidence. They are intentionally not
       # re-evaluated against the A50.10C four-record canonical topology.
