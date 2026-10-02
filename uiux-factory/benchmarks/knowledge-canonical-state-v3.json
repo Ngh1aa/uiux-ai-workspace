@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "state_id": "knowledge-canonical-state-v3",
+  "version": "3.0.0",
+  "checked_on": "2026-10-02",
+  "phase": "A50.13",
+  "scope": "post_edtech_promotion_canonical_truth",
+  "expected_records": [
+    {"ref":"records/financial-currency-locale-formatting.json","id":"knowledge.domain.financial-currency-locale-formatting.v1","domain":"financial-services"},
+    {"ref":"records/cultural-object-metadata-rights-iiif.json","id":"knowledge.domain.cultural-object-metadata-rights-iiif.v1","domain":"art-culture"},
+    {"ref":"records/industrial-motor-system-claims-doe.json","id":"knowledge.domain.industrial-motor-system-claims-doe.v1","domain":"industrial-services"},
+    {"ref":"records/ev-charging-ocpp-transaction-semantics.json","id":"knowledge.domain.ev-charging-ocpp-transaction-semantics.v1","domain":"mobility-ev"},
+    {"ref":"records/edtech-lti-context-roles-services-v2.json","id":"knowledge.domain.edtech-lti-context-roles-services.v2","domain":"education-edtech"}
+  ],
+  "promoted_record": {
+    "id": "knowledge.domain.edtech-lti-context-roles-services.v2",
+    "canonical_record_path": "skills_UIUX/knowledge/records/edtech-lti-context-roles-services-v2.json",
+    "canonical_content_path": "skills_UIUX/knowledge/content/edtech-lti-context-roles-services-v2.md",
+    "revision_record_path": "skills_UIUX/knowledge/revisions/records/edtech-lti-context-roles-services-v2.json",
+    "revision_content_path": "skills_UIUX/knowledge/revisions/content/edtech-lti-context-roles-services-v2.md",
+    "source_version": "LTI-1.3-current-with-LTI-Advantage-services-revision-2",
+    "source_freshness_checked_on": "2026-10-02"
+  },
+  "active_regression_cases": [
+    {"id":"nova-financial","domain":"financial-services","stage":"implementation","terms":["currency","locale","formatting"],"expected_record_id":"knowledge.domain.financial-currency-locale-formatting.v1"},
+    {"id":"lumen-art-culture","domain":"art-culture","stage":"research","terms":["iiif","metadata","rights"],"expected_record_id":"knowledge.domain.cultural-object-metadata-rights-iiif.v1"},
+    {"id":"cennext-industrial","domain":"industrial-services","stage":"research","terms":["motor","repair","claims"],"expected_record_id":"knowledge.domain.industrial-motor-system-claims-doe.v1"},
+    {"id":"ev-ocpp","domain":"mobility-ev","stage":"design","terms":["ocpp","transaction","charging station","csms","bidirectional"],"expected_record_id":"knowledge.domain.ev-charging-ocpp-transaction-semantics.v1"},
+    {"id":"edtech-lti","domain":"education-edtech","stage":"design","terms":["lti","nrps","ags","deep linking","recovery"],"expected_record_id":"knowledge.domain.edtech-lti-context-roles-services.v2"}
+  ],
+  "negative_isolation_domains": ["ai-software"],
+  "historical_pre_edtech_promotion_test_modules": [
+    "test_knowledge_edtech_canonical_promotion_proposal_a50.py",
+    "test_knowledge_edtech_canonical_promotion_shadow_a50.py"
+  ],
+  "historical_pre_edtech_promotion_validators": [
+    "validate_knowledge_edtech_canonical_promotion_proposal.py",
+    "validate_knowledge_edtech_canonical_promotion_shadow.py"
+  ],
+  "governance": {
+    "canonical_record_count": 5,
+    "vector_search_change_allowed": false,
+    "product_evidence": false,
+    "genai_candidate_status": "HOLD_FRESHNESS_REVIEW",
+    "final_owner_review_status": "DEFERRED_UNTIL_UPGRADE_COMPLETE"
+  },
+  "rollback": {
+    "restore_index_refs": [
+      "records/financial-currency-locale-formatting.json",
+      "records/cultural-object-metadata-rights-iiif.json",
+      "records/industrial-motor-system-claims-doe.json",
+      "records/ev-charging-ocpp-transaction-semantics.json"
+    ],
+    "remove_only": [
+      "skills_UIUX/knowledge/records/edtech-lti-context-roles-services-v2.json",
+      "skills_UIUX/knowledge/content/edtech-lti-context-roles-services-v2.md"
+    ],
+    "preserve_revision_history": true,
+    "preserve_governance_history": true,
+    "preserve_ev_canonical_record": true
+  }
+}

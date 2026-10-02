@@ -86,11 +86,9 @@ jobs:
           python scripts/validate_knowledge_retrieval_benchmark.py
           python scripts/validate_knowledge_project_dogfood.py
           python scripts/validate_knowledge_value_trial.py
-          python scripts/validate_knowledge_ev_canonical_apply.py
-          python scripts/validate_knowledge_edtech_canonical_promotion_proposal.py
-          python scripts/validate_knowledge_edtech_canonical_promotion_shadow.py
-      # A50.4-A50.10B topology-bound validators remain in the repository as
-      # immutable pre-promotion governance evidence. They are intentionally not
-      # re-evaluated against the A50.10C four-record canonical topology.
+          python scripts/validate_knowledge_edtech_canonical_apply.py
+      # Pre-promotion A50 validators remain in the repository as immutable
+      # governance evidence. Active CI validates the latest five-record
+      # post-EdTech canonical topology instead of replaying stale 3/4-record gates.
       - name: Run foundation tests
         run: python -m pytest -q tests
