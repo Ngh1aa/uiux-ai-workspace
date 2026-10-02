@@ -56,6 +56,8 @@ core/runtime/flow_os/provider_compat.py       bounded compatibility adapter surf
 
 A48 established explicit provider capability reconciliation, artifact bridging, parity dogfood and a controlled opt-in compatibility lane.
 
+Historical A48 used the phrase **different provider entry/capability contracts** to name the pre-convergence mismatch between the Factory legacy entry and the managed/provider-neutral surface. That phrase is retained as regression vocabulary; the current state is the controlled compatibility lane described below, not an unresolved duplicate-provider architecture.
+
 Current rule:
 
 ```text
@@ -123,7 +125,20 @@ provenance-aware scorecard
 deterministic Knowledge OS retrieval
 ```
 
-Brain OS is not a third execution runtime.
+Canonical implementation anchors retained for A48 architecture-regression coverage:
+
+```text
+core/brain_os/contracts.py
+core/brain_os/reasoning/evidence_graph.py
+core/brain_os/critics/
+core/brain_os/repair_orchestrator.py
+core/brain_os/memory_contracts.py
+core/memory/brain_memory.py
+core/brain_os/adapters/memory_context.py
+core/brain_os/scorecard.py
+```
+
+These anchors describe implemented owners, not additional runtimes. Brain OS is not a third execution runtime.
 
 ## 8. Memory
 
