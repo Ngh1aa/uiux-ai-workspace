@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "proposal_id": "knowledge-ev-canonical-promotion-proposal-v1",
+  "version": "1.0.0",
+  "checked_on": "2026-10-02",
+  "scope": "governance_review_only_no_index_mutation",
+  "candidate": {
+    "candidate_id": "a50-6-ev-ocpp",
+    "record_id": "knowledge.domain.ev-charging-ocpp-transaction-semantics.v1",
+    "source_record_path": "skills_UIUX/knowledge/drafts/records/ev-charging-ocpp-transaction-semantics.json",
+    "source_content_path": "skills_UIUX/knowledge/drafts/content/ev-charging-ocpp-transaction-semantics.md",
+    "proposed_record_path": "skills_UIUX/knowledge/records/ev-charging-ocpp-transaction-semantics.json",
+    "proposed_content_path": "skills_UIUX/knowledge/content/ev-charging-ocpp-transaction-semantics.md",
+    "proposed_index_ref": "records/ev-charging-ocpp-transaction-semantics.json",
+    "domain": "mobility-ev"
+  },
+  "required_preconditions": {
+    "canary_decision": "CANARY_PASS",
+    "promotion_proposal_allowed": true,
+    "canonical_index_expected_count": 3,
+    "candidate_must_be_unindexed": true,
+    "genai_candidate_status": "HOLD_FRESHNESS_REVIEW"
+  },
+  "required_execution_controls": [
+    "explicit_human_governance_approval",
+    "fresh_source_version_recheck",
+    "copy_content_to_canonical_namespace",
+    "rewrite_record_content_ref_to_canonical_path",
+    "validate_record_contract_before_index_change",
+    "add_exactly_one_canonical_index_ref",
+    "rerun_retrieval_cross_domain_regression",
+    "verify_context_budget",
+    "verify_rollback_plan",
+    "preserve_vector_search_disabled"
+  ],
+  "governance": {
+    "allowed_review_verdicts": ["APPROVE_PROMOTION_TASK", "REVISE_PROPOSAL", "HOLD", "REJECT"],
+    "index_mutation_in_this_proposal": false,
+    "canonical_promotion_in_this_proposal": false,
+    "auto_promotion_allowed": false,
+    "promotion_execution_requires_separate_task": true,
+    "vector_search_change_allowed": false,
+    "product_evidence": false
+  }
+}

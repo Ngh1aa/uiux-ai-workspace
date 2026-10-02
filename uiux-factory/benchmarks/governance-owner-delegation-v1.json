@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "delegation_id": "governance-owner-delegation-2026-10-02",
+  "owner_login": "Haign12",
+  "authorized_on": "2026-10-02",
+  "authorization_source": "explicit owner instruction through the connected ChatGPT session",
+  "scope": [
+    "A50 Knowledge OS continuation",
+    "subsequent uiux-ai-workspace upgrade tasks"
+  ],
+  "mode": "preauthorized_continuation_after_required_gates_pass",
+  "permissions": {
+    "continue_to_next_task_when_required_checks_pass": true,
+    "create_follow_up_implementation_tasks": true,
+    "prepare_pull_requests": true,
+    "record_model_or_owner_delegation_recommendations": true,
+    "bypass_failed_or_missing_checks": false,
+    "fabricate_independent_human_review": false,
+    "rewrite_protected_history": false,
+    "change_secrets_or_repository_permissions": false
+  },
+  "governance_boundaries": {
+    "independent_human_ledgers_remain_truthful": true,
+    "phase_specific_no_mutation_boundaries_remain_enforced": true,
+    "each_step_requires_auditable_evidence": true,
+    "final_retrospective_owner_review_required": true
+  },
+  "final_review": {
+    "status": "DEFERRED_UNTIL_UPGRADE_COMPLETE",
+    "reviewer": "Haign12"
+  }
+}
