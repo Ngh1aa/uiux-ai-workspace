@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "trial_id": "knowledge-edtech-revision-trial-v1",
+  "review_version": "1.0.0",
+  "review_status": "PENDING",
+  "review_policy": {
+    "reviewer_type": "independent_human",
+    "blind_first": true,
+    "allowed_preferences": ["A", "B", "TIE", "INSUFFICIENT"],
+    "score_scale": [0, 1, 2],
+    "dimensions": [
+      "correctness",
+      "specificity_actionability",
+      "relevance_noise",
+      "unsupported_claim_risk",
+      "decision_usefulness"
+    ]
+  },
+  "case": {
+    "id": "edtech-lti-integration-boundaries-revision-v2",
+    "status": "PENDING",
+    "preferred_output": null,
+    "scores": null,
+    "rationale": null,
+    "material_regression": null,
+    "reviewer": null,
+    "reviewed_at": null
+  }
+}
