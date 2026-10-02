@@ -12,7 +12,7 @@ For financial-product interfaces, treat an amount as at least:
 numeric value + currency + locale/display context
 ```
 
-Do not encode assumptions such as “comma always means thousands”, “period always means decimals”, “currency symbol always precedes the amount”, or “$ is unambiguous”. Use locale/currency-aware formatting data or APIs.
+Do not encode assumptions such as “comma always means thousands”, “period always means decimals”, “currency symbol always precedes the amount”, or “$ is unambiguous”. Use locale/currency-aware formatting data or APIs. Multi-currency interfaces need the currency identity carried explicitly with the value rather than inferred from punctuation or a symbol alone.
 
 ## Product application guidance
 
