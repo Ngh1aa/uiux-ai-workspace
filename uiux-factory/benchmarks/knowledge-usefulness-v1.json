@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "knowledge-usefulness-v1",
+  "version": "1.0.0",
+  "scope": "deterministic_context_usefulness_proxy_not_model_reasoning_or_product_evidence",
+  "cases": [
+    {
+      "id": "nova-financial-context-delta",
+      "repository": "https://github.com/Ngh1aa/Nova",
+      "domain": "financial-services",
+      "stage": "implementation",
+      "terms": ["currency", "amount", "money", "multi-currency"],
+      "record_id": "knowledge.domain.financial-currency-locale-formatting.v1",
+      "required_actionable_concepts": [
+        "locale",
+        "currency",
+        "decimal",
+        "grouping",
+        "negative",
+        "multi-currency"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/financial-product-intelligence/SKILL.md"
+      ],
+      "expected_decision": "KEEP"
+    },
+    {
+      "id": "lumen-cultural-context-delta",
+      "repository": "https://github.com/Ngh1aa/Lumen",
+      "domain": "art-culture",
+      "stage": "research",
+      "terms": ["museum", "metadata", "rights", "artwork"],
+      "record_id": "knowledge.domain.cultural-object-metadata-rights-iiif.v1",
+      "required_actionable_concepts": [
+        "metadata",
+        "requiredstatement",
+        "rights",
+        "provider",
+        "attribution"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/asset-media-and-art-direction/SKILL.md"
+      ],
+      "expected_decision": "KEEP"
+    },
+    {
+      "id": "cennext-industrial-context-delta",
+      "repository": "https://github.com/Ngh1aa/cennext-b2b-prototype",
+      "domain": "industrial-services",
+      "stage": "research",
+      "terms": ["motor", "repair", "efficiency", "technical claims"],
+      "record_id": "knowledge.domain.industrial-motor-system-claims-doe.v1",
+      "required_actionable_concepts": [
+        "motor-system",
+        "repair",
+        "efficiency",
+        "system performance",
+        "repair-versus-replace"
+      ],
+      "related_skill_paths": [
+        "skills_UIUX/trust-credibility-and-transparency/SKILL.md",
+        "skills_UIUX/website-audit-and-redesign/SKILL.md"
+      ],
+      "expected_decision": "KEEP"
+    }
+  ],
+  "governance": {
+    "allowed_decisions": ["KEEP", "REVISE", "REMOVE"],
+    "expand_allowed": false,
+    "expand_blocker": "A50.4 deterministic checks can prove context fit and duplication/noise boundaries, but cannot prove model reasoning improvement or human usefulness. Corpus expansion requires a separate human/model-assisted usefulness trial."
+  }
+}
