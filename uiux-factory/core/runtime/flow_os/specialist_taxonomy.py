@@ -48,6 +48,37 @@ DOMAIN_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ),
 )
 
+# Generic words such as "payment" also occur in ordinary ecommerce checkout copy.
+# Keep financial ownership only when the task contains stronger financial-product context.
+STRONG_FINANCIAL_DOMAIN_HINTS: tuple[str, ...] = (
+    "fintech",
+    "financial",
+    "banking",
+    "settlement",
+    "payment rail",
+    "payment rails",
+    "multi-rail",
+    "payment orchestration",
+    "treasury",
+    "ledger",
+    "payout",
+    "remittance",
+    "cross-border",
+    "money movement",
+    "mto",
+    "psp",
+    "kyc",
+    "aml",
+    "sanctions",
+    "reconciliation",
+    "subledger",
+    "wealth",
+    "brokerage",
+    "investment",
+    "card issuing",
+    "acquiring",
+)
+
 
 ARCHETYPE_HINTS: dict[str, tuple[tuple[str, tuple[str, ...]], ...]] = {
     "education-edtech": (
@@ -168,15 +199,27 @@ def infer_specialist_context(
 ) -> tuple[str, str, list[str]]:
     """Enrich canonical task context without depending on flow or skill routing.
 
-    Existing explicit/canonical classifications always win. This function only
-    fills generic gaps so every runtime consumer sees the same domain/archetype
-    before flow selection and specialist composition.
+    Existing explicit/canonical classifications normally win. The only arbitration
+    performed here is a bounded ambiguity correction: ordinary ecommerce checkout
+    language may contain the generic word "payment", which must not by itself turn a
+    commerce task into financial services when stronger financial-product evidence is absent.
     """
 
     text = _normalise(goal)
     resolved_domain = str(domain or "generic")
     resolved_archetype = str(product_archetype or "generic")
     evidence: list[str] = []
+
+    commerce_terms = dict(DOMAIN_HINTS)["commerce-retail"]
+    if (
+        resolved_domain == "financial-services"
+        and _contains(text, commerce_terms)
+        and not _contains(text, STRONG_FINANCIAL_DOMAIN_HINTS)
+    ):
+        resolved_domain = "commerce-retail"
+        resolved_archetype = "generic"
+        evidence.append("domain:commerce-retail")
+        evidence.append("domain_disambiguation:generic-payment->commerce-retail")
 
     if resolved_domain == "generic":
         for candidate, terms in DOMAIN_HINTS:
