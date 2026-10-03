@@ -87,6 +87,16 @@
       }
     },
     {
+      "id": "education-learning-platform",
+      "when": {"domain": "education-edtech", "product_archetype": "learning-platform"},
+      "skills_by_stage": {
+        "research": ["product-discovery", "complex-workflow-and-progress-ux", "information-architecture"],
+        "design": ["complex-workflow-and-progress-ux", "interaction-patterns-and-form-ux", "accessibility"],
+        "implementation": ["complex-workflow-and-progress-ux", "state-feedback-and-error-recovery", "accessibility"],
+        "qa": ["complex-workflow-and-progress-ux", "state-feedback-and-error-recovery", "accessibility"]
+      }
+    },
+    {
       "id": "industrial-b2b",
       "when": {"domain": "industrial-services"},
       "skills_by_stage": {
@@ -94,6 +104,16 @@
         "design": ["corporate-website", "trust-credibility-and-transparency"],
         "implementation": ["corporate-website"],
         "qa": ["corporate-website", "trust-credibility-and-transparency"]
+      }
+    },
+    {
+      "id": "industrial-enterprise-service",
+      "when": {"domain": "industrial-services", "product_archetype": "enterprise-service"},
+      "skills_by_stage": {
+        "research": ["service-experience-to-digital-journey", "audience-intent-and-top-tasks", "trust-credibility-and-transparency"],
+        "design": ["service-experience-to-digital-journey", "conversion-and-content", "interaction-patterns-and-form-ux"],
+        "implementation": ["complex-forms-and-wizards", "state-feedback-and-error-recovery"],
+        "qa": ["service-experience-to-digital-journey", "state-feedback-and-error-recovery", "accessibility"]
       }
     },
     {
@@ -107,6 +127,16 @@
       }
     },
     {
+      "id": "art-visual-discovery-museum",
+      "when": {"domain": "art-culture", "product_archetype": "visual-discovery-museum"},
+      "skills_by_stage": {
+        "research": ["design-reference-research-and-benchmark", "site-search-and-findability", "asset-media-and-art-direction"],
+        "design": ["experience-principles-and-signature-moments", "asset-media-and-art-direction", "motion-and-microinteractions"],
+        "implementation": ["media-crop-and-layout-integrity", "site-search-and-findability"],
+        "qa": ["prototype-visual-experience-qa", "media-crop-and-layout-integrity", "accessibility"]
+      }
+    },
+    {
       "id": "ecommerce",
       "when": {"website_type": "ecommerce"},
       "skills_by_stage": {
@@ -114,6 +144,16 @@
         "design": ["ecommerce-website", "conversion-and-content", "interaction-patterns-and-form-ux"],
         "implementation": ["ecommerce-website", "state-feedback-and-error-recovery"],
         "qa": ["ecommerce-website", "conversion-and-content", "state-feedback-and-error-recovery"]
+      }
+    },
+    {
+      "id": "ecommerce-storefront",
+      "when": {"website_type": "ecommerce", "product_archetype": "commerce-storefront"},
+      "skills_by_stage": {
+        "research": ["site-search-and-findability", "conversion-and-content", "asset-media-and-art-direction"],
+        "design": ["journey-driven-content-and-layout", "interaction-patterns-and-form-ux", "asset-media-and-art-direction"],
+        "implementation": ["state-feedback-and-error-recovery", "media-crop-and-layout-integrity", "site-search-and-findability"],
+        "qa": ["state-feedback-and-error-recovery", "media-crop-and-layout-integrity", "accessibility"]
       }
     },
     {
