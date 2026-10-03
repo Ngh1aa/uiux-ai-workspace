@@ -40,7 +40,7 @@ For public repositories, the observer may retry the read-only GitHub endpoint wi
 
 ## Registry semantics
 
-Freshness requirements are provider-specific, not a global OR. Nova, CENNEXT and LuxRoom require Vercel through `repository-static` evidence and GitHub Pages through `external-observed` evidence. Lumen requires both Vercel and GitHub Pages through repository-static evidence. External Vercel activity therefore does not substitute for a removed `vercel.json` marker.
+Freshness requirements are provider-specific, not a global OR. Nova, CENNEXT and LuxRoom require Vercel through `repository-static` evidence and GitHub Pages through `github-provider-native` evidence. Lumen requires both Vercel and GitHub Pages through repository-static evidence. External Vercel activity therefore does not substitute for a removed `vercel.json` marker.
 
 This does not broaden preview or release authority. `allowed_preview_providers`, mutation scope, merge authority, production deployment authority, and release authority remain unchanged.
 
@@ -58,6 +58,6 @@ Target repositories are never mutated by this monitor.
 
 ## Truth boundary
 
-A P1.7.5 PASS proves that, at scan time, static inspection plus GitHub deployment/status and Check Run visibility completed, recent provider-native evidence is compatible with the registry, no recent unclassified deployment evidence remains, and every registered provider satisfies its own declared freshness channel (`repository-static` or `external-observed`).
+A P1.7.5 PASS proves that, at scan time, static inspection plus GitHub deployment/status and Check Run visibility completed, recent provider-native evidence is compatible with the registry, no recent unclassified deployment evidence remains, and every registered provider satisfies its own declared freshness channel (`repository-static` or `github-provider-native`).
 
 It does not prove deployment health, visual correctness, production readiness, release approval, or the absence of an integration that leaves neither repository markers nor GitHub Deployment or provider Check Run evidence.
