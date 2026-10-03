@@ -21,7 +21,7 @@ The monitor is read-only against target repositories. It never creates target br
 
 P1.7.4 deliberately does **not** use registry declarations as detected evidence. Otherwise a provider removed from a repository could never be detected as removed.
 
-Current canonical repositories use the `repository-static` evidence channel:
+P1.7.4 inspects only the `repository-static` evidence channel:
 
 - Vercel: `vercel.json` or `.vercel/project.json`
 - Netlify: `netlify.toml`
@@ -30,6 +30,8 @@ Current canonical repositories use the `repository-static` evidence channel:
 - Railway: `railway.json` / `railway.toml`
 - Cloudflare: Wrangler config
 - Firebase Hosting: `firebase.json` containing a hosting block
+
+A provider whose canonical freshness rule is provider-native-only is outside P1.7.4's removal scope. P1.7.4 must not report that provider as removed merely because it does not inspect the external channel; P1.7.5 owns that evidence.
 
 The detector can discover providers that are not yet allowed. Discovery is evidence, not authority.
 
