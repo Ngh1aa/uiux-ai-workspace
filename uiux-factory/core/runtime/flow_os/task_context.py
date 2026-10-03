@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Iterable
 
 from core.runtime.flow_os.adaptive_surface import classify_change_surface
-from core.runtime.flow_os.specialist_taxonomy import infer_specialist_context
+from core.runtime.flow_os.specialist_taxonomy import assess_domain_ambiguity, infer_specialist_context
 
 
 TASK_CONTRACT_VERSION = "1.0"
@@ -93,6 +93,9 @@ class GoalInterpretation:
     authority: str = "unspecified"
     confidence: float = 0.0
     evidence: list[str] = field(default_factory=list)
+    routing_status: str = "resolved"
+    candidate_domains: list[str] = field(default_factory=list)
+    resolution_source: str = "canonical"
     delivery_policy: str = DEFAULT_DELIVERY_POLICY_ID
     delivery_lane: str = DEFAULT_FACTORY_DELIVERY_LANE
     task_contract_version: str = TASK_CONTRACT_VERSION
@@ -122,6 +125,9 @@ class GoalInterpretation:
             "inference": {
                 "confidence": payload["confidence"],
                 "evidence": payload["evidence"],
+                "routing_status": payload["routing_status"],
+                "candidate_domains": payload["candidate_domains"],
+                "resolution_source": payload["resolution_source"],
             },
         }
 
@@ -309,7 +315,20 @@ class GoalInterpreter:
             return "branch_write"
         return "unspecified"
 
-    def interpret(self, goal: str) -> GoalInterpretation:
+    def _archetype_for_domain(self, text: str, domain: str) -> str:
+        if domain == "financial-services":
+            for candidate, terms in self.FINANCIAL_ARCHETYPES:
+                if _contains(text, terms):
+                    return candidate
+            return "generic"
+        _, archetype, _ = infer_specialist_context(text, domain, "generic")
+        return archetype
+
+    def interpret(
+        self,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> GoalInterpretation:
         normalized = re.sub(r"\s+", " ", goal.strip().lower())
         evidence: list[str] = []
 
@@ -372,6 +391,54 @@ class GoalInterpreter:
             evidence = [item for item in evidence if not item.startswith("product_archetype:")]
         evidence.extend(item for item in specialist_evidence if item not in evidence)
 
+        ambiguity_status, ambiguity_candidates, ambiguity_evidence = assess_domain_ambiguity(normalized)
+        routing_status = "resolved"
+        candidate_domains: list[str] = []
+        resolution_source = "canonical"
+
+        if ambiguity_status == "ambiguous":
+            candidate_domains = list(ambiguity_candidates)
+            truth = dict(target_truth or {})
+            truth_domain = str(truth.get("domain", "")).strip()
+            truth_archetype = str(truth.get("product_archetype", "")).strip()
+            truth_source = str(truth.get("source", "target-project")).strip() or "target-project"
+
+            evidence = [
+                item
+                for item in evidence
+                if not item.startswith(("domain:", "product_archetype:", "secondary_domain:"))
+            ]
+            conflict_evidence = [
+                item
+                for item in ambiguity_evidence
+                if item.startswith("domain_conflict:")
+            ]
+            evidence.extend(item for item in conflict_evidence if item not in evidence)
+
+            if truth_domain and truth_domain in ambiguity_candidates:
+                domain = truth_domain
+                product_archetype = truth_archetype or self._archetype_for_domain(normalized, truth_domain)
+                routing_status = "resolved"
+                resolution_source = "target-project-truth"
+                evidence.append(f"domain:{domain}")
+                if product_archetype != "generic":
+                    evidence.append(f"product_archetype:{product_archetype}")
+                evidence.append(f"routing_status:resolved")
+                evidence.append(f"routing_resolution:target-truth->{domain}")
+                evidence.append(f"target_truth_source:{truth_source}")
+            else:
+                domain = "unresolved"
+                product_archetype = "unresolved"
+                routing_status = "ambiguous"
+                resolution_source = "needs-evidence"
+                evidence.extend(
+                    item
+                    for item in ambiguity_evidence
+                    if item not in evidence and not item.startswith("domain_conflict:")
+                )
+                if truth_domain:
+                    evidence.append(f"target_truth_mismatch:{truth_domain}")
+
         features: list[str] = []
         for feature, terms in self.FEATURE_TERMS:
             if _contains_token(normalized, terms):
@@ -406,6 +473,13 @@ class GoalInterpreter:
         evidence.append(f"delivery_policy:{DEFAULT_DELIVERY_POLICY_ID}")
         evidence.append(f"delivery_lane:{DEFAULT_FACTORY_DELIVERY_LANE}")
 
+        if routing_status == "ambiguous":
+            confidence = 0.35 if len(candidate_domains) >= 3 else 0.45
+        elif resolution_source == "target-project-truth":
+            confidence = 0.90
+        else:
+            confidence = 0.95 if website_type != "generic" or domain != "generic" else 0.65
+
         return GoalInterpretation(
             intent=intent,
             website_type=website_type,
@@ -421,6 +495,9 @@ class GoalInterpreter:
             forbidden=forbidden,
             references=references,
             authority=authority,
-            confidence=0.95 if website_type != "generic" or domain != "generic" else 0.65,
+            confidence=confidence,
             evidence=evidence,
+            routing_status=routing_status,
+            candidate_domains=candidate_domains,
+            resolution_source=resolution_source,
         )
