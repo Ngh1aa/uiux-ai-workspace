@@ -54,7 +54,7 @@ def test_p12_explicit_primary_semantics_own_mixed_domain_routing(case) -> None:
         assert set(required).issubset(stage_skills)
 
 
-def test_p12_word_order_does_not_change_primary_route() -> None:
+def test_p12_word_order_does_not_change_primary_route_or_feature_inference() -> None:
     pairs = defaultdict(list)
     for case in CASES:
         profile = GoalInterpreter().interpret(case.goal)
@@ -65,6 +65,7 @@ def test_p12_word_order_does_not_change_primary_route() -> None:
                 profile.product_archetype,
                 profile.change_surface,
                 flow.id,
+                tuple(sorted(profile.features)),
                 tuple(sorted(item for item in profile.evidence if item.startswith("secondary_domain:"))),
             )
         )
@@ -72,3 +73,20 @@ def test_p12_word_order_does_not_change_primary_route() -> None:
     for pair_id, outcomes in pairs.items():
         assert len(outcomes) == 2, pair_id
         assert outcomes[0] == outcomes[1], pair_id
+
+
+def test_p12_payment_orchestration_is_not_agentic_without_agent_language() -> None:
+    profile = GoalInterpreter().interpret(
+        "Build the whole product. Primary product is a fintech payment orchestration and treasury platform."
+    )
+    assert profile.domain == "financial-services"
+    assert profile.product_archetype == "payments-infrastructure"
+    assert "agentic-workflow" not in profile.features
+
+
+def test_p12_ai_copilot_is_agentic_even_inside_fintech() -> None:
+    profile = GoalInterpreter().interpret(
+        "Build the whole product. Primary product is a fintech treasury platform. An AI copilot is a supporting capability."
+    )
+    assert profile.domain == "financial-services"
+    assert "agentic-workflow" in profile.features
