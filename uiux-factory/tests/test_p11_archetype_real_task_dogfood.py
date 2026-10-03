@@ -60,6 +60,27 @@ def test_p11_real_task_goals_route_through_canonical_interpreter_and_planner(pro
                 assert stage.jit_skill_sources[skill] == "conditional"
 
 
+def test_p11_platform_token_does_not_create_fake_form_scope_or_feature() -> None:
+    case = PROJECTS["edtech"].cases[0]
+    profile = GoalInterpreter().interpret(case.goal)
+
+    assert "form" not in profile.scope
+    assert "forms" not in profile.features
+    assert "scope:form" not in profile.evidence
+    assert "feature:forms" not in profile.evidence
+    assert profile.change_surface == "PRODUCT"
+
+
+def test_p11_ecommerce_payment_disambiguation_leaves_only_final_domain_evidence() -> None:
+    case = PROJECTS["luxroom"].cases[1]
+    profile = GoalInterpreter().interpret(case.goal)
+
+    assert profile.domain == "commerce-retail"
+    assert "domain:financial-services" not in profile.evidence
+    assert "domain:commerce-retail" in profile.evidence
+    assert "domain_disambiguation:generic-payment->commerce-retail" in profile.evidence
+
+
 def test_p11_dogfood_matrix_uses_actual_owned_target_repositories() -> None:
     assert PROJECTS["edtech"].repo == "Ngh1aa/EdTech"
     assert PROJECTS["luxroom"].repo == "Ngh1aa/LuxRoom"
