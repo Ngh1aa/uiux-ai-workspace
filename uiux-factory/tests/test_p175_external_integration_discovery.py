@@ -183,7 +183,13 @@ def test_recent_external_vercel_evidence_can_satisfy_registry_without_static_mar
                 "creator": {"login": "vercel[bot]"},
                 "environment": "Preview",
                 "created_at": "2026-10-03T12:00:00Z",
-            }
+            },
+            {
+                "id": 506,
+                "creator": {"login": "github-actions[bot]"},
+                "environment": "github-pages",
+                "created_at": "2026-10-03T12:00:00Z",
+            },
         ]
 
     observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
@@ -192,10 +198,12 @@ def test_recent_external_vercel_evidence_can_satisfy_registry_without_static_mar
         "Ngh1aa/Nova",
         result.evidence,
         inspection_complete=result.inspection_complete,
+        inspected_channels=("github-deployment",),
     )
 
     assert assessment.status == "IN_SYNC"
-    assert assessment.evidence_channels["vercel"] == ("external-observed",)
+    assert assessment.evidence_channels["vercel"] == ("github-deployment",)
+    assert assessment.evidence_channels["github-pages"] == ("github-deployment",)
 
 
 def test_recent_unregistered_external_provider_is_added_drift_even_when_vercel_is_present() -> None:
@@ -212,6 +220,12 @@ def test_recent_unregistered_external_provider_is_added_drift_even_when_vercel_i
                     "creator": {"login": "netlify[bot]"},
                     "created_at": "2026-10-03T12:00:00Z",
                 },
+                {
+                    "id": 608,
+                    "creator": {"login": "github-actions[bot]"},
+                    "environment": "github-pages",
+                    "created_at": "2026-10-03T12:00:00Z",
+                },
             ]
         raise AssertionError(path)
 
@@ -221,6 +235,7 @@ def test_recent_unregistered_external_provider_is_added_drift_even_when_vercel_i
         "Ngh1aa/Nova",
         result.evidence,
         inspection_complete=True,
+        inspected_channels=("github-deployment",),
     )
 
     assert assessment.status == "DRIFT_ADDED_PROVIDER"
@@ -229,9 +244,9 @@ def test_recent_unregistered_external_provider_is_added_drift_even_when_vercel_i
 
 def test_registry_accepts_static_or_external_freshness_without_broadening_authority() -> None:
     nova = resolve_repository_policy("Ngh1aa/Nova")
-    rule = nova.integration_freshness[0]
-    assert rule.provider == "vercel"
-    assert rule.evidence_channels == ("repository-static", "external-observed")
+    rules = {rule.provider: rule for rule in nova.integration_freshness}
+    assert rules["vercel"].evidence_channels == ("repository-static", "github-deployment")
+    assert rules["github-pages"].evidence_channels == ("github-deployment",)
     assert nova.allowed_preview_providers == ("vercel",)
     assert nova.release_boundary.allow_merge is False
     assert nova.release_boundary.allow_production_deploy is False
