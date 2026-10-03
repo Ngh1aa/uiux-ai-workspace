@@ -12,7 +12,11 @@ from core.runtime.flow_os.repository_policy_registry import (
 )
 
 
-POLICY_DRIFT_VERSION = "1.0"
+POLICY_DRIFT_VERSION = "1.1"
+REPOSITORY_STATIC_CHANNEL = "repository-static"
+GITHUB_DEPLOYMENT_CHANNEL = "github-deployment"
+GITHUB_PR_COMMENT_CHANNEL = "github-pr-comment"
+GENERIC_EXTERNAL_CHANNEL = "external-observed"
 
 
 class RepositoryPolicyDriftError(RuntimeError):
@@ -28,6 +32,7 @@ class RepositoryPolicyDriftAssessment:
     status: str
     in_sync: bool
     inspection_complete: bool
+    inspected_channels: tuple[str, ...]
     detected_providers: tuple[str, ...]
     registered_providers: tuple[str, ...]
     added_providers: tuple[str, ...]
@@ -46,6 +51,7 @@ class RepositoryPolicyDriftAssessment:
             "status": self.status,
             "in_sync": self.in_sync,
             "inspection_complete": self.inspection_complete,
+            "inspected_channels": list(self.inspected_channels),
             "detected_providers": list(self.detected_providers),
             "registered_providers": list(self.registered_providers),
             "added_providers": list(self.added_providers),
@@ -63,10 +69,18 @@ class RepositoryPolicyDriftAssessment:
 
 def _evidence_channel(item: ExternalSideEffectEvidence) -> str:
     if item.source == "repository-static-config" or item.source.startswith("workflow:"):
-        return "repository-static"
+        return REPOSITORY_STATIC_CHANNEL
+    if item.source.startswith("github-deployment"):
+        return GITHUB_DEPLOYMENT_CHANNEL
+    if item.source == "github-pr-comment":
+        return GITHUB_PR_COMMENT_CHANNEL
     if item.state == "observed":
-        return "external-observed"
+        return GENERIC_EXTERNAL_CHANNEL
     return item.source
+
+
+def _canonical_channels(values: Iterable[str]) -> tuple[str, ...]:
+    return tuple(dict.fromkeys(str(value).strip().lower() for value in values if str(value).strip()))
 
 
 def _rules_by_provider(rules: Iterable[IntegrationFreshnessRule]) -> dict[str, IntegrationFreshnessRule]:
@@ -83,6 +97,7 @@ def assess_repository_policy_drift(
     evidence: Iterable[ExternalSideEffectEvidence],
     *,
     inspection_complete: bool,
+    inspected_channels: Iterable[str] | None = None,
 ) -> RepositoryPolicyDriftAssessment:
     policy = resolve_repository_policy(repository)
     items = tuple(evidence)
@@ -98,14 +113,32 @@ def assess_repository_policy_drift(
 
     rules = _rules_by_provider(policy.integration_freshness)
     unverifiable = tuple(sorted(set(registered) - set(rules)))
+    if inspected_channels is None:
+        inspected = tuple(
+            sorted(
+                {
+                    channel
+                    for rule in rules.values()
+                    for channel in rule.evidence_channels
+                }
+            )
+        )
+    else:
+        inspected = tuple(sorted(set(_canonical_channels(inspected_channels))))
+
     removed: list[str] = []
+    inspected_set = set(inspected)
     for provider in registered:
         rule = rules.get(provider)
         if rule is None:
             continue
-        observed_channels = set(channels.get(provider, set()))
         accepted_channels = set(rule.evidence_channels)
-        if not observed_channels.intersection(accepted_channels):
+        observable_channels = accepted_channels.intersection(inspected_set)
+        if not observable_channels:
+            # This scan did not inspect any channel capable of proving/removing this provider.
+            continue
+        observed_channels = set(channels.get(provider, set()))
+        if not observed_channels.intersection(observable_channels):
             removed.append(provider)
     removed_tuple = tuple(sorted(removed))
 
@@ -135,11 +168,11 @@ def assess_repository_policy_drift(
     elif removed_tuple:
         status = "DRIFT_REMOVED_PROVIDER"
         in_sync = False
-        reason = f"Registry still declares provider(s) no longer evidenced by the repository: {', '.join(removed_tuple)}"
+        reason = f"Registry still declares provider(s) no longer evidenced by inspected channels: {', '.join(removed_tuple)}"
     else:
         status = "IN_SYNC"
         in_sync = True
-        reason = "Current repository integration evidence matches the canonical registry footprint."
+        reason = "Current integration evidence matches the canonical registry for the inspected evidence channels."
 
     return RepositoryPolicyDriftAssessment(
         version=POLICY_DRIFT_VERSION,
@@ -149,6 +182,7 @@ def assess_repository_policy_drift(
         status=status,
         in_sync=in_sync,
         inspection_complete=inspection_complete,
+        inspected_channels=inspected,
         detected_providers=detected,
         registered_providers=registered,
         added_providers=added,
@@ -163,6 +197,16 @@ def assess_repository_policy_drift(
 def inspect_repository_policy_drift(repository: str, repo_root: Path | str) -> RepositoryPolicyDriftAssessment:
     root = Path(repo_root)
     if not root.is_dir():
-        return assess_repository_policy_drift(repository, (), inspection_complete=False)
+        return assess_repository_policy_drift(
+            repository,
+            (),
+            inspection_complete=False,
+            inspected_channels=(REPOSITORY_STATIC_CHANNEL,),
+        )
     evidence = detect_static_integrations(root)
-    return assess_repository_policy_drift(repository, evidence, inspection_complete=True)
+    return assess_repository_policy_drift(
+        repository,
+        evidence,
+        inspection_complete=True,
+        inspected_channels=(REPOSITORY_STATIC_CHANNEL,),
+    )
