@@ -10,6 +10,7 @@ from core.runtime.flow_os.execution_driver import (
     SegmentRunner,
 )
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
+from core.runtime.flow_os.github_transaction import GitHubProductionRunner, GitHubTransactionConfig
 from core.runtime.flow_os.sequence_flow import (
     MultiSurfaceRoutingError,
     ResolvedWorkPlan,
@@ -41,11 +42,12 @@ def _unique(items: list[str]) -> list[str]:
 
 
 class ProfessionalWebsiteFlow:
-    """Factory adapter over canonical Task, Sequence, Flow, Execution and Driver planning.
+    """Factory adapter over canonical Task, Sequence, Flow, Execution and Runner planning.
 
     GoalInterpreter remains the single-task contract owner. P1.4 adds a non-breaking
-    WorkSequenceContract, P1.5 turns the sequence into stateful execution, and P1.6
-    connects eligible segments to a concrete runner without changing routing ownership.
+    WorkSequenceContract, P1.5 turns the sequence into stateful execution, P1.6 binds
+    eligible segments to a concrete runner, and P1.7 adds a GitHub transaction boundary
+    without moving routing or state ownership out of canonical Flow OS.
     """
 
     FACTORY_TO_FLOW_STAGE = {
@@ -198,6 +200,28 @@ class ProfessionalWebsiteFlow:
             max_repair_attempts=max_repair_attempts,
         )
         return profile, driver
+
+    def resolve_github_execution_driver(
+        self,
+        goal: str,
+        config: GitHubTransactionConfig,
+        *,
+        checkpoint_path: Path | str | None = None,
+        target_truth: dict[str, str] | None = None,
+        max_repair_attempts: int = 2,
+    ) -> tuple[GoalInterpretation, ExecutionDriver, GitHubProductionRunner]:
+        """Bind canonical P1.5/P1.6 execution to the governed P1.7 GitHub transaction runner."""
+        runner = GitHubProductionRunner(config)
+        checkpoint = checkpoint_path or (runner.transaction_root / "execution-checkpoint.json")
+        profile, driver = self.resolve_execution_driver(
+            goal,
+            runner,
+            workspace_root=runner.artifact_root,
+            checkpoint_path=checkpoint,
+            target_truth=target_truth,
+            max_repair_attempts=max_repair_attempts,
+        )
+        return profile, driver, runner
 
     @classmethod
     def _nearest_active_stage(cls, resolved: ResolvedFlow, requested: str) -> ResolvedStage:
