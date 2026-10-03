@@ -14,7 +14,7 @@ def _write(root: Path, relative: str, content: str = "{}\n") -> None:
 
 
 def test_registry_freshness_rules_cover_every_registered_provider() -> None:
-    allowed_channels = {"repository-static", "external-observed"}
+    allowed_channels = {"repository-static", "github-provider-native"}
     for policy in registered_repository_policies():
         rules = {rule.provider: rule for rule in policy.integration_freshness}
         assert set(rules) == set(policy.known_integration_providers)
@@ -109,7 +109,7 @@ def test_registry_preview_authority_is_not_changed_by_external_pages_freshness()
     assert nova.known_integration_providers == ("vercel", "github-pages")
     assert rules == {
         "vercel": ("repository-static",),
-        "github-pages": ("external-observed",),
+        "github-pages": ("github-provider-native",),
     }
     assert nova.mutation_scope == ("branch-create", "branch-push", "pr-create", "pr-update")
     assert nova.release_boundary.allow_merge is False
