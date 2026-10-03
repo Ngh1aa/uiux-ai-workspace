@@ -15,11 +15,13 @@ The stress lane covers three mixed-domain families requested after P1.1:
 For prompts that explicitly state `primary product is ...` (or `the primary product is ...`):
 
 1. Explicit primary-product semantics own `domain` and `product_archetype`.
-2. Secondary domains are preserved as `secondary_domain:<domain>` inference evidence.
-3. Word order must not change the canonical outcome.
-4. Rejected domains must not remain as stale `domain:*` evidence.
-5. Specialist composition must follow the selected primary domain/archetype only; secondary domains are provenance, not automatic skill overlays.
-6. Existing P1.1 generic ecommerce-payment disambiguation remains valid when no explicit primary-product ownership is declared.
+2. If the primary clause itself contains multiple domain cues, the earliest product-defining cue in that clause owns the route. This prevents taxonomy-table order from overriding language such as `AI workspace for financial analysts`.
+3. Secondary domains are preserved as `secondary_domain:<domain>` inference evidence.
+4. Reordering primary and secondary clauses must not change domain, archetype, surface, flow, inferred features, or secondary-domain provenance.
+5. Rejected domains must not remain as stale `domain:*` evidence.
+6. Specialist composition must follow the selected primary domain/archetype only; secondary domains are provenance, not automatic skill overlays.
+7. Existing P1.1 generic ecommerce-payment disambiguation remains valid when no explicit primary-product ownership is declared.
+8. Feature inference must distinguish domain terminology from agent terminology: `payment orchestration` is not an agentic workflow by itself, while `AI copilot`, `AI assistant`, or explicit agent orchestration can activate the agentic feature.
 
 ## Corpus
 
@@ -34,7 +36,17 @@ The corpus contains 12 tasks: six ownership scenarios, each duplicated with the 
 | EdTech + enterprise | EdTech product | `education-edtech` | `learning-operations` |
 | EdTech + enterprise | enterprise operations product | `enterprise-software` | `enterprise-operations` |
 
-Each ownership scenario has A/B wording where the secondary-domain clause is moved before or after the primary-product clause. The route signature must remain identical.
+Each ownership scenario has A/B wording where the secondary-domain clause is moved before or after the primary-product clause. The full route signature, including inferred features, must remain identical.
+
+## Defects exposed during dogfood
+
+The intentionally failing first run exposed canonical defects rather than fixture-only failures:
+
+- taxonomy iteration order could override explicit primary-product semantics, causing AI-primary prompts to become FinTech and enterprise-SaaS-primary prompts to become commerce;
+- a primary clause containing two cues, such as `AI workspace for financial analysts`, could still be hijacked by the earlier domain entry in the taxonomy table;
+- generic `orchestration` in feature terms caused `payment orchestration` to emit a false `agentic-workflow` feature.
+
+The canonical fixes therefore live in shared inference, not in per-test exceptions.
 
 ## PASS criteria
 
@@ -48,7 +60,13 @@ Every task must prove:
 - expected secondary-domain provenance,
 - clean final `domain:*` evidence,
 - required specialist stage skills,
-- pair-level word-order invariance.
+- pair-level word-order invariance including inferred features.
+
+The lane also has focused collision checks proving that bare `payment orchestration` is not agentic and that an explicit AI copilot remains agentic even when FinTech owns the primary domain.
+
+## Evidence behavior
+
+The JSON evidence runner executes even when the focused pytest step fails, so a red P1.2 run still uploads the resolved contracts and routing matrix for diagnosis.
 
 ## Truth boundary
 
