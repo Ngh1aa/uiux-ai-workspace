@@ -1,0 +1,74 @@
+name: P1.5 Stateful Work-Plan Execution
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "uiux-factory/core/orchestration/intelligent_flow.py"
+      - "uiux-factory/core/runtime/flow_os/sequence_flow.py"
+      - "uiux-factory/core/runtime/flow_os/work_execution.py"
+      - "uiux-factory/scripts/run_p15_stateful_execution.py"
+      - "uiux-factory/tests/test_p15_stateful_work_plan_execution.py"
+      - ".github/workflows/p15-stateful-work-plan-execution.yml"
+      - ".github/workflows/p14-multi-intent-surface-routing.yml"
+      - ".github/workflows/routing-intelligence-contract.yml"
+      - "skills_UIUX/runtime/P15-STATEFUL-WORK-PLAN-EXECUTION.md"
+  push:
+    branches: [main]
+    paths:
+      - "uiux-factory/core/orchestration/intelligent_flow.py"
+      - "uiux-factory/core/runtime/flow_os/sequence_flow.py"
+      - "uiux-factory/core/runtime/flow_os/work_execution.py"
+      - "uiux-factory/scripts/run_p15_stateful_execution.py"
+      - "uiux-factory/tests/test_p15_stateful_work_plan_execution.py"
+      - ".github/workflows/p15-stateful-work-plan-execution.yml"
+      - ".github/workflows/p14-multi-intent-surface-routing.yml"
+      - ".github/workflows/routing-intelligence-contract.yml"
+      - "skills_UIUX/runtime/P15-STATEFUL-WORK-PLAN-EXECUTION.md"
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}/uiux-factory
+  REPORT_ROOT: ${{ github.workspace }}/p15-artifacts
+
+jobs:
+  p15-stateful-work-plan-execution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install focused dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt "pydantic>=2.5.3,<3"
+
+      - name: Run P1.5 execution contract tests
+        working-directory: uiux-factory
+        run: python -m pytest -q tests/test_p15_stateful_work_plan_execution.py
+
+      - name: Produce P1.5 execution evidence
+        if: always()
+        working-directory: uiux-factory
+        run: >-
+          python scripts/run_p15_stateful_execution.py
+          --report "$REPORT_ROOT/stateful-work-plan-execution.json"
+
+      - name: Upload P1.5 evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: p15-stateful-work-plan-execution-${{ github.run_id }}
+          path: p15-artifacts/*.json
+          if-no-files-found: warn
