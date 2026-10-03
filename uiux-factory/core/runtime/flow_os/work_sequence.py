@@ -64,7 +64,7 @@ def _split_action_units(goal: str) -> list[str]:
 
     cue_pattern = "|".join(sorted((re.escape(term) for term in ACTION_START_TERMS), key=len, reverse=True))
     connector = re.compile(
-        rf"\s+(?:and\s+then|then|and|plus|while|và|rồi|sau\s+đó)\s+(?=(?:{cue_pattern})(?!\w))",
+        rf"(?:\s*,\s*|\s+(?:and\s+then|then|and|plus|while|và|rồi|sau\s+đó)\s+)(?=(?:{cue_pattern})(?!\w))",
         flags=re.IGNORECASE,
     )
 
