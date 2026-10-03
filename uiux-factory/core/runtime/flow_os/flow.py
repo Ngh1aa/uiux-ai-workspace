@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from core.runtime.flow_os.adaptive_surface import CHANGE_SURFACES, default_change_surface_for_intent
+from core.runtime.flow_os.specialist_composition import SpecialistComposer
 
 REPLAN_SIGNALS = {
     "GATE_FAIL",
@@ -517,13 +518,14 @@ class ReplanningEngine:
 
 
 class FlowPlanner:
-    """Canonical flow decision owner for every Factory execution surface."""
+    """Canonical flow decision and specialist-composition owner for every Factory execution surface."""
 
     def __init__(self, library_root: Path, policy_doc: dict[str, Any]) -> None:
         self.library_root = Path(library_root)
         self.policy_doc = policy_doc
         self.flow_resolver = FlowResolver(self.library_root / "flows")
         self.skill_resolver = SkillResolver(self.library_root, policy_doc)
+        self.specialist_composer = SpecialistComposer(self.library_root)
         self.replanner = ReplanningEngine()
 
     def plan(
@@ -543,12 +545,17 @@ class FlowPlanner:
             )
             for stage in doc["stages"]
         ]
-        return ResolvedFlow(
+        resolved = ResolvedFlow(
             id=doc["id"],
             source=str(path.relative_to(self.library_root)),
             score=score,
             stages=stages,
             replanning=dict(doc.get("replanning", {})),
+        )
+        return self.specialist_composer.compose_flow(
+            resolved,
+            effective_context,
+            exclude_skills=exclude_skills,
         )
 
     def replan(

@@ -33,7 +33,11 @@ def test_goal_interpreter_supports_professional_website_domains() -> None:
             "policy": "adaptive-prompt-os-v4",
             "lane": "full_prompt_os",
         }
-        assert profile.domain in {"generic", "financial-services"}
+        if expected == "ecommerce":
+            assert profile.domain == "commerce-retail"
+            assert profile.product_archetype == "checkout-commerce"
+        else:
+            assert profile.domain in {"generic", "financial-services"}
 
 
 def test_factory_default_delivery_policy_is_pinned_to_upstream_source() -> None:
@@ -113,7 +117,7 @@ def test_goal_interpreter_classifies_financial_and_cultural_domains() -> None:
 
     lumen = interpreter.interpret("Create an immersive digital museum experience")
     assert lumen.domain == "art-culture"
-    assert lumen.product_archetype == "generic"
+    assert lumen.product_archetype == "exhibition-experience"
 
 
 def test_financial_projects_route_financial_product_intelligence() -> None:

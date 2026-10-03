@@ -5,7 +5,6 @@ from pathlib import Path
 import pytest
 
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
-from core.runtime.flow_os.specialist_composition import SpecialistComposer
 from core.runtime.flow_os.task_context import GoalInterpreter
 
 
@@ -48,8 +47,7 @@ def test_p1_profile_enrichment_covers_representative_specialisms(
     expected_domain: str,
     expected_archetype: str,
 ) -> None:
-    composer = SpecialistComposer(SKILLS)
-    profile = composer.enrich_profile(GoalInterpreter().interpret(goal), goal)
+    profile = GoalInterpreter().interpret(goal)
 
     assert profile.domain == expected_domain
     assert profile.product_archetype == expected_archetype
