@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from core.orchestration.intelligent_flow import GoalInterpreter, ProfessionalWebsiteFlow
+from core.runtime.flow_os.specialist_composition import SpecialistComposer
 from core.skills.execution_context import SkillSelection
 
 
@@ -142,9 +143,10 @@ class AdaptiveSkillRouter:
                 )
             else:
                 reasons[path] = (
-                    f"Domain/factory-stage capability selected for website_type="
+                    f"Domain/archetype/surface/feature capability selected for website_type="
                     f"{profile.website_type}, domain={profile.domain}, "
-                    f"product_archetype={profile.product_archetype}: {skill_name}."
+                    f"product_archetype={profile.product_archetype}, "
+                    f"change_surface={profile.change_surface}: {skill_name}."
                 )
 
         return SkillSelection(
@@ -155,6 +157,20 @@ class AdaptiveSkillRouter:
             mandatory_paths=mandatory_paths,
             reasons=reasons,
         )
+
+    @staticmethod
+    def _specialist_declared_skills() -> set[str]:
+        skills: set[str] = set()
+        for matrix in (
+            SpecialistComposer.DOMAIN_SKILLS,
+            SpecialistComposer.ARCHETYPE_SKILLS,
+            SpecialistComposer.SURFACE_SKILLS,
+            SpecialistComposer.FEATURE_SKILLS,
+        ):
+            for stage_map in matrix.values():
+                for declared in stage_map.values():
+                    skills.update(declared)
+        return skills
 
     @classmethod
     def all_declared_paths(cls, skills_root: Path | None = None) -> set[str]:
@@ -172,6 +188,7 @@ class AdaptiveSkillRouter:
                     paths.add(f"{skill}/SKILL.md")
         for extras in flow.EXTRA_BY_FACTORY_STAGE.values():
             paths.update(f"{skill}/SKILL.md" for skill in extras)
+        paths.update(f"{skill}/SKILL.md" for skill in cls._specialist_declared_skills())
         paths.update(
             {
                 "web-ui-code-review/SKILL.md",
