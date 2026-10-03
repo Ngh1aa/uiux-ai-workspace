@@ -7,11 +7,23 @@ from core.runtime.flow_os.external_integration_discovery import (
     GitHubDeploymentIntegrationObserver,
     infer_provider_from_github_deployment,
 )
+from core.runtime.flow_os.external_side_effects import ExternalSideEffectEvidence
 from core.runtime.flow_os.repository_policy_drift import assess_repository_policy_drift
 from core.runtime.flow_os.repository_policy_registry import registered_repository_policies, resolve_repository_policy
 
 
 NOW = datetime(2026, 10, 4, tzinfo=timezone.utc)
+FULL_SCOPE = ("repository-static", "external-observed")
+
+
+def _static(provider: str, effect: str = "pr-preview") -> ExternalSideEffectEvidence:
+    return ExternalSideEffectEvidence(
+        provider=provider,
+        effect=effect,
+        source="repository-static-config",
+        state="configured",
+        detail=f"{provider} static marker",
+    )
 
 
 def test_provider_classifier_covers_supported_external_hosts() -> None:
@@ -122,7 +134,12 @@ def test_stale_deployment_history_is_not_current_freshness_evidence() -> None:
             }
         ]
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, max_age_days=90, include_check_runs=False)
+    observer = GitHubDeploymentIntegrationObserver(
+        None,
+        request_json=request,
+        max_age_days=90,
+        include_check_runs=False,
+    )
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
 
     assert result.inspection_complete is True
@@ -155,11 +172,13 @@ def test_unclassified_recent_deployment_becomes_explicit_unknown_external_eviden
 
     assessment = assess_repository_policy_drift(
         "Ngh1aa/Nova",
-        result.evidence,
+        (_static("vercel"), *result.evidence),
         inspection_complete=True,
+        inspection_channels=FULL_SCOPE,
     )
     assert assessment.status == "DRIFT_ADDED_AND_REMOVED_PROVIDER"
     assert assessment.added_providers == ("unknown-external",)
+    assert assessment.removed_providers == ("github-pages",)
 
 
 def test_external_visibility_failure_is_unknown_not_safe() -> None:
@@ -170,12 +189,17 @@ def test_external_visibility_failure_is_unknown_not_safe() -> None:
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
 
     assert result.inspection_complete is False
-    assessment = assess_repository_policy_drift("Ngh1aa/Nova", (), inspection_complete=False)
+    assessment = assess_repository_policy_drift(
+        "Ngh1aa/Nova",
+        (_static("vercel"),),
+        inspection_complete=False,
+        inspection_channels=FULL_SCOPE,
+    )
     assert assessment.status == "UNKNOWN_POLICY_DRIFT"
     assert assessment.in_sync is False
 
 
-def test_recent_external_vercel_evidence_can_satisfy_registry_without_static_marker() -> None:
+def test_external_vercel_does_not_replace_static_required_vercel_marker() -> None:
     def request(path: str):
         return [
             {
@@ -197,57 +221,88 @@ def test_recent_external_vercel_evidence_can_satisfy_registry_without_static_mar
     assessment = assess_repository_policy_drift(
         "Ngh1aa/Nova",
         result.evidence,
-        inspection_complete=result.inspection_complete,
-        inspected_channels=("github-provider-native",),
+        inspection_complete=True,
+        inspection_channels=FULL_SCOPE,
+    )
+
+    assert assessment.status == "DRIFT_REMOVED_PROVIDER"
+    assert assessment.removed_providers == ("vercel",)
+    assert assessment.evidence_channels["vercel"] == ("external-observed",)
+    assert assessment.evidence_channels["github-pages"] == ("external-observed",)
+
+
+def test_static_vercel_plus_external_pages_is_full_scope_in_sync() -> None:
+    pages = ExternalSideEffectEvidence(
+        provider="github-pages",
+        effect="deployment",
+        source="github-deployment",
+        state="observed",
+        detail="recent Pages deployment",
+    )
+    assessment = assess_repository_policy_drift(
+        "Ngh1aa/Nova",
+        (_static("vercel"), pages),
+        inspection_complete=True,
+        inspection_channels=FULL_SCOPE,
     )
 
     assert assessment.status == "IN_SYNC"
-    assert assessment.evidence_channels["vercel"] == ("github-provider-native",)
-    assert assessment.evidence_channels["github-pages"] == ("github-provider-native",)
+    assert assessment.in_sync is True
+    assert assessment.coverage_complete is True
+    assert assessment.unresolved_providers == ()
+    assert assessment.evidence_channels == {
+        "github-pages": ("external-observed",),
+        "vercel": ("repository-static",),
+    }
 
 
-def test_recent_unregistered_external_provider_is_added_drift_even_when_vercel_is_present() -> None:
-    def request(path: str):
-        if path.endswith("/deployments?per_page=20"):
-            return [
-                {
-                    "id": 606,
-                    "creator": {"login": "vercel[bot]"},
-                    "created_at": "2026-10-03T12:00:00Z",
-                },
-                {
-                    "id": 607,
-                    "creator": {"login": "netlify[bot]"},
-                    "created_at": "2026-10-03T12:00:00Z",
-                },
-                {
-                    "id": 608,
-                    "creator": {"login": "github-actions[bot]"},
-                    "environment": "github-pages",
-                    "created_at": "2026-10-03T12:00:00Z",
-                },
-            ]
-        raise AssertionError(path)
-
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
-    result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
+def test_missing_external_pages_is_removed_in_full_scope() -> None:
     assessment = assess_repository_policy_drift(
         "Ngh1aa/Nova",
-        result.evidence,
+        (_static("vercel"),),
         inspection_complete=True,
-        inspected_channels=("github-provider-native",),
+        inspection_channels=FULL_SCOPE,
+    )
+
+    assert assessment.status == "DRIFT_REMOVED_PROVIDER"
+    assert assessment.removed_providers == ("github-pages",)
+    assert assessment.coverage_complete is True
+
+
+def test_recent_unregistered_external_provider_is_added_drift() -> None:
+    pages = ExternalSideEffectEvidence(
+        provider="github-pages",
+        effect="deployment",
+        source="github-deployment",
+        state="observed",
+        detail="recent Pages deployment",
+    )
+    netlify = ExternalSideEffectEvidence(
+        provider="netlify",
+        effect="pr-preview",
+        source="github-deployment",
+        state="observed",
+        detail="unexpected Netlify deployment",
+    )
+    assessment = assess_repository_policy_drift(
+        "Ngh1aa/Nova",
+        (_static("vercel"), pages, netlify),
+        inspection_complete=True,
+        inspection_channels=FULL_SCOPE,
     )
 
     assert assessment.status == "DRIFT_ADDED_PROVIDER"
     assert assessment.added_providers == ("netlify",)
 
 
-def test_registry_accepts_static_or_external_freshness_without_broadening_authority() -> None:
+def test_registry_separates_static_and_external_freshness_without_broadening_authority() -> None:
     nova = resolve_repository_policy("Ngh1aa/Nova")
     rules = {rule.provider: rule for rule in nova.integration_freshness}
-    assert rules["vercel"].evidence_channels == ("repository-static", "github-provider-native")
-    assert rules["github-pages"].evidence_channels == ("github-provider-native",)
+
+    assert rules["vercel"].evidence_channels == ("repository-static",)
+    assert rules["github-pages"].evidence_channels == ("external-observed",)
     assert nova.allowed_preview_providers == ("vercel",)
+    assert nova.known_integration_providers == ("vercel", "github-pages")
     assert nova.release_boundary.allow_merge is False
     assert nova.release_boundary.allow_production_deploy is False
     assert nova.release_boundary.allow_release is False
