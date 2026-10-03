@@ -70,6 +70,7 @@ def evaluate() -> dict[str, object]:
             contract.get("product_archetype"),
             contract.get("change_surface"),
             report.get("flow_id"),
+            tuple(sorted(str(item) for item in contract.get("features", []) or [])),
             tuple(sorted(item for item in evidence if str(item).startswith("secondary_domain:"))),
         )
         order_pairs.setdefault(str(case["order_pair"]), []).append(signature)
@@ -89,8 +90,8 @@ def evaluate() -> dict[str, object]:
         "passed": passed,
         "truth_boundary": (
             "PASS proves deterministic canonical primary-domain arbitration, secondary-domain provenance, "
-            "FlowPlanner routing and specialist composition for the declared mixed-domain corpus. It does not "
-            "claim semantic correctness for arbitrary unstated priorities or replace target-project evidence."
+            "feature inference, FlowPlanner routing and specialist composition for the declared mixed-domain corpus. "
+            "It does not claim semantic correctness for arbitrary unstated priorities or replace target-project evidence."
         ),
     }
 
