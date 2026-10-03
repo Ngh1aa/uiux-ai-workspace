@@ -1,6 +1,6 @@
 # P1.7.5 — External Integration Discovery / Provider-Native Evidence
 
-P1.7.5 closes the visibility gap left intentionally by P1.7.4. Static repository markers are useful, but deployment integrations may exist entirely outside the Git tree. P1.7.5 adds a second, read-only evidence channel based on GitHub Deployments and deployment statuses.
+P1.7.5 closes the visibility gap left intentionally by P1.7.4. Static repository markers are useful, but deployment integrations may exist entirely outside the Git tree. P1.7.5 adds a second, read-only evidence channel based on GitHub Deployments, deployment statuses, and provider-owned Check Runs on the default branch.
 
 ## Goal
 
@@ -10,7 +10,7 @@ The combined evidence is evaluated by the same canonical policy drift assessor. 
 
 ## Provider discovery
 
-P1.7.5 recognizes provider signals from deployment creator metadata, environment/task metadata, payload text, deployment status descriptions, and deployment/status URLs.
+P1.7.5 recognizes provider signals from deployment creator metadata, environment/task metadata, payload text, deployment status descriptions/URLs, and Check Run app/name/details metadata.
 
 Current classifier coverage:
 
@@ -32,9 +32,9 @@ Repository-static evidence remains non-expiring while the marker exists.
 
 ## Fail-closed visibility
 
-P1.7.5 requires both a readable target checkout for static inspection and a complete GitHub Deployments inspection.
+P1.7.5 requires both a readable target checkout for static inspection and complete GitHub Deployments/status + default-branch Check Run visibility.
 
-If deployment visibility is unavailable or only partially readable, the combined assessment becomes `UNKNOWN_POLICY_DRIFT`. Static configuration is not allowed to hide loss of visibility into the external channel.
+If deployment or Check Run visibility is unavailable or only partially readable, the combined assessment becomes `UNKNOWN_POLICY_DRIFT`. Static configuration is not allowed to hide loss of visibility into the external channel.
 
 For public repositories, the observer may retry the read-only GitHub endpoint without the Factory token when the repository-scoped Actions token cannot read a public target repository. No write fallback exists.
 
@@ -46,12 +46,12 @@ This does not broaden preview or release authority. `allowed_preview_providers`,
 
 ## Continuous monitoring
 
-`.github/workflows/p175-external-integration-discovery.yml` derives its target matrix from the canonical registry, checks out target repositories read-only, reads GitHub Deployments/status metadata, emits one JSON artifact per target, runs every six hours plus relevant PR/push/manual events, and manages Factory-only `[P1.7.5 EXTERNAL DRIFT]` issues.
+`.github/workflows/p175-external-integration-discovery.yml` derives its target matrix from the canonical registry, checks out target repositories read-only, reads GitHub Deployments/status and Check Run metadata, emits one JSON artifact per target, runs every six hours plus relevant PR/push/manual events, and manages Factory-only `[P1.7.5 EXTERNAL DRIFT]` issues.
 
 Target repositories are never mutated by this monitor.
 
 ## Truth boundary
 
-A P1.7.5 PASS proves that, at scan time, static inspection and GitHub deployment visibility completed, recent provider-native evidence is compatible with the registry, no recent unclassified deployment evidence remains, and every registered provider has acceptable current static or recent external evidence.
+A P1.7.5 PASS proves that, at scan time, static inspection plus GitHub deployment/status and Check Run visibility completed, recent provider-native evidence is compatible with the registry, no recent unclassified deployment evidence remains, and every registered provider has acceptable current static or recent external evidence.
 
-It does not prove deployment health, visual correctness, production readiness, release approval, or the absence of an integration that leaves neither repository markers nor GitHub Deployment evidence.
+It does not prove deployment health, visual correctness, production readiness, release approval, or the absence of an integration that leaves neither repository markers nor GitHub Deployment or provider Check Run evidence.
