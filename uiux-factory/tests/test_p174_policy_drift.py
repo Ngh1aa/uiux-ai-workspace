@@ -37,8 +37,8 @@ def test_vercel_repository_is_in_sync_when_static_marker_exists(tmp_path: Path) 
     assert assessment.in_sync is True
     assert assessment.detected_providers == ("vercel",)
     assert assessment.registered_providers == ("github-pages", "vercel")
-    assert assessment.inspected_channels == ("repository-static",)
-    assert assessment.removed_providers == ()
+    assert assessment.inspection_channels == ("repository-static",)
+    assert assessment.removed_providers == ()\n    assert assessment.unresolved_providers == ("github-pages",)\n    assert assessment.coverage_complete is False
 
 
 def test_added_netlify_provider_is_detected_without_registry_change(tmp_path: Path) -> None:
