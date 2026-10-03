@@ -161,6 +161,7 @@ jobs:
                 `Evidence channels: \`${JSON.stringify(a.evidence_channels || {})}\``,
                 `External inspection complete: \`${String(e.inspection_complete)}\``,
                 `Recent deployments inspected: \`${e.inspected_deployments ?? 'n/a'}\``,
+                `Recent check runs inspected: \`${e.inspected_check_runs ?? 'n/a'}\``,
                 `Unknown deployment IDs: \`${(e.unknown_deployment_ids || []).join(', ') || 'none'}\``,
                 `Reason: ${a.reason || 'n/a'}`,
               ].join('\n');
