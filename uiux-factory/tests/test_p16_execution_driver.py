@@ -138,6 +138,7 @@ def test_p16_qa_failure_auto_routes_to_nearest_implementation_repair_owner(tmp_p
 
     failure = next(event for event in driver.history if event.get("failure_class") == "PRODUCT_QA_FAILED")
     assert failure["repair_owner_segment_id"] == "work-3"
+    assert failure["superseded_artifact_ids"]
     repair = next(event for event in driver.history if event["segment_id"] == "work-3" and event["runner_mode"] == "repair")
     assert repair["status"] == "passed"
     requests = _request_docs(exchange)
@@ -145,6 +146,17 @@ def test_p16_qa_failure_auto_routes_to_nearest_implementation_repair_owner(tmp_p
     assert repair_request["repair_of_segment_id"] == "work-4"
     assert repair_request["repair_failure_artifact_ids"]
     assert "web-ui-code-review" in repair_request["required_capabilities"]
+
+    implementation_records = [
+        record for record in driver.registry.records.values() if record.producer_segment_id == "work-3"
+    ]
+    assert len(implementation_records) == 2
+    superseded = [record for record in implementation_records if record.metadata.get("superseded") == "true"]
+    active = [record for record in implementation_records if record.accepted_for_handoff]
+    assert len(superseded) == 1
+    assert superseded[0].accepted_for_handoff is False
+    assert len(active) == 1
+    assert active[0].metadata.get("mode") == "repair"
 
 
 def test_p16_failed_qa_evidence_is_retained_but_never_promoted_to_handoff(tmp_path: Path) -> None:
@@ -154,6 +166,7 @@ def test_p16_failed_qa_evidence_is_retained_but_never_promoted_to_handoff(tmp_pa
     assert len(failed) == 1
     assert failed[0].accepted_for_handoff is False
     assert failed[0].artifact_class == "report"
+    assert failed[0].metadata.get("superseded") is None
 
 
 def test_p16_runner_pass_without_expected_outputs_fails_gate_and_keeps_downstream_locked(tmp_path: Path) -> None:
