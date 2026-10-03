@@ -16,6 +16,7 @@ on:
       - ".github/workflows/uiux-factory-ci.yml"
       - ".github/workflows/external-task-manifest.yml"
       - ".github/workflows/external-agent-runner.yml"
+      - ".github/workflows/external-agent-connector-bridge.yml"
       - ".github/workflows/deployment-truth-gate.yml"
       - ".github/workflows/a37-external-agent-e2e-dogfood.yml"
   pull_request:
@@ -33,6 +34,7 @@ on:
       - ".github/workflows/uiux-factory-ci.yml"
       - ".github/workflows/external-task-manifest.yml"
       - ".github/workflows/external-agent-runner.yml"
+      - ".github/workflows/external-agent-connector-bridge.yml"
       - ".github/workflows/deployment-truth-gate.yml"
       - ".github/workflows/a37-external-agent-e2e-dogfood.yml"
 
