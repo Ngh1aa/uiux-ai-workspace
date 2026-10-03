@@ -26,10 +26,12 @@ FULL_REDESIGN_TERMS = (
     "whole site", "entire site", "toàn bộ website", "toàn bộ trang web", "cả website",
     "mọi trang", "tất cả các trang", "design system toàn bộ", "full redesign",
 )
-PRODUCT_TERMS = (
+FULL_PRODUCT_TERMS = (
     "whole product", "entire product", "end-to-end product", "end to end product",
-    "full product", "product-wide", "product wide", "new product", "build a product",
-    "build the product", "xây sản phẩm", "toàn bộ sản phẩm", "cả sản phẩm",
+    "full product", "product-wide", "product wide", "toàn bộ sản phẩm", "cả sản phẩm",
+)
+PRODUCT_TERMS = FULL_PRODUCT_TERMS + (
+    "new product", "build a product", "build the product", "xây sản phẩm",
     "web app", "mobile app", "application", "platform", "nền tảng", "website", "trang web",
     "portfolio", "case study site", "hồ sơ năng lực", "showcase",
 )
@@ -61,6 +63,11 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
     normalized_scope = [_normalise(item) for item in scope if str(item).strip()]
     scope_text = " ".join(normalized_scope)
     has_product_cue = _contains_any(normalized, PRODUCT_TERMS)
+
+    # Explicit whole-product language is stronger than inferred narrow scope tokens.
+    # This prevents incidental scope matches from shrinking a clearly product-wide task.
+    if intent in {"redesign", "rebuild"} and _contains_any(normalized, FULL_PRODUCT_TERMS):
+        return "PRODUCT"
 
     if scope_text:
         # Explicit single-page creation stays PAGE even when the page belongs to a platform/site.
