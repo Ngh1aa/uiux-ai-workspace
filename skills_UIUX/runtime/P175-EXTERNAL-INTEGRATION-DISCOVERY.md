@@ -40,9 +40,15 @@ For public repositories, the observer may retry the read-only GitHub endpoint wi
 
 ## Registry semantics
 
-Registered providers accept either `repository-static` or `github-provider-native` freshness evidence. Removal of a static marker is therefore not incorrectly called provider removal when recent provider-native deployment evidence still proves that the integration exists.
+Freshness requirements are provider-specific, not a global OR. Nova, CENNEXT and LuxRoom require Vercel through `repository-static` evidence and GitHub Pages through `external-observed` evidence. Lumen requires both Vercel and GitHub Pages through repository-static evidence. External Vercel activity therefore does not substitute for a removed `vercel.json` marker.
 
 This does not broaden preview or release authority. `allowed_preview_providers`, mutation scope, merge authority, production deployment authority, and release authority remain unchanged.
+
+## Canonical dogfood finding
+
+The first real P1.7.5 run exposed registry drift that P1.7.4 could not see: Nova, CENNEXT and LuxRoom all had repeated recent GitHub Pages Deployment records alongside Vercel, while their registry entries declared only Vercel. The registry was updated to record GitHub Pages as a known external integration for those three repositories.
+
+This discovery does **not** authorize GitHub Pages preview mutation. `allowed_preview_providers` remains Vercel-only for Nova, CENNEXT and LuxRoom; GitHub Pages is a known deployment boundary, not a permitted PR-preview provider.
 
 ## Continuous monitoring
 
@@ -52,6 +58,6 @@ Target repositories are never mutated by this monitor.
 
 ## Truth boundary
 
-A P1.7.5 PASS proves that, at scan time, static inspection plus GitHub deployment/status and Check Run visibility completed, recent provider-native evidence is compatible with the registry, no recent unclassified deployment evidence remains, and every registered provider has acceptable current static or recent external evidence.
+A P1.7.5 PASS proves that, at scan time, static inspection plus GitHub deployment/status and Check Run visibility completed, recent provider-native evidence is compatible with the registry, no recent unclassified deployment evidence remains, and every registered provider satisfies its own declared freshness channel (`repository-static` or `external-observed`).
 
 It does not prove deployment health, visual correctness, production readiness, release approval, or the absence of an integration that leaves neither repository markers nor GitHub Deployment or provider Check Run evidence.
