@@ -15,10 +15,36 @@ concurrency:
 jobs:
   prepare-task-packet:
     if: >-
-      (startsWith(github.event.issue.title, '[UIUX TASK]') || contains(github.event.issue.labels.*.name, 'uiux-agent-task')) &&
-      (github.event.issue.author_association == 'OWNER' || github.event.issue.author_association == 'MEMBER' || github.event.issue.author_association == 'COLLABORATOR')
+      startsWith(github.event.issue.title, '[UIUX TASK]') || contains(github.event.issue.labels.*.name, 'uiux-agent-task')
     runs-on: ubuntu-latest
     steps:
+      - name: Authorize trusted issue author from live GitHub state
+        id: authorize
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const eventAssociation = context.payload.issue?.author_association || 'UNKNOWN';
+            const liveAssociation = issue.author_association || 'NONE';
+            const trustedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+
+            core.info(`Connector issuer: ${issue.user?.login || 'unknown'}`);
+            core.info(`Event author_association: ${eventAssociation}`);
+            core.info(`Live author_association: ${liveAssociation}`);
+
+            if (!trustedAssociations.has(liveAssociation)) {
+              core.setFailed(`Connector request rejected: live author_association=${liveAssociation} is not trusted.`);
+              return;
+            }
+
+            core.setOutput('author_association', liveAssociation);
+            core.setOutput('issuer', issue.user?.login || 'unknown');
+
       - name: Checkout Factory
         uses: actions/checkout@v6
 
@@ -86,7 +112,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `UIUX Factory compiled the governed external-agent task packet for this request.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\nArtifact: \`external-agent-task-packet-${context.issue.number}\`\n\nThis packet is a routing contract, not evidence that implementation or QA passed.`
+              body: `UIUX Factory compiled the governed external-agent task packet for this request.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\nArtifact: \`external-agent-task-packet-${context.issue.number}\`\n\nAuthorized issuer: \`${{ steps.authorize.outputs.issuer }}\` (\`${{ steps.authorize.outputs.author_association }}\`).\n\nThis packet is a routing contract, not evidence that implementation or QA passed.`
             });
 
       - name: Comment on bridge failure
@@ -98,5 +124,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `UIUX Factory could not compile this connector request. Check the workflow run and request schema; no implementation or QA PASS is implied.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+              body: `UIUX Factory could not authorize or compile this connector request. Check the workflow run and request schema; no implementation or QA PASS is implied.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             });
