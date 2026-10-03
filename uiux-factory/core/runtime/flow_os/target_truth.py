@@ -31,6 +31,9 @@ _FEATURES = {name for name, _terms in GoalInterpreter.FEATURE_TERMS}
 _WEBSITE_TYPES = {name for name, _terms in GoalInterpreter.WEBSITE_TYPES}
 _DOMAINS = {name for name, _terms in GoalInterpreter.DOMAINS}
 _FINANCIAL_ARCHETYPES = {name for name, _terms in GoalInterpreter.FINANCIAL_ARCHETYPES}
+_ARCHETYPE_DOMAIN_REQUIREMENTS = {
+    archetype: "financial-services" for archetype in _FINANCIAL_ARCHETYPES
+}
 
 
 class TargetTruthProbeError(RuntimeError):
@@ -67,6 +70,10 @@ def _is_unknown(value: object) -> bool:
 
 def _contains(text: str, terms: tuple[str, ...]) -> bool:
     return any(term in text for term in terms)
+
+
+def _required_domain_for_archetype(value: object) -> str | None:
+    return _ARCHETYPE_DOMAIN_REQUIREMENTS.get(_slug(value))
 
 
 def _canonical_website_type(value: object) -> str | None:
@@ -308,6 +315,59 @@ class TargetTruthProbe:
             "release_effect": "none",
         }
 
+    @staticmethod
+    def _cohere_identity(
+        fields: dict[str, Any],
+        provenance: dict[str, dict[str, Any]],
+        diagnostics: list[str],
+    ) -> None:
+        """Keep domain-bound archetypes coherent without increasing target-truth authority."""
+
+        archetype = fields.get("product_archetype")
+        required_domain = _required_domain_for_archetype(archetype)
+        if required_domain is None:
+            return
+
+        archetype_provenance = provenance.get("product_archetype", {})
+        current_domain = fields.get("domain")
+        if current_domain in {None, "", "generic"}:
+            fields["domain"] = required_domain
+            provenance["domain"] = {
+                "source": archetype_provenance.get("source", "derived:product_archetype"),
+                "raw": archetype,
+                "normalized": required_domain,
+                "derived_from": "product_archetype",
+                "authority_effect": "none",
+                "evidence_effect": "none",
+                "release_effect": "none",
+            }
+            if archetype_provenance.get("confidence") == "fallback_inference":
+                provenance["domain"]["confidence"] = "fallback_inference"
+            diagnostics.append(
+                f"derived_domain_from_archetype:{archetype}:{required_domain}"
+            )
+            return
+
+        if current_domain == required_domain:
+            return
+
+        if archetype_provenance.get("confidence") == "fallback_inference":
+            fields.pop("product_archetype", None)
+            provenance.pop("product_archetype", None)
+            diagnostics.append(
+                "ignored_incoherent_fallback:product_archetype:"
+                f"{archetype}:requires:{required_domain}:got:{current_domain}"
+            )
+            return
+
+        domain_source = provenance.get("domain", {}).get("source", "unknown")
+        archetype_source = archetype_provenance.get("source", "unknown")
+        raise TargetTruthProbeError(
+            "incoherent target truth: product_archetype "
+            f"{archetype} requires domain {required_domain}, got {current_domain} "
+            f"(domain source: {domain_source}; archetype source: {archetype_source})"
+        )
+
     def _profile(
         self,
         fields: dict[str, Any],
@@ -467,7 +527,9 @@ class TargetTruthProbe:
 
         self._profile(fields, provenance, diagnostics, sources)
         self._project_context(fields, provenance, diagnostics, sources)
+        self._cohere_identity(fields, provenance, diagnostics)
         self._fallback_metadata(fields, provenance, diagnostics, sources)
+        self._cohere_identity(fields, provenance, diagnostics)
 
         return TargetTruthReport(
             status="PROBED" if fields else "NO_USABLE_TRUTH",
