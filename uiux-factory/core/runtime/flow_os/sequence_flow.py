@@ -28,6 +28,8 @@ class ResolvedWorkSegment:
     scope: list[str]
     change_surface: str
     inherits_from: str | None
+    preserve: list[str]
+    forbidden: list[str]
     active_stage_ids: list[str]
     flow: ResolvedFlow
 
@@ -105,6 +107,8 @@ class SequenceFlowPlanner:
                     scope=list(segment.scope),
                     change_surface=segment.change_surface,
                     inherits_from=segment.inherits_from,
+                    preserve=list(segment.preserve or []),
+                    forbidden=list(segment.forbidden or []),
                     active_stage_ids=self._active_stage_ids(flow, segment.phase),
                     flow=flow,
                 )
