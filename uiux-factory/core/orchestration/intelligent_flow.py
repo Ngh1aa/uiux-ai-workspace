@@ -19,6 +19,7 @@ from core.runtime.flow_os.task_context import (
     GoalProfile,
     TaskContract,
 )
+from core.runtime.flow_os.work_execution import WorkExecutionPlan
 
 
 ANTHROPIC_SKILL_ROOT = "upstream/anthropic-skills/skills"
@@ -34,11 +35,11 @@ def _unique(items: list[str]) -> list[str]:
 
 
 class ProfessionalWebsiteFlow:
-    """Factory specialist-stage adapter over canonical Task/Sequence + Flow OS planning.
+    """Factory adapter over canonical Task, Sequence, Flow and Execution planning.
 
     GoalInterpreter remains the single-task contract owner. P1.4 adds a non-breaking
-    WorkSequenceContract above it so explicit multi-intent/multi-surface requests are
-    routed as ordered work owners instead of being collapsed into one change surface.
+    WorkSequenceContract above it, while P1.5 turns a resolved sequence into a stateful
+    execution contract without changing canonical routing or specialist composition.
     """
 
     FACTORY_TO_FLOW_STAGE = {
@@ -114,8 +115,6 @@ class ProfessionalWebsiteFlow:
         self.sequence_interpreter = WorkSequenceInterpreter(self.interpreter)
         self.sequence_planner = SequenceFlowPlanner(self.planner)
 
-        # Compatibility view for Factory-local root-cause repair code. It is not
-        # used for task/flow selection; canonical planners own that.
         self.flow_path = self.skills_root / "flows" / "professional-website-redesign.json"
         if not self.flow_path.is_file():
             raise FileNotFoundError(f"Professional website flow missing: {self.flow_path}")
@@ -160,6 +159,15 @@ class ProfessionalWebsiteFlow:
         if contract.routing_mode != "sequence":
             raise ValueError("goal resolves to a single work owner; use resolve() instead")
         return contract.profile, self.sequence_planner.plan_sequence(contract)
+
+    def resolve_execution_plan(
+        self,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> tuple[GoalInterpretation, WorkExecutionPlan]:
+        """Resolve a multi-work prompt into a resumable dependency-aware execution plan."""
+        profile, work_plan = self.resolve_work_plan(goal, target_truth=target_truth)
+        return profile, WorkExecutionPlan.from_resolved_work_plan(work_plan)
 
     @classmethod
     def _nearest_active_stage(cls, resolved: ResolvedFlow, requested: str) -> ResolvedStage:
