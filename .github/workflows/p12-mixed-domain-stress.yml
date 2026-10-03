@@ -1,0 +1,78 @@
+name: P1.2 Mixed-Domain Routing Stress
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/p12-mixed-domain-stress.yml"
+      - ".github/workflows/routing-intelligence-contract.yml"
+      - "uiux-factory/core/dogfood/mixed_domain_matrix.py"
+      - "uiux-factory/core/runtime/flow_os/flow.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_composition.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_taxonomy.py"
+      - "uiux-factory/core/runtime/flow_os/task_context.py"
+      - "uiux-factory/scripts/run_p12_mixed_domain_stress.py"
+      - "uiux-factory/tests/test_p12_mixed_domain_stress.py"
+      - "skills_UIUX/runtime/P12-MIXED-DOMAIN-STRESS.md"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/p12-mixed-domain-stress.yml"
+      - ".github/workflows/routing-intelligence-contract.yml"
+      - "uiux-factory/core/dogfood/mixed_domain_matrix.py"
+      - "uiux-factory/core/runtime/flow_os/flow.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_composition.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_taxonomy.py"
+      - "uiux-factory/core/runtime/flow_os/task_context.py"
+      - "uiux-factory/scripts/run_p12_mixed_domain_stress.py"
+      - "uiux-factory/tests/test_p12_mixed_domain_stress.py"
+      - "skills_UIUX/runtime/P12-MIXED-DOMAIN-STRESS.md"
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}/uiux-factory
+
+jobs:
+  p12-mixed-domain-stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REPORT_ROOT: ${{ github.workspace }}/p12-artifacts
+
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install focused dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt "pydantic>=2.5.3,<3"
+
+      - name: Run P1.2 mixed-domain contract tests
+        working-directory: uiux-factory
+        run: python -m pytest -q tests/test_p12_mixed_domain_stress.py
+
+      - name: Produce mixed-domain routing evidence
+        if: always()
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_p12_mixed_domain_stress.py \
+            --report "$REPORT_ROOT/mixed-domain.json"
+
+      - name: Upload P1.2 stress evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: p12-mixed-domain-stress-${{ github.run_id }}
+          if-no-files-found: warn
+          path: p12-artifacts/*.json
