@@ -5,12 +5,14 @@ on:
   pull_request:
     paths:
       - ".github/workflows/a20-release-candidate.yml"
+      - ".github/workflows/external-agent-connector-bridge.yml"
       - "uiux-factory/**"
       - "skills_UIUX/**"
   push:
     branches: [main]
     paths:
       - ".github/workflows/a20-release-candidate.yml"
+      - ".github/workflows/external-agent-connector-bridge.yml"
       - "uiux-factory/**"
       - "skills_UIUX/**"
 
