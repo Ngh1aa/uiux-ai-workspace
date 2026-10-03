@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Iterable
 
 from core.runtime.flow_os.adaptive_surface import classify_change_surface
+from core.runtime.flow_os.specialist_taxonomy import infer_specialist_context
 
 
 TASK_CONTRACT_VERSION = "1.0"
@@ -346,6 +347,13 @@ class GoalInterpreter:
                     product_archetype = candidate
                     evidence.append(f"product_archetype:{candidate}")
                     break
+
+        domain, product_archetype, specialist_evidence = infer_specialist_context(
+            normalized,
+            domain,
+            product_archetype,
+        )
+        evidence.extend(item for item in specialist_evidence if item not in evidence)
 
         features: list[str] = []
         for feature, terms in self.FEATURE_TERMS:
