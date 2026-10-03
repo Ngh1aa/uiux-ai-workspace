@@ -34,6 +34,7 @@ on:
 permissions:
   contents: read
   deployments: read
+  checks: read
   issues: write
 
 jobs:
