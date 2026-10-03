@@ -11,7 +11,7 @@ from core.runtime.flow_os.external_side_effects import (
 )
 
 
-REPOSITORY_POLICY_REGISTRY_VERSION = "1.1"
+REPOSITORY_POLICY_REGISTRY_VERSION = "1.2"
 POLICY_SOURCE = "repository-policy-registry"
 
 
@@ -120,7 +120,7 @@ class RepositoryGovernanceAssessment:
 
 _PR_MUTATION_SCOPE = ("branch-create", "branch-push", "pr-create", "pr-update")
 _NO_RELEASE = ReleaseBoundary()
-_STATIC = ("repository-static",)
+_STATIC = ("repository-static",)\n_STATIC_OR_EXTERNAL = ("repository-static", "external-observed")
 
 
 REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
@@ -132,7 +132,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
         rationale="Nova uses Vercel PR previews as review evidence; merge and production release remain owner-controlled.",
-        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC),),
+        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),),
     ),
     "ngh1aa/lumen": RepositoryPolicy(
         repository="Ngh1aa/Lumen",
@@ -143,8 +143,8 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         release_boundary=_NO_RELEASE,
         rationale="Lumen has Vercel configuration and deploys GitHub Pages from main; Factory read-only review must not create remote mutations that could cross either external deployment boundary.",
         integration_freshness=(
-            IntegrationFreshnessRule("vercel", _STATIC),
-            IntegrationFreshnessRule("github-pages", _STATIC),
+            IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),
+            IntegrationFreshnessRule("github-pages", _STATIC_OR_EXTERNAL),
         ),
     ),
     "ngh1aa/cennext-b2b-prototype": RepositoryPolicy(
@@ -155,7 +155,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
         rationale="CENNEXT has Vercel review previews; PR mutation is allowed while merge and production release remain owner-controlled.",
-        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC),),
+        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),),
     ),
     "ngh1aa/luxroom": RepositoryPolicy(
         repository="Ngh1aa/LuxRoom",
@@ -165,7 +165,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
         rationale="LuxRoom P1.7.2 dogfood proved Vercel PR preview side effects; those previews are allowed and evidence-backed only.",
-        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC),),
+        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),),
     ),
 }
 
