@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Authorize trusted issue author
+      - name: Authorize trusted issue author from live GitHub state
         id: authorize
         uses: actions/github-script@v8
         with:
@@ -28,14 +28,47 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
+
+            const issuer = issue.user?.login || 'unknown';
             const association = issue.author_association || 'NONE';
-            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
-            if (!trusted.has(association)) {
-              core.setFailed(`P1.7.1 request rejected: author_association=${association}`);
+            const trustedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+
+            let repoPermission = 'none';
+            let roleName = 'none';
+            if (issuer !== 'unknown') {
+              try {
+                const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  username: issuer,
+                });
+                repoPermission = permission.permission || 'none';
+                roleName = permission.role_name || repoPermission;
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+            }
+
+            const trustedByAssociation = trustedAssociations.has(association);
+            const trustedByPermission = repoPermission === 'admin' || repoPermission === 'write';
+            const authorizationBasis = trustedByAssociation
+              ? `author_association:${association}`
+              : (trustedByPermission ? `repo_permission:${repoPermission}` : 'none');
+
+            core.info(`P1.7.1 issuer: ${issuer}`);
+            core.info(`Live author_association: ${association}`);
+            core.info(`Effective repository permission: ${repoPermission} (${roleName})`);
+            core.info(`Authorization basis: ${authorizationBasis}`);
+
+            if (!trustedByAssociation && !trustedByPermission) {
+              core.setFailed(`P1.7.1 request rejected: association=${association}, repo_permission=${repoPermission}`);
               return;
             }
-            core.setOutput('issuer', issue.user?.login || 'unknown');
+
+            core.setOutput('issuer', issuer);
             core.setOutput('association', association);
+            core.setOutput('repo_permission', repoPermission);
+            core.setOutput('authorization_basis', authorizationBasis);
 
       - name: Checkout Factory
         uses: actions/checkout@v6
@@ -105,7 +138,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `P1.7.1 authenticated real-runner dogfood completed.\n\n- Target: \`Ngh1aa/LuxRoom\`\n- Transaction branch: \`${{ steps.dogfood.outputs.transaction_branch }}\`\n- PR: ${{ steps.dogfood.outputs.pr_url }}\n- PR state: \`${{ steps.dogfood.outputs.pr_state }}\`\n- main unchanged: \`${{ steps.dogfood.outputs.main_unchanged }}\`\n- Merge/deploy: **not performed**\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+              body: `P1.7.1 authenticated real-runner dogfood completed.\n\n- Target: \`Ngh1aa/LuxRoom\`\n- Transaction branch: \`${{ steps.dogfood.outputs.transaction_branch }}\`\n- PR: ${{ steps.dogfood.outputs.pr_url }}\n- PR state: \`${{ steps.dogfood.outputs.pr_state }}\`\n- main unchanged: \`${{ steps.dogfood.outputs.main_unchanged }}\`\n- Authorized issuer: \`${{ steps.authorize.outputs.issuer }}\` via \`${{ steps.authorize.outputs.authorization_basis }}\`\n- Merge/deploy: **not performed**\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             });
 
       - name: Comment fail-closed result
@@ -117,5 +150,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `P1.7.1 authenticated dogfood failed closed. No merge or deployment is authorized by this workflow. Check the run for AUTH_BLOCKED, transaction, QA, or PR evidence.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+              body: `P1.7.1 authenticated dogfood failed closed. No merge or deployment is authorized by this workflow. Check the run for authorization, AUTH_BLOCKED, transaction, QA, or PR evidence.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             });
