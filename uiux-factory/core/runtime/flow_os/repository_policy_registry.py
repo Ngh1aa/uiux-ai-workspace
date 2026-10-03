@@ -120,7 +120,8 @@ class RepositoryGovernanceAssessment:
 
 _PR_MUTATION_SCOPE = ("branch-create", "branch-push", "pr-create", "pr-update")
 _NO_RELEASE = ReleaseBoundary()
-_STATIC = ("repository-static",)\n_STATIC_OR_EXTERNAL = ("repository-static", "external-observed")
+_STATIC = ("repository-static",)
+_STATIC_OR_EXTERNAL = ("repository-static", "external-observed")\n_STATIC_OR_EXTERNAL = ("repository-static", "external-observed")
 
 
 REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
