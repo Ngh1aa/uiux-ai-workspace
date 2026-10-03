@@ -13,7 +13,7 @@ from core.runtime.flow_os.repository_policy_registry import registered_repositor
 
 
 NOW = datetime(2026, 10, 4, tzinfo=timezone.utc)
-FULL_SCOPE = ("repository-static", "external-observed")
+FULL_SCOPE = ("repository-static", "github-provider-native")
 
 
 def _static(provider: str, effect: str = "pr-preview") -> ExternalSideEffectEvidence:
@@ -227,8 +227,8 @@ def test_external_vercel_does_not_replace_static_required_vercel_marker() -> Non
 
     assert assessment.status == "DRIFT_REMOVED_PROVIDER"
     assert assessment.removed_providers == ("vercel",)
-    assert assessment.evidence_channels["vercel"] == ("external-observed",)
-    assert assessment.evidence_channels["github-pages"] == ("external-observed",)
+    assert assessment.evidence_channels["vercel"] == ("github-provider-native",)
+    assert assessment.evidence_channels["github-pages"] == ("github-provider-native",)
 
 
 def test_static_vercel_plus_external_pages_is_full_scope_in_sync() -> None:
@@ -251,7 +251,7 @@ def test_static_vercel_plus_external_pages_is_full_scope_in_sync() -> None:
     assert assessment.coverage_complete is True
     assert assessment.unresolved_providers == ()
     assert assessment.evidence_channels == {
-        "github-pages": ("external-observed",),
+        "github-pages": ("github-provider-native",),
         "vercel": ("repository-static",),
     }
 
@@ -300,7 +300,7 @@ def test_registry_separates_static_and_external_freshness_without_broadening_aut
     rules = {rule.provider: rule for rule in nova.integration_freshness}
 
     assert rules["vercel"].evidence_channels == ("repository-static",)
-    assert rules["github-pages"].evidence_channels == ("external-observed",)
+    assert rules["github-pages"].evidence_channels == ("github-provider-native",)
     assert nova.allowed_preview_providers == ("vercel",)
     assert nova.known_integration_providers == ("vercel", "github-pages")
     assert nova.release_boundary.allow_merge is False
