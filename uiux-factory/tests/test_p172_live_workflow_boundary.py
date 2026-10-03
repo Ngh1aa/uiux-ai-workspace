@@ -42,6 +42,15 @@ def test_p172_live_lane_uses_existing_pr_evidence_and_secret_read_boundary() -> 
     assert "getCollaboratorPermissionLevel" in text
 
 
+def test_p172_live_lane_installs_factory_runtime_dependencies_before_observation() -> None:
+    text = LIVE_WORKFLOW.read_text(encoding="utf-8")
+    install_index = text.index("Install Factory runtime dependencies")
+    observe_index = text.index("Observe LuxRoom PR #24 and evaluate both policies")
+    assert install_index < observe_index
+    assert '"pydantic>=2.5.3,<3"' in text
+    assert '"python-dotenv>=1,<2"' in text
+
+
 def test_p172_live_dogfood_requires_main_unchanged() -> None:
     text = DOGFOOD.read_text(encoding="utf-8")
     assert "base_sha_before == base_sha_after" in text
