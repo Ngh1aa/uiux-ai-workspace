@@ -16,6 +16,11 @@ def _planner() -> FlowPlanner:
     return FlowPlanner(SKILLS, policy)
 
 
+def _plan(goal: str):
+    profile = GoalInterpreter().interpret(goal)
+    return profile, _planner().plan(profile.to_context())
+
+
 def test_sentry_audit_routes_as_read_only_fraud_operations_not_portfolio_site() -> None:
     goal = (
         "Audit existing Sentry fintech and fraud operations console, audit-only and read-only. "
@@ -111,3 +116,88 @@ def test_explicit_portfolio_website_still_routes_as_portfolio() -> None:
 
     assert profile.intent == "build"
     assert profile.website_type == "portfolio"
+
+
+def test_edtech_full_product_infers_learning_platform_and_composes_learning_specialists() -> None:
+    profile, plan = _plan(
+        "Build an EdTech learning platform with courses, lessons, assignments and student progress."
+    )
+
+    assert profile.domain == "education-edtech"
+    assert profile.product_archetype == "learning-platform"
+    assert plan.id == "professional-website-redesign"
+
+    stages = {stage.id: stage for stage in plan.stages}
+    assert {"product-discovery", "complex-workflow-and-progress-ux", "information-architecture"}.issubset(
+        set(stages["research"].skills)
+    )
+    assert {"complex-workflow-and-progress-ux", "interaction-patterns-and-form-ux", "accessibility"}.issubset(
+        set(stages["design"].skills)
+    )
+    assert "state-feedback-and-error-recovery" in stages["implementation"].skills
+
+
+def test_museum_full_product_infers_visual_discovery_and_composes_visual_specialists() -> None:
+    profile, plan = _plan(
+        "Build an immersive digital museum experience for artwork discovery, exhibitions and an art collection."
+    )
+
+    assert profile.domain == "art-culture"
+    assert profile.product_archetype == "visual-discovery-museum"
+    assert plan.id == "professional-website-redesign"
+
+    stages = {stage.id: stage for stage in plan.stages}
+    assert {"asset-media-and-art-direction", "experience-principles-and-signature-moments"}.issubset(
+        set(stages["research"].skills)
+    )
+    assert "motion-and-microinteractions" in stages["design"].skills
+    assert "prototype-visual-experience-qa" in stages["qa"].skills
+
+
+def test_industrial_full_product_infers_enterprise_service_and_composes_service_specialists() -> None:
+    profile, plan = _plan(
+        "Build an industrial electric motor repair service website with service request and request a quote flows."
+    )
+
+    assert profile.domain == "industrial-services"
+    assert profile.product_archetype == "enterprise-service"
+    assert plan.id == "professional-website-redesign"
+
+    stages = {stage.id: stage for stage in plan.stages}
+    assert {"corporate-website", "service-experience-to-digital-journey", "trust-credibility-and-transparency"}.issubset(
+        set(stages["research"].skills)
+    )
+    assert {"conversion-and-content", "interaction-patterns-and-form-ux"}.issubset(set(stages["design"].skills))
+    assert "complex-forms-and-wizards" in stages["implementation"].skills
+
+
+def test_ecommerce_page_infers_storefront_and_composes_page_specialists() -> None:
+    profile, plan = _plan(
+        "Redesign one ecommerce product detail page with product gallery, cart, checkout and site search."
+    )
+
+    assert profile.website_type == "ecommerce"
+    assert profile.product_archetype == "commerce-storefront"
+    assert profile.change_surface == "PAGE"
+    assert plan.id == "page-ui-work"
+
+    stages = {stage.id: stage for stage in plan.stages}
+    assert {"ecommerce-website", "site-search-and-findability", "asset-media-and-art-direction"}.issubset(
+        set(stages["research"].skills)
+    )
+    assert {"journey-driven-content-and-layout", "interaction-patterns-and-form-ux"}.issubset(
+        set(stages["design"].skills)
+    )
+    assert {"media-crop-and-layout-integrity", "state-feedback-and-error-recovery"}.issubset(
+        set(stages["qa"].skills)
+    )
+
+
+def test_generic_domain_does_not_receive_unrelated_archetype_specialists() -> None:
+    profile, plan = _plan("Build one generic landing page for a newsletter signup.")
+
+    assert profile.product_archetype == "generic"
+    all_skills = {skill for stage in plan.stages for skill in stage.skills}
+    assert "financial-product-intelligence" not in all_skills
+    assert "education-website" not in all_skills
+    assert "service-experience-to-digital-journey" not in all_skills
