@@ -53,7 +53,7 @@ def test_preview_policy_matrix_is_repository_owned() -> None:
         policy = resolve_repository_policy(repository)
         assert policy.preview_policy == PreviewPolicy.PR_PREVIEW_ALLOWED.value
         assert policy.allowed_preview_providers == ("vercel",)
-        assert policy.known_integration_providers == ("vercel",)
+        assert policy.known_integration_providers == ("vercel", "github-pages")
         assert set(policy.mutation_scope) == {"branch-create", "branch-push", "pr-create", "pr-update"}
 
     lumen = resolve_repository_policy("Ngh1aa/Lumen")
@@ -80,10 +80,10 @@ def test_known_integrations_are_evidence_not_permission() -> None:
 
 def test_live_dogfood_expected_provider_footprint_matches_registry_exactly() -> None:
     expected = {
-        "Ngh1aa/Nova": {"vercel"},
+        "Ngh1aa/Nova": {"vercel", "github-pages"},
         "Ngh1aa/Lumen": {"vercel", "github-pages"},
-        "Ngh1aa/cennext-b2b-prototype": {"vercel"},
-        "Ngh1aa/LuxRoom": {"vercel"},
+        "Ngh1aa/cennext-b2b-prototype": {"vercel", "github-pages"},
+        "Ngh1aa/LuxRoom": {"vercel", "github-pages"},
     }
     assert {target.repository: set(target.expected_providers) for target in DOGFOOD_TARGETS} == expected
     for repository, providers in expected.items():
@@ -100,6 +100,26 @@ def test_vercel_is_allowed_for_registered_preview_repositories() -> None:
         )
         assert assessment.status == "PREVIEW_OBSERVED"
         assert assessment.mutation_allowed is True
+
+
+def test_known_pages_deployment_does_not_broaden_or_block_preview_authority() -> None:
+    pages = ExternalSideEffectEvidence(
+        provider="github-pages",
+        effect="deployment",
+        source="github-deployment",
+        state="observed",
+        url="https://github.com/Ngh1aa/Nova/deployments/1",
+        detail="Pages deployment observed",
+    )
+    assessment = assess_repository_governance(
+        "Ngh1aa/Nova",
+        (_evidence("vercel"), pages),
+        inspection_complete=True,
+        required_mutations=("branch-create", "branch-push", "pr-create"),
+    )
+    assert assessment.status == "PREVIEW_OBSERVED"
+    assert assessment.mutation_allowed is True
+    assert resolve_repository_policy("Ngh1aa/Nova").allowed_preview_providers == ("vercel",)
 
 
 def test_unlisted_provider_blocks_even_when_pr_preview_is_generally_allowed() -> None:
