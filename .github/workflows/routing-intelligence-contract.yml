@@ -7,6 +7,7 @@ on:
       - "uiux-factory/core/dogfood/mixed_domain_matrix.py"
       - "uiux-factory/core/dogfood/ambiguous_domain_matrix.py"
       - "uiux-factory/core/dogfood/multi_surface_matrix.py"
+      - "uiux-factory/core/dogfood/p171_authenticated_real_runner.py"
       - "uiux-factory/core/runtime/flow_os/external_task.py"
       - "uiux-factory/core/runtime/flow_os/flow.py"
       - "uiux-factory/core/runtime/flow_os/sequence_flow.py"
@@ -21,6 +22,8 @@ on:
       - "uiux-factory/core/orchestration/intelligent_flow.py"
       - "uiux-factory/scripts/run_p17_github_transaction.py"
       - "skills_UIUX/scripts/github-connector-task-request.py"
+      - "skills_UIUX/scripts/p171-authenticated-real-runner-worker.py"
+      - "skills_UIUX/scripts/run-p171-authenticated-real-dogfood.py"
       - ".github/workflows/external-agent-connector-bridge.yml"
       - ".github/workflows/routing-intelligence-contract.yml"
       - ".github/workflows/p12-mixed-domain-stress.yml"
@@ -29,6 +32,8 @@ on:
       - ".github/workflows/p15-stateful-work-plan-execution.yml"
       - ".github/workflows/p16-execution-driver.yml"
       - ".github/workflows/p17-github-production-transaction.yml"
+      - ".github/workflows/p171-authenticated-real-runner-contract.yml"
+      - ".github/workflows/p171-authenticated-real-runner-dogfood.yml"
       - "uiux-factory/tests/test_routing_intelligence_bridge_a39.py"
       - "uiux-factory/tests/test_intelligent_flow.py"
       - "uiux-factory/tests/test_canonical_specialist_routing_p11.py"
@@ -39,6 +44,7 @@ on:
       - "uiux-factory/tests/test_p15_stateful_work_plan_execution.py"
       - "uiux-factory/tests/test_p16_execution_driver.py"
       - "uiux-factory/tests/test_p17_github_production_transaction.py"
+      - "uiux-factory/tests/test_p171_authenticated_real_runner.py"
       - "docs/CONTRACT-OWNERSHIP.md"
       - "START-HERE.md"
 
@@ -82,5 +88,6 @@ jobs:
           uiux-factory/tests/test_p15_stateful_work_plan_execution.py
           uiux-factory/tests/test_p16_execution_driver.py
           uiux-factory/tests/test_p17_github_production_transaction.py
+          uiux-factory/tests/test_p171_authenticated_real_runner.py
           uiux-factory/tests/test_visual_signature_contract.py
           uiux-factory/tests/test_github_external_agent_runner_a33.py
