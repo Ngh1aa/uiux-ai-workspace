@@ -194,10 +194,20 @@ class SpecialistComposer:
             selected.extend(self.FEATURE_SKILLS.get(feature, {}).get(stage_id, ()))
         return _unique(selected)
 
-    def compose_flow(self, flow: Any, context: dict[str, Any]) -> Any:
+    def compose_flow(
+        self,
+        flow: Any,
+        context: dict[str, Any],
+        exclude_skills: Iterable[str] | None = None,
+    ) -> Any:
+        excluded = set(_unique(exclude_skills or []))
         stages: list[Any] = []
         for stage in flow.stages:
-            overlay = self.skills_for(stage.id, context)
+            overlay = [
+                skill
+                for skill in self.skills_for(stage.id, context)
+                if skill not in excluded
+            ]
             missing = [skill for skill in overlay if not (self.skills_root / skill / "SKILL.md").is_file()]
             if missing:
                 raise FileNotFoundError(
