@@ -11,7 +11,7 @@ from core.runtime.flow_os.external_side_effects import (
 )
 
 
-REPOSITORY_POLICY_REGISTRY_VERSION = "1.0"
+REPOSITORY_POLICY_REGISTRY_VERSION = "1.1"
 POLICY_SOURCE = "repository-policy-registry"
 
 
@@ -44,6 +44,18 @@ class ReleaseBoundary:
 
 
 @dataclass(frozen=True)
+class IntegrationFreshnessRule:
+    provider: str
+    evidence_channels: tuple[str, ...] = ("repository-static",)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "provider": self.provider,
+            "evidence_channels": list(self.evidence_channels),
+        }
+
+
+@dataclass(frozen=True)
 class RepositoryPolicy:
     repository: str
     preview_policy: str
@@ -54,6 +66,7 @@ class RepositoryPolicy:
     registered: bool = True
     source: str = POLICY_SOURCE
     rationale: str = ""
+    integration_freshness: tuple[IntegrationFreshnessRule, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -61,6 +74,7 @@ class RepositoryPolicy:
         payload["allowed_preview_providers"] = list(self.allowed_preview_providers)
         payload["known_integration_providers"] = list(self.known_integration_providers)
         payload["mutation_scope"] = list(self.mutation_scope)
+        payload["integration_freshness"] = [rule.to_dict() for rule in self.integration_freshness]
         return payload
 
 
@@ -106,6 +120,7 @@ class RepositoryGovernanceAssessment:
 
 _PR_MUTATION_SCOPE = ("branch-create", "branch-push", "pr-create", "pr-update")
 _NO_RELEASE = ReleaseBoundary()
+_STATIC = ("repository-static",)
 
 
 REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
@@ -117,6 +132,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
         rationale="Nova uses Vercel PR previews as review evidence; merge and production release remain owner-controlled.",
+        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC),),
     ),
     "ngh1aa/lumen": RepositoryPolicy(
         repository="Ngh1aa/Lumen",
@@ -126,6 +142,10 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         mutation_scope=(),
         release_boundary=_NO_RELEASE,
         rationale="Lumen has Vercel configuration and deploys GitHub Pages from main; Factory read-only review must not create remote mutations that could cross either external deployment boundary.",
+        integration_freshness=(
+            IntegrationFreshnessRule("vercel", _STATIC),
+            IntegrationFreshnessRule("github-pages", _STATIC),
+        ),
     ),
     "ngh1aa/cennext-b2b-prototype": RepositoryPolicy(
         repository="Ngh1aa/cennext-b2b-prototype",
@@ -135,6 +155,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
         rationale="CENNEXT has Vercel review previews; PR mutation is allowed while merge and production release remain owner-controlled.",
+        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC),),
     ),
     "ngh1aa/luxroom": RepositoryPolicy(
         repository="Ngh1aa/LuxRoom",
@@ -144,6 +165,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
         rationale="LuxRoom P1.7.2 dogfood proved Vercel PR preview side effects; those previews are allowed and evidence-backed only.",
+        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC),),
     ),
 }
 
@@ -159,6 +181,11 @@ def _normalize_repository(repository: str) -> str:
 
 def _canonical_tuple(values: Iterable[str]) -> tuple[str, ...]:
     return tuple(dict.fromkeys(str(value).strip().lower() for value in values if str(value).strip()))
+
+
+def registered_repository_policies() -> tuple[RepositoryPolicy, ...]:
+    """Return the canonical registered policy set in stable registry order."""
+    return tuple(policy for policy in REPOSITORY_POLICIES.values() if policy.registered)
 
 
 def _apply_override(policy: RepositoryPolicy, override: RepositoryPolicyOverride) -> RepositoryPolicy:
@@ -223,6 +250,7 @@ def resolve_repository_policy(
             registered=False,
             source="repository-policy-registry:unregistered-fail-closed",
             rationale="Unregistered repositories receive no remote mutation or release authority.",
+            integration_freshness=(),
         )
     return _apply_override(policy, override) if override is not None else policy
 

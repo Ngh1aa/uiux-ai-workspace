@@ -1,0 +1,194 @@
+name: P1.7.4 Policy Drift Detection
+
+on:
+  pull_request:
+    paths:
+      - "uiux-factory/core/runtime/flow_os/repository_policy_registry.py"
+      - "uiux-factory/core/runtime/flow_os/repository_policy_drift.py"
+      - "uiux-factory/core/runtime/flow_os/external_side_effects.py"
+      - "uiux-factory/core/dogfood/p174_policy_drift.py"
+      - "skills_UIUX/scripts/run-p174-policy-drift.py"
+      - "skills_UIUX/runtime/P174-POLICY-DRIFT-DETECTION.md"
+      - "uiux-factory/tests/test_p174_policy_drift.py"
+      - "uiux-factory/tests/test_p174_workflow_boundary.py"
+      - ".github/workflows/p174-policy-drift-detection.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "uiux-factory/core/runtime/flow_os/repository_policy_registry.py"
+      - "uiux-factory/core/runtime/flow_os/repository_policy_drift.py"
+      - "uiux-factory/core/runtime/flow_os/external_side_effects.py"
+      - "uiux-factory/core/dogfood/p174_policy_drift.py"
+      - "skills_UIUX/scripts/run-p174-policy-drift.py"
+      - "skills_UIUX/runtime/P174-POLICY-DRIFT-DETECTION.md"
+      - "uiux-factory/tests/test_p174_policy_drift.py"
+      - "uiux-factory/tests/test_p174_workflow_boundary.py"
+      - ".github/workflows/p174-policy-drift-detection.yml"
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          path: factory
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install focused dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check
+          pytest "pydantic>=2.5.3,<3" "python-dotenv>=1,<2"
+      - name: Compile P1.7.4 governance surfaces
+        run: >-
+          python -m py_compile
+          factory/uiux-factory/core/runtime/flow_os/repository_policy_registry.py
+          factory/uiux-factory/core/runtime/flow_os/repository_policy_drift.py
+          factory/uiux-factory/core/dogfood/p174_policy_drift.py
+          factory/skills_UIUX/scripts/run-p174-policy-drift.py
+      - name: Run P1.7.4 and prior governance regressions
+        env:
+          PYTHONPATH: ${{ github.workspace }}/factory/uiux-factory
+        run: >-
+          python -m pytest -q
+          factory/uiux-factory/tests/test_p174_policy_drift.py
+          factory/uiux-factory/tests/test_p174_workflow_boundary.py
+          factory/uiux-factory/tests/test_p173_repository_policy_registry.py
+          factory/uiux-factory/tests/test_p173_live_workflow_boundary.py
+          factory/uiux-factory/tests/test_p172_external_side_effect_governance.py
+          factory/uiux-factory/tests/test_p172_live_workflow_boundary.py
+          factory/uiux-factory/tests/test_p171_authenticated_real_runner.py
+          factory/uiux-factory/tests/test_p17_github_production_transaction.py
+      - name: Build monitored repository matrix from registry
+        id: matrix
+        env:
+          PYTHONPATH: ${{ github.workspace }}/factory/uiux-factory
+        shell: bash
+        run: |
+          matrix="$(python factory/skills_UIUX/scripts/run-p174-policy-drift.py --matrix)"
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+
+  monitor:
+    needs: registry
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.registry.outputs.matrix) }}
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          path: factory
+          persist-credentials: false
+      - name: Checkout target repository read-only
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ matrix.repository }}
+          path: target
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install Factory runtime dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check
+          "pydantic>=2.5.3,<3" "python-dotenv>=1,<2"
+      - name: Evaluate current repository footprint against registry
+        id: drift
+        continue-on-error: true
+        env:
+          PYTHONPATH: ${{ github.workspace }}/factory/uiux-factory
+        run: >-
+          python factory/skills_UIUX/scripts/run-p174-policy-drift.py
+          --repository "${{ matrix.repository }}"
+          --repo-root target
+          --output-dir "${{ runner.temp }}/p174/${{ matrix.slug }}"
+      - name: Upload P1.7.4 evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p174-policy-drift-${{ matrix.slug }}
+          path: ${{ runner.temp }}/p174/${{ matrix.slug }}/*.json
+          if-no-files-found: error
+      - name: Open or update Factory drift alert
+        if: >-
+          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push')
+          && steps.drift.outcome == 'failure'
+        uses: actions/github-script@v8
+        env:
+          TARGET_REPOSITORY: ${{ matrix.repository }}
+          TARGET_SLUG: ${{ matrix.slug }}
+        with:
+          script: |
+            const fs = require('fs');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = `[P1.7.4 DRIFT] ${process.env.TARGET_REPOSITORY}`;
+            const reportPath = `${process.env.RUNNER_TEMP}/p174/${process.env.TARGET_SLUG}/p174-policy-drift-${process.env.TARGET_SLUG}.json`;
+            let summary = 'Drift report was not readable.';
+            try {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              const a = report.assessment || {};
+              summary = [
+                `Status: \`${a.status || 'UNKNOWN'}\``,
+                `Detected providers: \`${(a.detected_providers || []).join(', ') || 'none'}\``,
+                `Registered providers: \`${(a.registered_providers || []).join(', ') || 'none'}\``,
+                `Added: \`${(a.added_providers || []).join(', ') || 'none'}\``,
+                `Removed: \`${(a.removed_providers || []).join(', ') || 'none'}\``,
+                `Reason: ${a.reason || 'n/a'}`,
+              ].join('\n');
+            } catch (error) {
+              summary = `Could not parse drift report: ${error.message}`;
+            }
+            const body = `${summary}\n\nWorkflow: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}\n\nP1.7.4 is read-only against the target repository. Update the canonical registry or remove the unexpected integration evidence; do not weaken the detector to make this alert disappear.`;
+            const { data: issues } = await github.rest.issues.listForRepo({ owner, repo, state: 'open', per_page: 100 });
+            const existing = issues.find(item => !item.pull_request && item.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body });
+            }
+      - name: Close recovered Factory drift alert
+        if: >-
+          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push')
+          && steps.drift.outcome == 'success'
+        uses: actions/github-script@v8
+        env:
+          TARGET_REPOSITORY: ${{ matrix.repository }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = `[P1.7.4 DRIFT] ${process.env.TARGET_REPOSITORY}`;
+            const { data: issues } = await github.rest.issues.listForRepo({ owner, repo, state: 'open', per_page: 100 });
+            const existing = issues.find(item => !item.pull_request && item.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body: `P1.7.4 policy footprint is back in sync. Recovery run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`,
+              });
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, state: 'closed', state_reason: 'completed' });
+            }
+      - name: Enforce drift gate
+        if: steps.drift.outcome != 'success'
+        run: |
+          echo "P1.7.4 detected repository policy drift for ${{ matrix.repository }}"
+          exit 1

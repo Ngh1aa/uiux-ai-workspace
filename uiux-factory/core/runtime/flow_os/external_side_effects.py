@@ -68,40 +68,87 @@ def _dedupe(evidence: Iterable[ExternalSideEffectEvidence]) -> tuple[ExternalSid
     return tuple(result)
 
 
+def _read_lower(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8", errors="replace").lower()
+    except OSError:
+        return ""
+
+
 def detect_static_integrations(repo_root: Path | str) -> tuple[ExternalSideEffectEvidence, ...]:
     """Detect repository-visible integration signals without mutating the target."""
     root = Path(repo_root)
     evidence: list[ExternalSideEffectEvidence] = []
-    if (root / "vercel.json").is_file() or (root / ".vercel" / "project.json").is_file():
+
+    file_markers: tuple[tuple[str, str, tuple[str, ...], str], ...] = (
+        (
+            "vercel",
+            "pr-preview",
+            ("vercel.json", ".vercel/project.json"),
+            "Vercel configuration is present in the repository.",
+        ),
+        (
+            "netlify",
+            "pr-preview",
+            ("netlify.toml",),
+            "Netlify configuration is present in the repository.",
+        ),
+        (
+            "render",
+            "deployment",
+            ("render.yaml", "render.yml"),
+            "Render deployment configuration is present in the repository.",
+        ),
+        (
+            "railway",
+            "deployment",
+            ("railway.json", "railway.toml"),
+            "Railway deployment configuration is present in the repository.",
+        ),
+        (
+            "cloudflare",
+            "deployment",
+            ("wrangler.toml", "wrangler.json", "wrangler.jsonc"),
+            "Cloudflare Wrangler deployment configuration is present in the repository.",
+        ),
+    )
+    for provider, effect, relative_paths, detail in file_markers:
+        present = [relative_path for relative_path in relative_paths if (root / relative_path).is_file()]
+        if present:
+            evidence.append(
+                ExternalSideEffectEvidence(
+                    provider=provider,
+                    effect=effect,
+                    source="repository-static-config",
+                    state="configured",
+                    detail=f"{detail} Marker(s): {', '.join(present)}",
+                )
+            )
+
+    firebase = root / "firebase.json"
+    if firebase.is_file() and '"hosting"' in _read_lower(firebase):
         evidence.append(
             ExternalSideEffectEvidence(
-                provider="vercel",
-                effect="pr-preview",
+                provider="firebase-hosting",
+                effect="deployment",
                 source="repository-static-config",
                 state="configured",
-                detail="Vercel configuration is present in the repository.",
+                detail="Firebase Hosting configuration is present in firebase.json.",
             )
         )
-    if (root / "netlify.toml").is_file():
-        evidence.append(
-            ExternalSideEffectEvidence(
-                provider="netlify",
-                effect="pr-preview",
-                source="repository-static-config",
-                state="configured",
-                detail="Netlify configuration is present in the repository.",
-            )
-        )
+
     workflows = root / ".github" / "workflows"
     if workflows.is_dir():
         markers = (
+            "actions/configure-pages",
+            "actions/upload-pages-artifact",
             "actions/deploy-pages",
             "pages-build-deployment",
             "peaceiris/actions-gh-pages",
             "github-pages",
         )
         for path in sorted(workflows.glob("*.y*ml")):
-            text = path.read_text(encoding="utf-8", errors="replace").lower()
+            text = _read_lower(path)
             if any(marker in text for marker in markers):
                 evidence.append(
                     ExternalSideEffectEvidence(
