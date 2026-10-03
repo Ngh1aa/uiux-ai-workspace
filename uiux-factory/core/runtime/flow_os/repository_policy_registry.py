@@ -11,7 +11,7 @@ from core.runtime.flow_os.external_side_effects import (
 )
 
 
-REPOSITORY_POLICY_REGISTRY_VERSION = "1.2"
+REPOSITORY_POLICY_REGISTRY_VERSION = "1.3"
 POLICY_SOURCE = "repository-policy-registry"
 
 
@@ -121,7 +121,8 @@ class RepositoryGovernanceAssessment:
 _PR_MUTATION_SCOPE = ("branch-create", "branch-push", "pr-create", "pr-update")
 _NO_RELEASE = ReleaseBoundary()
 _STATIC = ("repository-static",)
-_STATIC_OR_EXTERNAL = ("repository-static", "external-observed")
+_STATIC_OR_DEPLOYMENT = ("repository-static", "github-deployment")
+_DEPLOYMENT_ONLY = ("github-deployment",)
 
 
 REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
@@ -129,11 +130,14 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         repository="Ngh1aa/Nova",
         preview_policy=PreviewPolicy.PR_PREVIEW_ALLOWED.value,
         allowed_preview_providers=("vercel",),
-        known_integration_providers=("vercel",),
+        known_integration_providers=("vercel", "github-pages"),
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
-        rationale="Nova uses Vercel PR previews as review evidence; merge and production release remain owner-controlled.",
-        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),),
+        rationale="Nova uses Vercel PR previews and has externally observed GitHub Pages deployments; merge and production release remain owner-controlled.",
+        integration_freshness=(
+            IntegrationFreshnessRule("vercel", _STATIC_OR_DEPLOYMENT),
+            IntegrationFreshnessRule("github-pages", _DEPLOYMENT_ONLY),
+        ),
     ),
     "ngh1aa/lumen": RepositoryPolicy(
         repository="Ngh1aa/Lumen",
@@ -144,29 +148,35 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         release_boundary=_NO_RELEASE,
         rationale="Lumen has Vercel configuration and deploys GitHub Pages from main; Factory read-only review must not create remote mutations that could cross either external deployment boundary.",
         integration_freshness=(
-            IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),
-            IntegrationFreshnessRule("github-pages", _STATIC_OR_EXTERNAL),
+            IntegrationFreshnessRule("vercel", _STATIC_OR_DEPLOYMENT),
+            IntegrationFreshnessRule("github-pages", _STATIC_OR_DEPLOYMENT),
         ),
     ),
     "ngh1aa/cennext-b2b-prototype": RepositoryPolicy(
         repository="Ngh1aa/cennext-b2b-prototype",
         preview_policy=PreviewPolicy.PR_PREVIEW_ALLOWED.value,
         allowed_preview_providers=("vercel",),
-        known_integration_providers=("vercel",),
+        known_integration_providers=("vercel", "github-pages"),
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
-        rationale="CENNEXT has Vercel review previews; PR mutation is allowed while merge and production release remain owner-controlled.",
-        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),),
+        rationale="CENNEXT has Vercel review previews and externally observed GitHub Pages deployments; PR mutation is allowed while merge and production release remain owner-controlled.",
+        integration_freshness=(
+            IntegrationFreshnessRule("vercel", _STATIC_OR_DEPLOYMENT),
+            IntegrationFreshnessRule("github-pages", _DEPLOYMENT_ONLY),
+        ),
     ),
     "ngh1aa/luxroom": RepositoryPolicy(
         repository="Ngh1aa/LuxRoom",
         preview_policy=PreviewPolicy.PR_PREVIEW_ALLOWED.value,
         allowed_preview_providers=("vercel",),
-        known_integration_providers=("vercel",),
+        known_integration_providers=("vercel", "github-pages"),
         mutation_scope=_PR_MUTATION_SCOPE,
         release_boundary=_NO_RELEASE,
-        rationale="LuxRoom P1.7.2 dogfood proved Vercel PR preview side effects; those previews are allowed and evidence-backed only.",
-        integration_freshness=(IntegrationFreshnessRule("vercel", _STATIC_OR_EXTERNAL),),
+        rationale="LuxRoom dogfood proved Vercel PR previews and P1.7.5 observed GitHub Pages deployments; preview mutation remains Vercel-only and release stays owner-controlled.",
+        integration_freshness=(
+            IntegrationFreshnessRule("vercel", _STATIC_OR_DEPLOYMENT),
+            IntegrationFreshnessRule("github-pages", _DEPLOYMENT_ONLY),
+        ),
     ),
 }
 
@@ -299,8 +309,10 @@ def assess_repository_governance(
         allowed = False
         reason = external.reason
     else:
-        observed_providers = {item.provider for item in combined_evidence}
-        unexpected = sorted(observed_providers - set(policy.allowed_preview_providers))
+        observed_preview_providers = {
+            item.provider for item in combined_evidence if item.effect == "pr-preview"
+        }
+        unexpected = sorted(observed_preview_providers - set(policy.allowed_preview_providers))
         if unexpected:
             status = "BLOCKED_PROVIDER_NOT_ALLOWED"
             allowed = False
