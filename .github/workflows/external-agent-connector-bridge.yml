@@ -29,21 +29,48 @@ jobs:
               issue_number: context.issue.number,
             });
 
+            const issuer = issue.user?.login || 'unknown';
             const eventAssociation = context.payload.issue?.author_association || 'UNKNOWN';
             const liveAssociation = issue.author_association || 'NONE';
             const trustedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
 
-            core.info(`Connector issuer: ${issue.user?.login || 'unknown'}`);
+            let repoPermission = 'none';
+            let roleName = 'none';
+            if (issuer !== 'unknown') {
+              try {
+                const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  username: issuer,
+                });
+                repoPermission = permission.permission || 'none';
+                roleName = permission.role_name || repoPermission;
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+            }
+
+            const trustedByAssociation = trustedAssociations.has(liveAssociation);
+            const trustedByPermission = repoPermission === 'admin' || repoPermission === 'write';
+            const authorizationBasis = trustedByAssociation
+              ? `author_association:${liveAssociation}`
+              : (trustedByPermission ? `repo_permission:${repoPermission}` : 'none');
+
+            core.info(`Connector issuer: ${issuer}`);
             core.info(`Event author_association: ${eventAssociation}`);
             core.info(`Live author_association: ${liveAssociation}`);
+            core.info(`Effective repository permission: ${repoPermission} (${roleName})`);
+            core.info(`Authorization basis: ${authorizationBasis}`);
 
-            if (!trustedAssociations.has(liveAssociation)) {
-              core.setFailed(`Connector request rejected: live author_association=${liveAssociation} is not trusted.`);
+            if (!trustedByAssociation && !trustedByPermission) {
+              core.setFailed(`Connector request rejected: association=${liveAssociation}, repo_permission=${repoPermission}.`);
               return;
             }
 
             core.setOutput('author_association', liveAssociation);
-            core.setOutput('issuer', issue.user?.login || 'unknown');
+            core.setOutput('repo_permission', repoPermission);
+            core.setOutput('authorization_basis', authorizationBasis);
+            core.setOutput('issuer', issuer);
 
       - name: Checkout Factory
         uses: actions/checkout@v6
@@ -112,7 +139,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `UIUX Factory compiled the governed external-agent task packet for this request.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\nArtifact: \`external-agent-task-packet-${context.issue.number}\`\n\nAuthorized issuer: \`${{ steps.authorize.outputs.issuer }}\` (\`${{ steps.authorize.outputs.author_association }}\`).\n\nThis packet is a routing contract, not evidence that implementation or QA passed.`
+              body: `UIUX Factory compiled the governed external-agent task packet for this request.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\nArtifact: \`external-agent-task-packet-${context.issue.number}\`\n\nAuthorized issuer: \`${{ steps.authorize.outputs.issuer }}\` via \`${{ steps.authorize.outputs.authorization_basis }}\` (event/live association: \`${{ steps.authorize.outputs.author_association }}\`, effective repo permission: \`${{ steps.authorize.outputs.repo_permission }}\`).\n\nThis packet is a routing contract, not evidence that implementation or QA passed.`
             });
 
       - name: Comment on bridge failure
