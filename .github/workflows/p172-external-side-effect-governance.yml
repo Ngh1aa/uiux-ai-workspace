@@ -4,16 +4,24 @@ on:
   pull_request:
     paths:
       - "uiux-factory/core/runtime/flow_os/external_side_effects.py"
+      - "uiux-factory/core/runtime/flow_os/repository_policy_registry.py"
       - "uiux-factory/core/runtime/flow_os/__init__.py"
       - "uiux-factory/core/dogfood/p171_authenticated_real_runner.py"
       - "uiux-factory/core/dogfood/p172_external_side_effect_governance.py"
+      - "uiux-factory/core/dogfood/p173_repository_policy_registry.py"
       - "skills_UIUX/scripts/run-p172-external-side-effect-governance.py"
+      - "skills_UIUX/scripts/run-p173-repository-policy-registry.py"
       - "skills_UIUX/runtime/P172-EXTERNAL-SIDE-EFFECT-GOVERNANCE.md"
+      - "skills_UIUX/runtime/P173-REPOSITORY-POLICY-REGISTRY.md"
       - "uiux-factory/tests/test_p172_external_side_effect_governance.py"
       - "uiux-factory/tests/test_p172_live_workflow_boundary.py"
+      - "uiux-factory/tests/test_p173_repository_policy_registry.py"
+      - "uiux-factory/tests/test_p173_live_workflow_boundary.py"
       - "uiux-factory/tests/test_p171_authenticated_real_runner.py"
       - ".github/workflows/p172-external-side-effect-governance.yml"
       - ".github/workflows/p172-external-side-effect-live-dogfood.yml"
+      - ".github/workflows/p173-repository-policy-registry.yml"
+      - ".github/workflows/p173-repository-policy-live-dogfood.yml"
       - ".github/workflows/p171-authenticated-real-runner-contract.yml"
 
 permissions:
@@ -43,5 +51,7 @@ jobs:
           python -m pytest -q
           uiux-factory/tests/test_p172_external_side_effect_governance.py
           uiux-factory/tests/test_p172_live_workflow_boundary.py
+          uiux-factory/tests/test_p173_repository_policy_registry.py
+          uiux-factory/tests/test_p173_live_workflow_boundary.py
           uiux-factory/tests/test_p171_authenticated_real_runner.py
           uiux-factory/tests/test_p17_github_production_transaction.py
