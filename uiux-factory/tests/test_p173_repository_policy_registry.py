@@ -102,6 +102,26 @@ def test_vercel_is_allowed_for_registered_preview_repositories() -> None:
         assert assessment.mutation_allowed is True
 
 
+def test_known_pages_deployment_does_not_broaden_or_block_preview_authority() -> None:
+    pages = ExternalSideEffectEvidence(
+        provider="github-pages",
+        effect="deployment",
+        source="github-deployment",
+        state="observed",
+        url="https://github.com/Ngh1aa/Nova/deployments/1",
+        detail="Pages deployment observed",
+    )
+    assessment = assess_repository_governance(
+        "Ngh1aa/Nova",
+        (_evidence("vercel"), pages),
+        inspection_complete=True,
+        required_mutations=("branch-create", "branch-push", "pr-create"),
+    )
+    assert assessment.status == "PREVIEW_OBSERVED"
+    assert assessment.mutation_allowed is True
+    assert resolve_repository_policy("Ngh1aa/Nova").allowed_preview_providers == ("vercel",)
+
+
 def test_unlisted_provider_blocks_even_when_pr_preview_is_generally_allowed() -> None:
     assessment = assess_repository_governance(
         "Ngh1aa/Nova",
