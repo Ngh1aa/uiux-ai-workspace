@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
-from core.runtime.flow_os.specialist_composition import SpecialistComposer
 from core.runtime.flow_os.task_context import (
     DEFAULT_DELIVERY_POLICY_ID,
     DEFAULT_FACTORY_DELIVERY_LANE,
@@ -31,15 +30,10 @@ def _unique(items: list[str]) -> list[str]:
 class ProfessionalWebsiteFlow:
     """Factory specialist-stage adapter over the canonical Flow OS planner.
 
-    The canonical runtime owns GoalInterpreter, Task Contract, adaptive flow
-    selection, skill resolution and high-level replanning. This adapter keeps the
-    existing detailed Factory stage vocabulary while translating each detailed
-    stage onto the single resolved declarative flow.
-
-    Specialist composition is applied after canonical flow selection so every
-    compatible lane (FOCUSED, PAGE, REDESIGN and PRODUCT) receives contextual
-    domain × archetype × surface × feature expertise without duplicating a
-    second flow-selection system.
+    Canonical GoalInterpreter owns Task Contract inference and canonical
+    FlowPlanner owns flow selection, skill resolution and specialist composition.
+    This adapter only maps the Factory's detailed stage vocabulary onto that
+    resolved canonical flow and adds Factory-stage compatibility extras.
     """
 
     FACTORY_TO_FLOW_STAGE = {
@@ -112,7 +106,6 @@ class ProfessionalWebsiteFlow:
         self.runtime_policy = json.loads(policy_path.read_text(encoding="utf-8"))
         self.planner = FlowPlanner(self.skills_root, self.runtime_policy)
         self.interpreter = GoalInterpreter()
-        self.specialist_composer = SpecialistComposer(self.skills_root)
 
         # Compatibility view for Factory-local root-cause repair code. It is not
         # used for task/flow selection; the canonical FlowPlanner owns that.
@@ -135,10 +128,8 @@ class ProfessionalWebsiteFlow:
             raise ValueError(f"Default delivery policy must define Prompt OS phases 0→4, got {phase_ids!r}")
 
     def resolve(self, goal: str) -> tuple[GoalInterpretation, ResolvedFlow]:
-        profile = self.specialist_composer.enrich_profile(self.interpreter.interpret(goal), goal)
-        context = profile.to_context()
-        resolved = self.planner.plan(context)
-        return profile, self.specialist_composer.compose_flow(resolved, context)
+        profile = self.interpreter.interpret(goal)
+        return profile, self.planner.plan(profile.to_context())
 
     @classmethod
     def _nearest_active_stage(cls, resolved: ResolvedFlow, requested: str) -> ResolvedStage:
