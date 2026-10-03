@@ -38,6 +38,7 @@ DOMAIN_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
             "enterprise software",
             "enterprise platform",
             "enterprise dashboard",
+            "enterprise saas",
             "back office",
             "back-office",
             "operations platform",
@@ -77,6 +78,87 @@ STRONG_FINANCIAL_DOMAIN_HINTS: tuple[str, ...] = (
     "investment",
     "card issuing",
     "acquiring",
+)
+
+PRIMARY_DOMAIN_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "financial-services",
+        STRONG_FINANCIAL_DOMAIN_HINTS + ("bank", "payments", "payment operations"),
+    ),
+    (
+        "ai-software",
+        (
+            "ai workspace",
+            "ai-native",
+            "ai native",
+            "ai platform",
+            "ai product",
+            "ai copilot",
+            "ai assistant",
+            "generative ai",
+            "artificial intelligence",
+            "llm platform",
+        ),
+    ),
+    ("commerce-retail", dict(DOMAIN_HINTS)["commerce-retail"] + ("ecommerce storefront", "storefront")),
+    ("enterprise-software", dict(DOMAIN_HINTS)["enterprise-software"] + ("saas operations", "enterprise operations")),
+    (
+        "education-edtech",
+        (
+            "edtech",
+            "lms",
+            "learning platform",
+            "learning management system",
+            "course platform",
+            "online learning",
+            "digital classroom",
+        ),
+    ),
+)
+
+DOMAIN_SIGNAL_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "financial-services",
+        STRONG_FINANCIAL_DOMAIN_HINTS + ("bank", "payment", "payments", "financial analysts"),
+    ),
+    (
+        "ai-software",
+        (
+            "ai workspace",
+            "ai-native",
+            "ai native",
+            "ai platform",
+            "ai product",
+            "ai copilot",
+            "ai assistant",
+            "generative ai",
+            "artificial intelligence",
+            "agentic",
+        ),
+    ),
+    ("commerce-retail", dict(DOMAIN_HINTS)["commerce-retail"] + ("ecommerce storefront", "storefront")),
+    (
+        "enterprise-software",
+        dict(DOMAIN_HINTS)["enterprise-software"]
+        + ("enterprise operations", "enterprise admin", "admin workflows", "saas admin"),
+    ),
+    (
+        "education-edtech",
+        (
+            "edtech",
+            "lms",
+            "learning platform",
+            "learning management system",
+            "course platform",
+            "online learning",
+            "digital classroom",
+        ),
+    ),
+)
+
+PRIMARY_PRODUCT_PATTERNS: tuple[str, ...] = (
+    r"\b(?:the\s+)?primary product is\s+([^.;]+)",
+    r"\b(?:the\s+)?(?:main|core) product is\s+([^.;]+)",
 )
 
 
@@ -192,6 +274,39 @@ ARCHETYPE_HINTS: dict[str, tuple[tuple[str, tuple[str, ...]], ...]] = {
 }
 
 
+def _explicit_primary_domain(text: str) -> str | None:
+    segment = ""
+    for pattern in PRIMARY_PRODUCT_PATTERNS:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            segment = _normalise(match.group(1))
+            break
+    if not segment:
+        return None
+
+    # P1.2: a primary clause can itself contain multiple domain cues, e.g.
+    # "AI workspace for financial analysts". Choose the earliest product-defining
+    # cue in the explicit primary clause instead of letting taxonomy tuple order win.
+    matches: list[tuple[int, int, str]] = []
+    for rank, (candidate, terms) in enumerate(PRIMARY_DOMAIN_HINTS):
+        positions = [segment.find(term) for term in terms if term in segment]
+        positions = [position for position in positions if position >= 0]
+        if positions:
+            matches.append((min(positions), rank, candidate))
+    if not matches:
+        return None
+    matches.sort()
+    return matches[0][2]
+
+
+def _secondary_domains(text: str, primary_domain: str) -> list[str]:
+    secondary: list[str] = []
+    for candidate, terms in DOMAIN_SIGNAL_HINTS:
+        if candidate != primary_domain and _contains(text, terms):
+            secondary.append(candidate)
+    return secondary
+
+
 def infer_specialist_context(
     goal: str,
     domain: str,
@@ -199,10 +314,10 @@ def infer_specialist_context(
 ) -> tuple[str, str, list[str]]:
     """Enrich canonical task context without depending on flow or skill routing.
 
-    Existing explicit/canonical classifications normally win. The only arbitration
-    performed here is a bounded ambiguity correction: ordinary ecommerce checkout
-    language may contain the generic word "payment", which must not by itself turn a
-    commerce task into financial services when stronger financial-product evidence is absent.
+    Explicit `primary product is ...` language owns mixed-domain arbitration. Secondary
+    domains stay visible as provenance but do not automatically compose specialists.
+    Without an explicit primary owner, the existing bounded ecommerce/payment ambiguity
+    correction and canonical fallback behaviour remain unchanged.
     """
 
     text = _normalise(goal)
@@ -210,9 +325,20 @@ def infer_specialist_context(
     resolved_archetype = str(product_archetype or "generic")
     evidence: list[str] = []
 
+    explicit_primary = _explicit_primary_domain(text)
+    if explicit_primary:
+        if resolved_domain != explicit_primary:
+            resolved_domain = explicit_primary
+            resolved_archetype = "generic"
+            evidence.append(f"domain:{explicit_primary}")
+        evidence.append(f"domain_precedence:explicit-primary->{explicit_primary}")
+        for secondary in _secondary_domains(text, explicit_primary):
+            evidence.append(f"secondary_domain:{secondary}")
+
     commerce_terms = dict(DOMAIN_HINTS)["commerce-retail"]
     if (
-        resolved_domain == "financial-services"
+        explicit_primary is None
+        and resolved_domain == "financial-services"
         and _contains(text, commerce_terms)
         and not _contains(text, STRONG_FINANCIAL_DOMAIN_HINTS)
     ):
