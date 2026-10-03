@@ -283,10 +283,20 @@ def _explicit_primary_domain(text: str) -> str | None:
             break
     if not segment:
         return None
-    for candidate, terms in PRIMARY_DOMAIN_HINTS:
-        if _contains(segment, terms):
-            return candidate
-    return None
+
+    # P1.2: a primary clause can itself contain multiple domain cues, e.g.
+    # "AI workspace for financial analysts". Choose the earliest product-defining
+    # cue in the explicit primary clause instead of letting taxonomy tuple order win.
+    matches: list[tuple[int, int, str]] = []
+    for rank, (candidate, terms) in enumerate(PRIMARY_DOMAIN_HINTS):
+        positions = [segment.find(term) for term in terms if term in segment]
+        positions = [position for position in positions if position >= 0]
+        if positions:
+            matches.append((min(positions), rank, candidate))
+    if not matches:
+        return None
+    matches.sort()
+    return matches[0][2]
 
 
 def _secondary_domains(text: str, primary_domain: str) -> list[str]:
