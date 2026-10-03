@@ -12,6 +12,7 @@ on:
       - "uiux-factory/core/runtime/flow_os/sequence_flow.py"
       - "uiux-factory/core/runtime/flow_os/sequence_router.py"
       - "uiux-factory/core/runtime/flow_os/work_sequence.py"
+      - "uiux-factory/core/runtime/flow_os/work_execution.py"
       - "uiux-factory/core/runtime/flow_os/specialist_composition.py"
       - "uiux-factory/core/runtime/flow_os/specialist_taxonomy.py"
       - "uiux-factory/core/runtime/flow_os/task_context.py"
@@ -22,6 +23,7 @@ on:
       - ".github/workflows/p12-mixed-domain-stress.yml"
       - ".github/workflows/p13-ambiguous-routing-evidence.yml"
       - ".github/workflows/p14-multi-intent-surface-routing.yml"
+      - ".github/workflows/p15-stateful-work-plan-execution.yml"
       - "uiux-factory/tests/test_routing_intelligence_bridge_a39.py"
       - "uiux-factory/tests/test_intelligent_flow.py"
       - "uiux-factory/tests/test_canonical_specialist_routing_p11.py"
@@ -29,6 +31,7 @@ on:
       - "uiux-factory/tests/test_p12_mixed_domain_stress.py"
       - "uiux-factory/tests/test_p13_ambiguous_routing.py"
       - "uiux-factory/tests/test_p14_multi_intent_surface_routing.py"
+      - "uiux-factory/tests/test_p15_stateful_work_plan_execution.py"
       - "docs/CONTRACT-OWNERSHIP.md"
       - "START-HERE.md"
 
@@ -69,5 +72,6 @@ jobs:
           uiux-factory/tests/test_p12_mixed_domain_stress.py
           uiux-factory/tests/test_p13_ambiguous_routing.py
           uiux-factory/tests/test_p14_multi_intent_surface_routing.py
+          uiux-factory/tests/test_p15_stateful_work_plan_execution.py
           uiux-factory/tests/test_visual_signature_contract.py
           uiux-factory/tests/test_github_external_agent_runner_a33.py
