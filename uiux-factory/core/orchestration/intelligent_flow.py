@@ -4,6 +4,12 @@ import json
 from pathlib import Path
 
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
+from core.runtime.flow_os.sequence_flow import (
+    MultiSurfaceRoutingError,
+    ResolvedWorkPlan,
+    SequenceFlowPlanner,
+)
+from core.runtime.flow_os.sequence_router import WorkSequenceContract, WorkSequenceInterpreter
 from core.runtime.flow_os.task_context import (
     DEFAULT_DELIVERY_POLICY_ID,
     DEFAULT_FACTORY_DELIVERY_LANE,
@@ -28,12 +34,11 @@ def _unique(items: list[str]) -> list[str]:
 
 
 class ProfessionalWebsiteFlow:
-    """Factory specialist-stage adapter over the canonical Flow OS planner.
+    """Factory specialist-stage adapter over canonical Task/Sequence + Flow OS planning.
 
-    Canonical GoalInterpreter owns Task Contract inference and canonical
-    FlowPlanner owns flow selection, skill resolution and specialist composition.
-    This adapter only maps the Factory's detailed stage vocabulary onto that
-    resolved canonical flow and adds Factory-stage compatibility extras.
+    GoalInterpreter remains the single-task contract owner. P1.4 adds a non-breaking
+    WorkSequenceContract above it so explicit multi-intent/multi-surface requests are
+    routed as ordered work owners instead of being collapsed into one change surface.
     """
 
     FACTORY_TO_FLOW_STAGE = {
@@ -106,9 +111,11 @@ class ProfessionalWebsiteFlow:
         self.runtime_policy = json.loads(policy_path.read_text(encoding="utf-8"))
         self.planner = FlowPlanner(self.skills_root, self.runtime_policy)
         self.interpreter = GoalInterpreter()
+        self.sequence_interpreter = WorkSequenceInterpreter(self.interpreter)
+        self.sequence_planner = SequenceFlowPlanner(self.planner)
 
         # Compatibility view for Factory-local root-cause repair code. It is not
-        # used for task/flow selection; the canonical FlowPlanner owns that.
+        # used for task/flow selection; canonical planners own that.
         self.flow_path = self.skills_root / "flows" / "professional-website-redesign.json"
         if not self.flow_path.is_file():
             raise FileNotFoundError(f"Professional website flow missing: {self.flow_path}")
@@ -127,13 +134,32 @@ class ProfessionalWebsiteFlow:
         if phase_ids != [0, 1, 2, 3, 4]:
             raise ValueError(f"Default delivery policy must define Prompt OS phases 0→4, got {phase_ids!r}")
 
+    def resolve_contract(
+        self,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> WorkSequenceContract:
+        return self.sequence_interpreter.interpret(goal, target_truth=target_truth)
+
     def resolve(
         self,
         goal: str,
         target_truth: dict[str, str] | None = None,
     ) -> tuple[GoalInterpretation, ResolvedFlow]:
-        profile = self.interpreter.interpret(goal, target_truth=target_truth)
-        return profile, self.planner.plan(profile.to_context())
+        contract = self.resolve_contract(goal, target_truth=target_truth)
+        if contract.routing_mode == "sequence":
+            raise MultiSurfaceRoutingError(contract.segments)
+        return contract.profile, self.sequence_planner.plan_single(contract)
+
+    def resolve_work_plan(
+        self,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> tuple[GoalInterpretation, ResolvedWorkPlan]:
+        contract = self.resolve_contract(goal, target_truth=target_truth)
+        if contract.routing_mode != "sequence":
+            raise ValueError("goal resolves to a single work owner; use resolve() instead")
+        return contract.profile, self.sequence_planner.plan_sequence(contract)
 
     @classmethod
     def _nearest_active_stage(cls, resolved: ResolvedFlow, requested: str) -> ResolvedStage:
@@ -161,10 +187,27 @@ class ProfessionalWebsiteFlow:
         if not flow_stage_id:
             raise ValueError(f"No declarative flow mapping for Factory stage: {factory_stage}")
 
-        profile, resolved = self.resolve(goal, target_truth=target_truth)
-        stage = self._nearest_active_stage(resolved, flow_stage_id)
-        mandatory = list(stage.mandatory_skills)
-        selected = list(stage.skills)
+        contract = self.resolve_contract(goal, target_truth=target_truth)
+        profile = contract.profile
+        selected: list[str] = []
+        mandatory: list[str] = []
+
+        if contract.routing_mode == "sequence":
+            work_plan = self.sequence_planner.plan_sequence(contract)
+            for work_segment in work_plan.segments:
+                if flow_stage_id not in work_segment.active_stage_ids:
+                    continue
+                stage = self._nearest_active_stage(work_segment.flow, flow_stage_id)
+                mandatory.extend(stage.mandatory_skills)
+                selected.extend(stage.skills)
+            if not selected:
+                return profile, [], []
+        else:
+            resolved = self.sequence_planner.plan_single(contract)
+            stage = self._nearest_active_stage(resolved, flow_stage_id)
+            mandatory.extend(stage.mandatory_skills)
+            selected.extend(stage.skills)
+
         selected.extend(self.EXTRA_BY_FACTORY_STAGE.get(factory_stage, ()))
 
         if (
@@ -206,9 +249,20 @@ class ProfessionalWebsiteFlow:
         self,
         goal: str,
         target_truth: dict[str, str] | None = None,
-    ) -> tuple[GoalInterpretation, ResolvedFlow, list[str]]:
-        """Expose canonical high-level routing plus the compatible detailed stage view."""
-        profile, resolved = self.resolve(goal, target_truth=target_truth)
+    ) -> tuple[GoalInterpretation, ResolvedFlow | ResolvedWorkPlan, list[str]]:
+        """Expose canonical routing plus the compatible detailed Factory stage view."""
+        contract = self.resolve_contract(goal, target_truth=target_truth)
+        if contract.routing_mode == "sequence":
+            work_plan = self.sequence_planner.plan_sequence(contract)
+            active = {
+                stage_id
+                for segment in work_plan.segments
+                for stage_id in segment.active_stage_ids
+            }
+            detailed = [stage for stage, owner in self.FACTORY_TO_FLOW_STAGE.items() if owner in active]
+            return contract.profile, work_plan, detailed
+
+        resolved = self.sequence_planner.plan_single(contract)
         active = {stage.id for stage in resolved.stages}
         detailed = [stage for stage, owner in self.FACTORY_TO_FLOW_STAGE.items() if owner in active]
-        return profile, resolved, detailed
+        return contract.profile, resolved, detailed
