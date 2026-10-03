@@ -53,7 +53,7 @@ def test_preview_policy_matrix_is_repository_owned() -> None:
         policy = resolve_repository_policy(repository)
         assert policy.preview_policy == PreviewPolicy.PR_PREVIEW_ALLOWED.value
         assert policy.allowed_preview_providers == ("vercel",)
-        assert policy.known_integration_providers == ("vercel",)
+        assert policy.known_integration_providers == ("vercel", "github-pages")
         assert set(policy.mutation_scope) == {"branch-create", "branch-push", "pr-create", "pr-update"}
 
     lumen = resolve_repository_policy("Ngh1aa/Lumen")
@@ -80,10 +80,10 @@ def test_known_integrations_are_evidence_not_permission() -> None:
 
 def test_live_dogfood_expected_provider_footprint_matches_registry_exactly() -> None:
     expected = {
-        "Ngh1aa/Nova": {"vercel"},
+        "Ngh1aa/Nova": {"vercel", "github-pages"},
         "Ngh1aa/Lumen": {"vercel", "github-pages"},
-        "Ngh1aa/cennext-b2b-prototype": {"vercel"},
-        "Ngh1aa/LuxRoom": {"vercel"},
+        "Ngh1aa/cennext-b2b-prototype": {"vercel", "github-pages"},
+        "Ngh1aa/LuxRoom": {"vercel", "github-pages"},
     }
     assert {target.repository: set(target.expected_providers) for target in DOGFOOD_TARGETS} == expected
     for repository, providers in expected.items():
