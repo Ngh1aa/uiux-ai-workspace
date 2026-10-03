@@ -270,6 +270,18 @@ class ReplanDecision:
         return asdict(self)
 
 
+class AmbiguousRoutingError(ValueError):
+    """Raised when canonical routing has competing domains but no owner evidence."""
+
+    def __init__(self, candidate_domains: Iterable[str]) -> None:
+        self.candidate_domains = tuple(sorted(_unique(candidate_domains)))
+        candidates = ", ".join(self.candidate_domains) or "unknown"
+        super().__init__(
+            "routing is ambiguous; provide target-project truth or explicit ownership before planning: "
+            + candidates
+        )
+
+
 class FlowResolver:
     """Select the smallest applicable declarative flow for a normalized Task Contract."""
 
@@ -535,6 +547,12 @@ class FlowPlanner:
         exclude_skills: list[str] | None = None,
     ) -> ResolvedFlow:
         effective_context = self.flow_resolver.normalize_context(context)
+        inference = effective_context.get("inference", {})
+        if isinstance(inference, dict) and str(inference.get("routing_status", "resolved")) == "ambiguous":
+            raw_candidates = inference.get("candidate_domains", [])
+            candidates = [str(item) for item in raw_candidates] if isinstance(raw_candidates, list) else []
+            raise AmbiguousRoutingError(candidates)
+
         path, doc, score = self.flow_resolver.resolve(effective_context)
         stages = [
             self.skill_resolver.resolve_stage(
