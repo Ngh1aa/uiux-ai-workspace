@@ -121,7 +121,7 @@ class RepositoryGovernanceAssessment:
 _PR_MUTATION_SCOPE = ("branch-create", "branch-push", "pr-create", "pr-update")
 _NO_RELEASE = ReleaseBoundary()
 _STATIC = ("repository-static",)
-_EXTERNAL = ("external-observed",)
+_PROVIDER_NATIVE = ("github-provider-native",)
 
 
 REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
@@ -135,7 +135,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         rationale="Nova uses Vercel PR previews and has externally observed GitHub Pages deployments; merge and production release remain owner-controlled.",
         integration_freshness=(
             IntegrationFreshnessRule("vercel", _STATIC),
-            IntegrationFreshnessRule("github-pages", _EXTERNAL),
+            IntegrationFreshnessRule("github-pages", _PROVIDER_NATIVE),
         ),
     ),
     "ngh1aa/lumen": RepositoryPolicy(
@@ -161,7 +161,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         rationale="CENNEXT has Vercel review previews and externally observed GitHub Pages deployments; PR mutation is allowed while merge and production release remain owner-controlled.",
         integration_freshness=(
             IntegrationFreshnessRule("vercel", _STATIC),
-            IntegrationFreshnessRule("github-pages", _EXTERNAL),
+            IntegrationFreshnessRule("github-pages", _PROVIDER_NATIVE),
         ),
     ),
     "ngh1aa/luxroom": RepositoryPolicy(
@@ -174,7 +174,7 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         rationale="LuxRoom dogfood proved Vercel PR previews and P1.7.5 observed GitHub Pages deployments; preview mutation remains Vercel-only and release stays owner-controlled.",
         integration_freshness=(
             IntegrationFreshnessRule("vercel", _STATIC),
-            IntegrationFreshnessRule("github-pages", _EXTERNAL),
+            IntegrationFreshnessRule("github-pages", _PROVIDER_NATIVE),
         ),
     ),
 }
