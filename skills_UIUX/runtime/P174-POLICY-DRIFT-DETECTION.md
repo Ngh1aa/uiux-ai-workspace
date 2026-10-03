@@ -31,7 +31,7 @@ P1.7.4 inspects only the `repository-static` evidence channel:
 - Cloudflare: Wrangler config
 - Firebase Hosting: `firebase.json` containing a hosting block
 
-A provider whose canonical freshness rule is external-only is outside P1.7.4's removal scope. P1.7.4 records it in `unresolved_providers` and sets `coverage_complete=false`; it must not report that provider as removed merely because the external channel was not inspected. P1.7.5 owns the full `repository-static + external-observed` freshness decision.
+A provider whose canonical freshness rule is external-only is outside P1.7.4's removal scope. P1.7.4 records it in `unresolved_providers` and sets `coverage_complete=false`; it must not report that provider as removed merely because the external channel was not inspected. P1.7.5 owns the full `repository-static + github-provider-native` freshness decision.
 
 The detector can discover providers that are not yet allowed. Discovery is evidence, not authority.
 
@@ -62,4 +62,4 @@ It does not prove:
 - release approval,
 - that an externally configured provider with no repository-visible marker does or does not exist.
 
-Providers that cannot be verified from repository-static evidence must declare `external-observed` freshness and are completed by P1.7.5 rather than being guessed absent by P1.7.4.
+Providers that cannot be verified from repository-static evidence must declare `github-provider-native` freshness and are completed by P1.7.5 rather than being guessed absent by P1.7.4.
