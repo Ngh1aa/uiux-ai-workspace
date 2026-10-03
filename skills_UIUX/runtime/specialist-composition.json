@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "description": "Shared specialist skill composition for page and full-product flows. Rules are additive, evidence-driven, and scoped by flow plus Task Contract context.",
+  "flows": [
+    "page-ui-work",
+    "professional-website-redesign"
+  ],
+  "rules": [
+    {
+      "id": "financial-core",
+      "when": {"domain": "financial-services"},
+      "skills_by_stage": {
+        "research": ["financial-product-intelligence", "trust-credibility-and-transparency"],
+        "design": ["financial-product-intelligence", "trust-credibility-and-transparency"],
+        "implementation": ["trust-credibility-and-transparency"],
+        "qa": ["financial-product-intelligence", "trust-credibility-and-transparency"]
+      }
+    },
+    {
+      "id": "financial-trust-safety-risk",
+      "when": {"domain": "financial-services", "product_archetype": "trust-safety-risk"},
+      "skills_by_stage": {
+        "research": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "security-and-privacy"],
+        "design": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "state-feedback-and-error-recovery", "security-and-privacy"],
+        "implementation": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "state-feedback-and-error-recovery", "security-and-privacy"],
+        "qa": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery", "security-and-privacy"]
+      }
+    },
+    {
+      "id": "financial-payments-infrastructure",
+      "when": {"domain": "financial-services", "product_archetype": "payments-infrastructure"},
+      "skills_by_stage": {
+        "research": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux"],
+        "design": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "trust-credibility-and-transparency"],
+        "implementation": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery"],
+        "qa": ["data-tables-and-enterprise-ux", "trust-credibility-and-transparency"]
+      }
+    },
+    {
+      "id": "financial-compliance-operations",
+      "when": {"domain": "financial-services", "product_archetype": "compliance-operations"},
+      "skills_by_stage": {
+        "research": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "security-and-privacy"],
+        "design": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "state-feedback-and-error-recovery", "security-and-privacy"],
+        "implementation": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery", "security-and-privacy"],
+        "qa": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery", "security-and-privacy"]
+      }
+    },
+    {
+      "id": "financial-operations",
+      "when": {"domain": "financial-services", "product_archetype": "financial-operations"},
+      "skills_by_stage": {
+        "research": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux"],
+        "design": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "state-feedback-and-error-recovery"],
+        "implementation": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery"],
+        "qa": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery"]
+      }
+    },
+    {
+      "id": "financial-consumer-banking",
+      "when": {"domain": "financial-services", "product_archetype": "consumer-banking"},
+      "skills_by_stage": {
+        "research": ["product-discovery", "trust-credibility-and-transparency"],
+        "design": ["authentication-account-and-recovery-ux", "interaction-patterns-and-form-ux"],
+        "implementation": ["authentication-account-and-recovery-ux", "state-feedback-and-error-recovery"],
+        "qa": ["authentication-account-and-recovery-ux", "state-feedback-and-error-recovery"]
+      }
+    },
+    {
+      "id": "financial-investment-wealth",
+      "when": {"domain": "financial-services", "product_archetype": "investment-wealth"},
+      "skills_by_stage": {
+        "research": ["trust-credibility-and-transparency", "data-visualization-and-dashboard-ux"],
+        "design": ["data-visualization-and-dashboard-ux", "data-tables-and-enterprise-ux", "trust-credibility-and-transparency"],
+        "implementation": ["data-visualization-and-dashboard-ux", "data-tables-and-enterprise-ux"],
+        "qa": ["data-visualization-and-dashboard-ux", "data-tables-and-enterprise-ux", "trust-credibility-and-transparency"]
+      }
+    },
+    {
+      "id": "education-edtech",
+      "when": {"domain": "education-edtech"},
+      "skills_by_stage": {
+        "research": ["education-website", "information-architecture", "accessibility"],
+        "design": ["education-website", "accessibility"],
+        "implementation": ["education-website", "accessibility"],
+        "qa": ["education-website", "accessibility"]
+      }
+    },
+    {
+      "id": "industrial-b2b",
+      "when": {"domain": "industrial-services"},
+      "skills_by_stage": {
+        "research": ["corporate-website", "trust-credibility-and-transparency", "information-architecture"],
+        "design": ["corporate-website", "trust-credibility-and-transparency"],
+        "implementation": ["corporate-website"],
+        "qa": ["corporate-website", "trust-credibility-and-transparency"]
+      }
+    },
+    {
+      "id": "art-culture-museum",
+      "when": {"domain": "art-culture"},
+      "skills_by_stage": {
+        "research": ["asset-media-and-art-direction", "experience-principles-and-signature-moments", "accessibility"],
+        "design": ["asset-media-and-art-direction", "experience-principles-and-signature-moments", "accessibility"],
+        "implementation": ["media-crop-and-layout-integrity", "accessibility"],
+        "qa": ["media-crop-and-layout-integrity", "accessibility"]
+      }
+    },
+    {
+      "id": "ecommerce",
+      "when": {"website_type": "ecommerce"},
+      "skills_by_stage": {
+        "research": ["ecommerce-website", "conversion-and-content", "site-search-and-findability"],
+        "design": ["ecommerce-website", "conversion-and-content", "interaction-patterns-and-form-ux"],
+        "implementation": ["ecommerce-website", "state-feedback-and-error-recovery"],
+        "qa": ["ecommerce-website", "conversion-and-content", "state-feedback-and-error-recovery"]
+      }
+    },
+    {
+      "id": "feature-dashboard",
+      "when": {"features": ["dashboard"]},
+      "skills_by_stage": {
+        "design": ["data-visualization-and-dashboard-ux"],
+        "implementation": ["data-tables-and-enterprise-ux", "data-visualization-and-dashboard-ux"],
+        "qa": ["data-tables-and-enterprise-ux", "data-visualization-and-dashboard-ux"]
+      }
+    },
+    {
+      "id": "feature-data-tables",
+      "when": {"features": ["data-tables"]},
+      "skills_by_stage": {
+        "design": ["data-tables-and-enterprise-ux"],
+        "implementation": ["data-tables-and-enterprise-ux"],
+        "qa": ["data-tables-and-enterprise-ux"]
+      }
+    },
+    {
+      "id": "feature-forms",
+      "when": {"features": ["forms"]},
+      "skills_by_stage": {
+        "design": ["interaction-patterns-and-form-ux"],
+        "implementation": ["complex-forms-and-wizards", "state-feedback-and-error-recovery"],
+        "qa": ["state-feedback-and-error-recovery", "accessibility"]
+      }
+    },
+    {
+      "id": "feature-auth",
+      "when": {"features": ["auth"]},
+      "skills_by_stage": {
+        "design": ["authentication-account-and-recovery-ux", "security-and-privacy"],
+        "implementation": ["authentication-account-and-recovery-ux", "security-and-privacy"],
+        "qa": ["authentication-account-and-recovery-ux", "security-and-privacy"]
+      }
+    },
+    {
+      "id": "feature-search",
+      "when": {"features": ["search"]},
+      "skills_by_stage": {
+        "research": ["site-search-and-findability"],
+        "implementation": ["site-search-and-findability"],
+        "qa": ["site-search-and-findability"]
+      }
+    },
+    {
+      "id": "feature-motion",
+      "when": {"features": ["motion"]},
+      "skills_by_stage": {
+        "design": ["motion-and-microinteractions"],
+        "qa": ["motion-and-microinteractions"]
+      }
+    },
+    {
+      "id": "feature-i18n",
+      "when": {"features": ["i18n"]},
+      "skills_by_stage": {
+        "design": ["localization-and-i18n"],
+        "implementation": ["localization-and-i18n"],
+        "qa": ["localization-and-i18n"]
+      }
+    }
+  ]
+}

@@ -36,6 +36,30 @@ def _contains_non_negated(text: str, terms: Iterable[str]) -> bool:
     return False
 
 
+def _best_taxonomy_match(
+    text: str,
+    candidates: Iterable[tuple[str, Iterable[str]]],
+) -> tuple[str, list[str]]:
+    """Prefer multiple and more-specific evidence over first substring match."""
+    best_name = "generic"
+    best_matches: list[str] = []
+    best_score = (0, 0, 0)
+    for name, terms in candidates:
+        matches = [term for term in terms if term in text]
+        if not matches:
+            continue
+        score = (
+            sum(1 + term.count(" ") for term in matches),
+            len(matches),
+            max(len(term) for term in matches),
+        )
+        if score > best_score:
+            best_name = name
+            best_matches = matches
+            best_score = score
+    return best_name, best_matches
+
+
 def _unique(values: Iterable[str]) -> list[str]:
     seen: set[str] = set()
     output: list[str] = []
@@ -131,9 +155,9 @@ class GoalInterpreter:
         ("hospitality", ("hotel", "resort", "restaurant", "hospitality", "booking", "khách sạn", "khu nghỉ dưỡng", "nhà hàng", "đặt phòng")),
         ("news", ("news", "magazine", "publisher", "media site", "tin tức", "tạp chí", "báo điện tử")),
         ("real-estate", ("real estate", "property", "apartment", "building", "bất động sản", "căn hộ", "chung cư", "dự án nhà ở")),
-        ("saas", ("saas", "software platform", "web app", "dashboard", "subscription app", "phần mềm", "nền tảng")),
+        ("saas", ("saas", "software platform", "web app", "dashboard", "operations console", "fraud console", "admin console", "subscription app", "phần mềm", "nền tảng")),
         ("startup", ("startup", "incubator", "accelerator", "khởi nghiệp", "ươm tạo", "tăng tốc")),
-        ("portfolio", ("portfolio", "case study site", "creative studio", "hồ sơ năng lực", "showcase")),
+        ("portfolio", ("portfolio website", "portfolio site", "portfolio", "personal portfolio", "designer portfolio", "case study site", "creative studio", "hồ sơ năng lực", "showcase")),
         ("nonprofit", ("nonprofit", "ngo", "charity", "foundation", "phi lợi nhuận", "quỹ", "từ thiện")),
         ("landing", ("landing page", "campaign page", "microsite", "trang đích", "landing")),
         ("corporate", ("corporate", "company website", "business website", "doanh nghiệp", "công ty", "tập đoàn", "website giới thiệu")),
@@ -144,7 +168,8 @@ class GoalInterpreter:
             "fintech", "financial", "banking", "bank", "payment", "payments", "settlement",
             "treasury", "ledger", "payout", "remittance", "cross-border", "money movement",
             "mto", "psp", "kyc", "aml", "sanctions", "reconciliation", "subledger",
-            "wealth", "brokerage", "investment", "card issuing", "acquiring",
+            "wealth", "brokerage", "investment", "card issuing", "acquiring", "fraud",
+            "chargeback", "dispute", "3ds", "3-d secure", "risk operations", "transaction risk",
         )),
         ("art-culture", (
             "museum", "art museum", "gallery", "exhibition", "artwork", "art collection",
@@ -180,6 +205,12 @@ class GoalInterpreter:
     )
 
     FINANCIAL_ARCHETYPES = (
+        ("trust-safety-risk", (
+            "fraud operations", "fraud ops", "fraud", "risk operations", "risk review",
+            "transaction risk", "risk score", "case review", "case management", "manual review",
+            "review queue", "case queue", "chargeback", "dispute", "disputes", "3ds",
+            "3-d secure", "suspicious transaction", "investigation workflow",
+        )),
         ("payments-infrastructure", (
             "settlement", "payment rail", "payment rails", "multi-rail", "payout", "remittance",
             "cross-border", "money movement", "treasury", "clearing", "acquiring", "psp", "mto",
@@ -188,14 +219,15 @@ class GoalInterpreter:
         ("compliance-operations", ("kyc", "aml", "sanctions", "pep", "onboarding", "enhanced due diligence", "edd")),
         ("financial-operations", ("reconciliation", "reconcile", "general ledger", "gl ", "subledger", "month-end", "fund admin", "fund accounting", "exception report")),
         ("consumer-banking", ("personal finance", "spending", "saving", "savings", "budget", "banking app", "debit card", "credit card", "consumer bank", "money goals")),
-        ("investment-wealth", ("wealth", "portfolio", "brokerage", "investment", "advisor", "asset management")),
+        ("investment-wealth", ("wealth", "investment portfolio", "wealth portfolio", "brokerage", "investment", "advisor", "asset management")),
     )
 
     FEATURE_TERMS = (
         ("search", ("search", "site search", "tìm kiếm")),
         ("forms", ("form", "contact form", "lead form", "checkout", "đăng ký", "liên hệ", "biểu mẫu", "thanh toán")),
         ("auth", ("login", "sign in", "account", "authentication", "đăng nhập", "tài khoản", "đăng ký tài khoản")),
-        ("dashboard", ("dashboard", "admin panel", "analytics", "bảng điều khiển", "trang quản trị")),
+        ("dashboard", ("dashboard", "admin panel", "analytics", "operations console", "fraud console", "admin console", "bảng điều khiển", "trang quản trị")),
+        ("data-tables", ("data table", "case queue", "review queue", "transaction table", "transaction list", "case list")),
         ("motion", ("animation", "motion", "microinteraction", "hiệu ứng", "chuyển động")),
         ("i18n", ("multilingual", "multi-language", "bilingual", "đa ngôn ngữ", "song ngữ", "tiếng anh", "english version")),
         ("agentic-workflow", ("multi-agent", "multiagent", "subagent", "sub-agent", "agent workflow", "agentic workflow", "autonomous agent", "orchestrator", "orchestration")),
@@ -214,7 +246,7 @@ class GoalInterpreter:
         ("footer", ("footer",)),
         ("landing-page", ("landing page", "trang đích")),
         ("homepage", ("homepage", "home page", "trang chủ")),
-        ("dashboard", ("dashboard", "bảng điều khiển")),
+        ("dashboard", ("dashboard", "operations console", "fraud console", "bảng điều khiển")),
         ("checkout", ("checkout",)),
         ("pricing", ("pricing", "bảng giá")),
         ("cards", ("cards", "các card", "các thẻ")),
@@ -240,6 +272,11 @@ class GoalInterpreter:
         ("fix", ("fix", "repair", "bugfix", "sửa lỗi", "khắc phục", "sửa")),
         ("polish", ("polish", "trau chuốt", "tinh chỉnh", "hoàn thiện giao diện")),
         ("improve", ("improve", "enhance", "refine", "cải thiện", "nâng cấp", "tối ưu giao diện")),
+        ("audit", ("audit-only", "audit only", "audit existing", "audit this", "audit the", "run an audit", "ui audit", "ux audit", "chỉ audit")),
+        ("review", ("review only", "review this", "review the", "design review", "code review", "chỉ review")),
+        ("research", ("research only", "research this", "research the", "research into", "do research", "nghiên cứu", "khảo sát")),
+        ("validate", ("validation only", "validate only", "run validation", "chỉ validate", "chỉ kiểm chứng")),
+        ("qa", ("qa only", "run qa", "perform qa", "visual qa", "quality assurance", "kiểm thử")),
     )
 
     PRESERVE_PATTERNS = (r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",)
@@ -275,9 +312,10 @@ class GoalInterpreter:
     @staticmethod
     def _authority(text: str) -> str:
         if _contains(text, (
-            "read only", "read-only", "audit only", "analysis only", "analyze only",
-            "review only", "chỉ audit", "chỉ review", "chỉ phân tích", "chỉ kiểm tra",
-            "không sửa code", "không thay đổi code", "không chỉnh code",
+            "read only", "read-only", "audit only", "audit-only", "analysis only", "analyze only",
+            "review only", "research only", "validation only", "qa only", "chỉ audit", "chỉ review",
+            "chỉ phân tích", "chỉ kiểm tra", "không sửa code", "không thay đổi code", "không chỉnh code",
+            "do not change code", "don't change code", "dont change code", "no code changes",
         )):
             return "read_only"
         if _contains(text, (
@@ -325,27 +363,27 @@ class GoalInterpreter:
         if authority != "unspecified":
             evidence.append(f"authority:{authority}")
 
-        website_type = "generic"
-        for candidate, terms in self.WEBSITE_TYPES:
-            if _contains(normalized, terms):
-                website_type = candidate
-                evidence.append(f"website_type:{candidate}")
-                break
+        website_type, website_evidence = _best_taxonomy_match(normalized, self.WEBSITE_TYPES)
+        if website_type == "landing":
+            non_landing = tuple(item for item in self.WEBSITE_TYPES if item[0] != "landing")
+            specific_type, specific_evidence = _best_taxonomy_match(normalized, non_landing)
+            if specific_type != "generic":
+                website_type, website_evidence = specific_type, specific_evidence
+        if website_type != "generic":
+            evidence.append(f"website_type:{website_type}")
+            evidence.append("website_type_evidence:" + "|".join(website_evidence))
 
-        domain = "generic"
-        for candidate, terms in self.DOMAINS:
-            if _contains(normalized, terms):
-                domain = candidate
-                evidence.append(f"domain:{candidate}")
-                break
+        domain, domain_evidence = _best_taxonomy_match(normalized, self.DOMAINS)
+        if domain != "generic":
+            evidence.append(f"domain:{domain}")
+            evidence.append("domain_evidence:" + "|".join(domain_evidence))
 
         product_archetype = "generic"
         if domain == "financial-services":
-            for candidate, terms in self.FINANCIAL_ARCHETYPES:
-                if _contains(normalized, terms):
-                    product_archetype = candidate
-                    evidence.append(f"product_archetype:{candidate}")
-                    break
+            product_archetype, archetype_evidence = _best_taxonomy_match(normalized, self.FINANCIAL_ARCHETYPES)
+            if product_archetype != "generic":
+                evidence.append(f"product_archetype:{product_archetype}")
+                evidence.append("product_archetype_evidence:" + "|".join(archetype_evidence))
 
         features: list[str] = []
         for feature, terms in self.FEATURE_TERMS:
@@ -364,7 +402,11 @@ class GoalInterpreter:
         evidence.append(f"mode:{mode}")
 
         risk = "standard"
-        if website_type == "government" or _contains(normalized, ("high risk", "critical", "compliance", "bảo mật cao", "tuân thủ")):
+        if (
+            website_type == "government"
+            or product_archetype in {"trust-safety-risk", "compliance-operations"}
+            or _contains(normalized, ("high risk", "critical", "compliance", "bảo mật cao", "tuân thủ"))
+        ):
             risk = "high"
         elif mode == "production":
             risk = "production"

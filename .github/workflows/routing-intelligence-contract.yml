@@ -5,10 +5,13 @@ on:
     paths:
       - "uiux-factory/core/runtime/flow_os/external_task.py"
       - "uiux-factory/core/runtime/flow_os/task_context.py"
+      - "skills_UIUX/flows/audit-review.json"
+      - "skills_UIUX/flows/existing-ui-improvement.json"
       - "skills_UIUX/scripts/github-connector-task-request.py"
       - ".github/workflows/external-agent-connector-bridge.yml"
       - ".github/workflows/routing-intelligence-contract.yml"
       - "uiux-factory/tests/test_routing_intelligence_bridge_a39.py"
+      - "uiux-factory/tests/test_routing_intelligence_regression.py"
       - "uiux-factory/tests/test_intelligent_flow.py"
       - "docs/CONTRACT-OWNERSHIP.md"
       - "START-HERE.md"
@@ -42,6 +45,7 @@ jobs:
         run: >-
           python -m pytest -q
           uiux-factory/tests/test_routing_intelligence_bridge_a39.py
+          uiux-factory/tests/test_routing_intelligence_regression.py
           uiux-factory/tests/test_external_collaborator_a21.py
           uiux-factory/tests/test_task_contract.py
           uiux-factory/tests/test_intelligent_flow.py
