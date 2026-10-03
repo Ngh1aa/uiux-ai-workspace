@@ -275,7 +275,7 @@ class GoalInterpreter:
         ("audit", ("audit-only", "audit only", "audit existing", "audit this", "audit the", "run an audit", "ui audit", "ux audit", "chỉ audit")),
         ("review", ("review only", "review this", "review the", "design review", "code review", "chỉ review")),
         ("research", ("research only", "research this", "research the", "research into", "do research", "nghiên cứu", "khảo sát")),
-        ("validate", ("validation only", "validate this", "validate the", "run validation", "kiểm chứng", "xác thực")),
+        ("validate", ("validation only", "validate only", "run validation", "chỉ validate", "chỉ kiểm chứng")),
         ("qa", ("qa only", "run qa", "perform qa", "visual qa", "quality assurance", "kiểm thử")),
     )
 
@@ -364,6 +364,11 @@ class GoalInterpreter:
             evidence.append(f"authority:{authority}")
 
         website_type, website_evidence = _best_taxonomy_match(normalized, self.WEBSITE_TYPES)
+        if website_type == "landing":
+            non_landing = tuple(item for item in self.WEBSITE_TYPES if item[0] != "landing")
+            specific_type, specific_evidence = _best_taxonomy_match(normalized, non_landing)
+            if specific_type != "generic":
+                website_type, website_evidence = specific_type, specific_evidence
         if website_type != "generic":
             evidence.append(f"website_type:{website_type}")
             evidence.append("website_type_evidence:" + "|".join(website_evidence))
