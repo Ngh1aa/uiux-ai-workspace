@@ -127,8 +127,12 @@ class ProfessionalWebsiteFlow:
         if phase_ids != [0, 1, 2, 3, 4]:
             raise ValueError(f"Default delivery policy must define Prompt OS phases 0→4, got {phase_ids!r}")
 
-    def resolve(self, goal: str) -> tuple[GoalInterpretation, ResolvedFlow]:
-        profile = self.interpreter.interpret(goal)
+    def resolve(
+        self,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> tuple[GoalInterpretation, ResolvedFlow]:
+        profile = self.interpreter.interpret(goal, target_truth=target_truth)
         return profile, self.planner.plan(profile.to_context())
 
     @classmethod
@@ -147,12 +151,17 @@ class ProfessionalWebsiteFlow:
         candidates.sort(key=lambda item: (item[0], item[1]))
         return candidates[0][2]
 
-    def resolve_skill_names(self, factory_stage: str, goal: str) -> tuple[GoalInterpretation, list[str], list[str]]:
+    def resolve_skill_names(
+        self,
+        factory_stage: str,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> tuple[GoalInterpretation, list[str], list[str]]:
         flow_stage_id = self.FACTORY_TO_FLOW_STAGE.get(factory_stage)
         if not flow_stage_id:
             raise ValueError(f"No declarative flow mapping for Factory stage: {factory_stage}")
 
-        profile, resolved = self.resolve(goal)
+        profile, resolved = self.resolve(goal, target_truth=target_truth)
         stage = self._nearest_active_stage(resolved, flow_stage_id)
         mandatory = list(stage.mandatory_skills)
         selected = list(stage.skills)
@@ -168,8 +177,17 @@ class ProfessionalWebsiteFlow:
             selected.extend(("web-ui-code-review", "state-feedback-and-error-recovery"))
         return profile, _unique(selected), _unique(mandatory)
 
-    def resolve_paths(self, factory_stage: str, goal: str) -> tuple[GoalInterpretation, list[str], list[str]]:
-        profile, selected, mandatory = self.resolve_skill_names(factory_stage, goal)
+    def resolve_paths(
+        self,
+        factory_stage: str,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> tuple[GoalInterpretation, list[str], list[str]]:
+        profile, selected, mandatory = self.resolve_skill_names(
+            factory_stage,
+            goal,
+            target_truth=target_truth,
+        )
         missing = [name for name in selected if not (self.skills_root / name / "SKILL.md").is_file()]
         if missing:
             submodule_hint = ""
@@ -184,9 +202,13 @@ class ProfessionalWebsiteFlow:
             [f"{name}/SKILL.md" for name in mandatory],
         )
 
-    def resolved_factory_stages(self, goal: str) -> tuple[GoalInterpretation, ResolvedFlow, list[str]]:
+    def resolved_factory_stages(
+        self,
+        goal: str,
+        target_truth: dict[str, str] | None = None,
+    ) -> tuple[GoalInterpretation, ResolvedFlow, list[str]]:
         """Expose canonical high-level routing plus the compatible detailed stage view."""
-        profile, resolved = self.resolve(goal)
+        profile, resolved = self.resolve(goal, target_truth=target_truth)
         active = {stage.id for stage in resolved.stages}
         detailed = [stage for stage, owner in self.FACTORY_TO_FLOW_STAGE.items() if owner in active]
         return profile, resolved, detailed
