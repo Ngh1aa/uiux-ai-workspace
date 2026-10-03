@@ -4,11 +4,14 @@ on:
   pull_request:
     paths:
       - "uiux-factory/core/dogfood/p171_authenticated_real_runner.py"
+      - "uiux-factory/core/runtime/flow_os/external_side_effects.py"
       - "skills_UIUX/scripts/p171-authenticated-real-runner-worker.py"
       - "skills_UIUX/scripts/run-p171-authenticated-real-dogfood.py"
       - "uiux-factory/tests/test_p171_authenticated_real_runner.py"
+      - "uiux-factory/tests/test_p172_external_side_effect_governance.py"
       - ".github/workflows/p171-authenticated-real-runner-dogfood.yml"
       - ".github/workflows/p171-authenticated-real-runner-contract.yml"
+      - ".github/workflows/p172-external-side-effect-governance.yml"
 
 permissions:
   contents: read
@@ -33,4 +36,4 @@ jobs:
           python -m pip install --disable-pip-version-check
           pytest "pydantic>=2.5.3,<3"
       - name: Run P1.7.1 authenticated boundary tests
-        run: python -m pytest -q uiux-factory/tests/test_p171_authenticated_real_runner.py uiux-factory/tests/test_p17_github_production_transaction.py
+        run: python -m pytest -q uiux-factory/tests/test_p171_authenticated_real_runner.py uiux-factory/tests/test_p17_github_production_transaction.py uiux-factory/tests/test_p172_external_side_effect_governance.py

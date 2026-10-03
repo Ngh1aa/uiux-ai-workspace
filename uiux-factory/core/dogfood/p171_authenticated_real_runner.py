@@ -8,10 +8,15 @@ from pathlib import Path
 from typing import Any
 
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
+from core.runtime.flow_os.external_side_effects import (
+    GitHubExternalSideEffectObserver,
+    PreviewPolicy,
+    assess_external_side_effects,
+)
 from core.runtime.flow_os.github_transaction import GitHubTransactionConfig
 
 
-P171_REPORT_VERSION = "1.0"
+P171_REPORT_VERSION = "1.1"
 WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
 SKILLS_ROOT = WORKSPACE_ROOT / "skills_UIUX"
 WORKER_SCRIPT = SKILLS_ROOT / "scripts" / "p171-authenticated-real-runner-worker.py"
@@ -27,6 +32,7 @@ class AuthenticatedDogfoodProfile:
     pr_body: str
     expected_changed_files: tuple[str, ...]
     target_truth: dict[str, str]
+    preview_policy: str
 
 
 DOGFOOD_PROFILES: dict[str, AuthenticatedDogfoodProfile] = {
@@ -49,11 +55,13 @@ DOGFOOD_PROFILES: dict[str, AuthenticatedDogfoodProfile] = {
             "### Boundary\n"
             "- transaction branch only\n"
             "- target-owned `npm run qa` before PR finalization\n"
+            "- external PR preview side effects are allowed but must be evidence-backed\n"
             "- no merge\n"
-            "- no deploy/release\n"
+            "- no production deploy/release\n"
         ),
         expected_changed_files=("cart.html",),
         target_truth={"domain": "commerce-retail", "product_archetype": "checkout-commerce"},
+        preview_policy=PreviewPolicy.PR_PREVIEW_ALLOWED.value,
     ),
 }
 
@@ -108,6 +116,17 @@ def run_authenticated_dogfood(
         raise FileNotFoundError(f"P1.7.1 worker missing: {WORKER_SCRIPT}")
 
     profile = DOGFOOD_PROFILES[profile_id]
+    observer = GitHubExternalSideEffectObserver(github_token)
+    preflight_evidence, preflight_query_complete = observer.inspect_recent_pull_requests(profile.repository)
+    preflight_visibility_complete = preflight_query_complete and bool(preflight_evidence)
+    side_effect_preflight = assess_external_side_effects(
+        profile.repository,
+        profile.preview_policy,
+        preflight_evidence,
+        inspection_complete=preflight_visibility_complete,
+    )
+    side_effect_preflight.require_mutation_allowed()
+
     remote_url = f"https://github.com/{profile.repository}.git"
     config = GitHubTransactionConfig(
         repository=profile.repository,
@@ -141,13 +160,26 @@ def run_authenticated_dogfood(
         changed_files = _changed_files(runner.repo_root, runner.state.base_sha, runner.state.last_commit_sha)
 
     pr = None
+    postflight_evidence = ()
+    postflight_query_complete = False
     if runner.state.pr_number is not None:
         pr = runner.api.find_pull_request(
             profile.repository,
             head_branch=config.transaction_branch,
             base_branch=profile.base_branch,
         )
+        postflight_evidence, postflight_query_complete = observer.observe_pull_request(
+            profile.repository,
+            runner.state.pr_number,
+        )
     pr_state = str(pr.get("state")) if isinstance(pr, dict) and pr.get("state") else None
+    postflight_visibility_complete = postflight_query_complete and bool(postflight_evidence)
+    side_effect_postflight = assess_external_side_effects(
+        profile.repository,
+        profile.preview_policy,
+        postflight_evidence,
+        inspection_complete=postflight_visibility_complete,
+    )
 
     expected_files = list(profile.expected_changed_files)
     passed = all(
@@ -162,6 +194,7 @@ def run_authenticated_dogfood(
             runner.state.base_sha == base_sha_after,
             changed_files == expected_files,
             config.transaction_branch != profile.base_branch,
+            side_effect_preflight.mutation_allowed,
         ]
     )
 
@@ -180,8 +213,12 @@ def run_authenticated_dogfood(
         "pr_state": pr_state,
         "pr_url": runner.state.pr_url,
         "runner_history": driver.history,
+        "external_side_effect_preflight": side_effect_preflight.to_dict(),
+        "external_side_effect_preflight_query_complete": preflight_query_complete,
+        "external_side_effect_postflight": side_effect_postflight.to_dict(),
+        "external_side_effect_postflight_query_complete": postflight_query_complete,
         "visual_qa": "NOT_RUN",
-        "deployment": "OUT_OF_SCOPE",
+        "production_deployment": "OUT_OF_SCOPE",
         "merge": "OUT_OF_SCOPE",
     }
 
