@@ -31,8 +31,11 @@ def test_p0_fallback_archetype_cannot_cross_a_rejected_fallback_domain(tmp_path:
         target_root=target,
     ).to_dict()["task_contract"]
 
+    # Canonical goal inference now owns the museum archetype. The target README
+    # is only fallback evidence and must not replace it with a FinTech archetype.
     assert contract["domain"] == "art-culture"
-    assert contract["product_archetype"] == "generic"
+    assert contract["product_archetype"] == "collection-discovery"
+    assert contract["product_archetype"] != "payments-infrastructure"
     assert "fallback_not_applied:product_archetype:domain_mismatch" in contract["routing_provenance"]["merge_diagnostics"]
 
 
