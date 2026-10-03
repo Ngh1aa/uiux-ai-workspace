@@ -19,6 +19,7 @@ REPLAN_SIGNALS = {
 JIT_SKILL_SOURCES = {
     "optional",
     "conditional",
+    "specialist",
     "additional",
     "replan",
     "legacy_inferred",
@@ -349,8 +350,86 @@ class FlowResolver:
         return path, doc, score
 
 
+class SpecialistSkillComposer:
+    """Apply shared domain/archetype/feature specialist rules after flow selection."""
+
+    STAGE_IDS = {"research", "design", "implementation", "qa"}
+
+    def __init__(self, library_root: Path) -> None:
+        self.library_root = Path(library_root)
+        self.config_path = self.library_root / "runtime" / "specialist-composition.json"
+        if not self.config_path.is_file():
+            self.document: dict[str, Any] = {"schema_version": 1, "flows": [], "rules": []}
+            return
+
+        document = json.loads(self.config_path.read_text(encoding="utf-8"))
+        if document.get("schema_version") != 1:
+            raise ValueError("specialist composition schema_version must be 1")
+        flows = document.get("flows", [])
+        rules = document.get("rules", [])
+        if not isinstance(flows, list) or any(not isinstance(item, str) for item in flows):
+            raise ValueError("specialist composition flows must be an array of flow ids")
+        if not isinstance(rules, list):
+            raise ValueError("specialist composition rules must be an array")
+
+        referenced: list[str] = []
+        for index, rule in enumerate(rules):
+            if not isinstance(rule, dict):
+                raise ValueError(f"specialist composition rule {index} must be an object")
+            rule_id = str(rule.get("id", "")).strip()
+            if not rule_id:
+                raise ValueError(f"specialist composition rule {index} must have an id")
+            if not isinstance(rule.get("when", {}), dict):
+                raise ValueError(f"specialist composition rule {rule_id} when must be an object")
+            rule_flows = rule.get("flows", [])
+            if not isinstance(rule_flows, list) or any(not isinstance(item, str) for item in rule_flows):
+                raise ValueError(f"specialist composition rule {rule_id} flows must be an array")
+            stage_map = rule.get("skills_by_stage", {})
+            if not isinstance(stage_map, dict):
+                raise ValueError(f"specialist composition rule {rule_id} skills_by_stage must be an object")
+            unknown_stages = sorted(set(stage_map).difference(self.STAGE_IDS))
+            if unknown_stages:
+                raise ValueError(
+                    f"specialist composition rule {rule_id} has unknown stages: {', '.join(unknown_stages)}"
+                )
+            for stage_id, skills in stage_map.items():
+                if not isinstance(skills, list) or any(not isinstance(item, str) for item in skills):
+                    raise ValueError(
+                        f"specialist composition rule {rule_id} stage {stage_id} must be an array of skill ids"
+                    )
+                referenced.extend(skills)
+
+        missing = [
+            skill
+            for skill in _unique(referenced)
+            if not (self.library_root / skill / "SKILL.md").is_file()
+        ]
+        if missing:
+            raise ValueError("specialist composition references missing skills: " + ", ".join(missing))
+        self.document = document
+
+    def skills_for_stage(
+        self,
+        flow_id: str,
+        stage_id: str,
+        context: dict[str, Any],
+    ) -> list[str]:
+        if flow_id not in _as_set(self.document.get("flows")):
+            return []
+        selected: list[str] = []
+        for rule in self.document.get("rules", []):
+            rule_flows = _as_set(rule.get("flows"))
+            if rule_flows and flow_id not in rule_flows:
+                continue
+            if not _condition_matches(dict(rule.get("when", {})), context):
+                continue
+            stage_map = dict(rule.get("skills_by_stage", {}))
+            selected.extend(stage_map.get(stage_id, []))
+        return _unique(selected)
+
+
 class SkillResolver:
-    """Merge role defaults, required, optional/conditional JIT skills and task additions."""
+    """Merge role defaults, required, optional/conditional/specialist JIT skills and task additions."""
 
     def __init__(self, library_root: Path, policy_doc: dict[str, Any]) -> None:
         self.library_root = Path(library_root)
@@ -363,6 +442,7 @@ class SkillResolver:
         self,
         stage: dict[str, Any],
         context: dict[str, Any],
+        specialist_skills: list[str] | None = None,
         additional_skills: list[str] | None = None,
         exclude_skills: list[str] | None = None,
     ) -> ResolvedStage:
@@ -379,6 +459,7 @@ class SkillResolver:
                 conditional.extend(rule.get("skills", []))
 
         defaults = list(roles[agent].get("default_skills", []))
+        specialists = list(specialist_skills or [])
         additions = list(additional_skills or [])
         excludes = set(exclude_skills or [])
         mandatory = _unique(defaults + required)
@@ -393,6 +474,7 @@ class SkillResolver:
         for source, candidates in (
             ("optional", optional),
             ("conditional", conditional),
+            ("specialist", specialists),
             ("additional", additions),
         ):
             for skill in _unique(candidates):
@@ -524,6 +606,7 @@ class FlowPlanner:
         self.policy_doc = policy_doc
         self.flow_resolver = FlowResolver(self.library_root / "flows")
         self.skill_resolver = SkillResolver(self.library_root, policy_doc)
+        self.specialist_composer = SpecialistSkillComposer(self.library_root)
         self.replanner = ReplanningEngine()
 
     def plan(
@@ -534,15 +617,22 @@ class FlowPlanner:
     ) -> ResolvedFlow:
         effective_context = self.flow_resolver.normalize_context(context)
         path, doc, score = self.flow_resolver.resolve(effective_context)
-        stages = [
-            self.skill_resolver.resolve_stage(
-                stage,
+        stages: list[ResolvedStage] = []
+        for stage in doc["stages"]:
+            specialists = self.specialist_composer.skills_for_stage(
+                str(doc["id"]),
+                str(stage["id"]),
                 effective_context,
-                additional_skills=additional_skills,
-                exclude_skills=exclude_skills,
             )
-            for stage in doc["stages"]
-        ]
+            stages.append(
+                self.skill_resolver.resolve_stage(
+                    stage,
+                    effective_context,
+                    specialist_skills=specialists,
+                    additional_skills=additional_skills,
+                    exclude_skills=exclude_skills,
+                )
+            )
         return ResolvedFlow(
             id=doc["id"],
             source=str(path.relative_to(self.library_root)),
