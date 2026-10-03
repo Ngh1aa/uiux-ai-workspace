@@ -40,7 +40,7 @@ def test_vercel_deployment_is_observed_without_status_lookup() -> None:
             }
         ]
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request)
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
 
     assert result.inspection_complete is True
@@ -71,13 +71,43 @@ def test_status_metadata_can_attribute_provider_when_deployment_is_generic() -> 
             ]
         raise AssertionError(path)
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request)
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
 
     assert result.inspection_complete is True
     assert result.evidence[0].provider == "netlify"
     assert result.evidence[0].source == "github-deployment-status"
     assert result.evidence[0].url == "https://example.netlify.app"
+
+
+def test_default_branch_check_run_can_supply_provider_native_evidence() -> None:
+    def request(path: str):
+        if path.endswith("/deployments?per_page=20"):
+            return []
+        if path == "/repos/Ngh1aa/Nova":
+            return {"default_branch": "main"}
+        if path.endswith("/commits/main/check-runs?per_page=100"):
+            return {
+                "check_runs": [
+                    {
+                        "id": 808,
+                        "name": "Vercel",
+                        "app": {"slug": "vercel", "name": "Vercel"},
+                        "details_url": "https://vercel.com/example/deployment",
+                        "completed_at": "2026-10-03T12:00:00Z",
+                    }
+                ]
+            }
+        raise AssertionError(path)
+
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=True)
+    result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
+
+    assert result.inspection_complete is True
+    assert result.inspected_deployments == 0
+    assert result.inspected_check_runs == 1
+    assert result.evidence[0].provider == "vercel"
+    assert result.evidence[0].source == "github-check-run"
 
 
 def test_stale_deployment_history_is_not_current_freshness_evidence() -> None:
@@ -92,7 +122,7 @@ def test_stale_deployment_history_is_not_current_freshness_evidence() -> None:
             }
         ]
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, max_age_days=90)
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, max_age_days=90, include_check_runs=False)
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
 
     assert result.inspection_complete is True
@@ -116,7 +146,7 @@ def test_unclassified_recent_deployment_becomes_explicit_unknown_external_eviden
             return []
         raise AssertionError(path)
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request)
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
 
     assert result.inspection_complete is True
@@ -136,7 +166,7 @@ def test_external_visibility_failure_is_unknown_not_safe() -> None:
     def request(path: str):
         raise OSError("network unavailable")
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request)
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
 
     assert result.inspection_complete is False
@@ -156,7 +186,7 @@ def test_recent_external_vercel_evidence_can_satisfy_registry_without_static_mar
             }
         ]
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request)
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
     assessment = assess_repository_policy_drift(
         "Ngh1aa/Nova",
@@ -185,7 +215,7 @@ def test_recent_unregistered_external_provider_is_added_drift_even_when_vercel_i
             ]
         raise AssertionError(path)
 
-    observer = GitHubDeploymentIntegrationObserver(None, request_json=request)
+    observer = GitHubDeploymentIntegrationObserver(None, request_json=request, include_check_runs=False)
     result = observer.discover_repository("Ngh1aa/Nova", now=NOW)
     assessment = assess_repository_policy_drift(
         "Ngh1aa/Nova",
