@@ -79,7 +79,7 @@ def test_p171_goal_resolves_as_sequence_without_ambiguity() -> None:
     contract = factory.resolve_contract(profile.goal, target_truth=profile.target_truth)
     assert contract.routing_mode == "sequence"
     assert contract.profile.routing_status == "resolved"
-    assert [segment.lifecycle_phase for segment in contract.segments] == ["audit", "design", "implementation", "qa"]
+    assert [segment.phase for segment in contract.segments] == ["audit", "design", "implementation", "qa"]
 
 
 def test_p171_worker_changes_only_bounded_cart_total_markup(tmp_path: Path) -> None:
