@@ -1,9 +1,10 @@
 # Current Runtime Map
 
-Status: **A55.1 CLOSED / POST-CLOSURE HARDENING CURRENT THROUGH P3 / WORKSPACE UPGRADE CLOSED WITH INTENTIONAL HOLDS**  
+Status: **A55.1 CLOSED / POST-CLOSURE HARDENING CURRENT THROUGH P4 / WORKSPACE UPGRADE CLOSED WITH INTENTIONAL HOLDS**  
 Audit date: **2026-10-03**  
 Baseline before Flow 5 / A55.1: `main@7e75fc27780e4ded5fed59f51fdad893ad4f6ddf`  
-Post-closure hardening baseline before P3: `main@4f8cf53b03164140561cd0c08ef3ce42158bad27`
+Post-closure hardening baseline before P3: `main@4f8cf53b03164140561cd0c08ef3ce42158bad27`  
+P4 coherence baseline: `main@7f2714e886aa8217f19bc80dc1839b2e2bdefe40`
 
 This map describes current executable ownership, explicit holds, the completed bounded upgrade-closure boundary, and post-closure productization/reliability hardening. Historical A-series plans remain audit history; current source/tests and exact-head CI evidence are authoritative.
 
@@ -431,7 +432,7 @@ They are not silently cleared by upgrade closure and must not be treated as perm
 
 ## 15. Post-closure Productization / Reliability Hardening
 
-Post-closure P0–P3 improve real-world use without reopening A50–A55 or granting new authority.
+Post-closure P0–P4 improve real-world use without reopening A50–A55 or granting new authority.
 
 ### P0 — target-truth-aware routing
 
@@ -501,7 +502,7 @@ Public guidance uses `scenario-based expert walkthroughs` / `simulated usage sce
 
 ### P3 — target-truth size reliability + truth sync
 
-`TargetTruthProbe` now detects source overflow by reading at most `MAX_SOURCE_CHARS + 1` characters:
+`TargetTruthProbe` detects source overflow by reading at most `MAX_SOURCE_CHARS + 1` characters:
 
 ```text
 .uiux-profile.json oversized
@@ -517,7 +518,30 @@ README / project-context unstructured text
 
 Malformed in-limit `.uiux-profile.json` still fails closed as malformed. Symlink escape protection, routing precedence and all non-authority boundaries remain unchanged.
 
-P0–P3 do not clear or weaken any of the five A55 intentional holds.
+### P4 — target-truth cross-field coherence + contradiction hardening
+
+Target identity is now checked as a coherent set before fallback metadata can influence Flow planning. Canonical domain-bound archetypes owned by Flow OS carry an explicit required-domain relation; currently this applies to the existing financial archetypes.
+
+```text
+structured domain + domain-bound archetype agree
+→ accept
+
+structured domain + domain-bound archetype contradict
+→ fail closed with TargetTruthProbeError
+→ include domain/archetype source provenance in the diagnostic
+
+domain-bound structured archetype + missing domain
+→ derive its required domain
+→ provenance remains non-authoritative
+
+structured domain + conflicting fallback archetype
+→ drop the fallback archetype
+→ emit ignored_incoherent_fallback diagnostic
+```
+
+P4 does not turn arbitrary custom archetype slugs into domain authority. It only binds archetypes for which Flow OS already owns a canonical domain requirement. Derived target truth still has authority/evidence/release effects `none`.
+
+P0–P4 do not clear or weaken any of the five A55 intentional holds.
 
 ## 16. Future convergence rules
 
