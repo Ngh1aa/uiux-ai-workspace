@@ -33,7 +33,7 @@ DOGFOOD_TARGETS: tuple[RepositoryDogfoodTarget, ...] = (
     RepositoryDogfoodTarget(
         repository="Ngh1aa/Nova",
         checkout_dir="nova",
-        expected_providers=("vercel",),
+        expected_providers=("github-pages", "vercel"),
         expected_status="PREVIEW_OBSERVED",
         evidence_pr_number=73,
     ),
@@ -46,14 +46,14 @@ DOGFOOD_TARGETS: tuple[RepositoryDogfoodTarget, ...] = (
     RepositoryDogfoodTarget(
         repository="Ngh1aa/cennext-b2b-prototype",
         checkout_dir="cennext",
-        expected_providers=("vercel",),
+        expected_providers=("github-pages", "vercel"),
         expected_status="PREVIEW_OBSERVED",
         evidence_pr_number=8,
     ),
     RepositoryDogfoodTarget(
         repository="Ngh1aa/LuxRoom",
         checkout_dir="luxroom",
-        expected_providers=("vercel",),
+        expected_providers=("github-pages", "vercel"),
         expected_status="PREVIEW_OBSERVED",
         evidence_pr_number=24,
     ),
