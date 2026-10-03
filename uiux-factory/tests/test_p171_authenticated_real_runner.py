@@ -139,6 +139,11 @@ def test_p171_workflow_has_authenticated_pr_only_boundary() -> None:
     assert "AUTH_BLOCKED" in text
     assert "gh auth setup-git" in text
     assert "gh api repos/Ngh1aa/LuxRoom" in text
+    assert "getCollaboratorPermissionLevel" in text
+    assert "repoPermission === 'admin' || repoPermission === 'write'" in text
+    assert "trustedAssociations.has(association)" in text
+    assert "new Set(['OWNER', 'MEMBER', 'COLLABORATOR'])" in text
+    assert "CONTRIBUTOR" not in text
     assert "run-p171-authenticated-real-dogfood.py" in text
     assert "[P1.7.1 DOGFOOD]" in text
     assert "Merge/deploy: **not performed**" in text
