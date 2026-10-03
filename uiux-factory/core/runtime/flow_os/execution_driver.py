@@ -209,6 +209,18 @@ class ArtifactRegistry:
         for artifact_id in artifact_ids:
             self.records[artifact_id].accepted_for_handoff = True
 
+    def supersede_segments(self, segment_ids: list[str], *, reason: str) -> list[str]:
+        affected = set(segment_ids)
+        superseded: list[str] = []
+        for record in self.records.values():
+            if record.producer_segment_id not in affected or not record.accepted_for_handoff:
+                continue
+            record.accepted_for_handoff = False
+            record.metadata["superseded"] = "true"
+            record.metadata["superseded_reason"] = reason
+            superseded.append(record.id)
+        return superseded
+
     def handoff_refs(self, artifact_ids: list[str]) -> list[ArtifactRef]:
         return [
             ArtifactRef(
@@ -229,7 +241,9 @@ class ArtifactRegistry:
         return [
             record.id
             for record in self.records.values()
-            if record.producer_segment_id == segment_id and not record.accepted_for_handoff
+            if record.producer_segment_id == segment_id
+            and not record.accepted_for_handoff
+            and record.metadata.get("superseded") != "true"
         ]
 
     def to_dict(self) -> dict[str, Any]:
@@ -490,7 +504,11 @@ class ExecutionDriver:
                     if count < self.max_repair_attempts:
                         self.repair_counts[owner] = count + 1
                         failure_ids = self.registry.failure_artifact_ids(segment_id)
-                        self.execution_plan.reset_from(owner)
+                        affected = self.execution_plan.reset_from(owner)
+                        superseded = self.registry.supersede_segments(
+                            affected,
+                            reason=f"repair_reset_from:{owner}:qa_failure:{segment_id}",
+                        )
                         self.repair_context[owner] = {
                             "qa_segment_id": segment_id,
                             "failure_class": result.failure_class,
@@ -498,6 +516,7 @@ class ExecutionDriver:
                         }
                         event["repair_owner_segment_id"] = owner
                         event["repair_attempt"] = self.repair_counts[owner]
+                        event["superseded_artifact_ids"] = superseded
 
         self.history.append(event)
         self._save_checkpoint()
