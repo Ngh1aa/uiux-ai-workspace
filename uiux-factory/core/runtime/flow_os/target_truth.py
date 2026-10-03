@@ -247,14 +247,39 @@ class TargetTruthProbe:
             return None
         return resolved
 
-    def _read_text(self, relative: str) -> str | None:
+    def _read_text(
+        self,
+        relative: str,
+        *,
+        overflow: str = "truncate",
+        diagnostics: list[str] | None = None,
+    ) -> str | None:
+        """Read at most limit+1 chars so overflow is detected without loading unbounded input.
+
+        `truncate` is reserved for bounded unstructured sources such as README/context text.
+        `error` is used by declared structured truth where truncation would corrupt syntax.
+        `ignore` is used by optional structured fallback metadata such as package.json.
+        """
+
+        if overflow not in {"truncate", "error", "ignore"}:
+            raise ValueError(f"unknown overflow policy: {overflow}")
         path = self._safe_path(relative)
         if path is None:
             return None
-        text = path.read_text(encoding="utf-8-sig", errors="strict")
-        if len(text) > self.max_source_chars:
-            text = text[: self.max_source_chars]
-        return text
+        with path.open("r", encoding="utf-8-sig", errors="strict") as handle:
+            text = handle.read(self.max_source_chars + 1)
+        if len(text) <= self.max_source_chars:
+            return text
+
+        if overflow == "error":
+            raise TargetTruthProbeError(
+                f"target truth source exceeds size limit ({self.max_source_chars} chars): {relative}"
+            )
+        if overflow == "ignore":
+            if diagnostics is not None:
+                diagnostics.append(f"ignored_oversized_fallback:{relative}")
+            return None
+        return text[: self.max_source_chars]
 
     @staticmethod
     def _record(
@@ -283,8 +308,14 @@ class TargetTruthProbe:
             "release_effect": "none",
         }
 
-    def _profile(self, fields: dict[str, Any], provenance: dict[str, dict[str, Any]], diagnostics: list[str], sources: list[str]) -> None:
-        text = self._read_text(PROFILE_PATH)
+    def _profile(
+        self,
+        fields: dict[str, Any],
+        provenance: dict[str, dict[str, Any]],
+        diagnostics: list[str],
+        sources: list[str],
+    ) -> None:
+        text = self._read_text(PROFILE_PATH, overflow="error")
         if text is None:
             return
         sources.append(PROFILE_PATH)
@@ -331,7 +362,13 @@ class TargetTruthProbe:
                     "release_effect": "none",
                 }
 
-    def _project_context(self, fields: dict[str, Any], provenance: dict[str, dict[str, Any]], diagnostics: list[str], sources: list[str]) -> None:
+    def _project_context(
+        self,
+        fields: dict[str, Any],
+        provenance: dict[str, dict[str, Any]],
+        diagnostics: list[str],
+        sources: list[str],
+    ) -> None:
         label_map = {
             "website type": "website_type",
             "site type": "website_type",
@@ -346,7 +383,7 @@ class TargetTruthProbe:
         }
         pattern = re.compile(r"^\s*-\s*\*\*([^*]+):\*\*\s*(.*?)\s*$", re.IGNORECASE)
         for relative in CONTEXT_PATHS:
-            text = self._read_text(relative)
+            text = self._read_text(relative, overflow="truncate")
             if text is None:
                 continue
             sources.append(relative)
@@ -366,9 +403,15 @@ class TargetTruthProbe:
                     raw_value=match.group(2),
                 )
 
-    def _fallback_metadata(self, fields: dict[str, Any], provenance: dict[str, dict[str, Any]], diagnostics: list[str], sources: list[str]) -> None:
+    def _fallback_metadata(
+        self,
+        fields: dict[str, Any],
+        provenance: dict[str, dict[str, Any]],
+        diagnostics: list[str],
+        sources: list[str],
+    ) -> None:
         fragments: list[str] = []
-        package_text = self._read_text("package.json")
+        package_text = self._read_text("package.json", overflow="ignore", diagnostics=diagnostics)
         if package_text is not None:
             sources.append("package.json")
             try:
@@ -383,7 +426,7 @@ class TargetTruthProbe:
                         if not _is_unknown(package.get(key))
                     )
 
-        readme = self._read_text("README.md")
+        readme = self._read_text("README.md", overflow="truncate")
         if readme is not None:
             sources.append("README.md")
             fragments.append(readme[:12000])
