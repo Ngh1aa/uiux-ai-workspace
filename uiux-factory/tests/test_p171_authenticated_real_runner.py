@@ -70,7 +70,7 @@ def test_p171_profile_is_explicitly_opted_in_and_pr_only() -> None:
     assert profile.expected_changed_files == ("cart.html",)
     assert "PR-only" in profile.pr_body
     assert "do not merge" in profile.pr_body
-    assert "no deploy/release" in profile.pr_body
+    assert "no production deploy/release" in profile.pr_body
 
 
 def test_p171_goal_resolves_as_sequence_without_ambiguity() -> None:
