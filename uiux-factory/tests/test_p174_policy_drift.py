@@ -19,7 +19,7 @@ def test_registry_freshness_rules_cover_every_registered_provider() -> None:
         assert set(rules) == set(policy.known_integration_providers)
         assert all(rule.evidence_channels for rule in rules.values())
         for rule in rules.values():
-            assert set(rule.evidence_channels).issubset({"repository-static", "github-deployment"})
+            assert set(rule.evidence_channels).issubset({"repository-static", "github-provider-native"})
         assert "repository-static" in rules["vercel"].evidence_channels
 
 
