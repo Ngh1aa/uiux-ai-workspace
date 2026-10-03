@@ -157,7 +157,7 @@ class GoalInterpreter:
         ("real-estate", ("real estate", "property", "apartment", "building", "bất động sản", "căn hộ", "chung cư", "dự án nhà ở")),
         ("saas", ("saas", "software platform", "web app", "dashboard", "operations console", "fraud console", "admin console", "subscription app", "phần mềm", "nền tảng")),
         ("startup", ("startup", "incubator", "accelerator", "khởi nghiệp", "ươm tạo", "tăng tốc")),
-        ("portfolio", ("portfolio website", "portfolio site", "personal portfolio", "designer portfolio", "case study site", "creative studio", "hồ sơ năng lực", "showcase")),
+        ("portfolio", ("portfolio website", "portfolio site", "portfolio", "personal portfolio", "designer portfolio", "case study site", "creative studio", "hồ sơ năng lực", "showcase")),
         ("nonprofit", ("nonprofit", "ngo", "charity", "foundation", "phi lợi nhuận", "quỹ", "từ thiện")),
         ("landing", ("landing page", "campaign page", "microsite", "trang đích", "landing")),
         ("corporate", ("corporate", "company website", "business website", "doanh nghiệp", "công ty", "tập đoàn", "website giới thiệu")),
