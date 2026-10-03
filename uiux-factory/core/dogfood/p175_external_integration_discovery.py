@@ -56,6 +56,7 @@ def run_p175_external_integration_discovery(
         repository,
         (*static_evidence, *external.evidence),
         inspection_complete=static_complete and external.inspection_complete,
+        inspected_channels=("repository-static", "github-deployment"),
     )
 
     report = {
