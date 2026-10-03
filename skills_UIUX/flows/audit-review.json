@@ -18,7 +18,8 @@
         {"when": {"product_archetype": "trust-safety-risk"}, "skills": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "security-and-privacy"]},
         {"when": {"features": ["dashboard"]}, "skills": ["data-visualization-and-dashboard-ux"]},
         {"when": {"features": ["data-tables"]}, "skills": ["data-tables-and-enterprise-ux"]},
-        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["evidence-provenance-and-research-ops", "real-user-validation", "user-research-planning-and-recruitment"]}
+        {"when": {"features": ["user-validation"]}, "skills": ["real-user-validation", "user-research-planning-and-recruitment"]},
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["evidence-provenance-and-research-ops"]}
       ],
       "gates": [
         {"id": "audit-scope-truth", "require": "target/source-of-truth, audit scope, authority and evidence boundaries are explicit"},
