@@ -191,7 +191,7 @@ CASES: tuple[MultiSurfaceCase, ...] = (
         goal="Sửa hero và thiết kế lại checkout, giữ nguyên animation.",
         expected_mode="sequence",
         expected_segments=(
-            seg("design", "redesign", ("hero",), "FOCUSED", "existing-ui-improvement", "implementation"),
+            seg("design", "fix", ("hero",), "FOCUSED", "existing-ui-improvement", "implementation"),
             seg("design", "redesign", ("checkout",), "PAGE", "page-ui-work", "design"),
         ),
         preserve_contains=("animation",),
