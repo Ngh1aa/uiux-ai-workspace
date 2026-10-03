@@ -3,6 +3,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from core.runtime.flow_os.execution_driver import (
+    ArtifactRegistry,
+    ExecutionDriver,
+    JsonCheckpointStore,
+    SegmentRunner,
+)
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.sequence_flow import (
     MultiSurfaceRoutingError,
@@ -35,11 +41,11 @@ def _unique(items: list[str]) -> list[str]:
 
 
 class ProfessionalWebsiteFlow:
-    """Factory adapter over canonical Task, Sequence, Flow and Execution planning.
+    """Factory adapter over canonical Task, Sequence, Flow, Execution and Driver planning.
 
     GoalInterpreter remains the single-task contract owner. P1.4 adds a non-breaking
-    WorkSequenceContract above it, while P1.5 turns a resolved sequence into a stateful
-    execution contract without changing canonical routing or specialist composition.
+    WorkSequenceContract, P1.5 turns the sequence into stateful execution, and P1.6
+    connects eligible segments to a concrete runner without changing routing ownership.
     """
 
     FACTORY_TO_FLOW_STAGE = {
@@ -168,6 +174,30 @@ class ProfessionalWebsiteFlow:
         """Resolve a multi-work prompt into a resumable dependency-aware execution plan."""
         profile, work_plan = self.resolve_work_plan(goal, target_truth=target_truth)
         return profile, WorkExecutionPlan.from_resolved_work_plan(work_plan)
+
+    def resolve_execution_driver(
+        self,
+        goal: str,
+        runner: SegmentRunner,
+        *,
+        workspace_root: Path | str,
+        checkpoint_path: Path | str | None = None,
+        target_truth: dict[str, str] | None = None,
+        max_repair_attempts: int = 2,
+    ) -> tuple[GoalInterpretation, ExecutionDriver]:
+        """Resolve canonical work then bind it to the P1.6 runner/registry/checkpoint driver."""
+        profile, work_plan = self.resolve_work_plan(goal, target_truth=target_truth)
+        execution_plan = WorkExecutionPlan.from_resolved_work_plan(work_plan)
+        checkpoint = JsonCheckpointStore(checkpoint_path) if checkpoint_path else None
+        driver = ExecutionDriver(
+            work_plan,
+            execution_plan,
+            runner,
+            ArtifactRegistry(workspace_root),
+            checkpoint_store=checkpoint,
+            max_repair_attempts=max_repair_attempts,
+        )
+        return profile, driver
 
     @classmethod
     def _nearest_active_stage(cls, resolved: ResolvedFlow, requested: str) -> ResolvedStage:
