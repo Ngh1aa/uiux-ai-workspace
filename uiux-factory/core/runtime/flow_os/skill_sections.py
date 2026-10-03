@@ -61,10 +61,14 @@ class SkillSectionPolicy:
         )
 
 
-def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
+def _atomic_json(path: Path, payload: dict[str, Any], *, compact: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if compact:
+        encoded = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    else:
+        encoded = json.dumps(payload, ensure_ascii=False, indent=2)
+    tmp.write_text(encoded + "\n", encoding="utf-8")
     os.replace(tmp, path)
 
 
@@ -272,14 +276,16 @@ def build_skill_section_registry(
             "A section read expands knowledge only; it cannot change routing, authority or gates."
         ),
     }
-    encoded_public = json.dumps(public_payload, ensure_ascii=False)
+    # The policy bounds the provider-facing representation, so measure and persist
+    # the same compact JSON rather than spending context budget on formatting whitespace.
+    encoded_public = json.dumps(public_payload, ensure_ascii=False, separators=(",", ":"))
     if len(encoded_public) > policy.max_index_chars:
         raise SkillSectionError(
             f"skill section index exceeds policy limit ({len(encoded_public)}>{policy.max_index_chars} chars)"
         )
 
     run_dir = project_root / ".uiux-agent-runs" / run_id
-    _atomic_json(run_dir / _PUBLIC_INDEX, public_payload)
+    _atomic_json(run_dir / _PUBLIC_INDEX, public_payload, compact=True)
     _atomic_json(
         run_dir / _PRIVATE_REGISTRY,
         {
