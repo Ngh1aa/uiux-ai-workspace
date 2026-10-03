@@ -12,6 +12,10 @@ The workspace intentionally has several layers. They must **reference** each oth
 | Bounded target-project routing truth and routing-field provenance | `uiux-factory/core/runtime/flow_os/target_truth.py` | Read only declared target metadata sources; may influence routing fields only, never authority/gates/evidence/release |
 | External Task Contract merge / routing precedence before Flow planning | `uiux-factory/core/runtime/flow_os/external_task.py` | Apply explicit caller overrides, target truth and task inference under the canonical precedence/coherence rules |
 | Flow selection, stage sequence, skills, gates, bounded replanning | `skills_UIUX/flows/*.json` + `uiux-factory/core/runtime/flow_os/flow.py` | Explain resolved flow; never invent a competing stage order |
+| Multi-intent work decomposition and per-segment Flow ownership | `uiux-factory/core/runtime/flow_os/sequence_router.py` + `sequence_flow.py` | Preserve explicit segment order/scope; do not collapse multiple work owners into one flow |
+| Stateful segment eligibility, dependency/artifact gates and rerun/reset semantics | `uiux-factory/core/runtime/flow_os/work_execution.py` | Ask which node is runnable and record validated handoff artifacts; never execute a blocked node |
+| Concrete runner dispatch, artifact registry/checkpoint and bounded repair coordination | `uiux-factory/core/runtime/flow_os/execution_driver.py` | Execute only the runnable segment through a supplied runner; runner output still must satisfy the P1.5 gate |
+| Git/GitHub target mutation transaction, branch lease/CAS, commit provenance, preview boundary and PR finalization | `uiux-factory/core/runtime/flow_os/github_transaction.py` | Mutate only the deterministic transaction branch, preserve P1.6 request/result semantics, create/reuse a PR after QA; never select flows, bypass evidence gates, push the base branch, or merge |
 | Specialist capability knowledge | `skills_UIUX/<skill>/SKILL.md` | Load only when routed/required for the active stage |
 | Per-task external handoff/routing | `external-task-manifest.json` generated from current code | Record the resolved contract and provenance; never claim QA PASS |
 | GitHub-native external-collaborator control plane | `.github/workflows/external-agent-runner.yml` + `skills_UIUX/scripts/github-external-agent-runner.py` | Checkout target truth, compile/transport the governed task packet and declared verification; never pretend to execute an LLM provider |
@@ -40,6 +44,24 @@ This is not permission for project files to override current user intent indiscr
 
 Authority is outside this target-truth precedence. Effective authority still comes from runtime policy plus caller/task authorization. A target file cannot grant merge, deploy, release, provider, evidence or gate authority.
 
+## GitHub production transaction boundary
+
+P1.7 deliberately sits *below* routing and execution-state ownership:
+
+```text
+Task/target truth
+→ Flow + sequence routing
+→ WorkExecutionPlan (P1.5)
+→ ExecutionDriver (P1.6)
+→ GitHubProductionRunner transaction (P1.7)
+```
+
+The GitHub transaction runner may clone/fetch the target, claim one deterministic transaction branch, invoke the already-routed segment worker, commit implementation changes, run a declared preview command, collect QA evidence, and create or reuse a pull request. It may not choose a different stage, add its own specialist routing, mark missing evidence as PASS, push the configured base branch, or merge the PR.
+
+Transaction isolation uses two fences: an atomic local TTL lease for same-workspace concurrency and remote branch provenance plus compare-and-swap push (`--force-with-lease`) for distributed mutation safety. A branch that moves outside the expected transaction/lease provenance fails closed rather than being overwritten.
+
+A transaction PR is a handoff artifact, not release proof. Deployment and release truth remain owned by the deployment/evidence contracts above.
+
 ## Conflict rule
 
 When two documents overlap, use the higher-authority owner above. Explanatory or historical documents cannot silently override canonical contracts.
@@ -52,6 +74,9 @@ Examples:
 - A README fallback says fintech while the current task specifically identifies an art museum → specific task identity wins over fallback inference.
 - A skill says a site “should” use a pattern but project source/preserve constraint forbids it → preserve project truth.
 - A model says QA passed but no target browser evidence exists → state remains unverified.
+- A P1.7 worker tries to edit target files during audit/design/QA → revert that read-only mutation and fail the segment; only the implementation/repair owner may create target commits.
+- A P1.7 transaction branch moved since the last observed remote SHA → fail the lease/ownership fence instead of force-overwriting the other writer.
+- A P1.7 PR already exists for the same deterministic head/base pair → reuse it; do not create a duplicate PR.
 - A content/evidence migration makes copy and accessibility checks greener but silently removes an existing hero media/motion/composition invariant → rendered acceptance fails; repair the visual owner or record an explicitly authorized redesign.
 - A state URL says `state=empty` but the contract's Empty semantic marker is absent → State Coverage fails even if HTTP/console checks are green.
 - A provider reports `build-rate-limit / upgradeToPro` while rendered product QA is green → classify provider capacity separately; do not rewrite product code to manufacture a deployment PASS.
