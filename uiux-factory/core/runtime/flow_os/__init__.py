@@ -9,6 +9,15 @@ CANONICAL_RUNTIME_OWNER = "uiux-factory/core/runtime/flow_os"
 from core.runtime.flow_os.browser_evidence import BrowserEvidenceError, PlaywrightBrowserEvidenceAdapter
 from core.runtime.flow_os.browser_observation import BrowserObservationError, PlaywrightBrowserObservationAdapter
 from core.runtime.flow_os.evidence import EvidenceRecord
+from core.runtime.flow_os.external_side_effects import (
+    ExternalSideEffectAssessment,
+    ExternalSideEffectBlocked,
+    ExternalSideEffectEvidence,
+    GitHubExternalSideEffectObserver,
+    PreviewPolicy,
+    assess_external_side_effects,
+    detect_static_integrations,
+)
 from core.runtime.flow_os.file_tools import WorkspaceFileError, WorkspaceFileTools
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
@@ -52,13 +61,18 @@ __all__ = [
     "ContainerSandbox",
     "DeploymentResult",
     "EvidenceRecord",
+    "ExternalSideEffectAssessment",
+    "ExternalSideEffectBlocked",
+    "ExternalSideEffectEvidence",
     "FlowPlanner",
+    "GitHubExternalSideEffectObserver",
     "GoalInterpretation",
     "GoalInterpreter",
     "ManagedFlowController",
     "ManagedWebsiteRun",
     "PlaywrightBrowserEvidenceAdapter",
     "PlaywrightBrowserObservationAdapter",
+    "PreviewPolicy",
     "ProductionReleaseController",
     "ProductionReleaseError",
     "ResolvedFlow",
@@ -84,7 +98,9 @@ __all__ = [
     "WorkspaceIsolationError",
     "WorkspaceMetadata",
     "WorktreeManager",
+    "assess_external_side_effects",
     "configured_vision_creative_analyzer",
+    "detect_static_integrations",
     "sanitize_creative_output",
     "sanitize_vision_output",
 ]
