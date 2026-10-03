@@ -137,7 +137,7 @@ jobs:
       - name: Open or update Factory external drift alert
         if: >-
           (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push')
-          && ${{ steps.discovery.outcome }} == 'failure'
+          && steps.discovery.outcome == 'failure'
         uses: actions/github-script@v8
         env:
           TARGET_REPOSITORY: ${{ matrix.repository }}
@@ -178,7 +178,7 @@ jobs:
       - name: Close recovered Factory external drift alert
         if: >-
           (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push')
-          && ${{ steps.discovery.outcome }} == 'success'
+          && steps.discovery.outcome == 'success'
         uses: actions/github-script@v8
         env:
           TARGET_REPOSITORY: ${{ matrix.repository }}
@@ -199,7 +199,7 @@ jobs:
               await github.rest.issues.update({ owner, repo, issue_number: existing.number, state: 'closed', state_reason: 'completed' });
             }
       - name: Enforce external drift gate
-        if: ${{ steps.discovery.outcome }} != 'success'
+        if: steps.discovery.outcome != 'success'
         run: |
           echo "P1.7.5 detected external integration drift or incomplete visibility for ${{ matrix.repository }}"
           exit 1
