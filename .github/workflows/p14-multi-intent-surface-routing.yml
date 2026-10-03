@@ -1,7 +1,21 @@
 name: P1.4 Multi-Intent Surface Routing
 
 on:
+  workflow_dispatch:
   pull_request:
+    paths:
+      - "uiux-factory/core/dogfood/multi_surface_matrix.py"
+      - "uiux-factory/core/orchestration/intelligent_flow.py"
+      - "uiux-factory/core/runtime/flow_os/sequence_flow.py"
+      - "uiux-factory/core/runtime/flow_os/sequence_router.py"
+      - "uiux-factory/core/runtime/flow_os/work_sequence.py"
+      - "uiux-factory/scripts/run_p14_multi_surface_routing.py"
+      - "uiux-factory/tests/test_p14_multi_intent_surface_routing.py"
+      - ".github/workflows/p14-multi-intent-surface-routing.yml"
+      - ".github/workflows/routing-intelligence-contract.yml"
+      - "skills_UIUX/runtime/P14-MULTI-INTENT-SURFACE-ROUTING.md"
+  push:
+    branches: [main]
     paths:
       - "uiux-factory/core/dogfood/multi_surface_matrix.py"
       - "uiux-factory/core/orchestration/intelligent_flow.py"
@@ -24,6 +38,7 @@ env:
 jobs:
   p14-multi-intent-surface-routing:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Factory
         uses: actions/checkout@v6
@@ -36,6 +51,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install focused dependencies
+        working-directory: uiux-factory
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-dev.txt "pydantic>=2.5.3,<3"
@@ -45,6 +61,7 @@ jobs:
         run: python -m pytest -q tests/test_p14_multi_intent_surface_routing.py
 
       - name: Produce P1.4 routing evidence
+        if: always()
         working-directory: uiux-factory
         run: >-
           python scripts/run_p14_multi_surface_routing.py
