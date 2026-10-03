@@ -10,7 +10,7 @@ The monitor is read-only against target repositories. It never creates target br
 
 ## Canonical statuses
 
-- `IN_SYNC` — detected providers match the registry and every registered provider satisfies its freshness evidence rule.
+- `IN_SYNC` — no drift is detected within the evidence channels P1.7.4 actually inspects. `coverage_complete=false` may still indicate provider rules that require P1.7.5 external evidence.
 - `DRIFT_ADDED_PROVIDER` — the repository now contains integration evidence for a provider missing from the registry.
 - `DRIFT_REMOVED_PROVIDER` — the registry still declares a provider whose required current evidence is absent.
 - `DRIFT_ADDED_AND_REMOVED_PROVIDER` — both changes happened in one scan.
@@ -31,7 +31,7 @@ P1.7.4 inspects only the `repository-static` evidence channel:
 - Cloudflare: Wrangler config
 - Firebase Hosting: `firebase.json` containing a hosting block
 
-A provider whose canonical freshness rule is provider-native-only is outside P1.7.4's removal scope. P1.7.4 must not report that provider as removed merely because it does not inspect the external channel; P1.7.5 owns that evidence.
+A provider whose canonical freshness rule is external-only is outside P1.7.4's removal scope. P1.7.4 records it in `unresolved_providers` and sets `coverage_complete=false`; it must not report that provider as removed merely because the external channel was not inspected. P1.7.5 owns the full `repository-static + external-observed` freshness decision.
 
 The detector can discover providers that are not yet allowed. Discovery is evidence, not authority.
 
@@ -52,7 +52,7 @@ When a scheduled/main/manual run detects drift, the workflow opens or updates a 
 
 ## Safety boundary
 
-A P1.7.4 PASS proves only that current repository-visible integration evidence matches the canonical registry footprint at scan time.
+A P1.7.4 PASS proves only that the repository-static portion of the canonical freshness policy has no detected drift at scan time. For Nova, CENNEXT and LuxRoom, externally observed GitHub Pages integrations intentionally remain unresolved in this lane; P1.7.5 is the complete cross-channel gate.
 
 It does not prove:
 
@@ -62,4 +62,4 @@ It does not prove:
 - release approval,
 - that an externally configured provider with no repository-visible marker does or does not exist.
 
-If a future provider cannot be verified from repository-static evidence, its policy must declare an appropriate evidence channel before Factory can consider the registry fresh.
+Providers that cannot be verified from repository-static evidence must declare `external-observed` freshness and are completed by P1.7.5 rather than being guessed absent by P1.7.4.
