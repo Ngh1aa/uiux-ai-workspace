@@ -40,7 +40,7 @@ For public repositories, the observer may retry the read-only GitHub endpoint wi
 
 ## Registry semantics
 
-Registered providers accept either `repository-static` or `external-observed` freshness evidence. Removal of a static marker is therefore not incorrectly called provider removal when recent provider-native deployment evidence still proves that the integration exists.
+Registered providers accept either `repository-static` or `github-provider-native` freshness evidence. Removal of a static marker is therefore not incorrectly called provider removal when recent provider-native deployment evidence still proves that the integration exists.
 
 This does not broaden preview or release authority. `allowed_preview_providers`, mutation scope, merge authority, production deployment authority, and release authority remain unchanged.
 
