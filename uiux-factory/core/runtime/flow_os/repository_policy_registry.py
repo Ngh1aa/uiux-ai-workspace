@@ -122,10 +122,10 @@ REPOSITORY_POLICIES: dict[str, RepositoryPolicy] = {
         repository="Ngh1aa/Lumen",
         preview_policy=PreviewPolicy.ZERO_DEPLOY_STRICT.value,
         allowed_preview_providers=(),
-        known_integration_providers=("github-pages",),
+        known_integration_providers=("vercel", "github-pages"),
         mutation_scope=(),
         release_boundary=_NO_RELEASE,
-        rationale="Lumen deploys GitHub Pages from main; Factory read-only review must not create remote mutations that could cross the release boundary.",
+        rationale="Lumen has Vercel configuration and deploys GitHub Pages from main; Factory read-only review must not create remote mutations that could cross either external deployment boundary.",
     ),
     "ngh1aa/cennext-b2b-prototype": RepositoryPolicy(
         repository="Ngh1aa/cennext-b2b-prototype",

@@ -16,14 +16,14 @@ from core.runtime.flow_os.repository_policy_registry import (
 )
 
 
-P173_REPORT_VERSION = "1.0"
+P173_REPORT_VERSION = "1.1"
 
 
 @dataclass(frozen=True)
 class RepositoryDogfoodTarget:
     repository: str
     checkout_dir: str
-    expected_provider: str
+    expected_providers: tuple[str, ...]
     expected_status: str
     evidence_pr_number: int | None = None
     base_branch: str = "main"
@@ -33,27 +33,27 @@ DOGFOOD_TARGETS: tuple[RepositoryDogfoodTarget, ...] = (
     RepositoryDogfoodTarget(
         repository="Ngh1aa/Nova",
         checkout_dir="nova",
-        expected_provider="vercel",
+        expected_providers=("vercel",),
         expected_status="PREVIEW_OBSERVED",
         evidence_pr_number=73,
     ),
     RepositoryDogfoodTarget(
         repository="Ngh1aa/Lumen",
         checkout_dir="lumen",
-        expected_provider="github-pages",
+        expected_providers=("github-pages", "vercel"),
         expected_status="BLOCKED_EXTERNAL_SIDE_EFFECT",
     ),
     RepositoryDogfoodTarget(
         repository="Ngh1aa/cennext-b2b-prototype",
         checkout_dir="cennext",
-        expected_provider="vercel",
+        expected_providers=("vercel",),
         expected_status="PREVIEW_OBSERVED",
         evidence_pr_number=8,
     ),
     RepositoryDogfoodTarget(
         repository="Ngh1aa/LuxRoom",
         checkout_dir="luxroom",
-        expected_provider="vercel",
+        expected_providers=("vercel",),
         expected_status="PREVIEW_OBSERVED",
         evidence_pr_number=24,
     ),
@@ -107,13 +107,16 @@ def run_p173_live_dogfood(
         )
         base_sha_after = _branch_sha(observer, target.repository, target.base_branch)
 
-        providers = sorted({item.provider for item in combined_evidence} | set(policy.known_integration_providers))
+        providers = tuple(sorted({item.provider for item in combined_evidence} | set(policy.known_integration_providers)))
+        expected_providers = tuple(sorted(target.expected_providers))
+        registered_providers = tuple(sorted(policy.known_integration_providers))
         preview_expected = policy.preview_policy == "pr-preview-allowed"
         target_passed = all(
             [
                 policy.registered,
                 pr_inspection_complete,
-                target.expected_provider in providers,
+                providers == expected_providers,
+                registered_providers == expected_providers,
                 governance.status == target.expected_status,
                 governance.mutation_allowed is preview_expected,
                 base_sha_before == base_sha_after,
@@ -128,7 +131,10 @@ def run_p173_live_dogfood(
                 "main_unchanged": base_sha_before == base_sha_after,
                 "evidence_pr_number": target.evidence_pr_number,
                 "inspection_complete": pr_inspection_complete,
-                "providers": providers,
+                "providers": list(providers),
+                "expected_providers": list(expected_providers),
+                "registered_providers": list(registered_providers),
+                "provider_footprint_matches_registry": providers == expected_providers == registered_providers,
                 "static_evidence": [item.to_dict() for item in static_evidence],
                 "pr_evidence": [item.to_dict() for item in pr_evidence],
                 "policy": policy.to_dict(),
