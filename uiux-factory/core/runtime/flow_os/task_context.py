@@ -233,9 +233,8 @@ class GoalInterpreter:
         ),
         "art-culture": (
             ("visual-discovery-museum", (
-                "museum experience", "digital museum", "art museum", "artwork discovery",
-                "artist discovery", "visual archive", "art collection", "exhibition", "art gallery",
-                "artwork", "bảo tàng", "triển lãm", "tác phẩm nghệ thuật",
+                "artwork discovery", "artist discovery", "visual archive", "art collection",
+                "exhibition", "art gallery", "artwork", "bảo tàng", "triển lãm", "tác phẩm nghệ thuật",
             )),
         ),
         "industrial-services": (
