@@ -233,7 +233,7 @@ CASES: tuple[MixedDomainCase, ...] = (
         order_pair="edtech-enterprise-enterprise-primary",
         goal=(
             "Build the whole product. Primary product is an enterprise operations platform for an education provider. "
-            "Courses, lessons and student records are managed content; include admin workflows, approvals and data tables."
+            "An EdTech learning platform, its courses, lessons and student records are managed content; include admin workflows, approvals and data tables."
         ),
         expected_domain="enterprise-software",
         expected_archetype="enterprise-operations",
@@ -249,8 +249,8 @@ CASES: tuple[MixedDomainCase, ...] = (
         family="edtech-enterprise",
         order_pair="edtech-enterprise-enterprise-primary",
         goal=(
-            "Courses, lessons and student records are managed content for an education provider. Build the whole product: "
-            "primary product is an enterprise operations platform with admin workflows, approvals and data tables."
+            "An EdTech learning platform, its courses, lessons and student records are managed content for an education provider. "
+            "Build the whole product: primary product is an enterprise operations platform with admin workflows, approvals and data tables."
         ),
         expected_domain="enterprise-software",
         expected_archetype="enterprise-operations",
