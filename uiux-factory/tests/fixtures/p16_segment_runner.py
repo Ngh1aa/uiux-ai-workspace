@@ -13,6 +13,7 @@ request = json.loads(request_path.read_text(encoding="utf-8"))
 segment_id = request["segment_id"]
 phase = request["phase"]
 mode = request["runner_mode"]
+attempt_tag = result_path.stem.removesuffix("-result")
 
 fail_qa_once = os.environ.get("P16_FAIL_QA_ONCE") == "1"
 qa_marker = workspace / ".qa-failed-once"
@@ -22,11 +23,11 @@ def emit_file(kind: str, artifact_class: str, name: str, content: str) -> dict[s
     path = workspace / name
     path.write_text(content, encoding="utf-8")
     return {
-        "id": f"{segment_id}-{kind}-{name}",
+        "id": f"{attempt_tag}-{kind}",
         "kind": kind,
         "artifact_class": artifact_class,
         "path": str(path),
-        "metadata": {"phase": phase, "mode": mode},
+        "metadata": {"phase": phase, "mode": mode, "attempt_tag": attempt_tag},
     }
 
 
@@ -35,7 +36,7 @@ if phase == "qa" and fail_qa_once and not qa_marker.exists():
     artifact = emit_file(
         "qa-failure-evidence",
         "report",
-        f"{segment_id}-qa-failure.txt",
+        f"{attempt_tag}-qa-failure.txt",
         "PRODUCT_QA_FAILED: rendered checkout drift\n",
     )
     payload = {
@@ -57,17 +58,17 @@ else:
         }.get(kind, "evidence")
         if artifact_class == "commit":
             outputs.append({
-                "id": f"{segment_id}-{kind}",
+                "id": f"{attempt_tag}-{kind}",
                 "kind": kind,
                 "artifact_class": "commit",
-                "uri": "git+commit://0123456789abcdef0123456789abcdef01234567",
-                "metadata": {"phase": phase, "mode": mode},
+                "uri": f"git+commit://{attempt_tag}",
+                "metadata": {"phase": phase, "mode": mode, "attempt_tag": attempt_tag},
             })
         else:
             outputs.append(emit_file(
                 kind,
                 artifact_class,
-                f"{segment_id}-{kind}.txt",
+                f"{attempt_tag}-{kind}.txt",
                 json.dumps({
                     "segment_id": segment_id,
                     "phase": phase,
@@ -81,7 +82,7 @@ else:
         "schema_version": "1.0",
         "status": "passed",
         "artifacts": outputs,
-        "metadata": {"runner": "p16-subprocess-fixture"},
+        "metadata": {"runner": "p16-subprocess-fixture", "attempt_tag": attempt_tag},
     }
 
 result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
