@@ -11,7 +11,7 @@ from typing import Any, Callable, Iterable
 from core.runtime.flow_os.external_side_effects import ExternalSideEffectEvidence
 
 
-EXTERNAL_INTEGRATION_DISCOVERY_VERSION = "1.0"
+EXTERNAL_INTEGRATION_DISCOVERY_VERSION = "1.1"
 DEFAULT_EXTERNAL_EVIDENCE_MAX_AGE_DAYS = 90
 
 
@@ -22,6 +22,8 @@ class ExternalIntegrationDiscoveryResult:
     inspection_complete: bool
     inspected_deployments: int
     ignored_stale_deployments: int
+    inspected_check_runs: int
+    ignored_stale_check_runs: int
     evidence: tuple[ExternalSideEffectEvidence, ...]
     unknown_deployment_ids: tuple[int, ...]
     reason: str
@@ -33,6 +35,8 @@ class ExternalIntegrationDiscoveryResult:
             "inspection_complete": self.inspection_complete,
             "inspected_deployments": self.inspected_deployments,
             "ignored_stale_deployments": self.ignored_stale_deployments,
+            "inspected_check_runs": self.inspected_check_runs,
+            "ignored_stale_check_runs": self.ignored_stale_check_runs,
             "evidence": [item.to_dict() for item in self.evidence],
             "unknown_deployment_ids": list(self.unknown_deployment_ids),
             "reason": self.reason,
@@ -114,7 +118,7 @@ def _best_status_url(statuses: list[dict[str, Any]]) -> str | None:
 
 
 class GitHubDeploymentIntegrationObserver:
-    """Read-only discovery of provider evidence from GitHub Deployments and statuses."""
+    """Read-only provider discovery from GitHub Deployments, statuses, and Check Runs."""
 
     def __init__(
         self,
@@ -123,12 +127,14 @@ class GitHubDeploymentIntegrationObserver:
         api_base: str = "https://api.github.com",
         timeout_seconds: int = 30,
         max_age_days: int = DEFAULT_EXTERNAL_EVIDENCE_MAX_AGE_DAYS,
+        include_check_runs: bool = True,
         request_json: Callable[[str], Any] | None = None,
     ) -> None:
         self.token = token
         self.api_base = api_base.rstrip("/")
         self.timeout_seconds = int(timeout_seconds)
         self.max_age_days = max(1, int(max_age_days))
+        self.include_check_runs = bool(include_check_runs)
         self._request_json_override = request_json
 
     def _request_once(self, path: str, *, token: str | None) -> Any:
@@ -178,6 +184,77 @@ class GitHubDeploymentIntegrationObserver:
             status.get("log_url"),
         )
 
+    @staticmethod
+    def _check_parts(check: dict[str, Any]) -> tuple[Any, ...]:
+        app = check.get("app") or {}
+        output = check.get("output") or {}
+        return (
+            app.get("slug"),
+            app.get("name"),
+            check.get("name"),
+            check.get("details_url"),
+            check.get("external_id"),
+            output.get("title"),
+            output.get("summary"),
+            output.get("text"),
+        )
+
+    def _discover_check_runs(
+        self,
+        repository: str,
+        *,
+        cutoff: datetime,
+    ) -> tuple[list[ExternalSideEffectEvidence], bool, int, int]:
+        try:
+            metadata = self._request(f"/repos/{repository}")
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+            return [], False, 0, 0
+        if not isinstance(metadata, dict):
+            return [], False, 0, 0
+
+        default_branch = str(metadata.get("default_branch") or "").strip()
+        if not default_branch:
+            return [], False, 0, 0
+        encoded_ref = urllib.parse.quote(default_branch, safe="")
+        try:
+            payload = self._request(f"/repos/{repository}/commits/{encoded_ref}/check-runs?per_page=100")
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+            return [], False, 0, 0
+        if not isinstance(payload, dict) or not isinstance(payload.get("check_runs"), list):
+            return [], False, 0, 0
+
+        evidence: list[ExternalSideEffectEvidence] = []
+        inspected = 0
+        stale = 0
+        for raw in payload["check_runs"]:
+            if not isinstance(raw, dict):
+                return evidence, False, inspected, stale
+            check = dict(raw)
+            observed_at = _parse_github_time(
+                check.get("completed_at") or check.get("started_at") or check.get("created_at")
+            )
+            if observed_at is not None and observed_at < cutoff:
+                stale += 1
+                continue
+            inspected += 1
+            provider = infer_provider_from_github_deployment(*self._check_parts(check))
+            if provider is None:
+                continue
+            evidence.append(
+                ExternalSideEffectEvidence(
+                    provider=provider,
+                    effect=_effect_for_provider(provider),
+                    source="github-check-run",
+                    state="observed",
+                    url=str(check.get("details_url") or check.get("html_url") or "").strip() or None,
+                    detail=(
+                        f"Recent {provider} activity was observed through GitHub Check Run "
+                        f"{check.get('id') or 'metadata'} on the default branch."
+                    ),
+                )
+            )
+        return evidence, True, inspected, stale
+
     def discover_repository(
         self,
         repository: str,
@@ -199,6 +276,8 @@ class GitHubDeploymentIntegrationObserver:
                 inspection_complete=False,
                 inspected_deployments=0,
                 ignored_stale_deployments=0,
+                inspected_check_runs=0,
+                ignored_stale_check_runs=0,
                 evidence=(),
                 unknown_deployment_ids=(),
                 reason="GitHub Deployments visibility is unavailable; external integration state is unknown.",
@@ -211,6 +290,8 @@ class GitHubDeploymentIntegrationObserver:
                 inspection_complete=False,
                 inspected_deployments=0,
                 ignored_stale_deployments=0,
+                inspected_check_runs=0,
+                ignored_stale_check_runs=0,
                 evidence=(),
                 unknown_deployment_ids=(),
                 reason="GitHub Deployments returned an unexpected payload; external integration state is unknown.",
@@ -253,9 +334,6 @@ class GitHubDeploymentIntegrationObserver:
                     provider = infer_provider_from_github_deployment(*self._status_parts(status))
                     if provider is not None:
                         source = "github-deployment-status"
-                        status_time = _parse_github_time(status.get("updated_at") or status.get("created_at"))
-                        if status_time is not None:
-                            observed_at = status_time
                         evidence_url = _best_status_url(statuses) or evidence_url
                         break
 
@@ -291,18 +369,38 @@ class GitHubDeploymentIntegrationObserver:
                 )
             )
 
-        reason = (
-            f"GitHub Deployments inspection completed for {repository}; "
-            f"{inspected} recent deployment(s) inspected and {stale} stale deployment(s) ignored."
-            if complete
-            else "GitHub Deployments inspection was only partially readable; external integration state is unknown."
-        )
+        check_evidence: list[ExternalSideEffectEvidence] = []
+        check_complete = True
+        check_inspected = 0
+        check_stale = 0
+        if self.include_check_runs:
+            check_evidence, check_complete, check_inspected, check_stale = self._discover_check_runs(
+                repository,
+                cutoff=cutoff,
+            )
+            evidence.extend(check_evidence)
+            complete = complete and check_complete
+
+        if complete:
+            reason = (
+                f"GitHub external integration inspection completed for {repository}; "
+                f"{inspected} recent deployment(s) and {check_inspected} recent check run(s) inspected; "
+                f"{stale} stale deployment(s) and {check_stale} stale check run(s) ignored."
+            )
+        else:
+            reason = (
+                "GitHub Deployments/statuses or Check Runs were only partially readable; "
+                "external integration state is unknown."
+            )
+
         return ExternalIntegrationDiscoveryResult(
             version=EXTERNAL_INTEGRATION_DISCOVERY_VERSION,
             repository=repository,
             inspection_complete=complete,
             inspected_deployments=inspected,
             ignored_stale_deployments=stale,
+            inspected_check_runs=check_inspected,
+            ignored_stale_check_runs=check_stale,
             evidence=_dedupe(evidence),
             unknown_deployment_ids=tuple(sorted(set(unknown_ids))),
             reason=reason,
