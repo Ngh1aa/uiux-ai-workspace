@@ -127,3 +127,18 @@ def test_p11_direct_runtime_is_deterministic_and_specialists_are_jit() -> None:
                 "state-feedback-and-error-recovery",
             }:
                 assert stage.jit_skill_sources[skill] == "conditional"
+
+
+def test_p11_exclude_skills_cannot_be_readded_by_specialist_composition() -> None:
+    goal = "Build a museum platform for artwork collection discovery and artist browsing"
+    profile = GoalInterpreter().interpret(goal)
+    planner = FlowPlanner(SKILLS, POLICY)
+
+    resolved = planner.plan(
+        profile.to_context(),
+        exclude_skills=["site-search-and-findability"],
+    )
+
+    for stage in resolved.stages:
+        assert "site-search-and-findability" not in stage.skills
+        assert "site-search-and-findability" not in (stage.jit_skills or [])
