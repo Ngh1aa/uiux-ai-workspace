@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "audit-review",
+  "description": "Read-only evidence-first audit, review, research, validation and QA flow for existing UI/product surfaces without implementation.",
+  "match": {
+    "priority": 95,
+    "intents": ["audit", "review", "research", "validate", "qa"],
+    "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
+  },
+  "stages": [
+    {
+      "id": "research",
+      "agent": "research",
+      "purpose": "Establish target truth and evaluate the current experience without mutating the target.",
+      "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "website-audit-and-redesign", "design-critique-and-rationale"],
+      "conditional_skills": [
+        {"when": {"domain": "financial-services"}, "skills": ["financial-product-intelligence", "trust-credibility-and-transparency"]},
+        {"when": {"product_archetype": "trust-safety-risk"}, "skills": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "security-and-privacy"]},
+        {"when": {"features": ["dashboard"]}, "skills": ["data-visualization-and-dashboard-ux"]},
+        {"when": {"features": ["data-tables"]}, "skills": ["data-tables-and-enterprise-ux"]},
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["evidence-provenance-and-research-ops"]}
+      ],
+      "gates": [
+        {"id": "audit-scope-truth", "require": "target/source-of-truth, audit scope, authority and evidence boundaries are explicit"},
+        {"id": "non-mutation", "require": "audit/review lane produces findings and recommendations without target mutation"}
+      ]
+    },
+    {
+      "id": "qa",
+      "agent": "qa",
+      "purpose": "Validate findings against rendered/source evidence and articulate severity, confidence and verification gaps.",
+      "required_skills": ["testing-strategy", "agent-evaluation-and-reliability", "ui-craft-and-visual-qa", "web-ui-code-review", "accessibility"],
+      "conditional_skills": [
+        {"when": {"product_archetype": "trust-safety-risk"}, "skills": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery", "security-and-privacy"]},
+        {"when": {"features": ["dashboard"]}, "skills": ["data-visualization-and-dashboard-ux"]},
+        {"when": {"features": ["data-tables"]}, "skills": ["data-tables-and-enterprise-ux"]},
+        {"when": {"risk": "high"}, "skills": ["security-and-privacy"]}
+      ],
+      "gates": [
+        {"id": "evidence-backed-findings", "require": "each material finding identifies observable evidence, impact/severity, confidence and a verification path"},
+        {"id": "truthful-completion", "require": "verified versus unverified areas are explicit; completion claims do not exceed evidence"}
+      ]
+    }
+  ],
+  "replanning": {
+    "max_replans": 2,
+    "triggers": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"],
+    "policies": [
+      {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "The audit assumption or target owner was wrong; return to source-of-truth inspection.", "target_stage": "research", "add_skills": ["reference-extraction-and-design-audit"]},
+      {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "Finding verification failed; strengthen evidence before restating conclusions.", "target_stage": "research", "add_skills": ["reference-extraction-and-design-audit", "evidence-provenance-and-research-ops"]},
+      {"when": {"signal": "NEW_RISK"}, "reason": "New material risk requires explicit security/privacy review before completion.", "target_stage": "qa", "add_skills": ["security-and-privacy"]},
+      {"when": {"signal": "TOOL_FAILURE"}, "reason": "Diagnose repeated evidence/tool failure rather than blind retry.", "target_stage": "qa", "add_skills": ["agent-evaluation-and-reliability"]},
+      {"when": {"signal": "BLOCKED"}, "reason": "Blocked audit needs reframing around evidence gaps and decision consequences.", "target_stage": "research", "add_skills": ["product-decision-and-stakeholder-framing"]}
+    ]
+  }
+}
