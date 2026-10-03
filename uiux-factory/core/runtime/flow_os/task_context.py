@@ -172,7 +172,7 @@ class GoalInterpreter:
             "chargeback", "dispute", "3ds", "3-d secure", "risk operations", "transaction risk",
         )),
         ("art-culture", (
-            "museum", "art museum", "gallery", "exhibition", "artwork", "art collection",
+            "museum", "art museum", "art gallery", "exhibition", "artwork", "art collection",
             "cultural heritage", "visual archive", "artist discovery", "museum experience",
             "bảo tàng", "phòng tranh", "triển lãm", "tác phẩm nghệ thuật", "di sản văn hóa",
         )),
@@ -222,6 +222,41 @@ class GoalInterpreter:
         ("investment-wealth", ("wealth", "investment portfolio", "wealth portfolio", "brokerage", "investment", "advisor", "asset management")),
     )
 
+    DOMAIN_ARCHETYPES = {
+        "education-edtech": (
+            ("learning-platform", (
+                "learning platform", "learning management system", "lms platform", "course platform",
+                "online learning", "digital classroom", "student learning", "student progress",
+                "course progress", "assignment", "assignments", "lesson", "lessons",
+                "nền tảng học tập", "học trực tuyến", "lớp học số",
+            )),
+        ),
+        "art-culture": (
+            ("visual-discovery-museum", (
+                "artwork discovery", "artist discovery", "visual archive", "art collection",
+                "exhibition", "art gallery", "artwork", "bảo tàng", "triển lãm", "tác phẩm nghệ thuật",
+            )),
+        ),
+        "industrial-services": (
+            ("enterprise-service", (
+                "industrial service", "industrial services", "engineering service", "engineering services",
+                "industrial maintenance", "industrial repair", "motor repair", "electric motor repair",
+                "machinery repair", "plant maintenance", "factory maintenance", "service request",
+                "request a quote", "request quote", "quotation", "bảo trì công nghiệp", "sửa chữa động cơ",
+            )),
+        ),
+    }
+
+    WEBSITE_ARCHETYPES = {
+        "ecommerce": (
+            ("commerce-storefront", (
+                "ecommerce", "e-commerce", "online store", "product catalog", "product catalogue",
+                "product detail", "product details", "product page", "collection page", "collections",
+                "shopping cart", "cart", "checkout", "wishlist", "shop", "store", "giỏ hàng",
+            )),
+        ),
+    }
+
     FEATURE_TERMS = (
         ("search", ("search", "site search", "tìm kiếm")),
         ("forms", ("form", "contact form", "lead form", "checkout", "đăng ký", "liên hệ", "biểu mẫu", "thanh toán")),
@@ -269,7 +304,7 @@ class GoalInterpreter:
     INTENT_TERMS = (
         ("redesign", ("redesign", "re-design", "thiết kế lại", "làm lại giao diện")),
         ("rebuild", ("rebuild", "build lại", "xây lại")),
-        ("fix", ("fix", "repair", "bugfix", "sửa lỗi", "khắc phục", "sửa")),
+        ("fix", ("fix", "bugfix", "sửa lỗi", "khắc phục", "sửa")),
         ("polish", ("polish", "trau chuốt", "tinh chỉnh", "hoàn thiện giao diện")),
         ("improve", ("improve", "enhance", "refine", "cải thiện", "nâng cấp", "tối ưu giao diện")),
         ("audit", ("audit-only", "audit only", "audit existing", "audit this", "audit the", "run an audit", "ui audit", "ux audit", "chỉ audit")),
@@ -379,8 +414,17 @@ class GoalInterpreter:
             evidence.append("domain_evidence:" + "|".join(domain_evidence))
 
         product_archetype = "generic"
+        archetype_evidence: list[str] = []
+        archetype_candidates: Iterable[tuple[str, Iterable[str]]] = ()
         if domain == "financial-services":
-            product_archetype, archetype_evidence = _best_taxonomy_match(normalized, self.FINANCIAL_ARCHETYPES)
+            archetype_candidates = self.FINANCIAL_ARCHETYPES
+        elif domain in self.DOMAIN_ARCHETYPES:
+            archetype_candidates = self.DOMAIN_ARCHETYPES[domain]
+        elif website_type in self.WEBSITE_ARCHETYPES:
+            archetype_candidates = self.WEBSITE_ARCHETYPES[website_type]
+
+        if archetype_candidates:
+            product_archetype, archetype_evidence = _best_taxonomy_match(normalized, archetype_candidates)
             if product_archetype != "generic":
                 evidence.append(f"product_archetype:{product_archetype}")
                 evidence.append("product_archetype_evidence:" + "|".join(archetype_evidence))

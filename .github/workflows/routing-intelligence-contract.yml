@@ -5,8 +5,12 @@ on:
     paths:
       - "uiux-factory/core/runtime/flow_os/external_task.py"
       - "uiux-factory/core/runtime/flow_os/task_context.py"
+      - "uiux-factory/core/runtime/flow_os/flow.py"
+      - "skills_UIUX/runtime/specialist-composition.json"
       - "skills_UIUX/flows/audit-review.json"
       - "skills_UIUX/flows/existing-ui-improvement.json"
+      - "skills_UIUX/flows/page-ui-work.json"
+      - "skills_UIUX/flows/professional-website-redesign.json"
       - "skills_UIUX/scripts/github-connector-task-request.py"
       - ".github/workflows/external-agent-connector-bridge.yml"
       - ".github/workflows/routing-intelligence-contract.yml"
