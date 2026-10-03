@@ -22,7 +22,7 @@ The registry owns four independent dimensions:
 | Repository | Preview policy | Known integration | Allowed PR preview provider | Remote mutation scope | Merge / production deploy / release |
 | --- | --- | --- | --- | --- | --- |
 | `Ngh1aa/Nova` | `pr-preview-allowed` | Vercel | Vercel | branch create/push, PR create/update | denied |
-| `Ngh1aa/Lumen` | `zero-deploy-strict` | GitHub Pages | none | none | denied |
+| `Ngh1aa/Lumen` | `zero-deploy-strict` | Vercel + GitHub Pages | none | none | denied |
 | `Ngh1aa/cennext-b2b-prototype` | `pr-preview-allowed` | Vercel | Vercel | branch create/push, PR create/update | denied |
 | `Ngh1aa/LuxRoom` | `pr-preview-allowed` | Vercel | Vercel | branch create/push, PR create/update | denied |
 
@@ -45,9 +45,11 @@ This keeps `assess_external_side_effects()` as the P1.7.2 evaluator. P1.7.3 is a
 
 The P1.7.3 live lane is read-only. It inspects:
 
-- Nova PR #73 for Vercel evidence;
-- CENNEXT PR #8 for Vercel evidence;
-- LuxRoom PR #24 for Vercel evidence;
-- Lumen's checked-out GitHub Pages workflow as static deployment-integration evidence.
+- Nova PR #73 plus repository static config for Vercel evidence;
+- CENNEXT PR #8 plus repository static config for Vercel evidence;
+- LuxRoom PR #24 plus repository static config for Vercel evidence;
+- Lumen's checked-out `vercel.json` and GitHub Pages workflow as two distinct configured deployment integrations.
+
+The live lane requires the detected provider footprint to exactly match the registry footprint. A newly detected provider that is missing from `known_integration_providers` fails dogfood even when another strict-mode rule would already block mutation.
 
 It checks each target `main` SHA before and after evaluation. It contains no production transaction runner, target push, PR creation/update, merge or deployment action.

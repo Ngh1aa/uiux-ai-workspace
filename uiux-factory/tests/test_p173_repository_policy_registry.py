@@ -5,6 +5,7 @@ import inspect
 import pytest
 
 from core.dogfood.p171_authenticated_real_runner import DOGFOOD_PROFILES, run_authenticated_dogfood
+from core.dogfood.p173_repository_policy_registry import DOGFOOD_TARGETS
 from core.runtime.flow_os.external_side_effects import ExternalSideEffectEvidence, PreviewPolicy
 from core.runtime.flow_os.repository_policy_registry import (
     REPOSITORY_POLICIES,
@@ -58,16 +59,15 @@ def test_preview_policy_matrix_is_repository_owned() -> None:
     lumen = resolve_repository_policy("Ngh1aa/Lumen")
     assert lumen.preview_policy == PreviewPolicy.ZERO_DEPLOY_STRICT.value
     assert lumen.allowed_preview_providers == ()
-    assert lumen.known_integration_providers == ("github-pages",)
+    assert lumen.known_integration_providers == ("vercel", "github-pages")
     assert lumen.mutation_scope == ()
 
 
-def test_known_integration_is_evidence_not_permission() -> None:
+def test_known_integrations_are_evidence_not_permission() -> None:
     lumen = resolve_repository_policy("Ngh1aa/Lumen")
     evidence = repository_policy_integration_evidence(lumen)
-    assert len(evidence) == 1
-    assert evidence[0].provider == "github-pages"
-    assert evidence[0].state == "configured"
+    assert {item.provider for item in evidence} == {"vercel", "github-pages"}
+    assert all(item.state == "configured" for item in evidence)
     assessment = assess_repository_governance(
         "Ngh1aa/Lumen",
         (),
@@ -76,6 +76,18 @@ def test_known_integration_is_evidence_not_permission() -> None:
     )
     assert assessment.status == "BLOCKED_EXTERNAL_SIDE_EFFECT"
     assert assessment.mutation_allowed is False
+
+
+def test_live_dogfood_expected_provider_footprint_matches_registry_exactly() -> None:
+    expected = {
+        "Ngh1aa/Nova": {"vercel"},
+        "Ngh1aa/Lumen": {"vercel", "github-pages"},
+        "Ngh1aa/cennext-b2b-prototype": {"vercel"},
+        "Ngh1aa/LuxRoom": {"vercel"},
+    }
+    assert {target.repository: set(target.expected_providers) for target in DOGFOOD_TARGETS} == expected
+    for repository, providers in expected.items():
+        assert set(resolve_repository_policy(repository).known_integration_providers) == providers
 
 
 def test_vercel_is_allowed_for_registered_preview_repositories() -> None:
