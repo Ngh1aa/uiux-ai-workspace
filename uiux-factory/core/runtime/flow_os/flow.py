@@ -552,7 +552,11 @@ class FlowPlanner:
             stages=stages,
             replanning=dict(doc.get("replanning", {})),
         )
-        return self.specialist_composer.compose_flow(resolved, effective_context)
+        return self.specialist_composer.compose_flow(
+            resolved,
+            effective_context,
+            exclude_skills=exclude_skills,
+        )
 
     def replan(
         self,
