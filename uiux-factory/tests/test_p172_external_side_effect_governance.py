@@ -13,6 +13,7 @@ from core.runtime.flow_os.external_side_effects import (
     assess_external_side_effects,
     detect_static_integrations,
 )
+from core.runtime.flow_os.repository_policy_registry import resolve_repository_policy
 
 
 def _vercel_observed() -> ExternalSideEffectEvidence:
@@ -129,9 +130,12 @@ def test_netlify_and_pages_bot_evidence_are_distinct() -> None:
     assert pages is not None and pages.provider == "github-pages"
 
 
-def test_p171_luxroom_profile_explicitly_opts_into_pr_preview() -> None:
+def test_p171_luxroom_profile_resolves_pr_preview_policy_from_registry() -> None:
     profile = DOGFOOD_PROFILES["luxroom-cart-total-live-region"]
-    assert profile.preview_policy == PreviewPolicy.PR_PREVIEW_ALLOWED.value
+    assert not hasattr(profile, "preview_policy")
+    policy = resolve_repository_policy(profile.repository)
+    assert policy.preview_policy == PreviewPolicy.PR_PREVIEW_ALLOWED.value
+    assert policy.allowed_preview_providers == ("vercel",)
     assert "external PR preview side effects are allowed" in profile.pr_body
     assert "no production deploy/release" in profile.pr_body
 
