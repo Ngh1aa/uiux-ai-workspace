@@ -146,7 +146,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `P1.7.3 multi-repository governance passed.\n\n- Nova: Vercel PR preview allowed and observed\n- CENNEXT: Vercel PR preview allowed and observed\n- LuxRoom: Vercel PR preview allowed and observed\n- Lumen: Vercel + GitHub Pages configured; zero-deploy-strict blocked remote mutation\n- Provider footprints: exact registry match required\n- Target branch creation/push, PR mutation, merge, production deployment: **not performed**\n- Authorized issuer: \`${{ steps.authorize.outputs.issuer }}\` via \`${{ steps.authorize.outputs.authorization_basis }}\`\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+              body: `P1.7.3 multi-repository governance passed.\n\n- Nova: Vercel PR preview allowed; GitHub Pages recorded as a known deployment integration\n- CENNEXT: Vercel PR preview allowed; GitHub Pages recorded as a known deployment integration\n- LuxRoom: Vercel PR preview allowed; GitHub Pages recorded as a known deployment integration\n- Lumen: Vercel + GitHub Pages configured; zero-deploy-strict blocked remote mutation\n- Preview mutation authority remains Vercel-only for Nova/CENNEXT/LuxRoom\n- Provider footprints: exact registry match required\n- Target branch creation/push, PR mutation, merge, production deployment: **not performed**\n- Authorized issuer: \`${{ steps.authorize.outputs.issuer }}\` via \`${{ steps.authorize.outputs.authorization_basis }}\`\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             });
 
       - name: Comment fail-closed result
