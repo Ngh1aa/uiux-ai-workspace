@@ -19,6 +19,17 @@ def _contains(text: str, terms: Iterable[str]) -> bool:
     return any(term in text for term in terms)
 
 
+def _contains_token(text: str, terms: Iterable[str]) -> bool:
+    """Match semantic scope/feature terms as tokens, not arbitrary substrings."""
+    for term in terms:
+        normalized = re.sub(r"\s+", " ", str(term).strip())
+        if not normalized:
+            continue
+        if re.search(rf"(?<!\w){re.escape(normalized)}(?!\w)", text, flags=re.IGNORECASE):
+            return True
+    return False
+
+
 def _contains_non_negated(text: str, terms: Iterable[str]) -> bool:
     negative_prefix = re.compile(
         r"(?:không|đừng|do not|don't|dont|without)\s+(?:được\s+)?$",
@@ -269,7 +280,7 @@ class GoalInterpreter:
         blocked_text = " ".join(preserve + forbidden)
         inferred: list[str] = []
         for name, terms in cls.SCOPE_TERMS:
-            if _contains(scan_text, terms) and not _contains(blocked_text, terms):
+            if _contains_token(scan_text, terms) and not _contains_token(blocked_text, terms):
                 inferred.append(name)
         return _unique(inferred)
 
@@ -348,16 +359,22 @@ class GoalInterpreter:
                     evidence.append(f"product_archetype:{candidate}")
                     break
 
+        initial_domain = domain
+        initial_archetype = product_archetype
         domain, product_archetype, specialist_evidence = infer_specialist_context(
             normalized,
             domain,
             product_archetype,
         )
+        if domain != initial_domain:
+            evidence = [item for item in evidence if not item.startswith("domain:")]
+        if product_archetype != initial_archetype:
+            evidence = [item for item in evidence if not item.startswith("product_archetype:")]
         evidence.extend(item for item in specialist_evidence if item not in evidence)
 
         features: list[str] = []
         for feature, terms in self.FEATURE_TERMS:
-            if _contains(normalized, terms):
+            if _contains_token(normalized, terms):
                 features.append(feature)
                 evidence.append(f"feature:{feature}")
 
