@@ -1,0 +1,121 @@
+name: P1.7.1 Authenticated Real Runner Dogfood
+
+on:
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: p171-authenticated-real-runner-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  authenticated-dogfood:
+    if: startsWith(github.event.issue.title, '[P1.7.1 DOGFOOD]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Authorize trusted issue author
+        id: authorize
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const association = issue.author_association || 'NONE';
+            const trusted = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            if (!trusted.has(association)) {
+              core.setFailed(`P1.7.1 request rejected: author_association=${association}`);
+              return;
+            }
+            core.setOutput('issuer', issue.user?.login || 'unknown');
+            core.setOutput('association', association);
+
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Factory runtime dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check
+          "pydantic>=2.5.3,<3" "python-dotenv>=1,<2"
+
+      - name: Authenticated target-repository preflight
+        env:
+          GH_TOKEN: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::AUTH_BLOCKED: repository secret UIUX_TARGET_REPO_TOKEN is not configured"
+            exit 78
+          fi
+          PUSH_ALLOWED="$(gh api repos/Ngh1aa/LuxRoom --jq '.permissions.push')"
+          if [ "$PUSH_ALLOWED" != "true" ]; then
+            echo "::error::AUTH_BLOCKED: UIUX_TARGET_REPO_TOKEN does not have push access to Ngh1aa/LuxRoom"
+            exit 77
+          fi
+          gh auth setup-git
+
+      - name: Run authenticated GitHubProductionRunner dogfood
+        id: dogfood
+        env:
+          UIUX_TARGET_REPO_TOKEN: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+          GH_TOKEN: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+        run: |
+          TRANSACTION_ID="p171-issue-${{ github.event.issue.number }}-luxroom-cart-total-live-region"
+          python -B skills_UIUX/scripts/run-p171-authenticated-real-dogfood.py \
+            --profile luxroom-cart-total-live-region \
+            --transaction-id "$TRANSACTION_ID" \
+            --workspace-root "$RUNNER_TEMP/p171-transactions" \
+            --output-dir "$GITHUB_WORKSPACE/p171-artifacts" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Upload P1.7.1 authenticated evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: p171-authenticated-real-runner-${{ github.event.issue.number }}
+          path: p171-artifacts/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Comment successful PR-only handoff
+        if: success()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `P1.7.1 authenticated real-runner dogfood completed.\n\n- Target: \`Ngh1aa/LuxRoom\`\n- Transaction branch: \`${{ steps.dogfood.outputs.transaction_branch }}\`\n- PR: ${{ steps.dogfood.outputs.pr_url }}\n- PR state: \`${{ steps.dogfood.outputs.pr_state }}\`\n- main unchanged: \`${{ steps.dogfood.outputs.main_unchanged }}\`\n- Merge/deploy: **not performed**\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
+
+      - name: Comment fail-closed result
+        if: failure()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `P1.7.1 authenticated dogfood failed closed. No merge or deployment is authorized by this workflow. Check the run for AUTH_BLOCKED, transaction, QA, or PR evidence.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
