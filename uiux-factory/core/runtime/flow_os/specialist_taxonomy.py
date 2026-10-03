@@ -307,6 +307,55 @@ def _secondary_domains(text: str, primary_domain: str) -> list[str]:
     return secondary
 
 
+def domain_signal_candidates(goal: str) -> tuple[str, ...]:
+    """Return deterministic mixed-domain candidates for ambiguity arbitration.
+
+    The P1.1 ecommerce/payment correction remains authoritative: a generic payment
+    token inside an otherwise clear commerce task is not enough to manufacture a
+    FinTech conflict unless stronger financial-product evidence is also present.
+    """
+
+    text = _normalise(goal)
+    candidates = {
+        candidate
+        for candidate, terms in DOMAIN_SIGNAL_HINTS
+        if _contains(text, terms)
+    }
+    if (
+        "financial-services" in candidates
+        and "commerce-retail" in candidates
+        and not _contains(text, STRONG_FINANCIAL_DOMAIN_HINTS)
+    ):
+        candidates.remove("financial-services")
+    return tuple(sorted(candidates))
+
+
+def assess_domain_ambiguity(goal: str) -> tuple[str, tuple[str, ...], list[str]]:
+    """Classify unresolved mixed-domain language without inventing an owner.
+
+    Explicit primary-product language is already handled by P1.2 and therefore is
+    never marked ambiguous here. Otherwise two or more credible domain signals form
+    a conflict that must be resolved by target-project truth or caller evidence.
+    """
+
+    text = _normalise(goal)
+    if _explicit_primary_domain(text):
+        return "resolved", (), []
+    candidates = domain_signal_candidates(text)
+    if len(candidates) < 2:
+        return "resolved", candidates, []
+    joined = "|".join(candidates)
+    return (
+        "ambiguous",
+        candidates,
+        [
+            f"domain_conflict:{joined}",
+            "routing_status:ambiguous",
+            "routing_action:needs-evidence",
+        ],
+    )
+
+
 def infer_specialist_context(
     goal: str,
     domain: str,
