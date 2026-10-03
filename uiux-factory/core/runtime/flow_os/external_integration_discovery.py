@@ -83,10 +83,7 @@ def _payload_text(*parts: Any) -> str:
 _PROVIDER_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("vercel", ("vercel", "vercel.app")),
     ("netlify", ("netlify", "netlify.app")),
-    (
-        "github-pages",
-        ("github-pages", "github pages", "github.io", "pages-build-deployment", "deploy-pages"),
-    ),
+    ("github-pages", ("github-pages", "github pages", "github.io", "pages-build-deployment", "deploy-pages")),
     ("render", ("render[bot]", "render.com", "onrender.com", "render deployment")),
     ("railway", ("railway", "railway.app")),
     ("cloudflare", ("cloudflare", "pages.dev", "workers.dev", "wrangler")),
@@ -103,9 +100,7 @@ def infer_provider_from_github_deployment(*parts: Any) -> str | None:
 
 
 def _effect_for_provider(provider: str) -> str:
-    if provider in {"vercel", "netlify"}:
-        return "pr-preview"
-    return "deployment"
+    return "pr-preview" if provider in {"vercel", "netlify"} else "deployment"
 
 
 def _best_status_url(statuses: list[dict[str, Any]]) -> str | None:
@@ -118,7 +113,7 @@ def _best_status_url(statuses: list[dict[str, Any]]) -> str | None:
 
 
 class GitHubDeploymentIntegrationObserver:
-    """Read-only provider discovery from GitHub Deployments, statuses, and Check Runs."""
+    """Read-only discovery from GitHub Deployments, statuses, and provider-owned Check Runs."""
 
     def __init__(
         self,
@@ -185,15 +180,16 @@ class GitHubDeploymentIntegrationObserver:
         )
 
     @staticmethod
-    def _check_parts(check: dict[str, Any]) -> tuple[Any, ...]:
-        app = check.get("app") or {}
-        output = check.get("output") or {}
+    def _check_run_parts(check_run: dict[str, Any]) -> tuple[Any, ...]:
+        app = check_run.get("app") or {}
+        output = check_run.get("output") or {}
         return (
+            check_run.get("name"),
             app.get("slug"),
             app.get("name"),
-            check.get("name"),
-            check.get("details_url"),
-            check.get("external_id"),
+            app.get("html_url"),
+            check_run.get("details_url"),
+            check_run.get("external_id"),
             output.get("title"),
             output.get("summary"),
             output.get("text"),
@@ -204,56 +200,58 @@ class GitHubDeploymentIntegrationObserver:
         repository: str,
         *,
         cutoff: datetime,
-    ) -> tuple[list[ExternalSideEffectEvidence], bool, int, int]:
+    ) -> tuple[list[ExternalSideEffectEvidence], int, int, bool]:
+        if not self.include_check_runs:
+            return [], 0, 0, True
         try:
-            metadata = self._request(f"/repos/{repository}")
+            repo_meta = self._request(f"/repos/{repository}")
+            if not isinstance(repo_meta, dict):
+                return [], 0, 0, False
+            default_branch = str(repo_meta.get("default_branch") or "").strip()
+            if not default_branch:
+                return [], 0, 0, False
+            encoded = urllib.parse.quote(default_branch, safe="")
+            payload = self._request(f"/repos/{repository}/commits/{encoded}/check-runs?per_page=100")
         except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
-            return [], False, 0, 0
-        if not isinstance(metadata, dict):
-            return [], False, 0, 0
-
-        default_branch = str(metadata.get("default_branch") or "").strip()
-        if not default_branch:
-            return [], False, 0, 0
-        encoded_ref = urllib.parse.quote(default_branch, safe="")
-        try:
-            payload = self._request(f"/repos/{repository}/commits/{encoded_ref}/check-runs?per_page=100")
-        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
-            return [], False, 0, 0
+            return [], 0, 0, False
         if not isinstance(payload, dict) or not isinstance(payload.get("check_runs"), list):
-            return [], False, 0, 0
+            return [], 0, 0, False
 
         evidence: list[ExternalSideEffectEvidence] = []
         inspected = 0
         stale = 0
         for raw in payload["check_runs"]:
             if not isinstance(raw, dict):
-                return evidence, False, inspected, stale
-            check = dict(raw)
+                continue
+            check_run = dict(raw)
             observed_at = _parse_github_time(
-                check.get("completed_at") or check.get("started_at") or check.get("created_at")
+                check_run.get("completed_at")
+                or check_run.get("started_at")
+                or check_run.get("updated_at")
+                or check_run.get("created_at")
             )
             if observed_at is not None and observed_at < cutoff:
                 stale += 1
                 continue
-            inspected += 1
-            provider = infer_provider_from_github_deployment(*self._check_parts(check))
+            provider = infer_provider_from_github_deployment(*self._check_run_parts(check_run))
             if provider is None:
                 continue
+            inspected += 1
+            url = str(check_run.get("details_url") or check_run.get("html_url") or "").strip() or None
             evidence.append(
                 ExternalSideEffectEvidence(
                     provider=provider,
                     effect=_effect_for_provider(provider),
                     source="github-check-run",
                     state="observed",
-                    url=str(check.get("details_url") or check.get("html_url") or "").strip() or None,
+                    url=url,
                     detail=(
-                        f"Recent {provider} activity was observed through GitHub Check Run "
-                        f"{check.get('id') or 'metadata'} on the default branch."
+                        f"Recent {provider} provider Check Run was observed on the default branch "
+                        f"within the {self.max_age_days}-day freshness window."
                     ),
                 )
             )
-        return evidence, True, inspected, stale
+        return evidence, inspected, stale, True
 
     def discover_repository(
         self,
@@ -282,7 +280,6 @@ class GitHubDeploymentIntegrationObserver:
                 unknown_deployment_ids=(),
                 reason="GitHub Deployments visibility is unavailable; external integration state is unknown.",
             )
-
         if not isinstance(deployments, list):
             return ExternalIntegrationDiscoveryResult(
                 version=EXTERNAL_INTEGRATION_DISCOVERY_VERSION,
@@ -319,7 +316,6 @@ class GitHubDeploymentIntegrationObserver:
             statuses: list[dict[str, Any]] = []
             source = "github-deployment"
             evidence_url = str(deployment.get("url") or "").strip() or None
-
             if provider is None and deployment_id:
                 try:
                     raw_statuses = self._request(f"/repos/{repository}/deployments/{deployment_id}/statuses?per_page=10")
@@ -369,38 +365,28 @@ class GitHubDeploymentIntegrationObserver:
                 )
             )
 
-        check_evidence: list[ExternalSideEffectEvidence] = []
-        check_complete = True
-        check_inspected = 0
-        check_stale = 0
-        if self.include_check_runs:
-            check_evidence, check_complete, check_inspected, check_stale = self._discover_check_runs(
-                repository,
-                cutoff=cutoff,
-            )
-            evidence.extend(check_evidence)
-            complete = complete and check_complete
+        check_evidence, inspected_checks, stale_checks, checks_complete = self._discover_check_runs(
+            repository,
+            cutoff=cutoff,
+        )
+        evidence.extend(check_evidence)
+        complete = complete and checks_complete
 
-        if complete:
-            reason = (
-                f"GitHub external integration inspection completed for {repository}; "
-                f"{inspected} recent deployment(s) and {check_inspected} recent check run(s) inspected; "
-                f"{stale} stale deployment(s) and {check_stale} stale check run(s) ignored."
-            )
-        else:
-            reason = (
-                "GitHub Deployments/statuses or Check Runs were only partially readable; "
-                "external integration state is unknown."
-            )
-
+        reason = (
+            f"GitHub external evidence inspection completed for {repository}; "
+            f"{inspected} recent deployment(s) and {inspected_checks} provider Check Run(s) inspected; "
+            f"{stale} stale deployment(s) and {stale_checks} stale Check Run(s) ignored."
+            if complete
+            else "GitHub deployment/status or Check Run inspection was only partially readable; external integration state is unknown."
+        )
         return ExternalIntegrationDiscoveryResult(
             version=EXTERNAL_INTEGRATION_DISCOVERY_VERSION,
             repository=repository,
             inspection_complete=complete,
             inspected_deployments=inspected,
             ignored_stale_deployments=stale,
-            inspected_check_runs=check_inspected,
-            ignored_stale_check_runs=check_stale,
+            inspected_check_runs=inspected_checks,
+            ignored_stale_check_runs=stale_checks,
             evidence=_dedupe(evidence),
             unknown_deployment_ids=tuple(sorted(set(unknown_ids))),
             reason=reason,
