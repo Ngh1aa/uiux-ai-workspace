@@ -3,13 +3,19 @@ name: Routing Intelligence Contract
 on:
   pull_request:
     paths:
+      - "uiux-factory/core/dogfood/archetype_matrix.py"
       - "uiux-factory/core/runtime/flow_os/external_task.py"
+      - "uiux-factory/core/runtime/flow_os/flow.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_composition.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_taxonomy.py"
       - "uiux-factory/core/runtime/flow_os/task_context.py"
       - "skills_UIUX/scripts/github-connector-task-request.py"
       - ".github/workflows/external-agent-connector-bridge.yml"
       - ".github/workflows/routing-intelligence-contract.yml"
       - "uiux-factory/tests/test_routing_intelligence_bridge_a39.py"
       - "uiux-factory/tests/test_intelligent_flow.py"
+      - "uiux-factory/tests/test_canonical_specialist_routing_p11.py"
+      - "uiux-factory/tests/test_p11_archetype_real_task_dogfood.py"
       - "docs/CONTRACT-OWNERSHIP.md"
       - "START-HERE.md"
 
@@ -45,5 +51,7 @@ jobs:
           uiux-factory/tests/test_external_collaborator_a21.py
           uiux-factory/tests/test_task_contract.py
           uiux-factory/tests/test_intelligent_flow.py
+          uiux-factory/tests/test_canonical_specialist_routing_p11.py
+          uiux-factory/tests/test_p11_archetype_real_task_dogfood.py
           uiux-factory/tests/test_visual_signature_contract.py
           uiux-factory/tests/test_github_external_agent_runner_a33.py

@@ -1,0 +1,131 @@
+name: P1.1 Archetype Real-Task Dogfood
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/p11-archetype-dogfood.yml"
+      - "uiux-factory/core/dogfood/archetype_matrix.py"
+      - "uiux-factory/core/runtime/flow_os/external_task.py"
+      - "uiux-factory/core/runtime/flow_os/flow.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_composition.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_taxonomy.py"
+      - "uiux-factory/core/runtime/flow_os/task_context.py"
+      - "uiux-factory/scripts/run_p11_archetype_dogfood.py"
+      - "uiux-factory/tests/test_p11_archetype_real_task_dogfood.py"
+      - "skills_UIUX/runtime/P11-ARCHETYPE-DOGFOOD.md"
+      - "skills_UIUX/runtime/runtime-policy.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/p11-archetype-dogfood.yml"
+      - "uiux-factory/core/dogfood/archetype_matrix.py"
+      - "uiux-factory/core/runtime/flow_os/external_task.py"
+      - "uiux-factory/core/runtime/flow_os/flow.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_composition.py"
+      - "uiux-factory/core/runtime/flow_os/specialist_taxonomy.py"
+      - "uiux-factory/core/runtime/flow_os/task_context.py"
+      - "uiux-factory/scripts/run_p11_archetype_dogfood.py"
+      - "uiux-factory/tests/test_p11_archetype_real_task_dogfood.py"
+      - "skills_UIUX/runtime/P11-ARCHETYPE-DOGFOOD.md"
+      - "skills_UIUX/runtime/runtime-policy.json"
+
+permissions:
+  contents: read
+
+jobs:
+  p11-archetype-dogfood:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EDTECH_SHA: c33be024e1fb59ceadd5edace0e1a42473618ae2
+      LUXROOM_SHA: 37e6a8c4a2aecdb9cefd9fd4291b353252d5356b
+      EDTECH_ROOT: ${{ github.workspace }}/.dogfood/EdTech
+      LUXROOM_ROOT: ${{ github.workspace }}/.dogfood/LuxRoom
+      REPORT_ROOT: ${{ github.workspace }}/p11-artifacts
+
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Checkout pinned EdTech
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/EdTech
+          ref: c33be024e1fb59ceadd5edace0e1a42473618ae2
+          path: .dogfood/EdTech
+
+      - name: Checkout pinned LuxRoom
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/LuxRoom
+          ref: 37e6a8c4a2aecdb9cefd9fd4291b353252d5356b
+          path: .dogfood/LuxRoom
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install focused dependencies
+        working-directory: uiux-factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt "pydantic>=2.5.3,<3"
+
+      - name: Run P1.1 canonical routing regressions
+        working-directory: uiux-factory
+        run: |
+          python -m pytest -q \
+            tests/test_p11_archetype_real_task_dogfood.py \
+            tests/test_canonical_specialist_routing_p11.py
+
+      - name: Dogfood real EdTech checkout
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_p11_archetype_dogfood.py \
+            --project-id edtech \
+            --project-root "$EDTECH_ROOT" \
+            --expected-target-sha "$EDTECH_SHA" \
+            --report "$REPORT_ROOT/edtech.json"
+
+      - name: Dogfood real LuxRoom checkout
+        working-directory: uiux-factory
+        run: |
+          python scripts/run_p11_archetype_dogfood.py \
+            --project-id luxroom \
+            --project-root "$LUXROOM_ROOT" \
+            --expected-target-sha "$LUXROOM_SHA" \
+            --report "$REPORT_ROOT/luxroom.json"
+
+      - name: Verify four-archetype evidence matrix
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["REPORT_ROOT"])
+          reports = [json.loads((root / name).read_text(encoding="utf-8")) for name in ("edtech.json", "luxroom.json")]
+          if not all(report.get("passed") is True for report in reports):
+              raise SystemExit("P1.1 real-task report did not pass")
+          archetypes = {
+              case["contract"]["product_archetype"]
+              for report in reports
+              for case in report["cases"]
+          }
+          expected = {"learning-experience", "learning-operations", "catalog-commerce", "checkout-commerce"}
+          if archetypes != expected:
+              raise SystemExit(f"unexpected archetype matrix: {sorted(archetypes)}")
+          print("P1.1 real-task archetype matrix PASS:", ", ".join(sorted(archetypes)))
+          PY
+
+      - name: Upload P1.1 dogfood evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: p11-archetype-dogfood-${{ github.run_id }}
+          if-no-files-found: warn
+          path: p11-artifacts/*.json
