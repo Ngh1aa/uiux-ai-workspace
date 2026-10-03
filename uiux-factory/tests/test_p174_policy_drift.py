@@ -18,7 +18,9 @@ def test_registry_freshness_rules_cover_every_registered_provider() -> None:
         rules = {rule.provider: rule for rule in policy.integration_freshness}
         assert set(rules) == set(policy.known_integration_providers)
         assert all(rule.evidence_channels for rule in rules.values())
-        assert all("repository-static" in rule.evidence_channels for rule in rules.values())
+        for rule in rules.values():
+            assert set(rule.evidence_channels).issubset({"repository-static", "github-deployment"})
+        assert "repository-static" in rules["vercel"].evidence_channels
 
 
 def test_monitor_matrix_is_derived_from_registry_without_duplicate_target_list() -> None:
@@ -34,6 +36,9 @@ def test_vercel_repository_is_in_sync_when_static_marker_exists(tmp_path: Path) 
     assert assessment.status == "IN_SYNC"
     assert assessment.in_sync is True
     assert assessment.detected_providers == ("vercel",)
+    assert assessment.registered_providers == ("github-pages", "vercel")
+    assert assessment.inspected_channels == ("repository-static",)
+    assert assessment.removed_providers == ()
 
 
 def test_added_netlify_provider_is_detected_without_registry_change(tmp_path: Path) -> None:
