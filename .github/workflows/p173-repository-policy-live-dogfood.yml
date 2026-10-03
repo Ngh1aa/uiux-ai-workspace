@@ -1,0 +1,162 @@
+name: P1.7.3 Repository Policy Live Dogfood
+
+on:
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: p173-repository-policy-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  p173-live-dogfood:
+    if: startsWith(github.event.issue.title, '[P1.7.3 DOGFOOD]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Authorize trusted issue author from live GitHub state
+        id: authorize
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const issuer = issue.user?.login || 'unknown';
+            const association = issue.author_association || 'NONE';
+            const trustedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            let repoPermission = 'none';
+            if (issuer !== 'unknown') {
+              try {
+                const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  username: issuer,
+                });
+                repoPermission = permission.permission || 'none';
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+            }
+            if (!trustedAssociations.has(association) && repoPermission !== 'admin' && repoPermission !== 'write') {
+              core.setFailed(`P1.7.3 request rejected: association=${association}, repo_permission=${repoPermission}`);
+              return;
+            }
+            core.setOutput('issuer', issuer);
+            core.setOutput('authorization_basis', trustedAssociations.has(association) ? `author_association:${association}` : `repo_permission:${repoPermission}`);
+
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Checkout Nova read-only
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Nova
+          ref: main
+          path: p173-targets/nova
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+          persist-credentials: false
+
+      - name: Checkout Lumen read-only
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/Lumen
+          ref: main
+          path: p173-targets/lumen
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+          persist-credentials: false
+
+      - name: Checkout CENNEXT read-only
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/cennext-b2b-prototype
+          ref: main
+          path: p173-targets/cennext
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+          persist-credentials: false
+
+      - name: Checkout LuxRoom read-only
+        uses: actions/checkout@v6
+        with:
+          repository: Ngh1aa/LuxRoom
+          ref: main
+          path: p173-targets/luxroom
+          token: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install Factory runtime dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check
+          "pydantic>=2.5.3,<3" "python-dotenv>=1,<2"
+
+      - name: Read-only credential preflight
+        env:
+          GH_TOKEN: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::AUTH_BLOCKED: repository secret UIUX_TARGET_REPO_TOKEN is not configured"
+            exit 78
+          fi
+          gh api repos/Ngh1aa/Nova >/dev/null
+          gh api repos/Ngh1aa/Nova/pulls/73 >/dev/null
+          gh api repos/Ngh1aa/Lumen >/dev/null
+          gh api repos/Ngh1aa/cennext-b2b-prototype >/dev/null
+          gh api repos/Ngh1aa/cennext-b2b-prototype/pulls/8 >/dev/null
+          gh api repos/Ngh1aa/LuxRoom >/dev/null
+          gh api repos/Ngh1aa/LuxRoom/pulls/24 >/dev/null
+
+      - name: Evaluate repository policies against four real targets
+        env:
+          UIUX_TARGET_REPO_TOKEN: ${{ secrets.UIUX_TARGET_REPO_TOKEN }}
+        run: >-
+          python -B skills_UIUX/scripts/run-p173-repository-policy-registry.py
+          --target-root "$GITHUB_WORKSPACE/p173-targets"
+          --output-dir "$GITHUB_WORKSPACE/p173-artifacts"
+
+      - name: Upload P1.7.3 evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: p173-repository-policy-${{ github.event.issue.number }}
+          path: p173-artifacts/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Comment successful read-only governance result
+        if: success()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `P1.7.3 multi-repository governance passed.\n\n- Nova: Vercel PR preview allowed and observed\n- CENNEXT: Vercel PR preview allowed and observed\n- LuxRoom: Vercel PR preview allowed and observed\n- Lumen: GitHub Pages integration known; zero-deploy-strict blocked remote mutation\n- Target branch creation/push, PR mutation, merge, production deployment: **not performed**\n- Authorized issuer: \`${{ steps.authorize.outputs.issuer }}\` via \`${{ steps.authorize.outputs.authorization_basis }}\`\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
+
+      - name: Comment fail-closed result
+        if: failure()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `P1.7.3 multi-repository governance failed closed. This workflow has no target mutation, merge, or deployment authority.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
