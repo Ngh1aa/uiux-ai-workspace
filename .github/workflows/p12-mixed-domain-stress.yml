@@ -31,6 +31,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONPATH: ${{ github.workspace }}/uiux-factory
+
 jobs:
   p12-mixed-domain-stress:
     runs-on: ubuntu-latest
