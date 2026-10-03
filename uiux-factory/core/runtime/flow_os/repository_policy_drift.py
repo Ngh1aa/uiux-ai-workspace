@@ -70,6 +70,10 @@ class RepositoryPolicyDriftAssessment:
 def _evidence_channel(item: ExternalSideEffectEvidence) -> str:
     if item.source == "repository-static-config" or item.source.startswith("workflow:"):
         return "repository-static"
+    if item.source.startswith("github-deployment") or item.source == "github-check-run":
+        return "github-provider-native"
+    if item.source == "github-pr-comment":
+        return "github-pr-comment"
     if item.state == "observed":
         return "external-observed"
     return item.source
