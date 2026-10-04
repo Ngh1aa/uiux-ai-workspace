@@ -16,7 +16,6 @@ _SURFACE_SCORE = {
 _HIGH_RISK_TERMS = (
     "architecture",
     "security",
-    "auth",
     "authentication",
     "authorization",
     "provider truth",
@@ -27,8 +26,6 @@ _HIGH_RISK_TERMS = (
     "migration",
     "data loss",
     "permission",
-    "read-only",
-    "read_only",
     "regression",
     "integration",
     "governance",
@@ -112,7 +109,7 @@ def _stage_profile(stage: Any, *, task_floor: str, high_risk: bool) -> dict[str,
 
     stage_floor = {
         "research": "balanced",
-        "implementation": "balanced",
+        "implementation": "efficient",
         "qa": "balanced",
         "development": "balanced",
     }.get(agent, "balanced")
@@ -210,6 +207,16 @@ def build_execution_advice(
         _stage_profile(stage, task_floor=capability_floor, high_risk=high_risk)
         for stage in list(getattr(flow, "stages", []) or [])
     ]
+    if stage_profiles:
+        recommended = _max_capability(
+            recommended,
+            *[str(item["recommended_capability"]) for item in stage_profiles],
+        )
+        picker_instruction = {
+            "efficient": "Choose a fast/efficient model that is still capable of the task.",
+            "balanced": "Choose a balanced reasoning/coding model.",
+            "advanced": "Choose the strongest available reasoning/coding model for this run.",
+        }[recommended]
 
     if not reasons:
         reasons.append("bounded task contract without elevated risk signals")
