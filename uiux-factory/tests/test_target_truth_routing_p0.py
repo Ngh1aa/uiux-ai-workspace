@@ -5,8 +5,10 @@ from pathlib import Path
 
 import pytest
 
+from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.external_task import build_external_task_manifest
-from core.runtime.flow_os.target_truth import TargetTruthProbe, TargetTruthProbeError
+from core.runtime.flow_os.managed import ManagedFlowController
+from core.runtime.flow_os.target_truth import ROUTING_FIELDS, TargetTruthProbe, TargetTruthProbeError
 
 
 FACTORY_ROOT = Path(__file__).resolve().parents[1]
@@ -232,3 +234,85 @@ def test_p0_malformed_declared_profile_fails_closed(tmp_path: Path) -> None:
             "owner/product",
             target_root=target,
         )
+
+
+def _managed_resolution(target: Path, goal: str, overrides: dict[str, object] | None = None):
+    harness = ProviderNeutralAgentHarness(SKILLS, target)
+    manager = ManagedFlowController(harness)
+    context = manager.interpret_goal(goal, overrides)
+    flow = manager.resolve_flow(context)
+    return context, flow
+
+
+def test_b06_managed_and_external_use_same_target_truth_before_flow_resolution(tmp_path: Path) -> None:
+    target = tmp_path / "portfolio"
+    _profile(
+        target,
+        {
+            "website_type": "portfolio",
+            "domain": "ai-software",
+            "mode": "interactive_prototype",
+        },
+    )
+    goal = "Redesign the whole product experience and add user research evidence."
+
+    external = build_external_task_manifest(
+        SKILLS, POLICY, goal, "owner/portfolio", target_root=target,
+    ).to_dict()
+    managed_context, managed_flow = _managed_resolution(target, goal)
+
+    for field_name in ROUTING_FIELDS:
+        assert managed_context[field_name] == external["task_contract"][field_name], field_name
+    assert managed_context["routing_provenance"] == external["task_contract"]["routing_provenance"]
+    assert managed_context["target_truth"] == external["task_contract"]["target_truth"]
+    assert managed_flow.id == external["resolved_flow"]["id"] == "portfolio-career-system"
+
+
+def test_b06_managed_and_external_share_explicit_override_precedence(tmp_path: Path) -> None:
+    target = tmp_path / "product"
+    _profile(
+        target,
+        {
+            "website_type": "saas",
+            "domain": "financial-services",
+            "mode": "production",
+            "features": ["auth"],
+        },
+    )
+    goal = "Improve the existing product interface."
+    overrides = {
+        "website_type": "portfolio",
+        "domain": "art-culture",
+        "mode": "visual-prototype",
+        "features": ["user-validation"],
+    }
+
+    external = build_external_task_manifest(
+        SKILLS, POLICY, goal, "owner/product", target_root=target, overrides=overrides,
+    ).to_dict()
+    managed_context, managed_flow = _managed_resolution(target, goal, overrides)
+
+    for field_name in ROUTING_FIELDS:
+        assert managed_context[field_name] == external["task_contract"][field_name], field_name
+    assert managed_context["routing_provenance"] == external["task_contract"]["routing_provenance"]
+    assert managed_flow.id == external["resolved_flow"]["id"]
+    assert managed_context["routing_provenance"]["field_sources"]["domain"] == "explicit_override"
+
+
+def test_b06_managed_preserves_non_routing_compatibility_overrides(tmp_path: Path) -> None:
+    target = tmp_path / "product"
+    _profile(target, {"website_type": "saas", "domain": "ai-software"})
+    harness = ProviderNeutralAgentHarness(SKILLS, target)
+    manager = ManagedFlowController(harness)
+
+    context = manager.interpret_goal(
+        "Fix button spacing on the existing product.",
+        {"change_surface": "MICRO", "approval_mode": "manual", "scope": ["button"]},
+    )
+
+    assert context["website_type"] == "saas"
+    assert context["domain"] == "ai-software"
+    assert context["approval_mode"] == "manual"
+    assert context["scope"] == ["button"]
+    assert context["routing_provenance"]["target_truth_applied_before_flow_resolution"] is True
+
