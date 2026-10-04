@@ -34,6 +34,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Run branch hygiene contract tests
         env:
           PYTHONPATH: ${{ github.workspace }}/uiux-factory
