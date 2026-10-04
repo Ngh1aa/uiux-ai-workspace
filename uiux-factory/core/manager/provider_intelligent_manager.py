@@ -213,12 +213,13 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             input_path = context.run_dir / "design-context.json"
             input_path.write_text(context.design_context.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("design_context", input_path)
-            self._save_flow_plan(context, engine)
+            self._save_flow_plan(context, engine, stateful_execution=True)
 
             await self._run_reference_analysis(context)
             self.runtime.require(context, "research.web")
             await self._run_research(context)
             await self._run_ux_ia(context)
+            self._complete_execution_phase(context, "audit")
             await self._run_art_direction(context)
             await self._run_design_contract(context)
             await self._run_design_system(context)
@@ -229,6 +230,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
 
             await self._run_implementation_plan(context)
             await self._run_visual_composition(context)
+            self._complete_execution_phase(context, "design")
 
             if engine == "external":
                 self._run_external_handoff(context)
@@ -237,13 +239,17 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
                 await self._run_ai_implementation(context, provider)
             else:
                 await self._run_template_implementation(context)
+            self._complete_execution_phase(context, "implementation")
 
             self.runtime.require(context, "browser.qa")
             self.runtime.require(context, "visual.qa")
             await self._run_quality_loop(context)
+            self._complete_execution_phase(context, "qa")
+            self._assert_execution_completion(context)
             context.complete()
             return context
         except Exception as error:
+            self._fail_active_execution_segment(context, error)
             context.add_error(error)
             raise
         finally:

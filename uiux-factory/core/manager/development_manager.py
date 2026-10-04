@@ -24,6 +24,8 @@ from core.contracts.prompt_pack_schema import PromptPack
 from core.contracts.schema import DesignContract
 from core.contracts.visual_composition_schema import VisualComposition
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
+from core.runtime.flow_os.main_execution import advance_execution_phase, fail_execution_phase
+from core.runtime.flow_os.work_execution import WorkExecutionPlan
 from core.runtime.run_context import RunContext
 from core.team.team_runner import UIUXTeamRunner
 
@@ -46,6 +48,33 @@ class DevelopmentManager:
         "visual_qa",
         "repair",
     ]
+
+    EXECUTION_OUTPUT_SOURCE_KEYS = {
+        "audit-findings": "research",
+        "design-spec": "visual_composition",
+        "implementation-artifact": "implementation",
+        "qa-evidence": "quality_loop",
+        "constraint-evidence": "quality_loop",
+        "work-evidence": "quality_loop",
+    }
+
+    EXECUTION_STAGE_PHASE = {
+        "reference_analysis": "audit",
+        "research": "audit",
+        "ux_ia": "audit",
+        "art_direction": "design",
+        "design_contract": "design",
+        "design_system": "design",
+        "implementation_plan": "design",
+        "visual_composition": "design",
+        "specification_compile": "implementation",
+        "implementation": "implementation",
+        "browser_qa": "qa",
+        "visual_qa": "qa",
+        "repair": "qa",
+        "quality_loop": "qa",
+        "external_handoff": "implementation",
+    }
 
     def __init__(self, root: Path):
         self.root = Path(root).resolve()
@@ -77,8 +106,119 @@ class DevelopmentManager:
     def _read(context: RunContext, key: str) -> str:
         return DevelopmentManager._require(context, key).read_text(encoding="utf-8")
 
-    def _save_flow_plan(self, context: RunContext, engine: str) -> None:
-        profile = self.flow.interpreter.interpret(context.goal)
+    def _load_execution_plan(self, context: RunContext) -> WorkExecutionPlan | None:
+        raw = context.artifacts.get("execution_plan")
+        if not raw:
+            return None
+        path = Path(raw)
+        if not path.is_file():
+            raise RuntimeError(f"Execution plan artifact missing: {path}")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise RuntimeError("Execution plan artifact must contain a JSON object.")
+        return WorkExecutionPlan.from_dict(payload)
+
+    def _persist_execution_plan(self, context: RunContext, plan: WorkExecutionPlan) -> Path:
+        raw = context.artifacts.get("execution_plan")
+        path = Path(raw) if raw else (context.run_dir / "execution-plan.json")
+        path.write_text(
+            json.dumps(plan.to_dict(), indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        if not raw:
+            context.add_artifact("execution_plan", path)
+        else:
+            context.save()
+        return path
+
+    def _complete_execution_phase(self, context: RunContext, phase: str) -> WorkExecutionPlan | None:
+        plan = self._load_execution_plan(context)
+        if plan is None:
+            return None
+
+        output_sources = {
+            kind: (source_key, Path(context.artifacts[source_key]))
+            for kind, source_key in self.EXECUTION_OUTPUT_SOURCE_KEYS.items()
+            if source_key in context.artifacts
+        }
+        completed = advance_execution_phase(plan, phase, output_sources)
+        if completed:
+            path = self._persist_execution_plan(context, plan)
+            context.event_bus().emit(
+                "flow.execution_phase_completed",
+                stage=phase,
+                data={
+                    "segments": completed,
+                    "execution_plan": str(path),
+                    "completion_status": plan.completion_status,
+                },
+            )
+        return plan
+
+    def _fail_active_execution_segment(self, context: RunContext, error: Exception) -> None:
+        active_stage = str(context.active_stage or "")
+        phase = self.EXECUTION_STAGE_PHASE.get(active_stage)
+        if not phase:
+            return
+        plan = self._load_execution_plan(context)
+        if plan is None:
+            return
+        segment_id = fail_execution_phase(
+            plan,
+            phase,
+            f"{type(error).__name__}: {error}",
+        )
+        if segment_id is None:
+            return
+        path = self._persist_execution_plan(context, plan)
+        context.event_bus().emit(
+            "flow.execution_segment_failed",
+            stage=active_stage,
+            data={
+                "segment_id": segment_id,
+                "phase": phase,
+                "execution_plan": str(path),
+                "completion_status": plan.completion_status,
+            },
+        )
+
+    def _assert_execution_completion(self, context: RunContext) -> None:
+        plan = self._load_execution_plan(context)
+        if plan is None:
+            return
+        if plan.completion_status != "completed":
+            raise RuntimeError(
+                "Main entrypoint reached completion before the canonical sequence execution plan: "
+                f"status={plan.completion_status}; runnable={plan.runnable_segment_ids()}"
+            )
+
+    def _save_flow_plan(
+        self,
+        context: RunContext,
+        engine: str,
+        *,
+        stateful_execution: bool = False,
+    ) -> None:
+        contract = self.flow.resolve_contract(context.goal)
+        profile = contract.profile
+        resolved_work_plan = None
+        execution_plan = None
+        if contract.routing_mode == "sequence" and stateful_execution:
+            resolved_work_plan = self.flow.sequence_planner.plan_sequence(contract)
+            execution_plan = WorkExecutionPlan.from_resolved_work_plan(resolved_work_plan)
+            self._write(
+                context,
+                "work_plan",
+                "work-plan.json",
+                json.dumps(resolved_work_plan.to_dict(), indent=2, ensure_ascii=False) + "\n",
+            )
+            self._write(
+                context,
+                "execution_plan",
+                "execution-plan.json",
+                json.dumps(execution_plan.to_dict(), indent=2, ensure_ascii=False) + "\n",
+            )
+
         stages = []
         for stage in self.FLOW:
             profile_for_stage, skills, mandatory = self.flow.resolve_skill_names(stage, context.goal)
@@ -96,11 +236,22 @@ class DevelopmentManager:
             "source": str(self.flow.flow_path),
             "flow_id": self.flow.document.get("id"),
             "engine": engine,
+            "routing_mode": contract.routing_mode,
+            "work_sequence_version": contract.version,
+            "work_segments": [segment.to_dict() for segment in contract.segments],
             "task_context": profile.to_dict(),
             "stages": stages,
+            "execution": {
+                "stateful": execution_plan is not None,
+                "work_plan_artifact": context.artifacts.get("work_plan"),
+                "execution_plan_artifact": context.artifacts.get("execution_plan"),
+                "initial_status": execution_plan.completion_status if execution_plan is not None else None,
+            },
             "replanning": self.flow.document.get("replanning", {}),
             "policy": (
                 "AI and deterministic engines follow the same canonical stage sequence. "
+                "Multi-work goals are resolved through the canonical sequence planner and a "
+                "dependency-aware execution plan before stage execution begins. "
                 "AI may refine specialist artifacts, but cannot bypass contracts or quality gates. "
                 "Substantial implementation is spec-first: compile and freeze the prompt pack before target code generation."
             ),
@@ -141,12 +292,13 @@ class DevelopmentManager:
             input_path = context.run_dir / "design-context.json"
             input_path.write_text(context.design_context.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("design_context", input_path)
-            self._save_flow_plan(context, engine)
+            self._save_flow_plan(context, engine, stateful_execution=True)
 
             # Canonical intelligence/design sequence. No engine is allowed to skip it.
             await self._run_reference_analysis(context)
             await self._run_research(context)
             await self._run_ux_ia(context)
+            self._complete_execution_phase(context, "audit")
             await self._run_art_direction(context)
             await self._run_design_contract(context)
             await self._run_design_system(context)
@@ -157,17 +309,22 @@ class DevelopmentManager:
 
             await self._run_implementation_plan(context)
             await self._run_visual_composition(context)
+            self._complete_execution_phase(context, "design")
             await self._run_specification_compile(context)
 
             if engine == "ai":
                 await self._run_ai_implementation(context, provider)
             else:
                 await self._run_template_implementation(context)
+            self._complete_execution_phase(context, "implementation")
 
             await self._run_quality_loop(context)
+            self._complete_execution_phase(context, "qa")
+            self._assert_execution_completion(context)
             context.complete()
             return context
         except Exception as error:
+            self._fail_active_execution_segment(context, error)
             context.add_error(error)
             raise
 
