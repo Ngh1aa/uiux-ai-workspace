@@ -778,6 +778,65 @@ railway
 
 Firebase Hosting intentionally remains repository-static/GitHub-native for repository-linkage truth because Hosting site/release visibility is not itself proof of a Git repository integration.
 
+### P1.7.10 — scheduled / continuous provider truth
+
+P1.7.10 adds a continuous read-only monitoring lane without changing canonical provider-truth semantics.
+
+The canonical truth resolver stays fail-closed:
+
+```text
+missing evidence / missing provider visibility
+→ canonical truth may remain UNKNOWN
+```
+
+The new continuous-monitoring layer answers a different question:
+
+```text
+should this scheduled workflow be red?
+```
+
+Credential-aware severity:
+
+```text
+canonical truth verified
++ optional provider credential absent
+→ HEALTHY_WITH_OPTIONAL_CREDENTIAL_GAPS
+→ workflow green
+
+canonical idle truth incomplete
+only because an opt-in provider credential is absent
+→ DEGRADED_MISSING_OPTIONAL_CREDENTIALS
+→ workflow green
+→ artifact still records incomplete canonical truth
+
+provider credential configured
+but provider API visibility is unavailable/incomplete
+→ ACTION_REQUIRED_PROVIDER_VISIBILITY
+→ workflow red
+
+drift / conflicting provider truth / non-credential evidence gap
+/ incomplete GitHub visibility
+→ ACTION_REQUIRED_CANONICAL_TRUTH
+→ workflow red
+```
+
+This separation prevents an intentionally unconfigured secret from turning the repository red while preserving fail-closed canonical truth and actionable monitoring failures.
+
+Canonical owner surfaces:
+
+```text
+core/runtime/flow_os/continuous_provider_truth.py
+core/dogfood/p1710_continuous_provider_truth.py
+skills_UIUX/scripts/run-p1710-continuous-provider-truth.py
+.github/workflows/p1710-continuous-provider-truth.yml
+```
+
+The schedule runs daily at `01:17 UTC` and can also be invoked manually. Pull requests and pushes to `main` run only the P1.7.10 contract tests; they do not execute live provider polling.
+
+The scheduled matrix covers every repository in the canonical repository policy registry. It reuses the existing P1.7.7/P1.7.9 read-only adapters and GitHub/static evidence channels.
+
+P1.7.10 introduces no provider mutation, deploy, branch push, PR mutation, merge, release, registry mutation or credential persistence. Provider secrets remain optional repository secrets and never appear in evidence artifacts.
+
 ## 16. Future convergence rules
 
 Future work must preserve:
