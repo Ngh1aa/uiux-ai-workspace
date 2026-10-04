@@ -15,7 +15,7 @@ from core.runtime.flow_os.repository_policy_registry import resolve_repository_p
 PROVIDER_ATTESTATION_VERSION = "1.0"
 CANONICAL_INTEGRATION_TRUTH_VERSION = "1.0"
 PROVIDER_ATTESTATION_COVERAGE_VERSION = "1.0"
-SUPPORTED_PROVIDER_ATTESTORS = frozenset({"vercel", "netlify", "render", "cloudflare"})
+SUPPORTED_PROVIDER_ATTESTORS = frozenset({"vercel", "netlify", "render", "cloudflare", "railway"})
 KNOWN_EXTERNAL_INTEGRATION_PROVIDERS = frozenset(
     {
         "vercel",
@@ -108,14 +108,14 @@ PROVIDER_ATTESTATION_CAPABILITIES: dict[str, ProviderAttestationCapability] = {
     ),
     "railway": ProviderAttestationCapability(
         provider="railway",
-        mode="provider-api-adapter-pending",
-        attestor_available=False,
+        mode="provider-api",
+        attestor_available=True,
         repository_linkage_truth=True,
-        idle_truth_provider_native=False,
-        credential_inputs=("P178_RAILWAY_TOKEN",),
+        idle_truth_provider_native=True,
+        credential_inputs=("P179_RAILWAY_TOKEN", "P179_RAILWAY_WORKSPACE_ID"),
         reason=(
-            "Railway exposes a read-only GraphQL API and models service-to-repository linkage, "
-            "but UIUX Factory does not yet ship a verified Railway read adapter. Idle truth therefore remains fail-closed."
+            "Railway project/service Git linkage is read through the public GraphQL API with schema introspection; "
+            "missing scope or incompatible schema fails closed."
         ),
     ),
     "firebase-hosting": ProviderAttestationCapability(
@@ -1182,6 +1182,422 @@ class CloudflarePagesProviderAttestor:
             evidence=evidence,
             reason=f"Cloudflare Pages project linkage for {repository} is configured and readable.",
         )
+
+
+def _graphql_named_type(type_payload: Any) -> str | None:
+    current = type_payload
+    for _ in range(8):
+        if not isinstance(current, Mapping):
+            return None
+        name = str(current.get("name") or "").strip()
+        if name:
+            return name
+        current = current.get("ofType")
+    return None
+
+
+class RailwayProviderAttestor:
+    """Read-only Railway project/service Git linkage attestation.
+
+    Railway's public API is GraphQL. The adapter first introspects the Service
+    schema before selecting source.repo/source.branch, so schema drift fails
+    closed instead of converting an invalid query into provider absence.
+    """
+
+    def __init__(
+        self,
+        token: str | None,
+        *,
+        workspace_id: str | None = None,
+        api_base: str = "https://backboard.railway.com/graphql/v2",
+        timeout_seconds: int = 30,
+        max_pages: int = 10,
+        request_graphql: Callable[[str, Mapping[str, Any]], Any] | None = None,
+    ) -> None:
+        self.token = str(token or "").strip()
+        self.workspace_id = str(workspace_id or "").strip() or None
+        self.api_base = api_base
+        self.timeout_seconds = int(timeout_seconds)
+        self.max_pages = max(1, int(max_pages))
+        self._request_graphql_override = request_graphql
+
+    def _request(self, query: str, variables: Mapping[str, Any] | None = None) -> Any:
+        payload_variables = dict(variables or {})
+        if self._request_graphql_override is not None:
+            return self._request_graphql_override(query, payload_variables)
+        body = json.dumps({"query": query, "variables": payload_variables}).encode("utf-8")
+        request = urllib.request.Request(
+            self.api_base,
+            data=body,
+            headers={
+                "Accept": "application/json",
+                "Authorization": f"Bearer {self.token}",
+                "Content-Type": "application/json",
+                "User-Agent": "uiux-factory-p179",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
+            raw = response.read().decode("utf-8")
+        return json.loads(raw) if raw.strip() else None
+
+    @staticmethod
+    def _graphql_data(payload: Any) -> Mapping[str, Any] | None:
+        if not isinstance(payload, Mapping):
+            return None
+        errors = payload.get("errors")
+        if isinstance(errors, list) and errors:
+            return None
+        data = payload.get("data")
+        return data if isinstance(data, Mapping) else None
+
+    def _source_field_ready(self) -> bool:
+        service_type_query = """
+        query P179ServiceSchema {
+          __type(name: "Service") {
+            fields(includeDeprecated: true) {
+              name
+              type {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+        """
+        payload = self._request(service_type_query, {})
+        data = self._graphql_data(payload)
+        type_payload = data.get("__type") if isinstance(data, Mapping) else None
+        fields = type_payload.get("fields") if isinstance(type_payload, Mapping) else None
+        if not isinstance(fields, list):
+            return False
+        source_field = next(
+            (
+                item
+                for item in fields
+                if isinstance(item, Mapping) and str(item.get("name") or "") == "source"
+            ),
+            None,
+        )
+        if not isinstance(source_field, Mapping):
+            return False
+        source_type = _graphql_named_type(source_field.get("type"))
+        if not source_type:
+            return False
+
+        source_type_query = """
+        query P179SourceSchema($name: String!) {
+          __type(name: $name) {
+            fields(includeDeprecated: true) {
+              name
+            }
+          }
+        }
+        """
+        payload = self._request(source_type_query, {"name": source_type})
+        data = self._graphql_data(payload)
+        type_payload = data.get("__type") if isinstance(data, Mapping) else None
+        source_fields = type_payload.get("fields") if isinstance(type_payload, Mapping) else None
+        if not isinstance(source_fields, list):
+            return False
+        names = {
+            str(item.get("name") or "").strip()
+            for item in source_fields
+            if isinstance(item, Mapping)
+        }
+        return "repo" in names and "branch" in names
+
+    def _list_projects_page(self, cursor: str | None) -> tuple[list[Mapping[str, Any]], bool, str | None] | None:
+        if self.workspace_id:
+            query = """
+            query P179Projects($workspaceId: String!, $first: Int!, $after: String) {
+              projects(workspaceId: $workspaceId, first: $first, after: $after) {
+                edges { node { id name } }
+                pageInfo { hasNextPage endCursor }
+              }
+            }
+            """
+            variables: dict[str, Any] = {
+                "workspaceId": self.workspace_id,
+                "first": 100,
+                "after": cursor,
+            }
+        else:
+            query = """
+            query P179Projects($first: Int!, $after: String) {
+              projects(first: $first, after: $after) {
+                edges { node { id name } }
+                pageInfo { hasNextPage endCursor }
+              }
+            }
+            """
+            variables = {"first": 100, "after": cursor}
+
+        payload = self._request(query, variables)
+        data = self._graphql_data(payload)
+        connection = data.get("projects") if isinstance(data, Mapping) else None
+        if not isinstance(connection, Mapping):
+            return None
+        edges = connection.get("edges")
+        page_info = connection.get("pageInfo")
+        if not isinstance(edges, list) or not isinstance(page_info, Mapping):
+            return None
+        projects = [
+            item["node"]
+            for item in edges
+            if isinstance(item, Mapping) and isinstance(item.get("node"), Mapping)
+        ]
+        has_next = bool(page_info.get("hasNextPage"))
+        end_cursor = str(page_info.get("endCursor") or "").strip() or None
+        if has_next and not end_cursor:
+            return None
+        return projects, has_next, end_cursor
+
+    def _list_services_page(
+        self,
+        project_id: str,
+        cursor: str | None,
+    ) -> tuple[list[Mapping[str, Any]], bool, str | None, str | None] | None:
+        query = """
+        query P179ProjectServices($id: String!, $first: Int!, $after: String) {
+          project(id: $id) {
+            id
+            name
+            services(first: $first, after: $after) {
+              edges {
+                node {
+                  id
+                  name
+                  source {
+                    repo
+                    branch
+                  }
+                }
+              }
+              pageInfo { hasNextPage endCursor }
+            }
+          }
+        }
+        """
+        payload = self._request(
+            query,
+            {"id": project_id, "first": 100, "after": cursor},
+        )
+        data = self._graphql_data(payload)
+        project = data.get("project") if isinstance(data, Mapping) else None
+        if not isinstance(project, Mapping):
+            return None
+        connection = project.get("services")
+        if not isinstance(connection, Mapping):
+            return None
+        edges = connection.get("edges")
+        page_info = connection.get("pageInfo")
+        if not isinstance(edges, list) or not isinstance(page_info, Mapping):
+            return None
+        services = [
+            item["node"]
+            for item in edges
+            if isinstance(item, Mapping) and isinstance(item.get("node"), Mapping)
+        ]
+        has_next = bool(page_info.get("hasNextPage"))
+        end_cursor = str(page_info.get("endCursor") or "").strip() or None
+        if has_next and not end_cursor:
+            return None
+        project_name = str(project.get("name") or "").strip() or None
+        return services, has_next, end_cursor, project_name
+
+    def attest_repository(self, repository: str) -> ProviderAttestationResult:
+        canonical_repo = _normalize_repository(repository)
+        if not self.token:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="railway",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=False,
+                state="unknown",
+                reason="Railway attestation credential is absent; integration truth remains unknown.",
+            )
+
+        try:
+            if not self._source_field_ready():
+                return ProviderAttestationResult(
+                    version=PROVIDER_ATTESTATION_VERSION,
+                    provider="railway",
+                    repository=repository,
+                    inspection_complete=False,
+                    credential_configured=True,
+                    state="unknown",
+                    reason=(
+                        "Railway GraphQL schema did not expose a readable Service.source repo/branch shape; "
+                        "repository linkage cannot be asserted."
+                    ),
+                )
+
+            projects_complete = False
+            project_cursor: str | None = None
+            project_pages = 0
+            while project_pages < self.max_pages:
+                project_page = self._list_projects_page(project_cursor)
+                project_pages += 1
+                if project_page is None:
+                    return ProviderAttestationResult(
+                        version=PROVIDER_ATTESTATION_VERSION,
+                        provider="railway",
+                        repository=repository,
+                        inspection_complete=False,
+                        credential_configured=True,
+                        state="unknown",
+                        reason="Railway project enumeration returned incomplete GraphQL visibility; fail closed.",
+                    )
+                projects, projects_has_next, next_project_cursor = project_page
+
+                for project in projects:
+                    project_id = str(project.get("id") or "").strip()
+                    project_name = str(project.get("name") or "").strip() or None
+                    if not project_id:
+                        return ProviderAttestationResult(
+                            version=PROVIDER_ATTESTATION_VERSION,
+                            provider="railway",
+                            repository=repository,
+                            inspection_complete=False,
+                            credential_configured=True,
+                            state="unknown",
+                            reason="Railway project enumeration omitted a stable project id; fail closed.",
+                        )
+                    service_cursor: str | None = None
+                    service_pages = 0
+                    services_complete = False
+                    while service_pages < self.max_pages:
+                        service_page = self._list_services_page(project_id, service_cursor)
+                        service_pages += 1
+                        if service_page is None:
+                            return ProviderAttestationResult(
+                                version=PROVIDER_ATTESTATION_VERSION,
+                                provider="railway",
+                                repository=repository,
+                                inspection_complete=False,
+                                credential_configured=True,
+                                state="unknown",
+                                project_id=project_id,
+                                project_name=project_name,
+                                reason="Railway service enumeration returned incomplete GraphQL visibility; fail closed.",
+                            )
+                        services, services_has_next, next_service_cursor, detail_project_name = service_page
+                        project_name = detail_project_name or project_name
+                        for service in services:
+                            source = service.get("source")
+                            if not isinstance(source, Mapping):
+                                continue
+                            linked = _github_repository_from_value(source.get("repo"))
+                            if linked != canonical_repo:
+                                continue
+                            service_id = str(service.get("id") or "").strip() or None
+                            service_name = str(service.get("name") or "").strip() or None
+                            branch = str(source.get("branch") or "").strip() or None
+                            evidence = (
+                                ExternalSideEffectEvidence(
+                                    provider="railway",
+                                    effect="deployment",
+                                    source="provider-attestation:railway",
+                                    state="configured",
+                                    detail=(
+                                        f"Railway service {service_id or service_name or 'unknown'} in project "
+                                        f"{project_id} is linked to {repository}; production branch={branch or 'unknown'}."
+                                    ),
+                                ),
+                            )
+                            return ProviderAttestationResult(
+                                version=PROVIDER_ATTESTATION_VERSION,
+                                provider="railway",
+                                repository=repository,
+                                inspection_complete=True,
+                                credential_configured=True,
+                                state="configured",
+                                project_id=project_id,
+                                project_name=project_name,
+                                linked_repository=linked,
+                                production_branch=branch,
+                                connection_active=True,
+                                evidence=evidence,
+                                reason=f"Railway service linkage for {repository} is configured and readable.",
+                            )
+
+                        if not services_has_next:
+                            services_complete = True
+                            break
+                        if next_service_cursor == service_cursor:
+                            break
+                        service_cursor = next_service_cursor
+
+                    if not services_complete:
+                        return ProviderAttestationResult(
+                            version=PROVIDER_ATTESTATION_VERSION,
+                            provider="railway",
+                            repository=repository,
+                            inspection_complete=False,
+                            credential_configured=True,
+                            state="unknown",
+                            project_id=project_id,
+                            project_name=project_name,
+                            reason=(
+                                "Railway service enumeration hit the bounded page limit; "
+                                "repository-linkage absence cannot be asserted."
+                            ),
+                        )
+
+                if not projects_has_next:
+                    projects_complete = True
+                    break
+                if next_project_cursor == project_cursor:
+                    break
+                project_cursor = next_project_cursor
+
+            if not projects_complete:
+                return ProviderAttestationResult(
+                    version=PROVIDER_ATTESTATION_VERSION,
+                    provider="railway",
+                    repository=repository,
+                    inspection_complete=False,
+                    credential_configured=True,
+                    state="unknown",
+                    reason=(
+                        "Railway project enumeration hit the bounded page limit; "
+                        "repository-linkage absence cannot be asserted."
+                    ),
+                )
+
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="railway",
+                repository=repository,
+                inspection_complete=True,
+                credential_configured=True,
+                state="not_configured",
+                connection_active=False,
+                reason=(
+                    f"No Railway service linked to {repository} was found in the fully readable "
+                    "account/workspace project scope."
+                ),
+            )
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError, ValueError):
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="railway",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                reason="Railway API visibility is unavailable; integration truth remains unknown.",
+            )
 
 def evidence_channel(item: ExternalSideEffectEvidence) -> str:
     if item.source == "repository-static-config" or item.source.startswith("workflow:"):
