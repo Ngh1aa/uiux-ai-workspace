@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 from core.runtime.flow_os.execution_advisor import build_execution_advice
 from core.runtime.flow_os.external_task import build_external_task_manifest
-from core.runtime.flow_os.flow import FlowPlanner
 
 
 FACTORY_ROOT = Path(__file__).resolve().parents[1]
@@ -14,8 +14,17 @@ SKILLS_ROOT = WORKSPACE_ROOT / "skills_UIUX"
 POLICY = json.loads((SKILLS_ROOT / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
 
 
-def _flow(context: dict):
-    return FlowPlanner(SKILLS_ROOT, POLICY).plan(context)
+def _flow(*agents: str):
+    stages = [
+        SimpleNamespace(
+            id=f"stage-{index}",
+            agent=agent,
+            gates=[{"require": "verified"}],
+            skills=["project-context"],
+        )
+        for index, agent in enumerate(agents or ("development",), start=1)
+    ]
+    return SimpleNamespace(stages=stages)
 
 
 def test_advisor_keeps_small_focused_work_bounded() -> None:
@@ -34,7 +43,7 @@ def test_advisor_keeps_small_focused_work_bounded() -> None:
     advice = build_execution_advice(
         "Fix card padding and spacing only",
         context,
-        _flow(context),
+        _flow("development"),
         POLICY,
     ).to_dict()
 
@@ -60,7 +69,7 @@ def test_advisor_forces_advanced_floor_for_provider_truth_and_production_risk() 
     advice = build_execution_advice(
         "Review provider truth, read-only permissions, production/preview behavior and regression risk",
         context,
-        _flow(context),
+        _flow("implementation", "qa"),
         POLICY,
     ).to_dict()
 
@@ -75,7 +84,7 @@ def test_external_manifest_contains_advice_without_granting_authority() -> None:
     manifest = build_external_task_manifest(
         SKILLS_ROOT,
         POLICY,
-        "Review architecture and provider integration only; do not change code",
+        "Read-only review of architecture and provider integration; do not change code",
         "owner/repo",
         authority="branch_write",
     ).to_dict()
