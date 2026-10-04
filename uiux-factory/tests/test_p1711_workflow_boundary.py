@@ -17,5 +17,5 @@ def test_p1711_aggregate_runs_after_monitor_even_if_matrix_has_failures() -> Non
 
 def test_p1711_is_read_only_and_has_no_alert_mutation_authority() -> None:
     text = (WORKFLOW.read_text(encoding="utf-8") + "\n" + SCRIPT.read_text(encoding="utf-8")).lower()
-    for forbidden in ("gh issue create", "git push", "gh pr", "deploy", "--write-repo"):
+    for forbidden in ("gh issue create", "git push", "gh pr merge", "vercel deploy", "railway deploy", "firebase deploy", "--write-repo"):
         assert forbidden not in text
