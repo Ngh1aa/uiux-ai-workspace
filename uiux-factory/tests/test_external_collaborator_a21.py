@@ -137,6 +137,8 @@ def test_a21_prepare_external_task_cli_emits_manifest(tmp_path: Path) -> None:
     persisted = json.loads(output.read_text(encoding="utf-8"))
     assert payload == persisted
     assert payload["resolved_flow"]["id"] == "portfolio-career-system"
+    assert payload["resolved_flow"]["source"].startswith("skills_UIUX/flows/")
+    assert (WORKSPACE_ROOT / payload["resolved_flow"]["source"]).is_file()
     assert payload["status"] == "READY_FOR_EXTERNAL_COLLABORATOR"
 
 
