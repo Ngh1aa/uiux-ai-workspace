@@ -288,6 +288,8 @@ def test_p177_report_never_persists_provider_credentials(tmp_path: Path, monkeyp
         render_token="render-super-secret",
         cloudflare_token="cloudflare-super-secret",
         cloudflare_account_id="account-super-secret",
+        railway_token="railway-super-secret",
+        railway_workspace_id="railway-workspace-super-secret",
         github_observer=observer,
         provider_attestors=attestors,
     )
@@ -301,5 +303,7 @@ def test_p177_report_never_persists_provider_credentials(tmp_path: Path, monkeyp
         "render-super-secret",
         "cloudflare-super-secret",
         "account-super-secret",
+        "railway-super-secret",
+        "railway-workspace-super-secret",
     ):
         assert secret not in serialized
