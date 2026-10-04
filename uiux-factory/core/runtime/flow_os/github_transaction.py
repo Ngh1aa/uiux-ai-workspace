@@ -595,26 +595,89 @@ class GitHubProductionRunner:
         self.state.last_remote_sha = commit_sha
         self._save_state()
 
+    def _recover_segment_commit_from_history(self, request: SegmentExecutionRequest) -> str | None:
+        """Recover an implementation commit after a fresh-run resume.
+
+        A clean worktree is only an idempotent success when the transaction branch
+        already contains a commit with exact Factory provenance for this transaction,
+        segment, runner mode, lease owner and base SHA. Arbitrary pre-existing target
+        content must never turn a required mutation into success.
+        """
+
+        if not self.state.base_sha:
+            return None
+        revision_range = f"{self.state.base_sha}..HEAD"
+        raw = self._git("log", "--format=%H%x1f%B%x1e", revision_range)
+        required_lines = {
+            f"UIUX-Transaction: {self.config.transaction_id}",
+            f"UIUX-Segment: {request.segment_id}",
+            f"UIUX-Runner-Mode: {request.runner_mode}",
+            f"UIUX-Lease-Owner: {self.config.effective_lease_owner}",
+            f"UIUX-Base-SHA: {self.state.base_sha}",
+        }
+        for record in raw.split("\x1e"):
+            record = record.strip()
+            if not record or "\x1f" not in record:
+                continue
+            commit_sha, message = record.split("\x1f", 1)
+            lines = {line.strip() for line in message.splitlines() if line.strip()}
+            if required_lines.issubset(lines):
+                recovered = commit_sha.strip()
+                if not recovered:
+                    continue
+                key = f"{request.segment_id}:{request.runner_mode}"
+                self.state.segment_commits[key] = recovered
+                self.state.last_commit_sha = recovered
+                self.state.metadata["resume_truth"] = "recovered_from_remote_history"
+                self._save_state()
+                return recovered
+        return None
+
+    def _implementation_artifact(
+        self,
+        request: SegmentExecutionRequest,
+        commit_sha: str,
+        *,
+        recovered_from_remote_history: bool = False,
+    ) -> RunnerArtifact:
+        metadata = {
+            "commit_sha": commit_sha,
+            "branch": self.config.transaction_branch,
+            "transaction_id": self.config.transaction_id,
+            "segment_id": request.segment_id,
+            "mode": request.runner_mode,
+            "idempotent_reuse": "true",
+        }
+        if recovered_from_remote_history:
+            metadata["recovered_from_remote_history"] = "true"
+        return RunnerArtifact(
+            id=f"{request.segment_id}-attempt-{self.state.runner_invocations}-implementation-artifact",
+            kind="implementation-artifact",
+            artifact_class="commit",
+            uri=f"https://github.com/{self.config.repository}/commit/{commit_sha}",
+            metadata=metadata,
+        )
+
     def _commit_implementation(self, request: SegmentExecutionRequest) -> RunnerArtifact:
         self._assert_branch_isolation()
         if not self._git("status", "--porcelain"):
-            existing = self.state.segment_commits.get(f"{request.segment_id}:{request.runner_mode}")
+            key = f"{request.segment_id}:{request.runner_mode}"
+            existing = self.state.segment_commits.get(key)
             if existing:
-                return RunnerArtifact(
-                    id=f"{request.segment_id}-attempt-{self.state.runner_invocations}-implementation-artifact",
-                    kind="implementation-artifact",
-                    artifact_class="commit",
-                    uri=f"https://github.com/{self.config.repository}/commit/{existing}",
-                    metadata={
-                        "commit_sha": existing,
-                        "branch": self.config.transaction_branch,
-                        "transaction_id": self.config.transaction_id,
-                        "segment_id": request.segment_id,
-                        "mode": request.runner_mode,
-                        "idempotent_reuse": "true",
-                    },
+                self.state.last_commit_sha = existing
+                self._save_state()
+                return self._implementation_artifact(request, existing)
+            recovered = self._recover_segment_commit_from_history(request)
+            if recovered:
+                return self._implementation_artifact(
+                    request,
+                    recovered,
+                    recovered_from_remote_history=True,
                 )
-            raise GitHubTransactionError("implementation segment passed without repository changes")
+            raise GitHubTransactionError(
+                "implementation segment passed without repository changes and no matching "
+                "transaction-owned implementation commit exists"
+            )
         self._check_cancelled()
         self._git("add", "-A")
         self._git("commit", "-m", self._commit_message(request))
