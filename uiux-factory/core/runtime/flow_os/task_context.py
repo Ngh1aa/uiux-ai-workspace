@@ -186,7 +186,7 @@ class GoalInterpreter:
             "chargeback", "dispute", "3ds", "3-d secure", "risk operations", "transaction risk",
         )),
         ("art-culture", (
-            "museum", "art museum", "gallery", "exhibition", "artwork", "art collection",
+            "museum", "art museum", "art gallery", "exhibition", "artwork", "art collection",
             "cultural heritage", "visual archive", "artist discovery", "museum experience",
             "bảo tàng", "phòng tranh", "triển lãm", "tác phẩm nghệ thuật", "di sản văn hóa",
         )),
@@ -283,7 +283,7 @@ class GoalInterpreter:
     INTENT_TERMS = (
         ("redesign", ("redesign", "re-design", "thiết kế lại", "làm lại giao diện")),
         ("rebuild", ("rebuild", "build lại", "xây lại")),
-        ("fix", ("fix", "repair", "bugfix", "sửa lỗi", "khắc phục", "sửa")),
+        ("fix", ("fix", "bugfix", "sửa lỗi", "khắc phục", "sửa")),
         ("polish", ("polish", "trau chuốt", "tinh chỉnh", "hoàn thiện giao diện")),
         ("improve", ("improve", "enhance", "refine", "cải thiện", "nâng cấp", "tối ưu giao diện")),
         ("audit", ("audit-only", "audit only", "audit existing", "audit this", "audit the", "run an audit", "ui audit", "ux audit", "chỉ audit")),
