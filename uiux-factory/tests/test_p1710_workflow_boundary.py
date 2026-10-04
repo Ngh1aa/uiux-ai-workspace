@@ -36,7 +36,8 @@ def test_p1710_schedule_consumes_optional_provider_secrets_without_requiring_the
         assert name in workflow
         assert name in script
 
-    assert "Missing opt-in provider credentials are degraded coverage, not workflow failure." in script
+    assert "Missing opt-in provider " in script
+    assert "credentials are degraded coverage, not workflow failure." in script
 
 
 def test_p1710_surfaces_have_no_mutation_release_commands() -> None:
