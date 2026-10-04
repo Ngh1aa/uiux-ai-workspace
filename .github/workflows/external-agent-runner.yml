@@ -105,6 +105,7 @@ jobs:
         env:
           TARGET_REPOSITORY: ${{ inputs.target_repository }}
           TARGET_REF: ${{ inputs.target_ref }}
+          TARGET_DIR: ${{ inputs.target_dir }}
           TASK: ${{ inputs.task }}
           AUTHORITY: ${{ inputs.authority }}
           QA_ROUTES: ${{ inputs.qa_routes }}
@@ -115,6 +116,7 @@ jobs:
             --repository "$TARGET_REPOSITORY" \
             --target-ref "$TARGET_REF" \
             --target-root "$GITHUB_WORKSPACE/target-project" \
+            --target-dir "$TARGET_DIR" \
             --task "$TASK" \
             --authority "$AUTHORITY" \
             --qa-routes "$QA_ROUTES" \
