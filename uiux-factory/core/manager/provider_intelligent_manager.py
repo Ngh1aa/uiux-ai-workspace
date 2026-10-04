@@ -213,7 +213,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             input_path = context.run_dir / "design-context.json"
             input_path.write_text(context.design_context.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("design_context", input_path)
-            self._save_flow_plan(context, engine)
+            self._save_flow_plan(context, engine, stateful_execution=True)
 
             await self._run_reference_analysis(context)
             self.runtime.require(context, "research.web")
