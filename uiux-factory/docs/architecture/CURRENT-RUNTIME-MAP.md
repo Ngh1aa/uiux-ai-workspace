@@ -880,6 +880,29 @@ The fleet job uses `if: always()` so it can still emit a consolidated artifact w
 
 P1.7.11 intentionally does **not** create GitHub issues, send provider mutations, deploy, merge, release, update the registry, or persist monitoring state between runs. It is an aggregation/evidence layer, not an alert-mutation or incident-management authority.
 
+
+### P1.7.12 — provider truth transition / historical delta detection
+
+P1.7.12 compares the current P1.7.11 fleet summary with the newest previous schedule/manual run that successfully produced a non-expired P1.7.11 artifact.
+
+A baseline artifact is considered successfully produced even when its fleet health was blocking; otherwise recovery and unchanged-blocking transitions could never be observed.
+
+Transition states:
+
+```text
+NEW_BLOCKER
+RECOVERED
+NEW_CREDENTIAL_GAP
+CREDENTIAL_GAP_RESOLVED
+UNCHANGED_HEALTHY
+UNCHANGED_BLOCKING
+BASELINE_NOT_AVAILABLE
+```
+
+The first scheduled/manual run has no historical artifact. That becomes `BASELINE_NOT_AVAILABLE` and remains workflow-green. P1.7.12 is evidence/delta detection only; current P1.7.10/P1.7.11 truth continues to own blocking enforcement.
+
+Historical access is read-only GitHub Actions artifact access. No issue creation, alert delivery, provider mutation, deploy, branch push, PR mutation, merge, release or persistent state store is introduced.
+
 ## 16. Future convergence rules
 
 Future work must preserve:
