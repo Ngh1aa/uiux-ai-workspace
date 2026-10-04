@@ -22,6 +22,13 @@ from core.runtime.flow_os.external_side_effects import (
 from core.runtime.flow_os.file_tools import WorkspaceFileError, WorkspaceFileTools
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
+from core.runtime.flow_os.provider_attestation import (
+    CanonicalIntegrationTruthResult,
+    ProviderAttestationResult,
+    ProviderIntegrationTruth,
+    VercelProviderAttestor,
+    resolve_canonical_integration_truth,
+)
 from core.runtime.flow_os.release import (
     CommandDeployAdapter,
     DeploymentResult,
@@ -59,6 +66,7 @@ __all__ = [
     "CANONICAL_RUNTIME_OWNER",
     "CommandDeployAdapter",
     "CommandVisionCreativeAnalyzer",
+    "CanonicalIntegrationTruthResult",
     "ContainerSandbox",
     "DeploymentResult",
     "EvidenceRecord",
@@ -77,6 +85,8 @@ __all__ = [
     "PreviewPolicy",
     "ProductionReleaseController",
     "ProductionReleaseError",
+    "ProviderAttestationResult",
+    "ProviderIntegrationTruth",
     "ResolvedFlow",
     "ResolvedStage",
     "SafeReadError",
@@ -88,6 +98,7 @@ __all__ = [
     "TargetRunner",
     "TargetRunnerError",
     "TaskContract",
+    "VercelProviderAttestor",
     "VisionAnalyzer",
     "VisionCreativeAnalyzer",
     "VisionCreativeDirectorAdapter",
@@ -104,6 +115,7 @@ __all__ = [
     "build_execution_advice",
     "configured_vision_creative_analyzer",
     "detect_static_integrations",
+    "resolve_canonical_integration_truth",
     "sanitize_creative_output",
     "sanitize_vision_output",
 ]
