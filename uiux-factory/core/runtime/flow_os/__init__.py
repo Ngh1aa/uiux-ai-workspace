@@ -44,6 +44,16 @@ from core.runtime.flow_os.provider_attestation import (
     assess_provider_attestation_coverage,
     resolve_canonical_integration_truth,
 )
+from core.runtime.flow_os.provider_truth_history import (
+    ProviderTruthBaselineSelection,
+    select_previous_fleet_artifact,
+)
+from core.runtime.flow_os.provider_truth_transition import (
+    ProviderTruthRepositoryTransition,
+    ProviderTruthTransitionReport,
+    build_provider_truth_transition_report,
+    write_provider_truth_transition_report,
+)
 from core.runtime.flow_os.provider_truth_fleet import (
     ProviderTruthFleetRepository,
     ProviderTruthFleetSummary,
@@ -118,6 +128,9 @@ __all__ = [
     "ProviderIntegrationTruth",
     "ProviderTruthFleetRepository",
     "ProviderTruthFleetSummary",
+    "ProviderTruthBaselineSelection",
+    "ProviderTruthRepositoryTransition",
+    "ProviderTruthTransitionReport",
     "RenderProviderAttestor",
     "RailwayProviderAttestor",
     "ResolvedFlow",
@@ -151,11 +164,14 @@ __all__ = [
     "assess_provider_attestation_coverage",
     "build_execution_advice",
     "build_provider_truth_fleet_summary",
+    "build_provider_truth_transition_report",
     "configured_vision_creative_analyzer",
     "detect_static_integrations",
     "load_provider_truth_fleet_reports",
     "resolve_canonical_integration_truth",
     "sanitize_creative_output",
     "sanitize_vision_output",
+    "select_previous_fleet_artifact",
     "write_provider_truth_fleet_summary",
+    "write_provider_truth_transition_report",
 ]
