@@ -1,34 +1,140 @@
 {
-  "schema_version": 6,
-  "authority_order": ["read_only", "branch_write", "external_write", "release"],
+  "schema_version": 7,
+  "authority_order": [
+    "read_only",
+    "branch_write",
+    "external_write",
+    "release"
+  ],
   "risk_defaults": {
-    "READ": {"required_authority": "read_only", "automatic": true},
-    "LOW_WRITE": {"required_authority": "branch_write", "automatic": false},
-    "HIGH_WRITE": {"required_authority": "external_write", "automatic": false},
-    "CRITICAL": {"required_authority": "release", "automatic": false}
+    "READ": {
+      "required_authority": "read_only",
+      "automatic": true
+    },
+    "LOW_WRITE": {
+      "required_authority": "branch_write",
+      "automatic": false
+    },
+    "HIGH_WRITE": {
+      "required_authority": "external_write",
+      "automatic": false
+    },
+    "CRITICAL": {
+      "required_authority": "release",
+      "automatic": false
+    }
   },
-  "critical_actions": ["merge", "deploy", "delete_repository", "production_data_mutation", "payment"],
+  "critical_actions": [
+    "merge",
+    "deploy",
+    "delete_repository",
+    "production_data_mutation",
+    "payment"
+  ],
   "target_runner": {
     "max_seconds": 180,
     "max_output_chars": 16000,
-    "env_allowlist": ["PATH", "SYSTEMROOT", "WINDIR", "HOME", "USERPROFILE", "TMP", "TEMP", "LANG", "LC_ALL"],
+    "env_allowlist": [
+      "PATH",
+      "SYSTEMROOT",
+      "WINDIR",
+      "HOME",
+      "USERPROFILE",
+      "TMP",
+      "TEMP",
+      "LANG",
+      "LC_ALL"
+    ],
     "commands": [
-      {"prefix": ["npm", "test"], "allow_extra": false},
-      {"prefix": ["npm", "run", "test"], "allow_extra": false},
-      {"prefix": ["npm", "run", "build"], "allow_extra": false},
-      {"prefix": ["npm", "run", "lint"], "allow_extra": false},
-      {"prefix": ["pnpm", "test"], "allow_extra": false},
-      {"prefix": ["pnpm", "build"], "allow_extra": false},
-      {"prefix": ["pnpm", "lint"], "allow_extra": false},
-      {"prefix": ["yarn", "test"], "allow_extra": false},
-      {"prefix": ["yarn", "build"], "allow_extra": false},
-      {"prefix": ["yarn", "lint"], "allow_extra": false},
-      {"prefix": ["python", "-m", "pytest"], "allow_extra": false}
+      {
+        "prefix": [
+          "npm",
+          "test"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "npm",
+          "run",
+          "test"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "pnpm",
+          "test"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "pnpm",
+          "build"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "pnpm",
+          "lint"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "yarn",
+          "test"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "yarn",
+          "build"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "yarn",
+          "lint"
+        ],
+        "allow_extra": false
+      },
+      {
+        "prefix": [
+          "python",
+          "-m",
+          "pytest"
+        ],
+        "allow_extra": false
+      }
     ]
   },
   "sandbox": {
     "required": true,
-    "engines": ["docker", "podman"],
+    "engines": [
+      "docker",
+      "podman"
+    ],
     "network": "none",
     "read_only_rootfs": true,
     "memory": "1g",
@@ -64,7 +170,11 @@
     "max_screenshots": 12,
     "recommended_viewports": 3,
     "max_decisions": 40,
-    "command_env_allowlist": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"]
+    "command_env_allowlist": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY",
+      "GEMINI_API_KEY"
+    ]
   },
   "remote_control": {
     "enabled": false,
@@ -76,7 +186,11 @@
     "command_argv_env": "UIUX_PRODUCTION_DEPLOY_ARGV_JSON",
     "timeout_seconds": 600,
     "max_output_chars": 12000,
-    "deploy_env_allowlist": ["VERCEL_TOKEN", "VERCEL_ORG_ID", "VERCEL_PROJECT_ID"]
+    "deploy_env_allowlist": [
+      "VERCEL_TOKEN",
+      "VERCEL_ORG_ID",
+      "VERCEL_PROJECT_ID"
+    ]
   },
   "evaluation_memory": {
     "enabled": true,
@@ -132,36 +246,94 @@
       "name": "development",
       "purpose": "End-to-end manager role: resolves declarative flows and specialist agent/skill routing without absorbing specialist UI/UX knowledge.",
       "max_authority": "branch_write",
-      "default_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "website-delivery-pipeline"],
-      "preferred_tools": ["read_text", "list_files", "search_text", "list_files_recursive", "write_artifact", "run_validator"],
-      "handoff_targets": ["research", "implementation", "qa"]
+      "default_skills": [
+        "project-context",
+        "adaptive-skill-routing-and-context-budget",
+        "website-delivery-pipeline"
+      ],
+      "preferred_tools": [
+        "read_text",
+        "list_files",
+        "search_text",
+        "list_files_recursive",
+        "write_artifact",
+        "run_validator"
+      ],
+      "handoff_targets": [
+        "research",
+        "implementation",
+        "qa"
+      ]
     },
     "research": {
       "schema_version": 1,
       "name": "research",
       "purpose": "Evidence, project truth, reference and uncertainty work without code mutation.",
       "max_authority": "read_only",
-      "default_skills": ["project-context", "adaptive-skill-routing-and-context-budget"],
-      "preferred_tools": ["read_text", "list_files", "search_text", "list_files_recursive", "run_validator"],
-      "handoff_targets": ["development", "implementation", "qa"]
+      "default_skills": [
+        "project-context",
+        "adaptive-skill-routing-and-context-budget"
+      ],
+      "preferred_tools": [
+        "read_text",
+        "list_files",
+        "search_text",
+        "list_files_recursive",
+        "run_validator"
+      ],
+      "handoff_targets": [
+        "development",
+        "implementation",
+        "qa"
+      ]
     },
     "implementation": {
       "schema_version": 1,
       "name": "implementation",
       "purpose": "Branch-scoped implementation and artifact work after applicable gates.",
       "max_authority": "branch_write",
-      "default_skills": ["project-context", "ai-agent-coding-guardrails"],
-      "preferred_tools": ["read_text", "list_files", "search_text", "list_files_recursive", "write_project_file", "replace_text", "write_artifact", "run_target_command", "run_validator"],
-      "handoff_targets": ["development", "research", "qa"]
+      "default_skills": [
+        "project-context",
+        "ai-agent-coding-guardrails"
+      ],
+      "preferred_tools": [
+        "read_text",
+        "list_files",
+        "search_text",
+        "list_files_recursive",
+        "write_project_file",
+        "replace_text",
+        "write_artifact",
+        "run_target_command",
+        "run_validator"
+      ],
+      "handoff_targets": [
+        "development",
+        "research",
+        "qa"
+      ]
     },
     "qa": {
       "schema_version": 1,
       "name": "qa",
       "purpose": "Independent verification using source/render/test evidence; no self-release.",
       "max_authority": "read_only",
-      "default_skills": ["testing-strategy", "agent-evaluation-and-reliability"],
-      "preferred_tools": ["read_text", "list_files", "search_text", "list_files_recursive", "run_validator"],
-      "handoff_targets": ["development", "research", "implementation"]
+      "default_skills": [
+        "testing-strategy",
+        "agent-evaluation-and-reliability"
+      ],
+      "preferred_tools": [
+        "read_text",
+        "list_files",
+        "search_text",
+        "list_files_recursive",
+        "run_validator"
+      ],
+      "handoff_targets": [
+        "development",
+        "research",
+        "implementation"
+      ]
     }
   },
   "rules": [
@@ -186,6 +358,29 @@
     "Model-readable browser observations use fixed read-only Playwright capture logic, never model-authored browser JavaScript, and remain advisory context that cannot replace trusted browser_render acceptance evidence.",
     "Vision Creative Director output is advisory-only KEEP/REVISE/REMOVE guidance grounded in trusted screenshot refs; it may never emit approval/pass authority, change Flow routing, satisfy gates, or authorize merge/deploy/release.",
     "Remote control is disabled by default and, when enabled, requires explicit token authentication plus project-root allowlisting; it exposes no arbitrary shell, provider-selection or release operation, and every lifecycle/read mutation is audit logged.",
-    "Provider skill/source documents share one policy-owned per-request character budget; JIT activation must preflight the next context before checkpoint mutation, and UIUX_PROVIDER_CONTEXT_CHARS may only lower this ceiling."
-  ]
+    "Provider skill/source documents share one policy-owned per-request character budget; JIT activation must preflight the next context before checkpoint mutation, and UIUX_PROVIDER_CONTEXT_CHARS may only lower this ceiling.",
+    "External execution advice is advisory-only: consumer model selection remains manual, model changes happen only between separate runs/clean checkpoints, and compute optimization may never lower the capability floor, grant authority, satisfy gates, or authorize release."
+  ],
+  "external_execution_advisor": {
+    "enabled": true,
+    "mode": "advisory_only",
+    "manual_consumer_model_selection": true,
+    "auto_switch_consumer_model": false,
+    "split_stage_threshold": 4,
+    "split_score_threshold": 6,
+    "capability_tiers": [
+      "efficient",
+      "balanced",
+      "advanced"
+    ],
+    "reasoning_efforts": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "preserve_quality_floor": true,
+    "measure_before_default_downgrade": true,
+    "model_stickiness": "stage_tool_loop",
+    "checkpoint_boundary": "completed_stage"
+  }
 }
