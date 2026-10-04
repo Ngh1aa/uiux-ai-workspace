@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "principle": "progressive_disclosure",
   "canonical_ownership": "docs/CONTRACT-OWNERSHIP.md",
   "profiles": {
@@ -50,5 +50,14 @@
     "provider_self_report_is_gate_evidence": false,
     "fixture_pass_proves_target": false,
     "target_runtime_evidence_required_for_runtime_claims": true
+  },
+  "compute_efficiency": {
+    "principle": "smallest_safe_high_signal_context",
+    "stable_prefix_first": true,
+    "active_stage_only": true,
+    "avoid_reloading_verified_checkpoint_evidence": true,
+    "prompt_cache_hit_assumed": false,
+    "lossy_compression_default": false,
+    "checkpoint_resume_preferred": true
   }
 }
