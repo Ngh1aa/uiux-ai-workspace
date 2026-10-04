@@ -47,6 +47,17 @@ def _unique(values: list[str]) -> list[str]:
     return output
 
 
+def _manifest_library_path(path: str) -> str:
+    """Return a workspace-root path that external collaborators can open directly."""
+
+    value = str(path).strip().replace("\\", "/").lstrip("./")
+    if not value:
+        raise ValueError("manifest library path is required")
+    if value.startswith("skills_UIUX/"):
+        return value
+    return f"skills_UIUX/{value}"
+
+
 def _effective_authority(caller_authority: str, task_authority: str) -> str:
     if caller_authority not in AUTHORITY_ORDER:
         raise ValueError(f"unknown authority: {caller_authority}")
@@ -198,6 +209,8 @@ def build_external_task_manifest(
         )
     context = normalized_context
     flow = planner.plan(context)
+    manifest_flow = flow.to_dict()
+    manifest_flow["source"] = _manifest_library_path(flow.source)
     stages = _stage_manifest(flow)
     execution_advice = build_execution_advice(cleaned_goal, context, flow, policy_doc).to_dict()
 
@@ -216,7 +229,7 @@ def build_external_task_manifest(
         "docs/CONTRACT-OWNERSHIP.md",
         *([VISUAL_SIGNATURE_CONTRACT] if visual_signature_required else []),
         "skills_UIUX/runtime/runtime-policy.json",
-        flow.source,
+        manifest_flow["source"],
     ])
 
     return ExternalTaskManifest(
@@ -226,7 +239,7 @@ def build_external_task_manifest(
         task=cleaned_goal,
         authority=effective_authority,
         task_contract=context,
-        resolved_flow=flow.to_dict(),
+        resolved_flow=manifest_flow,
         stages=stages,
         acceptance_criteria=criteria,
         qa_routes=_unique(list(qa_routes or [])),
