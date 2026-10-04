@@ -230,6 +230,8 @@ Agent-context or retrieval patterns that support:
 
 ## P0.6 Configurable provider budgets instead of a free-tier ceiling
 
+> Current companion capability: external consumer runs now have a deterministic, advisory execution preflight in `core/runtime/flow_os/execution_advisor.py`. It recommends a provider-neutral capability/reasoning floor before a human selects the ChatGPT/Codex model, preserves stage/tool-loop model stickiness, prefers progressive context loading, and requires measurement before any cheaper profile becomes default. It does **not** replace the internal provider router or auto-switch consumer models.
+
 ### What to find
 
 Patterns/config schemas for per-stage AI budgets:

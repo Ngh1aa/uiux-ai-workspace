@@ -1,6 +1,6 @@
 # Current Runtime Map
 
-Status: **A55.1 CLOSED / POST-CLOSURE HARDENING CURRENT THROUGH P4 / WORKSPACE UPGRADE CLOSED WITH INTENTIONAL HOLDS**  
+Status: **A55.1 CLOSED / POST-CLOSURE HARDENING CURRENT THROUGH P5 / WORKSPACE UPGRADE CLOSED WITH INTENTIONAL HOLDS**  
 Audit date: **2026-10-03**  
 Baseline before Flow 5 / A55.1: `main@7e75fc27780e4ded5fed59f51fdad893ad4f6ddf`  
 Post-closure hardening baseline before P3: `main@4f8cf53b03164140561cd0c08ef3ce42158bad27`  
@@ -542,6 +542,38 @@ structured domain + conflicting fallback archetype
 P4 does not turn arbitrary custom archetype slugs into domain authority. It only binds archetypes for which Flow OS already owns a canonical domain requirement. Derived target truth still has authority/evidence/release effects `none`.
 
 P0–P4 do not clear or weaken any of the five A55 intentional holds.
+
+### P5 — quality-preserving adaptive compute advice
+
+External consumer UIs such as ChatGPT/Codex still require manual model selection before an execution prompt. P5 therefore adds an advisory layer rather than a second runtime router:
+
+```text
+task + target truth + resolved Flow
+→ Execution Advisor
+→ provider-neutral capability floor + reasoning recommendation
+→ progressive context + checkpoint/resume guidance
+→ human selects consumer model
+→ governed external execution
+```
+
+Canonical owner:
+
+```text
+core/runtime/flow_os/execution_advisor.py
+skills_UIUX/runtime/runtime-policy.json
+skills_UIUX/runtime/context-routing.json
+```
+
+Invariant:
+
+```text
+correctness / grounding / completion / verification
+> compute efficiency
+```
+
+The advisor never changes authority, selects a paid provider, switches a ChatGPT/Codex model, satisfies gates, creates runtime evidence, or authorizes merge/deploy/release. Model stickiness is preferred within a stage/tool loop; reselection is a clean-checkpoint/separate-run decision. Long tasks checkpoint completed stages so quota exhaustion can resume from verified state instead of replaying the whole repository.
+
+P5 does not clear or weaken any of the five A55 intentional holds.
 
 ## 16. Future convergence rules
 
