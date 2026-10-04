@@ -15,7 +15,7 @@ if str(FACTORY_ROOT) not in sys.path:
 
 from core.runtime.flow_os.external_task import build_external_task_manifest
 
-RUNNER_SCHEMA_VERSION = "1.1"
+RUNNER_SCHEMA_VERSION = "1.2"
 FAILURE_CLASSES = [
     "PRODUCT_QA_FAILED", "PROVIDER_RATE_LIMITED", "AUTH_BLOCKED", "BUILD_FAILED",
     "DEPLOY_FAILED", "READY_BUT_NOT_DEPLOYED", "DEPLOYED_VERIFIED",
@@ -44,7 +44,7 @@ def _git(target: Path, *args: str) -> str:
 def _resolve_target_project_root(repository_root: Path, target_dir: str) -> tuple[Path, str]:
     repository_root = Path(repository_root).resolve()
     raw = str(target_dir or "").strip().replace("\\", "/")
-    if raw in {"", ".", "/"}:
+    if raw in {"", "."}:
         relative = "."
         candidate = repository_root
     else:
