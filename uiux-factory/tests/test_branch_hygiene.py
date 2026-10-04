@@ -70,3 +70,14 @@ def test_branch_hygiene_blocks_unmerged_history() -> None:
     )
     assert result.safe_to_delete is False
     assert result.state == "BLOCKED_UNMERGED_HISTORY"
+
+
+def test_branch_hygiene_workflow_installs_cleanup_runtime_dependencies() -> None:
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    workflow = (root / ".github" / "workflows" / "branch-hygiene-cleanup.yml").read_text(encoding="utf-8")
+
+    assert "Install cleanup runtime dependencies" in workflow
+    assert '"pydantic>=2.5.3,<3"' in workflow
+    assert '"python-dotenv>=1,<2"' in workflow
