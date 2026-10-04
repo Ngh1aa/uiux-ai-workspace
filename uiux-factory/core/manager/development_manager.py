@@ -24,7 +24,8 @@ from core.contracts.prompt_pack_schema import PromptPack
 from core.contracts.schema import DesignContract
 from core.contracts.visual_composition_schema import VisualComposition
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
-from core.runtime.flow_os.work_execution import ArtifactRef, WorkExecutionPlan
+from core.runtime.flow_os.main_execution import advance_execution_phase, fail_execution_phase
+from core.runtime.flow_os.work_execution import WorkExecutionPlan
 from core.runtime.run_context import RunContext
 from core.team.team_runner import UIUXTeamRunner
 
@@ -130,61 +131,17 @@ class DevelopmentManager:
             context.save()
         return path
 
-    def _execution_artifact_ref(
-        self,
-        context: RunContext,
-        *,
-        segment_id: str,
-        kind: str,
-        phase: str,
-        scope: list[str],
-    ) -> ArtifactRef:
-        source_key = self.EXECUTION_OUTPUT_SOURCE_KEYS.get(kind)
-        if not source_key:
-            raise RuntimeError(f"No main-entrypoint artifact mapping for execution output kind: {kind}")
-        path = self._require(context, source_key)
-        digest = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
-        return ArtifactRef(
-            id=f"{segment_id}-{kind}-main-entrypoint",
-            kind=kind,
-            producer_segment_id=segment_id,
-            uri=path.resolve().as_uri(),
-            digest=digest,
-            metadata={
-                "source": "factory-main-entrypoint",
-                "source_artifact_key": source_key,
-                "phase": phase,
-                "scope": ",".join(scope),
-            },
-        )
-
     def _complete_execution_phase(self, context: RunContext, phase: str) -> WorkExecutionPlan | None:
         plan = self._load_execution_plan(context)
         if plan is None:
             return None
 
-        completed: list[str] = []
-        while True:
-            runnable = plan.runnable_segment_ids()
-            if not runnable:
-                break
-            node = plan._node(runnable[0])
-            if node.phase != phase:
-                break
-            plan.start(node.segment_id)
-            artifacts = [
-                self._execution_artifact_ref(
-                    context,
-                    segment_id=node.segment_id,
-                    kind=kind,
-                    phase=phase,
-                    scope=list(node.scope),
-                )
-                for kind in node.expected_output_kinds
-            ]
-            plan.pass_segment(node.segment_id, artifacts)
-            completed.append(node.segment_id)
-
+        output_sources = {
+            kind: (source_key, Path(context.artifacts[source_key]))
+            for kind, source_key in self.EXECUTION_OUTPUT_SOURCE_KEYS.items()
+            if source_key in context.artifacts
+        }
+        completed = advance_execution_phase(plan, phase, output_sources)
         if completed:
             path = self._persist_execution_plan(context, plan)
             context.event_bus().emit(
@@ -206,20 +163,19 @@ class DevelopmentManager:
         plan = self._load_execution_plan(context)
         if plan is None:
             return
-        runnable = plan.runnable_segment_ids()
-        if not runnable:
+        segment_id = fail_execution_phase(
+            plan,
+            phase,
+            f"{type(error).__name__}: {error}",
+        )
+        if segment_id is None:
             return
-        node = plan._node(runnable[0])
-        if node.phase != phase:
-            return
-        plan.start(node.segment_id)
-        plan.fail_segment(node.segment_id, f"{type(error).__name__}: {error}")
         path = self._persist_execution_plan(context, plan)
         context.event_bus().emit(
             "flow.execution_segment_failed",
             stage=active_stage,
             data={
-                "segment_id": node.segment_id,
+                "segment_id": segment_id,
                 "phase": phase,
                 "execution_plan": str(path),
                 "completion_status": plan.completion_status,
