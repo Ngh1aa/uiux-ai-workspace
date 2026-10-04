@@ -16,6 +16,7 @@ from core.runtime.flow_os.provider_attestation import (
     RenderProviderAttestor,
     SUPPORTED_PROVIDER_ATTESTORS,
     VercelProviderAttestor,
+    assess_provider_attestation_coverage,
     resolve_canonical_integration_truth,
 )
 from core.runtime.flow_os.repository_policy_registry import (
@@ -101,6 +102,8 @@ def run_p177_multi_provider_attestation_truth(
     )
     external = observer.discover_repository(repository)
 
+    coverage = assess_provider_attestation_coverage(policy.known_integration_providers)
+
     injected = {str(key).strip().lower(): value for key, value in dict(provider_attestors or {}).items()}
     attestations = {}
     for provider in policy.known_integration_providers:
@@ -141,6 +144,7 @@ def run_p177_multi_provider_attestation_truth(
         "passed": truth.passed,
         "supported_provider_attestors": sorted(SUPPORTED_PROVIDER_ATTESTORS),
         "registered_integration_providers": list(policy.known_integration_providers),
+        "provider_attestation_coverage": coverage.to_dict(),
         "static_inspection_complete": static_complete,
         "github_discovery": external.to_dict(),
         "provider_attestations": {
