@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from typing import Any
+from core.runtime.flow_os.task_context import requested_text
+from core.runtime.flow_os.specialist_taxonomy import contains_terms
 
 
 ADVICE_SCHEMA_VERSION = "1.0"
@@ -32,6 +34,8 @@ _HIGH_RISK_TERMS = (
     "payment",
     "secret",
     "credential",
+    "bảo mật", "xác thực", "phân quyền", "vượt quyền", "đăng nhập",
+    "kiến trúc", "quyền truy cập", "thanh toán", "mất dữ liệu", "tích hợp",
 )
 _MEDIUM_COMPLEXITY_TERMS = (
     "responsive",
@@ -46,6 +50,7 @@ _MEDIUM_COMPLEXITY_TERMS = (
     "multi-step",
     "multi step",
     "root cause",
+    "nghiên cứu", "khảo sát", "đối thủ", "hệ thống thiết kế", "hoạt ảnh", "nguyên nhân gốc",
 )
 _LOW_COMPLEXITY_TERMS = (
     "typo",
@@ -56,6 +61,7 @@ _LOW_COMPLEXITY_TERMS = (
     "label",
     "small fix",
     "minor fix",
+    "khoảng cách", "lỗi chính tả", "đổi tên", "nhãn", "sửa nhỏ",
 )
 
 
@@ -76,7 +82,7 @@ class ExecutionAdvice:
 
 
 def _contains_any(text: str, terms: tuple[str, ...]) -> list[str]:
-    return [term for term in terms if term in text]
+    return [term for term in terms if contains_terms(text, (term,))]
 
 
 def _capability_for_score(score: int) -> str:
@@ -142,11 +148,15 @@ def build_execution_advice(
     repository's correctness-first contract.
     """
 
-    normalized = " ".join(str(goal).lower().split())
+    normalized = " ".join(requested_text(str(goal).lower()).split())
     reasons: list[str] = []
     score = _SURFACE_SCORE.get(str(context.get("change_surface", "FOCUSED")), 1)
 
     high_matches = _contains_any(normalized, _HIGH_RISK_TERMS)
+    # Canonical feature signals carry the same compute floor in every prompt language.
+    security_features = {"auth"}.intersection(context.get("features", []) or [])
+    if security_features:
+        high_matches.extend(f"feature:{feature}" for feature in sorted(security_features))
     medium_matches = _contains_any(normalized, _MEDIUM_COMPLEXITY_TERMS)
     low_matches = _contains_any(normalized, _LOW_COMPLEXITY_TERMS)
 
