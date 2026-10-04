@@ -236,12 +236,18 @@ class DevelopmentManager:
                 f"status={plan.completion_status}; runnable={plan.runnable_segment_ids()}"
             )
 
-    def _save_flow_plan(self, context: RunContext, engine: str) -> None:
+    def _save_flow_plan(
+        self,
+        context: RunContext,
+        engine: str,
+        *,
+        stateful_execution: bool = False,
+    ) -> None:
         contract = self.flow.resolve_contract(context.goal)
         profile = contract.profile
         resolved_work_plan = None
         execution_plan = None
-        if contract.routing_mode == "sequence":
+        if contract.routing_mode == "sequence" and stateful_execution:
             resolved_work_plan = self.flow.sequence_planner.plan_sequence(contract)
             execution_plan = WorkExecutionPlan.from_resolved_work_plan(resolved_work_plan)
             self._write(
@@ -330,7 +336,7 @@ class DevelopmentManager:
             input_path = context.run_dir / "design-context.json"
             input_path.write_text(context.design_context.model_dump_json(indent=2), encoding="utf-8")
             context.add_artifact("design_context", input_path)
-            self._save_flow_plan(context, engine)
+            self._save_flow_plan(context, engine, stateful_execution=True)
 
             # Canonical intelligence/design sequence. No engine is allowed to skip it.
             await self._run_reference_analysis(context)
