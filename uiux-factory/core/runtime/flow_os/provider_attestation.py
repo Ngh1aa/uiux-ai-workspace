@@ -14,7 +14,7 @@ from core.runtime.flow_os.repository_policy_registry import resolve_repository_p
 
 PROVIDER_ATTESTATION_VERSION = "1.0"
 CANONICAL_INTEGRATION_TRUTH_VERSION = "1.0"
-SUPPORTED_PROVIDER_ATTESTORS = frozenset({"vercel"})
+SUPPORTED_PROVIDER_ATTESTORS = frozenset({"vercel", "netlify", "render", "cloudflare"})
 
 
 @dataclass(frozen=True)
@@ -394,6 +394,613 @@ class VercelProviderAttestor:
             reason=f"Vercel project linkage for {repository} is configured and readable.",
         )
 
+
+
+def _github_repository_from_value(value: Any) -> str | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    lowered = text.lower()
+    if lowered.startswith("git@github.com:"):
+        text = text.split(":", 1)[1]
+    elif "github.com/" in lowered:
+        offset = lowered.index("github.com/") + len("github.com/")
+        text = text[offset:]
+    text = text.split("#", 1)[0].split("?", 1)[0].strip().strip("/")
+    if text.endswith(".git"):
+        text = text[:-4]
+    parts = [part for part in text.split("/") if part]
+    if len(parts) != 2:
+        return None
+    return _normalize_repository("/".join(parts))
+
+
+def _mapping_repository(container: Mapping[str, Any], *keys: str) -> str | None:
+    for key in keys:
+        value = container.get(key)
+        repo = _github_repository_from_value(value)
+        if repo:
+            return repo
+    return None
+
+
+def _bool_from_setting(value: Any) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    text = str(value or "").strip().lower()
+    if text in {"yes", "true", "on", "all", "custom", "commit", "checkspass"}:
+        return True
+    if text in {"no", "false", "off", "none"}:
+        return False
+    return None
+
+
+class NetlifyProviderAttestor:
+    """Read-only Netlify site/Git linkage attestation."""
+
+    def __init__(
+        self,
+        token: str | None,
+        *,
+        api_base: str = "https://api.netlify.com",
+        timeout_seconds: int = 30,
+        max_pages: int = 10,
+        request_json: Callable[[str], Any] | None = None,
+    ) -> None:
+        self.token = str(token or "").strip()
+        self.api_base = api_base.rstrip("/")
+        self.timeout_seconds = int(timeout_seconds)
+        self.max_pages = max(1, int(max_pages))
+        self._request_json_override = request_json
+
+    def _request(self, path: str) -> Any:
+        if self._request_json_override is not None:
+            return self._request_json_override(path)
+        request = urllib.request.Request(
+            self.api_base + path,
+            headers={
+                "Accept": "application/json",
+                "Authorization": f"Bearer {self.token}",
+                "User-Agent": "uiux-factory-p177",
+            },
+            method="GET",
+        )
+        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
+            body = response.read().decode("utf-8")
+        return json.loads(body) if body.strip() else None
+
+    @staticmethod
+    def _linked_repository(site: Mapping[str, Any]) -> str | None:
+        containers = [site]
+        for key in ("build_settings", "repo"):
+            value = site.get(key)
+            if isinstance(value, Mapping):
+                containers.append(value)
+        for item in containers:
+            repo = _mapping_repository(item, "repo_path", "repo_url")
+            if repo:
+                return repo
+        return None
+
+    @staticmethod
+    def _production_branch(site: Mapping[str, Any]) -> str | None:
+        for key in ("build_settings", "repo"):
+            value = site.get(key)
+            if isinstance(value, Mapping):
+                branch = str(value.get("repo_branch") or "").strip()
+                if branch:
+                    return branch
+        return None
+
+    @staticmethod
+    def _last_deployment_at(site: Mapping[str, Any]) -> str | None:
+        deploy = site.get("published_deploy")
+        if isinstance(deploy, Mapping):
+            for key in ("published_at", "created_at", "updated_at"):
+                value = str(deploy.get(key) or "").strip()
+                if value:
+                    return value
+        return None
+
+    def attest_repository(self, repository: str) -> ProviderAttestationResult:
+        canonical_repo = _normalize_repository(repository)
+        if not self.token:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="netlify",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=False,
+                state="unknown",
+                reason="Netlify attestation credential is absent; integration truth remains unknown.",
+            )
+
+        matched: dict[str, Any] | None = None
+        list_complete = False
+        try:
+            for page in range(1, self.max_pages + 1):
+                payload = self._request(f"/api/v1/sites?per_page=100&page={page}")
+                if not isinstance(payload, list):
+                    return ProviderAttestationResult(
+                        version=PROVIDER_ATTESTATION_VERSION,
+                        provider="netlify",
+                        repository=repository,
+                        inspection_complete=False,
+                        credential_configured=True,
+                        state="unknown",
+                        reason="Netlify site listing returned an unexpected payload; fail closed.",
+                    )
+                for raw in payload:
+                    if isinstance(raw, Mapping) and self._linked_repository(raw) == canonical_repo:
+                        matched = dict(raw)
+                        break
+                if matched is not None:
+                    break
+                if len(payload) < 100:
+                    list_complete = True
+                    break
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="netlify",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                reason="Netlify site visibility is unavailable; integration truth remains unknown.",
+            )
+
+        if matched is None:
+            if not list_complete:
+                return ProviderAttestationResult(
+                    version=PROVIDER_ATTESTATION_VERSION,
+                    provider="netlify",
+                    repository=repository,
+                    inspection_complete=False,
+                    credential_configured=True,
+                    state="unknown",
+                    reason="Netlify enumeration hit the bounded page limit; absence cannot be asserted.",
+                )
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="netlify",
+                repository=repository,
+                inspection_complete=True,
+                credential_configured=True,
+                state="not_configured",
+                connection_active=False,
+                reason=f"No Netlify site linked to {repository} was found in the readable account scope.",
+            )
+
+        site_id = str(matched.get("id") or "").strip() or None
+        site = matched
+        if site_id:
+            try:
+                detail = self._request(f"/api/v1/sites/{urllib.parse.quote(site_id, safe='')}")
+                if isinstance(detail, Mapping):
+                    site = {**matched, **dict(detail)}
+            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+                pass
+
+        linked = self._linked_repository(site) or self._linked_repository(matched)
+        if linked != canonical_repo:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="netlify",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                project_id=site_id,
+                reason="Netlify detail visibility did not preserve the expected Git linkage; fail closed.",
+            )
+
+        project_name = str(site.get("name") or matched.get("name") or "").strip() or None
+        production_branch = self._production_branch(site) or self._production_branch(matched)
+        last_deployment = self._last_deployment_at(site) or self._last_deployment_at(matched)
+        evidence = (
+            ExternalSideEffectEvidence(
+                provider="netlify",
+                effect="pr-preview",
+                source="provider-attestation:netlify",
+                state="configured",
+                detail=(
+                    f"Netlify site {site_id or project_name or 'unknown'} is linked to {repository}; "
+                    f"production branch={production_branch or 'unknown'}; "
+                    f"last deployment={last_deployment or 'not reported'}."
+                ),
+            ),
+        )
+        return ProviderAttestationResult(
+            version=PROVIDER_ATTESTATION_VERSION,
+            provider="netlify",
+            repository=repository,
+            inspection_complete=True,
+            credential_configured=True,
+            state="configured",
+            project_id=site_id,
+            project_name=project_name,
+            linked_repository=linked,
+            production_branch=production_branch,
+            connection_active=True,
+            last_deployment_at=last_deployment,
+            evidence=evidence,
+            reason=f"Netlify site linkage for {repository} is configured and readable.",
+        )
+
+
+class RenderProviderAttestor:
+    """Read-only Render service/Git linkage attestation."""
+
+    def __init__(
+        self,
+        token: str | None,
+        *,
+        api_base: str = "https://api.render.com",
+        timeout_seconds: int = 30,
+        max_pages: int = 10,
+        request_json: Callable[[str], Any] | None = None,
+    ) -> None:
+        self.token = str(token or "").strip()
+        self.api_base = api_base.rstrip("/")
+        self.timeout_seconds = int(timeout_seconds)
+        self.max_pages = max(1, int(max_pages))
+        self._request_json_override = request_json
+
+    def _request(self, path: str) -> Any:
+        if self._request_json_override is not None:
+            return self._request_json_override(path)
+        request = urllib.request.Request(
+            self.api_base + path,
+            headers={
+                "Accept": "application/json",
+                "Authorization": f"Bearer {self.token}",
+                "User-Agent": "uiux-factory-p177",
+            },
+            method="GET",
+        )
+        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
+            body = response.read().decode("utf-8")
+        return json.loads(body) if body.strip() else None
+
+    @staticmethod
+    def _service_from_row(row: Mapping[str, Any]) -> Mapping[str, Any]:
+        service = row.get("service")
+        return service if isinstance(service, Mapping) else row
+
+    def attest_repository(self, repository: str) -> ProviderAttestationResult:
+        canonical_repo = _normalize_repository(repository)
+        if not self.token:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="render",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=False,
+                state="unknown",
+                reason="Render attestation credential is absent; integration truth remains unknown.",
+            )
+
+        cursor: str | None = None
+        matched: dict[str, Any] | None = None
+        list_complete = False
+        try:
+            for _ in range(self.max_pages):
+                query = "/v1/services?limit=100"
+                if cursor:
+                    query += "&cursor=" + urllib.parse.quote(cursor, safe="")
+                payload = self._request(query)
+                if not isinstance(payload, list):
+                    return ProviderAttestationResult(
+                        version=PROVIDER_ATTESTATION_VERSION,
+                        provider="render",
+                        repository=repository,
+                        inspection_complete=False,
+                        credential_configured=True,
+                        state="unknown",
+                        reason="Render service listing returned an unexpected payload; fail closed.",
+                    )
+                for raw in payload:
+                    if not isinstance(raw, Mapping):
+                        continue
+                    service = self._service_from_row(raw)
+                    if _github_repository_from_value(service.get("repo")) == canonical_repo:
+                        matched = dict(service)
+                        break
+                if matched is not None:
+                    break
+                if len(payload) < 100:
+                    list_complete = True
+                    break
+                last = payload[-1] if payload else None
+                next_cursor = str(last.get("cursor") or "").strip() if isinstance(last, Mapping) else ""
+                if not next_cursor or next_cursor == cursor:
+                    break
+                cursor = next_cursor
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="render",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                reason="Render service visibility is unavailable; integration truth remains unknown.",
+            )
+
+        if matched is None:
+            if not list_complete:
+                return ProviderAttestationResult(
+                    version=PROVIDER_ATTESTATION_VERSION,
+                    provider="render",
+                    repository=repository,
+                    inspection_complete=False,
+                    credential_configured=True,
+                    state="unknown",
+                    reason="Render enumeration did not complete before the bounded page limit; absence cannot be asserted.",
+                )
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="render",
+                repository=repository,
+                inspection_complete=True,
+                credential_configured=True,
+                state="not_configured",
+                connection_active=False,
+                reason=f"No Render service linked to {repository} was found in the readable workspace scope.",
+            )
+
+        service_id = str(matched.get("id") or "").strip() or None
+        service = matched
+        if service_id:
+            try:
+                detail = self._request(f"/v1/services/{urllib.parse.quote(service_id, safe='')}")
+                if isinstance(detail, Mapping):
+                    service = dict(detail.get("service")) if isinstance(detail.get("service"), Mapping) else dict(detail)
+            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+                pass
+
+        linked = _github_repository_from_value(service.get("repo")) or _github_repository_from_value(matched.get("repo"))
+        if linked != canonical_repo:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="render",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                project_id=service_id,
+                reason="Render service detail did not preserve the expected Git linkage; fail closed.",
+            )
+
+        details = service.get("serviceDetails")
+        preview_value = None
+        if isinstance(details, Mapping):
+            preview_value = details.get("pullRequestPreviewsEnabled")
+            if preview_value is None and isinstance(details.get("previews"), Mapping):
+                preview_value = details["previews"].get("generation")
+        project_name = str(service.get("name") or matched.get("name") or "").strip() or None
+        production_branch = str(service.get("branch") or matched.get("branch") or "").strip() or None
+        preview_enabled = _bool_from_setting(preview_value)
+        evidence = (
+            ExternalSideEffectEvidence(
+                provider="render",
+                effect="deployment",
+                source="provider-attestation:render",
+                state="configured",
+                detail=(
+                    f"Render service {service_id or project_name or 'unknown'} is linked to {repository}; "
+                    f"production branch={production_branch or 'unknown'}."
+                ),
+            ),
+        )
+        return ProviderAttestationResult(
+            version=PROVIDER_ATTESTATION_VERSION,
+            provider="render",
+            repository=repository,
+            inspection_complete=True,
+            credential_configured=True,
+            state="configured",
+            project_id=service_id,
+            project_name=project_name,
+            linked_repository=linked,
+            production_branch=production_branch,
+            connection_active=True,
+            preview_deployments_enabled=preview_enabled,
+            evidence=evidence,
+            reason=f"Render service linkage for {repository} is configured and readable.",
+        )
+
+
+class CloudflarePagesProviderAttestor:
+    """Read-only Cloudflare Pages project/Git linkage attestation."""
+
+    def __init__(
+        self,
+        token: str | None,
+        *,
+        account_id: str | None,
+        api_base: str = "https://api.cloudflare.com/client/v4",
+        timeout_seconds: int = 30,
+        max_pages: int = 10,
+        request_json: Callable[[str], Any] | None = None,
+    ) -> None:
+        self.token = str(token or "").strip()
+        self.account_id = str(account_id or "").strip()
+        self.api_base = api_base.rstrip("/")
+        self.timeout_seconds = int(timeout_seconds)
+        self.max_pages = max(1, int(max_pages))
+        self._request_json_override = request_json
+
+    def _request(self, path: str) -> Any:
+        if self._request_json_override is not None:
+            return self._request_json_override(path)
+        request = urllib.request.Request(
+            self.api_base + path,
+            headers={
+                "Accept": "application/json",
+                "Authorization": f"Bearer {self.token}",
+                "User-Agent": "uiux-factory-p177",
+            },
+            method="GET",
+        )
+        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
+            body = response.read().decode("utf-8")
+        return json.loads(body) if body.strip() else None
+
+    @staticmethod
+    def _source_config(project: Mapping[str, Any]) -> Mapping[str, Any]:
+        source = project.get("source")
+        if not isinstance(source, Mapping) or str(source.get("type") or "").strip().lower() != "github":
+            return {}
+        config = source.get("config")
+        return config if isinstance(config, Mapping) else {}
+
+    @classmethod
+    def _linked_repository(cls, project: Mapping[str, Any]) -> str | None:
+        config = cls._source_config(project)
+        owner = str(config.get("owner") or "").strip()
+        repo_name = str(config.get("repo_name") or "").strip()
+        if owner and repo_name:
+            return _normalize_repository(f"{owner}/{repo_name}")
+        return None
+
+    def attest_repository(self, repository: str) -> ProviderAttestationResult:
+        canonical_repo = _normalize_repository(repository)
+        if not self.token or not self.account_id:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="cloudflare",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=False,
+                state="unknown",
+                reason=(
+                    "Cloudflare Pages attestation requires both an opt-in API token and account ID; "
+                    "integration truth remains unknown."
+                ),
+            )
+
+        matched: dict[str, Any] | None = None
+        list_complete = False
+        try:
+            for page in range(1, self.max_pages + 1):
+                path = (
+                    f"/accounts/{urllib.parse.quote(self.account_id, safe='')}/pages/projects"
+                    f"?per_page=100&page={page}"
+                )
+                payload = self._request(path)
+                if not isinstance(payload, Mapping) or payload.get("success") is not True:
+                    return ProviderAttestationResult(
+                        version=PROVIDER_ATTESTATION_VERSION,
+                        provider="cloudflare",
+                        repository=repository,
+                        inspection_complete=False,
+                        credential_configured=True,
+                        state="unknown",
+                        reason="Cloudflare Pages listing returned an unsuccessful or unexpected payload; fail closed.",
+                    )
+                projects = payload.get("result")
+                if not isinstance(projects, list):
+                    return ProviderAttestationResult(
+                        version=PROVIDER_ATTESTATION_VERSION,
+                        provider="cloudflare",
+                        repository=repository,
+                        inspection_complete=False,
+                        credential_configured=True,
+                        state="unknown",
+                        reason="Cloudflare Pages project result is not a list; fail closed.",
+                    )
+                for raw in projects:
+                    if isinstance(raw, Mapping) and self._linked_repository(raw) == canonical_repo:
+                        matched = dict(raw)
+                        break
+                if matched is not None:
+                    break
+                info = payload.get("result_info")
+                total_pages = int(info.get("total_pages") or 0) if isinstance(info, Mapping) else 0
+                if (total_pages and page >= total_pages) or (not total_pages and len(projects) < 100):
+                    list_complete = True
+                    break
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError, ValueError):
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="cloudflare",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                reason="Cloudflare Pages visibility is unavailable; integration truth remains unknown.",
+            )
+
+        if matched is None:
+            if not list_complete:
+                return ProviderAttestationResult(
+                    version=PROVIDER_ATTESTATION_VERSION,
+                    provider="cloudflare",
+                    repository=repository,
+                    inspection_complete=False,
+                    credential_configured=True,
+                    state="unknown",
+                    reason="Cloudflare Pages enumeration hit the bounded page limit; absence cannot be asserted.",
+                )
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="cloudflare",
+                repository=repository,
+                inspection_complete=True,
+                credential_configured=True,
+                state="not_configured",
+                connection_active=False,
+                reason=f"No Cloudflare Pages project linked to {repository} was found in the readable account scope.",
+            )
+
+        linked = self._linked_repository(matched)
+        config = self._source_config(matched)
+        project_id = str(matched.get("id") or matched.get("name") or "").strip() or None
+        project_name = str(matched.get("name") or "").strip() or None
+        production_branch = str(
+            matched.get("production_branch") or config.get("production_branch") or ""
+        ).strip() or None
+        preview_enabled = _bool_from_setting(config.get("preview_deployment_setting"))
+        if preview_enabled is None:
+            preview_enabled = _bool_from_setting(config.get("deployments_enabled"))
+        deployment = matched.get("latest_deployment")
+        last_deployment = None
+        if isinstance(deployment, Mapping):
+            last_deployment = str(
+                deployment.get("created_on") or deployment.get("modified_on") or ""
+            ).strip() or None
+        evidence = (
+            ExternalSideEffectEvidence(
+                provider="cloudflare",
+                effect="deployment",
+                source="provider-attestation:cloudflare",
+                state="configured",
+                detail=(
+                    f"Cloudflare Pages project {project_id or project_name or 'unknown'} is linked to {repository}; "
+                    f"production branch={production_branch or 'unknown'}; "
+                    f"last deployment={last_deployment or 'not reported'}."
+                ),
+            ),
+        )
+        return ProviderAttestationResult(
+            version=PROVIDER_ATTESTATION_VERSION,
+            provider="cloudflare",
+            repository=repository,
+            inspection_complete=True,
+            credential_configured=True,
+            state="configured",
+            project_id=project_id,
+            project_name=project_name,
+            linked_repository=linked,
+            production_branch=production_branch,
+            connection_active=True,
+            preview_deployments_enabled=preview_enabled,
+            last_deployment_at=last_deployment,
+            evidence=evidence,
+            reason=f"Cloudflare Pages project linkage for {repository} is configured and readable.",
+        )
 
 def evidence_channel(item: ExternalSideEffectEvidence) -> str:
     if item.source == "repository-static-config" or item.source.startswith("workflow:"):
