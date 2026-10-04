@@ -837,6 +837,49 @@ The scheduled matrix covers every repository in the canonical repository policy 
 
 P1.7.10 introduces no provider mutation, deploy, branch push, PR mutation, merge, release, registry mutation or credential persistence. Provider secrets remain optional repository secrets and never appear in evidence artifacts.
 
+### P1.7.11 — fleet provider truth summary
+
+P1.7.11 adds one fleet-level read-only summary after the scheduled P1.7.10 matrix completes.
+
+```text
+per-repository P1.7.10 artifacts
+        ↓
+registry-completeness check
+        ↓
+duplicate/unregistered artifact check
+        ↓
+blocking/degraded/healthy aggregation
+        ↓
+one fleet summary artifact
+```
+
+Fleet semantics:
+
+```text
+all expected reports present + no blocking repository
+→ FLEET_HEALTHY_VERIFIED
+
+all expected reports present
++ only optional-credential degradation
+→ FLEET_HEALTHY_WITH_OPTIONAL_CREDENTIAL_GAPS
+
+one or more repository reports are blocking
+→ ACTION_REQUIRED_FLEET_PROVIDER_TRUTH
+
+registered repository report missing
+→ BLOCKED_INCOMPLETE_FLEET_EVIDENCE
+
+duplicate report for one repository
+→ BLOCKED_DUPLICATE_REPOSITORY_REPORT
+
+artifact for repository outside canonical registry
+→ BLOCKED_UNREGISTERED_FLEET_REPORT
+```
+
+The fleet job uses `if: always()` so it can still emit a consolidated artifact when one matrix leg is red. That does not suppress or reinterpret the repository-level failure.
+
+P1.7.11 intentionally does **not** create GitHub issues, send provider mutations, deploy, merge, release, update the registry, or persist monitoring state between runs. It is an aggregation/evidence layer, not an alert-mutation or incident-management authority.
+
 ## 16. Future convergence rules
 
 Future work must preserve:
