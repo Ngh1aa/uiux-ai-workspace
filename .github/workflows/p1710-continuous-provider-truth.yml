@@ -161,7 +161,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Download repository provider truth artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v6
         with:
           pattern: p1710-continuous-provider-truth-*
           path: ${{ runner.temp }}/p1711/repositories
