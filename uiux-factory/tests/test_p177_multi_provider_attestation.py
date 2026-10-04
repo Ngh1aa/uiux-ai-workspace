@@ -47,7 +47,7 @@ def _attestation(provider: str, state: str, *, repository: str = "Ngh1aa/Multi")
 
 
 def test_p177_supported_provider_attestors_are_multi_provider() -> None:
-    assert SUPPORTED_PROVIDER_ATTESTORS == {"vercel", "netlify", "render", "cloudflare"}
+    assert SUPPORTED_PROVIDER_ATTESTORS == {"vercel", "netlify", "render", "cloudflare", "railway"}
 
 
 def test_netlify_attestor_proves_git_linkage() -> None:
