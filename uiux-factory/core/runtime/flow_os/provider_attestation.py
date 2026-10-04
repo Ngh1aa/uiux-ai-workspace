@@ -1,0 +1,594 @@
+from __future__ import annotations
+
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+from typing import Any, Callable, Iterable, Mapping
+
+from core.runtime.flow_os.external_side_effects import ExternalSideEffectEvidence
+from core.runtime.flow_os.repository_policy_registry import resolve_repository_policy
+
+
+PROVIDER_ATTESTATION_VERSION = "1.0"
+CANONICAL_INTEGRATION_TRUTH_VERSION = "1.0"
+SUPPORTED_PROVIDER_ATTESTORS = frozenset({"vercel"})
+
+
+@dataclass(frozen=True)
+class ProviderAttestationResult:
+    version: str
+    provider: str
+    repository: str
+    inspection_complete: bool
+    credential_configured: bool
+    state: str
+    project_id: str | None = None
+    project_name: str | None = None
+    linked_repository: str | None = None
+    production_branch: str | None = None
+    connection_active: bool | None = None
+    preview_deployments_enabled: bool | None = None
+    environment_ids: tuple[str, ...] = ()
+    last_deployment_at: str | None = None
+    evidence: tuple[ExternalSideEffectEvidence, ...] = ()
+    reason: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = asdict(self)
+        payload["environment_ids"] = list(self.environment_ids)
+        payload["evidence"] = [item.to_dict() for item in self.evidence]
+        return payload
+
+
+@dataclass(frozen=True)
+class ProviderIntegrationTruth:
+    provider: str
+    state: str
+    configured: bool | None
+    evidence_channels: tuple[str, ...]
+    reason: str
+    attestation: ProviderAttestationResult | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "provider": self.provider,
+            "state": self.state,
+            "configured": self.configured,
+            "evidence_channels": list(self.evidence_channels),
+            "reason": self.reason,
+            "attestation": self.attestation.to_dict() if self.attestation else None,
+        }
+
+
+@dataclass(frozen=True)
+class CanonicalIntegrationTruthResult:
+    version: str
+    repository: str
+    status: str
+    passed: bool
+    inspection_complete: bool
+    inspection_channels: tuple[str, ...]
+    providers: tuple[ProviderIntegrationTruth, ...]
+    added_providers: tuple[str, ...]
+    conflicting_providers: tuple[str, ...]
+    evidence: tuple[ExternalSideEffectEvidence, ...]
+    reason: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "version": self.version,
+            "repository": self.repository,
+            "status": self.status,
+            "passed": self.passed,
+            "inspection_complete": self.inspection_complete,
+            "inspection_channels": list(self.inspection_channels),
+            "providers": [item.to_dict() for item in self.providers],
+            "added_providers": list(self.added_providers),
+            "conflicting_providers": list(self.conflicting_providers),
+            "evidence": [item.to_dict() for item in self.evidence],
+            "reason": self.reason,
+        }
+
+    def require_passed(self) -> None:
+        if not self.passed:
+            raise RuntimeError(self.reason)
+
+
+def _normalize_repository(value: str) -> str:
+    text = str(value or "").strip().strip("/")
+    if text.startswith("https://github.com/"):
+        text = text.removeprefix("https://github.com/")
+    if text.endswith(".git"):
+        text = text[:-4]
+    return text.lower()
+
+
+def _project_linked_repository(project: Mapping[str, Any]) -> str | None:
+    candidates: list[Mapping[str, Any]] = []
+    for key in ("link", "gitRepository", "repository"):
+        value = project.get(key)
+        if isinstance(value, Mapping):
+            candidates.append(value)
+    for item in candidates:
+        repo = str(item.get("repo") or item.get("repository") or "").strip()
+        org = str(item.get("org") or item.get("owner") or item.get("organization") or "").strip()
+        if "/" in repo:
+            normalized = _normalize_repository(repo)
+            if normalized:
+                return normalized
+        if repo and org:
+            return _normalize_repository(f"{org}/{repo}")
+    return None
+
+
+def _project_production_branch(project: Mapping[str, Any]) -> str | None:
+    link = project.get("link")
+    values = [
+        project.get("productionBranch"),
+        link.get("productionBranch") if isinstance(link, Mapping) else None,
+    ]
+    for value in values:
+        text = str(value or "").strip()
+        if text:
+            return text
+    return None
+
+
+def _project_preview_enabled(project: Mapping[str, Any]) -> bool | None:
+    link = project.get("link")
+    for container in (project, link if isinstance(link, Mapping) else {}):
+        for key in ("previewDeploymentsEnabled", "enablePreviewDeployments"):
+            if key in container and isinstance(container.get(key), bool):
+                return bool(container[key])
+    return None
+
+
+def _project_environment_ids(project: Mapping[str, Any]) -> tuple[str, ...]:
+    values: list[str] = []
+    raw = project.get("customEnvironments")
+    if isinstance(raw, list):
+        for item in raw:
+            if isinstance(item, Mapping):
+                value = str(item.get("id") or "").strip()
+                if value and value not in values:
+                    values.append(value)
+    return tuple(values)
+
+
+def _vercel_time(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        try:
+            return datetime.fromtimestamp(float(value) / 1000.0, tz=timezone.utc).isoformat()
+        except (OverflowError, OSError, ValueError):
+            return None
+    text = str(value).strip()
+    return text or None
+
+
+def _last_deployment_at(project: Mapping[str, Any]) -> str | None:
+    deployments = project.get("latestDeployments")
+    if not isinstance(deployments, list):
+        return None
+    values: list[tuple[float, str]] = []
+    for item in deployments:
+        if not isinstance(item, Mapping):
+            continue
+        raw = item.get("createdAt") or item.get("created")
+        if isinstance(raw, (int, float)):
+            values.append((float(raw), _vercel_time(raw) or ""))
+        elif raw:
+            text = str(raw)
+            try:
+                parsed = datetime.fromisoformat(text.replace("Z", "+00:00")).timestamp()
+            except ValueError:
+                continue
+            values.append((parsed * 1000.0, text))
+    if not values:
+        return None
+    return max(values, key=lambda item: item[0])[1] or None
+
+
+class VercelProviderAttestor:
+    """Read-only Vercel project/Git linkage attestation.
+
+    The adapter uses GET requests only. A credential is opt-in input; it is never
+    persisted in reports or evidence. Positive Git linkage can establish configured
+    truth even when the latest deployment is old or absent.
+    """
+
+    def __init__(
+        self,
+        token: str | None,
+        *,
+        team_id: str | None = None,
+        api_base: str = "https://api.vercel.com",
+        timeout_seconds: int = 30,
+        max_pages: int = 10,
+        request_json: Callable[[str], Any] | None = None,
+    ) -> None:
+        self.token = str(token or "").strip()
+        self.team_id = str(team_id or "").strip() or None
+        self.api_base = api_base.rstrip("/")
+        self.timeout_seconds = int(timeout_seconds)
+        self.max_pages = max(1, int(max_pages))
+        self._request_json_override = request_json
+
+    def _request(self, path: str) -> Any:
+        if self._request_json_override is not None:
+            return self._request_json_override(path)
+        headers = {
+            "Accept": "application/json",
+            "Authorization": f"Bearer {self.token}",
+            "User-Agent": "uiux-factory-p176",
+        }
+        request = urllib.request.Request(self.api_base + path, headers=headers, method="GET")
+        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
+            body = response.read().decode("utf-8")
+        return json.loads(body) if body.strip() else None
+
+    def _project_query(self, *, until: str | None = None) -> str:
+        params: dict[str, str] = {"limit": "100"}
+        if self.team_id:
+            params["teamId"] = self.team_id
+        if until:
+            params["until"] = until
+        return "/v9/projects?" + urllib.parse.urlencode(params)
+
+    def _project_detail_path(self, project_id: str) -> str:
+        path = f"/v9/projects/{urllib.parse.quote(project_id, safe='')}"
+        if self.team_id:
+            path += "?" + urllib.parse.urlencode({"teamId": self.team_id})
+        return path
+
+    def attest_repository(self, repository: str) -> ProviderAttestationResult:
+        canonical_repo = _normalize_repository(repository)
+        if not self.token:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="vercel",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=False,
+                state="unknown",
+                reason=(
+                    "Vercel attestation was not attempted because the opt-in read-only credential is absent; "
+                    "absence of recent deployment evidence must not be treated as integration removal."
+                ),
+            )
+
+        next_cursor: str | None = None
+        pages = 0
+        matched: dict[str, Any] | None = None
+        list_complete = False
+        try:
+            while pages < self.max_pages:
+                payload = self._request(self._project_query(until=next_cursor))
+                pages += 1
+                if not isinstance(payload, Mapping) or not isinstance(payload.get("projects"), list):
+                    return ProviderAttestationResult(
+                        version=PROVIDER_ATTESTATION_VERSION,
+                        provider="vercel",
+                        repository=repository,
+                        inspection_complete=False,
+                        credential_configured=True,
+                        state="unknown",
+                        reason="Vercel project listing returned an unexpected payload; integration truth is unknown.",
+                    )
+                for raw in payload["projects"]:
+                    if not isinstance(raw, Mapping):
+                        continue
+                    candidate = dict(raw)
+                    if _project_linked_repository(candidate) == canonical_repo:
+                        matched = candidate
+                        break
+                if matched is not None:
+                    break
+                pagination = payload.get("pagination")
+                cursor = pagination.get("next") if isinstance(pagination, Mapping) else None
+                if cursor in (None, "", 0):
+                    list_complete = True
+                    break
+                next_value = str(cursor)
+                if next_value == next_cursor:
+                    break
+                next_cursor = next_value
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="vercel",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                reason="Vercel project visibility is unavailable; integration truth is unknown.",
+            )
+
+        if matched is None:
+            if not list_complete:
+                return ProviderAttestationResult(
+                    version=PROVIDER_ATTESTATION_VERSION,
+                    provider="vercel",
+                    repository=repository,
+                    inspection_complete=False,
+                    credential_configured=True,
+                    state="unknown",
+                    reason=(
+                        "Vercel project enumeration did not complete before the bounded page limit; "
+                        "integration absence cannot be asserted."
+                    ),
+                )
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="vercel",
+                repository=repository,
+                inspection_complete=True,
+                credential_configured=True,
+                state="not_configured",
+                connection_active=False,
+                reason=f"No Vercel project linked to {repository} was found in the readable account/team scope.",
+            )
+
+        project_id = str(matched.get("id") or "").strip() or None
+        project = matched
+        if project_id:
+            try:
+                detail = self._request(self._project_detail_path(project_id))
+                if isinstance(detail, Mapping):
+                    project = {**matched, **dict(detail)}
+            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+                pass
+
+        linked = _project_linked_repository(project) or _project_linked_repository(matched)
+        if linked != canonical_repo:
+            return ProviderAttestationResult(
+                version=PROVIDER_ATTESTATION_VERSION,
+                provider="vercel",
+                repository=repository,
+                inspection_complete=False,
+                credential_configured=True,
+                state="unknown",
+                project_id=project_id,
+                reason="Vercel project detail did not preserve the expected Git repository linkage; fail closed.",
+            )
+
+        project_name = str(project.get("name") or matched.get("name") or "").strip() or None
+        production_branch = _project_production_branch(project) or _project_production_branch(matched)
+        preview_enabled = _project_preview_enabled(project)
+        environment_ids = _project_environment_ids(project)
+        last_deployment = _last_deployment_at(project)
+        evidence = (
+            ExternalSideEffectEvidence(
+                provider="vercel",
+                effect="pr-preview",
+                source="provider-attestation:vercel",
+                state="configured",
+                detail=(
+                    f"Vercel project {project_id or project_name or 'unknown'} is linked to {repository}; "
+                    f"production branch={production_branch or 'unknown'}; "
+                    f"last deployment={last_deployment or 'not reported'}. "
+                    "This configuration attestation is independent of recent deployment activity."
+                ),
+            ),
+        )
+        return ProviderAttestationResult(
+            version=PROVIDER_ATTESTATION_VERSION,
+            provider="vercel",
+            repository=repository,
+            inspection_complete=True,
+            credential_configured=True,
+            state="configured",
+            project_id=project_id,
+            project_name=project_name,
+            linked_repository=linked,
+            production_branch=production_branch,
+            connection_active=True,
+            preview_deployments_enabled=preview_enabled,
+            environment_ids=environment_ids,
+            last_deployment_at=last_deployment,
+            evidence=evidence,
+            reason=f"Vercel project linkage for {repository} is configured and readable.",
+        )
+
+
+def evidence_channel(item: ExternalSideEffectEvidence) -> str:
+    if item.source == "repository-static-config" or item.source.startswith("workflow:"):
+        return "repository-static"
+    if item.source.startswith("github-deployment") or item.source == "github-check-run":
+        return "github-provider-native"
+    if item.source.startswith("provider-attestation:"):
+        return "provider-attestation"
+    if item.source == "github-pr-comment":
+        return "github-pr-comment"
+    if item.state == "observed":
+        return "external-observed"
+    return item.source
+
+
+def resolve_canonical_integration_truth(
+    repository: str,
+    evidence: Iterable[ExternalSideEffectEvidence],
+    *,
+    attestations: Mapping[str, ProviderAttestationResult] | None = None,
+    inspection_complete: bool = True,
+    inspection_channels: Iterable[str] = ("repository-static", "github-provider-native"),
+) -> CanonicalIntegrationTruthResult:
+    """Resolve integration truth without equating missing recent activity with absence."""
+
+    policy = resolve_repository_policy(repository)
+    items = tuple(evidence)
+    attestation_map = {
+        str(key).strip().lower(): value
+        for key, value in dict(attestations or {}).items()
+        if str(key).strip()
+    }
+    registered = tuple(sorted(set(policy.known_integration_providers)))
+    active = tuple(item for item in items if item.state in {"configured", "observed"})
+    detected = {item.provider for item in active}
+    added = tuple(sorted(detected - set(registered)))
+
+    channels: dict[str, set[str]] = {}
+    for item in active:
+        channels.setdefault(item.provider, set()).add(evidence_channel(item))
+
+    provider_truth: list[ProviderIntegrationTruth] = []
+    removed: list[str] = []
+    unknown: list[str] = []
+    conflicts: list[str] = []
+
+    for provider in registered:
+        attestation = attestation_map.get(provider)
+        observed_channels = tuple(sorted(channels.get(provider, set())))
+
+        if attestation is not None and attestation.state == "configured" and attestation.inspection_complete:
+            merged_channels = tuple(sorted(set(observed_channels) | {"provider-attestation"}))
+            provider_truth.append(
+                ProviderIntegrationTruth(
+                    provider=provider,
+                    state="CONFIGURED_ATTESTED",
+                    configured=True,
+                    evidence_channels=merged_channels,
+                    reason=(
+                        "Provider configuration is positively attested by the provider API; "
+                        "recent deployment activity is not required to prove the integration still exists."
+                    ),
+                    attestation=attestation,
+                )
+            )
+            continue
+
+        if (
+            observed_channels
+            and attestation is not None
+            and attestation.state == "not_configured"
+            and attestation.inspection_complete
+        ):
+            conflicts.append(provider)
+            provider_truth.append(
+                ProviderIntegrationTruth(
+                    provider=provider,
+                    state="CONFLICTING_PROVIDER_TRUTH",
+                    configured=None,
+                    evidence_channels=tuple(sorted(set(observed_channels) | {"provider-attestation"})),
+                    reason=(
+                        "Repository/GitHub evidence says the provider is configured or active, while a complete "
+                        "provider attestation says no linked project exists. Canonical truth must fail closed."
+                    ),
+                    attestation=attestation,
+                )
+            )
+            continue
+
+        if observed_channels:
+            provider_truth.append(
+                ProviderIntegrationTruth(
+                    provider=provider,
+                    state="CONFIGURED_EVIDENCED",
+                    configured=True,
+                    evidence_channels=observed_channels,
+                    reason="Repository-static or recent GitHub provider evidence confirms the integration footprint.",
+                    attestation=attestation,
+                )
+            )
+            continue
+
+        if attestation is not None and attestation.state == "not_configured" and attestation.inspection_complete:
+            removed.append(provider)
+            provider_truth.append(
+                ProviderIntegrationTruth(
+                    provider=provider,
+                    state="NOT_CONFIGURED_ATTESTED",
+                    configured=False,
+                    evidence_channels=("provider-attestation",),
+                    reason="Provider API inspection completed and found no linked project for this repository.",
+                    attestation=attestation,
+                )
+            )
+            continue
+
+        unknown.append(provider)
+        provider_truth.append(
+            ProviderIntegrationTruth(
+                provider=provider,
+                state="UNKNOWN_IDLE_TRUTH",
+                configured=None,
+                evidence_channels=observed_channels,
+                reason=(
+                    "No current repository/static or recent GitHub evidence proves this provider, and no complete "
+                    "provider attestation proves absence. Missing activity is not integration-removal evidence."
+                ),
+                attestation=attestation,
+            )
+        )
+
+    normalized_inspection_channels = tuple(
+        sorted({str(value).strip() for value in inspection_channels if str(value).strip()})
+    )
+
+    if not policy.registered:
+        status = "BLOCKED_UNREGISTERED_REPOSITORY"
+        passed = False
+        reason = "Repository is not registered; canonical integration truth cannot be established."
+    elif added:
+        status = "DRIFT_ADDED_PROVIDER"
+        passed = False
+        reason = f"Unregistered external provider evidence exists: {', '.join(added)}."
+    elif conflicts:
+        status = "CONFLICT_PROVIDER_TRUTH"
+        passed = False
+        reason = (
+            "Provider-native attestation contradicts repository/GitHub evidence for: "
+            f"{', '.join(sorted(conflicts))}. Investigate before changing the registry."
+        )
+    elif removed:
+        status = "DRIFT_REMOVED_PROVIDER"
+        passed = False
+        reason = f"Provider-native attestation confirms registered provider(s) are absent: {', '.join(sorted(removed))}."
+    elif unknown:
+        status = "UNKNOWN_IDLE_INTEGRATION_TRUTH"
+        passed = False
+        reason = (
+            "Canonical integration truth is incomplete for idle provider(s): "
+            f"{', '.join(sorted(unknown))}. Supply opt-in provider visibility or restore a trusted evidence channel."
+        )
+    elif not inspection_complete:
+        status = "UNKNOWN_EXTERNAL_VISIBILITY"
+        passed = False
+        reason = (
+            "Registered providers are positively evidenced, but external discovery visibility is incomplete; "
+            "an added provider could be hidden, so canonical truth fails closed."
+        )
+    else:
+        status = "IN_SYNC"
+        passed = True
+        reason = "All registered integrations are positively evidenced or provider-attested; no added provider drift was observed."
+
+    combined = list(items)
+    for attestation in attestation_map.values():
+        combined.extend(attestation.evidence)
+    deduped: list[ExternalSideEffectEvidence] = []
+    seen: set[tuple[str, str, str, str | None]] = set()
+    for item in combined:
+        key = (item.provider, item.effect, item.source, item.url)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(item)
+
+    return CanonicalIntegrationTruthResult(
+        version=CANONICAL_INTEGRATION_TRUTH_VERSION,
+        repository=policy.repository,
+        status=status,
+        passed=passed,
+        inspection_complete=bool(inspection_complete),
+        inspection_channels=normalized_inspection_channels,
+        providers=tuple(provider_truth),
+        added_providers=added,
+        conflicting_providers=tuple(sorted(conflicts)),
+        evidence=tuple(deduped),
+        reason=reason,
+    )

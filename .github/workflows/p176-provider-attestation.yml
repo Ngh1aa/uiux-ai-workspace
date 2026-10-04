@@ -1,0 +1,129 @@
+name: P1.7.6 External Provider Attestation
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/p176-provider-attestation.yml"
+      - "uiux-factory/core/runtime/flow_os/provider_attestation.py"
+      - "uiux-factory/core/runtime/flow_os/external_integration_discovery.py"
+      - "uiux-factory/core/runtime/flow_os/repository_policy_registry.py"
+      - "uiux-factory/core/dogfood/p176_provider_attestation_truth.py"
+      - "uiux-factory/tests/test_p176_provider_attestation_truth.py"
+      - "uiux-factory/tests/test_p176_workflow_boundary.py"
+      - "skills_UIUX/scripts/run-p176-provider-attestation-truth.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check
+          pytest "pydantic>=2.5.3,<3" "python-dotenv>=1,<2"
+      - name: Compile P1.7.6 runtime
+        run: >-
+          python -m py_compile
+          uiux-factory/core/runtime/flow_os/provider_attestation.py
+          uiux-factory/core/dogfood/p176_provider_attestation_truth.py
+          skills_UIUX/scripts/run-p176-provider-attestation-truth.py
+      - name: Run P1.7.6 and prior discovery regressions
+        env:
+          PYTHONPATH: ${{ github.workspace }}/uiux-factory
+        run: >-
+          python -m pytest -q
+          uiux-factory/tests/test_p176_provider_attestation_truth.py
+          uiux-factory/tests/test_p176_workflow_boundary.py
+          uiux-factory/tests/test_p175_external_integration_discovery.py
+          uiux-factory/tests/test_p175_workflow_boundary.py
+          uiux-factory/tests/test_p174_policy_drift.py
+          uiux-factory/tests/test_p173_repository_policy_registry.py
+
+  matrix:
+    if: github.event_name == 'workflow_dispatch'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      repositories: ${{ steps.matrix.outputs.repositories }}
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Build provider attestation matrix from registry
+        id: matrix
+        env:
+          PYTHONPATH: ${{ github.workspace }}/uiux-factory
+        shell: bash
+        run: |
+          repositories="$(python skills_UIUX/scripts/run-p176-provider-attestation-truth.py --matrix)"
+          echo "repositories=${repositories}" >> "$GITHUB_OUTPUT"
+
+  attest:
+    if: github.event_name == 'workflow_dispatch'
+    needs: matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.matrix.outputs.repositories) }}
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          path: factory
+          persist-credentials: false
+      - name: Checkout target repository read-only
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ matrix.repository }}
+          path: target
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run read-only canonical integration truth
+        id: truth
+        continue-on-error: true
+        env:
+          PYTHONPATH: ${{ github.workspace }}/factory/uiux-factory
+          P176_GITHUB_TOKEN: ${{ github.token }}
+          P176_VERCEL_TOKEN: ${{ secrets.P176_VERCEL_TOKEN }}
+          P176_VERCEL_TEAM_ID: ${{ secrets.P176_VERCEL_TEAM_ID }}
+        run: >-
+          python factory/skills_UIUX/scripts/run-p176-provider-attestation-truth.py
+          --repository "${{ matrix.repository }}"
+          --repo-root target
+          --output-dir "${{ runner.temp }}/p176/${{ matrix.slug }}"
+          --max-age-days 90
+      - name: Upload P1.7.6 attestation evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p176-provider-attestation-${{ matrix.slug }}
+          path: ${{ runner.temp }}/p176/${{ matrix.slug }}/*.json
+          if-no-files-found: error
+      - name: Enforce fail-closed canonical truth
+        if: steps.truth.outcome != 'success'
+        run: |
+          echo "P1.7.6 could not establish canonical integration truth for ${{ matrix.repository }}"
+          echo "If the repository is idle, configure the opt-in P176_VERCEL_TOKEN / P176_VERCEL_TEAM_ID secrets rather than treating missing activity as provider removal."
+          exit 1
