@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from core.runtime.flow_os.execution_advisor import build_execution_advice
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow
 from core.runtime.flow_os.target_truth import ROUTING_FIELDS, TargetTruthProbe
 from core.runtime.flow_os.task_context import GoalInterpreter
@@ -43,6 +44,7 @@ class ExternalTaskManifest:
     qa_routes: list[str] = field(default_factory=list)
     canonical_sources: list[str] = field(default_factory=list)
     research_packet: dict[str, Any] = field(default_factory=dict)
+    execution_advice: dict[str, Any] = field(default_factory=dict)
     evidence_boundary: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -384,6 +386,7 @@ def build_external_task_manifest(
     planner = FlowPlanner(Path(library_root), policy_doc)
     flow = planner.plan(context)
     stages = _stage_manifest(flow)
+    execution_advice = build_execution_advice(cleaned_goal, context, flow, policy_doc).to_dict()
 
     gate_criteria = [
         str(gate.get("require", "")).strip()
@@ -416,6 +419,7 @@ def build_external_task_manifest(
         qa_routes=_unique(list(qa_routes or [])),
         canonical_sources=canonical_sources,
         research_packet=_research_packet(context),
+        execution_advice=execution_advice,
         evidence_boundary={
             "manifest_is_not_qa_pass": True,
             "provider_self_report_is_not_gate_evidence": True,
@@ -428,6 +432,8 @@ def build_external_task_manifest(
             "target_truth_probed_before_flow_resolution": target_root is not None,
             "routing_precedence": list(ROUTING_PRECEDENCE),
             "visual_signature_guardrail_active": visual_signature_required,
+            "execution_advice_is_not_gate_evidence": True,
+            "execution_advice_never_selects_consumer_model": True,
             "preferred_repository_workflow": "feature branch -> implementation -> verification -> pull request -> merge",
         },
     )
