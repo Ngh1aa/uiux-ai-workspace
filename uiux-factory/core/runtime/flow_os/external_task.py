@@ -7,7 +7,7 @@ from typing import Any
 from core.runtime.flow_os.execution_advisor import build_execution_advice
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow
 from core.runtime.flow_os.target_truth import ROUTING_FIELDS, TargetTruthProbe
-from core.runtime.flow_os.task_context import GoalInterpreter
+from core.runtime.flow_os.task_context import GoalInterpreter, NON_MUTATING_INTENTS
 
 
 EXTERNAL_TASK_MANIFEST_VERSION = "1.2"
@@ -377,6 +377,8 @@ def build_external_task_manifest(
         target_root=target_root,
         overrides=overrides,
     )
+    if context.get("intent") in NON_MUTATING_INTENTS:
+        context["authority"] = "read_only"
     inferred_task_authority = str(context.get("authority", "unspecified"))
     effective_authority = _effective_authority(authority, inferred_task_authority)
     context["requested_authority"] = inferred_task_authority

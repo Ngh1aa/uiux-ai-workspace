@@ -68,6 +68,8 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
     # This prevents incidental scope matches from shrinking a clearly product-wide task.
     if intent in {"redesign", "rebuild"} and _contains_any(normalized, FULL_PRODUCT_TERMS):
         return "PRODUCT"
+    if intent in {"redesign", "rebuild"} and _contains_any(normalized, FULL_REDESIGN_TERMS):
+        return "REDESIGN"
 
     if scope_text:
         # Explicit single-page creation stays PAGE even when the page belongs to a platform/site.
@@ -92,8 +94,6 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
         if len(normalized_scope) >= 2:
             return "PAGE"
 
-    if intent in {"redesign", "rebuild"} and _contains_any(normalized, FULL_REDESIGN_TERMS):
-        return "REDESIGN"
     if intent == "build" and _contains_any(normalized, STRONG_PAGE_HINTS):
         return "PAGE"
     if has_product_cue:

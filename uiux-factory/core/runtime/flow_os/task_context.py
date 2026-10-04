@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Iterable
 
 from core.runtime.flow_os.adaptive_surface import classify_change_surface
-from core.runtime.flow_os.specialist_taxonomy import assess_domain_ambiguity, infer_specialist_context
+from core.runtime.flow_os.specialist_taxonomy import assess_domain_ambiguity, contains_terms, infer_specialist_context
 
 
 TASK_CONTRACT_VERSION = "1.0"
@@ -14,34 +14,44 @@ DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
 AUTHORITY_LEVELS = ("read_only", "branch_write", "external_write", "release")
 NON_MUTATING_INTENTS = frozenset({"audit", "review", "research", "validate", "qa"})
 URL_PATTERN = re.compile(r"https?://[^\s,;)\]}>]+", re.IGNORECASE)
+NEGATION_PREFIX = r"\b(?:không(?:\s+(?:được|cần|có))?|đừng|do not|don't|dont|must not|without|no)\s+"
+CLAUSE_END = (
+    r"(?=[,.;\n]|$|\b(?:but|however|nhưng|sau đó|then)\b|"
+    r"\b(?:and|và)\s+(?:fix|sửa|improve|cải thiện|build|implement|review|audit|run|kiểm thử)\b)"
+)
+NEGATED_CLAUSE = re.compile(NEGATION_PREFIX + r"(?!chỉ\b)(.+?)" + CLAUSE_END, re.IGNORECASE)
+
+
+def requested_text(text: str) -> str:
+    """Exclude prohibitions/absent features and deferred repairs from action inference.
+
+    The original request remains the source for preserved/forbidden constraints.
+    Positive clauses and real project context stay available to routing and advice.
+    """
+    active = NEGATED_CLAUSE.sub(" ", text)
+    active = re.sub(
+        r"\bto (?:fix|repair|implement|deploy)\b[^,.;]*?\b(?:later|in future)\b",
+        " ", active, flags=re.IGNORECASE,
+    )
+    if contains_terms(active, ("list", "backlog", "danh sách")):
+        active = re.sub(
+            r"\b(?:tasks? (?:to )?(?:fix|repair)|task sửa lỗi)\b.*?" + CLAUSE_END,
+            "tasks ", active, flags=re.IGNORECASE,
+        )
+    return active
 
 
 def _contains(text: str, terms: Iterable[str]) -> bool:
-    return any(term in text for term in terms)
+    return contains_terms(text, terms)
 
 
 def _contains_token(text: str, terms: Iterable[str]) -> bool:
     """Match semantic scope/feature terms as tokens, not arbitrary substrings."""
-    for term in terms:
-        normalized = re.sub(r"\s+", " ", str(term).strip())
-        if not normalized:
-            continue
-        if re.search(rf"(?<!\w){re.escape(normalized)}(?!\w)", text, flags=re.IGNORECASE):
-            return True
-    return False
+    return contains_terms(text, (re.sub(r"\s+", " ", str(term).strip()) for term in terms))
 
 
 def _contains_non_negated(text: str, terms: Iterable[str]) -> bool:
-    negative_prefix = re.compile(
-        r"(?:không|đừng|do not|don't|dont|without)\s+(?:được\s+)?$",
-        re.IGNORECASE,
-    )
-    for term in terms:
-        for match in re.finditer(rf"(?<!\w){re.escape(term)}(?!\w)", text):
-            prefix = text[max(0, match.start() - 28):match.start()]
-            if not negative_prefix.search(prefix):
-                return True
-    return False
+    return _contains_token(requested_text(text), terms)
 
 
 def _best_taxonomy_match(
@@ -53,7 +63,7 @@ def _best_taxonomy_match(
     best_matches: list[str] = []
     best_score = (0, 0, 0)
     for name, terms in candidates:
-        matches = [term for term in terms if term in text]
+        matches = [term for term in terms if _contains_token(text, (term,))]
         if not matches:
             continue
         score = (
@@ -295,7 +305,10 @@ class GoalInterpreter:
 
     PRESERVE_PATTERNS = (r"(?:giữ nguyên|giữ lại|giữ|keep|preserve|retain)\s+([^,.;\n]+)",)
     FORBIDDEN_PATTERNS = (
-        r"(?:đừng|không được|must not|do not|don't|dont|avoid)\s+(?:đụng|sửa|thay đổi|đổi|remove|delete|change|modify)?\s*([^,.;\n]+)",
+        r"\b(?:đừng|không được|must not|do not|don't|dont|avoid)\s+(?:đụng|sửa|thay đổi|đổi|remove|delete|change|modify)?\s*(.+?)" + CLAUSE_END,
+        r"\bkhông\s+(?:đụng|sửa|thay đổi|đổi|xóa|xoá|remove|delete|change|modify)\s+(.+?)" + CLAUSE_END,
+        r"\bkhông\s+((?:deploy|lên production|publish|release|merge|push)\b.*?)" + CLAUSE_END,
+        r"\b(?:no|without)\s+((?:deploy|deployment|release|publish|go live)\b.*?)" + CLAUSE_END,
     )
     SCOPE_PATTERNS = (
         r"(?:scope|phạm vi)\s*[:=-]\s*([^,.;\n]+)",
@@ -310,19 +323,24 @@ class GoalInterpreter:
                 if intent in NON_MUTATING_INTENTS and _contains_non_negated(text, terms):
                     return intent
             return "audit"
+        active = requested_text(text)
         for intent, terms in cls.INTENT_TERMS:
-            if _contains_non_negated(text, terms):
+            if _contains_token(active, terms):
                 return intent
         leading_intent = re.match(r"^(audit|review|research|validate|qa)\b", text)
         if leading_intent:
             return leading_intent.group(1)
+        if _contains_token(active, ("đọc repo", "đọc repository", "read the repo", "read repository", "list bugs", "list tasks", "danh sách lỗi", "danh sách task")):
+            return "audit"
         return "build"
 
     @classmethod
     def _scope(cls, text: str, preserve: list[str], forbidden: list[str]) -> list[str]:
         explicit = _extract_fragments(text, cls.SCOPE_PATTERNS)
         if explicit:
-            return explicit
+            # Keep explicit scope bounded, but use the same canonical aliases in both languages.
+            canonical = [name for name, terms in cls.SCOPE_TERMS if _contains_token(" ".join(explicit), terms)]
+            return canonical or explicit
         scan_text = re.split(r"\b(?:tham khảo|reference|refer to|inspired by)\b", text, maxsplit=1)[0]
         blocked_text = " ".join(preserve + forbidden)
         inferred: list[str] = []
@@ -336,24 +354,28 @@ class GoalInterpreter:
         if _contains(text, (
             "read only", "read-only", "audit only", "audit-only", "analysis only", "analyze only",
             "review only", "research only", "validation only", "qa only", "chỉ audit", "chỉ review",
-            "chỉ phân tích", "chỉ kiểm tra", "không sửa code", "không thay đổi code", "không chỉnh code",
+            "chỉ phân tích", "chỉ kiểm tra", "chỉ đọc", "không sửa code", "không thay đổi code", "không chỉnh code",
             "do not change code", "don't change code", "dont change code", "no code changes",
         )):
             return "read_only"
-        if _contains(text, (
+        active = requested_text(text)
+        if _contains(active, (
             "merge to main", "merge into main", "merge vào main", "deploy production",
             "deploy to production", "go live", "release production", "lên production",
         )):
             return "release"
-        if _contains(text, (
+        if _contains(active, (
             "deploy preview", "preview deployment", "push to vercel", "deploy to vercel",
             "external write", "publish preview",
         )):
             return "external_write"
-        if _contains(text, (
+        if _contains(active, (
             "implement", "sửa code", "chỉnh code", "viết code", "tạo branch", "create branch",
             "open pr", "pull request", "commit", "push code", "apply changes",
         )):
+            return "branch_write"
+        # An explicit deployment prohibition caps a mutating request even with a release caller.
+        if any(_contains(match.group(1), ("deploy", "deployment", "go live", "lên production", "publish", "release", "merge", "push")) for match in NEGATED_CLAUSE.finditer(text)):
             return "branch_write"
         return "unspecified"
 
@@ -371,19 +393,20 @@ class GoalInterpreter:
         goal: str,
         target_truth: dict[str, str] | None = None,
     ) -> GoalInterpretation:
-        normalized = re.sub(r"\s+", " ", goal.strip().lower())
+        original = re.sub(r"[^\S\n]+", " ", goal.strip().lower())
+        normalized = re.sub(r"\s+", " ", requested_text(original))
         evidence: list[str] = []
 
-        intent = self._intent(normalized)
+        intent = self._intent(original)
         evidence.append(f"intent:{intent}")
 
-        preserve = _extract_fragments(normalized, self.PRESERVE_PATTERNS)
-        forbidden = _extract_fragments(normalized, self.FORBIDDEN_PATTERNS)
+        preserve = _extract_fragments(original, self.PRESERVE_PATTERNS)
+        forbidden = _extract_fragments(original, self.FORBIDDEN_PATTERNS)
         references = _extract_urls(goal)
         if not references:
             references = _extract_fragments(normalized, self.REFERENCE_PATTERNS)
         scope = self._scope(normalized, preserve, forbidden)
-        authority = self._authority(normalized)
+        authority = self._authority(original)
         if intent in NON_MUTATING_INTENTS:
             authority = "read_only"
         change_surface = classify_change_surface(normalized, intent, scope)

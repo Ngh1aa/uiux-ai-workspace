@@ -18,6 +18,18 @@ class EvaluationMemoryError(RuntimeError):
     """Raised when project-scoped evaluation memory is unsafe or malformed."""
 
 
+def _resolved_path(path: Path) -> Path:
+    """Compare resolved Windows drive/UNC paths without their optional device prefix."""
+    resolved = path.resolve()
+    if os.name == "nt":
+        value = str(resolved)
+        if value.startswith("\\\\?\\UNC\\"):
+            return Path("\\\\" + value[8:])
+        if value.startswith("\\\\?\\"):
+            return Path(value[4:])
+    return resolved
+
+
 class EvaluationMemoryStore:
     """Bounded project-scoped memory containing evidence-derived outcomes and patterns.
 
@@ -37,7 +49,7 @@ class EvaluationMemoryStore:
     schema_version = 1
 
     def __init__(self, project_root: Path, policy: dict[str, Any]) -> None:
-        self.project_root = Path(project_root).resolve()
+        self.project_root = _resolved_path(Path(project_root))
         config = dict(policy.get("evaluation_memory", {}))
         self.enabled = bool(config.get("enabled", True))
         self.max_records = int(config.get("max_records", 200))
@@ -69,7 +81,7 @@ class EvaluationMemoryStore:
             if current.exists() and current.is_symlink():
                 raise EvaluationMemoryError(f"evaluation memory refuses symlink path: {current}")
         try:
-            self.path.parent.resolve().relative_to(self.project_root)
+            _resolved_path(self.path.parent).relative_to(self.project_root)
         except ValueError as exc:
             raise EvaluationMemoryError("evaluation memory path escapes project root") from exc
 
@@ -87,7 +99,7 @@ class EvaluationMemoryStore:
         if lock_parent.is_symlink():
             raise EvaluationMemoryError("evaluation memory lock directory must not be a symlink")
         try:
-            lock_parent.resolve().relative_to(self.memory_dir.resolve())
+            _resolved_path(lock_parent).relative_to(_resolved_path(self.memory_dir))
         except ValueError as exc:
             raise EvaluationMemoryError("evaluation memory lock directory escapes memory root") from exc
         return RunLock(

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from types import SimpleNamespace
+import pytest
 
 from core.runtime.flow_os.execution_advisor import build_execution_advice
 from core.runtime.flow_os.external_task import build_external_task_manifest
@@ -12,6 +13,21 @@ FACTORY_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = FACTORY_ROOT.parent
 SKILLS_ROOT = WORKSPACE_ROOT / "skills_UIUX"
 POLICY = json.loads((SKILLS_ROOT / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("english,vietnamese,capability", [
+    ("Fix button spacing only", "Chỉ sửa khoảng cách của nút", "balanced"),
+    ("Fix login authorization bypass", "Sửa lỗi vượt quyền đăng nhập", "advanced"),
+])
+def test_batch1_equivalent_languages_have_equal_scope_and_compute(english: str, vietnamese: str, capability: str) -> None:
+    manifests = [build_external_task_manifest(SKILLS_ROOT, POLICY, goal, "owner/repo").to_dict() for goal in (english, vietnamese)]
+    first, second = manifests
+    for field in ("intent", "scope", "change_surface", "risk", "features", "authority"):
+        assert first["task_contract"][field] == second["task_contract"][field], field
+    assert first["resolved_flow"]["id"] == second["resolved_flow"]["id"]
+    assert [stage["skills"] for stage in first["stages"]] == [stage["skills"] for stage in second["stages"]]
+    for manifest in manifests:
+        assert manifest["execution_advice"]["overall_profile"]["recommended_capability"] == capability
 
 
 def _flow(*agents: str):

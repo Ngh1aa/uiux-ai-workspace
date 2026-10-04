@@ -1,6 +1,47 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
+import http from 'node:http';
+
+test('B09/B10 matrix truth and failure reports survive real browser/image errors', async ({}, testInfo) => {
+  const { runStateCoverage } = await import(new URL('../scripts/state-coverage.mjs', import.meta.url).href);
+  const target = http.createServer((_request, response) => {
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+    response.end('<html><body><h1>Visible regression fixture</h1></body></html>');
+  });
+  await new Promise(resolve => target.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${target.address().port}`;
+  const state = { id: 'empty', wait_ms: 0, focus: 'body', assertions: [{ type: 'text', text: 'Visible regression fixture' }] };
+  const contract = { schema_version: '1.0', name: 'Matrix truth regression', entry_route: '/',
+    viewports: [{ name: 'desktop', width: 800, height: 600 }], states: [state],
+    matrix: { states: ['empty'], columns: 1, tile_width: 320, tile_height: 240 } };
+  try {
+    const mixed = await runStateCoverage({ ...contract,
+      states: [state, { ...state, id: 'error', assertions: [{ type: 'text', text: 'Missing expected text' }] }],
+      matrix: { ...contract.matrix, states: ['empty', 'error'], columns: 2 }
+    }, { baseUrl, artifactsDir: testInfo.outputPath('mixed') });
+    expect(mixed.report.classification).toBe('PRODUCT_QA_FAILED');
+    expect(mixed.report.matrix.generated).toBe(true);
+    expect(mixed.report.matrix.tiles.map(tile => tile.status)).toEqual(['PASS', 'FAIL']);
+    const focus = await runStateCoverage({ ...contract, states: [{ ...state, focus: '#missing' }] },
+      { baseUrl, artifactsDir: testInfo.outputPath('focus') });
+    expect(focus.report.failures[0].runtime_error).toContain('focus selector not found');
+    expect(focus.report.matrix.error).toContain('matrix tile missing');
+    expect(focus.report.classification).toBe('PRODUCT_QA_FAILED');
+    expect(JSON.parse(fs.readFileSync(focus.reportPath, 'utf8'))).toEqual(focus.report);
+    const artifactsDir = testInfo.outputPath('write-error');
+    fs.mkdirSync(path.join(artifactsDir, 'state-coverage', 'occupied.png'), { recursive: true });
+    const writeError = await runStateCoverage({ ...contract, matrix: { ...contract.matrix, output: 'state-coverage/occupied.png' } },
+      { baseUrl, artifactsDir });
+    expect(writeError.report.checks[0].passed).toBe(true);
+    expect(writeError.report.failures).toEqual([]);
+    expect(writeError.report.matrix.generated).toBe(false);
+    expect(writeError.report.matrix.error).toBeTruthy();
+    expect(writeError.report.classification).toBe('PRODUCT_QA_FAILED');
+    expect(JSON.parse(fs.readFileSync(writeError.reportPath, 'utf8'))).toEqual(writeError.report);
+  } finally { await new Promise(resolve => target.close(resolve)); }
+});
+
 
 const artifactsDir = path.resolve(process.env.QA_ARTIFACTS_DIR || 'artifacts');
 fs.mkdirSync(artifactsDir, { recursive: true });
@@ -200,3 +241,52 @@ for (const route of routes) {
     });
   }
 }
+
+test('B03 redirects preserve navigation origin and relative asset base', async ({ browser }) => {
+  const { navigateWithinOrigin } = await import(new URL('../scripts/state-coverage.mjs', import.meta.url).href);
+  let outsideRequests = 0;
+  const outside = http.createServer((_request, response) => {
+    outsideRequests += 1;
+    response.end('Outside origin');
+  });
+  await new Promise(resolve => outside.listen(0, '127.0.0.1', resolve));
+  const outsideUrl = `http://127.0.0.1:${outside.address().port}`;
+  const target = http.createServer((request, response) => {
+    const route = new URL(request.url, 'http://localhost').pathname;
+    if (route === '/start' || route === '/chain' || route === '/loop' || route === '/outside') {
+      const location = { '/start': '/nested/end', '/chain': '/outside', '/loop': '/loop', '/outside': `${outsideUrl}/secret` }[route];
+      response.writeHead(302, { Location: location });
+      response.end();
+    } else if (route === '/nested/asset.js') {
+      response.writeHead(200, { 'Content-Type': 'text/javascript' });
+      response.end('document.body.dataset.relativeAsset = "loaded";');
+    } else if (route === '/disconnected') request.socket.destroy();
+    else {
+      response.writeHead(200, { 'Content-Type': 'text/html' });
+      response.end('<html><body>Bounded state<script src="./asset.js"></script></body></html>');
+    }
+  });
+  await new Promise(resolve => target.listen(0, '127.0.0.1', resolve));
+  const origin = `http://127.0.0.1:${target.address().port}`;
+  try {
+    for (const route of ['/start', '/outside', '/chain', '/loop', '/disconnected']) {
+      const context = await browser.newContext({ serviceWorkers: 'block' });
+      const page = await context.newPage();
+      try {
+        if (route === '/start') {
+          const response = await navigateWithinOrigin(page, `${origin}${route}`);
+          expect(response.status()).toBe(200);
+          expect(page.url()).toBe(`${origin}/nested/end`);
+          await expect(page.locator('body')).toHaveAttribute('data-relative-asset', 'loaded');
+        } else {
+          const errorPattern = route === '/loop' ? /exceeded 20/ : route === '/disconnected' ? /socket|reset|closed/i : /ERR_BLOCKED_BY_CLIENT/;
+          await expect(navigateWithinOrigin(page, `${origin}${route}`)).rejects.toThrow(errorPattern);
+        }
+        expect(outsideRequests).toBe(0);
+      } finally { await context.close(); }
+    }
+  } finally {
+    await new Promise(resolve => target.close(resolve));
+    await new Promise(resolve => outside.close(resolve));
+  }
+});
