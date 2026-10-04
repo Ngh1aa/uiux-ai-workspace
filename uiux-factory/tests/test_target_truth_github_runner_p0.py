@@ -66,6 +66,8 @@ def test_p0_github_runner_uses_checked_out_truth_before_flow_resolution(tmp_path
     assert manifest["task_contract"]["routing_provenance"]["field_sources"]["website_type"] == "target_project_truth"
     assert manifest["evidence_boundary"]["target_truth_never_grants_authority_or_evidence"] is True
     assert run_doc["execution_boundary"]["target_truth_is_routing_only"] is True
+    assert run_doc["target_snapshot"]["target_dir"] == "."
+    assert run_doc["verification_plan"]["target_dir"] == "."
     assert run_doc["target_snapshot"]["tracked_file_count"] == 2
     assert "Target-truth routing" in handoff
     assert "portfolio" in handoff

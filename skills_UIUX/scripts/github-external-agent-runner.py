@@ -5,7 +5,7 @@ import argparse
 import json
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 SKILLS_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = SKILLS_ROOT.parent
@@ -15,7 +15,7 @@ if str(FACTORY_ROOT) not in sys.path:
 
 from core.runtime.flow_os.external_task import build_external_task_manifest
 
-RUNNER_SCHEMA_VERSION = "1.1"
+RUNNER_SCHEMA_VERSION = "1.2"
 FAILURE_CLASSES = [
     "PRODUCT_QA_FAILED", "PROVIDER_RATE_LIMITED", "AUTH_BLOCKED", "BUILD_FAILED",
     "DEPLOY_FAILED", "READY_BUT_NOT_DEPLOYED", "DEPLOYED_VERIFIED",
@@ -41,6 +41,33 @@ def _git(target: Path, *args: str) -> str:
         return ""
 
 
+def _resolve_target_project_root(repository_root: Path, target_dir: str) -> tuple[Path, str]:
+    repository_root = Path(repository_root).resolve()
+    raw = str(target_dir or "").strip().replace("\\", "/")
+    if raw in {"", "."}:
+        relative = "."
+        candidate = repository_root
+    else:
+        if raw.startswith("/"):
+            raise ValueError("target_dir must be repository-relative")
+        posix = PurePosixPath(raw)
+        if posix.is_absolute() or ".." in posix.parts:
+            raise ValueError("target_dir must stay inside the checked-out repository")
+        parts = [part for part in posix.parts if part not in {"", "."}]
+        if not parts or any(":" in part for part in parts):
+            raise ValueError("target_dir must use a repository-relative path")
+        relative = "/".join(parts)
+        candidate = (repository_root / Path(*parts)).resolve()
+
+    try:
+        candidate.relative_to(repository_root)
+    except ValueError as exc:
+        raise ValueError("target_dir resolves outside the checked-out repository") from exc
+    if not candidate.is_dir():
+        raise ValueError(f"target_dir does not exist: {relative}")
+    return candidate, relative
+
+
 def _target_snapshot(target: Path, requested_ref: str) -> dict[str, object]:
     tracked = _git(target, "ls-files").splitlines() if target.exists() else []
     return {
@@ -63,6 +90,7 @@ def _handoff_markdown(run_doc: dict[str, object]) -> str:
     lines = [
         "# GitHub-native external-agent handoff", "",
         f"**Target:** `{manifest['target_repository']}`",
+        f"**Target dir:** `{run_doc['target_snapshot'].get('target_dir', '.')}`",
         f"**Task:** {manifest['task']}",
         f"**Authority:** `{manifest['authority']}`",
         f"**Status:** `{run_doc['status']}`", "",
@@ -98,7 +126,8 @@ def main() -> int:
     parser.add_argument("--repository", required=True)
     parser.add_argument("--task", required=True)
     parser.add_argument("--authority", choices=["read_only", "branch_write", "external_write", "release"], default="branch_write")
-    parser.add_argument("--target-root", required=True)
+    parser.add_argument("--target-root", required=True, help="Checked-out target repository root")
+    parser.add_argument("--target-dir", default="", help="Project root inside the target repository; blank means repository root")
     parser.add_argument("--target-ref", default="")
     parser.add_argument("--qa-routes", default="")
     parser.add_argument("--acceptance", default="")
@@ -106,7 +135,11 @@ def main() -> int:
     parser.add_argument("--output-dir", required=True)
     args = parser.parse_args()
 
-    target_root = Path(args.target_root).resolve()
+    repository_root = Path(args.target_root).resolve()
+    try:
+        target_root, target_dir = _resolve_target_project_root(repository_root, args.target_dir)
+    except ValueError as exc:
+        parser.error(str(exc))
     output_dir = Path(args.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     policy_doc = json.loads((SKILLS_ROOT / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
@@ -131,8 +164,12 @@ def main() -> int:
             "target_truth_is_routing_only": True,
         },
         "manifest": manifest,
-        "target_snapshot": _target_snapshot(target_root, args.target_ref),
+        "target_snapshot": {
+            **_target_snapshot(target_root, args.target_ref),
+            "target_dir": target_dir,
+        },
         "verification_plan": {
+            "target_dir": target_dir,
             "cloud_qa_workflow": ".github/workflows/cloud-qa-toolchain.yml",
             "state_coverage_contract": args.state_contract or None,
             "state_gate_command": "npm run test:state -- --contract <target-state-contract>",
@@ -152,6 +189,7 @@ def main() -> int:
         "status": run_doc["status"],
         "target_repository": manifest["target_repository"],
         "target_sha": run_doc["target_snapshot"]["checked_out_sha"],
+        "target_dir": target_dir,
         "target_truth_status": manifest["task_contract"]["target_truth"]["status"],
         "resolved_flow": manifest["resolved_flow"]["id"],
         "state_contract": args.state_contract or None,

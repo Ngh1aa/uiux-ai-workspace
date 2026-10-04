@@ -105,6 +105,7 @@ jobs:
         env:
           TARGET_REPOSITORY: ${{ inputs.target_repository }}
           TARGET_REF: ${{ inputs.target_ref }}
+          TARGET_DIR: ${{ inputs.target_dir }}
           TASK: ${{ inputs.task }}
           AUTHORITY: ${{ inputs.authority }}
           QA_ROUTES: ${{ inputs.qa_routes }}
@@ -115,6 +116,7 @@ jobs:
             --repository "$TARGET_REPOSITORY" \
             --target-ref "$TARGET_REF" \
             --target-root "$GITHUB_WORKSPACE/target-project" \
+            --target-dir "$TARGET_DIR" \
             --task "$TASK" \
             --authority "$AUTHORITY" \
             --qa-routes "$QA_ROUTES" \
@@ -163,9 +165,23 @@ jobs:
           QA_BUILD_COMMAND: ${{ inputs.build_command }}
           QA_SERVE_COMMAND: ${{ inputs.serve_command }}
         run: |
-          TARGET_RELATIVE="${INPUT_TARGET_DIR#/}"
+          TARGET_RELATIVE="${INPUT_TARGET_DIR//\\//}"
+          if [[ "$TARGET_RELATIVE" = /* ]] || [[ "$TARGET_RELATIVE" == *:* ]] || [[ "/$TARGET_RELATIVE/" == *"/../"* ]]; then
+            echo "target_dir must stay repository-relative: $INPUT_TARGET_DIR" >&2
+            exit 1
+          fi
+          TARGET_RELATIVE="${TARGET_RELATIVE#/}"
           [ -n "$TARGET_RELATIVE" ] || TARGET_RELATIVE="."
-          export QA_TARGET_DIR="$GITHUB_WORKSPACE/target-project/$TARGET_RELATIVE"
+          REPO_ROOT="$(realpath "$GITHUB_WORKSPACE/target-project")"
+          export QA_TARGET_DIR="$(realpath -m "$REPO_ROOT/$TARGET_RELATIVE")"
+          case "$QA_TARGET_DIR" in
+            "$REPO_ROOT"|"$REPO_ROOT"/*) ;;
+            *) echo "target_dir resolves outside target repository: $INPUT_TARGET_DIR" >&2; exit 1 ;;
+          esac
+          if [ ! -d "$QA_TARGET_DIR" ]; then
+            echo "target_dir does not exist: $TARGET_RELATIVE" >&2
+            exit 1
+          fi
           export QA_BASE_URL="http://127.0.0.1:4173"
           echo "QA_TARGET_DIR=$QA_TARGET_DIR" >> "$GITHUB_ENV"
           echo "QA_BASE_URL=$QA_BASE_URL" >> "$GITHUB_ENV"
