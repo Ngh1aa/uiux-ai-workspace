@@ -6,7 +6,8 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from core.runtime.flow_os.adaptive_surface import CHANGE_SURFACES, default_change_surface_for_intent
-from core.runtime.flow_os.specialist_composition import SpecialistComposer
+from core.runtime.flow_os.specialist_composition import SpecialistComposer, _as_set, _condition_matches
+from core.runtime.flow_os.task_context import NON_MUTATING_INTENTS
 
 REPLAN_SIGNALS = {
     "GATE_FAIL",
@@ -48,30 +49,6 @@ def _unique(values: Iterable[str]) -> list[str]:
             seen.add(text)
             result.append(text)
     return result
-
-
-def _as_set(value: Any) -> set[str]:
-    if value is None:
-        return set()
-    if isinstance(value, str):
-        return {value}
-    return {str(item) for item in value}
-
-
-def _condition_matches(condition: dict[str, Any], context: dict[str, Any]) -> bool:
-    for key, expected in condition.items():
-        if key == "signal":
-            if str(context.get("signal", "")) not in _as_set(expected):
-                return False
-            continue
-        actual = context.get(key)
-        expected_set = _as_set(expected)
-        if key in {"features", "signals"}:
-            if expected_set and not expected_set.intersection(_as_set(actual)):
-                return False
-        elif expected_set and str(actual) not in expected_set:
-            return False
-    return True
 
 
 def validate_flow_document(doc: dict[str, Any]) -> list[str]:
@@ -303,6 +280,14 @@ class FlowResolver:
     @staticmethod
     def normalize_context(context: dict[str, Any]) -> dict[str, Any]:
         normalized = dict(context)
+        authority = normalized.get("effective_authority", normalized.get("authority"))
+        requested_authority = normalized.get("requested_authority", normalized.get("authority"))
+        if (
+            authority == "read_only"
+            and requested_authority == "read_only"
+            and normalized.get("intent") not in NON_MUTATING_INTENTS
+        ):
+            normalized["intent"] = "audit"
         raw_surface = str(normalized.get("change_surface", "")).strip().upper()
         if raw_surface:
             if raw_surface not in CHANGE_SURFACES:

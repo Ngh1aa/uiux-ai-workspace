@@ -107,7 +107,7 @@ def test_a2_language_never_escalates_above_caller_authority(tmp_path: Path) -> N
     assert managed.authority == "branch_write"
 
 
-def test_a2_negative_fix_phrase_does_not_create_fix_intent() -> None:
+def test_a2_negative_fix_phrase_routes_to_explicit_audit_intent() -> None:
     goal = "Chỉ audit UI, không sửa code"
-    assert FactoryGoalInterpreter().interpret(goal).intent == "build"
-    assert ManagedGoalInterpreter().interpret(goal).intent == "build"
+    assert FactoryGoalInterpreter().interpret(goal).intent == "audit"
+    assert ManagedGoalInterpreter().interpret(goal).intent == "audit"
