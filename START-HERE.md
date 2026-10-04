@@ -68,6 +68,18 @@ Do not preload old A-series design notes, every skill, every flow, or every runt
 
 Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.json`.
 
+## External model-selection preflight
+
+For ChatGPT, Codex, Claude or another consumer UI where the model is selected manually before execution, the Factory exposes an advisory preflight instead of pretending it can switch the consumer model mid-run:
+
+```bash
+python -B skills_UIUX/scripts/advise-external-task.py \
+  --repository owner/repo \
+  --task "Review provider truth, read-only permissions and regression risk"
+```
+
+The result recommends a provider-neutral capability tier (`efficient`, `balanced`, or `advanced`), reasoning effort, context strategy and checkpoint/resume guidance. The human still selects the actual model. The advisor cannot grant authority, satisfy gates, authorize paid-provider use, or become QA evidence. See `docs/ADAPTIVE-COMPUTE-AND-MODEL-SELECTION.md`.
+
 ## Canonical execution surfaces
 
 - Target-project routing truth: `uiux-factory/core/runtime/flow_os/target_truth.py`
