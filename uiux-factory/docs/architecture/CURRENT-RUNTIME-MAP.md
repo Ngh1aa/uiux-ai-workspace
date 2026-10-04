@@ -631,6 +631,50 @@ External visibility still fails closed: even when every registered provider is p
 
 P1.7.6 remains read-only: no target mutation, no provider mutation, no deployment, no merge, no release. Credentials are invocation-only inputs and are never serialized into evidence artifacts. The live workflow is manual/controlled until provider credentials and policy coverage are deliberately promoted.
 
+### P1.7.7 — multi-provider attestation coverage
+
+P1.7.7 extends the provider-native configuration layer without broadening repository authority.
+
+Supported provider attestors:
+
+```text
+vercel
+netlify
+render
+cloudflare
+```
+
+GitHub Pages remains a GitHub-native/static evidence channel and does not require a second external credential.
+
+Each external adapter is read-only and bounded:
+- Vercel: project/Git linkage and project configuration
+- Netlify: site/Git linkage and production branch
+- Render: service/Git linkage, branch and preview setting when exposed
+- Cloudflare Pages: project/source linkage, production branch and preview deployment setting
+
+The runner queries only providers already listed in the target repository policy. Adding an adapter never adds that provider to a repository's canonical integration set.
+
+Missing credentials remain:
+
+```text
+credential_configured = false
+inspection_complete = false
+state = unknown
+```
+
+No adapter may turn missing credential scope into `not_configured` or PASS. Complete provider enumeration is required before provider-side absence can become `NOT_CONFIGURED_ATTESTED`.
+
+Canonical owner surfaces:
+
+```text
+core/runtime/flow_os/provider_attestation.py
+core/dogfood/p177_multi_provider_attestation_truth.py
+skills_UIUX/scripts/run-p177-multi-provider-attestation-truth.py
+.github/workflows/p177-multi-provider-attestation.yml
+```
+
+The live multi-provider lane remains manual `workflow_dispatch` only. No scheduled provider polling, provider mutation, deploy, merge or release authority is introduced.
+
 ## 16. Future convergence rules
 
 Future work must preserve:
