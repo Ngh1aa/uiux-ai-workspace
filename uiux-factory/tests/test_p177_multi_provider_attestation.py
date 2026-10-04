@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+
+import pytest
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -307,3 +309,84 @@ def test_p177_report_never_persists_provider_credentials(tmp_path: Path, monkeyp
         "railway-workspace-super-secret",
     ):
         assert secret not in serialized
+
+
+
+def test_p177_can_observe_fail_closed_truth_without_raising(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    policy = SimpleNamespace(
+        repository="Ngh1aa/Idle",
+        registered=True,
+        known_integration_providers=("vercel",),
+    )
+    monkeypatch.setattr(dogfood_module, "resolve_repository_policy", lambda repository: policy)
+    monkeypatch.setattr(provider_module, "resolve_repository_policy", lambda repository: policy)
+
+    repo_root = tmp_path / "target"
+    repo_root.mkdir()
+    external = ExternalIntegrationDiscoveryResult(
+        version="1.1",
+        repository="Ngh1aa/Idle",
+        inspection_complete=True,
+        inspected_deployments=0,
+        ignored_stale_deployments=0,
+        inspected_check_runs=0,
+        ignored_stale_check_runs=0,
+        evidence=(),
+        unknown_deployment_ids=(),
+        reason="complete",
+    )
+    observer = SimpleNamespace(discover_repository=lambda repository: external)
+
+    report = run_p177_multi_provider_attestation_truth(
+        repository="Ngh1aa/Idle",
+        repo_root=repo_root,
+        output_dir=tmp_path / "out",
+        github_token=None,
+        github_observer=observer,
+        enforce_passed=False,
+    )
+
+    assert report["passed"] is False
+    assert report["canonical_integration_truth"]["status"] == "UNKNOWN_IDLE_INTEGRATION_TRUTH"
+    assert report["provider_attestations"]["vercel"]["credential_configured"] is False
+
+
+def test_p177_strict_default_still_raises_on_unverified_truth(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    policy = SimpleNamespace(
+        repository="Ngh1aa/Idle",
+        registered=True,
+        known_integration_providers=("vercel",),
+    )
+    monkeypatch.setattr(dogfood_module, "resolve_repository_policy", lambda repository: policy)
+    monkeypatch.setattr(provider_module, "resolve_repository_policy", lambda repository: policy)
+
+    repo_root = tmp_path / "target"
+    repo_root.mkdir()
+    external = ExternalIntegrationDiscoveryResult(
+        version="1.1",
+        repository="Ngh1aa/Idle",
+        inspection_complete=True,
+        inspected_deployments=0,
+        ignored_stale_deployments=0,
+        inspected_check_runs=0,
+        ignored_stale_check_runs=0,
+        evidence=(),
+        unknown_deployment_ids=(),
+        reason="complete",
+    )
+    observer = SimpleNamespace(discover_repository=lambda repository: external)
+
+    with pytest.raises(RuntimeError, match="canonical integration truth is not verified"):
+        run_p177_multi_provider_attestation_truth(
+            repository="Ngh1aa/Idle",
+            repo_root=repo_root,
+            output_dir=tmp_path / "out",
+            github_token=None,
+            github_observer=observer,
+        )
