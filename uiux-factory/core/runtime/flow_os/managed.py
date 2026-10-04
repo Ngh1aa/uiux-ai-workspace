@@ -9,6 +9,7 @@ from core.memory.quality_pattern_recall import build_quality_pattern_insight
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
 from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
+from core.runtime.flow_os.target_truth import ROUTING_OVERRIDE_FIELDS, build_truth_aware_context
 
 
 @dataclass
@@ -92,13 +93,23 @@ class ManagedFlowController:
         goal: str,
         overrides: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        context = self.goal_interpreter.interpret(goal).to_context()
-        for key, value in dict(overrides or {}).items():
-            if value is None:
-                continue
-            if key == "features":
-                if value:
-                    context[key] = list(value)
+        raw_overrides = dict(overrides or {})
+        routing_overrides = {
+            key: value
+            for key, value in raw_overrides.items()
+            if key in ROUTING_OVERRIDE_FIELDS
+            and value is not None
+            and not (key == "features" and not value)
+        }
+        context, _truth = build_truth_aware_context(
+            goal,
+            target_root=self.harness.project_root,
+            overrides=routing_overrides,
+        )
+        # Preserve managed-only compatibility overrides without creating a second
+        # routing merge policy. All routing fields above are owned by target_truth.
+        for key, value in raw_overrides.items():
+            if key in ROUTING_OVERRIDE_FIELDS or value is None:
                 continue
             context[key] = value
         context.setdefault("approval_mode", "auto")
