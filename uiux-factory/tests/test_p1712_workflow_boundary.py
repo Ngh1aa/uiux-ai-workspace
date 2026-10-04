@@ -60,3 +60,20 @@ def test_p1712_surfaces_have_no_alert_or_mutation_authority() -> None:
         "slack webhook",
     )
     assert not any(token in text for token in forbidden)
+
+
+
+def test_p1712_push_paths_cover_transition_contract_sources() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+    push_block = text.split("  push:", 1)[1].split("  schedule:", 1)[0]
+
+    for path in (
+        "uiux-factory/core/runtime/flow_os/provider_truth_transition.py",
+        "uiux-factory/core/runtime/flow_os/provider_truth_history.py",
+        "uiux-factory/tests/test_p1712_provider_truth_transition.py",
+        "uiux-factory/tests/test_p1712_provider_truth_history.py",
+        "uiux-factory/tests/test_p1712_workflow_boundary.py",
+        "skills_UIUX/scripts/fetch-p1712-provider-truth-baseline.py",
+        "skills_UIUX/scripts/run-p1712-provider-truth-transition.py",
+    ):
+        assert path in push_block
