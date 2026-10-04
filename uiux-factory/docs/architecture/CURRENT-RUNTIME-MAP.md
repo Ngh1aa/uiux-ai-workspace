@@ -575,6 +575,62 @@ The advisor never changes authority, selects a paid provider, switches a ChatGPT
 
 P5 does not clear or weaken any of the five A55 intentional holds.
 
+### P1.7.6 — external provider attestation / idle integration truth
+
+P1.7.5 proves **recent provider activity** from repository-static markers plus GitHub Deployments / statuses / Check Runs. It deliberately ignores stale activity, so an idle but still-linked provider can otherwise look absent.
+
+P1.7.6 adds a higher canonical truth layer:
+
+```text
+Repository Registry
+        ↓
+repository-static evidence
++
+recent GitHub provider evidence
++
+opt-in read-only provider attestation
+        ↓
+Canonical Integration Truth
+```
+
+Current provider-native adapter: Vercel.
+
+The Vercel attestor reads project/Git linkage only with an explicitly supplied credential. It can establish that a project still exists and remains linked to the target GitHub repository even when the last deployment is old or missing. When visible it also records non-secret project metadata such as project id/name, production branch, explicit preview-deployment setting when the API exposes one, custom-environment ids and last deployment time.
+
+Canonical owner:
+
+```text
+core/runtime/flow_os/provider_attestation.py
+core/dogfood/p176_provider_attestation_truth.py
+skills_UIUX/scripts/run-p176-provider-attestation-truth.py
+```
+
+Truth semantics:
+
+```text
+provider attested configured
+→ CONFIGURED_ATTESTED
+
+static / recent GitHub evidence exists
+→ CONFIGURED_EVIDENCED
+
+complete provider attestation says no linked project
+→ NOT_CONFIGURED_ATTESTED
+
+repository/GitHub evidence says configured
++ complete provider attestation says absent
+→ CONFLICTING_PROVIDER_TRUTH
+→ fail closed; do not auto-edit registry
+
+no activity + no complete provider attestation
+→ UNKNOWN_IDLE_TRUTH
+→ never infer removal
+```
+
+External visibility still fails closed: even when every registered provider is positively evidenced, incomplete GitHub discovery cannot produce a canonical PASS because it could hide an added provider.
+
+P1.7.6 remains read-only: no target mutation, no provider mutation, no deployment, no merge, no release. Credentials are invocation-only inputs and are never serialized into evidence artifacts. The live workflow is manual/controlled until provider credentials and policy coverage are deliberately promoted.
+
 ## 16. Future convergence rules
 
 Future work must preserve:
