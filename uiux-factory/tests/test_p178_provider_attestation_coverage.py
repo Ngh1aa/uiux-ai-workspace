@@ -22,17 +22,17 @@ def test_p178_available_attestors_match_capability_registry() -> None:
     assert available == set(SUPPORTED_PROVIDER_ATTESTORS)
 
 
-def test_p178_railway_gap_is_explicit_not_silent() -> None:
+def test_p178_railway_gap_is_closed_by_verified_read_adapter() -> None:
     coverage = assess_provider_attestation_coverage(("railway",))
 
     assert coverage.classification_complete is True
-    assert coverage.provider_native_idle_coverage_complete is False
-    assert coverage.adapter_pending_providers == ("railway",)
+    assert coverage.provider_native_idle_coverage_complete is True
+    assert coverage.adapter_pending_providers == ()
     capability = coverage.providers[0]
-    assert capability.mode == "provider-api-adapter-pending"
+    assert capability.mode == "provider-api"
     assert capability.repository_linkage_truth is True
-    assert capability.attestor_available is False
-    assert capability.idle_truth_provider_native is False
+    assert capability.attestor_available is True
+    assert capability.idle_truth_provider_native is True
 
 
 def test_p178_firebase_hosting_does_not_fake_repository_linkage_attestation() -> None:
@@ -78,4 +78,4 @@ def test_p178_current_repository_registry_has_no_silent_provider_classification_
 
 
 def test_p178_supported_provider_set_is_stable_and_explicit() -> None:
-    assert SUPPORTED_PROVIDER_ATTESTORS == {"vercel", "netlify", "render", "cloudflare"}
+    assert SUPPORTED_PROVIDER_ATTESTORS == {"vercel", "netlify", "render", "cloudflare", "railway"}

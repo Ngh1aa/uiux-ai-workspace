@@ -49,6 +49,8 @@ def main() -> int:
         render_token=os.environ.get("P177_RENDER_TOKEN"),
         cloudflare_token=os.environ.get("P177_CLOUDFLARE_API_TOKEN"),
         cloudflare_account_id=os.environ.get("P177_CLOUDFLARE_ACCOUNT_ID"),
+        railway_token=os.environ.get("P179_RAILWAY_TOKEN"),
+        railway_workspace_id=os.environ.get("P179_RAILWAY_WORKSPACE_ID"),
         max_age_days=args.max_age_days,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2))
