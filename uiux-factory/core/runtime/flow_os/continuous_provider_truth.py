@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from typing import Any
+from typing import Any, Iterable, Mapping
 
 from core.runtime.flow_os.provider_attestation import CanonicalIntegrationTruthResult
 
@@ -31,46 +31,43 @@ class ContinuousProviderTruthAssessment:
         return payload
 
 
-def assess_continuous_provider_truth(
-    truth: CanonicalIntegrationTruthResult,
+@dataclass(frozen=True)
+class _ProviderObservation:
+    provider: str
+    state: str
+    credential_configured: bool | None
+    inspection_complete: bool | None
+    attestation_state: str | None
+
+
+def _classify(
+    *,
+    repository: str,
+    canonical_status: str,
+    passed: bool,
+    observations: Iterable[_ProviderObservation],
 ) -> ContinuousProviderTruthAssessment:
-    """Classify scheduled provider truth without treating optional secrets as failures.
-
-    Canonical truth remains fail-closed. This layer only decides whether a scheduled
-    monitoring workflow should fail. Missing opt-in credentials are surfaced as a
-    degraded-but-nonblocking monitoring state. Drift, conflicts, provider visibility
-    failures with configured credentials, and non-credential evidence gaps remain
-    blocking.
-    """
-
     credential_gaps: list[str] = []
     visibility_failures: list[str] = []
     evidence_gaps: list[str] = []
 
-    for provider_truth in truth.providers:
-        attestation = provider_truth.attestation
-
-        if attestation is not None and not attestation.credential_configured:
-            credential_gaps.append(provider_truth.provider)
+    for item in observations:
+        if item.credential_configured is False:
+            credential_gaps.append(item.provider)
 
         if (
-            attestation is not None
-            and attestation.credential_configured
-            and not attestation.inspection_complete
-            and attestation.state == "unknown"
+            item.credential_configured is True
+            and item.inspection_complete is False
+            and item.attestation_state == "unknown"
         ):
-            visibility_failures.append(provider_truth.provider)
+            visibility_failures.append(item.provider)
 
-        if provider_truth.state == "UNKNOWN_IDLE_TRUTH":
-            if attestation is not None and not attestation.credential_configured:
+        if item.state == "UNKNOWN_IDLE_TRUTH":
+            if item.credential_configured is False:
                 continue
-            if (
-                attestation is not None
-                and attestation.credential_configured
-                and not attestation.inspection_complete
-            ):
+            if item.credential_configured is True and item.inspection_complete is False:
                 continue
-            evidence_gaps.append(provider_truth.provider)
+            evidence_gaps.append(item.provider)
 
     credential_gap_providers = tuple(sorted(set(credential_gaps)))
     provider_visibility_failure_providers = tuple(sorted(set(visibility_failures)))
@@ -84,7 +81,7 @@ def assess_continuous_provider_truth(
             + ", ".join(provider_visibility_failure_providers)
             + ". Scheduled monitoring fails closed because this is not a missing-secret condition."
         )
-    elif truth.passed:
+    elif passed:
         blocking = False
         if credential_gap_providers:
             state = "HEALTHY_WITH_OPTIONAL_CREDENTIAL_GAPS"
@@ -98,7 +95,7 @@ def assess_continuous_provider_truth(
             state = "HEALTHY_VERIFIED"
             reason = "Canonical integration truth is verified and no provider visibility gap is active."
     elif (
-        truth.status == "UNKNOWN_IDLE_INTEGRATION_TRUTH"
+        canonical_status == "UNKNOWN_IDLE_INTEGRATION_TRUTH"
         and credential_gap_providers
         and not evidence_gap_providers
     ):
@@ -112,7 +109,7 @@ def assess_continuous_provider_truth(
     else:
         state = "ACTION_REQUIRED_CANONICAL_TRUTH"
         blocking = True
-        details: list[str] = [f"canonical_status={truth.status}"]
+        details: list[str] = [f"canonical_status={canonical_status}"]
         if evidence_gap_providers:
             details.append("evidence_gap=" + ",".join(evidence_gap_providers))
         reason = (
@@ -124,12 +121,95 @@ def assess_continuous_provider_truth(
 
     return ContinuousProviderTruthAssessment(
         version=CONTINUOUS_PROVIDER_TRUTH_VERSION,
-        repository=truth.repository,
+        repository=repository,
         state=state,
         blocking=blocking,
-        canonical_status=truth.status,
+        canonical_status=canonical_status,
         credential_gap_providers=credential_gap_providers,
         provider_visibility_failure_providers=provider_visibility_failure_providers,
         evidence_gap_providers=evidence_gap_providers,
         reason=reason,
+    )
+
+
+def assess_continuous_provider_truth(
+    truth: CanonicalIntegrationTruthResult,
+) -> ContinuousProviderTruthAssessment:
+    """Classify scheduled provider truth without treating optional secrets as failures."""
+
+    observations = []
+    for provider_truth in truth.providers:
+        attestation = provider_truth.attestation
+        observations.append(
+            _ProviderObservation(
+                provider=provider_truth.provider,
+                state=provider_truth.state,
+                credential_configured=(
+                    attestation.credential_configured if attestation is not None else None
+                ),
+                inspection_complete=(
+                    attestation.inspection_complete if attestation is not None else None
+                ),
+                attestation_state=attestation.state if attestation is not None else None,
+            )
+        )
+
+    return _classify(
+        repository=truth.repository,
+        canonical_status=truth.status,
+        passed=truth.passed,
+        observations=observations,
+    )
+
+
+def assess_continuous_provider_truth_payload(
+    payload: Mapping[str, Any],
+) -> ContinuousProviderTruthAssessment:
+    """Classify a serialized CanonicalIntegrationTruthResult artifact."""
+
+    providers = payload.get("providers")
+    if not isinstance(providers, list):
+        raise ValueError("canonical provider truth payload requires providers[]")
+
+    observations: list[_ProviderObservation] = []
+    for raw in providers:
+        if not isinstance(raw, Mapping):
+            raise ValueError("canonical provider truth provider entries must be objects")
+        attestation = raw.get("attestation")
+        attestation_mapping = attestation if isinstance(attestation, Mapping) else None
+        observations.append(
+            _ProviderObservation(
+                provider=str(raw.get("provider") or "").strip(),
+                state=str(raw.get("state") or "").strip(),
+                credential_configured=(
+                    bool(attestation_mapping.get("credential_configured"))
+                    if attestation_mapping is not None
+                    and isinstance(attestation_mapping.get("credential_configured"), bool)
+                    else None
+                ),
+                inspection_complete=(
+                    bool(attestation_mapping.get("inspection_complete"))
+                    if attestation_mapping is not None
+                    and isinstance(attestation_mapping.get("inspection_complete"), bool)
+                    else None
+                ),
+                attestation_state=(
+                    str(attestation_mapping.get("state") or "").strip() or None
+                    if attestation_mapping is not None
+                    else None
+                ),
+            )
+        )
+
+    repository = str(payload.get("repository") or "").strip()
+    canonical_status = str(payload.get("status") or "").strip()
+    passed = bool(payload.get("passed"))
+    if not repository or not canonical_status:
+        raise ValueError("canonical provider truth payload requires repository and status")
+
+    return _classify(
+        repository=repository,
+        canonical_status=canonical_status,
+        passed=passed,
+        observations=observations,
     )
