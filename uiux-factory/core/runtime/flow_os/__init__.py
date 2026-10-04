@@ -10,8 +10,12 @@ from core.runtime.flow_os.browser_evidence import BrowserEvidenceError, Playwrig
 from core.runtime.flow_os.browser_observation import BrowserObservationError, PlaywrightBrowserObservationAdapter
 from core.runtime.flow_os.continuous_provider_truth import (
     ContinuousProviderTruthAssessment,
+    ContinuousProviderTruthFleetAssessment,
+    ContinuousProviderTruthFleetMember,
+    aggregate_continuous_provider_truth_reports,
     assess_continuous_provider_truth,
     assess_continuous_provider_truth_payload,
+    render_continuous_provider_truth_fleet_markdown,
 )
 from core.runtime.flow_os.evidence import EvidenceRecord
 from core.runtime.flow_os.execution_advisor import ExecutionAdvice, build_execution_advice
@@ -84,6 +88,8 @@ __all__ = [
     "CanonicalIntegrationTruthResult",
     "CloudflarePagesProviderAttestor",
     "ContinuousProviderTruthAssessment",
+    "ContinuousProviderTruthFleetAssessment",
+    "ContinuousProviderTruthFleetMember",
     "KNOWN_EXTERNAL_INTEGRATION_PROVIDERS",
     "ContainerSandbox",
     "DeploymentResult",
@@ -138,12 +144,14 @@ __all__ = [
     "WorktreeManager",
     "assess_external_side_effects",
     "assess_continuous_provider_truth",
+    "aggregate_continuous_provider_truth_reports",
     "assess_continuous_provider_truth_payload",
     "assess_provider_attestation_coverage",
     "build_execution_advice",
     "configured_vision_creative_analyzer",
     "detect_static_integrations",
     "resolve_canonical_integration_truth",
+    "render_continuous_provider_truth_fleet_markdown",
     "sanitize_creative_output",
     "sanitize_vision_output",
 ]
