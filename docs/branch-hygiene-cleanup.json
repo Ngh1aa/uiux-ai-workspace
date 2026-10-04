@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "base_branch": "main",
+  "policy": "delete-only-exact-audited-heads-with-zero-commits-ahead-of-main",
+  "delete_candidates": [
+    {
+      "name": "fix/p0-p171-idempotent-resume-truth",
+      "expected_sha": "934f9d4defaf5d9b170418df01f7d4dee4c6c45b",
+      "source_pr": 191,
+      "reason": "PR #191 merged; branch is 0 ahead of main and has no remaining file diff."
+    },
+    {
+      "name": "feat/p176-provider-attestation-truth",
+      "expected_sha": "2a1b5619250334cdb10c2d5d8ccb1cf7fcf58755",
+      "source_pr": 192,
+      "reason": "PR #192 merged; branch is 0 ahead of main and has no remaining file diff."
+    },
+    {
+      "name": "feat/routing-intelligence-sentry-regression",
+      "expected_sha": "f645ea18cd32a3cac59c7bb5eb83f1a739eee85a",
+      "source_pr": 167,
+      "reason": "PR #167 merged; branch is 0 ahead of main and has no remaining file diff."
+    },
+    {
+      "name": "feat/p1-specialist-composition-matrix",
+      "expected_sha": "12b2da953015765cc3b751aeb9f49127bc79a047",
+      "source_pr": 168,
+      "reason": "PR #168 merged; branch is 0 ahead of main and has no remaining file diff."
+    }
+  ],
+  "retain_for_review": [
+    {
+      "name": "feat/adaptive-compute-advisor",
+      "expected_sha": "b4acaff6d95ce468c5e6414b062e503ff3274843",
+      "source_pr": 190,
+      "reason": "Merged via reconciled/squashed history but still graph-diverged from main; preserve until a dedicated historical-branch archive sweep proves deletion safety."
+    }
+  ]
+}
