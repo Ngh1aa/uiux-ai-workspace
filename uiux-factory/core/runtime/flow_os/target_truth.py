@@ -19,6 +19,22 @@ ROUTING_FIELDS = (
     "features",
 )
 
+ROUTING_PRECEDENCE = ("explicit_override", "target_project_truth", "goal_inference")
+ROUTING_OVERRIDE_FIELDS = frozenset((*ROUTING_FIELDS, "intent", "change_surface"))
+_STABLE_TRUTH_FIELDS = {"website_type", "domain", "product_archetype"}
+_LIFECYCLE_DEFAULTS = {
+    "mode": "interactive-prototype",
+    "risk": "standard",
+    "validation_lane": "prototype",
+}
+_LIFECYCLE_FEATURES = {
+    "user-validation",
+    "outcome-measurement",
+    "stakeholder-governance",
+    "experimentation",
+    "live-learning",
+}
+
 PROFILE_PATH = ".uiux-profile.json"
 CONTEXT_PATHS = ("PROJECT-CONTEXT.md", "PROJECT_CONTEXT.md")
 FALLBACK_PATHS = ("package.json", "README.md")
@@ -539,3 +555,190 @@ class TargetTruthProbe:
             sources=list(dict.fromkeys(sources)),
             diagnostics=diagnostics,
         )
+
+
+def _unique_routing_values(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    output: list[str] = []
+    for raw in values:
+        value = str(raw).strip()
+        if value and value not in seen:
+            seen.add(value)
+            output.append(value)
+    return output
+
+
+def _is_fallback_truth(truth: dict[str, Any], field_name: str) -> bool:
+    provenance = truth.get("provenance", {}).get(field_name, {})
+    return provenance.get("confidence") == "fallback_inference"
+
+
+def _apply_target_truth(
+    context: dict[str, Any],
+    truth: dict[str, Any],
+    field_sources: dict[str, str],
+    merge_diagnostics: list[str],
+) -> None:
+    """Merge bounded target truth without granting authority or evidence.
+
+    Structured identity truth beats goal inference. Structured lifecycle truth acts as
+    a project default and does not erase a non-default lifecycle request inferred from
+    the task. README/package fallback only fills generic identity gaps. Features are
+    additive unless an explicit caller override later replaces them.
+    """
+
+    initial_domain = str(context.get("domain", "generic"))
+    fields = dict(truth.get("fields", {}))
+
+    for field_name, value in fields.items():
+        if field_name not in ROUTING_FIELDS:
+            continue
+
+        if _is_fallback_truth(truth, field_name):
+            if field_name not in _STABLE_TRUTH_FIELDS:
+                continue
+            if field_name == "product_archetype":
+                fallback_domain = fields.get("domain")
+                final_domain = context.get("domain")
+                if fallback_domain not in {None, "", "generic"} and final_domain != fallback_domain:
+                    merge_diagnostics.append("fallback_not_applied:product_archetype:domain_mismatch")
+                    continue
+            if context.get(field_name) not in {None, "", "generic"}:
+                merge_diagnostics.append(f"fallback_not_applied:{field_name}:goal_inference_is_specific")
+                continue
+            context[field_name] = value
+            field_sources[field_name] = "target_project_truth_fallback"
+            continue
+
+        if field_name in _STABLE_TRUTH_FIELDS:
+            context[field_name] = value
+            field_sources[field_name] = "target_project_truth"
+            continue
+
+        if field_name == "features":
+            current = [str(item) for item in context.get("features", [])]
+            target_values = [str(item) for item in value]
+            merged = _unique_routing_values(current + target_values)
+            if merged != current:
+                context[field_name] = merged
+                field_sources[field_name] = (
+                    "target_project_truth" if not current else "goal_inference+target_project_truth"
+                )
+            continue
+
+        default_value = _LIFECYCLE_DEFAULTS.get(field_name)
+        current_value = context.get(field_name)
+        if current_value == value:
+            continue
+        if default_value is not None and current_value != default_value:
+            merge_diagnostics.append(f"structured_default_not_applied:{field_name}:task_inference_is_non_default")
+            continue
+        context[field_name] = value
+        field_sources[field_name] = "target_project_truth"
+
+    if (
+        str(context.get("domain", "generic")) != initial_domain
+        and field_sources.get("product_archetype") == "goal_inference"
+    ):
+        context["product_archetype"] = "generic"
+        field_sources["product_archetype"] = "derived_from_final_contract"
+        merge_diagnostics.append("product_archetype_reset_after_domain_change")
+
+
+def _cohere_final_context(
+    context: dict[str, Any],
+    field_sources: dict[str, str],
+    explicit_fields: set[str],
+    initial_context: dict[str, Any],
+    derived_fields: dict[str, str],
+) -> None:
+    """Recompute defaults only when upstream routing changed and the task had no stronger signal."""
+
+    initial_risk = str(initial_context.get("risk", "standard"))
+    if "risk" not in explicit_fields and field_sources.get("risk") == "goal_inference" and initial_risk == "standard":
+        website_type = str(context.get("website_type", "generic"))
+        mode = str(context.get("mode", "interactive-prototype"))
+        risk = "high" if website_type == "government" else ("production" if mode == "production" else "standard")
+        if risk != context.get("risk"):
+            context["risk"] = risk
+            field_sources["risk"] = "derived_from_final_contract"
+            derived_fields["risk"] = "website_type+mode"
+
+    initial_lane = str(initial_context.get("validation_lane", "prototype"))
+    if (
+        "validation_lane" not in explicit_fields
+        and field_sources.get("validation_lane") == "goal_inference"
+        and initial_lane == "prototype"
+    ):
+        mode = str(context.get("mode", "interactive-prototype"))
+        risk = str(context.get("risk", "standard"))
+        features = {str(item) for item in context.get("features", [])}
+        if mode in {"production", "production-candidate"}:
+            lane = "production-learning"
+        elif risk == "high" or _LIFECYCLE_FEATURES.intersection(features):
+            lane = "evidence-led"
+        else:
+            lane = "prototype"
+        if lane != context.get("validation_lane"):
+            context["validation_lane"] = lane
+            field_sources["validation_lane"] = "derived_from_final_contract"
+            derived_fields["validation_lane"] = "mode+risk+features"
+
+
+def build_truth_aware_context(
+    goal: str,
+    *,
+    target_root: Path | str | None,
+    overrides: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Compile canonical routing context for every Flow OS entrypoint.
+
+    Precedence is explicit override > bounded target-project truth > goal inference.
+    Target truth never grants authority, gate evidence, provider access, or release power.
+    """
+
+    context = GoalInterpreter().interpret(goal).to_context()
+    initial_context = {
+        field_name: list(context[field_name]) if field_name == "features" else context.get(field_name)
+        for field_name in ROUTING_FIELDS
+    }
+    field_sources = {field_name: "goal_inference" for field_name in ROUTING_FIELDS}
+    merge_diagnostics: list[str] = []
+    derived_fields: dict[str, str] = {}
+
+    truth_report = TargetTruthProbe(target_root).probe()
+    truth = truth_report.to_dict()
+    _apply_target_truth(context, truth, field_sources, merge_diagnostics)
+
+    explicit_fields: set[str] = set()
+    domain_before_override = context.get("domain")
+    for key, value in dict(overrides or {}).items():
+        if key not in ROUTING_OVERRIDE_FIELDS or value is None or value == "":
+            continue
+        context[key] = value
+        explicit_fields.add(key)
+        if key in ROUTING_FIELDS:
+            field_sources[key] = "explicit_override"
+
+    if (
+        "domain" in explicit_fields
+        and "product_archetype" not in explicit_fields
+        and context.get("domain") != domain_before_override
+    ):
+        context["product_archetype"] = "generic"
+        field_sources["product_archetype"] = "derived_from_final_contract"
+        derived_fields["product_archetype"] = "domain_override"
+
+    _cohere_final_context(context, field_sources, explicit_fields, initial_context, derived_fields)
+
+    context["target_truth"] = truth
+    context["routing_provenance"] = {
+        "precedence": list(ROUTING_PRECEDENCE),
+        "field_sources": field_sources,
+        "explicit_override_fields": sorted(explicit_fields),
+        "derived_fields": derived_fields,
+        "merge_diagnostics": merge_diagnostics,
+        "target_truth_applied_before_flow_resolution": True,
+    }
+    return context, truth
+
