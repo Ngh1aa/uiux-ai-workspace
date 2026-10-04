@@ -15,6 +15,7 @@ It is built for AI-assisted product/UI/UX work where the agent must remain groun
 - keeps reasoning/memory/knowledge advisory rather than authoritative;
 - separates generated output from trusted runtime/browser evidence;
 - supports external collaborators such as ChatGPT, Codex, Claude and GitHub-connected agents;
+- advises external collaborators which capability/reasoning tier to select before execution while preserving manual model choice and correctness-first quality floors;
 - verifies changes through GitHub Actions, browser/a11y/performance tooling and release-candidate regression;
 - preserves intentional architecture holds instead of manufacturing PASS states.
 
@@ -135,6 +136,7 @@ The command compiles the task into:
 - gate-derived acceptance criteria;
 - optional QA routes;
 - research packet when evidence-led validation is required;
+- advisory execution profile for manual model selection, context efficiency and checkpoint/resume;
 - explicit evidence/claim boundaries.
 
 Routing precedence is bounded as:
