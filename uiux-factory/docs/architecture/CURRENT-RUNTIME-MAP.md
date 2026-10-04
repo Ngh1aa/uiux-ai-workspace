@@ -724,6 +724,60 @@ Current invariants:
 
 P1.7.8 is a correctness/coverage contract only. It does not add deploy, merge, release, provider mutation, automatic registry edits, scheduled provider polling, or new credentials.
 
+### P1.7.9 — Railway provider-native attestation
+
+P1.7.9 closes the Railway adapter-pending state identified by P1.7.8.
+
+The adapter uses Railway's public GraphQL API in read-only mode:
+
+```text
+opt-in Railway token
+        ↓
+Service schema introspection
+        ↓
+bounded project enumeration
+        ↓
+bounded service enumeration
+        ↓
+Service.source.repo + branch
+        ↓
+canonical provider attestation
+```
+
+The schema probe is part of the safety boundary. If Railway no longer exposes a readable `Service.source` object with `repo` and `branch`, the adapter returns:
+
+```text
+inspection_complete = false
+state = unknown
+```
+
+It never converts GraphQL validation errors, missing scope, pagination truncation, or schema drift into `not_configured`.
+
+Absence is attested only after the complete readable project and service scope has been enumerated. Positive repository linkage can produce `CONFIGURED_ATTESTED` even when no recent Railway deployment exists.
+
+Credential inputs remain opt-in:
+
+```text
+P179_RAILWAY_TOKEN
+P179_RAILWAY_WORKSPACE_ID   # optional account/workspace narrowing
+```
+
+The existing P1.7.7 manual live lane consumes these values only when a repository policy already registers Railway. The adapter does not add Railway to any repository policy.
+
+P1.7.9 remains read-only: no `serviceConnect`, `serviceDisconnect`, deploy, project creation/deletion, branch push, PR mutation, merge or release authority is introduced.
+
+After P1.7.9, the provider-native read adapter set is:
+
+```text
+vercel
+netlify
+render
+cloudflare
+railway
+```
+
+Firebase Hosting intentionally remains repository-static/GitHub-native for repository-linkage truth because Hosting site/release visibility is not itself proof of a Git repository integration.
+
 ## 16. Future convergence rules
 
 Future work must preserve:

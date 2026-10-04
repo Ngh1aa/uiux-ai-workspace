@@ -22,6 +22,8 @@ def test_p177_workflow_is_read_only_and_manual_for_live_provider_calls() -> None
         "P177_RENDER_TOKEN",
         "P177_CLOUDFLARE_API_TOKEN",
         "P177_CLOUDFLARE_ACCOUNT_ID",
+        "P179_RAILWAY_TOKEN",
+        "P179_RAILWAY_WORKSPACE_ID",
     ):
         assert secret in text
 

@@ -14,6 +14,7 @@ from core.runtime.flow_os.provider_attestation import (
     CloudflarePagesProviderAttestor,
     NetlifyProviderAttestor,
     RenderProviderAttestor,
+    RailwayProviderAttestor,
     SUPPORTED_PROVIDER_ATTESTORS,
     VercelProviderAttestor,
     assess_provider_attestation_coverage,
@@ -52,6 +53,8 @@ def _default_attestor(
     render_token: str | None,
     cloudflare_token: str | None,
     cloudflare_account_id: str | None,
+    railway_token: str | None,
+    railway_workspace_id: str | None,
 ):
     if provider == "vercel":
         return VercelProviderAttestor(vercel_token, team_id=vercel_team_id)
@@ -63,6 +66,11 @@ def _default_attestor(
         return CloudflarePagesProviderAttestor(
             cloudflare_token,
             account_id=cloudflare_account_id,
+        )
+    if provider == "railway":
+        return RailwayProviderAttestor(
+            railway_token,
+            workspace_id=railway_workspace_id,
         )
     return None
 
@@ -79,6 +87,8 @@ def run_p177_multi_provider_attestation_truth(
     render_token: str | None = None,
     cloudflare_token: str | None = None,
     cloudflare_account_id: str | None = None,
+    railway_token: str | None = None,
+    railway_workspace_id: str | None = None,
     max_age_days: int = DEFAULT_EXTERNAL_EVIDENCE_MAX_AGE_DAYS,
     github_observer: GitHubDeploymentIntegrationObserver | None = None,
     provider_attestors: Mapping[str, Any] | None = None,
@@ -117,6 +127,8 @@ def run_p177_multi_provider_attestation_truth(
             render_token=render_token,
             cloudflare_token=cloudflare_token,
             cloudflare_account_id=cloudflare_account_id,
+            railway_token=railway_token,
+            railway_workspace_id=railway_workspace_id,
         )
         if attestor is not None:
             attestations[provider] = attestor.attest_repository(repository)
