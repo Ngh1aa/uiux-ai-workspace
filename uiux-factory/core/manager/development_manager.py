@@ -270,7 +270,7 @@ class DevelopmentManager:
                 }
             )
         payload = {
-            "schema_version": 2,
+            "schema_version": 1,
             "source": str(self.flow.flow_path),
             "flow_id": self.flow.document.get("id"),
             "engine": engine,
