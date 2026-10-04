@@ -72,6 +72,13 @@ def test_a21_external_manifest_is_bounded_and_research_ready() -> None:
         for skill_path in stage["skill_paths"]:
             assert (WORKSPACE_ROOT / skill_path).is_file(), skill_path
 
+    flow_source = manifest["resolved_flow"]["source"]
+    assert flow_source.startswith("skills_UIUX/flows/")
+    assert (WORKSPACE_ROOT / flow_source).is_file()
+    assert flow_source in manifest["canonical_sources"]
+    for source in manifest["canonical_sources"]:
+        assert (WORKSPACE_ROOT / source).exists(), source
+
     for template_path in manifest["research_packet"]["templates"]:
         assert (WORKSPACE_ROOT / template_path).is_file(), template_path
 
@@ -130,6 +137,8 @@ def test_a21_prepare_external_task_cli_emits_manifest(tmp_path: Path) -> None:
     persisted = json.loads(output.read_text(encoding="utf-8"))
     assert payload == persisted
     assert payload["resolved_flow"]["id"] == "portfolio-career-system"
+    assert payload["resolved_flow"]["source"].startswith("skills_UIUX/flows/")
+    assert (WORKSPACE_ROOT / payload["resolved_flow"]["source"]).is_file()
     assert payload["status"] == "READY_FOR_EXTERNAL_COLLABORATOR"
 
 
