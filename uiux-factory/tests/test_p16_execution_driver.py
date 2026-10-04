@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -227,3 +228,160 @@ def test_p16_checkpoint_contains_history_registry_and_execution_state(tmp_path: 
     assert payload["history"][0]["segment_id"] == "work-1"
     assert payload["execution_plan"]["nodes"][0]["status"] == "passed"
     assert payload["artifact_registry"]["artifacts"][0]["accepted_for_handoff"] is True
+
+
+def _b12_pending_repair_checkpoint(tmp_path: Path):
+    _factory, _profile, driver, runner, target, _exchange = _build_driver(
+        tmp_path, fail_qa_once=True, max_repair_attempts=1,
+    )
+    for _ in range(4):
+        driver.run_next()
+    checkpoint = JsonCheckpointStore(tmp_path / "checkpoint.json")
+    payload = checkpoint.load()
+    assert payload["repair_counts"] == {"work-3": 1}
+    assert payload["repair_context"]["work-3"]["qa_segment_id"] == "work-4"
+    assert len(payload["history"]) == 4
+    return driver, runner, target, checkpoint, payload
+
+
+@pytest.mark.parametrize("interrupt_at", [1, 2])
+def test_b12_resume_preserves_checkpoint_when_writes_are_interrupted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, interrupt_at: int,
+) -> None:
+    driver, runner, target, checkpoint, payload = _b12_pending_repair_checkpoint(tmp_path)
+    before = checkpoint.path.read_bytes()
+    save = checkpoint.save
+    writes = []
+
+    def interrupted_save(value):
+        writes.append(value)
+        if len(writes) == interrupt_at:
+            raise OSError("B12 interrupted checkpoint save")
+        save(value)
+
+    monkeypatch.setattr(checkpoint, "save", interrupted_save)
+    try:
+        resumed = ExecutionDriver.resume(
+            driver.work_plan, runner, workspace_root=target,
+            checkpoint_store=checkpoint, max_repair_attempts=1,
+        )
+    finally:
+        assert checkpoint.path.read_bytes() == before
+    assert writes == []
+    assert resumed.checkpoint_payload() == payload
+    assert resumed.checkpoint_store is checkpoint
+    assert runner.invocations == 4
+
+
+@pytest.mark.parametrize(("field", "invalid"), [
+    ("repair_counts", {"work-3": "invalid-count"}),
+    ("repair_context", {"work-3": None}),
+    ("history", [None]),
+    ("execution_plan", {"nodes": [None]}),
+    ("artifact_registry", {"artifacts": [None]}),
+    ("plan_fingerprint", "sha256:different"),
+])
+def test_b12_invalid_resume_payload_never_overwrites_checkpoint(
+    tmp_path: Path, field: str, invalid,
+) -> None:
+    driver, runner, target, checkpoint, payload = _b12_pending_repair_checkpoint(tmp_path)
+    checkpoint.save({**payload, field: invalid})
+    before = checkpoint.path.read_bytes()
+    with pytest.raises((RunnerContractError, TypeError, ValueError, KeyError)):
+        ExecutionDriver.resume(
+            driver.work_plan, runner, workspace_root=target, checkpoint_store=checkpoint,
+        )
+    assert checkpoint.path.read_bytes() == before
+    assert runner.invocations == 4
+
+
+def test_b12_resume_keeps_repair_budget_and_passed_stages(tmp_path: Path) -> None:
+    driver, runner, target, checkpoint, payload = _b12_pending_repair_checkpoint(tmp_path)
+    resumed = ExecutionDriver.resume(
+        driver.work_plan, runner, workspace_root=target,
+        checkpoint_store=checkpoint, max_repair_attempts=1,
+    )
+    assert resumed.checkpoint_payload() == payload
+    assert resumed.execution_plan.runnable_segment_ids() == ["work-3"]
+    repair = resumed.run_next()
+    assert repair["runner_mode"] == "repair"
+    assert repair["status"] == "passed"
+    # A second independent QA failure must not receive a fresh repair budget.
+    (target / ".qa-failed-once").unlink()
+    failure = resumed.run_next()
+    assert failure["failure_class"] == "PRODUCT_QA_FAILED"
+    assert "repair_attempt" not in failure
+    assert resumed.repair_counts == {"work-3": 1}
+    assert resumed.execution_plan.runnable_segment_ids() == []
+    assert [node.attempts for node in resumed.execution_plan.nodes] == [1, 1, 2, 2]
+    assert [node.status for node in resumed.execution_plan.nodes] == ["passed", "passed", "passed", "failed"]
+    assert resumed.history[:4] == payload["history"]
+    assert runner.invocations == 6
+    assert checkpoint.load() == resumed.checkpoint_payload()
+
+
+def test_b12_atomic_checkpoint_preserves_old_file_at_every_write(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    checkpoint = JsonCheckpointStore(tmp_path / "checkpoint.json")
+    old = {"repair_counts": {"work-3": 1}, "history": [{"status": "failed"}]}
+    new = {**old, "history": [*old["history"], {"status": "passed", "reason": "Phục hồi đầy đủ"}]}
+    checkpoint.save(old)
+    before = checkpoint.path.read_bytes()
+    encoder = json.JSONEncoder(ensure_ascii=False, indent=2, sort_keys=True)
+    write_boundaries = len(list(encoder.iterencode(new))) + 1
+    create_temp = tempfile.NamedTemporaryFile
+
+    for interrupt_at in range(1, write_boundaries + 1):
+        calls = []
+
+        class InterruptedFile:
+            def __init__(self, handle):
+                self.handle = handle
+
+            def __enter__(self):
+                self.handle.__enter__()
+                return self
+
+            def __exit__(self, *args):
+                return self.handle.__exit__(*args)
+
+            @property
+            def name(self):
+                return self.handle.name
+
+            def write(self, text):
+                calls.append(text)
+                if len(calls) == interrupt_at:
+                    self.handle.write(text[:max(1, len(text) // 2)])
+                    raise OSError("B12 interrupted partial write")
+                return self.handle.write(text)
+
+        with monkeypatch.context() as fault:
+            fault.setattr(tempfile, "NamedTemporaryFile", lambda *args, **kwargs: InterruptedFile(create_temp(*args, **kwargs)))
+            with pytest.raises(OSError, match="interrupted partial write"):
+                checkpoint.save(new)
+        assert len(calls) == interrupt_at
+        assert checkpoint.path.read_bytes() == before
+        assert checkpoint.load() == old
+
+
+@pytest.mark.parametrize("boundary", ["temp-create", "replace"])
+def test_b12_atomic_checkpoint_keeps_old_file_when_commit_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, boundary: str,
+) -> None:
+    checkpoint = JsonCheckpointStore(tmp_path / "checkpoint.json")
+    checkpoint.save({"repair_counts": {"work-3": 1}, "history": [{"status": "failed"}]})
+    before = checkpoint.path.read_bytes()
+
+    def interrupted(*_args, **_kwargs):
+        raise OSError("B12 interrupted atomic commit")
+
+    with monkeypatch.context() as fault:
+        if boundary == "temp-create":
+            fault.setattr(tempfile, "NamedTemporaryFile", interrupted)
+        else:
+            fault.setattr(Path, "replace", interrupted)
+        with pytest.raises(OSError, match="interrupted atomic commit"):
+            checkpoint.save({"repair_counts": {}, "history": []})
+    assert checkpoint.path.read_bytes() == before
