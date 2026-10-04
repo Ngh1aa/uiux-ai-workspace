@@ -22,6 +22,19 @@ RISK_LEVELS = ("READ", "LOW_WRITE", "HIGH_WRITE", "CRITICAL")
 SENSITIVE_FRAGMENTS = ("token", "secret", "password", "authorization", "cookie", "api_key", "apikey")
 
 
+def utf8_subprocess_env() -> dict[str, str]:
+    return {**os.environ, "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}
+
+
+def configure_cli_utf8() -> None:
+    """Keep CLI streams and Python children UTF-8 even on redirected Windows pipes."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8")
+    os.environ.update({"PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"})
+
+
 def _unique(values: list[str]) -> list[str]:
     seen: set[str] = set()
     result: list[str] = []
@@ -335,6 +348,8 @@ class ToolRegistry:
             cwd=self.repo_root,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            env=utf8_subprocess_env(),
             timeout=120,
         )
         return {

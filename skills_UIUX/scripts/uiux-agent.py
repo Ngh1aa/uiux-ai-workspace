@@ -11,7 +11,7 @@ FACTORY_ROOT = ROOT.parent / "uiux-factory"
 if str(FACTORY_ROOT) not in sys.path:
     sys.path.insert(0, str(FACTORY_ROOT))
 
-from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
+from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, configure_cli_utf8
 from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
 from core.runtime.flow_os.free_tier_provider import create_free_tier_provider
 from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRun
@@ -197,6 +197,7 @@ def _run_provider_cycles(
 
 
 def main() -> int:
+    configure_cli_utf8()
     parser = argparse.ArgumentParser(description="Provider-neutral UIUX Factory Flow OS harness")
     parser.add_argument("--project", required=True)
     parser.add_argument("--task", default="UIUX task")

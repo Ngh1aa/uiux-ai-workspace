@@ -17,6 +17,23 @@ def _write_profile(root: Path, payload: dict[str, object]) -> None:
     (root / ".uiux-profile.json").write_text(json.dumps(payload) + "\n", encoding="utf-8")
 
 
+def test_batch1_deployment_prohibition_preserves_real_project_risk(tmp_path: Path) -> None:
+    target = tmp_path / "target"
+    _write_profile(target, {"mode": "production", "features": ["auth"]})
+    manifest = build_external_task_manifest(
+        SKILLS, POLICY, "Fix button spacing only; do not deploy production",
+        "owner/product", target_root=target, authority="release",
+    ).to_dict()
+    contract = manifest["task_contract"]
+    assert manifest["authority"] == "branch_write"
+    assert contract["mode"] == "production"
+    assert contract["risk"] == "production"
+    assert contract["features"] == ["auth"]
+    assert contract["validation_lane"] == "production-learning"
+    assert contract["forbidden"] == ["deploy production"]
+    assert manifest["execution_advice"]["overall_profile"]["recommended_capability"] == "advanced"
+
+
 def test_p0_structured_mode_recomputes_default_validation_lane(tmp_path: Path) -> None:
     target = tmp_path / "target"
     _write_profile(target, {"mode": "production_candidate"})

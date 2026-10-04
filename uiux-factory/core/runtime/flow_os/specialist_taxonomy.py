@@ -4,8 +4,16 @@ import re
 from typing import Iterable
 
 
+def contains_terms(text: str, terms: Iterable[str]) -> bool:
+    """Match complete taxonomy/semantic terms, including hyphenated compounds."""
+    return any(
+        re.search(rf"(?<!\w){re.escape(term)}(?!\w)", text, flags=re.IGNORECASE)
+        for term in terms if term
+    )
+
+
 def _contains(text: str, terms: Iterable[str]) -> bool:
-    return any(term in text for term in terms)
+    return contains_terms(text, terms)
 
 
 def _normalise(value: str) -> str:
@@ -180,13 +188,16 @@ ARCHETYPE_HINTS: dict[str, tuple[tuple[str, tuple[str, ...]], ...]] = {
             "learning-experience",
             (
                 "course",
+                "courses",
                 "lesson",
+                "lessons",
                 "learning path",
                 "student learning",
                 "online learning",
                 "classroom",
                 "quiz",
                 "assignment",
+                "assignments",
             ),
         ),
     ),

@@ -16,9 +16,11 @@ def _symlink(link: Path, target: Path) -> None:
         pytest.skip(f"symlink creation is unavailable in this environment: {exc}")
 
 
-def test_a4_1_safe_reader_reads_bounded_utf8_and_env_template(tmp_path: Path) -> None:
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
+def test_a4_1_safe_reader_reads_bounded_utf8_and_env_template(tmp_path: Path, newline: str) -> None:
     (tmp_path / "src").mkdir()
-    (tmp_path / "src" / "app.ts").write_text("export const ok = true;\n", encoding="utf-8")
+    raw = f"export const ok = true;{newline}".encode("utf-8")
+    (tmp_path / "src" / "app.ts").write_bytes(raw)
     (tmp_path / ".env.example").write_text("API_URL=https://example.test\n", encoding="utf-8")
 
     reader = SafeReader(tmp_path)
@@ -26,8 +28,8 @@ def test_a4_1_safe_reader_reads_bounded_utf8_and_env_template(tmp_path: Path) ->
     template = reader.read_text(".env.example")
 
     assert loaded.relative_path == "src/app.ts"
-    assert loaded.content == "export const ok = true;\n"
-    assert loaded.bytes_read == len(loaded.content.encode("utf-8"))
+    assert loaded.content == raw.decode("utf-8")
+    assert loaded.bytes_read == len(raw)
     assert "API_URL" in template.content
 
 
@@ -100,12 +102,14 @@ def test_a4_1_read_tool_and_listing_share_safe_read_policy(tmp_path: Path) -> No
         registry.execute("read_text", {"path": ".env.local"})
 
 
-def test_a4_1_context_manifest_records_trusted_read_root_and_rejects_secret_source(tmp_path: Path) -> None:
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
+def test_a4_1_context_manifest_records_trusted_read_root_and_rejects_secret_source(tmp_path: Path, newline: str) -> None:
     project = tmp_path / "project"
     library = tmp_path / "skills"
     (project / "docs").mkdir(parents=True)
     library.mkdir()
-    (project / "docs" / "truth.md").write_text("# Project truth\n", encoding="utf-8")
+    source = project / "docs" / "truth.md"
+    source.write_text("# Project truth\n", encoding="utf-8", newline=newline)
     (project / ".env").write_text("TOKEN=secret", encoding="utf-8")
 
     manifest = build_context_manifest(
@@ -116,7 +120,7 @@ def test_a4_1_context_manifest_records_trusted_read_root_and_rejects_secret_sour
     item = next(entry for entry in manifest["items"] if entry["kind"] == "source_of_truth")
 
     assert item["read_root"] == str(project.resolve())
-    assert item["bytes"] == len("# Project truth\n".encode("utf-8"))
+    assert item["bytes"] == len(source.read_bytes())
     assert manifest["totals"]["bytes"] >= item["bytes"]
 
     with pytest.raises(SafeReadError):

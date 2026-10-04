@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+import pytest
 
 from core.contracts.design_context_schema import ReferenceBoard
 from core.contracts.reference_evidence_schema import ReferenceEvidenceBundle
@@ -103,11 +104,12 @@ def test_declared_reference_artifact_hash_mismatch_is_rejected(tmp_path: Path) -
     assert any("digest mismatch" in warning.lower() for warning in warnings)
 
 
-def test_declared_reference_artifact_hash_match_is_accepted(tmp_path: Path) -> None:
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
+def test_declared_reference_artifact_hash_match_is_accepted(tmp_path: Path, newline: str) -> None:
     artifact = tmp_path / "reference-evidence.v1.json"
     raw = _bundle_json()
-    artifact.write_text(raw, encoding="utf-8")
-    digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    artifact.write_text(raw, encoding="utf-8", newline=newline)
+    digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
     board = ReferenceBoard(evidence_artifact=str(artifact), evidence_sha256=digest)
     records, _source, actual, warnings = load_verified_reference_catalog(board.model_dump_json())
     assert records

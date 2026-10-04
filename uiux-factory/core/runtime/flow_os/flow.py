@@ -300,6 +300,11 @@ class FlowResolver:
         return normalized
 
     def _score(self, doc: dict[str, Any], context: dict[str, Any]) -> int | None:
+        # A small surface cannot outrank the non-mutating intent boundary.
+        if context.get("intent") in NON_MUTATING_INTENTS and any(
+            stage.get("agent") == "implementation" for stage in doc.get("stages", [])
+        ):
+            return None
         match = doc.get("match", {})
         score = int(match.get("priority", 0))
         for key, weight in (
