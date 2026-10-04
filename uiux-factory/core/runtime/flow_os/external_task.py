@@ -10,7 +10,7 @@ from core.runtime.flow_os.target_truth import ROUTING_FIELDS, TargetTruthProbe
 from core.runtime.flow_os.task_context import GoalInterpreter
 
 
-EXTERNAL_TASK_MANIFEST_VERSION = "1.1"
+EXTERNAL_TASK_MANIFEST_VERSION = "1.2"
 EXTERNAL_TASK_STATUS = "READY_FOR_EXTERNAL_COLLABORATOR"
 AUTHORITY_ORDER = ("read_only", "branch_write", "external_write", "release")
 VISUAL_SIGNATURE_CONTRACT = "docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md"
