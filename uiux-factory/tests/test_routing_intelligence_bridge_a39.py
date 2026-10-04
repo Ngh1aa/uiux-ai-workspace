@@ -109,6 +109,7 @@ def test_a39_connector_request_parser_accepts_bounded_metadata(tmp_path: Path) -
 {
   "target_repository": "Ngh1aa/Nova",
   "target_ref": "main",
+  "target_dir": "apps/web",
   "task": "Audit and fix the existing dashboard cards while preserving current motion",
   "authority": "branch_write",
   "qa_routes": ["/", "/payments"],
@@ -139,6 +140,7 @@ def test_a39_connector_request_parser_accepts_bounded_metadata(tmp_path: Path) -
     request = json.loads(output.read_text(encoding="utf-8"))
     assert json.loads(completed.stdout) == request
     assert request["target_repository"] == "Ngh1aa/Nova"
+    assert request["target_dir"] == "apps/web"
     assert request["qa_routes"] == ["/", "/payments"]
     assert request["authority"] == "branch_write"
     github_text = github_output.read_text(encoding="utf-8")
@@ -181,8 +183,39 @@ def test_a39_connector_bridge_uses_trusted_issue_metadata_not_shell_inputs() -> 
     assert "author_association" in workflow
     assert "github-connector-task-request.py" in workflow
     assert "github-external-agent-runner.py" in workflow
+    assert "TARGET_DIR: ${{ steps.request.outputs.target_dir }}" in workflow
+    assert '--target-dir "$TARGET_DIR"' in workflow
     assert "UIUX_TARGET_REPO_TOKEN" in workflow
     assert "install_command" not in workflow
     assert "build_command" not in workflow
     assert "serve_command" not in workflow
     assert "routing contract, not evidence" in workflow
+
+def test_b16_connector_request_rejects_target_dir_escape(tmp_path: Path) -> None:
+    body = tmp_path / "unsafe-target-dir.md"
+    output = tmp_path / "unsafe-target-dir.json"
+    body.write_text(
+        """<!-- uiux-external-agent-task:v1 -->
+```json
+{
+  "target_repository": "Ngh1aa/Nova",
+  "target_dir": "../other-app",
+  "task": "Audit the app",
+  "authority": "read_only"
+}
+```
+""",
+        encoding="utf-8",
+    )
+
+    completed = subprocess.run(
+        [sys.executable, str(BRIDGE_SCRIPT), "--body-file", str(body), "--output", str(output)],
+        cwd=WORKSPACE_ROOT,
+        text=True,
+        capture_output=True,
+    )
+
+    assert completed.returncode != 0
+    assert "target_dir must be a repository-relative path" in completed.stderr
+    assert not output.exists()
+
