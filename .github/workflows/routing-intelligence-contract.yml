@@ -22,6 +22,8 @@ on:
       - "skills_UIUX/runtime/specialist-composition.json"
       - "skills_UIUX/flows/audit-review.json"
       - "skills_UIUX/flows/existing-ui-improvement.json"
+      - "skills_UIUX/flows/page-ui-work.json"
+      - "skills_UIUX/flows/professional-website-redesign.json"
       - "uiux-factory/core/orchestration/intelligent_flow.py"
       - "uiux-factory/scripts/run_p17_github_transaction.py"
       - "skills_UIUX/scripts/github-connector-task-request.py"
