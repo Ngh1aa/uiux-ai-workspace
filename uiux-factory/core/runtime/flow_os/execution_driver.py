@@ -557,16 +557,17 @@ class ExecutionDriver:
         expected = cls._fingerprint(work_plan)
         if payload.get("plan_fingerprint") != expected:
             raise RunnerContractError("checkpoint plan fingerprint does not match resolved work plan")
+        # Resume is read-only: the constructor must not persist partially restored state.
         driver = cls(
             work_plan,
             WorkExecutionPlan.from_dict(dict(payload["execution_plan"])),
             runner,
             ArtifactRegistry.from_dict(workspace_root, dict(payload.get("artifact_registry") or {})),
-            checkpoint_store=checkpoint_store,
+            checkpoint_store=None,
             max_repair_attempts=max_repair_attempts,
         )
         driver.repair_counts = {str(k): int(v) for k, v in dict(payload.get("repair_counts") or {}).items()}
         driver.repair_context = {str(k): dict(v) for k, v in dict(payload.get("repair_context") or {}).items()}
         driver.history = [dict(item) for item in payload.get("history") or []]
-        driver._save_checkpoint()
+        driver.checkpoint_store = checkpoint_store
         return driver
