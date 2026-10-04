@@ -159,8 +159,8 @@ CASES: tuple[MultiSurfaceCase, ...] = (
         goal="Audit checkout, then QA checkout.",
         expected_mode="sequence",
         expected_segments=(
-            seg("audit", "improve", ("checkout",), "PAGE", "page-ui-work", "research"),
-            seg("qa", "improve", ("checkout",), "PAGE", "page-ui-work", "qa"),
+            seg("audit", "improve", ("checkout",), "PAGE", "audit-review", "research"),
+            seg("qa", "improve", ("checkout",), "PAGE", "audit-review", "qa"),
         ),
     ),
     MultiSurfaceCase(
