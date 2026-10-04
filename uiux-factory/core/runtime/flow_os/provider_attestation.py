@@ -14,7 +14,188 @@ from core.runtime.flow_os.repository_policy_registry import resolve_repository_p
 
 PROVIDER_ATTESTATION_VERSION = "1.0"
 CANONICAL_INTEGRATION_TRUTH_VERSION = "1.0"
+PROVIDER_ATTESTATION_COVERAGE_VERSION = "1.0"
 SUPPORTED_PROVIDER_ATTESTORS = frozenset({"vercel", "netlify", "render", "cloudflare"})
+KNOWN_EXTERNAL_INTEGRATION_PROVIDERS = frozenset(
+    {
+        "vercel",
+        "netlify",
+        "render",
+        "railway",
+        "cloudflare",
+        "firebase-hosting",
+        "github-pages",
+    }
+)
+
+
+@dataclass(frozen=True)
+class ProviderAttestationCapability:
+    provider: str
+    mode: str
+    attestor_available: bool
+    repository_linkage_truth: bool
+    idle_truth_provider_native: bool
+    credential_inputs: tuple[str, ...] = ()
+    reason: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = asdict(self)
+        payload["credential_inputs"] = list(self.credential_inputs)
+        return payload
+
+
+@dataclass(frozen=True)
+class ProviderAttestationCoverageResult:
+    version: str
+    providers: tuple[ProviderAttestationCapability, ...]
+    unclassified_providers: tuple[str, ...]
+    adapter_pending_providers: tuple[str, ...]
+    non_provider_native_providers: tuple[str, ...]
+    classification_complete: bool
+    provider_native_idle_coverage_complete: bool
+    reason: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "version": self.version,
+            "providers": [item.to_dict() for item in self.providers],
+            "unclassified_providers": list(self.unclassified_providers),
+            "adapter_pending_providers": list(self.adapter_pending_providers),
+            "non_provider_native_providers": list(self.non_provider_native_providers),
+            "classification_complete": self.classification_complete,
+            "provider_native_idle_coverage_complete": self.provider_native_idle_coverage_complete,
+            "reason": self.reason,
+        }
+
+
+PROVIDER_ATTESTATION_CAPABILITIES: dict[str, ProviderAttestationCapability] = {
+    "vercel": ProviderAttestationCapability(
+        provider="vercel",
+        mode="provider-api",
+        attestor_available=True,
+        repository_linkage_truth=True,
+        idle_truth_provider_native=True,
+        credential_inputs=("P177_VERCEL_TOKEN", "P177_VERCEL_TEAM_ID"),
+        reason="Vercel project/Git linkage is readable through the existing read-only provider adapter.",
+    ),
+    "netlify": ProviderAttestationCapability(
+        provider="netlify",
+        mode="provider-api",
+        attestor_available=True,
+        repository_linkage_truth=True,
+        idle_truth_provider_native=True,
+        credential_inputs=("P177_NETLIFY_TOKEN",),
+        reason="Netlify site/Git linkage is readable through the existing read-only provider adapter.",
+    ),
+    "render": ProviderAttestationCapability(
+        provider="render",
+        mode="provider-api",
+        attestor_available=True,
+        repository_linkage_truth=True,
+        idle_truth_provider_native=True,
+        credential_inputs=("P177_RENDER_TOKEN",),
+        reason="Render service/Git linkage is readable through the existing read-only provider adapter.",
+    ),
+    "cloudflare": ProviderAttestationCapability(
+        provider="cloudflare",
+        mode="provider-api",
+        attestor_available=True,
+        repository_linkage_truth=True,
+        idle_truth_provider_native=True,
+        credential_inputs=("P177_CLOUDFLARE_API_TOKEN", "P177_CLOUDFLARE_ACCOUNT_ID"),
+        reason="Cloudflare Pages GitHub source linkage is readable through the existing read-only provider adapter.",
+    ),
+    "railway": ProviderAttestationCapability(
+        provider="railway",
+        mode="provider-api-adapter-pending",
+        attestor_available=False,
+        repository_linkage_truth=True,
+        idle_truth_provider_native=False,
+        credential_inputs=("P178_RAILWAY_TOKEN",),
+        reason=(
+            "Railway exposes a read-only GraphQL API and models service-to-repository linkage, "
+            "but UIUX Factory does not yet ship a verified Railway read adapter. Idle truth therefore remains fail-closed."
+        ),
+    ),
+    "firebase-hosting": ProviderAttestationCapability(
+        provider="firebase-hosting",
+        mode="repository-static-or-github-native",
+        attestor_available=False,
+        repository_linkage_truth=False,
+        idle_truth_provider_native=False,
+        credential_inputs=(),
+        reason=(
+            "Firebase Hosting provider APIs expose hosting sites/releases but do not provide the repository-linkage "
+            "truth required by this contract. Repository/static or GitHub workflow evidence remains authoritative."
+        ),
+    ),
+    "github-pages": ProviderAttestationCapability(
+        provider="github-pages",
+        mode="github-native",
+        attestor_available=False,
+        repository_linkage_truth=True,
+        idle_truth_provider_native=False,
+        credential_inputs=(),
+        reason=(
+            "GitHub Pages is intentionally proven through repository-static and GitHub-native evidence; "
+            "a second external-provider credential path is unnecessary."
+        ),
+    ),
+}
+
+
+def assess_provider_attestation_coverage(
+    providers: Iterable[str],
+) -> ProviderAttestationCoverageResult:
+    normalized = tuple(sorted({str(provider).strip().lower() for provider in providers if str(provider).strip()}))
+    capabilities: list[ProviderAttestationCapability] = []
+    unclassified: list[str] = []
+    adapter_pending: list[str] = []
+    non_provider_native: list[str] = []
+
+    for provider in normalized:
+        capability = PROVIDER_ATTESTATION_CAPABILITIES.get(provider)
+        if capability is None:
+            unclassified.append(provider)
+            continue
+        capabilities.append(capability)
+        if capability.mode == "provider-api-adapter-pending":
+            adapter_pending.append(provider)
+        if capability.mode in {"repository-static-or-github-native", "github-native"}:
+            non_provider_native.append(provider)
+
+    classification_complete = not unclassified
+    provider_native_idle_coverage_complete = classification_complete and not adapter_pending
+    if unclassified:
+        reason = (
+            "One or more integration providers have no attestation capability classification: "
+            + ", ".join(unclassified)
+            + "."
+        )
+    elif adapter_pending:
+        reason = (
+            "Provider capability classification is complete, but verified provider-native idle attestation "
+            "is still pending for: "
+            + ", ".join(adapter_pending)
+            + "."
+        )
+    else:
+        reason = (
+            "Every requested provider has an explicit attestation capability classification and no provider-api "
+            "adapter is silently pending."
+        )
+
+    return ProviderAttestationCoverageResult(
+        version=PROVIDER_ATTESTATION_COVERAGE_VERSION,
+        providers=tuple(capabilities),
+        unclassified_providers=tuple(unclassified),
+        adapter_pending_providers=tuple(adapter_pending),
+        non_provider_native_providers=tuple(non_provider_native),
+        classification_complete=classification_complete,
+        provider_native_idle_coverage_complete=provider_native_idle_coverage_complete,
+        reason=reason,
+    )
 
 
 @dataclass(frozen=True)
