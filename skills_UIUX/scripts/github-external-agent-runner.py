@@ -136,7 +136,10 @@ def main() -> int:
     args = parser.parse_args()
 
     repository_root = Path(args.target_root).resolve()
-    target_root, target_dir = _resolve_target_project_root(repository_root, args.target_dir)
+    try:
+        target_root, target_dir = _resolve_target_project_root(repository_root, args.target_dir)
+    except ValueError as exc:
+        parser.error(str(exc))
     output_dir = Path(args.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     policy_doc = json.loads((SKILLS_ROOT / "runtime" / "runtime-policy.json").read_text(encoding="utf-8"))
