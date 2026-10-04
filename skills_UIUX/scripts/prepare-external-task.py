@@ -14,6 +14,7 @@ if str(FACTORY_ROOT) not in sys.path:
     sys.path.insert(0, str(FACTORY_ROOT))
 
 from core.runtime.flow_os.external_task import build_external_task_manifest
+from core.runtime.flow_os.agent import configure_cli_utf8
 
 
 def _overrides(args: argparse.Namespace) -> dict[str, object]:
@@ -37,6 +38,7 @@ def _overrides(args: argparse.Namespace) -> dict[str, object]:
 
 
 def main() -> int:
+    configure_cli_utf8()
     parser = argparse.ArgumentParser(
         description="Compile one external AI/UIUX task into a bounded Factory routing manifest."
     )
@@ -55,7 +57,7 @@ def main() -> int:
         default="branch_write",
         help="Maximum caller-granted authority recorded in the manifest",
     )
-    parser.add_argument("--intent", choices=["build", "redesign", "rebuild", "improve", "fix", "polish"])
+    parser.add_argument("--intent", choices=["build", "redesign", "rebuild", "improve", "fix", "polish", "audit", "review", "research", "validate", "qa"])
     parser.add_argument("--change-surface", dest="change_surface", choices=["MICRO", "FOCUSED", "PAGE", "REDESIGN", "PRODUCT"])
     parser.add_argument("--website-type", dest="website_type")
     parser.add_argument("--domain")

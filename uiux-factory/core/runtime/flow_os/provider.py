@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from core.runtime.flow_os.flow import REPLAN_SIGNALS
+from core.runtime.flow_os.agent import utf8_subprocess_env
 from core.runtime.flow_os.safe_read import SafeReadError, SafeReader
 
 PROVIDER_STATUSES = {"CONTINUE", "PASS", "FAIL", "BLOCKED"}
@@ -579,6 +580,8 @@ class CommandProvider:
             input=json.dumps(envelope, ensure_ascii=False),
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            env=utf8_subprocess_env(),
             timeout=self.timeout,
         )
         if result.returncode != 0:

@@ -237,6 +237,39 @@ def test_a5_memory_serializes_concurrent_writers_without_lost_updates(tmp_path: 
     assert {row.run_id for row in store.load()} == {row.run_id for row in records}
 
 
+@pytest.mark.skipif(os.name != "nt", reason="Windows extended path representation")
+def test_windows_completion_memory_accepts_extended_path_for_same_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    store = EvaluationMemoryStore(_repo(tmp_path), {})
+    original_resolve = Path.resolve
+
+    def extended_resolve(candidate: Path, *args, **kwargs) -> Path:
+        resolved = original_resolve(candidate, *args, **kwargs)
+        if candidate in {store.memory_dir, store.memory_dir / ".runtime"}:
+            return Path("\\\\?\\" + str(resolved))
+        return resolved
+
+    monkeypatch.setattr(Path, "resolve", extended_resolve)
+    assert store.record(_memory_record("extended-path"))
+    assert store.load()[0].run_id == "extended-path"
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows extended path representation")
+def test_windows_completion_memory_still_rejects_extended_path_outside_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    store = EvaluationMemoryStore(_repo(tmp_path), {})
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    original_resolve = Path.resolve
+
+    def escaped_resolve(candidate: Path, *args, **kwargs) -> Path:
+        if candidate == store.memory_dir:
+            return Path("\\\\?\\" + str(outside))
+        return original_resolve(candidate, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "resolve", escaped_resolve)
+    with pytest.raises(EvaluationMemoryError, match="escapes project root"):
+        store.record(_memory_record("outside"))
+
+
 def test_a5_memory_refuses_symlinked_storage_path(tmp_path: Path) -> None:
     project = _repo(tmp_path)
     outside = tmp_path / "outside"

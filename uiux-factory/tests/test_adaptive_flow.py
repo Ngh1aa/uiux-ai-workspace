@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import pytest
 
 from core.orchestration.intelligent_flow import GoalInterpreter as FactoryGoalInterpreter
 from core.runtime.flow_os.flow import FlowResolver
@@ -9,6 +10,21 @@ from core.runtime.flow_os.task_context import GoalInterpreter as ManagedGoalInte
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT.parent / "skills_UIUX"
+
+
+@pytest.mark.parametrize("goal,surface", [
+    ("Redesign the entire website including hero, header and footer", "REDESIGN"),
+    ("Thiết kế lại toàn bộ website bao gồm hero, header và footer", "REDESIGN"),
+    ("Redesign the whole product including hero, header and footer", "PRODUCT"),
+    ("Thiết kế lại toàn bộ sản phẩm bao gồm hero, header và footer", "PRODUCT"),
+    ("Redesign hero section only", "FOCUSED"),
+    ("Redesign homepage only", "PAGE"),
+    ("Chỉ sửa khoảng cách của nút", "MICRO"),
+    ("Fix button spacing only", "MICRO"),
+])
+def test_batch1_explicit_scope_wins_over_incidental_components(goal: str, surface: str) -> None:
+    for interpreter in (FactoryGoalInterpreter(), ManagedGoalInterpreter()):
+        assert interpreter.interpret(goal).change_surface == surface
 
 
 def test_a3_change_surface_is_consistent_across_factory_and_managed_runtime() -> None:
