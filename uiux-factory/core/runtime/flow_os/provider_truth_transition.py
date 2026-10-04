@@ -195,19 +195,21 @@ def _fleet_transition(
     if current_passed is False and baseline_passed is False:
         return "UNCHANGED_BLOCKING"
 
-    baseline_degraded = {
-        key
+    baseline_gaps = {
+        (key, provider)
         for key, row in baseline_rows.items()
-        if not row.blocking and row.credential_gap_providers
+        if not row.blocking
+        for provider in row.credential_gap_providers
     }
-    current_degraded = {
-        key
+    current_gaps = {
+        (key, provider)
         for key, row in current_rows.items()
-        if not row.blocking and row.credential_gap_providers
+        if not row.blocking
+        for provider in row.credential_gap_providers
     }
-    if current_degraded - baseline_degraded:
+    if current_gaps - baseline_gaps:
         return "NEW_CREDENTIAL_GAP"
-    if baseline_degraded - current_degraded:
+    if baseline_gaps - current_gaps:
         return "CREDENTIAL_GAP_RESOLVED"
     return "UNCHANGED_HEALTHY"
 
