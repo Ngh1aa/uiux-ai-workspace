@@ -92,6 +92,7 @@ def run_p177_multi_provider_attestation_truth(
     max_age_days: int = DEFAULT_EXTERNAL_EVIDENCE_MAX_AGE_DAYS,
     github_observer: GitHubDeploymentIntegrationObserver | None = None,
     provider_attestors: Mapping[str, Any] | None = None,
+    enforce_passed: bool = True,
 ) -> dict[str, Any]:
     """Resolve canonical integration truth with bounded multi-provider attestation.
 
@@ -179,7 +180,7 @@ def run_p177_multi_provider_attestation_truth(
     report_path = output_path / f"p177-multi-provider-attestation-{_slug(truth.repository)}.json"
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    if not truth.passed:
+    if enforce_passed and not truth.passed:
         raise RuntimeError(
             "P1.7.7 canonical integration truth is not verified: "
             + json.dumps(report, ensure_ascii=False)
