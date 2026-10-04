@@ -675,6 +675,55 @@ skills_UIUX/scripts/run-p177-multi-provider-attestation-truth.py
 
 The live multi-provider lane remains manual `workflow_dispatch` only. No scheduled provider polling, provider mutation, deploy, merge or release authority is introduced.
 
+### P1.7.8 — provider attestation coverage truth
+
+P1.7.7 widened provider-native attestation, but provider discovery already recognizes a larger provider universe. P1.7.8 makes that coverage boundary explicit so an unsupported provider can never disappear behind a silent `continue`.
+
+Canonical capability classes:
+
+```text
+provider-api
+→ Vercel / Netlify / Render / Cloudflare Pages
+→ verified read-only repository-linkage attestor exists
+
+provider-api-adapter-pending
+→ Railway
+→ provider exposes repository linkage, but Factory has no verified read adapter yet
+→ idle truth remains fail-closed
+
+repository-static-or-github-native
+→ Firebase Hosting
+→ Hosting API visibility is not treated as repository-linkage truth
+→ static/GitHub evidence remains authoritative
+
+github-native
+→ GitHub Pages
+→ no second external-provider credential path is required
+```
+
+The coverage contract distinguishes two questions:
+
+```text
+classification_complete
+= every known provider has an explicit capability class
+
+provider_native_idle_coverage_complete
+= every provider that needs a provider API has a verified read adapter
+```
+
+These are intentionally not equivalent. A provider can be fully classified while its provider-native idle-truth adapter is still pending.
+
+Current invariants:
+
+- `SUPPORTED_PROVIDER_ATTESTORS` must exactly match capability entries marked `attestor_available=true`.
+- every provider recognized by the Factory external-integration universe must have an explicit capability classification;
+- unknown providers fail classification closed;
+- Railway remains explicitly pending rather than silently skipped;
+- Firebase Hosting must not be promoted to provider-attested repository linkage from site/release visibility alone;
+- provider capability metadata never broadens a repository policy, authorizes mutation, or satisfies canonical integration truth by itself.
+
+P1.7.8 is a correctness/coverage contract only. It does not add deploy, merge, release, provider mutation, automatic registry edits, scheduled provider polling, or new credentials.
+
 ## 16. Future convergence rules
 
 Future work must preserve:
