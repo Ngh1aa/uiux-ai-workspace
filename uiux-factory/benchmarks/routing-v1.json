@@ -40,6 +40,6 @@
     {"id":"product-ai-native","goal":"Build an AI-native software platform","expected_surface":"PRODUCT","expected_flow":"professional-website-redesign","expected_domain":"ai-software","expected_website_type":"saas","tags":["product","ai"]},
 
     {"id":"page-production-dashboard","goal":"Prepare this SaaS dashboard screen as a production candidate","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_website_type":"saas","stage_id":"research","mandatory_contains":["audience-intent-and-top-tasks"],"jit_contains":["outcome-metrics-and-instrumentation"],"tags":["page","production-learning","dashboard"]},
-    {"id":"page-real-user-validation","goal":"Validate this SaaS landing page with real users","expected_surface":"PAGE","expected_flow":"page-ui-work","expected_website_type":"saas","stage_id":"research","mandatory_contains":["audience-intent-and-top-tasks"],"jit_contains":["real-user-validation"],"tags":["page","evidence-led","user-validation"]}
+    {"id":"page-real-user-validation","goal":"Validate this SaaS landing page with real users","expected_surface":"PAGE","expected_flow":"audit-review","expected_website_type":"saas","stage_id":"research","mandatory_contains":["project-context","website-audit-and-redesign"],"jit_contains":["real-user-validation"],"tags":["page","evidence-led","user-validation","read-only"]}
   ]
 }

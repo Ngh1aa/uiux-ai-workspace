@@ -384,6 +384,14 @@ def build_external_task_manifest(
     context["authority"] = effective_authority
 
     planner = FlowPlanner(Path(library_root), policy_doc)
+    normalized_context = planner.flow_resolver.normalize_context(context)
+    if normalized_context["intent"] != context["intent"]:
+        provenance = normalized_context["routing_provenance"]
+        provenance["field_sources"]["intent"] = "authority_boundary"
+        provenance["merge_diagnostics"].append(
+            f"read_only_routing:{context['intent']}->{normalized_context['intent']}"
+        )
+    context = normalized_context
     flow = planner.plan(context)
     stages = _stage_manifest(flow)
     execution_advice = build_execution_advice(cleaned_goal, context, flow, policy_doc).to_dict()

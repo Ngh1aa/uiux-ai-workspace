@@ -16,13 +16,17 @@
       "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "ui-improvement"],
       "conditional_skills": [
         {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
+        {"when": {"domain": "financial-services"}, "skills": ["financial-product-intelligence", "trust-credibility-and-transparency"]},
+        {"when": {"product_archetype": "trust-safety-risk"}, "skills": ["data-tables-and-enterprise-ux", "complex-workflow-and-progress-ux", "security-and-privacy"]},
+        {"when": {"features": ["dashboard"]}, "skills": ["data-visualization-and-dashboard-ux"]},
+        {"when": {"features": ["data-tables"]}, "skills": ["data-tables-and-enterprise-ux"]},
         {"when": {"website_type": "ecommerce"}, "skills": ["ecommerce-website"]},
         {"when": {"website_type": "education"}, "skills": ["education-website"]},
         {"when": {"website_type": "corporate"}, "skills": ["corporate-website"]}
       ],
       "gates": [
         {"id": "scope-root-cause", "require": "affected owner, constraints and expected outcome are known"},
-        {"id": "evidence-led-problem-validation", "require": "material user/problem claims distinguish direct evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable", "when": {"validation_lane": ["evidence-led", "production-learning"]}}
+        {"id": "evidence-led-problem-validation", "require": "material user/problem claims distinguish direct user evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable", "when": {"validation_lane": ["evidence-led", "production-learning"]}}
       ]
     },
     {
@@ -32,6 +36,9 @@
       "required_skills": ["ai-agent-coding-guardrails", "ui-improvement", "frontend-implementation", "responsive-and-device-strategy"],
       "conditional_skills": [
         {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation"]},
+        {"when": {"product_archetype": "trust-safety-risk"}, "skills": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery", "security-and-privacy"]},
+        {"when": {"features": ["dashboard"]}, "skills": ["data-visualization-and-dashboard-ux"]},
+        {"when": {"features": ["data-tables"]}, "skills": ["data-tables-and-enterprise-ux"]},
         {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
         {"when": {"features": ["forms"]}, "skills": ["interaction-patterns-and-form-ux", "state-feedback-and-error-recovery"]},
         {"when": {"mode": ["production-candidate", "production"]}, "skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]}
@@ -49,6 +56,9 @@
       "conditional_skills": [
         {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
         {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation", "human-governance-and-playbacks", "post-launch-learning-loop"]},
+        {"when": {"product_archetype": "trust-safety-risk"}, "skills": ["data-tables-and-enterprise-ux", "state-feedback-and-error-recovery", "security-and-privacy"]},
+        {"when": {"features": ["dashboard"]}, "skills": ["data-visualization-and-dashboard-ux"]},
+        {"when": {"features": ["data-tables"]}, "skills": ["data-tables-and-enterprise-ux"]},
         {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance", "system-reality-and-production-readiness", "code-review-and-release"]}
       ],
       "gates": [
