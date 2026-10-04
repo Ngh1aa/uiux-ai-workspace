@@ -19,6 +19,9 @@ on:
       - "uiux-factory/core/runtime/flow_os/specialist_composition.py"
       - "uiux-factory/core/runtime/flow_os/specialist_taxonomy.py"
       - "uiux-factory/core/runtime/flow_os/task_context.py"
+      - "skills_UIUX/runtime/specialist-composition.json"
+      - "skills_UIUX/flows/audit-review.json"
+      - "skills_UIUX/flows/existing-ui-improvement.json"
       - "uiux-factory/core/orchestration/intelligent_flow.py"
       - "uiux-factory/scripts/run_p17_github_transaction.py"
       - "skills_UIUX/scripts/github-connector-task-request.py"
@@ -35,6 +38,7 @@ on:
       - ".github/workflows/p171-authenticated-real-runner-contract.yml"
       - ".github/workflows/p171-authenticated-real-runner-dogfood.yml"
       - "uiux-factory/tests/test_routing_intelligence_bridge_a39.py"
+      - "uiux-factory/tests/test_routing_intelligence_regression.py"
       - "uiux-factory/tests/test_intelligent_flow.py"
       - "uiux-factory/tests/test_canonical_specialist_routing_p11.py"
       - "uiux-factory/tests/test_p11_archetype_real_task_dogfood.py"
@@ -77,6 +81,7 @@ jobs:
         run: >-
           python -m pytest -q
           uiux-factory/tests/test_routing_intelligence_bridge_a39.py
+          uiux-factory/tests/test_routing_intelligence_regression.py
           uiux-factory/tests/test_external_collaborator_a21.py
           uiux-factory/tests/test_task_contract.py
           uiux-factory/tests/test_intelligent_flow.py

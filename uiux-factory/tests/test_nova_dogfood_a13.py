@@ -129,7 +129,9 @@ def test_a13_nova_render_lane_keeps_historical_profile_coverage_without_generic_
 
     assert report["passed"] is True
     assert report["profile"]["normalized_flow_domain"] == "financial-services"
-    assert report["flow"]["id"] == "professional-website-redesign"
+    assert report["flow"]["id"] == "audit-review"
+    assert report["runtime_task_context"]["authority"] == "read_only"
+    assert report["flow"]["stage_ids"] == ["research", "qa"]
     assert report["jit_section"]["skill"] == "financial-product-intelligence"
     assert report["browser"]["viewports"] == ["desktop", "mobile", "tablet"]
     assert report["vision"]["status"] == "NOT_RUN"

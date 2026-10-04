@@ -207,7 +207,7 @@ class RealProjectDogfoodRunner:
             key for key in OPTIONAL_PROFILE_FIELDS if not str(profile.get(key, "")).strip()
         ]
         overrides: dict[str, Any] = {
-            "intent": "redesign",
+            "intent": "audit",
             "change_surface": "PRODUCT",
             "website_type": "application",
             "domain": flow_domain,
@@ -223,17 +223,17 @@ class RealProjectDogfoodRunner:
         harness = ProviderNeutralAgentHarness(self.skills_root, self.project_root)
         manager = ManagedFlowController(harness)
         managed = manager.start_from_goal(
-            "Redesign and dogfood the existing Nova mobile-first fintech money-control product using its real source truth, responsive rendered evidence and visual-review readiness; do not release.",
+            "Audit and dogfood the existing Nova mobile-first fintech money-control product using its real source truth, responsive rendered evidence and visual-review readiness; do not change code or release.",
             authority="read_only",
             overrides=overrides,
         )
-        if managed.flow.id != "professional-website-redesign":
+        if managed.flow.id != "audit-review":
             raise RealProjectDogfoodError(
-                f"Nova PRODUCT redesign routed to unexpected flow: {managed.flow.id}"
+                f"Nova read-only audit routed to unexpected flow: {managed.flow.id}"
             )
         research = next((stage for stage in managed.flow.stages if stage.id == "research"), None)
         if research is None:
-            raise RealProjectDogfoodError("professional website flow has no research stage")
+            raise RealProjectDogfoodError("audit flow has no research stage")
         if "financial-product-intelligence" not in research.skills:
             raise RealProjectDogfoodError("Nova financial-services routing omitted financial-product-intelligence")
 
@@ -312,7 +312,7 @@ class RealProjectDogfoodRunner:
             "source_truth_loaded": bool(project_context.content.strip()) and bool(profile),
             "source_profile_grounded": bool(source_domain) and flow_domain == "financial-services",
             "static_project_detected": shape["kind"] == "static_html",
-            "canonical_flow_routed": managed.flow.id == "professional-website-redesign",
+            "canonical_flow_routed": managed.flow.id == "audit-review",
             "financial_skill_routed": "financial-product-intelligence" in research.skills,
             "explicit_sources_bound": loaded_sources == explicit_sources,
             "section_level_jit_grounded": section["skill"] == "financial-product-intelligence",
@@ -343,12 +343,14 @@ class RealProjectDogfoodRunner:
                 ),
             },
             "runtime_task_context": {
+                "authority": managed.authority,
                 "domain": managed.task_context.get("domain"),
                 "product_archetype": managed.task_context.get("product_archetype"),
                 "validation_lane": managed.task_context.get("validation_lane"),
             },
             "flow": {
                 "id": managed.flow.id,
+                "stage_ids": [stage.id for stage in managed.flow.stages],
                 "revision": managed.flow.revision,
                 "research_stage_run_id": stage_state.run_id,
                 "financial_skill_source": research.jit_skill_sources.get("financial-product-intelligence"),
