@@ -16,6 +16,7 @@ REF_PATTERN = re.compile(r"^[A-Za-z0-9._/-]*$")
 ALLOWED_KEYS = {
     "target_repository",
     "target_ref",
+    "target_dir",
     "task",
     "authority",
     "qa_routes",
@@ -88,6 +89,13 @@ def validate_request(payload: dict[str, Any]) -> dict[str, Any]:
     if target_ref and (not REF_PATTERN.fullmatch(target_ref) or ".." in target_ref):
         raise ValueError("target_ref contains unsupported characters")
 
+    target_dir = str(payload.get("target_dir", "")).strip().replace("\\", "/")
+    if target_dir:
+        path = Path(target_dir)
+        if path.is_absolute() or ".." in path.parts or ":" in target_dir:
+            raise ValueError("target_dir must be a repository-relative path")
+        target_dir = "/".join(part for part in path.parts if part not in {"", "."})
+
     state_contract = str(payload.get("state_contract", "")).strip()
     if state_contract and (state_contract.startswith("/") or ".." in Path(state_contract).parts):
         raise ValueError("state_contract must be a repository-relative path")
@@ -95,6 +103,7 @@ def validate_request(payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "target_repository": repository,
         "target_ref": target_ref,
+        "target_dir": target_dir,
         "task": task,
         "authority": authority,
         "qa_routes": _string_list(payload.get("qa_routes", []), "qa_routes"),
@@ -111,6 +120,7 @@ def _write_github_output(path: Path, request: dict[str, Any]) -> None:
     scalar_values = {
         "target_repository": request["target_repository"],
         "target_ref": request["target_ref"],
+        "target_dir": request["target_dir"],
         "task": request["task"],
         "authority": request["authority"],
         "qa_routes": "\n".join(request["qa_routes"]),
