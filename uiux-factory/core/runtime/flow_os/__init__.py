@@ -8,6 +8,11 @@ CANONICAL_RUNTIME_OWNER = "uiux-factory/core/runtime/flow_os"
 
 from core.runtime.flow_os.browser_evidence import BrowserEvidenceError, PlaywrightBrowserEvidenceAdapter
 from core.runtime.flow_os.browser_observation import BrowserObservationError, PlaywrightBrowserObservationAdapter
+from core.runtime.flow_os.continuous_provider_truth import (
+    ContinuousProviderTruthAssessment,
+    assess_continuous_provider_truth,
+    assess_continuous_provider_truth_payload,
+)
 from core.runtime.flow_os.evidence import EvidenceRecord
 from core.runtime.flow_os.execution_advisor import ExecutionAdvice, build_execution_advice
 from core.runtime.flow_os.external_side_effects import (
@@ -78,6 +83,7 @@ __all__ = [
     "CommandVisionCreativeAnalyzer",
     "CanonicalIntegrationTruthResult",
     "CloudflarePagesProviderAttestor",
+    "ContinuousProviderTruthAssessment",
     "KNOWN_EXTERNAL_INTEGRATION_PROVIDERS",
     "ContainerSandbox",
     "DeploymentResult",
@@ -131,6 +137,8 @@ __all__ = [
     "WorkspaceMetadata",
     "WorktreeManager",
     "assess_external_side_effects",
+    "assess_continuous_provider_truth",
+    "assess_continuous_provider_truth_payload",
     "assess_provider_attestation_coverage",
     "build_execution_advice",
     "configured_vision_creative_analyzer",
