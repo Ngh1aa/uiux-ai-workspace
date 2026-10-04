@@ -12,10 +12,12 @@ from urllib.parse import parse_qs, urlparse
 import pytest
 
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
+from core.runtime.flow_os.execution_driver import SegmentExecutionRequest
 from core.runtime.flow_os.github_transaction import (
     GitHubProductionRunner,
     GitHubRestClient,
     GitHubTransactionConfig,
+    GitHubTransactionError,
 )
 
 
@@ -224,6 +226,86 @@ def test_p17_real_git_transaction_runs_repair_and_opens_pr_without_moving_main(t
         transaction_state = json.loads(runner.state_path.read_text(encoding="utf-8"))
         assert transaction_state["base_sha"] == base_sha
         assert transaction_state["last_commit_sha"] == active[0].metadata["commit_sha"]
+
+
+def test_p17_fresh_workspace_resume_recovers_transaction_owned_implementation_truth(tmp_path: Path) -> None:
+    remote, base_sha = _init_remote(tmp_path)
+    with _fake_github_api() as (api_base, state):
+        _factory, profile, first_driver, first_runner = _build_driver(
+            tmp_path / "first",
+            remote,
+            api_base,
+            transaction_id="fresh-resume-idempotent",
+            lease_owner="resume-owner",
+        )
+        assert profile.routing_status == "resolved"
+        assert first_driver.run_until_blocked(max_steps=10) == "completed"
+        first_commit = first_runner.state.last_commit_sha
+        first_branch_sha = _remote_sha(remote, first_runner.config.transaction_branch)
+        assert first_commit
+        assert first_branch_sha == first_commit
+        assert state["create_count"] == 1
+
+        _factory2, profile2, second_driver, second_runner = _build_driver(
+            tmp_path / "second",
+            remote,
+            api_base,
+            transaction_id="fresh-resume-idempotent",
+            lease_owner="resume-owner",
+        )
+        assert profile2.routing_status == "resolved"
+        assert second_driver.run_until_blocked(max_steps=10) == "completed"
+
+        assert _remote_sha(remote, "main") == base_sha
+        assert _remote_sha(remote, second_runner.config.transaction_branch) == first_commit
+        assert second_runner.state.last_commit_sha == first_commit
+        assert second_runner.state.segment_commits["work-3:normal"] == first_commit
+        assert second_runner.state.metadata["resume_truth"] == "recovered_from_remote_history"
+        assert second_runner.state.pr_number == 1
+        assert state["create_count"] == 1
+
+        active_commits = [
+            record
+            for record in second_driver.registry.records.values()
+            if record.kind == "implementation-artifact" and record.accepted_for_handoff
+        ]
+        assert len(active_commits) == 1
+        assert active_commits[0].metadata["idempotent_reuse"] == "true"
+        assert active_commits[0].metadata["recovered_from_remote_history"] == "true"
+
+
+def test_p17_clean_implementation_without_matching_provenance_still_fails_closed(tmp_path: Path) -> None:
+    remote, _base_sha = _init_remote(tmp_path)
+    with _fake_github_api() as (api_base, _state):
+        _factory, _profile, driver, runner = _build_driver(
+            tmp_path,
+            remote,
+            api_base,
+            transaction_id="no-provenance-noop",
+            lease_owner="no-provenance-owner",
+        )
+        assert driver.run_next()["status"] == "passed"
+        request = SegmentExecutionRequest(
+            schema_version="1.0",
+            segment_id="work-3",
+            order=3,
+            phase="implementation",
+            intent="build",
+            scope=[],
+            change_surface="FOCUSED",
+            runner_mode="normal",
+            active_stage_id="implementation",
+            agent="implementation",
+            skills=[],
+            mandatory_skills=[],
+            gates=[],
+            input_artifacts=[],
+            expected_output_kinds=["implementation-artifact"],
+            preserve=[],
+            forbidden=[],
+        )
+        with pytest.raises(GitHubTransactionError, match="no matching transaction-owned implementation commit"):
+            runner._commit_implementation(request)
 
 
 def test_p17_pull_request_find_or_create_is_idempotent(tmp_path: Path) -> None:
