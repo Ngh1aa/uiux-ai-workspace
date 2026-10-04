@@ -10,6 +10,10 @@ on:
       - "uiux-factory/tests/test_p1710_continuous_provider_truth.py"
       - "uiux-factory/tests/test_p1710_workflow_boundary.py"
       - "skills_UIUX/scripts/run-p1710-continuous-provider-truth.py"
+      - "uiux-factory/core/runtime/flow_os/provider_truth_fleet.py"
+      - "uiux-factory/tests/test_p1711_provider_truth_fleet.py"
+      - "uiux-factory/tests/test_p1711_workflow_boundary.py"
+      - "skills_UIUX/scripts/run-p1711-provider-truth-fleet-summary.py"
       - "uiux-factory/docs/architecture/CURRENT-RUNTIME-MAP.md"
   push:
     branches: [main]
@@ -59,6 +63,8 @@ jobs:
           python -m pytest -q
           uiux-factory/tests/test_p1710_continuous_provider_truth.py
           uiux-factory/tests/test_p1710_workflow_boundary.py
+          uiux-factory/tests/test_p1711_provider_truth_fleet.py
+          uiux-factory/tests/test_p1711_workflow_boundary.py
           uiux-factory/tests/test_p179_railway_provider_attestation.py
           uiux-factory/tests/test_p178_provider_attestation_coverage.py
           uiux-factory/tests/test_p177_multi_provider_attestation.py
@@ -138,4 +144,39 @@ jobs:
         with:
           name: p1710-continuous-provider-truth-${{ matrix.slug }}
           path: ${{ runner.temp }}/p1710/${{ matrix.slug }}/*.json
+          if-no-files-found: error
+
+  fleet-summary:
+    if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    needs: [matrix, monitor]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Factory
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Download repository provider truth artifacts
+        uses: actions/download-artifact@v6
+        with:
+          pattern: p1710-continuous-provider-truth-*
+          path: ${{ runner.temp }}/p1711/repositories
+          merge-multiple: false
+      - name: Aggregate fleet provider truth
+        env:
+          PYTHONPATH: ${{ github.workspace }}/uiux-factory
+        run: >-
+          python skills_UIUX/scripts/run-p1711-provider-truth-fleet-summary.py
+          --input-dir "${{ runner.temp }}/p1711/repositories"
+          --output "${{ runner.temp }}/p1711/provider-truth-fleet-summary.json"
+      - name: Upload fleet provider truth summary
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p1711-provider-truth-fleet-summary
+          path: ${{ runner.temp }}/p1711/provider-truth-fleet-summary.json
           if-no-files-found: error

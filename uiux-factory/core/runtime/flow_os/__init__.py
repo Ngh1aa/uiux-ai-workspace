@@ -44,6 +44,13 @@ from core.runtime.flow_os.provider_attestation import (
     assess_provider_attestation_coverage,
     resolve_canonical_integration_truth,
 )
+from core.runtime.flow_os.provider_truth_fleet import (
+    ProviderTruthFleetRepository,
+    ProviderTruthFleetSummary,
+    build_provider_truth_fleet_summary,
+    load_provider_truth_fleet_reports,
+    write_provider_truth_fleet_summary,
+)
 from core.runtime.flow_os.release import (
     CommandDeployAdapter,
     DeploymentResult,
@@ -109,6 +116,8 @@ __all__ = [
     "ProviderAttestationCapability",
     "ProviderAttestationCoverageResult",
     "ProviderIntegrationTruth",
+    "ProviderTruthFleetRepository",
+    "ProviderTruthFleetSummary",
     "RenderProviderAttestor",
     "RailwayProviderAttestor",
     "ResolvedFlow",
@@ -141,9 +150,12 @@ __all__ = [
     "assess_continuous_provider_truth_payload",
     "assess_provider_attestation_coverage",
     "build_execution_advice",
+    "build_provider_truth_fleet_summary",
     "configured_vision_creative_analyzer",
     "detect_static_integrations",
+    "load_provider_truth_fleet_reports",
     "resolve_canonical_integration_truth",
     "sanitize_creative_output",
     "sanitize_vision_output",
+    "write_provider_truth_fleet_summary",
 ]
