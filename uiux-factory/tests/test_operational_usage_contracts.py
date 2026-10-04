@@ -34,3 +34,28 @@ def test_cloud_qa_external_defaults_do_not_point_at_internal_fixture() -> None:
     assert 'export QA_ROUTES="${INPUT_ROUTES:-/fixture/,/fixture/index.html}"' in workflow
     assert 'INPUT_TARGET_DIR: ${{ github.event.inputs.target_dir || \'\' }}' in workflow
     assert 'INPUT_ROUTES: ${{ github.event.inputs.routes || \'\' }}' in workflow
+
+def test_b15_required_status_checks_are_present_for_docs_only_pull_requests() -> None:
+    foundation = (WORKSPACE / ".github" / "workflows" / "uiux-factory-ci.yml").read_text(
+        encoding="utf-8"
+    )
+    release = (WORKSPACE / ".github" / "workflows" / "a20-release-candidate.yml").read_text(
+        encoding="utf-8"
+    )
+
+    foundation_pr = foundation.split("  pull_request:\n", 1)[1].split("\npermissions:", 1)[0]
+    release_pr = release.split("  pull_request:\n", 1)[1].split("  push:\n", 1)[0]
+
+    assert "paths:" not in foundation_pr
+    assert "paths-ignore:" not in foundation_pr
+    assert "paths:" not in release_pr
+    assert "paths-ignore:" not in release_pr
+
+    assert "\n  foundation:\n" in foundation
+    assert "\n  release-candidate:\n" in release
+
+    # Pushes remain path-scoped; B15 fixes PR required-check presence without
+    # turning every unrelated push into a full Factory release-candidate run.
+    assert "  push:\n    paths:" in foundation
+    assert "  push:\n    branches: [main]\n    paths:" in release
+
