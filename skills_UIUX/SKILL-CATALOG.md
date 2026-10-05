@@ -25,6 +25,7 @@
 | `content-design-and-question-design` | Interface content structure and question design for forms/transactional journeys |
 | `ux-writing-and-microcopy` | State-level UI copy, labels, CTA, errors, empty/loading/success/recovery, terminology and localization-safe microcopy |
 | `design-system-and-components` | Tokens, components, variants, states |
+| `figma-professional-artifact` | Recruiter/dev-inspectable Figma file craft: page structure, variables/tokens, auto layout, components/variants/states, responsive frames, prototype flows and handoff hygiene |
 | `interaction-patterns-and-form-ux` | Common forms/search/filter/dialog patterns |
 | `motion-and-microinteractions` | Purposeful motion |
 | `asset-media-and-art-direction` | Image/video/icon direction |
@@ -187,5 +188,6 @@ Keep base profiles small and route the smallest graph justified by the decision:
 - Current search demand/content brief → `search-demand-and-content-briefing`; technical search implementation → `seo-strategy`.
 - Code task needing multi-file plan/context/dependency discipline → `ai-agent-coding-guardrails`; tiny fixes remain lightweight.
 - Production candidate/release → `production-delivery` when integrations/security/performance/browser/rollback/production truth are material.
+- Recruiter-facing Figma proof → `figma-professional-artifact`; use it to prove file/system craft, not as a substitute for case-study reasoning or real validation.
 
 Do not activate product/growth/search/engineering specialists merely because they are installed. Cross-functional knowledge should improve a concrete UI/UX decision, not expand every task into product management, marketing and engineering at once.
