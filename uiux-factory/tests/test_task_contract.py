@@ -245,3 +245,23 @@ def test_batch1_taxonomy_retains_explicit_plural_aliases(content: str, archetype
     contract = ManagedGoalInterpreter().interpret(f"Build an EdTech learning platform with {content}")
     assert contract.domain == "education-edtech"
     assert contract.product_archetype == archetype
+
+def test_portfolio_figma_request_routes_professional_artifact_skill() -> None:
+    goal = (
+        "Improve my UI UX designer portfolio and make the Figma file professional "
+        "with case study and prototype proof"
+    )
+    contract = ManagedGoalInterpreter().interpret(goal)
+    assert contract.website_type == "portfolio"
+    assert "figma-artifact" in contract.features
+
+    resolver = FlowResolver(SKILLS / "flows")
+    _path, document, _score = resolver.resolve(contract.to_context())
+    assert document["id"] == "portfolio-career-system"
+
+    manifest = _manifest(goal)
+    stages = {stage["id"]: stage["skills"] for stage in manifest["stages"]}
+    assert "figma-professional-artifact" in stages["research"]
+    assert "figma-professional-artifact" in stages["design"]
+    assert "figma-professional-artifact" in stages["qa"]
+
