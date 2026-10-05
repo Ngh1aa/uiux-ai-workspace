@@ -145,4 +145,6 @@ Full portfolio rebuilds and role-positioning upgrades route to `portfolio-career
 
 ## Completion rule
 
+For verified UX feedback and Factory friction, load [UX feedback and regression policy](docs/UX-FEEDBACK-REGRESSION.md). Repair the reproduced Factory owner first, then the target; external manifests link reviewed cross-project prevention and recall bounded A5 project history without treating it as current QA.
+
 A task is complete only when the requested scope and relevant gates have evidence. Build success, provider self-report, a generated manifest, or a green fixture are never substitutes for target-project verification.

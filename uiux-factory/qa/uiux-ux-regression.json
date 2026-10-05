@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "checks": [
+    {"id": "FIXTURE-SQUARE-STYLE", "kind": "style-range", "selector": "button", "property": "border-top-left-radius", "max": 0, "route": "/fixture/"},
+    {"id": "FIXTURE-HIT", "kind": "hit-target", "selector": "button", "min": 44, "route": "/fixture/"}
+  ]
+}
