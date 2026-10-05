@@ -4,10 +4,27 @@
   "description": "Recruiter-facing portfolio and career-positioning flow covering identity, case-study product reasoning, AI-assisted workflow proof, CV/link/source hygiene, truthful research evidence and rendered QA.",
   "match": {
     "priority": 90,
-    "change_surfaces": ["REDESIGN", "PRODUCT"],
-    "intents": ["build", "redesign", "rebuild", "improve", "fix", "polish"],
-    "website_types": ["portfolio"],
-    "modes": ["visual-prototype", "interactive-prototype", "production-candidate", "production"]
+    "change_surfaces": [
+      "REDESIGN",
+      "PRODUCT"
+    ],
+    "intents": [
+      "build",
+      "redesign",
+      "rebuild",
+      "improve",
+      "fix",
+      "polish"
+    ],
+    "website_types": [
+      "portfolio"
+    ],
+    "modes": [
+      "visual-prototype",
+      "interactive-prototype",
+      "production-candidate",
+      "production"
+    ]
   },
   "stages": [
     {
@@ -26,7 +43,12 @@
       ],
       "conditional_skills": [
         {
-          "when": {"validation_lane": ["evidence-led", "production-learning"]},
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          },
           "skills": [
             "real-user-validation",
             "user-research-planning-and-recruitment",
@@ -35,12 +57,34 @@
           ]
         },
         {
-          "when": {"features": ["outcome-measurement"]},
-          "skills": ["outcome-metrics-and-instrumentation"]
+          "when": {
+            "features": [
+              "outcome-measurement"
+            ]
+          },
+          "skills": [
+            "outcome-metrics-and-instrumentation"
+          ]
         },
         {
-          "when": {"features": ["stakeholder-governance"]},
-          "skills": ["human-governance-and-playbacks"]
+          "when": {
+            "features": [
+              "stakeholder-governance"
+            ]
+          },
+          "skills": [
+            "human-governance-and-playbacks"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "figma-artifact"
+            ]
+          },
+          "skills": [
+            "figma-professional-artifact"
+          ]
         }
       ],
       "gates": [
@@ -59,7 +103,12 @@
         {
           "id": "research-package-ready",
           "require": "when direct-user evidence is needed but unavailable, the research decision map, participant criteria, protocol and evidence-ledger structure exist while findings remain empty/planned rather than fabricated",
-          "when": {"validation_lane": ["evidence-led", "production-learning"]}
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          }
         }
       ]
     },
@@ -79,12 +128,35 @@
       ],
       "conditional_skills": [
         {
-          "when": {"validation_lane": ["evidence-led", "production-learning"]},
-          "skills": ["real-user-validation"]
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          },
+          "skills": [
+            "real-user-validation"
+          ]
         },
         {
-          "when": {"features": ["motion"]},
-          "skills": ["motion-and-microinteractions"]
+          "when": {
+            "features": [
+              "motion"
+            ]
+          },
+          "skills": [
+            "motion-and-microinteractions"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "figma-artifact"
+            ]
+          },
+          "skills": [
+            "figma-professional-artifact"
+          ]
         }
       ],
       "gates": [
@@ -100,6 +172,15 @@
         {
           "id": "ai-proof-boundary",
           "require": "AI section separates human-owned judgment from AI-assisted work and links to inspectable workflow/config/QA evidence where public and safe instead of relying on a generic tools list"
+        },
+        {
+          "id": "figma-artifact-contract",
+          "require": "when Figma proof is requested, the file exposes intentional page/section structure, foundations/tokens, reusable components and variants, auto-layout/responsive behavior, critical product states, prototype flows and reviewer/developer annotations instead of acting as a flat screen dump",
+          "when": {
+            "features": [
+              "figma-artifact"
+            ]
+          }
         }
       ]
     },
@@ -116,12 +197,27 @@
       ],
       "conditional_skills": [
         {
-          "when": {"mode": ["production-candidate", "production"]},
-          "skills": ["system-reality-and-production-readiness", "testing-strategy", "web-quality-and-performance"]
+          "when": {
+            "mode": [
+              "production-candidate",
+              "production"
+            ]
+          },
+          "skills": [
+            "system-reality-and-production-readiness",
+            "testing-strategy",
+            "web-quality-and-performance"
+          ]
         },
         {
-          "when": {"features": ["motion"]},
-          "skills": ["motion-and-microinteractions"]
+          "when": {
+            "features": [
+              "motion"
+            ]
+          },
+          "skills": [
+            "motion-and-microinteractions"
+          ]
         }
       ],
       "gates": [
@@ -156,12 +252,38 @@
       ],
       "conditional_skills": [
         {
-          "when": {"validation_lane": ["evidence-led", "production-learning"]},
-          "skills": ["real-user-validation", "research-evidence-pipeline"]
+          "when": {
+            "validation_lane": [
+              "evidence-led",
+              "production-learning"
+            ]
+          },
+          "skills": [
+            "real-user-validation",
+            "research-evidence-pipeline"
+          ]
         },
         {
-          "when": {"mode": ["production-candidate", "production"]},
-          "skills": ["system-reality-and-production-readiness", "code-review-and-release"]
+          "when": {
+            "mode": [
+              "production-candidate",
+              "production"
+            ]
+          },
+          "skills": [
+            "system-reality-and-production-readiness",
+            "code-review-and-release"
+          ]
+        },
+        {
+          "when": {
+            "features": [
+              "figma-artifact"
+            ]
+          },
+          "skills": [
+            "figma-professional-artifact"
+          ]
         }
       ],
       "gates": [
@@ -180,48 +302,93 @@
         {
           "id": "truthful-portfolio-completion",
           "require": "independent concepts, missing user research, missing analytics/business outcomes and other evidence gaps remain clearly labeled; no polished artifact is presented as proof of unmeasured impact"
+        },
+        {
+          "id": "figma-artifact-quality",
+          "require": "when Figma proof is requested, representative flagship flows are reviewable without hidden context; naming, components/variants, variables/styles, auto layout, states, responsive frames, prototype links and handoff notes are coherent and no obvious detached or duplicate artifacts undermine the senior-craft claim",
+          "when": {
+            "features": [
+              "figma-artifact"
+            ]
+          }
         }
       ]
     }
   ],
   "replanning": {
     "max_replans": 4,
-    "triggers": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"],
+    "triggers": [
+      "GATE_FAIL",
+      "BLOCKED",
+      "NEW_RISK",
+      "INVALID_ASSUMPTION",
+      "TOOL_FAILURE",
+      "CONTEXT_DRIFT"
+    ],
     "policies": [
       {
-        "when": {"signal": "GATE_FAIL", "current_stage": "qa"},
+        "when": {
+          "signal": "GATE_FAIL",
+          "current_stage": "qa"
+        },
         "reason": "Recruiter-path QA found a material rendering, link, claim or source-hygiene defect; repair the owning implementation/source layer before re-verifying.",
         "target_stage": "implementation",
-        "add_skills": ["ui-improvement", "web-ui-code-review"]
+        "add_skills": [
+          "ui-improvement",
+          "web-ui-code-review"
+        ]
       },
       {
-        "when": {"signal": "GATE_FAIL", "current_stage": "design"},
+        "when": {
+          "signal": "GATE_FAIL",
+          "current_stage": "design"
+        },
         "reason": "Positioning or case-study hierarchy remains generic/unclear; deepen recruiter narrative and design critique before implementation.",
         "target_stage": "design",
-        "add_skills": ["design-critique-and-rationale", "visual-taste-calibration"]
+        "add_skills": [
+          "design-critique-and-rationale",
+          "visual-taste-calibration"
+        ]
       },
       {
-        "when": {"signal": "INVALID_ASSUMPTION"},
+        "when": {
+          "signal": "INVALID_ASSUMPTION"
+        },
         "reason": "A career, project, research or technical assumption was invalidated; return to public/source evidence rather than patching the story downstream.",
         "target_stage": "research",
-        "add_skills": ["research-synthesis-and-insight-management"]
+        "add_skills": [
+          "research-synthesis-and-insight-management"
+        ]
       },
       {
-        "when": {"signal": "BLOCKED"},
+        "when": {
+          "signal": "BLOCKED"
+        },
         "reason": "Missing target-role/project truth or user evidence blocks a responsible claim; reframe the unresolved decision and evidence plan.",
         "target_stage": "research",
-        "add_skills": ["product-decision-and-stakeholder-framing", "research-evidence-pipeline"]
+        "add_skills": [
+          "product-decision-and-stakeholder-framing",
+          "research-evidence-pipeline"
+        ]
       },
       {
-        "when": {"signal": "CONTEXT_DRIFT"},
+        "when": {
+          "signal": "CONTEXT_DRIFT"
+        },
         "reason": "Portfolio source or positioning changed; re-ground project truth before further narrative/code changes.",
         "target_stage": "research",
-        "add_skills": ["project-context"]
+        "add_skills": [
+          "project-context"
+        ]
       },
       {
-        "when": {"signal": "TOOL_FAILURE"},
+        "when": {
+          "signal": "TOOL_FAILURE"
+        },
         "reason": "Tool failure requires diagnosis/evidence rather than blind retry.",
-        "add_skills": ["agent-evaluation-and-reliability"]
+        "add_skills": [
+          "agent-evaluation-and-reliability"
+        ]
       }
     ]
   }
