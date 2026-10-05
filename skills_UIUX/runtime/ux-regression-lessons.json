@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "scope": "reviewed_cross_project_prevention",
+  "source": {"repository": "Ngh1aa/Nova", "pull_request": 74, "commit": "7ccaa014f488f94a8f7d9842c37c06d455a21ea8", "evidence": "https://github.com/Ngh1aa/Nova/actions/runs/37311549086"},
+  "history_is_not_current_evidence": true,
+  "lessons": [
+    {"id": "UX-FOREGROUND", "owner": "semantic surface and foreground", "prevention": "Scan all affected routes for computed foreground collapsing into the rendered surface; inspect gradient/media separately.", "automation": "default rendered scan"},
+    {"id": "UX-OVERFLOW", "owner": "responsive layout", "prevention": "Render every affected template on desktop and mobile; declare additional pressure widths and states.", "automation": "default rendered scan"},
+    {"id": "UX-CASCADE", "owner": "shared styles and canonical renderer", "prevention": "Trace the winning reset/cascade and generator source before editing. Declare intended computed geometry; do not impose one project's radius on another.", "automation": "project style-range checks"},
+    {"id": "UX-TOGGLE", "owner": "interaction component", "prevention": "Verify names, keyboard operation, hit regions and state after return/reload for declared local/demo preferences. Destructive or remote actions require separate scenario authorization.", "automation": "project hit-target and toggle-persistence checks plus accessibility"},
+    {"id": "UX-ALIGNMENT", "owner": "row composition", "prevention": "Use the row layout appropriate to its children. Declare control alignment relative to the owner, not fixed page coordinates.", "automation": "project right-aligned checks"},
+    {"id": "UX-OVERLAY", "owner": "navigation and reviewer tooling", "prevention": "Keep diagnostics opt-in and verify critical controls are not covered. Inspect pseudo-elements and active navigation visually.", "automation": "project absent-or-hidden and unobscured checks"},
+    {"id": "UX-MOTION", "owner": "motion styles", "prevention": "Render reduce and no-preference modes; reduced motion must not reveal hidden native controls or remove state feedback.", "automation": "declared motion matrix and project opacity range"},
+    {"id": "UX-STATE-TRUTH", "owner": "state and summary renderer", "prevention": "Re-run critical flows and confirm counters, summaries and selected states reflect actual UI state. Use the existing State Coverage semantics, not visual appearance alone.", "automation": "target flow tests and State Coverage"}
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "checks": [
+    {"id": "NOVA-PAY-CTA", "kind": "style-range", "selector": ".v4-dark-pill", "property": "border-top-left-radius", "min": 12, "route": "/app.html?screen=transfer-recipient"},
+    {"id": "NOVA-CARDS-CTA", "kind": "style-range", "selector": ".v3-pill-btn", "property": "border-top-left-radius", "min": 12, "route": "/app.html?screen=cards"},
+    {"id": "NOVA-SWITCH-HIT", "kind": "hit-target", "selector": ".v3-switch", "min": 44, "route": "/app.html?screen=settings"},
+    {"id": "NOVA-SWITCH-SHAPE", "kind": "style-range", "selector": ".v3-switch > span", "property": "border-top-left-radius", "min": 12, "route": "/app.html?screen=settings"},
+    {"id": "NOVA-SWITCH-ALIGN", "kind": "right-aligned", "selector": ".v3-setting-row .v3-switch", "within": ".v3-setting-row", "route": "/app.html?screen=settings"},
+    {"id": "NOVA-NATIVE-INPUT", "kind": "style-range", "selector": ".v3-switch input", "property": "opacity", "max": 0, "route": "/app.html?screen=settings"},
+    {"id": "NOVA-DEMO-ALERTS", "kind": "toggle-persistence", "selector": "input[aria-label='Instant payment alerts']", "route": "/app.html?screen=settings"},
+    {"id": "NOVA-NO-REVIEWER-OVERLAY", "kind": "absent-or-hidden", "selector": "[data-nova-state-lab-launcher]"}
+  ]
+}

@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from core.runtime.flow_os.execution_advisor import build_execution_advice
+from core.memory.ux_feedback import recall_external_quality
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow
 from core.runtime.flow_os.target_truth import ROUTING_PRECEDENCE, build_truth_aware_context
 from core.runtime.flow_os.task_context import GoalInterpreter, NON_MUTATING_INTENTS
@@ -31,6 +32,7 @@ class ExternalTaskManifest:
     research_packet: dict[str, Any] = field(default_factory=dict)
     execution_advice: dict[str, Any] = field(default_factory=dict)
     evidence_boundary: dict[str, Any] = field(default_factory=dict)
+    ux_regression: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -220,7 +222,10 @@ def build_external_task_manifest(
         for gate in stage.gates
         if str(gate.get("require", "")).strip()
     ]
-    criteria = _unique(list(acceptance_criteria or []) + gate_criteria)
+    criteria = _unique(list(acceptance_criteria or []) + gate_criteria + [
+        "Run the rendered UX regression safety net on all affected routes/templates and declared viewports; missing state coverage remains UNKNOWN.",
+        "Verify changed component geometry, keyboard/persistence and state-summary invariants through the target UX contract or existing target regression tests; inspect screenshots before claiming visual PASS.",
+    ])
     visual_signature_required = _requires_visual_signature_contract(context, cleaned_goal)
 
     canonical_sources = _unique([
@@ -230,6 +235,8 @@ def build_external_task_manifest(
         *([VISUAL_SIGNATURE_CONTRACT] if visual_signature_required else []),
         "skills_UIUX/runtime/runtime-policy.json",
         manifest_flow["source"],
+        "docs/UX-FEEDBACK-REGRESSION.md",
+        "skills_UIUX/runtime/ux-regression-lessons.json",
     ])
 
     return ExternalTaskManifest(
@@ -246,6 +253,17 @@ def build_external_task_manifest(
         canonical_sources=canonical_sources,
         research_packet=_research_packet(context),
         execution_advice=execution_advice,
+        ux_regression={
+            "catalog": "skills_UIUX/runtime/ux-regression-lessons.json",
+            "policy": "docs/UX-FEEDBACK-REGRESSION.md",
+            "browser_evaluator": "uiux-factory/qa/scripts/ux-regression.mjs",
+            "target_contract": "uiux-ux-regression.json (optional project-declared invariants)",
+            "required_coverage": "all affected routes/templates, desktop/mobile and material states; declare omissions",
+            "project_style_is_not_inferred_from_other_projects": True,
+            "current_evidence_status": "UNKNOWN",
+            "target_invariant_coverage": "UNKNOWN_UNTIL_TARGET_RECEIPTS_EXIST",
+            "history": recall_external_quality(target_root, policy_doc),
+        },
         evidence_boundary={
             "manifest_is_not_qa_pass": True,
             "provider_self_report_is_not_gate_evidence": True,
