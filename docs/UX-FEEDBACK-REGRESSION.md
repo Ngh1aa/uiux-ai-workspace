@@ -45,6 +45,9 @@ promise that every future UX defect is impossible.
 `uiux-factory/qa/scripts/ux-regression.mjs` runs inside the existing browser-evidence lane.
 Every declared route uses desktop + mobile by default. `QA_VIEWPORTS_JSON` may override
 that matrix explicitly. `QA_MOTION_MODES` can declare `reduce,no-preference`.
+Screenshots use Playwright `animations: 'disabled'` to finish finite entrance animations
+before DOM/style inspection; the evidence records this choice. This proves the settled
+layout, not animation timing or motion quality. Those still need explicit flow review.
 
 The default scan inspects all visible DOM text (bounded to 5,000 candidates), composites
 known solid ancestor surfaces, and fails catastrophic contrast below 1.2:1, horizontal

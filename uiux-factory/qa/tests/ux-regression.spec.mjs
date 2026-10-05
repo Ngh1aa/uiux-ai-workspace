@@ -3,6 +3,13 @@ import { inspectRenderedUX, runUXRegression, validateUXContract, qaViewports } f
 
 const pageHTML = content => `<!doctype html><html><head><style>html{background:#fff;color:#17202b}body{margin:0;padding:20px}button,label{min-height:44px}label{display:flex;justify-content:space-between;padding:10px}.switch{width:44px;height:44px;border-radius:20px}button{background:#18242e;color:#fff;border-radius:16px}</style></head><body>${content}</body></html>`;
 
+test('stable capture completes finite entrances before rendered style inspection', async ({ page }) => {
+  await page.setContent(pageHTML('<style>@keyframes entrance{from{opacity:.1;transform:translateY(30px)}to{opacity:1;transform:none}}#enter{animation:entrance 10s both}</style><button id="enter">Continue</button>'));
+  await page.screenshot({ animations: 'disabled' });
+  expect(await page.locator('#enter').evaluate(element => getComputedStyle(element).opacity)).toBe('1');
+  expect((await inspectRenderedUX(page)).unknown.some(item => item.target === '#enter')).toBe(false);
+});
+
 test('browser and accessibility share desktop/mobile defaults and reject incomplete viewport matrices', () => {
   expect(qaViewports().map(item => item.name)).toEqual(['desktop', 'mobile']);
   for (const value of [[], [{ name: 'mobile', width: 0, height: 844 }], [{ name: 'x', width: 390, height: 844 }, { name: 'x', width: 1440, height: 1000 }]]) expect(() => qaViewports(JSON.stringify(value))).toThrow();
@@ -13,6 +20,15 @@ test('catches inherited white text on white without a selector whitelist', async
   const broken = await inspectRenderedUX(page);
   expect(broken.failures.some(item => item.target === '#balance' && item.requirement === 'UX-FOREGROUND')).toBe(true);
   await page.locator('main').evaluate(element => element.style.color = '#17202b');
+  expect((await inspectRenderedUX(page)).failures).toEqual([]);
+});
+
+test('light labels inheriting dark-section text fail on a local light surface', async ({ page }) => {
+  await page.setContent(pageHTML('<main style="background:#091b2a;color:#f6f2e9"><div style="display:flex"><span style="background:#d9e9ec">Hover</span><span style="background:#d9e9ec">Selected</span><span style="background:#d9e9ec">Saved</span></div></main>'));
+  const broken = await inspectRenderedUX(page);
+  expect(broken.failures).toHaveLength(3);
+  expect(broken.failures.map(item => item.ratio)).toEqual([1.118, 1.118, 1.118]);
+  await page.locator('span').evaluateAll(elements => elements.forEach(element => element.style.color = '#091b2a'));
   expect((await inspectRenderedUX(page)).failures).toEqual([]);
 });
 

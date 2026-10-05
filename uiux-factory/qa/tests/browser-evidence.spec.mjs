@@ -121,6 +121,14 @@ for (const route of routes) {
       await page.waitForLoadState('load');
       await page.evaluate(() => document.fonts.ready);
 
+      const safeRoute = route.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'root';
+      const viewportSuffix = requestedViewport ? `-${requestedViewport.name}` : '';
+      const evidenceStem = `${safeRoute}${viewportSuffix}${motionModes.length > 1 ? '-' + motion : ''}`;
+      const screenshotName = `${evidenceStem}-render.png`;
+      // Fast-forward finite entrances before collecting DOM/style receipts. This
+      // freezes capture only; reduced-motion declarations and interactions still run.
+      await page.screenshot({ path: path.join(artifactsDir, screenshotName), fullPage: true, animations: 'disabled' });
+
       const main = page.locator('main').first();
       const hasMain = (await main.count()) > 0;
       const evidenceRoot = hasMain ? main : page.locator('body').first();
@@ -194,12 +202,6 @@ for (const route of routes) {
           image
         };
       }));
-      const safeRoute = route.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'root';
-      const viewportSuffix = requestedViewport ? `-${requestedViewport.name}` : '';
-      const evidenceStem = `${safeRoute}${viewportSuffix}${motionModes.length > 1 ? '-' + motion : ''}`;
-      const screenshotName = `${evidenceStem}-render.png`;
-      await page.screenshot({ path: path.join(artifactsDir, screenshotName), fullPage: true });
-
       const uxRegression = await runUXRegression(page, { route, contract: uxContract });
       const uxArtifacts = path.join(artifactsDir, 'ux-regression');
       fs.mkdirSync(uxArtifacts, { recursive: true });
@@ -217,6 +219,7 @@ for (const route of routes) {
         computedStyle,
         elements,
         screenshot: screenshotName,
+        screenshotAnimations: 'disabled',
         consoleMessages,
         pageErrors,
         blockedRequests,
