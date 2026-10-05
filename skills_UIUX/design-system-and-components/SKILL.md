@@ -45,6 +45,8 @@ Chuyển brand + visual direction thành **reusable decisions**, không phải c
 
 ## Surface / state integrity gate
 
+For regressions in resets, computed component geometry and persisted controls, use the target-declared checks in [UX feedback and regression policy](../../docs/UX-FEEDBACK-REGRESSION.md). Generalize the failure mechanism, not another project's radius or palette.
+
 Với shared component hoặc theme/surface change:
 
 1. enumerate semantic surface contexts mà component xuất hiện: light, dark/inverse, media overlay, disabled, selected, etc.;

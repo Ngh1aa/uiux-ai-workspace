@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
+import { runUXRegression, validateUXContract, qaViewports } from '../scripts/ux-regression.mjs';
 
 test('B09/B10 matrix truth and failure reports survive real browser/image errors', async ({}, testInfo) => {
   const { runStateCoverage } = await import(new URL('../scripts/state-coverage.mjs', import.meta.url).href);
@@ -52,34 +53,19 @@ const routes = (process.env.QA_ROUTES || '/fixture/')
   .map(route => route.trim())
   .filter(Boolean);
 
-const viewportPayload = process.env.QA_VIEWPORTS_JSON || '';
-let requestedViewports = [null];
-if (viewportPayload) {
-  const parsed = JSON.parse(viewportPayload);
-  if (!Array.isArray(parsed) || parsed.length < 1 || parsed.length > 6) {
-    throw new Error('QA_VIEWPORTS_JSON must be an array with 1..6 entries');
-  }
-  requestedViewports = parsed.map(raw => {
-    if (!raw || typeof raw !== 'object') throw new Error('viewport entry must be an object');
-    const name = String(raw.name || '').trim().toLowerCase();
-    const width = Number(raw.width);
-    const height = Number(raw.height);
-    if (!/^[a-z0-9][a-z0-9_-]{0,31}$/.test(name)) throw new Error(`invalid viewport name: ${name}`);
-    if (!Number.isInteger(width) || !Number.isInteger(height)) throw new Error(`invalid viewport dimensions: ${name}`);
-    if (width < 240 || width > 4096 || height < 240 || height > 4096) {
-      throw new Error(`viewport dimensions out of bounds: ${name}`);
-    }
-    return { name, width, height };
-  });
-  if (new Set(requestedViewports.map(item => item.name)).size !== requestedViewports.length) {
-    throw new Error('viewport names must be unique');
-  }
-}
+const requestedViewports = qaViewports(process.env.QA_VIEWPORTS_JSON);
+const defaultUXContract = process.env.QA_TARGET_DIR ? path.join(process.env.QA_TARGET_DIR, 'uiux-ux-regression.json') : '';
+const uxContractPath = process.env.QA_UX_CONTRACT || (defaultUXContract && fs.existsSync(defaultUXContract) ? defaultUXContract : '');
+const uxContract = uxContractPath ? validateUXContract(JSON.parse(fs.readFileSync(uxContractPath, 'utf8'))) : null;
+const motionModes = (process.env.QA_MOTION_MODES || 'reduce').split(',').map(value => value.trim());
+if (!motionModes.length || motionModes.some(value => !['reduce', 'no-preference'].includes(value)) || new Set(motionModes).size !== motionModes.length) throw new Error('QA_MOTION_MODES must contain unique reduce/no-preference modes');
 
 for (const route of routes) {
   for (const requestedViewport of requestedViewports) {
+    for (const motion of motionModes) {
     const viewportLabel = requestedViewport ? ` @ ${requestedViewport.name}` : '';
-    test(`captures browser evidence for ${route}${viewportLabel}`, async ({ page }) => {
+    test(`captures browser evidence for ${route}${viewportLabel} @ ${motion}`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: motion });
       if (requestedViewport) {
         await page.setViewportSize({ width: requestedViewport.width, height: requestedViewport.height });
       }
@@ -132,6 +118,8 @@ for (const route of routes) {
       expect(response.ok(), `Navigation failed for ${route} with HTTP ${response.status()}`).toBeTruthy();
       expect(new URL(page.url()).origin, `Cross-origin navigation detected for ${route}`).toBe(allowedOrigin);
       expect(blockedRequests, `Unsafe cross-origin network request detected for ${route}`).toEqual([]);
+      await page.waitForLoadState('load');
+      await page.evaluate(() => document.fonts.ready);
 
       const main = page.locator('main').first();
       const hasMain = (await main.count()) > 0;
@@ -208,9 +196,14 @@ for (const route of routes) {
       }));
       const safeRoute = route.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'root';
       const viewportSuffix = requestedViewport ? `-${requestedViewport.name}` : '';
-      const evidenceStem = `${safeRoute}${viewportSuffix}`;
+      const evidenceStem = `${safeRoute}${viewportSuffix}${motionModes.length > 1 ? '-' + motion : ''}`;
       const screenshotName = `${evidenceStem}-render.png`;
       await page.screenshot({ path: path.join(artifactsDir, screenshotName), fullPage: true });
+
+      const uxRegression = await runUXRegression(page, { route, contract: uxContract });
+      const uxArtifacts = path.join(artifactsDir, 'ux-regression');
+      fs.mkdirSync(uxArtifacts, { recursive: true });
+      fs.writeFileSync(path.join(uxArtifacts, `${evidenceStem}.json`), JSON.stringify(uxRegression, null, 2));
 
       const evidence = {
         route,
@@ -228,7 +221,8 @@ for (const route of routes) {
         pageErrors,
         blockedRequests,
         failedRequests,
-        sanitizedRemoteStylesheets
+        sanitizedRemoteStylesheets,
+        uxRegression: { status: uxRegression.status, report: `ux-regression/${evidenceStem}.json`, scope: uxRegression.scope, visual_review: uxRegression.visual_review }
       };
       fs.writeFileSync(
         path.join(artifactsDir, `browser-evidence-${evidenceStem}.json`),
@@ -238,7 +232,11 @@ for (const route of routes) {
       expect(box).not.toBeNull();
       expect(pageErrors).toEqual([]);
       expect(consoleMessages.filter(item => item.type === 'error')).toEqual([]);
+      expect(blockedRequests, `Cross-origin request during UX checks for ${route}`).toEqual([]);
+      expect(uxRegression.failures, `Rendered UX safety net failed for ${route}`).toEqual([]);
+      expect(uxRegression.checks.filter(check => check.status === 'FAIL'), `Target UX contract failed for ${route}`).toEqual([]);
     });
+    }
   }
 }
 

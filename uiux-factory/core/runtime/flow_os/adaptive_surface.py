@@ -96,6 +96,17 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
 
     if intent == "build" and _contains_any(normalized, STRONG_PAGE_HINTS):
         return "PAGE"
+    # A project identity word (e.g. portfolio) must not turn a named rendered
+    # defect into a career/product rebuild when no larger scope was requested.
+    if (
+        intent in {"fix", "improve", "polish"}
+        and not _contains_any(normalized, FULL_PRODUCT_TERMS + FULL_REDESIGN_TERMS)
+        and _contains_any(normalized, (
+            "ux regression", "lỗi ux", "css reset", "white-on-white",
+            "chữ biến mất", "toggle", "công tắc", "component state",
+        ))
+    ):
+        return "FOCUSED"
     if has_product_cue:
         return "PRODUCT"
     if _contains_any(normalized, ATOMIC_HINTS):
