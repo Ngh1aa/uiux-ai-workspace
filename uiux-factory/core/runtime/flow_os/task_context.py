@@ -253,6 +253,7 @@ class GoalInterpreter:
         ("dashboard", ("dashboard", "admin panel", "analytics", "operations console", "fraud console", "admin console", "bảng điều khiển", "trang quản trị")),
         ("data-tables", ("data table", "case queue", "review queue", "transaction table", "transaction list", "case list")),
         ("motion", ("animation", "motion", "microinteraction", "hiệu ứng", "chuyển động")),
+        ("figma-artifact", ("figma", "figma file", "design file", "figma prototype", "design library", "component library")),
         ("i18n", ("multilingual", "multi-language", "bilingual", "đa ngôn ngữ", "song ngữ", "tiếng anh", "english version")),
         ("agentic-workflow", ("multi-agent", "multiagent", "subagent", "sub-agent", "agent workflow", "agentic workflow", "autonomous agent", "ai copilot", "ai assistant", "agent orchestration", "ai orchestration", "agent orchestrator")),
         ("user-validation", ("real users", "real user", "user research", "usability test", "usability testing", "moderated testing", "concept test", "concept testing", "user validation", "test with users", "research participants", "sponsor user", "interview users")),
