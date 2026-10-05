@@ -41,6 +41,10 @@
         {
           "when": {"features": ["stakeholder-governance"]},
           "skills": ["human-governance-and-playbacks"]
+        },
+        {
+          "when": {"features": ["figma-artifact"]},
+          "skills": ["figma-professional-artifact"]
         }
       ],
       "gates": [
@@ -85,6 +89,10 @@
         {
           "when": {"features": ["motion"]},
           "skills": ["motion-and-microinteractions"]
+        },
+        {
+          "when": {"features": ["figma-artifact"]},
+          "skills": ["figma-professional-artifact"]
         }
       ],
       "gates": [
@@ -100,6 +108,11 @@
         {
           "id": "ai-proof-boundary",
           "require": "AI section separates human-owned judgment from AI-assisted work and links to inspectable workflow/config/QA evidence where public and safe instead of relying on a generic tools list"
+        },
+        {
+          "id": "figma-artifact-contract",
+          "require": "when Figma proof is requested, the file exposes intentional page/section structure, foundations/tokens, reusable components and variants, auto-layout/responsive behavior, critical product states, prototype flows and reviewer/developer annotations instead of acting as a flat screen dump",
+          "when": {"features": ["figma-artifact"]}
         }
       ]
     },
@@ -162,6 +175,10 @@
         {
           "when": {"mode": ["production-candidate", "production"]},
           "skills": ["system-reality-and-production-readiness", "code-review-and-release"]
+        },
+        {
+          "when": {"features": ["figma-artifact"]},
+          "skills": ["figma-professional-artifact"]
         }
       ],
       "gates": [
@@ -180,6 +197,11 @@
         {
           "id": "truthful-portfolio-completion",
           "require": "independent concepts, missing user research, missing analytics/business outcomes and other evidence gaps remain clearly labeled; no polished artifact is presented as proof of unmeasured impact"
+        },
+        {
+          "id": "figma-artifact-quality",
+          "require": "when Figma proof is requested, representative flagship flows are reviewable without hidden context; naming, components/variants, variables/styles, auto layout, states, responsive frames, prototype links and handoff notes are coherent and no obvious detached or duplicate artifacts undermine the senior-craft claim",
+          "when": {"features": ["figma-artifact"]}
         }
       ]
     }
