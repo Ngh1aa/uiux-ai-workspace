@@ -247,6 +247,7 @@ class GoalInterpreter:
     )
 
     FEATURE_TERMS = (
+        ("html-to-figma-export", ("html to figma", "html-to-figma", "html→figma", "html → figma", "html to design", "html.to.design", "figma export", "figma-export", "dmaya.ai/html-to-figma")),
         ("search", ("search", "site search", "tìm kiếm")),
         ("forms", ("form", "contact form", "lead form", "checkout", "đăng ký", "liên hệ", "biểu mẫu", "thanh toán")),
         ("auth", ("login", "sign in", "account", "authentication", "đăng nhập", "tài khoản", "đăng ký tài khoản")),

@@ -64,6 +64,15 @@ def classify_change_surface(text: str, intent: str, scope: Iterable[str]) -> str
     scope_text = " ".join(normalized_scope)
     has_product_cue = _contains_any(normalized, PRODUCT_TERMS)
 
+    # Explicit multi-screen work has a shared route/state owner. A singular
+    # incidental "screen" token must not reduce a whole capture inventory to PAGE.
+    # A single screen and state-only requests retain their narrow classification.
+    if (
+        re.search(r"\b(?:multi[- ](?:screen|page)|all (?:screens|routes)|screen inventory)\b", normalized)
+        or any(int(match) > 1 for match in re.findall(r"\b(\d+)\s+(?:screens?|pages?|màn(?: hình)?)\b", normalized))
+    ):
+        return "PRODUCT"
+
     # Explicit whole-product language is stronger than inferred narrow scope tokens.
     # This prevents incidental scope matches from shrinking a clearly product-wide task.
     if intent in {"redesign", "rebuild"} and _contains_any(normalized, FULL_PRODUCT_TERMS):

@@ -182,6 +182,12 @@ class SpecialistComposer:
     }
 
     FEATURE_SKILLS: dict[str, dict[str, tuple[str, ...]]] = {
+        "html-to-figma-export": {
+            "research": ("html-to-figma-export",),
+            "design": ("html-to-figma-export",),
+            "implementation": ("html-to-figma-export",),
+            "qa": ("html-to-figma-export",),
+        },
         "dashboard": {
             "design": ("data-visualization-and-dashboard-ux", "data-tables-and-enterprise-ux"),
             "implementation": ("data-tables-and-enterprise-ux", "data-visualization-and-dashboard-ux"),
