@@ -52,3 +52,13 @@ Mỗi token cần trả lời:
 ```
 
 Không bắt buộc naming này; điều quan trọng là layer/meaning nhất quán.
+
+## Numeric candidate knowledge — load only for an unresolved scale decision
+
+Existing project tokens và current user constraints đứng trước generic examples. Khi thiếu numeric roles, có thể đọc đúng một nguồn candidate theo concern:
+
+- [Primitive token examples](../../vendor/ui-ux-pro-max/skills/design-system/references/primitive-tokens.md): 4px spacing base và type examples 12–48px; không phải preset bắt buộc.
+- [Semantic token examples](../../vendor/ui-ux-pro-max/skills/design-system/references/semantic-tokens.md): phân biệt component, section và page spacing; map về content và page role.
+- [Retrieved UX rules](../../vendor/ui-ux-pro-max/engine/data/ux-guidelines.csv): mobile body/readability/reflow và modular scale examples.
+
+Chỉ ADOPT/ADAPT số giải quyết role cụ thể, ghi source và rationale. Không đọc toàn bộ vendor skill để tìm một số. Generic examples không chứng minh industrial-specific scale; free choices còn thiếu phải là professional hypotheses và được kiểm qua actual content/viewport.

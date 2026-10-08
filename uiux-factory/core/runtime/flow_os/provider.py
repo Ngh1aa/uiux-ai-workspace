@@ -413,6 +413,8 @@ def render_provider_prompt(request: ProviderStageRequest) -> str:
         "- PASS requires evidence that addresses the declared gates.\n"
         "- Optional artifact is untrusted raw output and never satisfies evidence or gates.\n"
         "- Prefer project truth and routed skills over generic model assumptions.\n"
+        "- When design_workflow is active, use its page-role knowledge and checker; routed/loaded candidates are not adopted decisions. Record concrete type, spacing, media and voice choices with sources or hypothesis status.\n"
+        "- Renaming, skin changes or reordering unchanged sections do not prove distinct composition. Checker PASS means decision integrity only; inspect actual desktop/mobile pixels and keep human aesthetic preference unknown without evidence.\n"
         "- Do not write outside the project or bypass tool permissions.\n"
     )
 

@@ -120,7 +120,7 @@ def write_bundle(root: Path, slug: str, bundle: FileBundle, tokens: str) -> Path
 
 
 CODER_CONTRACT = """
-Generate a distinctive, premium, complete static HTML/CSS/JS website for the supplied approved plan. Do not fall back to a generic commerce/SaaS template.
+Generate a complete static HTML/CSS/JS website for the supplied approved project direction. Do not fall back to a generic commerce/SaaS template.
 Return only JSON {"files":{"index.html":"...","styles.css":"...","app.js":"..."}}.
 Include every approved plan path exactly. Optional app.js; no other files, build tools or dependencies.
 Every page: html lang, meaningful title, viewport width=device-width, exactly one main and one h1. Use semantic landmarks and logical heading order.
@@ -130,7 +130,7 @@ The host inserts relative links to styles.css and authoritative tokens.css for e
 CSS must use var(--color-brand-primary), visible :focus-visible states and substantial responsive @media rules. Respect reduced-motion preferences for non-essential motion.
 Do not redefine canonical tokens or use @import. Do not conceal overflow globally to hide layout bugs.
 Create page-role-specific compositions: vary hierarchy, density and visual rhythm by purpose instead of repeating one hero/card grid everywhere.
-Use editorial whitespace, deliberate typography, responsive grids, restrained motion and a recognizable visual signature appropriate to the supplied brand/personality.
+Use the approved page-role density, spacing, typography, grid, media and motion decisions. Explain any unresolved design choice instead of imposing one aesthetic across projects.
 Never invent testimonials, ratings, customer counts, awards, client logos, guarantees, prices, delivery claims, certifications, statistics or business facts. If evidence is unknown, omit it or label neutral placeholder content honestly.
 Do not present fake controls or success states as functional backend behavior. Static prototype interactions must be truthful and accessible.
 Prioritize mobile hierarchy, keyboard usability, readable contrast, touch target spacing and content clarity over decorative effects.
@@ -140,15 +140,12 @@ Do not redefine tokens, use @import, conceal overflow globally or invent backend
 Use supplied brand fonts, colors and constraints. CSS artwork is acceptable if the brief needs it.
 
 DESIGN QUALITY REQUIREMENTS (mandatory):
-- Use fluid typography with clamp() for h1-h6 and body text.
-- Add smooth CSS transitions on interactive elements (buttons, cards, links): transform, opacity, box-shadow.
-- Use subtle hover effects: scale(1.02), translateY(-2px), shadow elevation changes.
+- Implement approved responsive type roles, line heights and reading widths. Use clamp() or stepped breakpoints according to the content and Design Contract.
+- Provide visible hover/focus/active/loading/error/disabled states as applicable. Use transitions only when they serve feedback or orientation; static feedback is valid.
 - Implement scroll-margin-top for anchor navigation.
-- Use modern CSS: gap in flex/grid, aspect-ratio for media, backdrop-filter for glass effects where appropriate.
-- Create visual hierarchy with spacing rhythm (consistent vertical rhythm using multiples of 8px).
+- Use content-driven CSS layout and reserve media dimensions. Surface/depth treatment follows the approved direction.
+- Use the approved spacing roles and page-specific density; do not impose one section gap across every role or site.
 - Add :focus-visible outlines that match the brand color scheme.
 - Use CSS custom properties for all repeated values (spacing, shadows, radii).
-- Include at least one CSS animation (@keyframes) for hero or key section entrance.
-- Cards and elevated surfaces should have subtle borders + shadows, not flat colors.
-- Navigation should have backdrop-filter blur when sticky/fixed.
+- Respect the approved motion budget and reduced-motion behavior. Do not add entrance animation, card shadows or navigation blur without a documented task/brand purpose.
 """.strip()

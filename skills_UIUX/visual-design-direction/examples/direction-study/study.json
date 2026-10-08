@@ -1,0 +1,203 @@
+{
+  "status": "ILLUSTRATIVE_DIRECTION_STUDY",
+  "directions": {
+    "register": {
+      "desktop_typography": {
+        "family": "Arial, sans-serif",
+        "title": {
+          "size_px": 42,
+          "line_height": 1.18,
+          "weight": 700
+        },
+        "body": {
+          "size_px": 18,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "title_tracking_em": -0.025,
+        "reading_width_ch": 65
+      },
+      "desktop_density": {
+        "mode": "productive",
+        "section_gap_px": 40,
+        "group_gap_px": 20,
+        "object_padding_px": 20
+      },
+      "mobile_typography": {
+        "family": "Arial, sans-serif",
+        "title": {
+          "size_px": 32,
+          "line_height": 1.18,
+          "weight": 700
+        },
+        "body": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "title_tracking_em": -0.025,
+        "reading_width_ch": 36
+      },
+      "mobile_density": {
+        "mode": "productive",
+        "section_gap_px": 32,
+        "group_gap_px": 20,
+        "object_padding_px": 20
+      }
+    },
+    "sequence": {
+      "desktop_typography": {
+        "family": "Georgia, serif",
+        "title": {
+          "size_px": 68,
+          "line_height": 1.12,
+          "weight": 400
+        },
+        "body": {
+          "size_px": 18,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "title_tracking_em": -0.02,
+        "reading_width_ch": 65
+      },
+      "desktop_density": {
+        "mode": "expressive",
+        "section_gap_px": 72,
+        "group_gap_px": 32,
+        "object_padding_px": 32
+      },
+      "mobile_typography": {
+        "family": "Georgia, serif",
+        "title": {
+          "size_px": 42,
+          "line_height": 1.12,
+          "weight": 400
+        },
+        "body": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "title_tracking_em": -0.02,
+        "reading_width_ch": 36
+      },
+      "mobile_density": {
+        "mode": "expressive",
+        "section_gap_px": 48,
+        "group_gap_px": 32,
+        "object_padding_px": 24
+      }
+    }
+  },
+  "cases": {
+    "enterprise": {
+      "context": {
+        "website_type": "saas",
+        "domain": "enterprise-software",
+        "product_archetype": "enterprise-access-governance"
+      },
+      "category": "Software access governance",
+      "title": "A request has an owner. Execution has a result.",
+      "lead": "Evaluate a time-bound permission from request through approval to fulfillment.",
+      "cta": "Review this scope",
+      "object_title": "Illustrative access scenario",
+      "records": [
+        {
+          "title": "Request",
+          "facts": [
+            [
+              "Application",
+              "Reporting workspace"
+            ],
+            [
+              "Permission",
+              "Read-only for 14 days"
+            ]
+          ]
+        },
+        {
+          "title": "Decision",
+          "facts": [
+            [
+              "Owner",
+              "Morgan Chen"
+            ],
+            [
+              "Approval",
+              "Pending owner review"
+            ]
+          ]
+        },
+        {
+          "title": "Execution",
+          "facts": [
+            [
+              "Provisioning",
+              "Not started"
+            ],
+            [
+              "Revocation",
+              "Not confirmed"
+            ]
+          ]
+        }
+      ],
+      "boundary": "Approval does not mean active access. Expiry does not confirm revocation. Synthetic scenario; no system was changed."
+    },
+    "industrial": {
+      "context": {
+        "website_type": "corporate",
+        "domain": "industrial-services",
+        "product_archetype": "b2b-service-operations"
+      },
+      "category": "Automation and system integration",
+      "title": "Define the change. Make the handover explicit.",
+      "lead": "Evaluate a controls modernization scope from installed-base input to acceptance evidence.",
+      "cta": "Review this scope",
+      "object_title": "Illustrative modernization scope",
+      "records": [
+        {
+          "title": "Baseline",
+          "facts": [
+            [
+              "Input",
+              "Existing controller and I/O list"
+            ],
+            [
+              "Constraint",
+              "Shutdown window not yet agreed"
+            ]
+          ]
+        },
+        {
+          "title": "Engineering",
+          "facts": [
+            [
+              "Output",
+              "Migration scope and interface map"
+            ],
+            [
+              "Boundary",
+              "Mechanical redesign excluded"
+            ]
+          ]
+        },
+        {
+          "title": "Acceptance",
+          "facts": [
+            [
+              "Artifact",
+              "Functional test record"
+            ],
+            [
+              "Handover",
+              "As-built notes and open items"
+            ]
+          ]
+        }
+      ],
+      "boundary": "Illustrative service concept. Site safety, shutdown authorization and commissioning acceptance require an agreed project scope."
+    }
+  }
+}
