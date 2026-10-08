@@ -7,6 +7,7 @@ from typing import Any
 
 
 TRUSTED_EVIDENCE_TYPES = frozenset({
+    "design_contract_check",
     "file_read",
     "file_change",
     "search_result",
@@ -55,6 +56,8 @@ class EvidenceRecord:
 
 
 def _record_type(tool: str, result: Any) -> str:
+    if tool == 'check_design_decisions':
+        return 'design_contract_check'
     if tool in {"write_project_file", "write_artifact", "replace_text"}:
         return "file_change"
     if tool in {"search_text", "list_files_recursive"}:
@@ -142,7 +145,7 @@ def evidence_from_tool(stage_id: str, tool: str, result: Any) -> EvidenceRecord:
 
     evidence_type = _record_type(tool, result)
     data = dict(result) if isinstance(result, dict) else {"value": result}
-    if evidence_type in {"command_result", "validator_result"}:
+    if evidence_type in {"command_result", "validator_result", "design_contract_check"}:
         returncode = int(data.get("returncode", 0))
         status = "PASS" if returncode == 0 else "FAIL"
         summary = f"{tool} exited with code {returncode}"
@@ -274,6 +277,13 @@ def gate_evidence_errors(
             missing = sorted(required.difference(available))
             if missing:
                 errors.append(f"gate {gate_id} missing typed evidence: {', '.join(missing)}")
+            if 'design_contract_check' in required:
+                phase = gate.get('design_phase', 'design')
+                version = gate.get('design_contract_version')
+                if not any(record.type == 'design_contract_check' and record.status == 'PASS' and record.data.get('phase') == phase for record in effective):
+                    errors.append(f"gate {gate_id} requires canonical design check phase={phase}; file length, general validators and provider prose cannot substitute")
+                elif version and not any(record.type == 'design_contract_check' and record.status == 'PASS' and record.data.get('phase') == phase and record.data.get('contract_version') == version for record in effective):
+                    errors.append(f"gate {gate_id} requires design contract version={version}; a legacy layout receipt cannot satisfy multi-axis direction requirements")
             continue
         acceptable = role_defaults.get(agent, set(TRUSTED_EVIDENCE_TYPES))
         if not available.intersection(acceptable):

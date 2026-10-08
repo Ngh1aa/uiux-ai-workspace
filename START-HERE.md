@@ -68,6 +68,10 @@ Do not preload old A-series design notes, every skill, every flow, or every runt
 
 Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.json`.
 
+For active visual-design work, the stage packet now includes `design_workflow`: use structured project identity + one page-role lookup, then record adopted numeric/media/composition decisions and run its canonical integrity checker. A SKILL.md name in the packet is not proof the resource was retrieved or applied. The decision owner is `skills_UIUX/visual-design-direction/SKILL.md`; load its resources only for the current decision. Technical/contract PASS never proves aesthetic quality.
+
+New design contracts use v2: retrieve domain/page-role reference anatomy, explain each transfer, compare materially different free typography/density/object axes, and predeclare comprehension/distinctiveness questions. Use the comparison CLI or routed read-only provider tools to prepare labelled reviews and summarize capture-bound observations. Legacy v1 remains inspectable as layout-only evidence and cannot satisfy a v2 gate. Human participation and causal improvement remain UNKNOWN until appropriate evidence exists.
+
 ## External model-selection preflight
 
 For ChatGPT, Codex, Claude or another consumer UI where the model is selected manually before execution, the Factory exposes an advisory preflight instead of pretending it can switch the consumer model mid-run:

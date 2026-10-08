@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "status": "CURATED_CANDIDATES_NOT_ADOPTED",
+  "numeric_status": "PROFESSIONAL_HYPOTHESIS",
+  "sources": {
+    "local-direction": "skills_UIUX/visual-design-direction/SKILL.md",
+    "local-journey": "skills_UIUX/journey-driven-content-and-layout/SKILL.md",
+    "local-media": "skills_UIUX/asset-media-and-art-direction/SKILL.md",
+    "carbon": {"url": "https://www.carbondesignsystem.com/building-blocks/foundations/typography/type-sets", "checked": "2026-10-08", "principle": "Productive and expressive typography serve different information densities and moments; do not copy IBM's font or scale into every brand."},
+    "govuk": {"url": "https://design-system.service.gov.uk/styles/spacing/", "checked": "2026-10-08", "principle": "Spacing has relationships and responsive roles; published values belong to GOV.UK, not a universal website preset."},
+    "reflow": {"url": "https://www.w3.org/WAI/WCAG22/Understanding/reflow.html", "checked": "2026-10-08", "principle": "Check information and function at 320 CSS px; handle genuinely two-dimensional content separately."}
+  },
+  "foundations": {
+    "type_selection": ["Choose productive vs expressive roles from the current task, not the website label alone.", "Choose font by actual glyph coverage, legibility, numerals, weight availability, license and subject/brand fit. No prescribed family.", "Measure headline wraps and first decision-object position; a large clamp value is not a hierarchy proof.", "Set body, UI and metadata independently. Do not shrink explanatory body copy to fit a dense object."],
+    "spacing_selection": ["Separate page gutters, section rhythm, group gaps and component padding.", "Use tighter spacing within one decision object than between unrelated decisions.", "Try a denser and a more expressive arrangement when density is a free axis; choose from real content and media.", "Use a repeated base only when it helps alignment; optical exceptions need a reason."],
+    "art_direction": ["Specify subject, view distance, detail level, lighting, safe crop zone, caption and mobile treatment.", "Choose document, product, person, place or process media for the information it conveys.", "Use one icon family with visible labels; technical appearance alone is not evidence.", "Reserve one memorable visual commitment tied to subject matter; do not stack unrelated effects."],
+    "tone_of_voice": ["Use concrete nouns, actions and outputs. State what the buyer can evaluate or do next.", "Prefer one useful explanation to repeated brand adjectives or vague benefit slogans.", "Separate actual evidence, design concepts and unknown capabilities.", "Do not reproduce the vocabulary, numerical claims or identity of a reference supplier."],
+    "pressure_checks": ["320 CSS px reflow", "longest real heading and service name", "one primary CTA visible and named", "text-spacing override", "media no-cut zones", "hover/focus surface pairs"]
+  },
+  "role_aliases": {"home": "orientation", "service-detail": "offering", "project-detail": "evidence", "rfq": "conversion", "product-list": "catalog", "resource-detail": "editorial"},
+  "roles": {
+    "orientation": {
+      "question": "What is offered, is it relevant, and where should I start?",
+      "decision_object": "Offer/fit selector or concrete subject overview",
+      "compositions": [
+        {"id": "decision-ledger", "anatomy": "Offer statement integrated with a labelled need-to-scope register; CTA belongs to the selected scope.", "mobile": "Each record carries its own need, outputs and action; do not detach column headings."},
+        {"id": "subject-stage", "anatomy": "One dominant subject/process object with anchored explanations; a compact offer/action rail connects it to the buyer job.", "mobile": "Use an alternate crop or linear subject model with meaningful annotations before secondary explanations."}
+      ],
+      "type_px_candidates": {"display": {"desktop": [40, 80], "mobile": [28, 44]}, "section": {"desktop": [28, 44], "mobile": [24, 32]}, "body": [16, 20], "meta": [12, 14]},
+      "spacing_px_candidates": {"gutter": {"desktop": [24, 80], "mobile": [16, 24]}, "section": {"desktop": [48, 112], "mobile": [32, 64]}, "group": [16, 32], "component": [12, 24]},
+      "density": "Medium when fit is the entry decision; expressive only if the subject object earns the first viewport.",
+      "reject_when": "A decorative hero delays every actual decision; or a three-column feature grid merely repeats the headline.",
+      "sources": ["local-direction", "local-journey", "carbon", "govuk"]
+    },
+    "offering": {
+      "question": "Does this scope cover my inputs, constraints and required outputs?",
+      "decision_object": "Scope boundary, specification or deliverable package",
+      "compositions": [
+        {"id": "scope-register", "anatomy": "A navigable scope spine beside a dominant inputs/outputs/boundaries register; contextual action follows the agreed scope.", "mobile": "Move the scope spine into a concise local index, then keep each input/output relationship together."},
+        {"id": "annotated-object", "anatomy": "An actual product/process/artifact is the dominant object; structured annotations explain constraints and verification, not decorative features.", "mobile": "Replace spatial callouts with labelled object segments; retain important scope exclusions near the action."}
+      ],
+      "type_px_candidates": {"title": {"desktop": [32, 56], "mobile": [28, 40]}, "section": {"desktop": [24, 36], "mobile": [22, 28]}, "body": [16, 18], "meta": [12, 14]},
+      "spacing_px_candidates": {"gutter": {"desktop": [24, 64], "mobile": [16, 24]}, "section": {"desktop": [32, 72], "mobile": [24, 48]}, "group": [16, 24], "component": [12, 24]},
+      "density": "Productive within scope objects; breathing room between scope and evidence. Avoid oversized display competing with technical detail.",
+      "reject_when": "A generic banner and benefit cards substitute for measurable inputs, boundaries or specifications.",
+      "sources": ["local-direction", "local-journey", "carbon"]
+    },
+    "evidence": {
+      "question": "What happened or would happen, under which constraints, and what supports the claim?",
+      "decision_object": "Traceable case evidence or explicitly illustrative requirement-to-test chain",
+      "compositions": [
+        {"id": "evidence-dossier", "anatomy": "A case dossier pairs context and constraints with labelled artifact extracts and claim status; evidence is visually dominant.", "mobile": "Read context, artifact and interpretation as one chain; expose claim status alongside each item."},
+        {"id": "execution-sequence", "anatomy": "A sequence of decisions and verification artifacts explains causality; summary facts sit in a compact orientation rail.", "mobile": "Linear sequence with concise milestones; no sideways timeline required for essential content."}
+      ],
+      "type_px_candidates": {"title": {"desktop": [36, 64], "mobile": [28, 40]}, "section": {"desktop": [24, 36], "mobile": [22, 30]}, "body": [16, 20], "meta": [12, 14]},
+      "spacing_px_candidates": {"gutter": {"desktop": [24, 80], "mobile": [16, 24]}, "section": {"desktop": [40, 96], "mobile": [32, 64]}, "group": [16, 32], "component": [12, 24]},
+      "density": "Expressive for verified evidence artifacts; productive for interpretation and constraints.",
+      "reject_when": "A gallery, fabricated outcome or duplicated service hero is presented as case evidence.",
+      "sources": ["local-direction", "local-journey", "local-media"]
+    },
+    "conversion": {
+      "question": "What do you need from me, what happens next, and can I correct my input?",
+      "decision_object": "Form task and reviewable request",
+      "compositions": [
+        {"id": "task-spine", "anatomy": "A focused task column with a restrained progress/context rail; validation and review own the visual hierarchy.", "mobile": "Progress becomes concise status; fields and errors precede secondary guidance."},
+        {"id": "brief-workbench", "anatomy": "A request brief is progressively assembled beside input groups; the review object reflects the current task rather than marketing proof.", "mobile": "Alternate input and summary intentionally; preserve memory and edit paths without duplicated fields."}
+      ],
+      "type_px_candidates": {"title": {"desktop": [28, 44], "mobile": [24, 32]}, "section": {"desktop": [20, 28], "mobile": [20, 24]}, "body": [16, 18], "meta": [12, 14]},
+      "spacing_px_candidates": {"gutter": {"desktop": [24, 64], "mobile": [16, 24]}, "section": {"desktop": [24, 48], "mobile": [20, 40]}, "group": [16, 24], "component": [12, 20]},
+      "density": "Productive, one active task; no competing hero or proof collage.",
+      "reject_when": "Decorative content pushes the first field/error below the useful viewport or distracts from recovery.",
+      "sources": ["local-journey", "carbon", "reflow"]
+    },
+    "catalog": {
+      "question": "Which option fits my criteria and how can I compare it?",
+      "decision_object": "Comparable options, filters and distinguishing attributes",
+      "compositions": [
+        {"id": "attribute-register", "anatomy": "Options share stable comparison attributes in a register; controls change the eligible set with visible feedback.", "mobile": "Use labelled option records or an explicit comparison view; preserve active filter and empty states."},
+        {"id": "object-gallery", "anatomy": "Product objects lead when visual recognition is the decision; short attributes and comparison affordances stay attached.", "mobile": "Choose one/two columns from actual product and label size; preserve crop and readable attributes."}
+      ],
+      "type_px_candidates": {"title": {"desktop": [28, 48], "mobile": [24, 36]}, "section": {"desktop": [20, 28], "mobile": [20, 24]}, "body": [16, 18], "meta": [12, 14]},
+      "spacing_px_candidates": {"gutter": {"desktop": [24, 64], "mobile": [16, 24]}, "section": {"desktop": [24, 56], "mobile": [20, 40]}, "group": [12, 24], "component": [12, 24]},
+      "density": "Productive for specifications, expressive for visual selection; distinguish those buyer tasks.",
+      "reject_when": "Cards expose no distinguishing attributes, inconsistent image scales impede comparison, or decorative banners displace controls.",
+      "sources": ["local-journey", "local-media", "carbon"]
+    },
+    "editorial": {
+      "question": "What can I learn or use, and is the material reliable?",
+      "decision_object": "Readable argument, source, example or usable document",
+      "compositions": [
+        {"id": "reading-column", "anatomy": "A controlled reading measure with a local contents/source rail; document actions are contextual.", "mobile": "Contents becomes an accessible index; reading order and source references stay intact."},
+        {"id": "artifact-explainer", "anatomy": "A useful document or example leads and annotations explain how to interpret or use it; prose follows its structure.", "mobile": "Provide a readable extract and real download instead of shrinking a whole document image."}
+      ],
+      "type_px_candidates": {"title": {"desktop": [32, 56], "mobile": [26, 40]}, "section": {"desktop": [24, 32], "mobile": [22, 28]}, "body": [16, 20], "meta": [12, 14]},
+      "spacing_px_candidates": {"gutter": {"desktop": [24, 80], "mobile": [16, 24]}, "section": {"desktop": [32, 64], "mobile": [24, 48]}, "group": [16, 24], "component": [12, 24]},
+      "density": "Reading-oriented, narrower measure than overview; whitespace follows argument and examples.",
+      "reject_when": "A full-width text wall or a fake download replaces usable content.",
+      "sources": ["local-journey", "carbon", "reflow"]
+    }
+  },
+  "domain_profiles": [
+    {
+      "id": "industrial-service-operations",
+      "match": {"website_type": ["corporate"], "domain": ["industrial-services"], "product_archetype": ["b2b-service-operations"]},
+      "status": "PROFESSIONAL_HYPOTHESIS",
+      "objects": ["scope boundary", "control narrative", "interface register", "acceptance checklist", "migration/cutover plan"],
+      "voice": "Use equipment, operating need, interface, deliverable and acceptance language; avoid vague transformation or unverified reliability claims.",
+      "media": "Show identifiable equipment/interfaces or legible scope documents; caption conceptual diagrams; technical labels must carry information.",
+      "icons": "One legible outline family; status/error meaning has text and shape, not accent alone.",
+      "avoid": ["consumer plant-care or hydration profiles from lexical matching", "unverified safety certification or uptime proof", "decorative schematics with no scope meaning"],
+      "role_ids": ["orientation", "offering", "evidence", "conversion", "editorial"]
+    },
+    {
+      "id": "physical-product-commerce",
+      "match": {"website_type": ["ecommerce"], "domain": ["commerce", "retail", "ecommerce"], "product_archetype": ["physical-product-commerce"]},
+      "status": "PROFESSIONAL_HYPOTHESIS",
+      "objects": ["actual product", "variant comparison", "size/material information", "cart total and checkout state"],
+      "voice": "Use verifiable attributes and purchase constraints; avoid invented popularity, reviews, scarcity or shipping promises.",
+      "media": "Consistent product scale and identifying features; editorial imagery earns space only when it helps selection.",
+      "icons": "One family for familiar controls with labels for unfamiliar actions.",
+      "avoid": ["industrial scope documents as decorative retail styling", "a large brand hero before every category task"],
+      "role_ids": ["orientation", "catalog", "offering", "conversion", "editorial"]
+    },
+    {
+      "id": "career-portfolio",
+      "match": {"website_type": ["portfolio"], "domain": ["portfolio", "career"], "product_archetype": ["portfolio-career", "career-portfolio"]},
+      "status": "PROFESSIONAL_HYPOTHESIS",
+      "objects": ["actual work artifact", "role contribution", "decision evidence", "case constraint", "career/contact path"],
+      "voice": "Describe the role, choices and evidence precisely; separate team output, individual contribution and planned validation.",
+      "media": "Show work at readable scale with context; prototype screenshots do not imply native Figma systems or shipped impact.",
+      "icons": "Use sparingly for navigation; let work artifacts carry identity.",
+      "avoid": ["fabricated impact metrics", "one universal case-study banner hiding the work", "commerce/luxury skin applied without subject rationale"],
+      "role_ids": ["orientation", "evidence", "conversion", "editorial"]
+    },
+    {
+      "id": "enterprise-software-governance",
+      "match": {
+        "website_type": [
+          "saas",
+          "webapp"
+        ],
+        "domain": [
+          "enterprise-software",
+          "identity-governance"
+        ],
+        "product_archetype": [
+          "b2b-service-operations",
+          "enterprise-access-governance"
+        ]
+      },
+      "status": "PROFESSIONAL_HYPOTHESIS",
+      "objects": [
+        "access request with scope and expiry",
+        "review decision and accountable owner",
+        "provisioning result distinct from approval",
+        "access review evidence",
+        "revocation result and event history"
+      ],
+      "voice": "Name the actor, permission, scope, duration, decision and execution status. Separate approval from fulfillment and expiry from verified revocation; describe simulation and unknown integration coverage explicitly.",
+      "media": "Use legible working workflow objects and event history with synthetic data. Mobile turns spatial annotations into a linear request, decision and fulfillment chain; keep status and next action together.",
+      "icons": "One labelled outline family; status combines text, shape and color. Product icons identify software objects, not physical credentials.",
+      "avoid": [
+        "door, reader or wallet hardware used to imply software governance",
+        "cyber decoration replacing permission semantics",
+        "invented compliance certification or universal connector provisioning",
+        "approval presented as already active permission"
+      ],
+      "role_ids": [
+        "orientation",
+        "offering",
+        "evidence",
+        "conversion",
+        "catalog",
+        "editorial"
+      ]
+    }
+  ]
+}

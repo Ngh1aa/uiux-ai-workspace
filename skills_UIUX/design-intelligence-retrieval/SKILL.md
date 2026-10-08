@@ -28,6 +28,7 @@ Do not route this skill for a trivial local fix when project truth already deter
 - Prefer 2–5 meaningful terms plus one useful product/platform/interaction constraint.
 - Do not include secrets, private user data or unnecessary project content in queries or persisted output.
 - Verify returned domain/category, top result identity and fit before adopting it.
+- The local adapter exposes `factory_retrieval_review` in design-system JSON and a provenance header in text. `NO_VERIFIED_PRODUCT_MATCH` / `NO_CATEGORY_REASONING_PROFILE` means the engine used generic fallback; `MATCHED_CANDIDATE` is only a lexical/profile match, with semantic fit still `UNVALIDATED`. Review source identities, not just the displayed style/font names.
 - If output is empty or off-topic, retry **once** with a narrower query or explicit domain/stack.
 - If the retry still fails, record `no verified match`; use local/project guidance as fallback and do not pretend the database returned evidence.
 - Do not persist unverified retrieval output.
@@ -57,6 +58,14 @@ If stack-specific guidance is not material, do not spend context detecting it.
 ```bash
 python design-intelligence-retrieval/scripts/query.py "<domain product audience role character>" --design-system
 ```
+
+Khi project identity đã có, ưu tiên structured query để tránh lexical guess:
+
+```bash
+python skills_UIUX/design-intelligence-retrieval/scripts/query.py "<focused domain words>" --design-system --website-type corporate --project-domain industrial-services --product-archetype b2b-service-operations --page-role offering --json
+```
+
+`--project-domain` khác `--domain` (upstream focused search). `--page-role` nhận orientation/offering/evidence/conversion/catalog/editorial hoặc declared aliases home/service-detail/project-detail/rfq/product-list/resource-detail. `factory_design_knowledge` chứa exact-context domain candidate, page-job anatomy, type/spacing ranges, density, voice/media rules và source digest. Không tự adopt palette/font từ upstream. Unknown identity → NO_CURATED_DOMAIN_PROFILE; contradictory structured fields → IDENTITY_CONFLICT; candidate fit vẫn UNVALIDATED. Keep upstream payload riêng để chẩn đoán, không merge consumer-app semantics vào domain thật. Current data covers three domain profiles, not all industries.
 
 Focused examples:
 ```bash

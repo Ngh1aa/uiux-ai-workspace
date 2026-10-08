@@ -94,6 +94,12 @@
           "require": "role identity, hero proposition, flagship order, case-study evidence structure, AI-assisted workflow explanation, scan-depth hierarchy and preserve/change decisions are concrete before broad implementation"
         },
         {
+          "id": "design-decision-integrity",
+          "require": "canonical decision checker verifies numeric roles, source traces and distinct internal composition topology; integrity is not aesthetic acceptance",
+          "evidence_types": ["design_contract_check"],
+          "design_phase": "design", "design_contract_version": "2.0"
+        },
+        {
           "id": "case-study-product-reasoning",
           "require": "flagship cases expose problem/context, evidence class, product reasoning, decision/trade-off, system/design response, working proof and validation/outcome boundary where applicable"
         },
@@ -168,6 +174,12 @@
         {
           "id": "rendered-recruiter-path",
           "require": "actual rendered homepage and representative case routes are inspected at desktop/mobile viewports for hierarchy, overflow, broken media, navigation and critical interaction states"
+        },
+        {
+          "id": "design-render-integrity",
+          "require": "decision contract references inspected desktop/mobile alternatives with capture digests and critique; quality remains a separate review",
+          "evidence_types": ["design_contract_check"],
+          "design_phase": "rendered", "design_contract_version": "2.0"
         },
         {
           "id": "critical-route-link-audit",

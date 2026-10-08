@@ -343,6 +343,12 @@
           "require": "page-role compositions, typography, imagery, interaction, mobile transformation, prototype signature moment when applicable, and do/don't rules are concrete before broad implementation"
         },
         {
+          "id": "design-decision-integrity",
+          "require": "canonical decision checker verifies numeric roles, source traces and distinct internal composition topology; integrity is not aesthetic acceptance",
+          "evidence_types": ["design_contract_check"],
+          "design_phase": "design", "design_contract_version": "2.0"
+        },
+        {
           "id": "solution-validation",
           "require": "for evidence-led or production-learning work, consequential solution hypotheses have direct validation evidence or are explicitly labeled PLANNED/UNVALIDATED before irreversible implementation",
           "when": {
@@ -583,6 +589,12 @@
         {
           "id": "rendered-qa",
           "require": "actual rendered pixels are inspected across representative routes/viewports and obvious shared-owner defects are checked across affected routes"
+        },
+        {
+          "id": "design-render-integrity",
+          "require": "decision contract references inspected desktop/mobile alternatives with capture digests and concrete critique; human preference remains unknown",
+          "evidence_types": ["design_contract_check"],
+          "design_phase": "rendered", "design_contract_version": "2.0"
         },
         {
           "id": "prototype-experience-qa",
