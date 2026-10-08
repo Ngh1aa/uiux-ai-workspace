@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0",
+  "contract_sha256": "0aa259681e37f2679bdf10ea36d64660aee481dcbafef11f3282ca02c0d7bad8",
+  "route": "/study?case=industrial",
+  "seed": 27,
+  "facilitator": {
+    "labels": {
+      "A": "register",
+      "B": "sequence"
+    },
+    "protocol": {
+      "buyer_task": "Plant team must understand what is assessed, engineered and commissioned, and what remains outside scope.",
+      "held_constant": {
+        "audience": "industrial-services",
+        "content": "study.json semantic brief SHA256=c8e1e74b37cae2b9dad312afb22a46a6bcbfb6ca24674dec15692a88628da449",
+        "claims": "Illustrative/synthetic only; identical boundary text",
+        "cta": "Review this scope",
+        "state": "Static scoped illustration; no fulfillment/submission",
+        "assets": "Same text and DOM facts; no stock photos or vendor assets",
+        "viewports": "1440\u00d71000,390\u00d7900,320\u00d7900; same width/height for every candidate"
+      },
+      "questions": [
+        {
+          "id": "scope",
+          "dimension": "comprehension",
+          "prompt": "What is the input/permission, who or what controls the decision, and what remains unresolved?",
+          "criteria": [
+            "Identifies the request permission or installed-base input",
+            "Distinguishes the decision/scope boundary from completed execution"
+          ]
+        },
+        {
+          "id": "identity",
+          "dimension": "distinctiveness",
+          "prompt": "Without the logo or color, which object relationship identifies this domain? Is there an ownable visual signature?",
+          "criteria": [
+            "Names a domain-specific information relationship",
+            "Identifies a visual signature beyond a conventional register or three-step sequence"
+          ]
+        }
+      ]
+    },
+    "captures": [
+      {
+        "route": "/study?case=industrial",
+        "composition_id": "register",
+        "file": "screenshots/industrial-register-1440.png",
+        "sha256": "ae62ac6e0294ecb1ae5410724245a5c5acfe06639a871fa8072ac174a823d066",
+        "width": 1440,
+        "viewport_height": 1000,
+        "inspected": true,
+        "review_source": "agent-heuristic",
+        "critique": {
+          "hierarchy": "CTA precedes scope; first object starts at 454.0px. Scope/boundary labels remain present.",
+          "typography": "Compact sans42 retains fewer title lines.",
+          "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+          "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+          "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+        }
+      },
+      {
+        "route": "/study?case=industrial",
+        "composition_id": "register",
+        "file": "screenshots/industrial-register-390.png",
+        "sha256": "6ff6b2f8d77fbab3b7332252bd3f54f55e70ec69479c492584c083cc41469d11",
+        "width": 390,
+        "viewport_height": 900,
+        "inspected": true,
+        "review_source": "agent-heuristic",
+        "critique": {
+          "hierarchy": "CTA precedes scope; first object starts at 451.1px. Scope/boundary labels remain present.",
+          "typography": "Compact sans32 retains fewer title lines.",
+          "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+          "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+          "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+        }
+      },
+      {
+        "route": "/study?case=industrial",
+        "composition_id": "register",
+        "file": "screenshots/industrial-register-320.png",
+        "sha256": "57a70608531d198bfb1058fabb50360506853ba6298aeb942e5f4b88de279df6",
+        "width": 320,
+        "viewport_height": 900,
+        "inspected": true,
+        "review_source": "agent-heuristic",
+        "critique": {
+          "hierarchy": "CTA precedes scope; first object starts at 475.9px. Scope/boundary labels remain present.",
+          "typography": "Compact sans32 retains fewer title lines.",
+          "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+          "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+          "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+        }
+      },
+      {
+        "route": "/study?case=industrial",
+        "composition_id": "sequence",
+        "file": "screenshots/industrial-sequence-1440.png",
+        "sha256": "c65bf638d0104940cefe429bd7bdacad061a798aa335e7fd65fef1fb641aca2b",
+        "width": 1440,
+        "viewport_height": 1000,
+        "inspected": true,
+        "review_source": "agent-heuristic",
+        "critique": {
+          "hierarchy": "CTA precedes scope; first object starts at 539.3px. Scope/boundary labels remain present.",
+          "typography": "Serif68 emphasizes narrative but spends more height before scope.",
+          "spacing": "Actual object padding 32px; compact matrix and more open numbered chain have different group rhythm.",
+          "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+          "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+        }
+      },
+      {
+        "route": "/study?case=industrial",
+        "composition_id": "sequence",
+        "file": "screenshots/industrial-sequence-390.png",
+        "sha256": "1ebe1476fbb5e3759fcafbe4d229be89d86e801597f26f25f783307532d09a03",
+        "width": 390,
+        "viewport_height": 900,
+        "inspected": true,
+        "review_source": "agent-heuristic",
+        "critique": {
+          "hierarchy": "CTA precedes scope; first object starts at 494.9px. Scope/boundary labels remain present.",
+          "typography": "Serif42 makes more headline lines at320; subject object arrives later.",
+          "spacing": "Actual object padding 24px; compact matrix and more open numbered chain have different group rhythm.",
+          "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+          "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+        }
+      },
+      {
+        "route": "/study?case=industrial",
+        "composition_id": "sequence",
+        "file": "screenshots/industrial-sequence-320.png",
+        "sha256": "b83b1a3dc905be88c30b8744c769b73729e98dc1c4628525e8d78fd04903dc07",
+        "width": 320,
+        "viewport_height": 900,
+        "inspected": true,
+        "review_source": "agent-heuristic",
+        "critique": {
+          "hierarchy": "CTA precedes scope; first object starts at 566.7px. Scope/boundary labels remain present.",
+          "typography": "Serif42 makes more headline lines at320; subject object arrives later.",
+          "spacing": "Actual object padding 24px; compact matrix and more open numbered chain have different group rhythm.",
+          "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+          "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+        }
+      }
+    ],
+    "ordering": "Assign contiguous session_index from zero; rotate label order by seed + session index. This balances first exposure within one cohort."
+  },
+  "reviewer": {
+    "buyer_task": "Plant team must understand what is assessed, engineered and commissioned, and what remains outside scope.",
+    "labels": [
+      "A",
+      "B"
+    ],
+    "questions": [
+      {
+        "id": "scope",
+        "dimension": "comprehension",
+        "prompt": "What is the input/permission, who or what controls the decision, and what remains unresolved?"
+      },
+      {
+        "id": "identity",
+        "dimension": "distinctiveness",
+        "prompt": "Without the logo or color, which object relationship identifies this domain? Is there an ownable visual signature?"
+      }
+    ],
+    "instruction": "Show only this reviewer packet and anonymously labelled captures. Answer before seeing another candidate. Do not disclose answer criteria or author preference."
+  },
+  "status": "PLANNED_VALIDATION",
+  "human_preference": "UNKNOWN",
+  "causal_effect": "UNKNOWN",
+  "boundary": "Labels do not prove blinding. A facilitator who also authored or grades the candidates must report heuristic review. Human provenance remains a reviewer declaration."
+}

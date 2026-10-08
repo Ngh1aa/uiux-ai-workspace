@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "returncode": 0,
+  "phase": "rendered",
+  "contract_version": "2.0",
+  "errors": [],
+  "page_count": 2,
+  "verification": "DECISION_INTEGRITY_ONLY",
+  "aesthetic_quality": "UNKNOWN",
+  "human_preference": "UNKNOWN",
+  "comparison_reviews": [
+    {
+      "route": "/study?case=enterprise",
+      "status": "HEURISTIC_ONLY",
+      "human_review_count": 0
+    },
+    {
+      "route": "/study?case=industrial",
+      "status": "HEURISTIC_ONLY",
+      "human_review_count": 0
+    }
+  ],
+  "direction_comparison": "MULTI_AXIS_DECLARED"
+}

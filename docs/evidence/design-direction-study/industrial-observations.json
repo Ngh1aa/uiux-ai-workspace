@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "plan_sha256": "05a852c34be8eacfe0604d968ea3737bbf9ac8598502e30a4bf0fb1097bcf285",
+  "reviews": [
+    {
+      "reviewer_id": "author-agent",
+      "role": "Same author using an IT/procurement lens; not a recruited practitioner",
+      "source": "agent-heuristic",
+      "independent": false,
+      "presentation_order": [
+        "B",
+        "A"
+      ],
+      "answers": [
+        {
+          "label": "A",
+          "question_id": "scope",
+          "response": "Existing controller/I/O input; shutdown unknown; interface/migration output, mechanical redesign excluded, test record and handover notes.",
+          "criteria_met": [
+            true,
+            true
+          ],
+          "observed_element": "Scope fields and boundary text in register object",
+          "capture_sha256": "6ff6b2f8d77fbab3b7332252bd3f54f55e70ec69479c492584c083cc41469d11"
+        },
+        {
+          "label": "A",
+          "question_id": "identity",
+          "response": "Domain identified through specific permission/fulfillment or baseline/test/handover relationships. The register/sequence treatment itself could serve another vendor and is not an ownable signature.",
+          "criteria_met": [
+            true,
+            false
+          ],
+          "observed_element": "Scope fields and boundary text in register object",
+          "capture_sha256": "6ff6b2f8d77fbab3b7332252bd3f54f55e70ec69479c492584c083cc41469d11"
+        },
+        {
+          "label": "B",
+          "question_id": "scope",
+          "response": "Existing controller/I/O input; shutdown unknown; interface/migration output, mechanical redesign excluded, test record and handover notes.",
+          "criteria_met": [
+            true,
+            true
+          ],
+          "observed_element": "Scope fields and boundary text in sequence object",
+          "capture_sha256": "1ebe1476fbb5e3759fcafbe4d229be89d86e801597f26f25f783307532d09a03"
+        },
+        {
+          "label": "B",
+          "question_id": "identity",
+          "response": "Domain identified through specific permission/fulfillment or baseline/test/handover relationships. The register/sequence treatment itself could serve another vendor and is not an ownable signature.",
+          "criteria_met": [
+            true,
+            false
+          ],
+          "observed_element": "Scope fields and boundary text in sequence object",
+          "capture_sha256": "1ebe1476fbb5e3759fcafbe4d229be89d86e801597f26f25f783307532d09a03"
+        }
+      ],
+      "preferred_label": null,
+      "tradeoff": "Compact scope is visible earlier on mobile. Expressive type highlights narrative. Both lack a strong unique visual signature; no preference or comprehension effect from real buyers measured."
+    }
+  ]
+}

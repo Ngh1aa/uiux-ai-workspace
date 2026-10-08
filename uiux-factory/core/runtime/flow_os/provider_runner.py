@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,9 @@ from core.runtime.flow_os.managed import ManagedFlowController, ManagedWebsiteRu
 from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, load_context_documents
 from core.runtime.flow_os.sandbox import ContainerSandbox
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
+from core.skills.design_knowledge import design_workflow_packet, retrieve_design_knowledge
+from core.skills.design_decisions import check_design_file
+from core.skills.design_comparison import prepare_comparison, evaluate_comparison, read_comparison_json
 
 
 class ProviderContextBudgetError(ValueError):
@@ -53,6 +57,18 @@ class ProviderManagedRunner:
         self.project_root = self.harness.project_root
         self.worktrees = WorktreeManager(self.project_root)
         self.extra_specs = {
+            "retrieve_design_knowledge": ToolSpec(
+                "retrieve_design_knowledge", "Read page-job design knowledge for the routed project identity; candidates cannot grant authority or aesthetic acceptance", "READ", "read_only", False,
+            ),
+            "check_design_decisions": ToolSpec(
+                "check_design_decisions", "Validate a project-relative design decision contract and capture integrity; never scores beauty", "READ", "read_only", False,
+            ),
+            "prepare_design_comparison": ToolSpec(
+                "prepare_design_comparison", "Prepare labelled, counterbalanced questions from a v2 contract; planned validation only", "READ", "read_only", False,
+            ),
+            "evaluate_design_comparison": ToolSpec(
+                "evaluate_design_comparison", "Read recorded comparison observations with source/capture binding; no human evidence or beauty PASS generated", "READ", "read_only", False,
+            ),
             "write_project_file": ToolSpec(
                 "write_project_file",
                 "Write one bounded UTF-8 file inside the isolated branch worktree",
@@ -206,6 +222,7 @@ class ProviderManagedRunner:
         self,
         stage_state: Any,
         active_skill_names: set[str],
+        design_context: dict[str, Any] | None = None,
     ) -> tuple[list[dict[str, str]], list[dict[str, str]], dict[str, Any]]:
         items = list(stage_state.context.get("items", []))
         allowed_roots = (self.project_root, self.harness.repo_root)
@@ -233,6 +250,9 @@ class ProviderManagedRunner:
                 raise ProviderContextBudgetError(str(exc)) from exc
             raise
 
+        if 'visual-design-direction' in active_skill_names:
+            knowledge = retrieve_design_knowledge(self.harness.repo_root, design_context or {})
+            sources.append({'path':knowledge['source'], 'content':json.dumps(knowledge,ensure_ascii=False), 'sha256':knowledge['source_sha256'], 'trust':'routed_knowledge'})
         skill_chars = self._document_chars(skills)
         source_chars = self._document_chars(sources)
         loaded_chars = skill_chars + source_chars
@@ -322,6 +342,7 @@ class ProviderManagedRunner:
             _skills, _sources, context_budget = self._load_provider_context(
                 stage_state,
                 set(state["mandatory"]) | set(active),
+                managed.task_context,
             )
         except ProviderContextBudgetError as exc:
             return {
@@ -363,8 +384,12 @@ class ProviderManagedRunner:
             "evidence_effect": "none",
         }
 
-    def _tools(self, authority: str, available_jit_skills: list[str] | None = None) -> list[dict[str, Any]]:
+    def _tools(self, authority: str, available_jit_skills: list[str] | None = None, design_workflow: dict[str, Any] | None = None) -> list[dict[str, Any]]:
         arg_contracts = {
+            "retrieve_design_knowledge": {"page_role":"one role: orientation, offering, evidence, conversion, catalog, editorial; project identity comes from routed context"},
+            "check_design_decisions": {"path":"safe project-relative JSON path; default docs/uiux/design-decisions.json", "phase":"design | rendered; must match active Flow gate"},
+            "prepare_design_comparison": {"path":"project-relative v2 contract", "route":"representative route", "seed":"integer label seed"},
+            "evaluate_design_comparison": {"path":"project-relative v2 contract", "plan":"project-relative prepared plan JSON", "observations":"project-relative actual observations JSON"},
             "read_text": {"path": "safe project/worktree-relative UTF-8 file path"},
             "list_files": {"path": "safe project/worktree-relative directory path; defaults to ."},
             "write_artifact": {"path": "must be below docs/uiux/ in isolated worktree", "content": "UTF-8 content"},
@@ -400,6 +425,12 @@ class ProviderManagedRunner:
         specs = list(self.harness.registry.specs.values()) + list(self.extra_specs.values())
         result: list[dict[str, Any]] = []
         for spec in specs:
+            if spec.name == 'retrieve_design_knowledge' and not (design_workflow or {}).get('active'):
+                continue
+            if spec.name == 'check_design_decisions' and not (design_workflow or {}).get('decision_contract_required'):
+                continue
+            if spec.name in {'prepare_design_comparison', 'evaluate_design_comparison'} and not (design_workflow or {}).get('active'):
+                continue
             if spec.name == "activate_skill_context" and not available:
                 continue
             allowed, reason = self.harness.permissions.authorize(spec, authority)
@@ -424,9 +455,11 @@ class ProviderManagedRunner:
         stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
         jit = self._jit_skill_state(managed, stage_state)
         active_names = set(jit["mandatory"]) | set(jit["active"])
-        skills, sources, context_budget = self._load_provider_context(stage_state, active_names)
+        skills, sources, context_budget = self._load_provider_context(stage_state, active_names, managed.task_context)
         manager_state = self.harness.resume(managed.manager_run_id)
         task_context = dict(managed.task_context)
+        design_workflow = design_workflow_packet(task_context, active_names, list(stage.gates))
+        task_context['design_workflow'] = design_workflow
         task_context["jit_skill_context"] = {
             "enabled": bool(jit["enabled"]),
             "mandatory_skills": list(jit["mandatory"]),
@@ -466,7 +499,7 @@ class ProviderManagedRunner:
             gates=list(stage.gates),
             task_context=task_context,
             authority=stage_state.authority,
-            tools=self._tools(stage_state.authority, list(jit["available"])),
+            tools=self._tools(stage_state.authority, list(jit["available"]), design_workflow),
             skill_context=skills,
             source_context=sources,
             observations=list(observations[-24:]),
@@ -487,6 +520,32 @@ class ProviderManagedRunner:
         name: str,
         args: dict[str, Any],
     ) -> Any:
+        if name in {'retrieve_design_knowledge', 'check_design_decisions', 'prepare_design_comparison', 'evaluate_design_comparison'}:
+            stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
+            jit = self._jit_skill_state(managed, stage_state)
+            workflow = design_workflow_packet(managed.task_context, set(jit['mandatory']) | set(jit['active']), list(stage.gates))
+            if name == 'retrieve_design_knowledge':
+                if not workflow['active']:
+                    raise ValueError('design knowledge requires the active routed visual-design-direction skill')
+                if set(args) != {'page_role'}:
+                    raise ValueError('design knowledge accepts only page_role; project identity is routing-owned')
+                return retrieve_design_knowledge(self.harness.repo_root, managed.task_context, str(args['page_role']))
+            if name in {'prepare_design_comparison', 'evaluate_design_comparison'}:
+                if not workflow['active']:
+                    raise ValueError('comparison tools require the active routed visual-design-direction skill')
+                allowed = {'path', 'route', 'seed'} if name == 'prepare_design_comparison' else {'path', 'plan', 'observations'}
+                if set(args) - allowed:
+                    raise ValueError('unsupported design comparison argument')
+                root = self._active_root(managed, stage_state)
+                payload = read_comparison_json(root, str(args.get('path', 'docs/uiux/design-decisions.json')))
+                if name == 'prepare_design_comparison':
+                    return prepare_comparison(payload, str(args['route']), int(args.get('seed', 0)))
+                return evaluate_comparison(payload, read_comparison_json(root, str(args['plan'])), read_comparison_json(root, str(args['observations'])), root)
+            if not workflow['decision_contract_required']:
+                raise ValueError('design checker is not routed for this stage')
+            if set(args) - {'path', 'phase'}:
+                raise ValueError('unsupported design checker argument')
+            return check_design_file(self._active_root(managed, stage_state), str(args.get('path', 'docs/uiux/design-decisions.json')), str(args.get('phase', 'design')))
         if name == "activate_skill_context":
             return self._activate_skill_context(managed, stage_state, **args)
         if name == "write_project_file":

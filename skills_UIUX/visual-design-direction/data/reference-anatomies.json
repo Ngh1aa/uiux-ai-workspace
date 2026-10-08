@@ -1,0 +1,465 @@
+{
+  "schema_version": "1.0",
+  "status": "CURATED_TRANSFERS_NOT_ADOPTED",
+  "sources": {
+    "rockwell-modernization": {
+      "url": "https://www.rockwellautomation.com/en-us/capabilities/industrial-maintenance-support/modernization.html",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "modernization reason",
+        "installed-base evaluation",
+        "planning",
+        "execution",
+        "related services"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "thomas-suppliers": {
+      "url": "https://www.thomasnet.com/suppliers",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "supplier search",
+        "capability categories",
+        "supplier evaluation",
+        "sourcing action"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "xometry-start": {
+      "url": "https://www.xometry.com/get-started/",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "CAD input",
+        "process selection",
+        "quote configuration",
+        "manufacturing handoff",
+        "FAQ"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "xometry-resources": {
+      "url": "https://www.xometry.com/technical-resources/",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "resource library",
+        "process-specific guides",
+        "engineering tools",
+        "guide actions"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "c1-governance": {
+      "url": "https://www.c1.ai/solutions/identity-governance",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "identity lifecycle jobs",
+        "self-service",
+        "policy and provisioning",
+        "platform modules",
+        "demo action",
+        "FAQ"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "workos-admin": {
+      "url": "https://workos.com/docs/admin-portal",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "organization context",
+        "configuration steps",
+        "prerequisites",
+        "setup screenshots",
+        "redirect completion"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "patagonia-product": {
+      "url": "https://www.patagonia.com/product/mens-better-sweater-fleece-jacket/25528.html",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "product views",
+        "size and color",
+        "fit",
+        "specifications",
+        "materials and care",
+        "purchase controls"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "pentagram-work": {
+      "url": "https://www.pentagram.com/work/",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "work index",
+        "client-type taxonomy",
+        "project identifiers",
+        "individual project links"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "pentagram-reddit": {
+      "url": "https://www.pentagram.com/work/reddit",
+      "checked": "2026-10-08",
+      "observation_method": "web-content-observed",
+      "observed_information_anatomy": [
+        "project context",
+        "identity artifacts",
+        "design explanation",
+        "work examples"
+      ],
+      "pixel_geometry": "UNKNOWN",
+      "human_usability": "UNKNOWN",
+      "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    }
+  },
+  "cards": [
+    {
+      "id": "industrial-service-operations:orientation",
+      "profile_id": "industrial-service-operations",
+      "page_role": "orientation",
+      "reference_ids": [
+        "rockwell-modernization",
+        "thomas-suppliers"
+      ],
+      "buyer_task": "Engineer needs to locate a capability that fits the installed system before contacting a supplier.",
+      "observed_relationship": "need → capability → deliverables → scoped conversation",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Engineer needs to locate a capability that fits the installed system before contacting a supplier. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare editorial orientation with compact technical labels; keep unfamiliar abbreviations expanded.",
+      "density_reason": "Use more open spacing around a system map; use compact aligned rows for capability matching.",
+      "visual_object_candidates": [
+        "capability ledger: system / need / scope / deliverables",
+        "system boundary map: equipment / interfaces / responsibility / handover"
+      ],
+      "mobile_transformation": "Stack each need and its scope on mobile; maps need a labelled linear equivalent.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "industrial-service-operations:offering",
+      "profile_id": "industrial-service-operations",
+      "page_role": "offering",
+      "reference_ids": [
+        "rockwell-modernization"
+      ],
+      "buyer_task": "Plant team must understand what is assessed, engineered and commissioned, and what remains outside scope.",
+      "observed_relationship": "installed base → assessment → plan → execution boundary",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Plant team must understand what is assessed, engineered and commissioned, and what remains outside scope. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare a restrained technical heading with a more expressive scope statement; specification text stays readable.",
+      "density_reason": "Compact scope rows versus separated acceptance stages; density must not imply missing scope.",
+      "visual_object_candidates": [
+        "scope register: inputs / constraints / outputs / exclusions",
+        "commissioning chain: baseline / engineering / test / acceptance"
+      ],
+      "mobile_transformation": "Keep each stage with its acceptance artifact; replace sideways sequences with labelled vertical steps.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "industrial-service-operations:evidence",
+      "profile_id": "industrial-service-operations",
+      "page_role": "evidence",
+      "reference_ids": [
+        "rockwell-modernization"
+      ],
+      "buyer_task": "Buyer needs a traceable requirement-to-verification example rather than a claim about supplier experience.",
+      "observed_relationship": "baseline risk → chosen migration scope → execution artifact",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Buyer needs a traceable requirement-to-verification example rather than a claim about supplier experience. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare document-like hierarchy with an expressive case introduction; source/status labels remain productive.",
+      "density_reason": "Dense verification table versus open before/after reading; give annotations enough space to identify evidence.",
+      "visual_object_candidates": [
+        "test dossier: requirement / constraint / test result / evidence status",
+        "migration comparison: before system / intervention / acceptance / remaining risk"
+      ],
+      "mobile_transformation": "Show requirement, artifact and interpretation together; label illustrative examples on every relevant artifact.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "industrial-service-operations:conversion",
+      "profile_id": "industrial-service-operations",
+      "page_role": "conversion",
+      "reference_ids": [
+        "xometry-start"
+      ],
+      "buyer_task": "Engineering buyer can describe an uncertain project without already having every CAD/specification input.",
+      "observed_relationship": "input readiness → configuration → review → next step",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Engineering buyer can describe an uncertain project without already having every CAD/specification input. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare a compact task heading with a brief-oriented heading; forms retain legible body and field labels.",
+      "density_reason": "Compact task column versus moderate brief workspace; both put the first field ahead of marketing material.",
+      "visual_object_candidates": [
+        "RFQ task sheet: context / scope / constraints / contact / review",
+        "scope brief: known inputs / unknowns / deliverables / editable summary"
+      ],
+      "mobile_transformation": "Use one active step and an editable review. Attachment previews stay local when the product is a prototype.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "industrial-service-operations:catalog",
+      "profile_id": "industrial-service-operations",
+      "page_role": "catalog",
+      "reference_ids": [
+        "thomas-suppliers"
+      ],
+      "buyer_task": "Procurement compares capabilities using stable attributes before choosing a supplier or service.",
+      "observed_relationship": "capability query → eligible categories → evaluation",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Procurement compares capabilities using stable attributes before choosing a supplier or service. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare specification-first labels with stronger application titles; never shrink differing attributes to fit cards.",
+      "density_reason": "Compact comparisons versus grouped application records; keep the distinguishing fields visible.",
+      "visual_object_candidates": [
+        "capability attribute register: system / scope / input / output",
+        "application selector: need / relevant service / boundary / next action"
+      ],
+      "mobile_transformation": "Preserve query, active criteria and empty feedback; compare labelled records instead of squeezing desktop columns.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "industrial-service-operations:editorial",
+      "profile_id": "industrial-service-operations",
+      "page_role": "editorial",
+      "reference_ids": [
+        "xometry-resources"
+      ],
+      "buyer_task": "Engineer needs a useful guide or worksheet that can be inspected before downloading.",
+      "observed_relationship": "technical topic → guide type → useful extract → document action",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Engineer needs a useful guide or worksheet that can be inspected before downloading. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare a reading-oriented heading and body measure with a document-led title hierarchy.",
+      "density_reason": "Open prose rhythm versus compact working-sheet fields; no whole-page document thumbnail as the only content.",
+      "visual_object_candidates": [
+        "guide reading column: problem / explanation / example / source",
+        "worksheet preview: inputs / working notes / checklist / download"
+      ],
+      "mobile_transformation": "Offer a readable extract and real downloadable content; keep the title before a long contents list.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "enterprise-software-governance:orientation",
+      "profile_id": "enterprise-software-governance",
+      "page_role": "orientation",
+      "reference_ids": [
+        "c1-governance"
+      ],
+      "buyer_task": "IT buyer needs to recognize software access work and see how request, decision and execution connect.",
+      "observed_relationship": "identity job → connected module → next action",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "IT buyer needs to recognize software access work and see how request, decision and execution connect. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare expressive offer type with a restrained operational headline; numerals and status labels stay clear.",
+      "density_reason": "Open permission subject versus compact lifecycle register; preserve the decision and execution distinction.",
+      "visual_object_candidates": [
+        "permission record: actor / application / scope / owner / duration",
+        "lifecycle chain: request / approval / provisioning / expiry / revocation"
+      ],
+      "mobile_transformation": "Keep current status and next action together; linearize event relationships rather than shrinking a dashboard.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "enterprise-software-governance:offering",
+      "profile_id": "enterprise-software-governance",
+      "page_role": "offering",
+      "reference_ids": [
+        "c1-governance",
+        "workos-admin"
+      ],
+      "buyer_task": "Security team checks actor permissions, prerequisites and supported outcomes before accepting a workflow.",
+      "observed_relationship": "job → input context → configured step → execution result",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Security team checks actor permissions, prerequisites and supported outcomes before accepting a workflow. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare a task-sized technical title with a larger module statement; explanatory body is not metadata.",
+      "density_reason": "Compact responsibility rows versus annotated working object; guard against excessive empty space between them.",
+      "visual_object_candidates": [
+        "request workbench: permission / reason / approver / execution result",
+        "responsibility register: actor / required input / decision / fulfillment / limit"
+      ],
+      "mobile_transformation": "Move the current decision before secondary identity context; preserve prerequisites beside the relevant action.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "enterprise-software-governance:evidence",
+      "profile_id": "enterprise-software-governance",
+      "page_role": "evidence",
+      "reference_ids": [
+        "workos-admin"
+      ],
+      "buyer_task": "Buyer needs to distinguish a configured action from its actual completion and understand the evidence boundary.",
+      "observed_relationship": "prerequisite → configured action → completion context",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Buyer needs to distinguish a configured action from its actual completion and understand the evidence boundary. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare a document-led narrative with productive history type; event labels need stable reading rhythm.",
+      "density_reason": "Compact history versus separated annotated evidence; avoid huge synthetic success badges.",
+      "visual_object_candidates": [
+        "execution history: event / actor / decision / result / timestamp",
+        "review evidence dossier: permission / reviewer / rationale / execution / unresolved gap"
+      ],
+      "mobile_transformation": "Retain event order, failure and unresolved status. Screenshots of setup are not compliance or production proof.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "enterprise-software-governance:conversion",
+      "profile_id": "enterprise-software-governance",
+      "page_role": "conversion",
+      "reference_ids": [
+        "workos-admin"
+      ],
+      "buyer_task": "Buyer can assemble a discussion brief with known/unknown requirements and review it before completion.",
+      "observed_relationship": "context → prerequisites → scoped task → completion destination",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Buyer can assemble a discussion brief with known/unknown requirements and review it before completion. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare compact task type with a clearer brief introduction; display type cannot displace the first field.",
+      "density_reason": "Compact field groups versus moderate input-summary pairing; preserve one active task.",
+      "visual_object_candidates": [
+        "discussion task sheet: context / workflow / constraints / contact / review",
+        "fit brief: current process / target decision / unknowns / editable summary"
+      ],
+      "mobile_transformation": "Put the active field and error summary ahead of secondary guidance; prototype completion says no request sent.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "enterprise-software-governance:catalog",
+      "profile_id": "enterprise-software-governance",
+      "page_role": "catalog",
+      "reference_ids": [
+        "c1-governance",
+        "workos-admin"
+      ],
+      "buyer_task": "IT buyer compares integration scope and prerequisites without assuming every connector supports write actions.",
+      "observed_relationship": "module selection → required context → configuration boundary",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "IT buyer compares integration scope and prerequisites without assuming every connector supports write actions. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare compact attribute headings with clearer workflow-led titles; action coverage stays readable.",
+      "density_reason": "Dense comparable rows versus grouped coverage records; filters do not hide scope limitations.",
+      "visual_object_candidates": [
+        "integration register: system / read / write / prerequisite / status",
+        "coverage matrix: workflow / source system / action / limit / setup path"
+      ],
+      "mobile_transformation": "Retain active filters, no-match recovery and coverage labels. Do not invent connector certification or support.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "enterprise-software-governance:editorial",
+      "profile_id": "enterprise-software-governance",
+      "page_role": "editorial",
+      "reference_ids": [
+        "workos-admin"
+      ],
+      "buyer_task": "Reader must use a guide while recognizing prerequisites, setup sequence and what success actually means.",
+      "observed_relationship": "prerequisites → ordered setup → context-specific completion",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Reader must use a guide while recognizing prerequisites, setup sequence and what success actually means. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare reading-first prose hierarchy with artifact-first instructional type; code and identifiers need their own role.",
+      "density_reason": "Open explanation versus compact setup steps; avoid burying context in decorative panels.",
+      "visual_object_candidates": [
+        "reading guide: question / prerequisites / steps / source",
+        "annotated setup artifact: context / configured object / result / next action"
+      ],
+      "mobile_transformation": "Readable step excerpts and actual local downloads; use concise contents after title and purpose.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "physical-product-commerce:offering",
+      "profile_id": "physical-product-commerce",
+      "page_role": "offering",
+      "reference_ids": [
+        "patagonia-product"
+      ],
+      "buyer_task": "Shopper must check fit, material, variants and selection before buying.",
+      "observed_relationship": "product identity → variant choice → fit/specification → purchase",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Shopper must check fit, material, variants and selection before buying. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare product-name emphasis with editorial material hierarchy; variant and price text remain explicit.",
+      "density_reason": "Open visual inspection versus compact specifications; image scale must support recognizing the product.",
+      "visual_object_candidates": [
+        "product gallery: view / color / fit / size / selection",
+        "material-fit dossier: construction / dimensions / care / selected variant"
+      ],
+      "mobile_transformation": "Keep selection feedback with purchase action and label unavailable variants; do not inherit another retailer promises.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "physical-product-commerce:editorial",
+      "profile_id": "physical-product-commerce",
+      "page_role": "editorial",
+      "reference_ids": [
+        "patagonia-product"
+      ],
+      "buyer_task": "Reader needs practical material and care information linked to the actual item.",
+      "observed_relationship": "construction feature → practical consequence → material/care",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Reader needs practical material and care information linked to the actual item. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare a readable prose treatment with expressive detail captions; long instructions remain body text.",
+      "density_reason": "Open reading groups versus closer annotated detail groups; do not compress safety or care instructions.",
+      "visual_object_candidates": [
+        "care reading guide: material / instruction / limit / example",
+        "construction explainer: product detail / annotation / care consequence"
+      ],
+      "mobile_transformation": "Keep instruction and its material context together; supplier certifications require target proof.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "career-portfolio:orientation",
+      "profile_id": "career-portfolio",
+      "page_role": "orientation",
+      "reference_ids": [
+        "pentagram-work"
+      ],
+      "buyer_task": "Hiring reviewer needs to identify relevant work and the designer role before opening a case.",
+      "observed_relationship": "work taxonomy → identifiable project → detailed case",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Hiring reviewer needs to identify relevant work and the designer role before opening a case. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare work-title-led typography with an editorial contribution statement; project captions stay legible.",
+      "density_reason": "Compact work index versus open artifact presentation; work must remain inspectable, not decoration.",
+      "visual_object_candidates": [
+        "work index: project / role / problem / artifact / case link",
+        "selected-work atlas: domain / contribution / artifact extract / case link"
+      ],
+      "mobile_transformation": "Preserve role and relevance with each work item; avoid a long self-description before the evidence.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "career-portfolio:evidence",
+      "profile_id": "career-portfolio",
+      "page_role": "evidence",
+      "reference_ids": [
+        "pentagram-reddit"
+      ],
+      "buyer_task": "Hiring reviewer needs to understand decisions, authorship and the actual work, with truthful outcomes.",
+      "observed_relationship": "project context → design explanation → work artifacts",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Hiring reviewer needs to understand decisions, authorship and the actual work, with truthful outcomes. Transfer the information relationship so the first object helps this decision.",
+      "typography_reason": "Compare case-reading type with expressive artifact captions; distinguish personal role from team output.",
+      "density_reason": "Compact decision records versus open artifact excerpts; no fabricated business metrics to fill layout.",
+      "visual_object_candidates": [
+        "decision dossier: problem / contribution / alternatives / artifact / validation gap",
+        "artifact narrative: work detail / constraint / decision / evidence / result status"
+      ],
+      "mobile_transformation": "Keep rationale beside the relevant artifact and separate verified results from planned validation.",
+      "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    }
+  ],
+  "gap_policy": "No exact profile/page-role card is a visible knowledge gap. Research the current first-party page and author a grounded transfer; never borrow an unrelated industry preset."
+}

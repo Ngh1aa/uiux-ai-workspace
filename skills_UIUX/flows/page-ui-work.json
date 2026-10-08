@@ -40,6 +40,7 @@
       ],
       "gates": [
         {"id": "page-design-contract", "require": "layout hierarchy, responsive transformation, component reuse and interaction states are concrete before implementation"},
+        {"id": "design-decision-integrity", "require": "canonical decision checker verifies numeric roles, source traces and distinct composition topology; this is not aesthetic acceptance", "evidence_types": ["design_contract_check"], "design_phase": "design", "design_contract_version": "2.0"},
         {"id": "solution-validation", "require": "consequential solution hypotheses have direct validation evidence or are explicitly labeled PLANNED/UNVALIDATED before irreversible implementation", "when": {"validation_lane": ["evidence-led", "production-learning"]}}
       ]
     },
@@ -73,6 +74,7 @@
       ],
       "gates": [
         {"id": "page-rendered-check", "require": "target page is inspected at representative desktop/mobile widths and affected shared components show no material regression"},
+        {"id": "design-render-integrity", "require": "decision contract references inspected desktop/mobile alternatives with actual capture digests and critique; preference remains unvalidated", "evidence_types": ["design_contract_check"], "design_phase": "rendered", "design_contract_version": "2.0"},
         {"id": "truthful-completion", "require": "verified versus unverified areas are explicit; no production/accessibility/UX improvement claim exceeds evidence"},
         {"id": "human-release-governance", "approval": "human", "require": "an authorized human decision owner reviews unresolved risk, user evidence, outcome readiness and rollback/learning plan before production release when project policy requires it", "when": {"validation_lane": "production-learning"}},
         {"id": "live-learning-ready", "require": "post-launch signals, critical experiences, research/feedback sources, review cadence and experiment/rollout/rollback criteria are explicit", "when": {"validation_lane": "production-learning"}}
