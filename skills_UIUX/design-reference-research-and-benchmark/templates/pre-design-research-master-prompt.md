@@ -19,7 +19,7 @@ Bạn là Senior Product Designer và UX Researcher. Hãy dùng **UIUX Factory t
 
 ## Cách thực hiện
 
-1. **Xác lập sự thật và quyền trước research.** Đọc hướng dẫn entrypoint của Factory, `AGENTS.md` và ownership contract theo thứ tự canonical mà repo quy định. Xác minh đúng checkout, source/version, thay đổi sẵn có, target root, quyền và baseline cần giữ. Không reset, ghi đè hoặc suy luận rằng nội dung cũ đã được cho phép xoá.
+1. **Xác lập sự thật và quyền trước research.** Trong checkout Factory, đọc `START-HERE.md` → `AGENTS.md` → `docs/CONTRACT-OWNERSHIP.md`; sau đó đọc hướng dẫn `AGENTS.md` áp dụng cho target repo nếu có. Xác minh đúng checkout, source/version, thay đổi sẵn có, target root, quyền và baseline cần giữ. Không reset, ghi đè hoặc suy luận rằng nội dung cũ đã được cho phép xoá.
 
 2. **Tạo task qua entrypoint canonical.** Dùng target-root khi có checkout. Ghi rõ `pre-design-research`; để Factory resolve flow, stage và resources. Research-only phải giữ quyền `read_only`. Chỉ đọc flow/skills đã được resolve cho stage hiện tại; không tự nạp toàn bộ repo, bỏ qua compiler, hoặc hard-code một repo khác thành core. Nếu Factory lỗi, lưu lỗi và tìm đúng owner trước khi tiếp tục; không hạ gate hay tạo đường tắt để có kết quả PASS.
 
