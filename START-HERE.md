@@ -139,6 +139,10 @@ Use A36 Release Evidence Registry to produce one integrity-hashed `uiux-evidence
 
 A37 dogfoods these surfaces together against pinned CENNEXT target truth. It intentionally refuses to claim a verified deployment when trusted provider SHA metadata is absent. See `docs/A37-REAL-PROJECT-E2E-DOGFOOD.md`.
 
+## Pre-design research
+
+Explicit buyer/reference research before design routes the `pre-design-research` feature (or pass `--feature pre-design-research`). Research-only stays in `audit-review`; substantial build/redesign keeps its own research stage. Stage `research_workflow` links decision-led methods, anatomy and synthesis; `research_packet` retains its human-study contract. Desk findings may be real evidence without human sessions. Read the [working flow and evidence boundaries](docs/PRE-DESIGN-RESEARCH.md).
+
 ## Human research
 
 When a task needs real-user evidence, activate `research-evidence-pipeline` plus the existing research skills. If participant access does not exist, produce a plan/package and label the state `PLANNED_VALIDATION`, `BLOCKED_USER_EVIDENCE`, or `UNKNOWN`. Never invent sessions, quotes, counts, percentages or findings.

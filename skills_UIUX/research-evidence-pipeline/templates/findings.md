@@ -3,11 +3,12 @@
 ## Study / round
 
 **Study ID:**  
-**Status:** PLANNED_VALIDATION / DIRECT_USER / LIVE_BEHAVIOR / MIXED  
+**Status:** PLANNED_VALIDATION / DESK_EVIDENCE / DIRECT_USER / LIVE_BEHAVIOR / MIXED
+
 **Decisions covered:**  
 **Evidence ledger:** `docs/research/evidence-ledger.jsonl`
 
-> Do not populate findings before real evidence exists. A protocol or heuristic review is not DIRECT_USER evidence.
+> Do not populate findings before real evidence exists. Actual desk-source findings are allowed as DESK_EVIDENCE; a protocol or heuristic review is not DIRECT_USER evidence.
 
 ## Finding F-01 — [concise observed pattern]
 

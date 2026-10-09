@@ -512,6 +512,22 @@ class GoalInterpreter:
                 features.append(feature)
                 evidence.append(f"feature:{feature}")
 
+        # Explicit design-research language, not generic technical research or a
+        # passing mention of a reference. Negated clauses were removed above.
+        pre_design = _contains_token(normalized, (
+            "pre-design research", "research before design", "research before designing",
+            "nghiên cứu trước thiết kế", "nghiên cứu trước khi thiết kế",
+        )) or (
+            _contains_token(normalized, ("research", "nghiên cứu", "benchmark", "khảo sát"))
+            and _contains_token(normalized, (
+                "buyers", "buyer", "người mua", "website references", "design references",
+                "reference anatomy", "tham chiếu thiết kế", "reference giao diện",
+            ))
+        )
+        if pre_design:
+            features.append("pre-design-research")
+            evidence.append("feature:pre-design-research")
+
         if _contains(normalized, ("production candidate", "staging", "pre-production", "tiền production")):
             mode = "production-candidate"
         elif _contains(normalized, ("production", "go live", "deploy production", "lên production", "chạy thật")):

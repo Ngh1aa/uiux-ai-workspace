@@ -1,6 +1,6 @@
 ---
 name: research-evidence-pipeline
-description: Turn a user-research need into an operational evidence pipeline: decision map, recruitment/screener, interview or usability protocol, consent/data handling, traceable evidence ledger, synthesis and decision log. Use for evidence-led or production-learning work. Never fabricates participants, quotes, findings, counts or validation.
+description: Turn a user-research need into an operational evidence pipeline: decision map, recruitment/screener, interview or usability protocol, consent/data handling, traceable evidence ledger, synthesis and decision log. Use for desk evidence or evidence-led/production-learning work; instantiate recruitment only for human studies. Never fabricates participants, quotes, findings, counts or validation.
 ---
 
 # Research Evidence Pipeline
@@ -72,13 +72,20 @@ Each JSONL line must conform conceptually to `templates/evidence-ledger.schema.j
 
 Quotes are optional. If used, they must come from a real source record and remain short/contextual.
 
+## Desk research và human research
+
+Desk mode dùng tài liệu, review hoặc trang/state đã inspect: ghi `DESK_EVIDENCE`, ngày, source và giới hạn; không yêu cầu screener/interview guide nếu không có kế hoạch tiếp cận participants. Human mode giữ recruitment, consent, session provenance và protocol hiện có. Hai loại có thể cùng ledger nhưng luôn giữ evidence class; tổng hợp không biến desk thành direct-user.
+
+Phương pháp chọn nguồn nằm ở product-discovery; phương pháp suy luận sang thiết kế nằm ở research-synthesis-and-insight-management. Không tạo findings từ kế hoạch chưa thực hiện.
+
 ## No-participant mode
 
 If participant access does not exist:
 
-- create the plan, screener and protocol;
-- leave `evidence-ledger.jsonl` empty;
-- mark the round `PLANNED_VALIDATION` or `BLOCKED_USER_EVIDENCE`;
+- create the plan, screener and protocol only when a human study is actually planned;
+- keep human session/result records absent; leave the ledger empty only if no evidence of any class was actually collected;
+- traceable desk evidence and desk findings may be recorded with limitations; they never validate human preference;
+- mark the planned human round `PLANNED_VALIDATION` or `BLOCKED_USER_EVIDENCE`; desk-only findings keep their DESK_EVIDENCE class;
 - list what decision remains at risk;
 - proceed only if project risk allows;
 - never invent names, quotes, percentages, sample sizes, task success rates or findings.
