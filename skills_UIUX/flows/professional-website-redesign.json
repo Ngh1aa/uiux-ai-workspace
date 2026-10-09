@@ -31,6 +31,10 @@
       ],
       "conditional_skills": [
         {
+          "when": {"validation_lane": "prototype"},
+          "skills": ["product-discovery", "research-synthesis-and-insight-management"]
+        },
+        {
           "when": {
             "validation_lane": [
               "evidence-led",

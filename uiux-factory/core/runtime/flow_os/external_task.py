@@ -9,9 +9,10 @@ from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow
 from core.runtime.flow_os.target_truth import ROUTING_PRECEDENCE, build_truth_aware_context
 from core.runtime.flow_os.task_context import GoalInterpreter, NON_MUTATING_INTENTS
 from core.skills.design_knowledge import design_workflow_packet
+from core.skills.research_workflow import research_workflow_packet
 
 
-EXTERNAL_TASK_MANIFEST_VERSION = "1.2"
+EXTERNAL_TASK_MANIFEST_VERSION = "1.3"
 EXTERNAL_TASK_STATUS = "READY_FOR_EXTERNAL_COLLABORATOR"
 AUTHORITY_ORDER = ("read_only", "branch_write", "external_write", "release")
 VISUAL_SIGNATURE_CONTRACT = "docs/VISUAL-SIGNATURE-REGRESSION-CONTRACT.md"
@@ -81,6 +82,7 @@ def _stage_manifest(flow: ResolvedFlow, context: dict[str, Any] | None = None) -
                 "skill_paths": [f"skills_UIUX/{skill}/SKILL.md" for skill in stage.skills],
                 "gates": list(stage.gates),
                 "design_workflow": design_workflow_packet(context or {}, list(stage.skills), list(stage.gates)),
+                "research_workflow": research_workflow_packet(context or {}, stage.id, stage.skills),
                 "load_policy": "Load only this stage's routed skills plus target-project evidence needed for the active decision.",
             }
         )
@@ -117,7 +119,7 @@ def _research_packet(context: dict[str, Any]) -> dict[str, Any]:
             "docs/research/findings.md",
             "docs/research/decision-log.md",
         ],
-        "no_participant_rule": "If participant access is unavailable, keep findings empty and label PLANNED_VALIDATION or BLOCKED_USER_EVIDENCE. Never fabricate sessions or results.",
+        "no_participant_rule": "Without participants, keep human findings/sessions empty and label human validation PLANNED_VALIDATION or BLOCKED_USER_EVIDENCE. Traceable DESK_EVIDENCE and its limited findings may be recorded; never fabricate sessions or results.",
     }
 
 

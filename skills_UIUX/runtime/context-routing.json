@@ -14,7 +14,8 @@
         "resolved_flow.source",
         "active_stage.skill_paths",
         "active_stage.design_workflow when active; bounded page-role lookup, no eager catalog",
-        "target_project.required_source_files"
+        "target_project.required_source_files",
+        "active_stage.research_workflow when active; only resources of routed/activated research skills, under the shared document budget"
       ],
       "avoid_by_default": [
         "skills_UIUX/runtime/A*-*.md",
@@ -31,7 +32,8 @@
       "then": [
         "resolved_flow.source",
         "active_stage.skill_paths",
-        "active_stage.design_workflow; knowledge participates in shared provider document budget"
+        "active_stage.design_workflow; knowledge participates in shared provider document budget",
+        "active_stage.research_workflow when active; only resources of routed/activated research skills, under the shared document budget"
       ]
     },
     "qa": {

@@ -26,6 +26,10 @@ Nếu scope đủ lớn nhưng visual direction còn generic và chưa có refer
 
 Nếu domain có physical/printed/spatial/service artifacts mạnh và visual direction vẫn generic/card-heavy hoặc thiếu ownable domain DNA, route sang `real-world-artifact-and-domain-metaphor-design` trước khi khóa grammar.
 
+## Research đầu vào
+
+Nếu research đã có, đọc findings/decision log và page-role reference matrix trước khi chọn direction. Dùng `source.ref` để nối quyết định tới nguồn/finding; nguồn chỉ chứng minh problem không tự chứng minh solution. Phương pháp tổng hợp thuộc `research-synthesis-and-insight-management`; không viết lại một bộ ledger. Nếu chưa có bằng chứng, ghi hypothesis và thử representative render.
+
 ## Workflow
 
 1. Audit reference benchmark theo *principle*, không copy surface; nếu chưa có benchmark và task cần reference intelligence, tạo nó trước.

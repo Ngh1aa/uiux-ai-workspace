@@ -37,6 +37,8 @@ The workspace intentionally has several layers. They must **reference** each oth
 | Deployment truth acceptance | `uiux-factory/qa/scripts/deployment-truth.mjs` + `.github/workflows/deployment-truth-gate.yml` | Supply provider/API deployment metadata and production URL; never manufacture provider SHA from the expected source SHA |
 | Release-level evidence registry | `uiux-factory/core/provenance/release_evidence_registry.py` + `core/contracts/release_evidence_schema.py` | Register/hash artifacts and derived claim state; never override the originating gate's evidence semantics |
 | Fine-grained evidence lineage | `uiux-factory/core/provenance/evidence_lineage.py` + evidence provenance contracts | Produce individually addressable evidence/spec links beneath the release registry |
+| Pre-design research method and synthesis | `product-discovery` + `design-reference-research-and-benchmark` + `research-synthesis-and-insight-management` skills | Own method, anatomy and evidence-to-decision respectively; use the existing research evidence ledger and Design Contract, never a second evidence system |
+| Pre-design research packet | `uiux-factory/core/skills/research_workflow.py` | Share stage-scoped resource pointers across external and managed execution; activated resources share the existing context budget; never grant authority or certify findings |
 | Human research evidence | Real sessions/behavior with traceable evidence ledger | Plan, synthesize and label gaps; never fabricate evidence |
 
 ## External routing precedence

@@ -16,6 +16,10 @@ globs:
 
 Đây là bước đầu tiên và quan trọng nhất. KHÔNG được bắt đầu thiết kế hay code nếu chưa hoàn tất product discovery. Mọi quyết định về UI, UX, stack, feature đều phải bắt nguồn từ understanding về người dùng và bài toán kinh doanh.
 
+## Chọn nghiên cứu theo quyết định
+
+Khi discovery có khoảng trống về người mua/người dùng, nguồn hoặc cách kiểm chứng, đọc [Decision-led research](references/decision-led-research.md). Phân biệt constraint với giả thuyết; không tạo đủ JTBD/KPI chỉ để lấp template. Với task nhỏ, dùng phần liên quan thay vì ép whole-project discovery.
+
 ## Quy trình bắt buộc
 
 ### 1. Problem Framing
@@ -149,7 +153,7 @@ Tracking assumptions, evidence và status (validated/invalidated/pending).
 
 - [ ] Problem statement rõ ràng, cụ thể
 - [ ] Ít nhất 1 primary audience segment được mô tả chi tiết
-- [ ] Ít nhất 3 JTBD được xác định
+- [ ] Các top jobs ảnh hưởng quyết định được xác định; không bịa job để đạt số lượng
 - [ ] Constraints được liệt kê đầy đủ
 - [ ] Assumptions có risk level và cách kiểm chứng
 - [ ] KPIs có baseline (hoặc ghi rõ N/A) và target

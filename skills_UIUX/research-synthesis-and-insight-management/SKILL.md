@@ -1,9 +1,13 @@
 ---
 name: research-synthesis-and-insight-management
-description: Turn interviews, usability notes and analytics observations into traceable evidence, patterns, insights, opportunities and design decisions. Use after research rounds or when consolidating fragmented UX evidence.
+description: Turn desk sources, interviews, usability notes and analytics into traceable evidence and page/state design decisions. Use when synthesizing pre-design research or consolidating fragmented UX evidence.
 ---
 
 # Research Synthesis & Insight Management
+
+## Decision handoff
+
+Đọc [Evidence to design](references/evidence-to-design.md) khi cần chuyển nguồn thành quyết định content/layout/type/density/media/state. Dùng cùng evidence ledger/decision log của research-evidence-pipeline cho desk và human evidence; không đổi class khi tổng hợp.
 
 ## Workflow
 1. Normalize notes into atomic observations.

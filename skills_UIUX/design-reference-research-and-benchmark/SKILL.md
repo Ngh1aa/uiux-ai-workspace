@@ -16,6 +16,12 @@ Biến “tham khảo website đẹp” thành evidence cho **design decisions c
 
 Không chọn reference chỉ vì đẹp. Không copy một website. Không dùng gallery shot như bằng chứng UX.
 
+## Anatomy và handoff
+
+Đọc [Reference anatomy method](references/reference-anatomy-method.md) cho material page-role decisions; nó hướng dẫn đo/diễn giải/chuyển nguyên tắc và xử lý capture partial. Ví dụ ứng dụng ở [bốn loại project](examples/research-to-design-cases.md). Số candidate/finalist bên dưới là gợi ý cho substantial work, không phải quota hay bằng chứng chất lượng.
+
+Khi cần một điểm bắt đầu dùng được cho mọi loại project, dùng duy nhất [Prompt nghiên cứu trước thiết kế](templates/pre-design-research-master-prompt.md). Prompt này yêu cầu Factory route và nạp đúng skill theo stage; nó không thay thế các contract hoặc tạo quy trình song song.
+
 ## 1. Required inputs
 
 Đọc trước khi research:
@@ -250,7 +256,7 @@ PASS chỉ khi:
 - [ ] Có production/category references, không chỉ gallery.
 - [ ] Reference research bám business/user/page-role problem.
 - [ ] Material finalists có actual page/state inspection khi accessible.
-- [ ] 3–6 finalists có job rõ.
+- [ ] Finalists phủ các material decisions và có job rõ; 3–6 là gợi ý, không là quota.
 - [ ] Production/concept distinction rõ.
 - [ ] Có page-role reference matrix cho substantial multi-page redesign.
 - [ ] Không lấy một universal hero/layout làm giải pháp mặc định cho mọi page.

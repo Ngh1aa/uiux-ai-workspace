@@ -14,6 +14,7 @@ from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, l
 from core.runtime.flow_os.sandbox import ContainerSandbox
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
 from core.skills.design_knowledge import design_workflow_packet, retrieve_design_knowledge
+from core.skills.research_workflow import research_workflow_packet
 from core.skills.design_decisions import check_design_file
 from core.skills.design_comparison import prepare_comparison, evaluate_comparison, read_comparison_json
 
@@ -223,6 +224,7 @@ class ProviderManagedRunner:
         stage_state: Any,
         active_skill_names: set[str],
         design_context: dict[str, Any] | None = None,
+        stage_id: str = "",
     ) -> tuple[list[dict[str, str]], list[dict[str, str]], dict[str, Any]]:
         items = list(stage_state.context.get("items", []))
         allowed_roots = (self.project_root, self.harness.repo_root)
@@ -245,6 +247,11 @@ class ProviderManagedRunner:
                 max_chars=limit,
                 allowed_roots=allowed_roots,
             )
+            research = research_workflow_packet(design_context or {}, stage_id, active_skill_names)
+            sources.extend(load_context_documents(
+                [{"kind": "research_reference", "path": str(self.harness.repo_root / Path(path).relative_to("skills_UIUX"))} for path in research["resources"]],
+                {"research_reference"}, max_chars=limit, allowed_roots=allowed_roots,
+            ))
         except ValueError as exc:
             if "provider context budget exceeded" in str(exc):
                 raise ProviderContextBudgetError(str(exc)) from exc
@@ -343,6 +350,7 @@ class ProviderManagedRunner:
                 stage_state,
                 set(state["mandatory"]) | set(active),
                 managed.task_context,
+                managed.active_stage,
             )
         except ProviderContextBudgetError as exc:
             return {
@@ -455,11 +463,12 @@ class ProviderManagedRunner:
         stage = next(item for item in managed.flow.stages if item.id == managed.active_stage)
         jit = self._jit_skill_state(managed, stage_state)
         active_names = set(jit["mandatory"]) | set(jit["active"])
-        skills, sources, context_budget = self._load_provider_context(stage_state, active_names, managed.task_context)
+        skills, sources, context_budget = self._load_provider_context(stage_state, active_names, managed.task_context, managed.active_stage)
         manager_state = self.harness.resume(managed.manager_run_id)
         task_context = dict(managed.task_context)
         design_workflow = design_workflow_packet(task_context, active_names, list(stage.gates))
         task_context['design_workflow'] = design_workflow
+        task_context['research_workflow'] = research_workflow_packet(task_context, stage.id, active_names)
         task_context["jit_skill_context"] = {
             "enabled": bool(jit["enabled"]),
             "mandatory_skills": list(jit["mandatory"]),
