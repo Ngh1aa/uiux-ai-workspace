@@ -40,8 +40,10 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
         self.runtime = HarnessInspiredRuntime(self.root)
         self.team_runner.set_runtime(self.runtime)
 
-    def _save_flow_plan(self, context: RunContext, engine: str) -> None:
-        super()._save_flow_plan(context, engine)
+    def _save_flow_plan(
+        self, context: RunContext, engine: str, *, stateful_execution: bool = False
+    ) -> None:
+        super()._save_flow_plan(context, engine, stateful_execution=stateful_execution)
         raw = context.artifacts.get("flow_plan")
         if not raw or not self.runtime.has_active(context):
             return
@@ -235,6 +237,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             if engine == "external":
                 self._run_external_handoff(context)
                 return context
+            await self._run_specification_compile(context)
             if engine == "ai":
                 await self._run_ai_implementation(context, provider)
             else:

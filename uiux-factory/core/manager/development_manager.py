@@ -106,6 +106,27 @@ class DevelopmentManager:
     def _read(context: RunContext, key: str) -> str:
         return DevelopmentManager._require(context, key).read_text(encoding="utf-8")
 
+    @staticmethod
+    def _require_specification(context: RunContext) -> tuple[Path, Path]:
+        spec = DevelopmentManager._require(context, "full_build_spec")
+        prompt = DevelopmentManager._require(context, "implementation_prompt_spec")
+        manifest_path = DevelopmentManager._require(context, "spec_manifest")
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (ValueError, UnicodeError) as error:
+            raise RuntimeError("Frozen spec manifest is invalid; recompile specification.") from error
+        if not isinstance(manifest, dict):
+            raise RuntimeError("Frozen spec manifest must be an object; recompile specification.")
+        if (
+            manifest.get("frozen") is not True
+            or Path(str(manifest.get("source_of_truth", ""))).resolve() != spec.resolve()
+            or manifest.get("full_build_spec_sha256") != hashlib.sha256(spec.read_bytes()).hexdigest()
+            or not spec.read_text(encoding="utf-8").strip()
+            or "02-FULL-BUILD-SPEC.md" not in prompt.read_text(encoding="utf-8")
+        ):
+            raise RuntimeError("Frozen specification is missing, invalid or stale; recompile specification.")
+        return spec, prompt
+
     def _load_execution_plan(self, context: RunContext) -> WorkExecutionPlan | None:
         raw = context.artifacts.get("execution_plan")
         if not raw:
@@ -551,7 +572,7 @@ class DevelopmentManager:
             path = self._write(context, key, filename, content)
             written[key] = str(path.resolve())
 
-        spec_bytes = pack.full_build_spec.encode("utf-8")
+        spec_bytes = Path(written["full_build_spec"]).read_bytes()
         manifest = {
             "schema_version": 1,
             "mode": "compile_then_execute",
@@ -581,8 +602,7 @@ class DevelopmentManager:
         system = self._require(context, "design_system")
         plan = self._require(context, "implementation_plan")
         visual = self._require(context, "visual_composition")
-        full_spec = self._require(context, "full_build_spec")
-        implementation_prompt = self._require(context, "implementation_prompt_spec")
+        full_spec, implementation_prompt = self._require_specification(context)
         context.start_stage(stage)
         result = await self.team_runner.run_role(
             role_class=FrontendEngineer,
@@ -620,8 +640,7 @@ class DevelopmentManager:
     async def _run_ai_implementation(self, context: RunContext, provider) -> None:
         if provider is None:
             raise RuntimeError("AI implementation requires a configured provider.")
-        self._require(context, "full_build_spec")
-        self._require(context, "implementation_prompt_spec")
+        self._require_specification(context)
         stage = "implementation"
         print("\n[Stage] AI Frontend Implementation STARTED")
         context.start_stage(stage)
