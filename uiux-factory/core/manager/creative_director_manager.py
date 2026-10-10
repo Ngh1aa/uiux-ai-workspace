@@ -167,6 +167,8 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             elif stage == "visual_composition":
                 await self._run_visual_composition(context)
             elif stage == "implementation":
+                if engine != "external":
+                    await self._run_specification_compile(context)
                 if engine == "external":
                     self._run_external_handoff(context)
                 elif engine == "ai":
