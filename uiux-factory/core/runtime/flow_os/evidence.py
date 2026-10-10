@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+import hashlib
+import json
+import struct
 import uuid
+import zlib
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 
 TRUSTED_EVIDENCE_TYPES = frozenset({
@@ -244,6 +250,118 @@ def effective_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> li
     return [record for record in effective_evidence(records) if record.stage_id == stage_id]
 
 
+def _valid_png(raw: bytes) -> bool:
+    """Check encoded PNG structure and CRCs without optional image dependencies."""
+    if not raw.startswith(b"\x89PNG\r\n\x1a\n"):
+        return False
+    offset = 8
+    kinds: list[bytes] = []
+    compressed = bytearray()
+    expected_bytes = 0
+    while offset + 12 <= len(raw):
+        size = struct.unpack(">I", raw[offset:offset + 4])[0]
+        end = offset + size + 12
+        if end > len(raw):
+            return False
+        kind = raw[offset + 4:offset + 8]
+        payload = raw[offset + 8:offset + 8 + size]
+        checksum = struct.unpack(">I", raw[end - 4:end])[0]
+        if checksum != zlib.crc32(kind + payload):
+            return False
+        if not kinds:
+            if kind != b"IHDR" or size != 13:
+                return False
+            width, height, depth, color, compression, filtering, interlace = struct.unpack(">IIBBBBB", payload)
+            depths = {0: {1, 2, 4, 8, 16}, 2: {8, 16}, 3: {1, 2, 4, 8}, 4: {8, 16}, 6: {8, 16}}
+            if (not width or not height or depth not in depths.get(color, set())
+                    or compression or filtering or interlace not in {0, 1}):
+                return False
+            channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}[color]
+            passes = ((0, 0, 1, 1),) if not interlace else (
+                (0, 0, 8, 8), (4, 0, 8, 8), (0, 4, 4, 8), (2, 0, 4, 4),
+                (0, 2, 2, 4), (1, 0, 2, 2), (0, 1, 1, 2),
+            )
+            for x, y, dx, dy in passes:
+                columns = max(0, (width - x + dx - 1) // dx)
+                rows = max(0, (height - y + dy - 1) // dy)
+                if columns and rows:
+                    expected_bytes += (1 + (columns * channels * depth + 7) // 8) * rows
+        kinds.append(kind)
+        if kind == b"IDAT":
+            compressed.extend(payload)
+        if kind == b"IEND":
+            if size or end != len(raw) or not compressed:
+                return False
+            # Stream output in bounded chunks; full-page captures may be tall.
+            decoder = zlib.decompressobj()
+            remaining = bytes(compressed)
+            decoded_bytes = 0
+            try:
+                while remaining:
+                    decoded_bytes += len(decoder.decompress(remaining, 1024 * 1024))
+                    if decoded_bytes > expected_bytes:
+                        return False
+                    remaining = decoder.unconsumed_tail
+            except zlib.error:
+                return False
+            return decoder.eof and not decoder.unused_data and decoded_bytes == expected_bytes
+        offset = end
+    return False
+
+
+def browser_render_errors(record: EvidenceRecord) -> list[str]:
+    """Recheck capture provenance and current image bytes at acceptance time."""
+    data = record.data
+    if record.type != "browser_render" or record.status != "PASS" or not record.trusted or record.origin != "runtime":
+        return ["browser render must be a PASS capture"]
+    route = data.get("route")
+    viewport = data.get("viewport")
+    if not isinstance(route, str) or not route.startswith("/") or route.startswith("//"):
+        return ["browser render requires a same-origin route"]
+    try:
+        parsed = urlsplit(str(data.get("url", "")))
+        parsed_route = urlsplit(route)
+    except ValueError:
+        return ["browser render URL/route is malformed"]
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+        return ["browser render requires its captured URL"]
+    if parsed_route.path != parsed.path or parsed_route.query != parsed.query:
+        return ["browser render route does not match captured URL"]
+    if not isinstance(viewport, dict) or any(
+        isinstance(viewport.get(edge), bool) or not isinstance(viewport.get(edge), int)
+        or viewport[edge] <= 0 for edge in ("width", "height")
+    ):
+        return ["browser render requires positive viewport width and height"]
+    root_raw = data.get("artifact_root")
+    if not isinstance(root_raw, str) or not Path(root_raw).is_absolute():
+        return ["browser render requires its runtime artifact root"]
+    root = Path(root_raw)
+    try:
+        from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
+
+        adapter = PlaywrightBrowserEvidenceAdapter(root.parent, {
+            "browser_evidence": {"max_artifact_bytes": data.get("max_artifact_bytes", 4 * 1024 * 1024)}
+        })
+        root = adapter._artifact_root(root)
+        image = adapter._safe_artifact(root, str(data.get("screenshot", "")), require_png=True)
+        raw = image.read_bytes()
+        if data.get("screenshot_sha256") != hashlib.sha256(raw).hexdigest():
+            return ["browser render screenshot hash does not match current file (stale evidence)"]
+        if not _valid_png(raw):
+            return ["browser render screenshot is not a structurally valid PNG image"]
+        observation = adapter._safe_artifact(root, str(data.get("evidence_json", "")))
+        if data.get("evidence_sha256") != hashlib.sha256(observation.read_bytes()).hexdigest():
+            return ["browser render observation hash does not match current file (stale evidence)"]
+        payload = json.loads(observation.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict) or any(
+            payload.get(key) != data.get(key) for key in ("route", "url", "viewport", "screenshot")
+        ):
+            return ["browser render metadata does not match captured route/viewport/image"]
+    except (OSError, TypeError, ValueError, RuntimeError) as error:
+        return [f"browser render artifact validation failed: {error}"]
+    return []
+
+
 def gate_evidence_errors(
     gates: list[dict[str, Any]],
     stage_id: str,
@@ -252,22 +370,30 @@ def gate_evidence_errors(
 ) -> list[str]:
     """Evaluate typed evidence requirements without treating model prose as proof."""
     effective = effective_stage_evidence(records, stage_id)
-    available = {record.type for record in effective if record.status != "FAIL"}
+    available = {record.type for record in effective if record.status != "FAIL" and record.type != "browser_render"}
     errors: list[str] = []
     for record in effective:
         if record.status == "FAIL":
             errors.append(f"runtime evidence failed: {record.type} via {record.tool} ({record.summary})")
+        elif record.type == "browser_render":
+            render_errors = browser_render_errors(record)
+            errors.extend(render_errors)
+            if not render_errors:
+                available.add("browser_render")
 
     role_defaults = {
         "research": {"file_read", "search_result", "validator_result", "command_result"},
         "implementation": {"file_change", "validator_result", "command_result"},
-        "qa": {"validator_result", "command_result", "file_read", "search_result", "browser_render"},
+        "qa": {"validator_result", "command_result", "browser_render"},
         "development": set(TRUSTED_EVIDENCE_TYPES),
     }
     for gate in gates:
         if gate.get("approval") == "human":
             continue
         gate_id = str(gate.get("id", "unnamed"))
+        if gate_id in {"rendered-qa", "prototype-experience-qa"} and "browser_render" not in available:
+            errors.append(f"gate {gate_id} missing typed evidence: browser_render")
+            continue
         declared = gate.get("evidence_types")
         if declared is not None:
             required = {str(item) for item in declared}
