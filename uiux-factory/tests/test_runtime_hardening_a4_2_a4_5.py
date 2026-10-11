@@ -119,7 +119,9 @@ def test_a4_2_managed_handoff_preserves_workspace_owner_and_reads_worktree(tmp_p
 
     for expected in ("research", "design"):
         assert managed.active_stage == expected
-        stage = harness.execute_plan(manager.start_stage(managed), [])
+        action = ({"tool": "read_text", "args": {"path": "src/app.txt"}} if expected == "research"
+                  else {"tool": "run_validator", "args": {"name": "validate-flows"}})
+        stage = harness.execute_plan(manager.start_stage(managed), [action])
         assert stage.state == "COMPLETED"
         manager.complete_stage(managed)
 
