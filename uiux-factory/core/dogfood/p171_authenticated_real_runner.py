@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
+from core.runtime.flow_os.execution_driver import ExecutionGrant
 from core.runtime.flow_os.external_side_effects import GitHubExternalSideEffectObserver
 from core.runtime.flow_os.github_transaction import GitHubTransactionConfig
 from core.runtime.flow_os.repository_policy_registry import (
@@ -150,6 +151,7 @@ def run_authenticated_dogfood(
         config,
         target_truth=profile.target_truth,
         max_repair_attempts=1,
+        grant=ExecutionGrant("external_write"),
     )
     completion_status = driver.run_until_blocked(max_steps=10)
 

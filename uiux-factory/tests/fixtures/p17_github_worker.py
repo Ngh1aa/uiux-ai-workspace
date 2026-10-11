@@ -43,7 +43,7 @@ if phase == "implementation":
     if marker not in current:
         target.write_text(current + marker, encoding="utf-8")
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "passed",
         "artifacts": [],
         "metadata": {"worker": "p17-github-fixture"},
@@ -53,7 +53,7 @@ elif phase == "qa" and os.environ.get("P17_FAIL_QA_ONCE") == "1":
     if not marker.exists():
         marker.write_text("failed\n", encoding="utf-8")
         payload = {
-            "schema_version": "1.0",
+            "schema_version": "2.0",
             "status": "failed",
             "failure_class": "PRODUCT_QA_FAILED",
             "reason": "fixture browser QA detected rendered drift",
@@ -70,7 +70,7 @@ elif phase == "qa" and os.environ.get("P17_FAIL_QA_ONCE") == "1":
                 "skills": request.get("skills", []),
             }, ensure_ascii=False)))
         payload = {
-            "schema_version": "1.0",
+            "schema_version": "2.0",
             "status": "passed",
             "artifacts": artifacts,
             "metadata": {"worker": "p17-github-fixture"},
@@ -95,7 +95,7 @@ else:
             "inputs": [item.get("id") for item in request.get("input_artifacts", [])],
         }, ensure_ascii=False)))
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "passed",
         "artifacts": artifacts,
         "metadata": {"worker": "p17-github-fixture"},

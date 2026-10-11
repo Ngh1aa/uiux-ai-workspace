@@ -43,7 +43,7 @@ def emit(kind: str, artifact_class: str, payload: dict[str, object]) -> dict[str
 
 def fail(reason: str, failure_class: str = "RUNNER_CONTRACT_FAILED") -> None:
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "failed",
         "failure_class": failure_class,
         "reason": reason,
@@ -112,7 +112,7 @@ else:
     fail(f"unsupported lifecycle phase for P1.7.1 dogfood: {phase}")
 
 payload = {
-    "schema_version": "1.0",
+    "schema_version": "2.0",
     "status": "passed",
     "artifacts": artifacts,
     "metadata": {"worker": "p171-authenticated-real-runner", "profile": profile},

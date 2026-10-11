@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from core.runtime.flow_os.execution_driver import (
+    ExecutionGrant,
     ArtifactRegistry,
     ExecutionDriver,
     JsonCheckpointStore,
@@ -186,6 +187,7 @@ class ProfessionalWebsiteFlow:
         checkpoint_path: Path | str | None = None,
         target_truth: dict[str, str] | None = None,
         max_repair_attempts: int = 2,
+        grant: ExecutionGrant | None = None,
     ) -> tuple[GoalInterpretation, ExecutionDriver]:
         """Resolve canonical work then bind it to the P1.6 runner/registry/checkpoint driver."""
         profile, work_plan = self.resolve_work_plan(goal, target_truth=target_truth)
@@ -198,6 +200,7 @@ class ProfessionalWebsiteFlow:
             ArtifactRegistry(workspace_root),
             checkpoint_store=checkpoint,
             max_repair_attempts=max_repair_attempts,
+            grant=grant,
         )
         return profile, driver
 
@@ -209,6 +212,7 @@ class ProfessionalWebsiteFlow:
         checkpoint_path: Path | str | None = None,
         target_truth: dict[str, str] | None = None,
         max_repair_attempts: int = 2,
+        grant: ExecutionGrant | None = None,
     ) -> tuple[GoalInterpretation, ExecutionDriver, GitHubProductionRunner]:
         """Bind canonical P1.5/P1.6 execution to the governed P1.7 GitHub transaction runner."""
         runner = GitHubProductionRunner(config)
@@ -220,6 +224,7 @@ class ProfessionalWebsiteFlow:
             checkpoint_path=checkpoint,
             target_truth=target_truth,
             max_repair_attempts=max_repair_attempts,
+            grant=grant,
         )
         return profile, driver, runner
 
