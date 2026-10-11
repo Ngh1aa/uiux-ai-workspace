@@ -106,6 +106,7 @@ def run_authenticated_dogfood(
     github_token: str,
     workspace_root: Path | str,
     output_dir: Path | str,
+    browser_artifact_dir: Path | str | None = None,
 ) -> dict[str, Any]:
     if profile_id not in DOGFOOD_PROFILES:
         raise ValueError(f"unknown or non-opted-in P1.7.1 profile: {profile_id}")
@@ -142,7 +143,9 @@ def run_authenticated_dogfood(
         preview_command=["npm", "run", "qa"],
         push_enabled=True,
         pr_enabled=True,
-        extra_env={"UIUX_P171_PROFILE": profile_id},
+        extra_env={"UIUX_P171_PROFILE": profile_id,
+                   **({"UIUX_P171_BROWSER_ARTIFACTS": str(Path(browser_artifact_dir).resolve())}
+                      if browser_artifact_dir else {})},
     )
 
     factory = ProfessionalWebsiteFlow(SKILLS_ROOT)

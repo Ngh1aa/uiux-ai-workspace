@@ -1,4 +1,5 @@
 import json
+import hashlib
 import threading
 from http.server import (
     SimpleHTTPRequestHandler,
@@ -352,6 +353,7 @@ class RunBrowserQA(Action):
             route=route,
             viewport=viewport,
             screenshot=str(screenshot_path),
+            screenshot_sha256=hashlib.sha256(screenshot_path.read_bytes()).hexdigest(),
             status=status,
             console_errors=console_errors,
             page_errors=page_errors,

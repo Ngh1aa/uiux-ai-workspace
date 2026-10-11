@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
+from executor_evidence import file_proof, render_fixture
 
 
 request_path = Path(os.environ["UIUX_EXECUTION_REQUEST"])
@@ -48,6 +51,7 @@ if phase == "qa" and fail_qa_once and not qa_marker.exists():
     }
 else:
     outputs: list[dict[str, object]] = []
+    evidence = []
     for kind in request["expected_output_kinds"]:
         artifact_class = {
             "audit-findings": "report",
@@ -78,10 +82,26 @@ else:
                     "inputs": [item["id"] for item in request["input_artifacts"]],
                 }, ensure_ascii=False),
             ))
+            evidence.append(file_proof(request['active_stage_id'], 'read_text' if phase == 'audit' else 'write_artifact', outputs[-1]['path']))
+    if phase == 'implementation':
+        check = subprocess.run([sys.executable, '-c', "print('SYNTHETIC implementation boundary')"], capture_output=True, text=True)
+        proof = workspace / f'{attempt_tag}-command.json'
+        proof.write_text(json.dumps({'returncode': check.returncode, 'stdout': check.stdout}), encoding='utf-8')
+        evidence.append(file_proof(request['active_stage_id'], 'run_target_command', proof, {'returncode': check.returncode}))
+    if phase == 'qa':
+        if os.environ.get('P16_FILE_ONLY_QA') == '1':
+            evidence = []  # Deliberate negative fixture: text labeled screenshot must fail.
+        else:
+            record, image = render_fixture(workspace, attempt_tag, request['active_stage_id'])
+            evidence.append(record)
+            for artifact in outputs:
+                if artifact['kind'] == 'qa-evidence':
+                    artifact['path'] = str(image)
     payload = {
         "schema_version": "2.0",
         "status": "passed",
         "artifacts": outputs,
+        "evidence_records": evidence,
         "metadata": {"runner": "p16-subprocess-fixture", "attempt_tag": attempt_tag},
     }
 

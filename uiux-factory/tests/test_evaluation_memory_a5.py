@@ -5,6 +5,7 @@ import os
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from fixtures.executor_evidence import render_fixture
 
 import pytest
 
@@ -80,6 +81,9 @@ def _complete_with_evidence(
         if repaired_first_stage and index == 0:
             records.append(_evidence(resolved.id, "FAIL"))
             records.append(_evidence(resolved.id, "PASS"))
+        elif resolved.id == "qa":
+            # Explicit SYNTHETIC capture: a validator alone is not render evidence.
+            records.append(render_fixture(manager.harness.project_root, "evaluation-memory")[0])
         else:
             records.append(_evidence(resolved.id, "PASS"))
         stage_state.context["evidence_records"] = records

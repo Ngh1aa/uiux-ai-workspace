@@ -9,6 +9,7 @@ from core.contracts.design_system_schema import DesignSystemContract
 from core.contracts.frontend_result_schema import FrontendBuildGate, FrontendResult, GeneratedFile, SkillEvidence
 from core.contracts.implementation_plan_schema import ImplementationPlan
 from core.contracts.visual_composition_schema import VisualComposition
+from core.runtime.run_context import require_frozen_specification, require_native_execution_grant
 
 
 class AIFrontendBuilder:
@@ -90,16 +91,13 @@ class AIFrontendBuilder:
         )
 
     async def run(self) -> FrontendResult:
+        full_spec_path, implementation_prompt_path = require_frozen_specification(self.context)
+        require_native_execution_grant(self.context)
         contract_path = Path(self.context.artifacts["design_contract"])
         system_path = Path(self.context.artifacts["design_system"])
         plan_path = Path(self.context.artifacts["implementation_plan"])
         composition_path = Path(self.context.artifacts["visual_composition"])
         tokens_path = Path(self.context.artifacts["design_tokens"])
-        full_spec_path = Path(self.context.artifacts["full_build_spec"])
-        implementation_prompt_path = Path(self.context.artifacts["implementation_prompt_spec"])
-
-        if not full_spec_path.is_file() or not implementation_prompt_path.is_file():
-            raise RuntimeError("Spec-first gate failed: compiled build spec/implementation prompt is missing")
 
         plan = ImplementationPlan.model_validate_json(plan_path.read_text(encoding="utf-8"))
         composition = VisualComposition.model_validate_json(composition_path.read_text(encoding="utf-8"))

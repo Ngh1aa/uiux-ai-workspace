@@ -7,7 +7,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from core.runtime.flow_os.evidence import EvidenceRecord, effective_evidence
+from core.runtime.flow_os.evidence import EvidenceRecord, effective_evidence, browser_render_errors
 from core.runtime.flow_os.managed import ManagedWebsiteRun
 from core.runtime.flow_os.workspace import WorktreeManager, WorkspaceFinalizeResult
 
@@ -179,6 +179,8 @@ class ProductionReleaseController:
         if any(record.status == "FAIL" for record in records):
             errors.append("latest effective trusted runtime evidence contains a failing result")
         browser = [record for record in records if record.type == "browser_render" and record.status == "PASS"]
+        for record in browser:
+            errors.extend(browser_render_errors(record))
         if not browser:
             errors.append("at least one PASS browser_render evidence record is required for production release")
         checks = [

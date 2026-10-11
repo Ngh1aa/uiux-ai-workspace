@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from executor_evidence import file_proof, render_fixture
 
 
 request_path = Path(os.environ["UIUX_EXECUTION_REQUEST"])
@@ -100,5 +101,18 @@ else:
         "artifacts": artifacts,
         "metadata": {"worker": "p17-github-fixture"},
     }
+
+if payload['status'] == 'passed':
+    stage = request['active_stage_id']
+    payload['evidence_records'] = [file_proof(stage, 'read_text' if phase == 'audit' else 'write_artifact', item['path'])
+                                   for item in payload['artifacts'] if item.get('path')]
+    if phase == 'implementation':
+        payload['evidence_records'].append(file_proof(stage, 'write_project_file', Path('index.html')))
+    if phase == 'qa' and os.environ.get('P17_FILE_ONLY_QA') != '1':
+        record, image = render_fixture(artifact_dir, f'{segment_id}-{attempt}', stage)
+        payload['evidence_records'].append(record)
+        for item in payload['artifacts']:
+            if item['kind'] == 'qa-evidence':
+                item['path'] = str(image)
 
 result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

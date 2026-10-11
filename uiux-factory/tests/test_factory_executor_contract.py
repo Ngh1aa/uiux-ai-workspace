@@ -1,5 +1,6 @@
 """Executor 2.0 regressions; subprocesses use only the existing temporary fixture."""
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 
@@ -87,3 +88,51 @@ def test_resume_requires_same_explicit_caller_grant(tmp_path):
                                checkpoint_store=JsonCheckpointStore(tmp_path / "checkpoint.json"),
                                grant=ExecutionGrant("release"))
     assert runner.invocations == 1
+
+
+def test_direct_adapter_rejects_different_well_formed_fingerprint(tmp_path):
+    _, _, driver, runner, _, _ = _build_driver(tmp_path)
+    with pytest.raises(RunnerContractError, match='fingerprint'):
+        runner.run(replace(driver._request('work-1'), plan_fingerprint='sha256:' + '0' * 64))
+    assert runner.invocations == 0
+
+
+def test_completed_checkpoint_cannot_skip_proof_validation(tmp_path):
+    _, _, driver, runner, target, _ = _build_driver(tmp_path)
+    store = JsonCheckpointStore(tmp_path / 'checkpoint.json')
+    payload = store.load()
+    for node in payload['execution_plan']['nodes']:
+        node['status'] = 'passed'
+    store.save(payload)
+    with pytest.raises(RunnerContractError, match='evidence|outputs|artifact'):
+        ExecutionDriver.resume(driver.work_plan, runner, workspace_root=target, checkpoint_store=store, grant=driver.grant)
+    assert runner.invocations == 0
+
+
+@pytest.mark.parametrize("case", ["missing", "empty", "foreign", "stale", "wrong_outputs", "unfinished_dependency"])
+def test_resume_rechecks_previously_passed_evidence(tmp_path, case):
+    _, _, driver, runner, target, _ = _build_driver(tmp_path)
+    assert driver.run_until_blocked() == "completed"
+    store = JsonCheckpointStore(tmp_path / "checkpoint.json")
+    payload = store.load()
+    qa = payload["stage_evidence"]["work-4"]
+    capture = next(record for record in qa if record["type"] == "browser_render")
+    if case == "missing":
+        payload.pop("stage_evidence")
+    elif case == "empty":
+        payload["stage_evidence"]["work-4"] = []
+    elif case == "foreign":
+        capture["stage_id"] = "research"
+    elif case == "stale":
+        (Path(capture["data"]["artifact_root"]) / capture["data"]["screenshot"]).write_bytes(b"stale")
+    elif case == "wrong_outputs":
+        payload["execution_plan"]["nodes"][-1]["expected_output_kinds"] = []
+    else:
+        payload["execution_plan"]["nodes"][0]["status"] = "pending"
+    store.save(payload)
+    before = store.path.read_bytes()
+    with pytest.raises(RunnerContractError):
+        ExecutionDriver.resume(driver.work_plan, runner, workspace_root=target,
+                               checkpoint_store=store, grant=driver.grant)
+    assert runner.invocations == 4
+    assert store.path.read_bytes() == before, "failed resume must not overwrite its checkpoint"

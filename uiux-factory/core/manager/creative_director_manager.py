@@ -16,6 +16,7 @@ from core.orchestration.creative_revision_policy import (
     retarget_slug,
 )
 from core.runtime.run_context import RunContext
+from core.runtime.flow_os.execution_driver import ExecutionGrant
 
 
 class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
@@ -185,6 +186,7 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
         directive: CreativeDirective,
         run_id: str,
         engine: str,
+        execution_grant: ExecutionGrant | None = None,
     ) -> RunContext:
         if directive.source_run_id != source_run_id:
             raise ValueError(
@@ -219,6 +221,7 @@ class CreativeDirectorDevelopmentManager(VisualBrainDevelopmentManager):
             goal=review_goal,
             design_context=design_context,
             runtime_preset=runtime_preset,
+            execution_grant=execution_grant,
         )
         context.run_id = run_id
         context.initialize()
