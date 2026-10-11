@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
 from metagpt.actions import Action
@@ -25,6 +26,71 @@ class CreateSpecFirstPromptPack(Action):
         except json.JSONDecodeError:
             return {}
         return payload if isinstance(payload, dict) else {}
+
+    @classmethod
+    def evaluate_consistency(cls, payload: dict[str, Any], pack: PromptPack) -> PromptPackGate:
+        """Check structural contracts, including provider-refined packs; not human validation."""
+        text_keys = ("goal", "reference_analysis", "research", "ux_ia", "art_direction")
+        inputs_present = all(str(payload.get(key, "")).strip() for key in text_keys)
+        contract, system, plan, visual = [cls._json(str(payload.get(key, ""))) for key in (
+            "design_contract_content", "design_system_content", "implementation_plan_content", "visual_composition_content"
+        )]
+        sources_present = inputs_present and all((contract, system, plan, visual))
+        routes = plan.get("routes", [])
+        pages = visual.get("pages", [])
+        routes = routes if isinstance(routes, list) else []
+        pages = pages if isinstance(pages, list) else []
+        route_roles = {item.get("path"): item.get("page_role") for item in routes if isinstance(item, dict)}
+        page_roles = {item.get("path"): item.get("page_role") for item in pages if isinstance(item, dict)}
+        scope_matches = bool(route_roles) and route_roles == page_roles and len(route_roles) == len(routes) == len(pages)
+        scope_matches = scope_matches and all(isinstance(path, str) and path and role for path, role in route_roles.items())
+        domains = [contract.get("project", {}).get("domain"), system.get("domain"), visual.get("domain")]
+        architecture = all(plan.get(key) and plan.get(key) != "UNKNOWN" for key in ("framework", "language", "styling", "output_dir"))
+        spec_pages = {path: role for path, role in re.findall(r"^### (\S+) — (.+)$", pack.full_build_spec, re.M)
+                      if path.startswith("/")}
+        scope_matches = scope_matches and spec_pages == route_roles
+        constraints = contract.get("constraints", {})
+        compositions: dict[str, str] = {}
+        diverse = bool(pages)
+        mobile = bool(pages)
+        for page in pages:
+            if not isinstance(page, dict):
+                diverse = mobile = False
+                continue
+            sections = page.get("sections", [])
+            if not isinstance(sections, list) or not sections:
+                diverse = mobile = False
+                continue
+            mobile = mobile and all(isinstance(section, dict) and bool(section.get("mobile_behavior")) for section in sections)
+            fingerprint = json.dumps([page.get("composition_family"), page.get("first_visual_anchor"),
+                                      [{key: section.get(key) for key in ("type", "composition", "visual_anchor", "density")}
+                                       for section in sections if isinstance(section, dict)]], sort_keys=True)
+            role = page.get("page_role", "")
+            if fingerprint in compositions and compositions[fingerprint] != role:
+                diverse = False
+            compositions[fingerprint] = role
+        preserve_required = constraints.get("preserve_page_role_diversity") or constraints.get("avoid_shared_hero_everywhere")
+        components = system.get("components", [])
+        component_mobile = bool(components) and all(isinstance(item, dict) and item.get("responsive_behavior") for item in components)
+        outputs = "\n".join((pack.project_context, pack.full_build_spec, pack.implementation_prompt, pack.qa_remediation_prompt))
+        inputs = "\n".join(str(value) for value in payload.values())
+        hidden_chat = re.compile(r"(?:from the previous message|as discussed (?:above|earlier)|see (?:the )?(?:previous|earlier) (?:chat|message))", re.I)
+        leaked_examples = any(marker in outputs.lower() and marker not in inputs.lower()
+                              for marker in ("mostar", "example.com", "[project name]", "your-project-name"))
+        filename = "02-FULL-BUILD-SPEC.md"
+        return PromptPackGate(
+            goal_scope_consistent=bool(sources_present and scope_matches and architecture and all(domains) and len(set(domains)) == 1),
+            preserve_change_consistent=bool(sources_present and scope_matches and (diverse or not preserve_required)),
+            responsive_scope_consistent=bool(sources_present and mobile and component_mobile
+                                             and system.get("gates", {}).get("responsive_contracts_defined")
+                                             and "responsive_all" in pack.full_build_spec),
+            qa_maps_to_spec=bool(scope_matches and filename in pack.qa_remediation_prompt
+                                 and all(f"`{path}`" in pack.qa_remediation_prompt for path in route_roles)),
+            implementation_reads_full_spec=bool(filename in pack.implementation_prompt
+                                                 and re.search(r"read.*02-FULL-BUILD-SPEC\.md.*before", pack.implementation_prompt, re.I)),
+            no_hidden_chat_dependency=bool(sources_present and not hidden_chat.search(inputs + "\n" + outputs)),
+            no_example_project_leakage=bool(sources_present and not leaked_examples),
+        )
 
     @staticmethod
     def _bullets(items: list[str], empty: str = "- UNKNOWN") -> str:
@@ -229,14 +295,9 @@ class CreateSpecFirstPromptPack(Action):
             full_build_spec=full_build_spec,
             implementation_prompt=implementation_prompt,
             qa_remediation_prompt=qa_prompt,
-            gates=PromptPackGate(
-                goal_scope_consistent=True,
-                preserve_change_consistent=True,
-                responsive_scope_consistent=True,
-                qa_maps_to_spec=True,
-                implementation_reads_full_spec=True,
-                no_hidden_chat_dependency=True,
-                no_example_project_leakage=True,
-            ),
+            gates=PromptPackGate(),
         )
+        pack.qa_remediation_prompt += "\n\nDeclared route checks against the frozen spec:\n" + self._bullets(route_lines)
+        pack.gates = self.evaluate_consistency(payload, pack)
+        pack.blocking_unknowns = [f"Unverified spec contract: {name}" for name, passed in pack.gates.model_dump().items() if not passed]
         return pack.model_dump_json(indent=2)
