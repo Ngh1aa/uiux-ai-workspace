@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from core.runtime.flow_os.sequence_flow import ResolvedWorkPlan, ResolvedWorkSegment
-from core.runtime.flow_os.work_execution import ArtifactRef, ExecutionTransitionError, WorkExecutionPlan
+from core.runtime.flow_os.work_execution import ArtifactRef, ExecutionTransitionError, WorkExecutionPlan, require_expected_outputs
 from core.runtime.flow_os.agent import AUTHORITY_ORDER, PermissionGate, ToolSpec
 from core.runtime.flow_os.evidence import EvidenceRecord, browser_render_errors, gate_evidence_errors
 
@@ -107,6 +107,17 @@ def validate_runner_evidence(request: SegmentExecutionRequest, result: RunnerRes
     )
     if errors:
         raise RunnerContractError("executor completion evidence failed: " + "; ".join(errors))
+
+
+def validate_runner_outputs(request: SegmentExecutionRequest, result: RunnerResult) -> None:
+    """Reuse ingest/path/hash and expected-kind owners before publishing side effects."""
+    records = ArtifactRegistry(request.workspace_root).ingest(request.segment_id, result.artifacts)
+    if {item.id for item in records}.intersection(item['id'] for item in request.input_artifacts):
+        raise RunnerContractError("runner output reuses an upstream artifact id")
+    try:
+        require_expected_outputs(request.segment_id, request.expected_output_kinds, records)
+    except ExecutionTransitionError as exc:
+        raise RunnerContractError(str(exc)) from exc
 
 
 @dataclass(frozen=True)
@@ -440,6 +451,7 @@ class CommandRunnerAdapter:
             raise RunnerContractError(f"runner exited {completed.returncode} but claimed PASS")
         if result.status == "passed":
             validate_runner_evidence(request, result)
+            validate_runner_outputs(request, result)
         return result
 
 

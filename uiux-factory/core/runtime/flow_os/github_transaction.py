@@ -10,7 +10,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +22,7 @@ from core.runtime.flow_os.execution_driver import (
     SegmentExecutionRequest,
     validate_execution_request,
     validate_runner_evidence,
+    validate_runner_outputs,
 )
 
 
@@ -790,6 +791,11 @@ class GitHubProductionRunner:
                 )
 
             validate_runner_evidence(request, result)
+            # The broker produces the real implementation commit; all other
+            # outputs belong to the worker and must pass before commit/PR effects.
+            worker_outputs = [kind for kind in request.expected_output_kinds
+                              if not (request.phase == "implementation" and kind == "implementation-artifact")]
+            validate_runner_outputs(replace(request, expected_output_kinds=worker_outputs), result)
             if request.phase == "implementation":
                 commit_artifact = self._commit_implementation(request)
                 artifacts = [artifact for artifact in artifacts if artifact.kind != "implementation-artifact"]
