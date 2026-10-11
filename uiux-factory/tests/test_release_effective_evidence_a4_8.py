@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
+from fixtures.executor_evidence import render_fixture
 
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.evidence import EvidenceRecord, effective_evidence
@@ -66,12 +67,7 @@ def test_a4_8_later_pass_supersedes_same_failed_release_channel(tmp_path: Path) 
         "PASS",
         {"name": "validate-runtime", "returncode": 0},
     )
-    browser = _record(
-        "browser-pass",
-        "browser_render",
-        "PASS",
-        {"route": "/", "viewport": {"width": 1440, "height": 900}},
-    )
+    browser = EvidenceRecord.from_dict(render_fixture(source, "release-effective")[0])
     release.attach_release_evidence(managed, [failed, repaired, browser])
 
     effective = effective_evidence([failed.to_dict(), repaired.to_dict(), browser.to_dict()])

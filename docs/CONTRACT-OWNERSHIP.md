@@ -75,6 +75,10 @@ read-only goal can reduce that grant. Requests carry the effective authority, ab
 artifact workspace, plan fingerprint and explicit approval status. Both the driver
 and concrete adapters validate these controls before invoking a runner. Legacy 1.0
 requests/results/checkpoints fail closed; resume requires the same caller grant.
+Concrete adapters bind the caller's plan fingerprint before dispatch. Checkpoints
+retain typed evidence per passed stage; resume rechecks canonical nodes, accepted
+outputs, current hashes and evidence gates, including a fully completed checkpoint.
+It does not accept a stored PASS as proof and does not overwrite a rejected checkpoint.
 
 Host `CommandRunnerAdapter` commands are trusted caller-supplied programs and require
 at least `branch_write`, including audit runs which can write artifacts. They are not
@@ -89,6 +93,25 @@ and obtained through `approve_stage`; this permission to execute is not a claim 
 human usability validation. Read-only research requires no execution approval.
 Pure planning, packet compilation and handoff helpers do not execute a runner and do
 not grant completion, write, merge or release authority.
+
+All passing executor results must carry typed runtime `evidence_records`, bound to
+current local proof artifacts; screenshot labels and prose are insufficient. The
+shared `validate_runner_evidence` boundary runs in the driver, command adapter, and
+GitHub broker before implementation commit/push or PR finalization. File handoff
+digests are checked again before dispatch. Release rechecks current rendered bytes.
+These are consistency/provenance checks for trusted runtime adapters, not a signature
+scheme that authenticates a hostile caller or proves usability/design quality.
+
+Native internal implementation and repair callers must pass `execution_grant` into
+`run`, `run_revision`, or `RunContext`. `run.py --authority branch_write` is the explicit
+write opt-in; omission defaults to `read_only`. The shared frozen-spec verifier in
+`run_context.py` is used by managers, direct AI builders and QA/repair loops. Manual
+native execution approval binds to the current spec SHA; auto remains unreviewed.
+Native BrowserQA emits screenshot SHA and validates the declared route/viewport
+matrix before visual critique. P1.7.1 source-only QA now fails closed: operators must
+produce current browser evidence inside the transaction workspace and supply
+`--browser-artifact-dir` (or the worker's default `evidence/browser` directory).
+No consumer may synthesize render evidence to keep a production run passing.
 
 ## Conflict rule
 

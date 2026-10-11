@@ -6,13 +6,14 @@ import os
 import re
 import subprocess
 import tempfile
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any, Protocol
 
 from core.runtime.flow_os.sequence_flow import ResolvedWorkPlan, ResolvedWorkSegment
 from core.runtime.flow_os.work_execution import ArtifactRef, ExecutionTransitionError, WorkExecutionPlan
 from core.runtime.flow_os.agent import AUTHORITY_ORDER, PermissionGate, ToolSpec
+from core.runtime.flow_os.evidence import EvidenceRecord, browser_render_errors, gate_evidence_errors
 
 
 EXECUTION_DRIVER_VERSION = "2.0"
@@ -49,7 +50,7 @@ def validate_execution_request(request: SegmentExecutionRequest, required_author
     """Shared pre-dispatch boundary, also called by concrete adapters used directly."""
     if request.schema_version != EXECUTION_DRIVER_VERSION:
         raise RunnerContractError("executor request version must be 2.0; legacy requests require migration")
-    if not re.fullmatch(r"sha256:[0-9a-f]{64}", request.plan_fingerprint):
+    if not isinstance(request.plan_fingerprint, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", request.plan_fingerprint):
         raise RunnerContractError("request requires a current plan fingerprint")
     if not request.workspace_root or not Path(request.workspace_root).is_absolute():
         raise RunnerContractError("request requires an absolute workspace_root")
@@ -63,6 +64,49 @@ def validate_execution_request(request: SegmentExecutionRequest, required_author
         raise RunnerContractError(reason)
     if request.phase in {"design", "implementation"} and request.authority == "read_only":
         raise RunnerContractError("mutating stage requires branch_write authority")
+    if not isinstance(request.input_artifacts, list) or not all(isinstance(item, dict) for item in request.input_artifacts):
+        raise RunnerContractError("input artifacts must be structured records")
+    for artifact in request.input_artifacts:
+        relative = dict(artifact.get("metadata") or {}).get("workspace_path")
+        if str(artifact.get("uri", "")).startswith("file://") and not relative:
+            raise RunnerContractError("file input artifact requires workspace path and current digest")
+        if relative:
+            path = (Path(request.workspace_root) / relative).resolve()
+            if not path.is_relative_to(Path(request.workspace_root).resolve()) or not path.is_file():
+                raise RunnerContractError("input artifact is missing or escapes workspace")
+            if artifact.get("digest") != ArtifactRegistry._sha256(path):
+                raise RunnerContractError("input artifact digest is stale")
+
+
+def validate_runner_evidence(request: SegmentExecutionRequest, result: RunnerResult) -> None:
+    """One current-file/typed-gate owner for driver and pre-PR transaction acceptance."""
+    root = Path(request.workspace_root).resolve()
+    for payload in result.evidence_records:
+        try:
+            record = EvidenceRecord.from_dict(payload)
+            if record.stage_id != request.active_stage_id or not record.trusted or record.origin != "runtime":
+                raise ValueError("evidence is foreign, untrusted or not emitted by runtime")
+            if record.type == "browser_render":
+                capture_root = Path(str(record.data.get("artifact_root", ""))).resolve()
+                if not capture_root.is_relative_to(root):
+                    raise ValueError("render evidence escapes executor workspace")
+                errors = browser_render_errors(record)
+                if errors:
+                    raise ValueError("; ".join(errors))
+            else:
+                path = Path(str(record.data.get("artifact_path", "")))
+                if not path.is_absolute() or not path.resolve().is_relative_to(root) or not path.is_file():
+                    raise ValueError("runtime evidence requires a local proof artifact")
+                if record.data.get("artifact_sha256") != ArtifactRegistry._sha256(path):
+                    raise ValueError("runtime evidence proof hash is missing or stale")
+        except (KeyError, TypeError, ValueError, OSError) as exc:
+            raise RunnerContractError(f"invalid executor evidence: {exc}") from exc
+    errors = gate_evidence_errors(
+        list(request.gates) + [{"id": "stage-completion-evidence"}],
+        request.active_stage_id, result.evidence_records, agent=request.agent,
+    )
+    if errors:
+        raise RunnerContractError("executor completion evidence failed: " + "; ".join(errors))
 
 
 @dataclass(frozen=True)
@@ -135,10 +179,13 @@ class RunnerResult:
     failure_class: str | None = None
     reason: str | None = None
     metadata: dict[str, str] = field(default_factory=dict)
+    evidence_records: list[dict[str, Any]] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if self.schema_version != RUNNER_RESULT_VERSION:
             raise RunnerContractError("runner result version must be 2.0")
+        if not isinstance(self.evidence_records, list) or not all(isinstance(item, dict) for item in self.evidence_records):
+            raise RunnerContractError("runner evidence_records must be structured records")
         if self.status not in {"passed", "failed"}:
             raise RunnerContractError(f"runner status must be passed or failed, got {self.status!r}")
         if self.status == "failed" and not (self.reason or self.failure_class):
@@ -153,6 +200,7 @@ class RunnerResult:
             failure_class=str(payload["failure_class"]) if payload.get("failure_class") else None,
             reason=str(payload["reason"]) if payload.get("reason") else None,
             metadata={str(k): str(v) for k, v in dict(payload.get("metadata") or {}).items()},
+            evidence_records=list(payload.get("evidence_records") or []),
         )
 
 
@@ -328,9 +376,26 @@ class CommandRunnerAdapter:
         self.timeout_seconds = int(timeout_seconds)
         self.extra_env = dict(extra_env or {})
         self.invocations = 0
+        self.workspace_root: Path | None = None
+        self.plan_fingerprint: str | None = None
+
+    def bind_plan(self, plan_fingerprint: str) -> None:
+        if self.plan_fingerprint is not None and self.plan_fingerprint != plan_fingerprint:
+            raise RunnerContractError("runner cannot be rebound to a different plan fingerprint")
+        self.plan_fingerprint = plan_fingerprint
+
+    def bind_workspace(self, workspace_root: Path | str) -> None:
+        root = Path(workspace_root).resolve()
+        if self.workspace_root is not None and self.workspace_root != root:
+            raise RunnerContractError("runner cannot be rebound to a different executor workspace")
+        self.workspace_root = root
 
     def run(self, request: SegmentExecutionRequest) -> RunnerResult:
         validate_execution_request(request, self.required_authority)
+        if self.workspace_root is None or Path(request.workspace_root).resolve() != self.workspace_root:
+            raise RunnerContractError("request workspace does not match caller-bound runner workspace")
+        if self.plan_fingerprint is None or request.plan_fingerprint != self.plan_fingerprint:
+            raise RunnerContractError("request fingerprint does not match caller-bound runner plan")
         self.invocations += 1
         prefix = f"{request.segment_id}-attempt-{self.invocations}"
         request_path = self.exchange_dir / f"{prefix}-request.json"
@@ -373,6 +438,8 @@ class CommandRunnerAdapter:
             raise RunnerContractError(f"invalid runner result at {result_path}: {exc}") from exc
         if completed.returncode != 0 and result.status == "passed":
             raise RunnerContractError(f"runner exited {completed.returncode} but claimed PASS")
+        if result.status == "passed":
+            validate_runner_evidence(request, result)
         return result
 
 
@@ -412,6 +479,9 @@ class ExecutionDriver:
         self.execution_plan = execution_plan
         self.runner = runner
         self.registry = registry
+        bind_workspace = getattr(runner, "bind_workspace", None)
+        if bind_workspace is not None:
+            bind_workspace(registry.workspace_root)
         self.checkpoint_store = checkpoint_store
         self.max_repair_attempts = max(0, int(max_repair_attempts))
         self.grant = grant
@@ -419,7 +489,11 @@ class ExecutionDriver:
         self.repair_counts: dict[str, int] = {}
         self.repair_context: dict[str, dict[str, Any]] = {}
         self.history: list[dict[str, Any]] = []
+        self.stage_evidence: dict[str, list[dict[str, Any]]] = {}
         self.plan_fingerprint = self._fingerprint(work_plan)
+        bind_plan = getattr(runner, "bind_plan", None)
+        if bind_plan is not None:
+            bind_plan(self.plan_fingerprint)
         self._save_checkpoint()
 
     @staticmethod
@@ -504,6 +578,7 @@ class ExecutionDriver:
             "version": EXECUTION_DRIVER_VERSION,
             "grant": asdict(self.grant) if self.grant else None,
             "approvals": dict(self.approvals),
+            "stage_evidence": dict(self.stage_evidence),
             "plan_fingerprint": self.plan_fingerprint,
             "execution_plan": self.execution_plan.to_dict(),
             "artifact_registry": self.registry.to_dict(),
@@ -566,11 +641,13 @@ class ExecutionDriver:
 
         if result.status == "passed":
             try:
+                validate_runner_evidence(request, result)
                 refs = self.registry.handoff_refs(record_ids)
                 self.execution_plan.pass_segment(segment_id, refs)
                 self.registry.mark_accepted(record_ids)
+                self.stage_evidence[segment_id] = list(result.evidence_records)
                 self.repair_context.pop(segment_id, None)
-            except ExecutionTransitionError as exc:
+            except (ExecutionTransitionError, RunnerContractError) as exc:
                 self.execution_plan.fail_segment(segment_id, f"runner_output_gate_failed:{exc}")
                 event["status"] = "failed"
                 event["failure_class"] = "RUNNER_OUTPUT_GATE_FAILED"
@@ -588,6 +665,8 @@ class ExecutionDriver:
                         self.repair_counts[owner] = count + 1
                         failure_ids = self.registry.failure_artifact_ids(segment_id)
                         affected = self.execution_plan.reset_from(owner)
+                        for affected_id in affected:
+                            self.stage_evidence.pop(affected_id, None)
                         superseded = self.registry.supersede_segments(
                             affected,
                             reason=f"repair_reset_from:{owner}:qa_failure:{segment_id}",
@@ -622,6 +701,7 @@ class ExecutionDriver:
             "version": EXECUTION_DRIVER_VERSION,
             "grant": asdict(self.grant) if self.grant else None,
             "approvals": dict(self.approvals),
+            "stage_evidence": dict(self.stage_evidence),
             "plan_fingerprint": self.plan_fingerprint,
             "execution_plan": self.execution_plan.to_dict(),
             "artifact_registry": self.registry.to_dict(),
@@ -663,5 +743,38 @@ class ExecutionDriver:
         driver.repair_counts = {str(k): int(v) for k, v in dict(payload.get("repair_counts") or {}).items()}
         driver.repair_context = {str(k): dict(v) for k, v in dict(payload.get("repair_context") or {}).items()}
         driver.history = [dict(item) for item in payload.get("history") or []]
+        driver.stage_evidence = dict(payload.get("stage_evidence") or {})
+        driver._validate_restored_execution()
         driver.checkpoint_store = checkpoint_store
         return driver
+
+    def _validate_restored_execution(self) -> None:
+        """A persisted PASS never replaces current output and evidence checks."""
+        canonical = WorkExecutionPlan.from_resolved_work_plan(self.work_plan)
+        mutable = {"status", "blocking_reason", "attempts"}
+        shape = lambda node: {k: v for k, v in node.to_dict().items() if k not in mutable}
+        if [shape(node) for node in self.execution_plan.nodes] != [shape(node) for node in canonical.nodes]:
+            raise RunnerContractError("checkpoint execution nodes do not match current resolved plan")
+        for node in self.execution_plan.nodes:
+            if node.status != "passed":
+                continue
+            if any(self.execution_plan._node(dep).status != "passed" for dep in node.depends_on):
+                raise RunnerContractError("checkpoint passed stage is missing completed upstream evidence")
+            outputs = [ref for ref in self.execution_plan.artifacts.values()
+                       if ref.producer_segment_id == node.segment_id]
+            if not set(node.expected_output_kinds).issubset({ref.kind for ref in outputs}):
+                raise RunnerContractError("checkpoint passed stage is missing expected outputs")
+            for ref in outputs:
+                record = self.registry.records.get(ref.id)
+                if (record is None or not record.accepted_for_handoff
+                        or self.registry.handoff_refs([ref.id])[0].to_dict() != ref.to_dict()):
+                    raise RunnerContractError("checkpoint outputs disagree with accepted artifact registry")
+            request = self._request(node.segment_id)
+            validate_execution_request(
+                replace(request, input_artifacts=request.input_artifacts + [ref.to_dict() for ref in outputs]),
+                getattr(self.runner, "required_authority", ""),
+            )
+            validate_runner_evidence(request, RunnerResult(
+                schema_version=RUNNER_RESULT_VERSION, status="passed", artifacts=[],
+                evidence_records=self.stage_evidence.get(node.segment_id, []),
+            ))

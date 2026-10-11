@@ -349,6 +349,9 @@ def browser_render_errors(record: EvidenceRecord) -> list[str]:
             return ["browser render screenshot hash does not match current file (stale evidence)"]
         if not _valid_png(raw):
             return ["browser render screenshot is not a structurally valid PNG image"]
+        width, height = struct.unpack(">II", raw[16:24])
+        if width != viewport["width"] or height < viewport["height"]:
+            return ["browser render image dimensions do not match captured viewport"]
         observation = adapter._safe_artifact(root, str(data.get("evidence_json", "")))
         if data.get("evidence_sha256") != hashlib.sha256(observation.read_bytes()).hexdigest():
             return ["browser render observation hash does not match current file (stale evidence)"]
@@ -357,9 +360,53 @@ def browser_render_errors(record: EvidenceRecord) -> list[str]:
             payload.get(key) != data.get(key) for key in ("route", "url", "viewport", "screenshot")
         ):
             return ["browser render metadata does not match captured route/viewport/image"]
+        if payload.get("pageErrors") or payload.get("failedRequests") or payload.get("blockedRequests") or any(
+            isinstance(item, dict) and item.get("type") == "error" for item in payload.get("consoleMessages", [])
+        ):
+            return ["browser render observation contains failing browser signals"]
     except (OSError, TypeError, ValueError, RuntimeError) as error:
         return [f"browser render artifact validation failed: {error}"]
     return []
+
+
+def native_browser_evidence_errors(report: dict[str, Any], artifact_root: Path) -> list[str]:
+    """Native BrowserQA uses the same PNG/hash checks, with its declared route matrix."""
+    root = Path(artifact_root).resolve()
+    errors: list[str] = []
+    expected = {(route, viewport.get("width"), viewport.get("height"))
+                for route in report.get("routes", []) for viewport in report.get("viewports", [])}
+    seen = set()
+    try:
+        base = urlsplit(str(report.get("base_url", "")))
+    except ValueError:
+        return ["browser report URL is malformed"]
+    if base.scheme not in {"http", "https"} or not base.hostname or not expected:
+        errors.append("browser report requires a URL and nonempty route/viewport matrix")
+    for item in report.get("evidence", []):
+        try:
+            route = str(item.get("route", ""))
+            parsed = urlsplit(route)
+            viewport = dict(item.get("viewport") or {})
+            key = (route, viewport.get("width"), viewport.get("height"))
+            path = Path(str(item.get("screenshot", ""))).resolve()
+            if (not route.startswith("/") or parsed.netloc or parsed.scheme or key not in expected
+                    or any(type(viewport.get(edge)) is not int or viewport[edge] <= 0 for edge in ("width", "height"))
+                    or not path.is_relative_to(root) or not path.is_file()):
+                raise ValueError("capture route, viewport or screenshot path is invalid")
+            raw = path.read_bytes()
+            if not _valid_png(raw) or item.get("screenshot_sha256") != hashlib.sha256(raw).hexdigest():
+                raise ValueError("capture image is invalid or hash is missing/stale")
+            width, height = struct.unpack(">II", raw[16:24])
+            if width != viewport["width"] or height < viewport["height"]:
+                raise ValueError("capture image dimensions do not match viewport")
+            if item.get("status") != "passed":
+                raise ValueError("capture has failed browser QA")
+            seen.add(key)
+        except (TypeError, ValueError, OSError) as exc:
+            errors.append(str(exc))
+    if expected.difference(seen):
+        errors.append("browser report is missing valid captures for declared routes/viewports")
+    return errors
 
 
 def gate_evidence_errors(
@@ -391,7 +438,8 @@ def gate_evidence_errors(
         if gate.get("approval") == "human":
             continue
         gate_id = str(gate.get("id", "unnamed"))
-        if gate_id in {"rendered-qa", "prototype-experience-qa"} and "browser_render" not in available:
+        if gate_id in {"rendered-qa", "prototype-experience-qa", "rendered-check", "micro-rendered-check",
+                       "page-rendered-check", "rendered-recruiter-path"} and "browser_render" not in available:
             errors.append(f"gate {gate_id} missing typed evidence: browser_render")
             continue
         declared = gate.get("evidence_types")

@@ -27,7 +27,8 @@ from core.contracts.visual_composition_schema import VisualComposition
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 from core.runtime.flow_os.main_execution import advance_execution_phase, fail_execution_phase
 from core.runtime.flow_os.work_execution import WorkExecutionPlan
-from core.runtime.run_context import RunContext
+from core.runtime.run_context import RunContext, require_frozen_specification, require_native_execution_grant
+from core.runtime.flow_os.execution_driver import ExecutionGrant
 from core.team.team_runner import UIUXTeamRunner
 
 
@@ -109,24 +110,7 @@ class DevelopmentManager:
 
     @staticmethod
     def _require_specification(context: RunContext) -> tuple[Path, Path]:
-        spec = DevelopmentManager._require(context, "full_build_spec")
-        prompt = DevelopmentManager._require(context, "implementation_prompt_spec")
-        manifest_path = DevelopmentManager._require(context, "spec_manifest")
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (ValueError, UnicodeError) as error:
-            raise RuntimeError("Frozen spec manifest is invalid; recompile specification.") from error
-        if not isinstance(manifest, dict):
-            raise RuntimeError("Frozen spec manifest must be an object; recompile specification.")
-        if (
-            manifest.get("frozen") is not True
-            or Path(str(manifest.get("source_of_truth", ""))).resolve() != spec.resolve()
-            or manifest.get("full_build_spec_sha256") != hashlib.sha256(spec.read_bytes()).hexdigest()
-            or not spec.read_text(encoding="utf-8").strip()
-            or "02-FULL-BUILD-SPEC.md" not in prompt.read_text(encoding="utf-8")
-        ):
-            raise RuntimeError("Frozen specification is missing, invalid or stale; recompile specification.")
-        return spec, prompt
+        return require_frozen_specification(context)
 
     def _load_execution_plan(self, context: RunContext) -> WorkExecutionPlan | None:
         raw = context.artifacts.get("execution_plan")
@@ -287,11 +271,12 @@ class DevelopmentManager:
         run_id: str | None = None,
         intelligence_only: bool = False,
         engine: str = "template",
+        execution_grant: ExecutionGrant | None = None,
     ) -> RunContext:
         if engine not in {"template", "ai"}:
             raise ValueError("Unknown generation engine.")
 
-        context = RunContext(root=self.root, goal=goal, design_context=design_context or DesignContext())
+        context = RunContext(root=self.root, goal=goal, design_context=design_context or DesignContext(), execution_grant=execution_grant)
         if run_id:
             if not re.fullmatch(r"[a-zA-Z0-9-]{1,80}", run_id):
                 raise ValueError("Invalid run ID.")
@@ -606,6 +591,7 @@ class DevelopmentManager:
         plan = self._require(context, "implementation_plan")
         visual = self._require(context, "visual_composition")
         full_spec, implementation_prompt = self._require_specification(context)
+        require_native_execution_grant(context)
         context.start_stage(stage)
         result = await self.team_runner.run_role(
             role_class=FrontendEngineer,
@@ -644,6 +630,7 @@ class DevelopmentManager:
         if provider is None:
             raise RuntimeError("AI implementation requires a configured provider.")
         self._require_specification(context)
+        require_native_execution_grant(context)
         stage = "implementation"
         print("\n[Stage] AI Frontend Implementation STARTED")
         context.start_stage(stage)
@@ -664,7 +651,8 @@ class DevelopmentManager:
 
         stage = "quality_loop"
         print("\n[Stage] Quality Loop STARTED")
-        self._require(context, "full_build_spec")
+        self._require_specification(context)
+        require_native_execution_grant(context)
         self._require(context, "qa_remediation_prompt")
         frontend_path = self._require(context, "implementation")
         frontend = FrontendResult.model_validate_json(frontend_path.read_text(encoding="utf-8"))

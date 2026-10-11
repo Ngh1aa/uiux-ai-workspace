@@ -21,6 +21,7 @@ from core.runtime.flow_os.execution_driver import (
     RunnerResult,
     SegmentExecutionRequest,
     validate_execution_request,
+    validate_runner_evidence,
 )
 
 
@@ -314,6 +315,12 @@ class GitHubProductionRunner:
         self.exchange_dir.mkdir(parents=True, exist_ok=True)
         self.evidence_dir.mkdir(parents=True, exist_ok=True)
         self.state = self._load_or_create_state()
+        self.plan_fingerprint: str | None = None
+
+    def bind_plan(self, plan_fingerprint: str) -> None:
+        if self.plan_fingerprint is not None and self.plan_fingerprint != plan_fingerprint:
+            raise RunnerContractError("transaction runner cannot be rebound to a different plan fingerprint")
+        self.plan_fingerprint = plan_fingerprint
 
     @property
     def artifact_root(self) -> Path:
@@ -530,7 +537,10 @@ class GitHubProductionRunner:
                 metadata={"returncode": str(completed.returncode)},
             )
         try:
-            return RunnerResult.from_dict(json.loads(result_path.read_text(encoding="utf-8")))
+            result = RunnerResult.from_dict(json.loads(result_path.read_text(encoding="utf-8")))
+            if completed.returncode != 0 and result.status == "passed":
+                raise RunnerContractError(f"worker exited {completed.returncode} but claimed PASS")
+            return result
         except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
             raise RunnerContractError(f"invalid production worker result: {exc}") from exc
 
@@ -739,6 +749,10 @@ class GitHubProductionRunner:
 
     def run(self, request: SegmentExecutionRequest) -> RunnerResult:
         validate_execution_request(request, self.required_authority)
+        if Path(request.workspace_root).resolve() != self.artifact_root.resolve():
+            raise RunnerContractError("request workspace does not match transaction workspace")
+        if self.plan_fingerprint is None or request.plan_fingerprint != self.plan_fingerprint:
+            raise RunnerContractError("request fingerprint does not match caller-bound transaction plan")
         try:
             self._check_cancelled()
             self._ensure_checkout_and_claim()
@@ -775,6 +789,7 @@ class GitHubProductionRunner:
                     metadata={**result.metadata, "transaction_branch": self.config.transaction_branch},
                 )
 
+            validate_runner_evidence(request, result)
             if request.phase == "implementation":
                 commit_artifact = self._commit_implementation(request)
                 artifacts = [artifact for artifact in artifacts if artifact.kind != "implementation-artifact"]
@@ -798,6 +813,7 @@ class GitHubProductionRunner:
                     "last_commit_sha": self.state.last_commit_sha or "",
                     "pr_url": self.state.pr_url or "",
                 },
+                evidence_records=list(result.evidence_records),
             )
         except TransactionCancelled as exc:
             return RunnerResult(

@@ -15,6 +15,8 @@ from core.team.team_runner import UIUXTeamRunner
 from core.verification.evidence_contract_v1 import EvidenceContractEvaluatorV1
 from core.verification.post_render_evaluators_final import PostRenderEvaluatorSuite
 from core.verification.reference_aware_visual_qa import ReferenceAwareVisualQA
+from core.runtime.run_context import require_frozen_specification, require_native_execution_grant
+from core.runtime.flow_os.evidence import native_browser_evidence_errors
 
 
 class QualityLoopRunner:
@@ -43,6 +45,8 @@ class QualityLoopRunner:
 
     def _spec_context(self) -> dict[str, str]:
         """Return frozen spec/reference lineage for every QA/repair stage."""
+        require_frozen_specification(self.run_context)
+        require_native_execution_grant(self.run_context)
         artifacts = getattr(self.run_context, "artifacts", {})
         result: dict[str, str] = {}
         for key in (
@@ -313,6 +317,7 @@ class QualityLoopRunner:
         latest_repair = None
 
         for iteration in range(1, self.max_iterations + 1):
+            spec_context = self._spec_context()
             iteration_dir = output_dir / "quality-loop" / f"iteration-{iteration:02d}"
             iteration_dir.mkdir(parents=True, exist_ok=True)
 
@@ -331,6 +336,9 @@ class QualityLoopRunner:
                 context=self.run_context,
             )
             browser = BrowserQAResult.model_validate_json(browser_message.content)
+            capture_errors = native_browser_evidence_errors(browser.model_dump(), iteration_dir)
+            if capture_errors:
+                raise RuntimeError("Native rendered QA evidence failed: " + "; ".join(capture_errors))
             browser_path = iteration_dir / "browser-report.json"
             browser_path.write_text(browser.model_dump_json(indent=2), encoding="utf-8")
             latest_browser = browser_path
@@ -484,6 +492,7 @@ class QualityLoopRunner:
                     visual_critic_path=str(critic_path),
                 )
 
+            spec_context = self._spec_context()
             repair_instruction = {
                 "visual_critic_path": str(critic_path),
                 "browser_report_path": str(browser_path),
