@@ -101,6 +101,11 @@ GitHub broker before implementation commit/push or PR finalization. File handoff
 digests are checked again before dispatch. Release rechecks current rendered bytes.
 These are consistency/provenance checks for trusted runtime adapters, not a signature
 scheme that authenticates a hostile caller or proves usability/design quality.
+Before publishing, command adapters and GitHub brokers also reuse `ArtifactRegistry`
+path/hash validation and the expected-output owner in `work_execution.py`. QA outputs
+cannot be absent, mislabeled, stale, outside the workspace, or reuse an input ID before
+PR creation. The broker owns the implementation commit output; workers supply all
+other required kinds, and the final Driver still requires the real broker commit.
 
 Native internal implementation and repair callers must pass `execution_grant` into
 `run`, `run_revision`, or `RunContext`. `run.py --authority branch_write` is the explicit

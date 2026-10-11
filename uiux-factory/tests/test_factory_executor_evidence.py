@@ -193,6 +193,41 @@ def test_github_source_only_qa_cannot_create_pr(tmp_path):
         assert driver.execution_plan.nodes[-1].status == 'failed'
 
 
+@pytest.mark.parametrize('case', ['empty', 'wrong_kind', 'stale_digest', 'missing_file', 'outside', 'reused_id'])
+def test_github_output_contract_is_checked_before_pr(tmp_path, monkeypatch, case):
+    from test_p17_github_production_transaction import _init_remote, _fake_github_api, _build_driver as github_driver
+    remote, _ = _init_remote(tmp_path)
+    with _fake_github_api() as (api, state):
+        _, _, driver, runner = github_driver(tmp_path, remote, api)
+        invoke = runner._invoke_worker
+
+        def invalid_qa_outputs(request):
+            result = invoke(request)
+            if request.phase != 'qa':
+                return result
+            artifact = next(item for item in result.artifacts if item.kind == 'qa-evidence')
+            if case == 'empty':
+                return replace(result, artifacts=[])
+            if case == 'wrong_kind':
+                changed = replace(artifact, kind='audit-findings')
+            elif case == 'stale_digest':
+                changed = replace(artifact, digest='sha256:' + '0' * 64)
+            elif case == 'missing_file':
+                changed = replace(artifact, path=str(runner.artifact_root / 'missing.png'))
+            elif case == 'outside':
+                outside = tmp_path / 'outside.png'
+                outside.write_bytes(Path(artifact.path).read_bytes())
+                changed = replace(artifact, path=str(outside))
+            else:
+                changed = replace(artifact, id=request.input_artifacts[0]['id'])
+            return replace(result, artifacts=[changed if item.id == artifact.id else item for item in result.artifacts])
+
+        monkeypatch.setattr(runner, '_invoke_worker', invalid_qa_outputs)
+        assert driver.run_until_blocked() == 'failed'
+        assert state['create_count'] == 0, 'invalid outputs must block before a PR is created'
+        assert runner.state.pr_number is None
+
+
 @pytest.mark.parametrize('executor', ['managed', 'provider', 'release'])
 @pytest.mark.parametrize('case', ['valid', 'missing', 'wrong_route', 'wrong_viewport', 'stale', 'empty'])
 def test_shared_render_negatives_on_managed_provider_and_release(tmp_path, rendered, monkeypatch, executor, case):
