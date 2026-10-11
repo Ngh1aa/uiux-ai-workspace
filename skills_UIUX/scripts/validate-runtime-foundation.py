@@ -180,7 +180,9 @@ def _run_flow_os_smoke(errors: list[str]) -> None:
                 )
             if expected_stage == "research" and stage_run.authority != "read_only":
                 errors.append("research stage did not honor role max_authority")
-            stage_run = harness.execute_plan(stage_run, [])
+            action = ({"tool": "read_text", "args": {"path": ".gitkeep"}} if expected_stage == "research"
+                      else {"tool": "run_validator", "args": {"name": "validate-flows"}})
+            stage_run = harness.execute_plan(stage_run, [action])
             if stage_run.state != "COMPLETED":
                 errors.append(f"managed stage {expected_stage} did not complete smoke plan")
             manager.complete_stage(managed)
@@ -215,9 +217,9 @@ def _run_flow_os_smoke(errors: list[str]) -> None:
             authority="branch_write",
             overrides={"approval_mode": "manual"},
         )
-        research_run = harness.execute_plan(manager.start_stage(manual), [])
+        research_run = harness.execute_plan(manager.start_stage(manual), [{"tool": "read_text", "args": {"path": ".gitkeep"}}])
         manager.complete_stage(manual)
-        design_run = harness.execute_plan(manager.start_stage(manual), [])
+        design_run = harness.execute_plan(manager.start_stage(manual), [{"tool": "run_validator", "args": {"name": "validate-flows"}}])
         if research_run.state != "COMPLETED" or design_run.state != "COMPLETED":
             errors.append("manual approval smoke specialist stage did not complete")
         try:
