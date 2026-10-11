@@ -20,6 +20,7 @@ from core.runtime.flow_os.execution_driver import (
     RunnerContractError,
     RunnerResult,
     SegmentExecutionRequest,
+    validate_execution_request,
 )
 
 
@@ -291,6 +292,8 @@ class GitHubRestClient:
 
 class GitHubProductionRunner:
     """P1.7 SegmentRunner that fences target mutation inside one GitHub transaction branch."""
+
+    required_authority = "external_write"
 
     def __init__(self, config: GitHubTransactionConfig) -> None:
         self.config = config
@@ -735,6 +738,7 @@ class GitHubProductionRunner:
         )
 
     def run(self, request: SegmentExecutionRequest) -> RunnerResult:
+        validate_execution_request(request, self.required_authority)
         try:
             self._check_cancelled()
             self._ensure_checkout_and_claim()

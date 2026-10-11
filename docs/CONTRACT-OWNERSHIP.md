@@ -67,6 +67,29 @@ Transaction isolation uses two fences: an atomic local TTL lease for same-worksp
 
 A transaction PR is a handoff artifact, not release proof. Deployment and release truth remain owned by the deployment/evidence contracts above.
 
+### Executor contract 2.0 migration
+
+`execution_driver.py` owns the 2.0 request/result/checkpoint boundary. Executing callers
+must supply `ExecutionGrant`; routing and target truth cannot grant permissions. A
+read-only goal can reduce that grant. Requests carry the effective authority, absolute
+artifact workspace, plan fingerprint and explicit approval status. Both the driver
+and concrete adapters validate these controls before invoking a runner. Legacy 1.0
+requests/results/checkpoints fail closed; resume requires the same caller grant.
+
+Host `CommandRunnerAdapter` commands are trusted caller-supplied programs and require
+at least `branch_write`, including audit runs which can write artifacts. They are not
+a sandbox for model-generated or untrusted target commands; those use the existing
+`ToolRegistry`/`ContainerSandbox` boundary. GitHub transaction brokers require
+`external_write` before checkout/branch claims/worker invocation. SegmentRunner
+implementations must declare their required authority; undeclared adapters fail closed.
+
+The existing `auto` policy remains explicit `UNREVIEWED`, never human approval.
+In `manual` mode, stage execution approval is bound to the current plan fingerprint
+and obtained through `approve_stage`; this permission to execute is not a claim of
+human usability validation. Read-only research requires no execution approval.
+Pure planning, packet compilation and handoff helpers do not execute a runner and do
+not grant completion, write, merge or release authority.
+
 ## Conflict rule
 
 When two documents overlap, use the higher-authority owner above. Explanatory or historical documents cannot silently override canonical contracts.

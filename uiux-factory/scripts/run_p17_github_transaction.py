@@ -19,6 +19,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
+from core.runtime.flow_os.execution_driver import ExecutionGrant
 from core.runtime.flow_os.github_transaction import GitHubTransactionConfig
 
 
@@ -135,7 +136,7 @@ def main() -> int:
                 pr_title="P1.7 evidence transaction",
             )
             factory = ProfessionalWebsiteFlow(SKILLS)
-            profile, driver, runner = factory.resolve_github_execution_driver(GOAL, config)
+            profile, driver, runner = factory.resolve_github_execution_driver(GOAL, config, grant=ExecutionGrant("external_write"))
             completion = driver.run_until_blocked(max_steps=12)
             branch_sha = remote_sha(remote, runner.config.transaction_branch)
             main_sha = remote_sha(remote, "main")

@@ -40,7 +40,7 @@ if phase == "qa" and fail_qa_once and not qa_marker.exists():
         "PRODUCT_QA_FAILED: rendered checkout drift\n",
     )
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "failed",
         "failure_class": "PRODUCT_QA_FAILED",
         "reason": "rendered checkout drift",
@@ -79,7 +79,7 @@ else:
                 }, ensure_ascii=False),
             ))
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "passed",
         "artifacts": outputs,
         "metadata": {"runner": "p16-subprocess-fixture", "attempt_tag": attempt_tag},

@@ -11,6 +11,8 @@ from urllib.parse import parse_qs, urlparse
 
 import pytest
 
+from core.runtime.flow_os.execution_driver import ExecutionGrant
+
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 from core.runtime.flow_os.execution_driver import SegmentExecutionRequest
 from core.runtime.flow_os.github_transaction import (
@@ -164,7 +166,7 @@ def _config(
 def _build_driver(tmp_path: Path, remote: Path, api_base: str, **config_kwargs):
     factory = ProfessionalWebsiteFlow(SKILLS)
     config = _config(tmp_path, remote, api_base, **config_kwargs)
-    profile, driver, runner = factory.resolve_github_execution_driver(GOAL, config)
+    profile, driver, runner = factory.resolve_github_execution_driver(GOAL, config, grant=ExecutionGrant("external_write"))
     return factory, profile, driver, runner
 
 
@@ -286,7 +288,7 @@ def test_p17_clean_implementation_without_matching_provenance_still_fails_closed
         )
         assert driver.run_next()["status"] == "passed"
         request = SegmentExecutionRequest(
-            schema_version="1.0",
+            schema_version="2.0",
             segment_id="work-3",
             order=3,
             phase="implementation",

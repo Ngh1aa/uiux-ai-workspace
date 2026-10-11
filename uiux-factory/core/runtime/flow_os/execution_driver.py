@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import tempfile
 from dataclasses import asdict, dataclass, field
@@ -11,10 +12,12 @@ from typing import Any, Protocol
 
 from core.runtime.flow_os.sequence_flow import ResolvedWorkPlan, ResolvedWorkSegment
 from core.runtime.flow_os.work_execution import ArtifactRef, ExecutionTransitionError, WorkExecutionPlan
+from core.runtime.flow_os.agent import AUTHORITY_ORDER, PermissionGate, ToolSpec
 
 
-EXECUTION_DRIVER_VERSION = "1.0"
-RUNNER_RESULT_VERSION = "1.0"
+EXECUTION_DRIVER_VERSION = "2.0"
+RUNNER_RESULT_VERSION = "2.0"
+POLICY_PATH = Path(__file__).resolve().parents[4] / "skills_UIUX/runtime/runtime-policy.json"
 ARTIFACT_CLASSES = frozenset({"file", "report", "screenshot", "commit", "evidence"})
 REPAIR_FAILURE_CLASSES = frozenset({"PRODUCT_QA_FAILED"})
 REPAIR_CAPABILITIES = (
@@ -26,6 +29,40 @@ REPAIR_CAPABILITIES = (
 
 class RunnerContractError(ValueError):
     """Raised when a runner violates the P1.6 request/result contract."""
+
+
+@dataclass(frozen=True)
+class ExecutionGrant:
+    """Trusted caller input; routing/profile/runner output cannot grant authority."""
+
+    authority: str
+    approval_mode: str = "auto"
+
+    def __post_init__(self) -> None:
+        if self.authority not in AUTHORITY_ORDER:
+            raise RunnerContractError("unknown caller authority")
+        if self.approval_mode not in {"auto", "manual"}:
+            raise RunnerContractError("approval_mode must be auto or manual")
+
+
+def validate_execution_request(request: SegmentExecutionRequest, required_authority: str) -> None:
+    """Shared pre-dispatch boundary, also called by concrete adapters used directly."""
+    if request.schema_version != EXECUTION_DRIVER_VERSION:
+        raise RunnerContractError("executor request version must be 2.0; legacy requests require migration")
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", request.plan_fingerprint):
+        raise RunnerContractError("request requires a current plan fingerprint")
+    if not request.workspace_root or not Path(request.workspace_root).is_absolute():
+        raise RunnerContractError("request requires an absolute workspace_root")
+    if request.approval_status not in {"NOT_REQUIRED", "UNREVIEWED", "APPROVED", "AWAITING_APPROVAL"}:
+        raise RunnerContractError("request requires explicit approval status")
+    if request.approval_status == "AWAITING_APPROVAL":
+        raise RunnerContractError("AWAITING_APPROVAL: stage execution has not been approved")
+    tool = ToolSpec("segment_runner", "Caller-controlled executor", "HIGH_WRITE", required_authority, True)
+    allowed, reason = PermissionGate(POLICY_PATH).authorize(tool, request.authority)
+    if not allowed:
+        raise RunnerContractError(reason)
+    if request.phase in {"design", "implementation"} and request.authority == "read_only":
+        raise RunnerContractError("mutating stage requires branch_write authority")
 
 
 @dataclass(frozen=True)
@@ -42,7 +79,7 @@ class SegmentExecutionRequest:
     agent: str
     skills: list[str]
     mandatory_skills: list[str]
-    gates: list[str]
+    gates: list[dict[str, Any]]
     input_artifacts: list[dict[str, Any]]
     expected_output_kinds: list[str]
     preserve: list[str]
@@ -50,6 +87,10 @@ class SegmentExecutionRequest:
     repair_of_segment_id: str | None = None
     repair_failure_artifact_ids: list[str] = field(default_factory=list)
     required_capabilities: list[str] = field(default_factory=list)
+    authority: str = ""
+    approval_status: str = ""
+    plan_fingerprint: str = ""
+    workspace_root: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -96,6 +137,8 @@ class RunnerResult:
     metadata: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        if self.schema_version != RUNNER_RESULT_VERSION:
+            raise RunnerContractError("runner result version must be 2.0")
         if self.status not in {"passed", "failed"}:
             raise RunnerContractError(f"runner status must be passed or failed, got {self.status!r}")
         if self.status == "failed" and not (self.reason or self.failure_class):
@@ -104,7 +147,7 @@ class RunnerResult:
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> RunnerResult:
         return cls(
-            schema_version=str(payload.get("schema_version") or RUNNER_RESULT_VERSION),
+            schema_version=str(payload.get("schema_version") or ""),
             status=str(payload["status"]),
             artifacts=[RunnerArtifact.from_dict(item) for item in payload.get("artifacts") or []],
             failure_class=str(payload["failure_class"]) if payload.get("failure_class") else None,
@@ -114,6 +157,7 @@ class RunnerResult:
 
 
 class SegmentRunner(Protocol):
+    required_authority: str
     def run(self, request: SegmentExecutionRequest) -> RunnerResult: ...
 
 
@@ -262,6 +306,10 @@ class ArtifactRegistry:
 class CommandRunnerAdapter:
     """Run a concrete subprocess against a file-based request/result contract."""
 
+    # Host subprocesses are trusted caller-supplied code, never a read-only tool.
+    # Untrusted target commands belong to ContainerSandbox/ToolRegistry.
+    required_authority = "branch_write"
+
     def __init__(
         self,
         command: list[str],
@@ -282,6 +330,7 @@ class CommandRunnerAdapter:
         self.invocations = 0
 
     def run(self, request: SegmentExecutionRequest) -> RunnerResult:
+        validate_execution_request(request, self.required_authority)
         self.invocations += 1
         prefix = f"{request.segment_id}-attempt-{self.invocations}"
         request_path = self.exchange_dir / f"{prefix}-request.json"
@@ -322,6 +371,8 @@ class CommandRunnerAdapter:
             result = RunnerResult.from_dict(payload)
         except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
             raise RunnerContractError(f"invalid runner result at {result_path}: {exc}") from exc
+        if completed.returncode != 0 and result.status == "passed":
+            raise RunnerContractError(f"runner exited {completed.returncode} but claimed PASS")
         return result
 
 
@@ -355,6 +406,7 @@ class ExecutionDriver:
         *,
         checkpoint_store: JsonCheckpointStore | None = None,
         max_repair_attempts: int = 2,
+        grant: ExecutionGrant | None = None,
     ) -> None:
         self.work_plan = work_plan
         self.execution_plan = execution_plan
@@ -362,6 +414,8 @@ class ExecutionDriver:
         self.registry = registry
         self.checkpoint_store = checkpoint_store
         self.max_repair_attempts = max(0, int(max_repair_attempts))
+        self.grant = grant
+        self.approvals: dict[str, str] = {}
         self.repair_counts: dict[str, int] = {}
         self.repair_context: dict[str, dict[str, Any]] = {}
         self.history: list[dict[str, Any]] = []
@@ -415,7 +469,22 @@ class ExecutionDriver:
             repair_of_segment_id=str(repair["qa_segment_id"]) if repair else None,
             repair_failure_artifact_ids=list(repair.get("failure_artifact_ids", [])) if repair else [],
             required_capabilities=list(REPAIR_CAPABILITIES) if repair else [],
+            authority=("read_only" if self.work_plan.requested_authority == "read_only"
+                       else self.grant.authority if self.grant else ""),
+            approval_status=("NOT_REQUIRED" if segment.phase == "audit" else
+                             "APPROVED" if self.approvals.get(segment.id) == self.plan_fingerprint else
+                             "AWAITING_APPROVAL" if self.grant and self.grant.approval_mode == "manual" else
+                             "UNREVIEWED"),
+            plan_fingerprint=self.plan_fingerprint,
+            workspace_root=str(self.registry.workspace_root),
         )
+
+    def approve_stage(self, segment_id: str, *, plan_fingerprint: str) -> None:
+        self._segment(segment_id)
+        if plan_fingerprint != self.plan_fingerprint:
+            raise RunnerContractError("approval plan fingerprint is stale")
+        self.approvals[segment_id] = plan_fingerprint
+        self._save_checkpoint()
 
     def _repair_owner(self, qa_segment_id: str) -> str | None:
         qa_node = self.execution_plan._node(qa_segment_id)
@@ -433,6 +502,8 @@ class ExecutionDriver:
             return
         self.checkpoint_store.save({
             "version": EXECUTION_DRIVER_VERSION,
+            "grant": asdict(self.grant) if self.grant else None,
+            "approvals": dict(self.approvals),
             "plan_fingerprint": self.plan_fingerprint,
             "execution_plan": self.execution_plan.to_dict(),
             "artifact_registry": self.registry.to_dict(),
@@ -448,6 +519,18 @@ class ExecutionDriver:
             return None
         segment_id = runnable[0]
         request = self._request(segment_id)
+        try:
+            validate_execution_request(request, getattr(self.runner, "required_authority", ""))
+        except RunnerContractError as exc:
+            waiting = str(exc).startswith("AWAITING_APPROVAL")
+            if not waiting:
+                self.execution_plan.fail_segment(segment_id, f"executor_preflight:{exc}")
+            event = {"segment_id": segment_id, "runner_mode": request.runner_mode,
+                     "status": "AWAITING_APPROVAL" if waiting else "failed",
+                     "failure_class": "EXECUTOR_PREFLIGHT_FAILED", "reason": str(exc), "artifact_ids": []}
+            self.history.append(event)
+            self._save_checkpoint()
+            return event
         self.execution_plan.start(segment_id)
         self._save_checkpoint()
 
@@ -528,13 +611,17 @@ class ExecutionDriver:
                 break
             if not self.execution_plan.runnable_segment_ids():
                 break
-            self.run_next()
+            event = self.run_next()
+            if event and event["status"] == "AWAITING_APPROVAL":
+                return "AWAITING_APPROVAL"
         self._save_checkpoint()
         return self.execution_plan.completion_status
 
     def checkpoint_payload(self) -> dict[str, Any]:
         return {
             "version": EXECUTION_DRIVER_VERSION,
+            "grant": asdict(self.grant) if self.grant else None,
+            "approvals": dict(self.approvals),
             "plan_fingerprint": self.plan_fingerprint,
             "execution_plan": self.execution_plan.to_dict(),
             "artifact_registry": self.registry.to_dict(),
@@ -552,8 +639,13 @@ class ExecutionDriver:
         workspace_root: Path | str,
         checkpoint_store: JsonCheckpointStore,
         max_repair_attempts: int = 2,
+        grant: ExecutionGrant | None = None,
     ) -> ExecutionDriver:
         payload = checkpoint_store.load()
+        if payload.get("version") != EXECUTION_DRIVER_VERSION:
+            raise RunnerContractError("checkpoint version must be 2.0; legacy checkpoints require migration")
+        if payload.get("grant") != (asdict(grant) if grant else None):
+            raise RunnerContractError("checkpoint caller grant does not match; resume cannot escalate authority")
         expected = cls._fingerprint(work_plan)
         if payload.get("plan_fingerprint") != expected:
             raise RunnerContractError("checkpoint plan fingerprint does not match resolved work plan")
@@ -565,7 +657,9 @@ class ExecutionDriver:
             ArtifactRegistry.from_dict(workspace_root, dict(payload.get("artifact_registry") or {})),
             checkpoint_store=None,
             max_repair_attempts=max_repair_attempts,
+            grant=grant,
         )
+        driver.approvals = {str(k): str(v) for k, v in dict(payload.get("approvals") or {}).items()}
         driver.repair_counts = {str(k): int(v) for k, v in dict(payload.get("repair_counts") or {}).items()}
         driver.repair_context = {str(k): dict(v) for k, v in dict(payload.get("repair_context") or {}).items()}
         driver.history = [dict(item) for item in payload.get("history") or []]

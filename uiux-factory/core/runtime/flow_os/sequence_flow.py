@@ -44,11 +44,13 @@ class ResolvedWorkPlan:
     routing_mode: str
     segments: list[ResolvedWorkSegment]
     work_sequence_version: str
+    requested_authority: str = "unspecified"
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "routing_mode": self.routing_mode,
             "work_sequence_version": self.work_sequence_version,
+            "requested_authority": self.requested_authority,
             "segments": [segment.to_dict() for segment in self.segments],
         }
 
@@ -118,4 +120,5 @@ class SequenceFlowPlanner:
             routing_mode="sequence",
             segments=resolved_segments,
             work_sequence_version=contract.version,
+            requested_authority=contract.profile.authority,
         )
