@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from shutil import copy2
 
-from core.actions.generate_ai_frontend import CODER_CONTRACT, DesignBrief, DesignPage, validate_bundle, write_bundle
+from core.actions.generate_ai_frontend import CODER_CONTRACT, DesignBrief, DesignPage, bundle_quality_checks, validate_bundle, write_bundle
 from core.contracts.design_system_schema import DesignSystemContract
 from core.contracts.frontend_result_schema import FrontendBuildGate, FrontendResult, GeneratedFile, SkillEvidence
 from core.contracts.implementation_plan_schema import ImplementationPlan
@@ -159,6 +159,7 @@ class AIFrontendBuilder:
 
         if bundle is None:
             raise RuntimeError("AI frontend bundle failed validation after 3 attempts: " + "; ".join(issues))
+        quality_checks = bundle_quality_checks(bundle)
 
         project_slug = plan.project_slug
         project = write_bundle(
@@ -227,10 +228,7 @@ class AIFrontendBuilder:
                 next_source_created=False,
                 visual_composition_consumed=True,
                 required_skills_loaded=bool(skills_used),
-                semantic_html_passed=True,
-                responsive_contract_passed=True,
-                focus_contract_passed=True,
-                technical_copy_gate_passed=True,
+                **quality_checks,
                 ready_for_dependency_install=False,
                 build_verified=False,
             ),

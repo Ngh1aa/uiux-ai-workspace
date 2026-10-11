@@ -21,6 +21,7 @@ from core.contracts.design_system_schema import DesignSystemContract
 from core.contracts.frontend_result_schema import FrontendResult
 from core.contracts.implementation_plan_schema import ImplementationPlan
 from core.contracts.prompt_pack_schema import PromptPack
+from core.actions.create_spec_first_prompt_pack import CreateSpecFirstPromptPack
 from core.contracts.schema import DesignContract
 from core.contracts.visual_composition_schema import VisualComposition
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
@@ -557,8 +558,10 @@ class DevelopmentManager:
             context=context,
         )
         pack = PromptPack.model_validate_json(result.content)
+        pack.gates = CreateSpecFirstPromptPack.evaluate_consistency(instruction, pack)
         if not pack.gates.passed:
-            raise RuntimeError("Spec-first prompt pack consistency gate failed.")
+            failed = [name for name, passed in pack.gates.model_dump().items() if not passed]
+            raise RuntimeError("Spec-first prompt pack consistency gate failed: " + ", ".join(failed))
 
         prompt_files = {
             "project_context_prompt": ("00-PROJECT-CONTEXT.md", pack.project_context),
