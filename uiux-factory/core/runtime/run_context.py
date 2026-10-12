@@ -8,10 +8,24 @@ from typing import Any
 from uuid import uuid4
 
 from core.contracts.design_context_schema import DesignContext
+from core.contracts.prompt_pack_schema import SPEC_UPSTREAM_ARTIFACTS, specification_input_sha256
 from core.events.run_event_bus import RunEventBus
 from core.runtime.flow_os.execution_driver import ExecutionGrant, POLICY_PATH
 from core.runtime.flow_os.agent import PermissionGate, ToolSpec
 from core.runtime.flow_os.task_context import GoalInterpreter
+
+
+def specification_inputs(context) -> dict[str, str]:
+    """Read the same canonical source owners at compile and execution time."""
+    inputs = {"goal": context.goal}
+    for key, artifact in SPEC_UPSTREAM_ARTIFACTS.items():
+        raw = context.artifacts.get(artifact)
+        if not raw or not Path(raw).is_file():
+            raise RuntimeError(f"Specification upstream missing: {artifact}; recompile specification.")
+        inputs[key] = Path(raw).read_text(encoding="utf-8")
+    if not specification_input_sha256(inputs):
+        raise RuntimeError("Specification upstream is empty or invalid; recompile specification.")
+    return inputs
 
 
 def require_frozen_specification(context) -> tuple[Path, Path]:
@@ -32,8 +46,11 @@ def require_frozen_specification(context) -> tuple[Path, Path]:
     if not isinstance(manifest, dict):
         raise RuntimeError("Frozen spec manifest must be an object; recompile specification.")
     if (manifest.get("frozen") is not True
+            or manifest.get("schema_version") != 2
             or Path(str(manifest.get("source_of_truth", ""))).resolve() != spec.resolve()
             or manifest.get("full_build_spec_sha256") != hashlib.sha256(spec.read_bytes()).hexdigest()
+            or manifest.get("implementation_prompt_sha256") != hashlib.sha256(prompt.read_bytes()).hexdigest()
+            or manifest.get("upstream_sha256") != specification_input_sha256(specification_inputs(context))
             or not spec.read_text(encoding="utf-8").strip()
             or "02-FULL-BUILD-SPEC.md" not in prompt.read_text(encoding="utf-8")):
         raise RuntimeError("Frozen specification is missing, invalid or stale; recompile specification.")
