@@ -1,5 +1,6 @@
 """Validated static file bundles from the configured coder, without a layout template."""
 
+import ast
 import json
 import re
 from html.parser import HTMLParser
@@ -99,14 +100,110 @@ def _css_blocks(css: str):
             yield match.group(1).strip(), css[match.end():end - 1]
 
 
+def _css_values(value: str, separator: str | None = None) -> list[str]:
+    """Split at top level, preserving nested CSS function arguments."""
+    result, start, depth = [], 0, 0
+    for index, char in enumerate(value):
+        depth += (char == "(") - (char == ")")
+        if depth == 0 and (char == separator if separator else char.isspace()):
+            if value[start:index].strip():
+                result.append(value[start:index].strip())
+            start = index + 1
+    if value[start:].strip():
+        result.append(value[start:].strip())
+    return result
+
+
+def _css_scalar(value: str) -> tuple[float, str] | None:
+    """Evaluate literal dimensions and bounded calc arithmetic, never Python eval.
+
+    Mixed-unit arithmetic needs computed style and is deliberately unresolved here.
+    """
+    number = r"(?:\d*\.\d+|\d+)(?:[a-z%]+)?"
+    literal = re.fullmatch(r"([-+]?(?:\d*\.\d+|\d+))([a-z%]*)", value.strip())
+    if literal:
+        return float(literal[1]), literal[2]
+    if not value.startswith("calc(") or not value.endswith(")") or len(value) > 256:
+        return None
+    body = value[5:-1]
+    # CSS requires whitespace around binary +/-, unlike Python arithmetic.
+    for index, char in enumerate(body):
+        previous = body[:index].rstrip()
+        if char in "+-" and previous and previous[-1] not in "(+-*/":
+            if not body[index - 1].isspace() or index + 1 == len(body) or not body[index + 1].isspace():
+                return None
+    literals: dict[str, tuple[float, str]] = {}
+    def replace(match):
+        key = f"v{len(literals)}"
+        literals[key] = _css_scalar(match[0])
+        return key
+    expression = re.sub(number, replace, body)
+    def evaluate(node):
+        if isinstance(node, ast.Name) and node.id in literals:
+            return literals[node.id]
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+            amount, unit = evaluate(node.operand)
+            return (-amount if isinstance(node.op, ast.USub) else amount), unit
+        if isinstance(node, ast.BinOp):
+            left, lu = evaluate(node.left)
+            right, ru = evaluate(node.right)
+            if isinstance(node.op, (ast.Add, ast.Sub)) and lu == ru:
+                return (left + right if isinstance(node.op, ast.Add) else left - right), lu
+            if isinstance(node.op, ast.Mult) and not (lu and ru):
+                return left * right, lu or ru
+            if isinstance(node.op, ast.Div) and not ru and right:
+                return left / right, lu
+        raise ValueError("Unresolved CSS arithmetic")
+    try:
+        return evaluate(ast.parse(expression.strip(), mode="eval").body)
+    except (SyntaxError, ValueError, TypeError, RecursionError):
+        return None
+
+
+def _invisible_color(value: str) -> bool:
+    if re.search(r"\b(?:none|transparent)\b|#(?:[0-9a-f]{6}00|[0-9a-f]{3}0)\b", value):
+        return True
+    for token in _css_values(value):
+        color = re.fullmatch(r"(rgba?|hsla?|hwb|(?:ok)?lab|(?:ok)?lch|color)\((.*)\),?", token)
+        if not color:
+            continue
+        slash = _css_values(color[2], "/")
+        comma = _css_values(color[2], ",")
+        alpha = slash[-1] if len(slash) == 2 else comma[-1] if len(comma) == 4 else ""
+        scalar = _css_scalar(alpha)
+        if scalar and scalar[0] <= 0 and scalar[1] in {"", "%"}:
+            return True
+    return False
+
+
+def _merge_focus_properties(target: dict[str, str], source: dict[str, str]) -> None:
+    for key, value in source.items():
+        if key.startswith("!"):
+            continue
+        priority = source.get("!" + key, "0")
+        if target.get("!" + key) != "1" or priority == "1":
+            target[key] = value
+            target["!" + key] = priority
+
+
 def _resolve_css_vars(value: str, variables: dict[str, str]) -> str:
     """Resolve local custom properties/fallbacks; external color tokens stay symbolic."""
-    pattern = re.compile(r"var\(\s*(--[\w-]+)\s*(?:,\s*([^()]*))?\)")
+    pattern = re.compile(r"var\(\s*(--[\w-]+)")
     for _ in range(12):
-        resolved = pattern.sub(lambda match: variables.get(match[1], match[2] if match[2] is not None else match[0]), value)
-        if resolved == value:
+        before = value
+        for match in reversed(list(pattern.finditer(value))):
+            depth, end = 1, match.end()
+            while end < len(value) and depth:
+                depth += (value[end] == "(") - (value[end] == ")")
+                end += 1
+            if depth:
+                continue
+            arguments = _css_values(value[match.start() + 4:end - 1], ",")
+            fallback = ",".join(arguments[1:]) if len(arguments) > 1 else value[match.start():end]
+            replacement = variables.get(match[1], fallback)
+            value = value[:match.start()] + replacement + value[end:]
+        if before == value:
             break
-        value = resolved
     # A locally declared reference left unresolved is cyclic, not a visible ring.
     if any(match[1] in variables for match in pattern.finditer(value)):
         return "none"
@@ -122,19 +219,20 @@ def _focus_properties(body: str, variables: dict[str, str]) -> dict[str, str]:
         if key.startswith("--"):
             continue
         key = key.lower()
-        value = _resolve_css_vars(re.sub(r"!important", "", raw, flags=re.I).strip(), variables)
+        important = bool(re.search(r"!\s*important\s*$", raw, re.I))
+        value = _resolve_css_vars(re.sub(r"!\s*important", "", raw, flags=re.I).strip(), variables)
         if key == "outline":
             # Shorthand resets all three longhands at this point in declaration order.
             outline = {"outline-width": "medium", "outline-style": "none", "outline-color": "currentcolor"}
-            for token in re.findall(r"[a-z][\w-]*\([^)]*\)|[^\s]+", value):
+            for token in _css_values(value):
                 if token in styles:
                     outline["outline-style"] = token
-                elif token in {"thin", "medium", "thick", "0"} or re.fullmatch(r"[\d.]+[a-z]+", token):
+                elif token in {"thin", "medium", "thick", "0"} or re.fullmatch(r"[\d.]+[a-z]+", token) or token.startswith(("calc(", "min(", "max(", "clamp(")):
                     outline["outline-width"] = token
                 else:
                     outline["outline-color"] = token
-            properties.update(outline)
-        properties[key] = value
+            _merge_focus_properties(properties, {**outline, **{"!" + name: str(int(important)) for name in outline}})
+        _merge_focus_properties(properties, {key: value, "!" + key: str(int(important))})
     return properties
 
 
@@ -149,13 +247,17 @@ def _fully_clipped(properties: dict[str, str]) -> bool:
             if zero_height or zero_width:
                 return True
     path = properties.get("clip-path", "")
-    if re.match(r"(?:circle|ellipse)\(\s*0(?:\.0+)?(?:[a-z%]+)?(?:\s|\))", path):
-        return True
-    inset = re.fullmatch(r"inset\(([^)]+)\)", path)
+    radial = re.fullmatch(r"(?:circle|ellipse)\((.*)\)", path)
+    if radial:
+        radii = _css_values(radial[1])
+        radius = _css_scalar(radii[0]) if radii else None
+        if radius and radius[0] == 0:
+            return True
+    inset = re.fullmatch(r"inset\((.*)\)", path)
     if inset:
-        offsets = inset[1].split(" round ")[0].split()
-        if 1 <= len(offsets) <= 4 and all(re.fullmatch(r"[\d.]+%", offset) for offset in offsets):
-            values = [float(offset[:-1]) for offset in offsets]
+        offsets = [_css_scalar(offset) for offset in _css_values(inset[1].split(" round ")[0])]
+        if 1 <= len(offsets) <= 4 and all(offset and offset[1] == "%" for offset in offsets):
+            values = [offset[0] for offset in offsets]
             top, right, bottom, left = (values * 4)[:4] if len(values) <= 2 else (values + [values[1]])[:4]
             return top + bottom >= 100 or right + left >= 100
     return False
@@ -189,25 +291,29 @@ def bundle_quality_checks(bundle: FileBundle) -> dict[str, bool]:
         declarations = _focus_properties(body, variables)
         for individual in selector.split(","):
             if ":focus-visible" in individual:
-                focus_declarations.setdefault(individual.strip(), {}).update(declarations)
+                _merge_focus_properties(focus_declarations.setdefault(individual.strip(), {}), declarations)
     focus_rules = []
-    baseline = {**focus_declarations.get(":focus-visible", {}), **focus_declarations.get("*:focus-visible", {})}
+    baseline = dict(focus_declarations.get(":focus-visible", {}))
+    _merge_focus_properties(baseline, focus_declarations.get("*:focus-visible", {}))
     for declarations in focus_declarations.values():
-        declarations = {**baseline, **declarations}
+        combined = dict(baseline)
+        _merge_focus_properties(combined, declarations)
+        declarations = combined
         hidden = declarations.get("visibility") == "hidden" or declarations.get("display") == "none"
-        hidden = hidden or bool(re.fullmatch(r"0(?:\.0+)?", declarations.get("opacity", "")))
+        opacity = _css_scalar(declarations.get("opacity", ""))
+        hidden = hidden or bool(opacity and opacity[0] <= 0 and opacity[1] in {"", "%"})
         hidden = hidden or _fully_clipped(declarations)
         width = declarations.get("outline-width", "medium")
         style = declarations.get("outline-style", "none")
         color = declarations.get("outline-color", "currentcolor")
         shadow = declarations.get("box-shadow", "")
-        invisible = r"(?:\bnone\b|\btransparent\b|rgba\([^)]*[,/]\s*0(?:\.0+)?\s*\)|#(?:[0-9a-f]{6}00|[0-9a-f]{3}0)\b)"
-        numeric_width = re.fullmatch(r"(\d*\.\d+|\d+)(px|rem|em|pt|pc|in|cm|mm|q|vw|vh|vmin|vmax)", width)
-        visible_outline = bool((width in {"thin", "medium", "thick"} or (numeric_width and float(numeric_width[1]) > 0))
+        numeric_width = _css_scalar(width)
+        visible_outline = bool((width in {"thin", "medium", "thick"} or (numeric_width and numeric_width[0] > 0
+                               and numeric_width[1] in {"px", "rem", "em", "pt", "pc", "in", "cm", "mm", "q", "vw", "vh", "vmin", "vmax"}))
                                and style in {"auto", "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"}
-                               and not re.search(invisible, color))
+                               and not _invisible_color(color))
         visible_shadow = bool(re.search(r"(?:[1-9]\d*(?:\.\d+)?|0\.\d*[1-9]\d*)(?:px|rem|em)\b", shadow)
-                              and not re.search(invisible, shadow))
+                              and not _invisible_color(shadow))
         focus_rules.append(bool(not hidden and (visible_outline or visible_shadow)))
     text = " ".join(" ".join(document.visible_text) for document in documents).lower()
     technical = re.search(r"uiux\s*factory|metagpt|generated by|implemented (?:using|with)|factory placeholder|deterministic placeholder", text)
