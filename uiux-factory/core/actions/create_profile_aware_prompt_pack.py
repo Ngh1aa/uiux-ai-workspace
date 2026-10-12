@@ -153,4 +153,9 @@ class CreateProfileAwarePromptPack(Action):
             + pack.qa_remediation_prompt
         )
 
+        # Profile/provenance augmentation is deterministic and part of compilation.
+        pack.bind_compilation(payload)
+        pack.gates = CreateSpecFirstPromptPack.evaluate_consistency(payload, pack)
+        pack.blocking_unknowns = [f"Unverified structural spec contract: {name}"
+                                 for name, passed in pack.gates.model_dump().items() if not passed]
         return pack.model_dump_json(indent=2)

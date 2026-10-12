@@ -27,7 +27,7 @@ from core.contracts.visual_composition_schema import VisualComposition
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 from core.runtime.flow_os.main_execution import advance_execution_phase, fail_execution_phase
 from core.runtime.flow_os.work_execution import WorkExecutionPlan
-from core.runtime.run_context import RunContext, require_frozen_specification, require_native_execution_grant
+from core.runtime.run_context import RunContext, require_frozen_specification, require_native_execution_grant, specification_inputs
 from core.runtime.flow_os.execution_driver import ExecutionGrant
 from core.team.team_runner import UIUXTeamRunner
 
@@ -525,17 +525,7 @@ class DevelopmentManager:
         stage = "specification_compile"
         print("\n[Stage] Specification Compile STARTED")
         context.start_stage(stage)
-        instruction = {
-            "goal": context.goal,
-            "reference_analysis": self._read(context, "reference_analysis"),
-            "research": self._read(context, "research"),
-            "ux_ia": self._read(context, "ux_ia"),
-            "art_direction": self._read(context, "art_direction"),
-            "design_contract_content": self._read(context, "design_contract"),
-            "design_system_content": self._read(context, "design_system"),
-            "implementation_plan_content": self._read(context, "implementation_plan"),
-            "visual_composition_content": self._read(context, "visual_composition"),
-        }
+        instruction = specification_inputs(context)
         result = await self.team_runner.run_role(
             role_class=SpecWriter,
             stage=stage,
@@ -562,11 +552,13 @@ class DevelopmentManager:
 
         spec_bytes = Path(written["full_build_spec"]).read_bytes()
         manifest = {
-            "schema_version": 1,
+            "schema_version": 2,
             "mode": "compile_then_execute",
             "frozen": True,
             "source_of_truth": written["full_build_spec"],
             "full_build_spec_sha256": hashlib.sha256(spec_bytes).hexdigest(),
+            "implementation_prompt_sha256": hashlib.sha256(Path(written["implementation_prompt_spec"]).read_bytes()).hexdigest(),
+            "upstream_sha256": pack.upstream_sha256,
             "artifacts": written,
             "gates": pack.gates.model_dump(),
             "rule": (

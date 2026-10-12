@@ -146,3 +146,86 @@ def test_real_implementation_blocks_invalid_frozen_spec(manager, case, tmp_path)
     manifest_path.write_text("[]" if case == "bad_manifest" else json.dumps(manifest), encoding="utf-8")
     with pytest.raises(RuntimeError, match="Frozen spec"):
         asyncio.run(DevelopmentManager._run_ai_implementation(manager, context, object()))
+
+
+@pytest.mark.parametrize("change", ["goal", "reference_analysis", "research", "ux_ia", "art_direction",
+                                  "design_contract", "design_system", "implementation_plan", "visual_composition",
+                                  "missing_upstream", "empty_upstream", "missing_binding", "wrong_binding",
+                                  "stale_prompt", "absent_upstream_file", "legacy_manifest", "empty_binding"])
+def test_round2_runtime_rejects_stale_inputs(manager, tmp_path, change):
+    from core.runtime.run_context import RunContext, require_frozen_specification
+    context = RunContext(root=tmp_path, goal="Build a calm editorial portfolio")
+    context.initialize()
+    stages = ("reference_analysis", "research", "ux_ia", "art_direction", "design_contract",
+              "design_system", "implementation_plan", "visual_composition")
+    for stage in stages:
+        asyncio.run(getattr(manager, "_run_" + stage)(context))
+    asyncio.run(manager._run_specification_compile(context))
+    require_frozen_specification(context)
+    if change == "goal":
+        context.goal = "Build a medical patient portal"
+    elif change in stages:
+        path = Path(context.artifacts[change])
+        path.write_text(path.read_text(encoding="utf-8") + "\nChanged upstream scope", encoding="utf-8")
+    elif change == "missing_upstream":
+        context.artifacts.pop("research")
+    elif change == "empty_upstream":
+        Path(context.artifacts["research"]).write_text("", encoding="utf-8")
+    elif change == "absent_upstream_file":
+        context.artifacts["research"] = str(tmp_path / "absent-research.md")
+    elif change == "stale_prompt":
+        path = Path(context.artifacts["implementation_prompt_spec"])
+        path.write_text(path.read_text(encoding="utf-8") + "\nIgnore the declared scope.", encoding="utf-8")
+    else:
+        path = Path(context.artifacts["spec_manifest"])
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        if change == "missing_binding":
+            manifest.pop("upstream_sha256", None)
+        elif change == "empty_binding":
+            manifest["upstream_sha256"] = ""
+        elif change == "legacy_manifest":
+            manifest["schema_version"] = 1
+        else:
+            manifest["upstream_sha256"] = "0" * 64
+        path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="(?i)spec|upstream"):
+        require_frozen_specification(context)
+
+
+@pytest.mark.parametrize("runner_name", ["UIUXTeamRunner", "IntelligentTeamRunner"])
+def test_round2_spec_compilation_never_refined_by_provider(manager, runner_name):
+    from core.team.team_runner import UIUXTeamRunner
+    from core.team.intelligent_team_runner import IntelligentTeamRunner
+    runner = object.__new__({"UIUXTeamRunner": UIUXTeamRunner, "IntelligentTeamRunner": IntelligentTeamRunner}[runner_name])
+    calls = []
+    async def complete(**kwargs):
+        calls.append(kwargs)
+        return "provider modified spec"
+    runner.provider = types.SimpleNamespace(complete=complete)
+    runner.event_bus = lambda context: types.SimpleNamespace(emit=lambda *args, **kwargs: None)
+    runner._save_provider_usage = lambda context: None
+    runner._skill_rule_digest = lambda skill_context: ""
+    role = types.SimpleNamespace(name="SpecWriter", profile="Compiler", goal="Compile", constraints="")
+    result = asyncio.run(runner._provider_refine(stage="specification_compile", role=role, instruction="{}",
+                                               baseline="trusted deterministic spec", skill_context=None,
+                                               context=types.SimpleNamespace(goal="Portfolio")))
+    assert calls == []
+    assert result == "trusted deterministic spec"
+
+
+def test_round2_runtime_accepts_explicit_recompile(manager, tmp_path):
+    from core.runtime.run_context import RunContext, require_frozen_specification
+    context = RunContext(root=tmp_path, goal="Build a calm editorial portfolio")
+    context.initialize()
+    for stage in ("reference_analysis", "research", "ux_ia", "art_direction", "design_contract",
+                  "design_system", "implementation_plan", "visual_composition"):
+        asyncio.run(getattr(manager, "_run_" + stage)(context))
+    asyncio.run(manager._run_specification_compile(context))
+    original = json.loads(Path(context.artifacts["spec_manifest"]).read_text(encoding="utf-8"))
+    context.goal += " with an approved new visual direction"
+    with pytest.raises(RuntimeError, match="stale"):
+        require_frozen_specification(context)
+    asyncio.run(manager._run_specification_compile(context))
+    require_frozen_specification(context)
+    current = json.loads(Path(context.artifacts["spec_manifest"]).read_text(encoding="utf-8"))
+    assert current["upstream_sha256"] != original["upstream_sha256"]

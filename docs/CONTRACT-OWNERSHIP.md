@@ -117,6 +117,20 @@ Native internal implementation and repair callers must pass `execution_grant` in
 write opt-in; omission defaults to `read_only`. The shared frozen-spec verifier in
 `run_context.py` is used by managers, direct AI builders and QA/repair loops. Manual
 native execution approval binds to the current spec SHA; auto remains unreviewed.
+Prompt packs and native spec manifests use schema 2. The deterministic compiler
+owns the specification from `RunContext.goal` and the eight upstream artifacts
+listed in `prompt_pack_schema.py::SPEC_UPSTREAM_ARTIFACTS`. Both compiler wrappers
+bind these inputs and their generated content; `specification_compile` is excluded
+from provider refinement in both team runners. Change the goal/upstream and
+recompile to change the specification. A provider must not reseal its own edits.
+The shared verifier rechecks current upstream, spec and implementation-prompt
+hashes before implementation/repair. Legacy manifests without binding must be
+recompiled; they are not auto-upgraded on resume.
+The retained `*_consistent` flag names are compatibility names for structural
+checks (routes/page roles/domain/responsive/QA references), not semantic validation.
+`upstream_binding_valid` additionally detects missing, changed or stale inputs and
+compiled content. Hashes establish consistency for trusted owners, not authenticity
+against a hostile local writer, correctness of prose, human approval or design quality.
 Native BrowserQA emits screenshot SHA and validates the declared route/viewport
 matrix before visual critique. P1.7.1 source-only QA now fails closed: operators must
 produce current browser evidence inside the transaction workspace and supply
