@@ -99,6 +99,68 @@ def _css_blocks(css: str):
             yield match.group(1).strip(), css[match.end():end - 1]
 
 
+def _resolve_css_vars(value: str, variables: dict[str, str]) -> str:
+    """Resolve local custom properties/fallbacks; external color tokens stay symbolic."""
+    pattern = re.compile(r"var\(\s*(--[\w-]+)\s*(?:,\s*([^()]*))?\)")
+    for _ in range(12):
+        resolved = pattern.sub(lambda match: variables.get(match[1], match[2] if match[2] is not None else match[0]), value)
+        if resolved == value:
+            break
+        value = resolved
+    # A locally declared reference left unresolved is cyclic, not a visible ring.
+    if any(match[1] in variables for match in pattern.finditer(value)):
+        return "none"
+    return value.strip().lower()
+
+
+def _focus_properties(body: str, variables: dict[str, str]) -> dict[str, str]:
+    pairs = re.findall(r"([\w-]+)\s*:\s*([^;{}]+)", body)
+    variables = {**variables, **{key: value.strip() for key, value in pairs if key.startswith("--")}}
+    properties: dict[str, str] = {}
+    styles = {"none", "auto", "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"}
+    for key, raw in pairs:
+        if key.startswith("--"):
+            continue
+        key = key.lower()
+        value = _resolve_css_vars(re.sub(r"!important", "", raw, flags=re.I).strip(), variables)
+        if key == "outline":
+            # Shorthand resets all three longhands at this point in declaration order.
+            outline = {"outline-width": "medium", "outline-style": "none", "outline-color": "currentcolor"}
+            for token in re.findall(r"[a-z][\w-]*\([^)]*\)|[^\s]+", value):
+                if token in styles:
+                    outline["outline-style"] = token
+                elif token in {"thin", "medium", "thick", "0"} or re.fullmatch(r"[\d.]+[a-z]+", token):
+                    outline["outline-width"] = token
+                else:
+                    outline["outline-color"] = token
+            properties.update(outline)
+        properties[key] = value
+    return properties
+
+
+def _fully_clipped(properties: dict[str, str]) -> bool:
+    clip = re.fullmatch(r"rect\(([^)]+)\)", properties.get("clip", ""))
+    if clip and properties.get("position") in {"absolute", "fixed"}:
+        edges = re.split(r"\s*,\s*|\s+", clip[1].strip())
+        edges = ["0" if re.fullmatch(r"0(?:\.0+)?(?:[a-z]+)?", edge) else edge for edge in edges]
+        if len(edges) == 4:
+            zero_height = edges[0] == edges[2] and edges[0] != "auto"
+            zero_width = edges[1] == edges[3] and edges[1] != "auto"
+            if zero_height or zero_width:
+                return True
+    path = properties.get("clip-path", "")
+    if re.match(r"(?:circle|ellipse)\(\s*0(?:\.0+)?(?:[a-z%]+)?(?:\s|\))", path):
+        return True
+    inset = re.fullmatch(r"inset\(([^)]+)\)", path)
+    if inset:
+        offsets = inset[1].split(" round ")[0].split()
+        if 1 <= len(offsets) <= 4 and all(re.fullmatch(r"[\d.]+%", offset) for offset in offsets):
+            values = [float(offset[:-1]) for offset in offsets]
+            top, right, bottom, left = (values * 4)[:4] if len(values) <= 2 else (values + [values[1]])[:4]
+            return top + bottom >= 100 or right + left >= 100
+    return False
+
+
 def bundle_quality_checks(bundle: FileBundle) -> dict[str, bool]:
     """Deterministic source checks, not computed-style or rendered WCAG certification."""
     documents = []
@@ -116,12 +178,15 @@ def bundle_quality_checks(bundle: FileBundle) -> dict[str, bool]:
     responsive = any(selector.lower().startswith("@media") and re.search(r"(?:min|max)-width\s*:|\bwidth\s*[<>=]", selector)
                      and any(value.strip() for _key, value in re.findall(r"[^{]+\{\s*([\w-]+)\s*:\s*([^;{}]+)", body))
                      for selector, body in blocks)
+    variables: dict[str, str] = {}
+    for selector, body in blocks:
+        if any(part.strip() in {":root", "html"} for part in selector.split(",")):
+            variables.update((key, value.strip()) for key, value in re.findall(r"(--[\w-]+)\s*:\s*([^;{}]+)", body))
     focus_declarations: dict[str, dict[str, str]] = {}
     for selector, body in blocks:
         if ":focus-visible" not in selector or selector.startswith("@") or re.search(r":not\([^)]*:focus-visible", selector):
             continue
-        declarations = {key.strip().lower(): value.strip().lower().replace("!important", "").strip()
-                        for key, value in re.findall(r"([\w-]+)\s*:\s*([^;{}]+)", body)}
+        declarations = _focus_properties(body, variables)
         for individual in selector.split(","):
             if ":focus-visible" in individual:
                 focus_declarations.setdefault(individual.strip(), {}).update(declarations)
@@ -131,16 +196,18 @@ def bundle_quality_checks(bundle: FileBundle) -> dict[str, bool]:
         declarations = {**baseline, **declarations}
         hidden = declarations.get("visibility") == "hidden" or declarations.get("display") == "none"
         hidden = hidden or bool(re.fullmatch(r"0(?:\.0+)?", declarations.get("opacity", "")))
-        outline = declarations.get("outline", "")
+        hidden = hidden or _fully_clipped(declarations)
+        width = declarations.get("outline-width", "medium")
+        style = declarations.get("outline-style", "none")
+        color = declarations.get("outline-color", "currentcolor")
         shadow = declarations.get("box-shadow", "")
         invisible = r"(?:\bnone\b|\btransparent\b|rgba\([^)]*[,/]\s*0(?:\.0+)?\s*\)|#(?:[0-9a-f]{6}00|[0-9a-f]{3}0)\b)"
-        visible_outline = bool(re.search(r"(?:[1-9]\d*(?:\.\d+)?|0\.\d*[1-9]\d*)(?:px|rem|em)\b|\b(?:thin|medium|thick)\b", outline)
-                               and re.search(r"\b(?:solid|dashed|dotted|double)\b", outline)
-                               and not re.search(invisible, outline))
+        numeric_width = re.fullmatch(r"(\d*\.\d+|\d+)(px|rem|em|pt|pc|in|cm|mm|q|vw|vh|vmin|vmax)", width)
+        visible_outline = bool((width in {"thin", "medium", "thick"} or (numeric_width and float(numeric_width[1]) > 0))
+                               and style in {"auto", "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"}
+                               and not re.search(invisible, color))
         visible_shadow = bool(re.search(r"(?:[1-9]\d*(?:\.\d+)?|0\.\d*[1-9]\d*)(?:px|rem|em)\b", shadow)
                               and not re.search(invisible, shadow))
-        visible_outline = visible_outline and declarations.get("outline-style") != "none" and declarations.get("outline-width") not in {"0", "0px"}
-        visible_outline = visible_outline and declarations.get("outline-color") != "transparent"
         focus_rules.append(bool(not hidden and (visible_outline or visible_shadow)))
     text = " ".join(" ".join(document.visible_text) for document in documents).lower()
     technical = re.search(r"uiux\s*factory|metagpt|generated by|implemented (?:using|with)|factory placeholder|deterministic placeholder", text)

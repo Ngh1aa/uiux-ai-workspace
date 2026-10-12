@@ -150,3 +150,65 @@ def test_ai_builder_quality_flags_are_not_constant_pass():
     flags = {"semantic_html_passed", "responsive_contract_passed", "focus_contract_passed", "technical_copy_gate_passed"}
     assert not [node.arg for node in ast.walk(source) if isinstance(node, ast.keyword)
                 and node.arg in flags and isinstance(node.value, ast.Constant) and node.value.value is True]
+
+
+@pytest.mark.parametrize('indicator', [
+    '--ring:2px solid #145;outline:var(--ring)',
+    'outline-width:2px;outline-style:solid;outline-color:#145',
+    'outline:solid #145',
+    'outline:solid 2px #145',
+    'outline-style:solid;outline-width:thin;outline-color:currentColor',
+    'outline:var(--absent, 2px solid #145)',
+])
+def test_round2_valid_focus_syntax(indicator):
+    raw, brief = _bundle(CSS.replace('outline:2px solid #145', indicator))
+    assert validate_bundle(raw, brief).files['index.html']
+
+
+@pytest.mark.parametrize('indicator', [
+    'outline:none',
+    'outline:2px solid #145;outline-style:none',
+    'outline:2px solid #145;opacity:0',
+    'outline:2px solid #145;position:absolute;clip:rect(0px,0px,0px,0px)',
+    'outline:2px solid #145;clip-path:inset(50%)',
+    'outline:2px solid #145;clip-path:circle(0px)',
+])
+def test_round2_invisible_focus_rejected(indicator):
+    raw, brief = _bundle(CSS.replace('outline:2px solid #145', indicator))
+    with pytest.raises(ValueError, match='focus_contract_passed'):
+        validate_bundle(raw, brief)
+
+
+@pytest.mark.parametrize('css', [
+    ':root{--ring:2px solid #145}' + CSS.replace('outline:2px solid #145', 'outline:var(--ring)'),
+    CSS.replace('outline:2px solid #145', '--width:2px;--ring:var(--width) solid #145;outline:var(--ring)'),
+    CSS.replace('outline:2px solid #145', 'outline-style:none;outline:2px solid #145'),
+    CSS.replace('outline:2px solid #145', 'outline-width:0;outline:2px solid #145'),
+    CSS.replace('outline:2px solid #145', 'outline-color:transparent;outline:2px solid #145'),
+])
+def test_round2_focus_variables_and_declaration_order(css):
+    raw, brief = _bundle(css)
+    assert validate_bundle(raw, brief).files['index.html']
+
+
+@pytest.mark.parametrize('indicator', [
+    '--alpha:0;outline:2px solid #145;opacity:var(--alpha)',
+    '--color:transparent;outline:2px solid var(--color)',
+    'outline-style:solid;outline-width:0px;outline-color:#145',
+    'outline-style:solid;outline-width:2px;outline-color:transparent',
+    'outline:2px solid #145;clip-path:inset(100%)',
+    'outline:2px solid #145;position:absolute;clip:rect(10px,10px,10px,10px)',
+    'outline:2px solid #145;position:absolute;clip:rect(0px,auto,0px,auto)',
+    'outline:var(--undefined-ring)',
+    '--ring:var(--ring);outline:var(--ring)',
+])
+def test_round2_focus_nearby_hidden_and_invalid_variants(indicator):
+    raw, brief = _bundle(CSS.replace('outline:2px solid #145', indicator))
+    with pytest.raises(ValueError, match='focus_contract_passed'):
+        validate_bundle(raw, brief)
+
+
+@pytest.mark.parametrize('position', ['', 'position:static;', 'position:relative;'])
+def test_round2_inactive_legacy_clip_is_not_a_focus_failure(position):
+    raw, brief = _bundle(CSS.replace('outline:2px solid #145', 'outline:2px solid #145;' + position + 'clip:rect(0px,0px,0px,0px)'))
+    assert validate_bundle(raw, brief).files['index.html']
