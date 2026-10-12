@@ -8,7 +8,7 @@ import hashlib
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'uiux-factory'))
-from core.runtime.flow_os.execution_driver import SegmentExecutionRequest, RunnerResult, validate_execution_request, validate_runner_evidence
+from core.runtime.flow_os.execution_driver import ArtifactRegistry, SegmentExecutionRequest, RunnerResult, validate_execution_request, validate_runner_evidence
 from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
 from core.runtime.flow_os.evidence import evidence_from_tool
 
@@ -38,6 +38,7 @@ def emit(kind: str, artifact_class: str, payload: dict[str, object]) -> dict[str
         "kind": kind,
         "artifact_class": artifact_class,
         "path": str(path),
+        "digest": ArtifactRegistry._sha256(path),
         "metadata": {
             "phase": phase,
             "mode": mode,

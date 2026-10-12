@@ -106,6 +106,11 @@ path/hash validation and the expected-output owner in `work_execution.py`. QA ou
 cannot be absent, mislabeled, stale, outside the workspace, or reuse an input ID before
 PR creation. The broker owns the implementation commit output; workers supply all
 other required kinds, and the final Driver still requires the real broker commit.
+Required `qa-evidence` outputs must declare both a workspace file path and its
+current `sha256:` digest. URI-only outputs and metadata-only path claims are
+rejected before PR creation and again on checkpoint resume. Producers must hash
+the final selected file after any render/path substitution. This requirement does
+not apply to broker-owned implementation commit and pull-request URIs.
 
 Native internal implementation and repair callers must pass `execution_grant` into
 `run`, `run_revision`, or `RunContext`. `run.py --authority branch_write` is the explicit

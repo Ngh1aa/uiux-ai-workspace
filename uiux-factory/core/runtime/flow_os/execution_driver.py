@@ -268,6 +268,10 @@ class ArtifactRegistry:
         for artifact in artifacts:
             if artifact.id in self.records:
                 raise RunnerContractError(f"duplicate registry artifact id: {artifact.id}")
+            # Required QA proof is a current local file, regardless of its class.
+            # Broker-owned implementation commits and PR URIs remain metadata.
+            if artifact.kind == "qa-evidence" and (not artifact.path or not artifact.digest):
+                raise RunnerContractError(f"QA output {artifact.id} requires a workspace file path and current digest")
             uri = artifact.uri
             digest = artifact.digest
             metadata = dict(artifact.metadata)
@@ -782,6 +786,15 @@ class ExecutionDriver:
                         or self.registry.handoff_refs([ref.id])[0].to_dict() != ref.to_dict()):
                     raise RunnerContractError("checkpoint outputs disagree with accepted artifact registry")
             request = self._request(node.segment_id)
+            validate_runner_outputs(request, RunnerResult(
+                schema_version=RUNNER_RESULT_VERSION, status="passed",
+                artifacts=[RunnerArtifact(
+                    id=self.registry.records[ref.id].id, kind=ref.kind,
+                    artifact_class=self.registry.records[ref.id].artifact_class,
+                    path=ref.metadata.get("workspace_path"), uri=ref.uri,
+                    digest=ref.digest, metadata=self.registry.records[ref.id].metadata,
+                ) for ref in outputs],
+            ))
             validate_execution_request(
                 replace(request, input_artifacts=request.input_artifacts + [ref.to_dict() for ref in outputs]),
                 getattr(self.runner, "required_authority", ""),
