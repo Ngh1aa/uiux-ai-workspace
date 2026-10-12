@@ -184,8 +184,11 @@ Standard capabilities plus creator inspection/preset-authoring capability and An
 Select one on a new CLI run:
 
 ```bash
-python run.py "Design a luxury fragrance ecommerce site" --runtime-preset visual-first
+python run.py "Design a luxury fragrance ecommerce site" --runtime-preset visual-first --authority branch_write
 ```
+
+For `run.py`, `--authority branch_write` is an explicit opt-in to implementation/repair
+writes. Omission keeps the `read_only` default; this flag grants no merge/deploy permission.
 
 Creative-review revisions inherit the source run's runtime preset. They cannot swap composition mid-history through the CLI.
 
