@@ -11,8 +11,13 @@ artifacts:
 
 ```bash
 cd uiux-factory
-python run.py "Improve the existing onboarding without reopening unrelated product strategy."
+python run.py "Improve the existing onboarding without reopening unrelated product strategy." --authority branch_write
 ```
+
+For `run.py`, `--authority branch_write` explicitly opts into implementation/repair
+writes. This opt-in is needed for builds; omission retains the `read_only` default.
+It does not grant merge/deploy permission. Autonomous examples below also declare
+authority explicitly without changing that entrypoint's existing defaults.
 
 Use the provider-neutral autonomous Flow OS when an agent should inspect a real Git
 project, make bounded branch-scoped changes and run its canonical QA stages:
@@ -22,6 +27,7 @@ cd uiux-factory
 python scripts/run_autonomous_flow.py \
   --project-root /absolute/path/to/project \
   --goal "Improve the existing onboarding without redesigning the whole product." \
+  --authority branch_write \
   --source README.md
 ```
 
@@ -61,7 +67,8 @@ Every autonomous result prints `manager_run_id` and `recovery_snapshot`.
 ```bash
 python scripts/run_autonomous_flow.py \
   --project-root /absolute/path/to/project \
-  --resume-run-id <manager_run_id>
+  --resume-run-id <manager_run_id> \
+  --authority branch_write
 ```
 
 READY/RUNNING same-revision work resumes from its checkpoint. Terminal FAILED/BLOCKED
@@ -75,6 +82,7 @@ Use the snapshot label returned by the earlier run:
 python scripts/run_autonomous_flow.py \
   --project-root /absolute/path/to/project \
   --resume-run-id <manager_run_id> \
+  --authority branch_write \
   --recover-snapshot <snapshot_label>
 ```
 

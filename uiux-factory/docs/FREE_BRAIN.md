@@ -43,8 +43,11 @@ Tên model trên là ví dụ đã đối chiếu tài liệu tại thời đi�
 .\.venv\Scripts\python.exe -m scripts.check_free_provider
 # Chỉ gọi thật khi cấu hình free tier đã sẵn sàng:
 .\.venv\Scripts\python.exe -m scripts.check_free_provider --live
-.\.venv\Scripts\python.exe run.py "Thiết kế website studio với trang chủ và dịch vụ" --engine ai --context docs/examples/design-context-v3.json
+.\.venv\Scripts\python.exe run.py "Thiết kế website studio với trang chủ và dịch vụ" --engine ai --context docs/examples/design-context-v3.json --authority branch_write
 ```
+
+Với `run.py`, `--authority branch_write` là quyền ghi chủ động (opt-in) cho
+implementation/repair. Bỏ cờ này giữ mặc định `read_only`; cờ không cấp quyền merge/deploy.
 
 Workbench có lựa chọn **AI tùy biến · Groq / Gemini đã cấu hình**. API `POST /run` nhận `engine: "ai"`; mặc định vẫn là `template`. Backend đọc `.env.local` khi tạo job, không gửi key về browser. Tài khoản chưa cấu hình trả lỗi trước khi tạo job.
 
