@@ -281,3 +281,97 @@ def test_shared_render_negatives_on_managed_provider_and_release(tmp_path, rende
             with pytest.raises(ValueError, match='completion evidence failed'):
                 controller.complete_stage(managed)
             assert managed.state != 'COMPLETED'
+
+
+@pytest.mark.parametrize('case', ['path_none', 'missing_file_uri', 'remote_uri', 'stale_hash', 'digest_none'])
+def test_round2_required_qa_file_before_pr(tmp_path, monkeypatch, case):
+    from test_p17_github_production_transaction import _init_remote, _fake_github_api, _build_driver as github_driver
+    remote, _ = _init_remote(tmp_path)
+    with _fake_github_api() as (api, state):
+        _, _, driver, runner = github_driver(tmp_path, remote, api)
+        invoke = runner._invoke_worker
+
+        def malformed_output(request):
+            result = invoke(request)
+            if request.phase != 'qa':
+                return result
+            # Establish that output checks, rather than render proof, cause denial.
+            validate_runner_evidence(request, result)
+            artifact = next(item for item in result.artifacts if item.kind == 'qa-evidence')
+            if case == 'path_none':
+                changed = replace(artifact, path=None, uri=Path(artifact.path).as_uri())
+            elif case == 'missing_file_uri':
+                changed = replace(artifact, path=None, digest=None,
+                                  uri=(runner.artifact_root / 'definitely-missing.png').as_uri())
+            elif case == 'remote_uri':
+                changed = replace(artifact, path=None, digest=None, uri='https://example.invalid/no-evidence')
+            elif case == 'stale_hash':
+                changed = replace(artifact, digest='sha256:' + '0' * 64)
+            else:
+                changed = replace(artifact, digest=None)
+            return replace(result, artifacts=[changed if item.id == artifact.id else item for item in result.artifacts])
+
+        monkeypatch.setattr(runner, '_invoke_worker', malformed_output)
+        completion = driver.run_until_blocked()
+        print({'case': case, 'completion': completion, 'create_count': state['create_count'],
+               'pr_number': runner.state.pr_number, 'reason': driver.history[-1]['reason']})
+        assert state['create_count'] == 0, 'Malformed QA output was published before validation'
+        assert completion == 'failed'
+        assert driver.execution_plan.nodes[-1].status == 'failed', 'Probe must reach QA boundary'
+        assert runner.state.pr_number is None
+
+
+@pytest.mark.parametrize('case', ['path_empty', 'digest_empty', 'commit_class', 'metadata_only', 'stale', 'missing'])
+def test_round2_registry_qa_file_contract(tmp_path, case):
+    from core.runtime.flow_os.execution_driver import ArtifactRegistry, RunnerArtifact, RunnerContractError
+    path = tmp_path / 'qa.json'
+    path.write_text('{}', encoding='utf-8')
+    artifact = RunnerArtifact('qa', 'qa-evidence', 'report', path=str(path), digest=ArtifactRegistry._sha256(path))
+    if case in {'path_empty', 'commit_class', 'metadata_only'}:
+        artifact = replace(artifact, path='', uri='https://example.invalid/qa',
+                           artifact_class='commit' if case == 'commit_class' else 'report',
+                           metadata={'workspace_path': 'qa.json'} if case == 'metadata_only' else {})
+    elif case == 'digest_empty':
+        artifact = replace(artifact, digest='')
+    elif case == 'stale':
+        artifact = replace(artifact, digest='sha256:' + '0' * 64)
+    else:
+        artifact = replace(artifact, path=str(tmp_path / 'missing.json'))
+    with pytest.raises(RunnerContractError):
+        ArtifactRegistry(tmp_path).ingest('work-4', [artifact])
+
+
+def test_round2_registry_preserves_current_qa_and_broker_uris(tmp_path):
+    from core.runtime.flow_os.execution_driver import ArtifactRegistry, RunnerArtifact
+    path = tmp_path / 'qa.json'
+    path.write_text('{}', encoding='utf-8')
+    records = ArtifactRegistry(tmp_path).ingest('work-4', [
+        RunnerArtifact('qa', 'qa-evidence', 'report', path=str(path), digest=ArtifactRegistry._sha256(path)),
+        RunnerArtifact('commit', 'implementation-artifact', 'commit', uri='https://github.com/owner/repo/commit/abc'),
+        RunnerArtifact('pr', 'pull-request', 'evidence', uri='https://github.com/owner/repo/pull/1'),
+    ])
+    assert len(records) == 3
+    assert records[0].uri == path.as_uri()
+    assert records[0].digest == ArtifactRegistry._sha256(path)
+
+
+@pytest.mark.parametrize('case', ['remote_uri', 'missing_hash', 'stale_hash'])
+def test_round2_resume_rechecks_required_qa_file(tmp_path, case):
+    from core.runtime.flow_os.execution_driver import ExecutionDriver, RunnerContractError
+    from test_p16_execution_driver import _build_driver as command_driver
+    _, _, driver, _, target, _ = command_driver(tmp_path)
+    assert driver.run_until_blocked() == 'completed'
+    payload = driver.checkpoint_store.load()
+    for collection in (payload['artifact_registry']['artifacts'], payload['execution_plan']['artifacts']):
+        for artifact in collection:
+            if artifact['kind'] != 'qa-evidence':
+                continue
+            if case == 'remote_uri':
+                artifact['uri'] = 'https://example.invalid/missing-qa'
+                artifact['metadata'].pop('workspace_path', None)
+            else:
+                artifact['digest'] = None if case == 'missing_hash' else 'sha256:' + '0' * 64
+    driver.checkpoint_store.save(payload)
+    with pytest.raises(RunnerContractError):
+        ExecutionDriver.resume(driver.work_plan, driver.runner, workspace_root=target,
+                               checkpoint_store=driver.checkpoint_store, grant=driver.grant)

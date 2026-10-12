@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 from executor_evidence import file_proof, render_fixture
+from core.runtime.flow_os.execution_driver import ArtifactRegistry
 
 
 request_path = Path(os.environ["UIUX_EXECUTION_REQUEST"])
@@ -114,5 +115,9 @@ if payload['status'] == 'passed':
         for item in payload['artifacts']:
             if item['kind'] == 'qa-evidence':
                 item['path'] = str(image)
+
+for artifact in payload.get("artifacts", []):
+    if artifact["kind"] == "qa-evidence":
+        artifact["digest"] = ArtifactRegistry._sha256(Path(artifact["path"]))
 
 result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
