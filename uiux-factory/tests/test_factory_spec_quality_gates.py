@@ -262,3 +262,58 @@ def test_round2_binding_ignores_unrelated_routed_metadata_and_can_recompile():
     assert updated.gates.passed
     assert updated.upstream_sha256 != pack.upstream_sha256
     assert updated.compiled_content_sha256 != pack.compiled_content_sha256
+
+
+@pytest.mark.parametrize("indicator", [
+    "outline:calc(0px) solid #145",
+    "outline:2px solid #145;opacity:0%",
+    "outline:2px solid rgb(0 0 0 / 0)",
+    "outline:2px solid rgba(0,0,0,0%)",
+    "outline:2px solid #145;clip-path:circle(calc(0px))",
+    "outline:calc(2px - 2px) solid #145",
+    "outline:2px solid #145;opacity:calc(1 - 1)",
+    "outline:2px solid #145;clip-path:inset(calc(25% + 25%))",
+    "outline:2px solid hsl(0 50% 50% / calc(0))",
+])
+def test_review_invisible_functional_focus_is_rejected(indicator):
+    raw, brief = _bundle(CSS.replace("outline:2px solid #145", indicator))
+    with pytest.raises(ValueError, match="focus_contract_passed"):
+        validate_bundle(raw, brief)
+
+
+@pytest.mark.parametrize("indicator", [
+    "outline-width:calc(1px + 1px);outline-style:solid;outline-color:#145",
+    "outline:var(--absent, 2px solid rgb(1 2 3))",
+    "outline:calc(4px / 2) solid rgb(255,0,0)",
+    "outline:2px solid #145;opacity:50%",
+    "outline:2px solid #145;opacity:calc(1 - .5)",
+    "outline:var(--absent, var(--nested, 2px solid rgb(1 2 3 / 50%)))",
+    "outline:2px solid rgba(0,0,0,50%)",
+    "outline:2px solid #145;clip-path:circle(calc(200px + 200px))",
+    "outline:2px solid #145;clip-path:inset(calc(-10% - 10%))",
+])
+def test_review_valid_functional_focus_is_accepted(indicator):
+    raw, brief = _bundle(CSS.replace("outline:2px solid #145", indicator))
+    assert validate_bundle(raw, brief).files["index.html"]
+
+
+@pytest.mark.parametrize("indicator", [
+    "outline:none!important;outline:2px solid #145",
+    "outline:2px solid #145;outline-style:none!important;outline-style:solid",
+    "outline:2px solid #145;opacity:0!important;opacity:1",
+])
+def test_review_important_hidden_focus_cannot_be_overridden(indicator):
+    raw, brief = _bundle(CSS.replace("outline:2px solid #145", indicator))
+    with pytest.raises(ValueError, match="focus_contract_passed"):
+        validate_bundle(raw, brief)
+
+
+def test_review_important_visible_focus_wins_over_normal_reset():
+    raw, brief = _bundle(CSS.replace("outline:2px solid #145", "outline:2px solid #145!important;outline:none"))
+    assert validate_bundle(raw, brief).files["index.html"]
+
+
+def test_review_invalid_calc_operator_spacing_never_implies_a_visible_width():
+    raw, brief = _bundle(CSS.replace("outline:2px solid #145", "outline:calc(1px+1px) solid #145"))
+    with pytest.raises(ValueError, match="focus_contract_passed"):
+        validate_bundle(raw, brief)
