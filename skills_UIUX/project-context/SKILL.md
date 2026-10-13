@@ -39,6 +39,8 @@ Biến cấu hình riêng của từng repository thành lớp context đứng g
 
 ## Source-of-truth rules
 
+For Factory friction and derived bundles, follow [UX feedback and regression policy](../../docs/UX-FEEDBACK-REGRESSION.md): map renderer/shared owner/canonical source/generator/affected routes, repair a reproduced Factory defect before target work, and preserve current user edits.
+
 - Không assume file tồn tại chỉ vì config khai báo; kiểm tra trước khi dùng.
 - Không duplicate nguyên brand guideline/content dài vào code comments.
 - Existing tokens/components/architecture đã được project chốt phải được reuse trước khi tạo variant mới.

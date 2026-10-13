@@ -68,6 +68,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Set up feedback memory runtime
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install existing memory dependency
+        run: python -m pip install "pydantic>=2.5.3,<3"
       - name: Install QA dependencies
         run: npm ci --no-audit --no-fund
       - name: Install Chromium
@@ -108,7 +114,14 @@ jobs:
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
           node scripts/wait-ready.mjs
+          set +e
           npm test
+          QA_EXIT=$?
+          set -e
+          if [ -d artifacts/ux-regression ]; then
+            python ../../skills_UIUX/scripts/record-ux-feedback.py --project-root "$QA_TARGET_DIR" --reports-dir artifacts/ux-regression > artifacts/feedback-memory-receipt.json || echo "[QA] Advisory feedback import unavailable; original QA status preserved"
+          fi
+          if [ "$QA_EXIT" -ne 0 ]; then exit "$QA_EXIT"; fi
           if [ -n "$STATE_CONTRACT_RELATIVE" ]; then
             CONTRACT_PATH="$QA_TARGET_DIR/$STATE_CONTRACT_RELATIVE"
             set +e

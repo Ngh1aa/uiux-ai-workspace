@@ -55,6 +55,8 @@ Do not choose the preserve-style path merely because code already exists.
 
 ## Step 0 — Read project truth first
 
+Use [UX feedback and regression policy](../../docs/UX-FEEDBACK-REGRESSION.md) when a reported defect or Factory friction triggers remediation. Reuse the reviewed lesson catalog and repair the verified Factory owner before continuing target implementation.
+
 Before changing UI:
 
 1. Read applicable project instructions and `.uiux-profile.json` if present.

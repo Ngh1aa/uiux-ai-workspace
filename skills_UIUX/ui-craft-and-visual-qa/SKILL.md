@@ -27,6 +27,8 @@ Nếu không thể render/capture/inspect implementation:
 
 ## Mandatory elementary visual sanity gate
 
+The executable safety net, project-declared invariants and feedback promotion process are owned by [UX feedback and regression policy](../../docs/UX-FEEDBACK-REGRESSION.md). Run the existing browser lane with all affected routes; record normalized receipts through the A5 adapter and inspect the rendered evidence before claiming visual PASS.
+
 Trước khi chấm craft/aesthetic sâu hơn, chạy [Elementary Visual Sanity Gate](checklists/elementary-visual-sanity-gate.md) khi task là substantial visual work, multi-page/whole-site, production-candidate/release, hoặc remediation của một lỗi obvious mà QA trước đã bỏ lọt.
 
 Các failure sau là **hard blockers** dù build/CI/screenshot generation xanh:

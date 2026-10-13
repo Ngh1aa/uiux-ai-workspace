@@ -9,6 +9,7 @@ Current toolchain:
 - Lighthouse CI: performance/accessibility/best-practice budgets.
 - Sharp: WebP/AVIF media processing smoke coverage and automatic lifecycle-state matrix composition.
 - State Coverage Gate: contract-driven Normal/Empty/Loading/Error/Edge rendering with semantic assertions across declared viewports.
+- Rendered UX regression safety net: computed foreground/surface collapse, overflow, visible images and optional target-declared geometry/overlay/toggle invariants. Desktop/mobile are the default browser matrix.
 - Infra failure classifier: separates product QA failures from provider rate limits, auth blockers, build/deploy failures and release-state gaps.
 
 Run locally only when desired:
@@ -23,6 +24,8 @@ npx lhci autorun --config=lighthouserc.json
 ```
 
 The canonical execution path is `.github/workflows/cloud-qa-toolchain.yml`, which uploads evidence artifacts for review. Automated checks do not replace creative/visual judgment.
+
+See `docs/UX-FEEDBACK-REGRESSION.md` for `QA_UX_CONTRACT`, `QA_MOTION_MODES`, normalized A5 feedback recording and reviewed cross-project prevention. `npm run test:ux` tests the evaluator against actual browser regressions; fixture success is tooling evidence, not target acceptance.
 
 The harness is intentionally independent of `apps/web`, the removed localhost bridge, and ad-hoc migration/manual-test scripts. Foundation tests live under `uiux-factory/tests/`; browser/a11y/performance/media/state evidence lives here.
 
