@@ -57,7 +57,10 @@ def parse_frontmatter(text: str) -> tuple[str, str, int]:
 
 
 def main() -> int:
-    skill_files = sorted(ROOT.rglob("SKILL.md"))
+    # Match canonical skill discovery (validate-runtime-foundation.py): only
+    # direct owned skill folders. Pinned upstream/vendor sources have separate
+    # integrity validators and must not enter this namespace as active skills.
+    skill_files = sorted(ROOT.glob("*/SKILL.md"))
     errors: list[str] = []
     warnings: list[str] = []
     seen: dict[str, Path] = {}

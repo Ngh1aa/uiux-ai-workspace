@@ -1,0 +1,526 @@
+{
+  "status": "PASS",
+  "browser": "Chromium",
+  "checks": 32,
+  "rows": [
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 1440,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 426.15625,
+        "body_px": 18,
+        "object_padding_px": 20
+      },
+      "file": "screenshots/enterprise-register-1440.png",
+      "sha256": "e6da5d9f73ab82c2e037e9a430ed45fa148d8d1ae624b62a28b93e4f957ea04d",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 1280,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 426.15625,
+        "body_px": 18,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 1024,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 426.15625,
+        "body_px": 18,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 768,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 426.15625,
+        "body_px": 18,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 480,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 413.3125,
+        "body_px": 16,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 390,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 413.3125,
+        "body_px": 16,
+        "object_padding_px": 20
+      },
+      "file": "screenshots/enterprise-register-390.png",
+      "sha256": "9f7e27a96c4e1d50f8f1ec23d02269dbb684df7fbaad810a047d65b5ddf104d4",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 360,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 451.0625,
+        "body_px": 16,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "register",
+      "width": 320,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 451.0625,
+        "body_px": 16,
+        "object_padding_px": 20
+      },
+      "file": "screenshots/enterprise-register-320.png",
+      "sha256": "9f016578f4445db7d5110ef5b17f9e58dd19abbcd14a82c4a19a6b762540b6ab",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 1440,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 511.375,
+        "body_px": 18,
+        "object_padding_px": 32
+      },
+      "file": "screenshots/enterprise-sequence-1440.png",
+      "sha256": "bbdcc9e37f5cf1e381f6b1837dc13404fc8ab94710c1b68d62f6162654baa10f",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 1280,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 511.375,
+        "body_px": 18,
+        "object_padding_px": 32
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 1024,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 511.375,
+        "body_px": 18,
+        "object_padding_px": 32
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 768,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 511.375,
+        "body_px": 18,
+        "object_padding_px": 32
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 480,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 447.875,
+        "body_px": 16,
+        "object_padding_px": 24
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 390,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 494.90625,
+        "body_px": 16,
+        "object_padding_px": 24
+      },
+      "file": "screenshots/enterprise-sequence-390.png",
+      "sha256": "1a9cea20c0b2e0fd72b525ac227ea5f1c5af15db80c5847dc3dca2227f6c65c1",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 360,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 494.90625,
+        "body_px": 16,
+        "object_padding_px": 24
+      }
+    },
+    {
+      "caseKey": "enterprise",
+      "candidate": "sequence",
+      "width": 320,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 541.9375,
+        "body_px": 16,
+        "object_padding_px": 24
+      },
+      "file": "screenshots/enterprise-sequence-320.png",
+      "sha256": "dcdf7755e144914fc3c6ee8eae8d4187999d98b94fe1f5ac3532372f9578cfaa",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 1440,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 454.046875,
+        "body_px": 18,
+        "object_padding_px": 20
+      },
+      "file": "screenshots/industrial-register-1440.png",
+      "sha256": "ae62ac6e0294ecb1ae5410724245a5c5acfe06639a871fa8072ac174a823d066",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 1280,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 454.046875,
+        "body_px": 18,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 1024,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 454.046875,
+        "body_px": 18,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 768,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1800000000000002,
+        "font": "Arial, sans-serif",
+        "object_y": 454.046875,
+        "body_px": 18,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 480,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 413.3125,
+        "body_px": 16,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 390,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 451.0625,
+        "body_px": 16,
+        "object_padding_px": 20
+      },
+      "file": "screenshots/industrial-register-390.png",
+      "sha256": "6ff6b2f8d77fbab3b7332252bd3f54f55e70ec69479c492584c083cc41469d11",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 360,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 475.859375,
+        "body_px": 16,
+        "object_padding_px": 20
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "register",
+      "width": 320,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 32,
+        "title_line": 1.18,
+        "font": "Arial, sans-serif",
+        "object_y": 475.859375,
+        "body_px": 16,
+        "object_padding_px": 20
+      },
+      "file": "screenshots/industrial-register-320.png",
+      "sha256": "57a70608531d198bfb1058fabb50360506853ba6298aeb942e5f4b88de279df6",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 1440,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 539.265625,
+        "body_px": 18,
+        "object_padding_px": 32
+      },
+      "file": "screenshots/industrial-sequence-1440.png",
+      "sha256": "c65bf638d0104940cefe429bd7bdacad061a798aa335e7fd65fef1fb641aca2b",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 1280,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 539.265625,
+        "body_px": 18,
+        "object_padding_px": 32
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 1024,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 539.265625,
+        "body_px": 18,
+        "object_padding_px": 32
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 768,
+      "viewport_height": 1000,
+      "measured": {
+        "overflow": 0,
+        "title_px": 68,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 615.421875,
+        "body_px": 18,
+        "object_padding_px": 32
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 480,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 447.875,
+        "body_px": 16,
+        "object_padding_px": 24
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 390,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 494.90625,
+        "body_px": 16,
+        "object_padding_px": 24
+      },
+      "file": "screenshots/industrial-sequence-390.png",
+      "sha256": "1ebe1476fbb5e3759fcafbe4d229be89d86e801597f26f25f783307532d09a03",
+      "axe_violations": []
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 360,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 519.703125,
+        "body_px": 16,
+        "object_padding_px": 24
+      }
+    },
+    {
+      "caseKey": "industrial",
+      "candidate": "sequence",
+      "width": 320,
+      "viewport_height": 900,
+      "measured": {
+        "overflow": 0,
+        "title_px": 42,
+        "title_line": 1.1199999999999999,
+        "font": "Georgia, serif",
+        "object_y": 566.734375,
+        "body_px": 16,
+        "object_padding_px": 24
+      },
+      "file": "screenshots/industrial-sequence-320.png",
+      "sha256": "b83b1a3dc905be88c30b8744c769b73729e98dc1c4628525e8d78fd04903dc07",
+      "axe_violations": []
+    }
+  ],
+  "errors": [],
+  "human_preference": "UNKNOWN",
+  "aesthetic_quality": "UNKNOWN"
+}
