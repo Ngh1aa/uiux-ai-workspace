@@ -1,5 +1,6 @@
 """Validated static file bundles from the configured coder, without a layout template."""
 
+import ast
 import json
 import re
 from html.parser import HTMLParser
@@ -51,10 +52,14 @@ class HTMLContract(HTMLParser):
         self.counts: dict[str, int] = {}
         self.viewport = False
         self.language = False
+        self.visible_text: list[str] = []
+        self.hidden_depth = 0
 
     def handle_starttag(self, tag, attrs):
         self.counts[tag] = self.counts.get(tag, 0) + 1
         values = dict(attrs)
+        if tag in {"head", "script", "style"}:
+            self.hidden_depth += 1
         if tag in {"iframe", "frame", "object", "embed", "base", "foreignobject"}:
             raise ValueError(f"Unsupported embedded element: {tag}")
         if any(key.lower().startswith("on") for key, _ in attrs):
@@ -73,6 +78,251 @@ class HTMLContract(HTMLParser):
                 raise ValueError("Unsafe URL in generated HTML")
 
     handle_startendtag = handle_starttag
+
+    def handle_endtag(self, tag):
+        if tag in {"head", "script", "style"}:
+            self.hidden_depth = max(0, self.hidden_depth - 1)
+
+    def handle_data(self, data):
+        if not self.hidden_depth:
+            self.visible_text.append(data)
+
+
+def _css_blocks(css: str):
+    """Yield balanced blocks, including nested rules; comments are already removed."""
+    for match in re.finditer(r"([^{}]+)\{", css):
+        depth = 1
+        end = match.end()
+        while end < len(css) and depth:
+            depth += (css[end] == "{") - (css[end] == "}")
+            end += 1
+        if depth == 0:
+            yield match.group(1).strip(), css[match.end():end - 1]
+
+
+def _css_values(value: str, separator: str | None = None) -> list[str]:
+    """Split at top level, preserving nested CSS function arguments."""
+    result, start, depth = [], 0, 0
+    for index, char in enumerate(value):
+        depth += (char == "(") - (char == ")")
+        if depth == 0 and (char == separator if separator else char.isspace()):
+            if value[start:index].strip():
+                result.append(value[start:index].strip())
+            start = index + 1
+    if value[start:].strip():
+        result.append(value[start:].strip())
+    return result
+
+
+def _css_scalar(value: str) -> tuple[float, str] | None:
+    """Evaluate literal dimensions and bounded calc arithmetic, never Python eval.
+
+    Mixed-unit arithmetic needs computed style and is deliberately unresolved here.
+    """
+    number = r"(?:\d*\.\d+|\d+)(?:[a-z%]+)?"
+    literal = re.fullmatch(r"([-+]?(?:\d*\.\d+|\d+))([a-z%]*)", value.strip())
+    if literal:
+        return float(literal[1]), literal[2]
+    if not value.startswith("calc(") or not value.endswith(")") or len(value) > 256:
+        return None
+    body = value[5:-1]
+    # CSS requires whitespace around binary +/-, unlike Python arithmetic.
+    for index, char in enumerate(body):
+        previous = body[:index].rstrip()
+        if char in "+-" and previous and previous[-1] not in "(+-*/":
+            if not body[index - 1].isspace() or index + 1 == len(body) or not body[index + 1].isspace():
+                return None
+    literals: dict[str, tuple[float, str]] = {}
+    def replace(match):
+        key = f"v{len(literals)}"
+        literals[key] = _css_scalar(match[0])
+        return key
+    expression = re.sub(number, replace, body)
+    def evaluate(node):
+        if isinstance(node, ast.Name) and node.id in literals:
+            return literals[node.id]
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+            amount, unit = evaluate(node.operand)
+            return (-amount if isinstance(node.op, ast.USub) else amount), unit
+        if isinstance(node, ast.BinOp):
+            left, lu = evaluate(node.left)
+            right, ru = evaluate(node.right)
+            if isinstance(node.op, (ast.Add, ast.Sub)) and lu == ru:
+                return (left + right if isinstance(node.op, ast.Add) else left - right), lu
+            if isinstance(node.op, ast.Mult) and not (lu and ru):
+                return left * right, lu or ru
+            if isinstance(node.op, ast.Div) and not ru and right:
+                return left / right, lu
+        raise ValueError("Unresolved CSS arithmetic")
+    try:
+        return evaluate(ast.parse(expression.strip(), mode="eval").body)
+    except (SyntaxError, ValueError, TypeError, RecursionError):
+        return None
+
+
+def _invisible_color(value: str) -> bool:
+    if re.search(r"\b(?:none|transparent)\b|#(?:[0-9a-f]{6}00|[0-9a-f]{3}0)\b", value):
+        return True
+    for token in _css_values(value):
+        color = re.fullmatch(r"(rgba?|hsla?|hwb|(?:ok)?lab|(?:ok)?lch|color)\((.*)\),?", token)
+        if not color:
+            continue
+        slash = _css_values(color[2], "/")
+        comma = _css_values(color[2], ",")
+        alpha = slash[-1] if len(slash) == 2 else comma[-1] if len(comma) == 4 else ""
+        scalar = _css_scalar(alpha)
+        if scalar and scalar[0] <= 0 and scalar[1] in {"", "%"}:
+            return True
+    return False
+
+
+def _merge_focus_properties(target: dict[str, str], source: dict[str, str]) -> None:
+    for key, value in source.items():
+        if key.startswith("!"):
+            continue
+        priority = source.get("!" + key, "0")
+        if target.get("!" + key) != "1" or priority == "1":
+            target[key] = value
+            target["!" + key] = priority
+
+
+def _resolve_css_vars(value: str, variables: dict[str, str]) -> str:
+    """Resolve local custom properties/fallbacks; external color tokens stay symbolic."""
+    pattern = re.compile(r"var\(\s*(--[\w-]+)")
+    for _ in range(12):
+        before = value
+        for match in reversed(list(pattern.finditer(value))):
+            depth, end = 1, match.end()
+            while end < len(value) and depth:
+                depth += (value[end] == "(") - (value[end] == ")")
+                end += 1
+            if depth:
+                continue
+            arguments = _css_values(value[match.start() + 4:end - 1], ",")
+            fallback = ",".join(arguments[1:]) if len(arguments) > 1 else value[match.start():end]
+            replacement = variables.get(match[1], fallback)
+            value = value[:match.start()] + replacement + value[end:]
+        if before == value:
+            break
+    # A locally declared reference left unresolved is cyclic, not a visible ring.
+    if any(match[1] in variables for match in pattern.finditer(value)):
+        return "none"
+    return value.strip().lower()
+
+
+def _focus_properties(body: str, variables: dict[str, str]) -> dict[str, str]:
+    pairs = re.findall(r"([\w-]+)\s*:\s*([^;{}]+)", body)
+    variables = {**variables, **{key: value.strip() for key, value in pairs if key.startswith("--")}}
+    properties: dict[str, str] = {}
+    styles = {"none", "auto", "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"}
+    for key, raw in pairs:
+        if key.startswith("--"):
+            continue
+        key = key.lower()
+        important = bool(re.search(r"!\s*important\s*$", raw, re.I))
+        value = _resolve_css_vars(re.sub(r"!\s*important", "", raw, flags=re.I).strip(), variables)
+        if key == "outline":
+            # Shorthand resets all three longhands at this point in declaration order.
+            outline = {"outline-width": "medium", "outline-style": "none", "outline-color": "currentcolor"}
+            for token in _css_values(value):
+                if token in styles:
+                    outline["outline-style"] = token
+                elif token in {"thin", "medium", "thick", "0"} or re.fullmatch(r"[\d.]+[a-z]+", token) or token.startswith(("calc(", "min(", "max(", "clamp(")):
+                    outline["outline-width"] = token
+                else:
+                    outline["outline-color"] = token
+            _merge_focus_properties(properties, {**outline, **{"!" + name: str(int(important)) for name in outline}})
+        _merge_focus_properties(properties, {key: value, "!" + key: str(int(important))})
+    return properties
+
+
+def _fully_clipped(properties: dict[str, str]) -> bool:
+    clip = re.fullmatch(r"rect\(([^)]+)\)", properties.get("clip", ""))
+    if clip and properties.get("position") in {"absolute", "fixed"}:
+        edges = re.split(r"\s*,\s*|\s+", clip[1].strip())
+        edges = ["0" if re.fullmatch(r"0(?:\.0+)?(?:[a-z]+)?", edge) else edge for edge in edges]
+        if len(edges) == 4:
+            zero_height = edges[0] == edges[2] and edges[0] != "auto"
+            zero_width = edges[1] == edges[3] and edges[1] != "auto"
+            if zero_height or zero_width:
+                return True
+    path = properties.get("clip-path", "")
+    radial = re.fullmatch(r"(?:circle|ellipse)\((.*)\)", path)
+    if radial:
+        radii = _css_values(radial[1])
+        radius = _css_scalar(radii[0]) if radii else None
+        if radius and radius[0] == 0:
+            return True
+    inset = re.fullmatch(r"inset\((.*)\)", path)
+    if inset:
+        offsets = [_css_scalar(offset) for offset in _css_values(inset[1].split(" round ")[0])]
+        if 1 <= len(offsets) <= 4 and all(offset and offset[1] == "%" for offset in offsets):
+            values = [offset[0] for offset in offsets]
+            top, right, bottom, left = (values * 4)[:4] if len(values) <= 2 else (values + [values[1]])[:4]
+            return top + bottom >= 100 or right + left >= 100
+    return False
+
+
+def bundle_quality_checks(bundle: FileBundle) -> dict[str, bool]:
+    """Deterministic source checks, not computed-style or rendered WCAG certification."""
+    documents = []
+    semantic = True
+    for path, source in bundle.files.items():
+        if not path.endswith(".html"):
+            continue
+        document = HTMLContract()
+        document.feed(source)
+        documents.append(document)
+        semantic = semantic and document.language and document.viewport and "</head>" in source.lower()
+        semantic = semantic and all(document.counts.get(tag) == 1 for tag in ("html", "head", "title", "body", "main", "h1"))
+    css = re.sub(r"/\*.*?\*/", "", bundle.files.get("styles.css", ""), flags=re.S)
+    blocks = list(_css_blocks(css))
+    responsive = any(selector.lower().startswith("@media") and re.search(r"(?:min|max)-width\s*:|\bwidth\s*[<>=]", selector)
+                     and any(value.strip() for _key, value in re.findall(r"[^{]+\{\s*([\w-]+)\s*:\s*([^;{}]+)", body))
+                     for selector, body in blocks)
+    variables: dict[str, str] = {}
+    for selector, body in blocks:
+        if any(part.strip() in {":root", "html"} for part in selector.split(",")):
+            variables.update((key, value.strip()) for key, value in re.findall(r"(--[\w-]+)\s*:\s*([^;{}]+)", body))
+    focus_declarations: dict[str, dict[str, str]] = {}
+    for selector, body in blocks:
+        if ":focus-visible" not in selector or selector.startswith("@") or re.search(r":not\([^)]*:focus-visible", selector):
+            continue
+        declarations = _focus_properties(body, variables)
+        for individual in selector.split(","):
+            if ":focus-visible" in individual:
+                _merge_focus_properties(focus_declarations.setdefault(individual.strip(), {}), declarations)
+    focus_rules = []
+    baseline = dict(focus_declarations.get(":focus-visible", {}))
+    _merge_focus_properties(baseline, focus_declarations.get("*:focus-visible", {}))
+    for declarations in focus_declarations.values():
+        combined = dict(baseline)
+        _merge_focus_properties(combined, declarations)
+        declarations = combined
+        hidden = declarations.get("visibility") == "hidden" or declarations.get("display") == "none"
+        opacity = _css_scalar(declarations.get("opacity", ""))
+        hidden = hidden or bool(opacity and opacity[0] <= 0 and opacity[1] in {"", "%"})
+        hidden = hidden or _fully_clipped(declarations)
+        width = declarations.get("outline-width", "medium")
+        style = declarations.get("outline-style", "none")
+        color = declarations.get("outline-color", "currentcolor")
+        shadow = declarations.get("box-shadow", "")
+        numeric_width = _css_scalar(width)
+        visible_outline = bool((width in {"thin", "medium", "thick"} or (numeric_width and numeric_width[0] > 0
+                               and numeric_width[1] in {"px", "rem", "em", "pt", "pc", "in", "cm", "mm", "q", "vw", "vh", "vmin", "vmax"}))
+                               and style in {"auto", "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"}
+                               and not _invisible_color(color))
+        visible_shadow = bool(re.search(r"(?:[1-9]\d*(?:\.\d+)?|0\.\d*[1-9]\d*)(?:px|rem|em)\b", shadow)
+                              and not _invisible_color(shadow))
+        focus_rules.append(bool(not hidden and (visible_outline or visible_shadow)))
+    text = " ".join(" ".join(document.visible_text) for document in documents).lower()
+    technical = re.search(r"uiux\s*factory|metagpt|generated by|implemented (?:using|with)|factory placeholder|deterministic placeholder", text)
+    return {
+        "semantic_html_passed": bool(documents and semantic),
+        "responsive_contract_passed": bool(responsive),
+        "focus_contract_passed": bool(focus_rules and all(focus_rules)),
+        "technical_copy_gate_passed": not bool(technical),
+    }
 
 
 def validate_bundle(raw: str, brief: DesignBrief) -> FileBundle:
@@ -95,8 +345,10 @@ def validate_bundle(raw: str, brief: DesignBrief) -> FileBundle:
     css = bundle.files["styles.css"]
     if "@import" in css.lower() or re.search(r"--color-brand-primary\s*:", css):
         raise ValueError("CSS must preserve brand tokens and use local assets")
-    if "var(--color-brand-primary" not in css or ":focus-visible" not in css or "@media" not in css:
-        raise ValueError("CSS requires the brand primary token, keyboard focus and responsive rules")
+    checks = bundle_quality_checks(bundle)
+    failed = [name for name, passed in checks.items() if not passed]
+    if "var(--color-brand-primary" not in css or failed:
+        raise ValueError("Static frontend quality contract failed: " + ", ".join(failed or ["brand_primary_token"]))
     return bundle
 
 

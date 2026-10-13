@@ -1,4 +1,5 @@
 import json
+import hashlib
 import os
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -7,7 +8,68 @@ from typing import Any
 from uuid import uuid4
 
 from core.contracts.design_context_schema import DesignContext
+from core.contracts.prompt_pack_schema import SPEC_UPSTREAM_ARTIFACTS, specification_input_sha256
 from core.events.run_event_bus import RunEventBus
+from core.runtime.flow_os.execution_driver import ExecutionGrant, POLICY_PATH
+from core.runtime.flow_os.agent import PermissionGate, ToolSpec
+from core.runtime.flow_os.task_context import GoalInterpreter
+
+
+def specification_inputs(context) -> dict[str, str]:
+    """Read the same canonical source owners at compile and execution time."""
+    inputs = {"goal": context.goal}
+    for key, artifact in SPEC_UPSTREAM_ARTIFACTS.items():
+        raw = context.artifacts.get(artifact)
+        if not raw or not Path(raw).is_file():
+            raise RuntimeError(f"Specification upstream missing: {artifact}; recompile specification.")
+        inputs[key] = Path(raw).read_text(encoding="utf-8")
+    if not specification_input_sha256(inputs):
+        raise RuntimeError("Specification upstream is empty or invalid; recompile specification.")
+    return inputs
+
+
+def require_frozen_specification(context) -> tuple[Path, Path]:
+    paths = []
+    for key in ("full_build_spec", "implementation_prompt_spec", "spec_manifest"):
+        raw = context.artifacts.get(key)
+        if not raw:
+            raise RuntimeError(f"Required artifact missing: {key}")
+        path = Path(raw)
+        if not path.is_file():
+            raise RuntimeError(f"Required artifact not found: {path}")
+        paths.append(path)
+    spec, prompt, manifest_path = paths
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (ValueError, UnicodeError) as error:
+        raise RuntimeError("Frozen spec manifest is invalid; recompile specification.") from error
+    if not isinstance(manifest, dict):
+        raise RuntimeError("Frozen spec manifest must be an object; recompile specification.")
+    if (manifest.get("frozen") is not True
+            or manifest.get("schema_version") != 2
+            or Path(str(manifest.get("source_of_truth", ""))).resolve() != spec.resolve()
+            or manifest.get("full_build_spec_sha256") != hashlib.sha256(spec.read_bytes()).hexdigest()
+            or manifest.get("implementation_prompt_sha256") != hashlib.sha256(prompt.read_bytes()).hexdigest()
+            or manifest.get("upstream_sha256") != specification_input_sha256(specification_inputs(context))
+            or not spec.read_text(encoding="utf-8").strip()
+            or "02-FULL-BUILD-SPEC.md" not in prompt.read_text(encoding="utf-8")):
+        raise RuntimeError("Frozen specification is missing, invalid or stale; recompile specification.")
+    return spec, prompt
+
+
+def require_native_execution_grant(context) -> None:
+    grant = getattr(context, "execution_grant", None)
+    authority = grant.authority if isinstance(grant, ExecutionGrant) else ""
+    if GoalInterpreter().interpret(context.goal).authority == "read_only":
+        authority = "read_only"
+    allowed, reason = PermissionGate(POLICY_PATH).authorize(
+        ToolSpec("native_executor", "Implementation/repair executor", "HIGH_WRITE", "branch_write", True), authority)
+    if not allowed:
+        raise RuntimeError("Native executor authority denied: " + reason)
+    if grant.approval_mode == "manual":
+        spec, _ = require_frozen_specification(context)
+        if getattr(context, "execution_approval", None) != hashlib.sha256(spec.read_bytes()).hexdigest():
+            raise RuntimeError("AWAITING_APPROVAL: execution approval is missing or stale for the frozen spec")
 
 
 @dataclass
@@ -23,6 +85,8 @@ class RunContext:
 
     design_context: DesignContext = field(default_factory=DesignContext)
     runtime_preset: str = "standard"
+    execution_grant: ExecutionGrant | None = None
+    execution_approval: str | None = None
 
     status: str = "created"
     active_stage: str | None = None
@@ -132,6 +196,10 @@ class RunContext:
             "run_id": self.run_id,
             "goal": self.goal,
             "runtime_preset": self.runtime_preset,
+            "execution_grant": ({"authority": self.execution_grant.authority,
+                                  "approval_mode": self.execution_grant.approval_mode}
+                                 if self.execution_grant else None),
+            "execution_approval": self.execution_approval,
             "status": self.status,
             "active_stage": self.active_stage,
             "completed_stages": self.completed_stages,

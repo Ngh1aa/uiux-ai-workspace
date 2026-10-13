@@ -18,6 +18,7 @@ from core.runtime.provider_compat_contract import (
     resolve_factory_provider_lane,
 )
 from core.runtime.run_context import RunContext
+from core.runtime.flow_os.execution_driver import ExecutionGrant
 from core.team.intelligent_team_runner import IntelligentTeamRunner
 
 
@@ -40,8 +41,10 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
         self.runtime = HarnessInspiredRuntime(self.root)
         self.team_runner.set_runtime(self.runtime)
 
-    def _save_flow_plan(self, context: RunContext, engine: str) -> None:
-        super()._save_flow_plan(context, engine)
+    def _save_flow_plan(
+        self, context: RunContext, engine: str, *, stateful_execution: bool = False
+    ) -> None:
+        super()._save_flow_plan(context, engine, stateful_execution=stateful_execution)
         raw = context.artifacts.get("flow_plan")
         if not raw or not self.runtime.has_active(context):
             return
@@ -173,6 +176,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
         intelligence_only: bool = False,
         engine: str = "ai",
         runtime_preset: str = "standard",
+        execution_grant: ExecutionGrant | None = None,
     ) -> RunContext:
         resolved_context = design_context or DesignContext()
         self._validate_engine_context(engine, resolved_context)
@@ -182,6 +186,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             goal=goal,
             design_context=resolved_context,
             runtime_preset=runtime_preset,
+            execution_grant=execution_grant,
         )
         if run_id:
             if not re.fullmatch(r"[a-zA-Z0-9-]{1,80}", run_id):
@@ -235,6 +240,7 @@ class ProviderIntelligentDevelopmentManager(IntelligentDevelopmentManager):
             if engine == "external":
                 self._run_external_handoff(context)
                 return context
+            await self._run_specification_compile(context)
             if engine == "ai":
                 await self._run_ai_implementation(context, provider)
             else:

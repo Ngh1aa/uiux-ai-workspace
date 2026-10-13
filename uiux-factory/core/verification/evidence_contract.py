@@ -67,7 +67,14 @@ class EvidenceContractEvaluator:
         for path in sorted(item for item in root.rglob("*") if item.is_file()):
             if ".git" in path.parts:
                 continue
-            relative = path.relative_to(root).as_posix().encode("utf-8")
+            relative_path = path.relative_to(root)
+            # EvaluationMemoryStore owns this exact advisory data file. Learning
+            # after a render must not invalidate source-bound evidence. Other
+            # files, even in its directory, remain bound to the current output.
+            if (relative_path.as_posix() == ".uiux-agent-runs/memory/evaluation-memory.json"
+                    and not path.is_symlink()):
+                continue
+            relative = relative_path.as_posix().encode("utf-8")
             digest.update(relative)
             digest.update(b"\0")
             digest.update(cls._sha256(path).encode("ascii"))

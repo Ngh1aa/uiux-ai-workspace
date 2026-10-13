@@ -67,6 +67,76 @@ Transaction isolation uses two fences: an atomic local TTL lease for same-worksp
 
 A transaction PR is a handoff artifact, not release proof. Deployment and release truth remain owned by the deployment/evidence contracts above.
 
+### Executor contract 2.0 migration
+
+`execution_driver.py` owns the 2.0 request/result/checkpoint boundary. Executing callers
+must supply `ExecutionGrant`; routing and target truth cannot grant permissions. A
+read-only goal can reduce that grant. Requests carry the effective authority, absolute
+artifact workspace, plan fingerprint and explicit approval status. Both the driver
+and concrete adapters validate these controls before invoking a runner. Legacy 1.0
+requests/results/checkpoints fail closed; resume requires the same caller grant.
+Concrete adapters bind the caller's plan fingerprint before dispatch. Checkpoints
+retain typed evidence per passed stage; resume rechecks canonical nodes, accepted
+outputs, current hashes and evidence gates, including a fully completed checkpoint.
+It does not accept a stored PASS as proof and does not overwrite a rejected checkpoint.
+
+Host `CommandRunnerAdapter` commands are trusted caller-supplied programs and require
+at least `branch_write`, including audit runs which can write artifacts. They are not
+a sandbox for model-generated or untrusted target commands; those use the existing
+`ToolRegistry`/`ContainerSandbox` boundary. GitHub transaction brokers require
+`external_write` before checkout/branch claims/worker invocation. SegmentRunner
+implementations must declare their required authority; undeclared adapters fail closed.
+
+The existing `auto` policy remains explicit `UNREVIEWED`, never human approval.
+In `manual` mode, stage execution approval is bound to the current plan fingerprint
+and obtained through `approve_stage`; this permission to execute is not a claim of
+human usability validation. Read-only research requires no execution approval.
+Pure planning, packet compilation and handoff helpers do not execute a runner and do
+not grant completion, write, merge or release authority.
+
+All passing executor results must carry typed runtime `evidence_records`, bound to
+current local proof artifacts; screenshot labels and prose are insufficient. The
+shared `validate_runner_evidence` boundary runs in the driver, command adapter, and
+GitHub broker before implementation commit/push or PR finalization. File handoff
+digests are checked again before dispatch. Release rechecks current rendered bytes.
+These are consistency/provenance checks for trusted runtime adapters, not a signature
+scheme that authenticates a hostile caller or proves usability/design quality.
+Before publishing, command adapters and GitHub brokers also reuse `ArtifactRegistry`
+path/hash validation and the expected-output owner in `work_execution.py`. QA outputs
+cannot be absent, mislabeled, stale, outside the workspace, or reuse an input ID before
+PR creation. The broker owns the implementation commit output; workers supply all
+other required kinds, and the final Driver still requires the real broker commit.
+Required `qa-evidence` outputs must declare both a workspace file path and its
+current `sha256:` digest. URI-only outputs and metadata-only path claims are
+rejected before PR creation and again on checkpoint resume. Producers must hash
+the final selected file after any render/path substitution. This requirement does
+not apply to broker-owned implementation commit and pull-request URIs.
+
+Native internal implementation and repair callers must pass `execution_grant` into
+`run`, `run_revision`, or `RunContext`. `run.py --authority branch_write` is the explicit
+write opt-in; omission defaults to `read_only`. The shared frozen-spec verifier in
+`run_context.py` is used by managers, direct AI builders and QA/repair loops. Manual
+native execution approval binds to the current spec SHA; auto remains unreviewed.
+Prompt packs and native spec manifests use schema 2. The deterministic compiler
+owns the specification from `RunContext.goal` and the eight upstream artifacts
+listed in `prompt_pack_schema.py::SPEC_UPSTREAM_ARTIFACTS`. Both compiler wrappers
+bind these inputs and their generated content; `specification_compile` is excluded
+from provider refinement in both team runners. Change the goal/upstream and
+recompile to change the specification. A provider must not reseal its own edits.
+The shared verifier rechecks current upstream, spec and implementation-prompt
+hashes before implementation/repair. Legacy manifests without binding must be
+recompiled; they are not auto-upgraded on resume.
+The retained `*_consistent` flag names are compatibility names for structural
+checks (routes/page roles/domain/responsive/QA references), not semantic validation.
+`upstream_binding_valid` additionally detects missing, changed or stale inputs and
+compiled content. Hashes establish consistency for trusted owners, not authenticity
+against a hostile local writer, correctness of prose, human approval or design quality.
+Native BrowserQA emits screenshot SHA and validates the declared route/viewport
+matrix before visual critique. P1.7.1 source-only QA now fails closed: operators must
+produce current browser evidence inside the transaction workspace and supply
+`--browser-artifact-dir` (or the worker's default `evidence/browser` directory).
+No consumer may synthesize render evidence to keep a production run passing.
+
 ## Conflict rule
 
 When two documents overlap, use the higher-authority owner above. Explanatory or historical documents cannot silently override canonical contracts.

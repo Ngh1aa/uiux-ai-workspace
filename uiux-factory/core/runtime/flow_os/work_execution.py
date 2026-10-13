@@ -22,6 +22,15 @@ class ExecutionTransitionError(ValueError):
     """Raised when a work-plan state transition violates execution gates."""
 
 
+def require_expected_outputs(segment_id: str, expected_kinds: Iterable[str], artifacts: Iterable[Any]) -> None:
+    produced_kinds = {artifact.kind for artifact in artifacts}
+    missing = [kind for kind in expected_kinds if kind not in produced_kinds]
+    if missing:
+        raise ExecutionTransitionError(
+            f"segment {segment_id} cannot pass without expected outputs: {', '.join(missing)}"
+        )
+
+
 @dataclass(frozen=True)
 class ArtifactRef:
     id: str
@@ -210,12 +219,7 @@ class WorkExecutionPlan:
                 raise ExecutionTransitionError(
                     f"artifact {artifact.id} belongs to {artifact.producer_segment_id}, expected {segment_id}"
                 )
-        produced_kinds = {artifact.kind for artifact in produced}
-        missing = [kind for kind in node.expected_output_kinds if kind not in produced_kinds]
-        if missing:
-            raise ExecutionTransitionError(
-                f"segment {segment_id} cannot pass without expected outputs: {', '.join(missing)}"
-            )
+        require_expected_outputs(segment_id, node.expected_output_kinds, produced)
         duplicate_ids = [artifact.id for artifact in produced if artifact.id in self.artifacts]
         if duplicate_ids:
             raise ExecutionTransitionError("duplicate artifact ids: " + ", ".join(duplicate_ids))

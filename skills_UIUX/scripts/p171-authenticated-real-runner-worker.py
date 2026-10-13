@@ -3,7 +3,14 @@ from __future__ import annotations
 
 import json
 import os
+import sys
+import hashlib
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'uiux-factory'))
+from core.runtime.flow_os.execution_driver import ArtifactRegistry, SegmentExecutionRequest, RunnerResult, validate_execution_request, validate_runner_evidence
+from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
+from core.runtime.flow_os.evidence import evidence_from_tool
 
 
 PROFILE_ID = "luxroom-cart-total-live-region"
@@ -31,6 +38,7 @@ def emit(kind: str, artifact_class: str, payload: dict[str, object]) -> dict[str
         "kind": kind,
         "artifact_class": artifact_class,
         "path": str(path),
+        "digest": ArtifactRegistry._sha256(path),
         "metadata": {
             "phase": phase,
             "mode": mode,
@@ -43,7 +51,7 @@ def emit(kind: str, artifact_class: str, payload: dict[str, object]) -> dict[str
 
 def fail(reason: str, failure_class: str = "RUNNER_CONTRACT_FAILED") -> None:
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "failed",
         "failure_class": failure_class,
         "reason": reason,
@@ -53,6 +61,11 @@ def fail(reason: str, failure_class: str = "RUNNER_CONTRACT_FAILED") -> None:
     result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     raise SystemExit(0)
 
+
+try:
+    validate_execution_request(SegmentExecutionRequest(**request), 'branch_write')
+except (TypeError, ValueError) as error:
+    fail(f'executor preflight rejected request: {error}')
 
 if profile != PROFILE_ID:
     fail(f"worker refused non-opted-in profile: {profile!r}")
@@ -111,10 +124,38 @@ elif phase == "qa":
 else:
     fail(f"unsupported lifecycle phase for P1.7.1 dogfood: {phase}")
 
+records = []
+stage = request['active_stage_id']
+for artifact in artifacts:
+    path = Path(str(artifact['path']))
+    records.append(evidence_from_tool(stage, 'read_text' if phase == 'audit' else 'write_artifact', {
+        'path': str(path), 'artifact_path': str(path.resolve()),
+        'artifact_sha256': 'sha256:' + hashlib.sha256(path.read_bytes()).hexdigest(),
+    }).to_dict())
+if phase == 'implementation':
+    records.append(evidence_from_tool(stage, 'write_project_file', {
+        'path': str(TARGET_FILE), 'artifact_path': str(TARGET_FILE.resolve()),
+        'artifact_sha256': 'sha256:' + hashlib.sha256(TARGET_FILE.read_bytes()).hexdigest(),
+    }).to_dict())
+if phase == 'qa':
+    capture_dir = Path(os.environ.get('UIUX_P171_BROWSER_ARTIFACTS', str(artifact_dir / 'browser')))
+    try:
+        captures = PlaywrightBrowserEvidenceAdapter(Path(request['workspace_root']), {}).collect(capture_dir)
+    except (ValueError, RuntimeError, OSError) as error:
+        fail(f'current rendered browser evidence is required: {error}', 'BROWSER_EVIDENCE_REQUIRED')
+    if not captures:
+        fail('current rendered browser evidence is required; source checks alone cannot pass QA', 'BROWSER_EVIDENCE_REQUIRED')
+    records.extend(record.to_dict() for record in captures)
+
 payload = {
-    "schema_version": "1.0",
+    "schema_version": "2.0",
     "status": "passed",
     "artifacts": artifacts,
+    "evidence_records": records,
     "metadata": {"worker": "p171-authenticated-real-runner", "profile": profile},
 }
+try:
+    validate_runner_evidence(SegmentExecutionRequest(**request), RunnerResult.from_dict(payload))
+except ValueError as error:
+    fail(f'executor evidence rejected result: {error}', 'RUNNER_EVIDENCE_FAILED')
 result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

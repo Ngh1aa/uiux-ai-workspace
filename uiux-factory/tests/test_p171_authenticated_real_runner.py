@@ -10,6 +10,7 @@ import pytest
 
 from core.dogfood.p171_authenticated_real_runner import DOGFOOD_PROFILES, run_authenticated_dogfood
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
+from fixtures.executor_evidence import render_fixture
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,8 +27,13 @@ def _cart_source(snippet: str = OLD_SNIPPET) -> str:
     return f"<!doctype html><title>LuxRoom | Your selection</title><aside>{snippet}</aside>\n"
 
 
-def _run_worker(tmp_path: Path, phase: str, expected: list[str], *, profile: str = PROFILE_ID):
+def _run_worker(tmp_path: Path, phase: str, expected: list[str], *, profile: str = PROFILE_ID, with_render: bool = True):
     request = {
+        "schema_version": "2.0", "order": 1, "intent": "build", "scope": [], "change_surface": "FOCUSED",
+        "agent": {'audit': 'research', 'design': 'development', 'implementation': 'implementation', 'qa': 'qa'}[phase],
+        "skills": [], "mandatory_skills": [], "gates": [], "input_artifacts": [],
+        "preserve": [], "forbidden": [], "authority": "branch_write", "approval_status": "UNREVIEWED",
+        "plan_fingerprint": "sha256:" + "a" * 64, "workspace_root": str(tmp_path.resolve()),
         "segment_id": f"work-{phase}",
         "phase": phase,
         "runner_mode": "normal",
@@ -37,6 +43,10 @@ def _run_worker(tmp_path: Path, phase: str, expected: list[str], *, profile: str
     request_path = tmp_path / "request.json"
     result_path = tmp_path / "result.json"
     artifact_dir = tmp_path / "artifacts"
+    capture_dir = artifact_dir / 'missing-browser'
+    if phase == 'qa' and with_render:
+        _, image = render_fixture(artifact_dir, 'p171')  # Explicit synthetic capture fixture, not live UI proof.
+        capture_dir = image.parent
     request_path.write_text(json.dumps(request), encoding="utf-8")
     env = {
         **os.environ,
@@ -49,6 +59,7 @@ def _run_worker(tmp_path: Path, phase: str, expected: list[str], *, profile: str
         "UIUX_TRANSACTION_ID": "p171-test",
         "UIUX_TRANSACTION_BRANCH": "uiux-factory/p171-test",
         "UIUX_P171_PROFILE": profile,
+        "UIUX_P171_BROWSER_ARTIFACTS": str(capture_dir),
     }
     completed = subprocess.run(
         [sys.executable, str(WORKER)],
@@ -119,6 +130,13 @@ def test_p171_worker_fails_closed_on_wrong_profile_or_target_drift(tmp_path: Pat
     drift = _run_worker(tmp_path, "implementation", ["implementation-artifact"])
     assert drift["status"] == "failed"
     assert drift["failure_class"] == "RUNNER_CONTRACT_FAILED"
+
+
+def test_p171_worker_source_checks_without_render_cannot_pass_qa(tmp_path: Path) -> None:
+    (tmp_path / 'cart.html').write_text(_cart_source(NEW_SNIPPET), encoding='utf-8')
+    result = _run_worker(tmp_path, 'qa', ['qa-evidence'], with_render=False)
+    assert result['status'] == 'failed'
+    assert result['failure_class'] == 'BROWSER_EVIDENCE_REQUIRED'
 
 
 def test_p171_runtime_rejects_missing_auth_before_git_mutation(tmp_path: Path) -> None:

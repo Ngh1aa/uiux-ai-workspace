@@ -97,6 +97,12 @@ def _payload() -> dict:
                     }
                 ],
                 "anti_monotony_rules": ["Do not repeat identical card shells"],
+            },
+            {
+                "path": "/case-study", "page_role": "Case Study", "composition_family": "case-story",
+                "first_visual_anchor": "Project narrative",
+                "sections": [{"type": "case-story", "purpose": "Explain decisions", "composition": "long-form",
+                              "visual_anchor": "project evidence", "density": "medium", "mobile_behavior": ["single column"]}],
             }
         ],
         "unresolved_items": [],

@@ -732,6 +732,8 @@ class ProviderManagedRunner:
                             self.provider.model,
                             str(exc),
                         )
+                    if managed.state == "FAILED":
+                        return ProviderRunResult("FAIL", managed.active_stage, turn, self.provider.name, self.provider.model, str(exc))
                     raise
                 return ProviderRunResult(
                     managed.state,

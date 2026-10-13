@@ -16,6 +16,7 @@ from core.team.uiux_team import UIUXMetaTeam
 class UIUXTeamRunner:
     """MetaGPT Team + real skills_UIUX execution + optional provider refinement."""
 
+    # Specification remains deterministic; provider proposals must change upstream first.
     PROVIDER_REFINEMENT_STAGES = {
         "research",
         "ux_ia",
@@ -24,7 +25,6 @@ class UIUXTeamRunner:
         "design_system",
         "implementation_plan",
         "visual_composition",
-        "specification_compile",
     }
     JSON_STAGES = {
         "design_contract",

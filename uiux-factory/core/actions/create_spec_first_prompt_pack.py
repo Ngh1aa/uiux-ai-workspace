@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
 from metagpt.actions import Action
@@ -25,6 +26,73 @@ class CreateSpecFirstPromptPack(Action):
         except json.JSONDecodeError:
             return {}
         return payload if isinstance(payload, dict) else {}
+
+    @classmethod
+    def evaluate_consistency(cls, payload: dict[str, Any], pack: PromptPack) -> PromptPackGate:
+        """Check structural contracts and frozen input/content binding, not semantics."""
+        binding_valid = pack.binding_matches(payload)
+        text_keys = ("goal", "reference_analysis", "research", "ux_ia", "art_direction")
+        inputs_present = all(str(payload.get(key, "")).strip() for key in text_keys)
+        contract, system, plan, visual = [cls._json(str(payload.get(key, ""))) for key in (
+            "design_contract_content", "design_system_content", "implementation_plan_content", "visual_composition_content"
+        )]
+        sources_present = inputs_present and all((contract, system, plan, visual))
+        routes = plan.get("routes", [])
+        pages = visual.get("pages", [])
+        routes = routes if isinstance(routes, list) else []
+        pages = pages if isinstance(pages, list) else []
+        route_roles = {item.get("path"): item.get("page_role") for item in routes if isinstance(item, dict)}
+        page_roles = {item.get("path"): item.get("page_role") for item in pages if isinstance(item, dict)}
+        scope_matches = bool(route_roles) and route_roles == page_roles and len(route_roles) == len(routes) == len(pages)
+        scope_matches = scope_matches and all(isinstance(path, str) and path and role for path, role in route_roles.items())
+        domains = [contract.get("project", {}).get("domain"), system.get("domain"), visual.get("domain")]
+        architecture = all(plan.get(key) and plan.get(key) != "UNKNOWN" for key in ("framework", "language", "styling", "output_dir"))
+        spec_pages = {path: role for path, role in re.findall(r"^### (\S+) — (.+)$", pack.full_build_spec, re.M)
+                      if path.startswith("/")}
+        scope_matches = scope_matches and spec_pages == route_roles
+        constraints = contract.get("constraints", {})
+        compositions: dict[str, str] = {}
+        diverse = bool(pages)
+        mobile = bool(pages)
+        for page in pages:
+            if not isinstance(page, dict):
+                diverse = mobile = False
+                continue
+            sections = page.get("sections", [])
+            if not isinstance(sections, list) or not sections:
+                diverse = mobile = False
+                continue
+            mobile = mobile and all(isinstance(section, dict) and bool(section.get("mobile_behavior")) for section in sections)
+            fingerprint = json.dumps([page.get("composition_family"), page.get("first_visual_anchor"),
+                                      [{key: section.get(key) for key in ("type", "composition", "visual_anchor", "density")}
+                                       for section in sections if isinstance(section, dict)]], sort_keys=True)
+            role = page.get("page_role", "")
+            if fingerprint in compositions and compositions[fingerprint] != role:
+                diverse = False
+            compositions[fingerprint] = role
+        preserve_required = constraints.get("preserve_page_role_diversity") or constraints.get("avoid_shared_hero_everywhere")
+        components = system.get("components", [])
+        component_mobile = bool(components) and all(isinstance(item, dict) and item.get("responsive_behavior") for item in components)
+        outputs = "\n".join((pack.project_context, pack.full_build_spec, pack.implementation_prompt, pack.qa_remediation_prompt))
+        inputs = "\n".join(str(value) for value in payload.values())
+        hidden_chat = re.compile(r"(?:from the previous message|as discussed (?:above|earlier)|see (?:the )?(?:previous|earlier) (?:chat|message))", re.I)
+        leaked_examples = any(marker in outputs.lower() and marker not in inputs.lower()
+                              for marker in ("mostar", "example.com", "[project name]", "your-project-name"))
+        filename = "02-FULL-BUILD-SPEC.md"
+        return PromptPackGate(
+            upstream_binding_valid=binding_valid,
+            goal_scope_consistent=bool(binding_valid and sources_present and scope_matches and architecture and all(domains) and len(set(domains)) == 1),
+            preserve_change_consistent=bool(sources_present and scope_matches and (diverse or not preserve_required)),
+            responsive_scope_consistent=bool(sources_present and mobile and component_mobile
+                                             and system.get("gates", {}).get("responsive_contracts_defined")
+                                             and "responsive_all" in pack.full_build_spec),
+            qa_maps_to_spec=bool(scope_matches and filename in pack.qa_remediation_prompt
+                                 and all(f"`{path}`" in pack.qa_remediation_prompt for path in route_roles)),
+            implementation_reads_full_spec=bool(filename in pack.implementation_prompt
+                                                 and re.search(r"read.*02-FULL-BUILD-SPEC\.md.*before", pack.implementation_prompt, re.I)),
+            no_hidden_chat_dependency=bool(sources_present and not hidden_chat.search(inputs + "\n" + outputs)),
+            no_example_project_leakage=bool(sources_present and not leaked_examples),
+        )
 
     @staticmethod
     def _bullets(items: list[str], empty: str = "- UNKNOWN") -> str:
@@ -219,7 +287,7 @@ class CreateSpecFirstPromptPack(Action):
 
         full_build_spec = f"""# Project — Full Build Specification\n\n> **Goal:** {goal}\n> **Evidence rule:** VERIFIED / INFERRED / ASSUMED / UNKNOWN / PROPOSED / N/A_JUSTIFIED.\n\n## 0. Mission\n\nBuild the project described by the upstream Design Contract and implementation artifacts without relying on hidden conversation history.\n\n- Domain: **{domain}**\n- Framework: **{framework}**\n- Language: **{language}**\n- Styling: **{styling}**\n- Responsive scope: **{responsive_scope}**\n- Execution order: **compile spec → read/freeze spec → implement → rendered QA → root-cause repair**\n\n## 1. Source of truth\n\n1. Latest explicit user goal: `{goal}`\n2. Design Contract and Design System artifacts from this run.\n3. Implementation Plan and Visual Composition artifacts from this run.\n4. Current repository/runtime/reference evidence when supplied.\n5. Applicable UIUX Factory rules.\n6. Inference/assumption only when clearly labelled.\n\n## 2. Current verified architecture\n\n- Framework: `{framework}`\n- Language: `{language}`\n- Styling: `{styling}`\n- Planned output: `{output_dir}`\n\n### Routes\n{route_tree}\n\n### Planned files\n{file_tree}\n\n## 3. Immutable / preserve contract\n\n{self._bullets(preserve_notes)}\n\nByte-for-byte preservation, public DOM/API preservation, and protected runtime behavior remain `UNKNOWN` unless the target audit/reference evidence explicitly proves them. Do not invent protected owners.\n\n## 4. Current problems and gaps\n\n### Declared unresolved items\n{unresolved_text}\n\nFor each newly discovered implementation issue use `CURRENT → PROBLEM → IMPACT → PROPOSED RESOLUTION` and repair the earliest responsible owner.\n\n## 5. Product / UX direction\n\n### UX principles\n{self._bullets(ux_principles)}\n\n### Primary journey\n{self._bullets(primary_journey)}\n\nDo not fabricate user research, conversion metrics, or production outcomes.\n\n## 6. Sitemap and information architecture\n\n{route_tree}\n\nTreat every listed route as VERIFIED from the Implementation Plan. Any additional route is PROPOSED until the spec explicitly adds it.\n\n## 7. Page-by-page specification\n\n{self._page_specs(pages)}\n\n## 8. Design system / visual direction\n\n### Visual signature\n{visual.get('visual_signature') or visual_contract.get('signature') or 'UNKNOWN'}\n\n### Attributes\n{self._bullets(visual_attributes)}\n\n### Layout rules\n{self._bullets(layout_rules)}\n\n### Typography rules\n{self._bullets(typography_rules)}\n\n### Media rules\n{self._bullets(media_rules)}\n\n### Resolved/declared tokens\n{tokens}\n\n## 9. Motion and interaction contract\n\n{self._bullets(motion_rules, '- UNKNOWN — no motion rules were supplied upstream.')}\n\nExisting protected animation/function ownership must come from target-source evidence; do not infer exact timings/selectors/functions from visual similarity alone.\n\n## 10. Responsive behavior\n\n- Declared scope: `{responsive_scope}`\n\n### Component responsive rules\n{self._bullets(component_responsive, '- UNKNOWN — no component-level responsive rules were supplied.')}\n\nFor `responsive_all`, verify representative mobile/tablet/desktop widths and repair overflow/clipping/crop/state issues before release.\n\n## 11. Technical architecture and file structure\n\n### Planned files\n{file_tree}\n\n### Implementation order\n{self._bullets([str(item) for item in plan.get('implementation_order', [])])}\n\n### Dependency / framework contract\n- Framework: `{framework}`\n- Language: `{language}`\n- Styling: `{styling}`\n- Avoid unrelated dependencies/refactors.\n- Verify the real target repository before editing; this generated plan does not override newer source truth.\n\n## 12. Accessibility / performance / SEO\n\n### Accessibility\n{self._bullets(component_accessibility, '- UNKNOWN — component accessibility requirements were not supplied upstream.')}\n\n### Performance\n- PROPOSED — no project-code console/runtime errors during the critical journey.\n- PROPOSED — no broken required media or route resources.\n- UNKNOWN — explicit performance budget unless supplied elsewhere.\n\n### SEO / metadata\n- UNKNOWN — inspect target head/metadata ownership before adding or replacing SEO configuration.\n- If SEO is DUE NOW, specify exact title/description/OG/canonical/robots/sitemap ownership in this file before implementation.\n\n## 13. Deployment\n\n- UNKNOWN — inspect the target repository and declared release authority before prescribing GitHub Pages, Vercel, or another platform.\n- If deployment is DUE NOW, this section must be refined to exact config paths/keys, build command, output directory, base-path rules, environment requirements, workflow steps and production verification.\n- Never report “deployed” from a proposed deployment contract alone.\n\n## 14. QA checklist\n\n- [ ] All declared routes load successfully.\n- [ ] Representative rendered pages match the approved page roles and visual composition.\n- [ ] No project-code console errors during the critical journey.\n- [ ] Required media loads without broken resources.\n- [ ] Keyboard/focus behavior satisfies declared component accessibility contracts.\n- [ ] No serious/critical accessibility issue is knowingly hidden.\n- [ ] For responsive scope, representative mobile/tablet/desktop views have no unintended horizontal overflow or clipping.\n- [ ] Visual review is based on actual rendered pixels, not build success alone.\n- [ ] Any deployment due now is verified on the real target environment.\n\n## 15. Deliverables\n\n### Planned project files\n{file_tree}\n\n### Required process artifacts\n- `00-PROJECT-CONTEXT.md`\n- `01-RESEARCH-PROMPT.md`\n- `02-FULL-BUILD-SPEC.md`\n- `03-IMPLEMENTATION-PROMPT.md`\n- `04-QA-REMEDIATION-PROMPT.md`\n- rendered QA evidence for material UI changes\n- implementation deviation record when the frozen spec cannot be followed exactly\n\n## 16. Definition of Done\n\n- [ ] `02-FULL-BUILD-SPEC.md` was compiled before target implementation.\n- [ ] Implementation read the frozen spec before editing target code.\n- [ ] Declared routes/files/components were implemented within scope.\n- [ ] Applicable rendered/responsive/accessibility/runtime checks passed.\n- [ ] QA evaluated the implementation against this same spec.\n- [ ] No blocker or UNKNOWN was silently converted into PASS.\n- [ ] Deviations from this spec are documented with evidence.\n\n```text\nDONE_VERIFIED = [only evidence-backed completed requirements]\nN/A_JUSTIFIED = [intentionally irrelevant requirements]\nPENDING_FUTURE_PHASE = [valid later work]\nBLOCKED = [current blockers]\n```\n"""
 
-        implementation_prompt = f"""# Project — Implementation Prompt\n\nGoal: {goal}\n\n## SPEC-FIRST RULE\nRead `02-FULL-BUILD-SPEC.md` completely before editing target code. Treat that frozen file as the implementation source of truth unless the user's latest explicit correction overrides it.\n\n1. Verify current target source before editing.\n2. Preserve every protected item at its declared preservation level.\n3. Implement only the declared scope/routes/files/states.\n4. Do not independently redesign around the spec.\n5. Record unavoidable deviations with evidence and rationale.\n6. Render representative pages before broad rollout.\n7. Repair root causes instead of weakening tests.\n8. Merge/deploy only within explicit authority.\n"""
+        implementation_prompt = f"""# Project — Implementation Prompt\n\nGoal: {goal}\n\n## SPEC-FIRST RULE\nRead `02-FULL-BUILD-SPEC.md` completely before editing target code. Treat that frozen file as the implementation source of truth. For a user correction, update the goal/upstream artifacts and recompile before editing target code.\n\n1. Verify current target source before editing.\n2. Preserve every protected item at its declared preservation level.\n3. Implement only the declared scope/routes/files/states.\n4. Do not independently redesign around the spec.\n5. Record unavoidable deviations with evidence and rationale.\n6. Render representative pages before broad rollout.\n7. Repair root causes instead of weakening tests.\n8. Merge/deploy only within explicit authority.\n"""
 
         qa_prompt = f"""# Project — QA / Remediation Prompt\n\nGoal: {goal}\n\nAudit the implementation against the same frozen `02-FULL-BUILD-SPEC.md`.\n\nCheck functional behavior, declared routes, rendered visual hierarchy, responsive scope, interaction/motion, media integrity, accessibility, console/runtime errors, SEO/deployment requirements when due now, and delivery inventory.\n\nWhen implementation differs from the spec, identify the earliest responsible owner, repair there, then rerun all affected downstream gates. Do not weaken QA to manufacture a PASS.\n"""
 
@@ -229,14 +297,10 @@ class CreateSpecFirstPromptPack(Action):
             full_build_spec=full_build_spec,
             implementation_prompt=implementation_prompt,
             qa_remediation_prompt=qa_prompt,
-            gates=PromptPackGate(
-                goal_scope_consistent=True,
-                preserve_change_consistent=True,
-                responsive_scope_consistent=True,
-                qa_maps_to_spec=True,
-                implementation_reads_full_spec=True,
-                no_hidden_chat_dependency=True,
-                no_example_project_leakage=True,
-            ),
+            gates=PromptPackGate(),
         )
+        pack.qa_remediation_prompt += "\n\nDeclared route checks against the frozen spec:\n" + self._bullets(route_lines)
+        pack.bind_compilation(payload)
+        pack.gates = self.evaluate_consistency(payload, pack)
+        pack.blocking_unknowns = [f"Unverified spec contract: {name}" for name, passed in pack.gates.model_dump().items() if not passed]
         return pack.model_dump_json(indent=2)

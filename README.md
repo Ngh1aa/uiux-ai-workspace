@@ -257,8 +257,11 @@ python -m pytest -q tests
 Provider-backed direct pipeline work remains available when an approved provider is configured:
 
 ```bash
-python run.py "Design a distinctive ecommerce website" --engine ai --runtime-preset visual-first
+python run.py "Design a distinctive ecommerce website" --engine ai --runtime-preset visual-first --authority branch_write
 ```
+
+For `run.py`, `--authority branch_write` is an explicit opt-in to implementation/repair
+writes. Omission keeps the `read_only` default. It does not grant merge/deploy authority.
 
 ## Repository governance
 

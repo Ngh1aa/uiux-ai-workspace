@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
+
+import pytest
 
 from core.runtime.flow_os.autonomous import AutonomousFlowRunner, audit_project_truth
 from core.runtime.flow_os.provider import ScriptedProvider
@@ -32,7 +35,8 @@ def test_a16_audit_is_bounded_to_existing_source_truth(tmp_path: Path) -> None:
     assert audit.package_project is False
 
 
-def test_a16_prompt_to_audit_plan_execute_qa_uses_canonical_flow(tmp_path: Path) -> None:
+@pytest.mark.parametrize("with_render", [True, False])
+def test_a16_prompt_to_audit_plan_execute_qa_uses_canonical_flow(tmp_path: Path, monkeypatch, with_render) -> None:
     project = _git_project(tmp_path)
     provider = ScriptedProvider(
         [
@@ -74,6 +78,30 @@ def test_a16_prompt_to_audit_plan_execute_qa_uses_canonical_flow(tmp_path: Path)
         project_root=project,
         provider=provider,
     )
+    if with_render:
+        # Synthetic capture boundary for this lifecycle test; no live browser QA.
+        # Acceptance still runs the real adapter and the unchanged evidence gate.
+        from core.runtime.flow_os.browser_evidence import PlaywrightBrowserEvidenceAdapter
+        from test_factory_render_gates import _png
+
+        artifacts = tmp_path / "qa" / "artifacts"
+        artifacts.mkdir(parents=True)
+        (artifacts / "home.png").write_bytes(_png())
+        observation = {
+            "route": "/", "url": "http://localhost:4173/", "title": "Synthetic lifecycle fixture",
+            "viewport": {"width": 320, "height": 240}, "screenshot": "home.png",
+            "box": {"width": 320, "height": 240},
+        }
+        (artifacts / "browser-evidence-home.json").write_text(json.dumps(observation), encoding="utf-8")
+        capture = PlaywrightBrowserEvidenceAdapter(artifacts.parent, {}).collect(artifacts)[0]
+        evaluate = runner.provider_runner._typed_gate_errors
+
+        def evaluate_capture(managed, stage_state):
+            if managed.active_stage == "qa":
+                stage_state.context.setdefault("evidence_records", []).append(capture.to_dict())
+            return evaluate(managed, stage_state)
+
+        monkeypatch.setattr(runner.provider_runner, "_typed_gate_errors", evaluate_capture)
     result = runner.start(
         "Improve the existing navigation component without redesigning the whole product.",
         overrides={
@@ -86,6 +114,11 @@ def test_a16_prompt_to_audit_plan_execute_qa_uses_canonical_flow(tmp_path: Path)
     )
 
     assert result.flow_id == "existing-ui-improvement"
+    if not with_render:
+        assert result.state == "FAIL"
+        assert result.completed_stages == ("research", "implementation")
+        assert not (project / "docs" / "uiux" / "autonomous-proof.md").exists()
+        return
     assert result.state == "COMPLETED"
     assert result.completed_stages == ("research", "implementation", "qa")
     assert result.lifecycle == ("audit", "plan", "execute", "qa")

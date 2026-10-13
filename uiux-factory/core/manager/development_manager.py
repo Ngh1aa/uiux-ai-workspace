@@ -21,12 +21,14 @@ from core.contracts.design_system_schema import DesignSystemContract
 from core.contracts.frontend_result_schema import FrontendResult
 from core.contracts.implementation_plan_schema import ImplementationPlan
 from core.contracts.prompt_pack_schema import PromptPack
+from core.actions.create_spec_first_prompt_pack import CreateSpecFirstPromptPack
 from core.contracts.schema import DesignContract
 from core.contracts.visual_composition_schema import VisualComposition
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
 from core.runtime.flow_os.main_execution import advance_execution_phase, fail_execution_phase
 from core.runtime.flow_os.work_execution import WorkExecutionPlan
-from core.runtime.run_context import RunContext
+from core.runtime.run_context import RunContext, require_frozen_specification, require_native_execution_grant, specification_inputs
+from core.runtime.flow_os.execution_driver import ExecutionGrant
 from core.team.team_runner import UIUXTeamRunner
 
 
@@ -105,6 +107,10 @@ class DevelopmentManager:
     @staticmethod
     def _read(context: RunContext, key: str) -> str:
         return DevelopmentManager._require(context, key).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _require_specification(context: RunContext) -> tuple[Path, Path]:
+        return require_frozen_specification(context)
 
     def _load_execution_plan(self, context: RunContext) -> WorkExecutionPlan | None:
         raw = context.artifacts.get("execution_plan")
@@ -265,11 +271,12 @@ class DevelopmentManager:
         run_id: str | None = None,
         intelligence_only: bool = False,
         engine: str = "template",
+        execution_grant: ExecutionGrant | None = None,
     ) -> RunContext:
         if engine not in {"template", "ai"}:
             raise ValueError("Unknown generation engine.")
 
-        context = RunContext(root=self.root, goal=goal, design_context=design_context or DesignContext())
+        context = RunContext(root=self.root, goal=goal, design_context=design_context or DesignContext(), execution_grant=execution_grant)
         if run_id:
             if not re.fullmatch(r"[a-zA-Z0-9-]{1,80}", run_id):
                 raise ValueError("Invalid run ID.")
@@ -518,17 +525,7 @@ class DevelopmentManager:
         stage = "specification_compile"
         print("\n[Stage] Specification Compile STARTED")
         context.start_stage(stage)
-        instruction = {
-            "goal": context.goal,
-            "reference_analysis": self._read(context, "reference_analysis"),
-            "research": self._read(context, "research"),
-            "ux_ia": self._read(context, "ux_ia"),
-            "art_direction": self._read(context, "art_direction"),
-            "design_contract_content": self._read(context, "design_contract"),
-            "design_system_content": self._read(context, "design_system"),
-            "implementation_plan_content": self._read(context, "implementation_plan"),
-            "visual_composition_content": self._read(context, "visual_composition"),
-        }
+        instruction = specification_inputs(context)
         result = await self.team_runner.run_role(
             role_class=SpecWriter,
             stage=stage,
@@ -536,8 +533,10 @@ class DevelopmentManager:
             context=context,
         )
         pack = PromptPack.model_validate_json(result.content)
+        pack.gates = CreateSpecFirstPromptPack.evaluate_consistency(instruction, pack)
         if not pack.gates.passed:
-            raise RuntimeError("Spec-first prompt pack consistency gate failed.")
+            failed = [name for name, passed in pack.gates.model_dump().items() if not passed]
+            raise RuntimeError("Spec-first prompt pack consistency gate failed: " + ", ".join(failed))
 
         prompt_files = {
             "project_context_prompt": ("00-PROJECT-CONTEXT.md", pack.project_context),
@@ -551,13 +550,15 @@ class DevelopmentManager:
             path = self._write(context, key, filename, content)
             written[key] = str(path.resolve())
 
-        spec_bytes = pack.full_build_spec.encode("utf-8")
+        spec_bytes = Path(written["full_build_spec"]).read_bytes()
         manifest = {
-            "schema_version": 1,
+            "schema_version": 2,
             "mode": "compile_then_execute",
             "frozen": True,
             "source_of_truth": written["full_build_spec"],
             "full_build_spec_sha256": hashlib.sha256(spec_bytes).hexdigest(),
+            "implementation_prompt_sha256": hashlib.sha256(Path(written["implementation_prompt_spec"]).read_bytes()).hexdigest(),
+            "upstream_sha256": pack.upstream_sha256,
             "artifacts": written,
             "gates": pack.gates.model_dump(),
             "rule": (
@@ -581,8 +582,8 @@ class DevelopmentManager:
         system = self._require(context, "design_system")
         plan = self._require(context, "implementation_plan")
         visual = self._require(context, "visual_composition")
-        full_spec = self._require(context, "full_build_spec")
-        implementation_prompt = self._require(context, "implementation_prompt_spec")
+        full_spec, implementation_prompt = self._require_specification(context)
+        require_native_execution_grant(context)
         context.start_stage(stage)
         result = await self.team_runner.run_role(
             role_class=FrontendEngineer,
@@ -620,8 +621,8 @@ class DevelopmentManager:
     async def _run_ai_implementation(self, context: RunContext, provider) -> None:
         if provider is None:
             raise RuntimeError("AI implementation requires a configured provider.")
-        self._require(context, "full_build_spec")
-        self._require(context, "implementation_prompt_spec")
+        self._require_specification(context)
+        require_native_execution_grant(context)
         stage = "implementation"
         print("\n[Stage] AI Frontend Implementation STARTED")
         context.start_stage(stage)
@@ -642,7 +643,8 @@ class DevelopmentManager:
 
         stage = "quality_loop"
         print("\n[Stage] Quality Loop STARTED")
-        self._require(context, "full_build_spec")
+        self._require_specification(context)
+        require_native_execution_grant(context)
         self._require(context, "qa_remediation_prompt")
         frontend_path = self._require(context, "implementation")
         frontend = FrontendResult.model_validate_json(frontend_path.read_text(encoding="utf-8"))

@@ -13,6 +13,7 @@ class RouteViewportEvidence(BaseModel):
     route: str
     viewport: ViewportSpec
     screenshot: str
+    screenshot_sha256: str = ""
     status: Literal["passed", "failed"]
 
     console_errors: list[str] = Field(default_factory=list)
