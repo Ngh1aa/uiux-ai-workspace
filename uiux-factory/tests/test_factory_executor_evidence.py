@@ -19,6 +19,7 @@ from core.runtime.flow_os.managed import ManagedFlowController
 from core.runtime.flow_os.release import ProductionReleaseController
 from core.runtime.flow_os.evidence import gate_evidence_errors, evidence_from_tool
 from core.runtime.flow_os.execution_driver import ExecutionGrant, RunnerContractError, RunnerResult, validate_runner_evidence
+from fixtures.executor_evidence import attach_design_fixture, design_fixture
 
 
 def test_driver_rejects_file_only_qa(tmp_path):
@@ -47,7 +48,7 @@ def test_release_rechecks_capture_hash(tmp_path, rendered):
     state = harness.execute_plan(controller.start_stage(managed), [{'tool': 'run_validator', 'args': {'name': 'validate-flows'}}])
     record, image = rendered
     state.context['evidence_records'].append(record)
-    harness.checkpoints.save(state.run_id, state.to_dict())
+    attach_design_fixture(harness, state)
     controller.complete_stage(managed)
     assert ProductionReleaseController(harness).validate_release_ready(managed) == []
     image.write_bytes(_png(width=321))
@@ -244,7 +245,7 @@ def test_shared_render_negatives_on_managed_provider_and_release(tmp_path, rende
     if executor != 'provider':
         state = harness.execute_plan(controller.start_stage(managed), [{'tool': 'run_validator', 'args': {'name': 'validate-flows'}}])
         state.context['evidence_records'].append(record)
-        harness.checkpoints.save(state.run_id, state.to_dict())
+        attach_design_fixture(harness, state)
         if executor == 'release':
             controller.complete_stage(managed)
     if case == 'wrong_route':
@@ -262,6 +263,7 @@ def test_shared_render_negatives_on_managed_provider_and_release(tmp_path, rende
         runner = ProviderManagedRunner(controller, provider)
         check = runner._typed_gate_errors
         def captured_evidence(run, stage):
+            stage.context.setdefault('evidence_records', []).append(design_fixture(project, 'qa'))
             if case != 'missing':
                 stage.context.setdefault('evidence_records', []).append(record)
             return check(run, stage)

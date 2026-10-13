@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FACTORY_ROOT = ROOT.parent / "uiux-factory"
+DESIGN_SMOKE_CONTRACT = ROOT.parent / "docs/evidence/design-direction-study/design-decisions.json"
 if str(FACTORY_ROOT) not in sys.path:
     sys.path.insert(0, str(FACTORY_ROOT))
 
@@ -81,6 +82,31 @@ def _git_fixture(project: Path) -> None:
         check=True,
         timeout=30,
     )
+
+
+def _record_smoke_design_check(harness, state) -> None:
+    """Check the existing illustrative contract, never declare a design PASS.
+
+    This smoke verifies lifecycle wiring only, not the fixture's domain fit,
+    rendered UI, human preference or the quality of a generated website.
+    """
+    from core.runtime.flow_os.evidence import evidence_from_tool
+    from core.skills.design_decisions import check_design_file
+
+    harness._ensure_workspace(state)
+    root = harness._active_project_root(state)
+    relative = "docs/uiux/runtime-smoke-design.json"
+    path = root / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(DESIGN_SMOKE_CONTRACT.read_bytes())
+    result = check_design_file(root, relative, "design")
+    if result["returncode"]:
+        raise ValueError("runtime smoke design fixture is invalid: " + str(result["errors"]))
+    result.update(artifact_path=str(path), artifact_sha256="sha256:" + result["contract_sha256"])
+    state.context.setdefault("evidence_records", []).append(
+        evidence_from_tool("design", "check_design_decisions", result).to_dict()
+    )
+    harness.checkpoints.save(state.run_id, state.to_dict())
 
 
 def _run_flow_os_smoke(errors: list[str]) -> None:
@@ -185,6 +211,8 @@ def _run_flow_os_smoke(errors: list[str]) -> None:
             stage_run = harness.execute_plan(stage_run, [action])
             if stage_run.state != "COMPLETED":
                 errors.append(f"managed stage {expected_stage} did not complete smoke plan")
+            if expected_stage == "design":
+                _record_smoke_design_check(harness, stage_run)
             manager.complete_stage(managed)
 
         if managed.active_stage != "qa":
@@ -220,6 +248,7 @@ def _run_flow_os_smoke(errors: list[str]) -> None:
         research_run = harness.execute_plan(manager.start_stage(manual), [{"tool": "read_text", "args": {"path": ".gitkeep"}}])
         manager.complete_stage(manual)
         design_run = harness.execute_plan(manager.start_stage(manual), [{"tool": "run_validator", "args": {"name": "validate-flows"}}])
+        _record_smoke_design_check(harness, design_run)
         if research_run.state != "COMPLETED" or design_run.state != "COMPLETED":
             errors.append("manual approval smoke specialist stage did not complete")
         try:

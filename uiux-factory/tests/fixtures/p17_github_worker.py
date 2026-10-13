@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from executor_evidence import file_proof, render_fixture
+from executor_evidence import file_proof, render_fixture, design_fixture
 from core.runtime.flow_os.execution_driver import ArtifactRegistry
 
 
@@ -109,6 +109,8 @@ if payload['status'] == 'passed':
                                    for item in payload['artifacts'] if item.get('path')]
     if phase == 'implementation':
         payload['evidence_records'].append(file_proof(stage, 'write_project_file', Path('index.html')))
+    if phase in {'design', 'qa'}:
+        payload['evidence_records'].append(design_fixture(artifact_dir, stage, f'{segment_id}-{attempt}'))
     if phase == 'qa' and os.environ.get('P17_FILE_ONLY_QA') != '1':
         record, image = render_fixture(artifact_dir, f'{segment_id}-{attempt}', stage)
         payload['evidence_records'].append(record)

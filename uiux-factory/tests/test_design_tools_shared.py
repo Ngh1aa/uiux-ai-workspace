@@ -121,3 +121,96 @@ def test_skill_validator_still_rejects_invalid_owned_skill(tmp_path):
     (tmp_path/'upstream/deep').mkdir(parents=True)
     (tmp_path/'upstream/deep/SKILL.md').write_text('Invalid pinned source, tested separately',encoding='utf-8')
     assert validate() == 1
+
+
+def test_executor_design_handoff_runs_canonical_design_checker(tmp_path):
+    from test_p16_execution_driver import _build_driver
+    _, _, driver, _, _, _ = _build_driver(tmp_path)
+    assert driver.run_next()['status'] == 'passed'
+    event = driver.run_next()
+    assert event['status'] == 'passed', event.get('reason')
+    records = driver.checkpoint_store.load()['stage_evidence']['work-2']
+    proof = next(item for item in records if item['type'] == 'design_contract_check')
+    assert proof['data']['phase'] == 'design'
+    assert proof['data']['contract_version'] == '2.0'
+    assert proof['data']['aesthetic_quality'] == 'UNKNOWN'
+    assert proof['data']['human_preference'] == 'UNKNOWN'
+    assert Path(proof['data']['artifact_path']).is_file()
+
+
+def test_runtime_foundation_smoke_satisfies_canonical_design_gates():
+    import runpy
+    smoke = runpy.run_path(str(SKILLS/'scripts/validate-runtime-foundation.py'))
+    errors = []
+    smoke['_run_flow_os_smoke'](errors)
+    assert errors == []
+
+
+@pytest.mark.parametrize('case', ['empty', 'provider_origin', 'failed', 'wrong_phase', 'legacy', 'wrong_stage'])
+def test_canonical_design_completion_rejects_invalid_proof(tmp_path, case):
+    from fixtures.executor_evidence import design_fixture
+    from test_factory_completion_gates import _fresh
+    harness, manager, managed = _fresh(tmp_path)
+    harness.execute_plan(manager.start_stage(managed), [{'tool': 'read_text', 'args': {'path': 'index.html'}}])
+    manager.complete_stage(managed)
+    state = harness.execute_plan(manager.start_stage(managed), [])
+    proof = design_fixture(tmp_path, 'design')
+    if case == 'provider_origin':
+        proof['origin'] = 'provider'
+    elif case == 'failed':
+        proof['status'] = 'FAIL'
+    elif case == 'wrong_phase':
+        proof['data']['phase'] = 'rendered'
+    elif case == 'legacy':
+        proof['data']['contract_version'] = '1.0'
+    elif case == 'wrong_stage':
+        proof['stage_id'] = 'research'
+    state.context['evidence_records'] = [] if case == 'empty' else [proof]
+    harness.checkpoints.save(state.run_id, state.to_dict())
+    with pytest.raises(ValueError, match='completion evidence failed'):
+        manager.complete_stage(managed)
+    assert managed.active_stage == 'design' and managed.state != 'COMPLETED'
+
+
+def test_executor_resume_rechecks_current_design_proof(tmp_path):
+    from core.runtime.flow_os.execution_driver import ExecutionDriver, RunnerContractError
+    from test_p16_execution_driver import _build_driver
+    _, _, driver, runner, target, _ = _build_driver(tmp_path)
+    assert driver.run_next()['status'] == 'passed'
+    assert driver.run_next()['status'] == 'passed'
+    proof = next(item for item in driver.checkpoint_store.load()['stage_evidence']['work-2']
+                 if item['type'] == 'design_contract_check')
+    Path(proof['data']['artifact_path']).write_text('{}', encoding='utf-8')
+    with pytest.raises(RunnerContractError):
+        ExecutionDriver.resume(driver.work_plan, runner, workspace_root=target,
+                               checkpoint_store=driver.checkpoint_store, grant=driver.grant)
+
+
+def test_design_proof_cannot_replace_implementation_evidence(tmp_path):
+    from fixtures.executor_evidence import design_fixture
+    from core.runtime.flow_os.evidence import gate_evidence_errors
+    proof = design_fixture(tmp_path, 'implementation')
+    assert gate_evidence_errors([{'id': 'stage-completion-evidence'}], 'implementation',
+                                [proof], agent='implementation')
+
+
+@pytest.mark.parametrize('content', ['{}', 'not json'])
+def test_runtime_smoke_never_attests_invalid_contract(tmp_path, content):
+    import runpy
+    from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
+    from core.runtime.flow_os.managed import ManagedFlowController
+    smoke = runpy.run_path(str(SKILLS/'scripts/validate-runtime-foundation.py'))
+    source = tmp_path/'invalid-contract.json'
+    source.write_text(content, encoding='utf-8')
+    project = tmp_path/'project'
+    smoke['_git_fixture'](project)
+    harness = ProviderNeutralAgentHarness(SKILLS, project)
+    manager = ManagedFlowController(harness)
+    managed = manager.start_from_goal('Build a corporate website', authority='branch_write')
+    managed.active_stage = 'design'  # Isolated smoke-fixture boundary.
+    state = manager.start_stage(managed)
+    record = smoke['_record_smoke_design_check']
+    record.__globals__['DESIGN_SMOKE_CONTRACT'] = source
+    with pytest.raises(ValueError):
+        record(harness, state)
+    assert not state.context.get('evidence_records')

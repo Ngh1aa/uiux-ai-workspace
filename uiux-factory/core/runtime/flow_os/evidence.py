@@ -437,6 +437,10 @@ def gate_evidence_errors(
         "qa": {"validator_result", "command_result", "browser_render"},
         "development": set(TRUSTED_EVIDENCE_TYPES),
     }
+    # Design uses the implementation role but its canonical checker is a distinct
+    # evidence type. Accept it only where a stage actually requires that check.
+    if any("design_contract_check" in (gate.get("evidence_types") or []) for gate in gates):
+        role_defaults["implementation"].add("design_contract_check")
     for gate in gates:
         if gate.get("approval") == "human":
             continue
