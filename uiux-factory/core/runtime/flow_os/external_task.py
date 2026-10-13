@@ -8,6 +8,7 @@ from core.runtime.flow_os.execution_advisor import build_execution_advice
 from core.runtime.flow_os.flow import FlowPlanner, ResolvedFlow
 from core.runtime.flow_os.target_truth import ROUTING_PRECEDENCE, build_truth_aware_context
 from core.runtime.flow_os.task_context import GoalInterpreter, NON_MUTATING_INTENTS
+from core.skills.design_knowledge import design_workflow_packet
 
 
 EXTERNAL_TASK_MANIFEST_VERSION = "1.2"
@@ -66,7 +67,7 @@ def _effective_authority(caller_authority: str, task_authority: str) -> str:
     return AUTHORITY_ORDER[min(AUTHORITY_ORDER.index(caller_authority), AUTHORITY_ORDER.index(task_authority))]
 
 
-def _stage_manifest(flow: ResolvedFlow) -> list[dict[str, Any]]:
+def _stage_manifest(flow: ResolvedFlow, context: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     stages: list[dict[str, Any]] = []
     for stage in flow.stages:
         stages.append(
@@ -79,6 +80,7 @@ def _stage_manifest(flow: ResolvedFlow) -> list[dict[str, Any]]:
                 "jit_skills": list(stage.jit_skills or []),
                 "skill_paths": [f"skills_UIUX/{skill}/SKILL.md" for skill in stage.skills],
                 "gates": list(stage.gates),
+                "design_workflow": design_workflow_packet(context or {}, list(stage.skills), list(stage.gates)),
                 "load_policy": "Load only this stage's routed skills plus target-project evidence needed for the active decision.",
             }
         )
@@ -211,7 +213,7 @@ def build_external_task_manifest(
     flow = planner.plan(context)
     manifest_flow = flow.to_dict()
     manifest_flow["source"] = _manifest_library_path(flow.source)
-    stages = _stage_manifest(flow)
+    stages = _stage_manifest(flow, context)
     execution_advice = build_execution_advice(cleaned_goal, context, flow, policy_doc).to_dict()
 
     gate_criteria = [
