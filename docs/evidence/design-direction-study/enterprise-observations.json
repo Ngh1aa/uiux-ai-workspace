@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "plan_sha256": "78a4ef4de6cd2c345f1e048ef4eea30a79fc35cb5f24baefdaa31ddf83ef1a9c",
+  "reviews": [
+    {
+      "reviewer_id": "author-agent",
+      "role": "Same author using an IT/procurement lens; not a recruited practitioner",
+      "source": "agent-heuristic",
+      "independent": false,
+      "presentation_order": [
+        "B",
+        "A"
+      ],
+      "answers": [
+        {
+          "label": "A",
+          "question_id": "scope",
+          "response": "Read-only14days; Morgan Chen; approval pending, provisioning not started and revocation unconfirmed.",
+          "criteria_met": [
+            true,
+            true
+          ],
+          "observed_element": "Scope fields and boundary text in register object",
+          "capture_sha256": "9f7e27a96c4e1d50f8f1ec23d02269dbb684df7fbaad810a047d65b5ddf104d4"
+        },
+        {
+          "label": "A",
+          "question_id": "identity",
+          "response": "Domain identified through specific permission/fulfillment or baseline/test/handover relationships. The register/sequence treatment itself could serve another vendor and is not an ownable signature.",
+          "criteria_met": [
+            true,
+            false
+          ],
+          "observed_element": "Scope fields and boundary text in register object",
+          "capture_sha256": "9f7e27a96c4e1d50f8f1ec23d02269dbb684df7fbaad810a047d65b5ddf104d4"
+        },
+        {
+          "label": "B",
+          "question_id": "scope",
+          "response": "Read-only14days; Morgan Chen; approval pending, provisioning not started and revocation unconfirmed.",
+          "criteria_met": [
+            true,
+            true
+          ],
+          "observed_element": "Scope fields and boundary text in sequence object",
+          "capture_sha256": "1a9cea20c0b2e0fd72b525ac227ea5f1c5af15db80c5847dc3dca2227f6c65c1"
+        },
+        {
+          "label": "B",
+          "question_id": "identity",
+          "response": "Domain identified through specific permission/fulfillment or baseline/test/handover relationships. The register/sequence treatment itself could serve another vendor and is not an ownable signature.",
+          "criteria_met": [
+            true,
+            false
+          ],
+          "observed_element": "Scope fields and boundary text in sequence object",
+          "capture_sha256": "1a9cea20c0b2e0fd72b525ac227ea5f1c5af15db80c5847dc3dca2227f6c65c1"
+        }
+      ],
+      "preferred_label": null,
+      "tradeoff": "Compact scope is visible earlier on mobile. Expressive type highlights narrative. Both lack a strong unique visual signature; no preference or comprehension effect from real buyers measured."
+    }
+  ]
+}
