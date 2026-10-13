@@ -13,6 +13,7 @@
       "then": [
         "resolved_flow.source",
         "active_stage.skill_paths",
+        "active_stage.design_workflow when active; bounded page-role lookup, no eager catalog",
         "target_project.required_source_files"
       ],
       "avoid_by_default": [
@@ -29,7 +30,8 @@
       ],
       "then": [
         "resolved_flow.source",
-        "active_stage.skill_paths"
+        "active_stage.skill_paths",
+        "active_stage.design_workflow; knowledge participates in shared provider document budget"
       ]
     },
     "qa": {

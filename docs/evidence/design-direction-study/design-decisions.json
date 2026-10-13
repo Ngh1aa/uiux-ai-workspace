@@ -1,0 +1,1007 @@
+{
+  "schema_version": "2.0",
+  "pages": [
+    {
+      "route": "/study?case=enterprise",
+      "page_role": "offering",
+      "user_question": "Does this scope cover my inputs, constraints and required outputs?",
+      "cta": "Review this scope",
+      "decisions": [
+        {
+          "axis": "layout",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "Scope matrix followed by explicit boundary",
+          "rejected_alternative": "Three-step sequence; loses horizontal attribute scanning"
+        },
+        {
+          "axis": "font",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "System Arial, sans-serif for direct scope reading",
+          "rejected_alternative": "System Georgia serif for expressive entry; no supplied brand font"
+        },
+        {
+          "axis": "typography",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "42/32 title; 18/16 body; no condensed uppercase",
+          "rejected_alternative": "68/42 title; more mobile wraps"
+        },
+        {
+          "axis": "spacing",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "40/32 section gaps,20 group/padding",
+          "rejected_alternative": "72/48 section gaps,32 groups,32/24 padding"
+        },
+        {
+          "axis": "media",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "Actual rendered synthetic matrix with labelled scope fields",
+          "rejected_alternative": "Rendered stage chain with the same facts"
+        },
+        {
+          "axis": "voice",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "Concrete inputs, decisions, unresolved boundaries",
+          "rejected_alternative": "Unverified outcome or commercial proof claims"
+        }
+      ],
+      "selected_composition": "register",
+      "compositions": [
+        {
+          "id": "register",
+          "anchor": "scope-matrix",
+          "structure": {
+            "regions": [
+              {
+                "role": "entry",
+                "layout": "statement-and-action",
+                "contains": [
+                  "title",
+                  "lead",
+                  "cta"
+                ]
+              },
+              {
+                "role": "scope",
+                "layout": "labelled-matrix",
+                "contains": [
+                  "facts",
+                  "boundary"
+                ]
+              }
+            ],
+            "relationships": [
+              [
+                "entry",
+                "introduces",
+                "scope"
+              ],
+              [
+                "facts",
+                "compared-as-attributes",
+                "boundary"
+              ]
+            ],
+            "mobile_layout": "stacked-labelled-matrix-rows",
+            "mobile_grouping": [
+              [
+                "row-header",
+                "label-value-cell",
+                "boundary"
+              ]
+            ]
+          },
+          "direction": {
+            "desktop_typography": {
+              "family": "Arial, sans-serif",
+              "title": {
+                "size_px": 42,
+                "line_height": 1.18,
+                "weight": 700
+              },
+              "body": {
+                "size_px": 18,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.025,
+              "reading_width_ch": 65
+            },
+            "desktop_density": {
+              "mode": "productive",
+              "section_gap_px": 40,
+              "group_gap_px": 20,
+              "object_padding_px": 20
+            },
+            "mobile_typography": {
+              "family": "Arial, sans-serif",
+              "title": {
+                "size_px": 32,
+                "line_height": 1.18,
+                "weight": 700
+              },
+              "body": {
+                "size_px": 16,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.025,
+              "reading_width_ch": 36
+            },
+            "mobile_density": {
+              "mode": "productive",
+              "section_gap_px": 32,
+              "group_gap_px": 20,
+              "object_padding_px": 20
+            },
+            "visual_object": {
+              "kind": "scope-matrix",
+              "information_task": "Does this scope cover my inputs, constraints and required outputs?",
+              "anatomy": [
+                "row-header",
+                "label-value-cell",
+                "boundary-after-register"
+              ],
+              "reality": "synthetic"
+            }
+          },
+          "proof": "examples/direction-study/index.html?case=enterprise&direction=register",
+          "tradeoff": "Register supports compact comparison; expressive chain emphasizes sequence and pushes first decision object lower on mobile."
+        },
+        {
+          "id": "sequence",
+          "anchor": "stage-chain",
+          "structure": {
+            "regions": [
+              {
+                "role": "entry",
+                "layout": "statement-and-action",
+                "contains": [
+                  "title",
+                  "lead",
+                  "cta"
+                ]
+              },
+              {
+                "role": "scope",
+                "layout": "parallel-stage-chain",
+                "contains": [
+                  "facts",
+                  "boundary"
+                ]
+              }
+            ],
+            "relationships": [
+              [
+                "entry",
+                "introduces",
+                "scope"
+              ],
+              [
+                "facts",
+                "grouped-by-stage",
+                "boundary"
+              ]
+            ],
+            "mobile_layout": "vertical-numbered-stages",
+            "mobile_grouping": [
+              [
+                "stage-number",
+                "stage-owned-facts"
+              ],
+              [
+                "boundary"
+              ]
+            ]
+          },
+          "direction": {
+            "desktop_typography": {
+              "family": "Georgia, serif",
+              "title": {
+                "size_px": 68,
+                "line_height": 1.12,
+                "weight": 400
+              },
+              "body": {
+                "size_px": 18,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.02,
+              "reading_width_ch": 65
+            },
+            "desktop_density": {
+              "mode": "expressive",
+              "section_gap_px": 72,
+              "group_gap_px": 32,
+              "object_padding_px": 32
+            },
+            "mobile_typography": {
+              "family": "Georgia, serif",
+              "title": {
+                "size_px": 42,
+                "line_height": 1.12,
+                "weight": 400
+              },
+              "body": {
+                "size_px": 16,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.02,
+              "reading_width_ch": 36
+            },
+            "mobile_density": {
+              "mode": "expressive",
+              "section_gap_px": 48,
+              "group_gap_px": 32,
+              "object_padding_px": 24
+            },
+            "visual_object": {
+              "kind": "stage-chain",
+              "information_task": "Does this scope cover my inputs, constraints and required outputs?",
+              "anatomy": [
+                "ordered-stage",
+                "stage-owned-facts",
+                "boundary-after-chain"
+              ],
+              "reality": "synthetic"
+            }
+          },
+          "proof": "examples/direction-study/index.html?case=enterprise&direction=sequence",
+          "tradeoff": "Register supports compact comparison; expressive chain emphasizes sequence and pushes first decision object lower on mobile."
+        }
+      ],
+      "reference_transfers": [
+        {
+          "reference_id": "enterprise-software-governance:offering",
+          "source": {
+            "kind": "reference",
+            "ref": "https://www.c1.ai/solutions/identity-governance"
+          },
+          "action": "ADAPT",
+          "property": "job \u2192 input context \u2192 configured step \u2192 execution result",
+          "reason": "Security team checks actor permissions, prerequisites and supported outcomes before accepting a workflow.",
+          "boundary": "Transfer information relationships only. Geometry and type are hypotheses; no vendor claims or assets copied."
+        }
+      ],
+      "comparison_protocol": {
+        "buyer_task": "Security team checks actor permissions, prerequisites and supported outcomes before accepting a workflow.",
+        "held_constant": {
+          "audience": "enterprise-software",
+          "content": "study.json semantic brief SHA256=e27150f39dad1d4a75c877f9b770fe2706d7357c47abc94f42219cd22dc91997",
+          "claims": "Illustrative/synthetic only; identical boundary text",
+          "cta": "Review this scope",
+          "state": "Static scoped illustration; no fulfillment/submission",
+          "assets": "Same text and DOM facts; no stock photos or vendor assets",
+          "viewports": "1440\u00d71000,390\u00d7900,320\u00d7900; same width/height for every candidate"
+        },
+        "questions": [
+          {
+            "id": "scope",
+            "dimension": "comprehension",
+            "prompt": "What is the input/permission, who or what controls the decision, and what remains unresolved?",
+            "criteria": [
+              "Identifies the request permission or installed-base input",
+              "Distinguishes the decision/scope boundary from completed execution"
+            ]
+          },
+          {
+            "id": "identity",
+            "dimension": "distinctiveness",
+            "prompt": "Without the logo or color, which object relationship identifies this domain? Is there an ownable visual signature?",
+            "criteria": [
+              "Names a domain-specific information relationship",
+              "Identifies a visual signature beyond a conventional register or three-step sequence"
+            ]
+          }
+        ]
+      },
+      "desktop_type": {
+        "title": {
+          "size_px": 42,
+          "line_height": 1.18,
+          "weight": 700
+        },
+        "body": {
+          "size_px": 18,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "section": {
+          "size_px": 24,
+          "line_height": 1.3,
+          "weight": 700
+        },
+        "ui": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "meta": {
+          "size_px": 13,
+          "line_height": 1.55,
+          "weight": 400
+        }
+      },
+      "desktop_layout": {
+        "max_width_px": 1280,
+        "columns": 1,
+        "column_gap_px": 0,
+        "reading_width_ch": 65,
+        "density": "productive"
+      },
+      "desktop_spacing": {
+        "gutter_px": 32,
+        "section_gap_px": 40,
+        "group_gap_px": 20,
+        "component_padding_px": 20
+      },
+      "mobile_type": {
+        "title": {
+          "size_px": 32,
+          "line_height": 1.18,
+          "weight": 700
+        },
+        "body": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "section": {
+          "size_px": 22,
+          "line_height": 1.3,
+          "weight": 700
+        },
+        "ui": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "meta": {
+          "size_px": 13,
+          "line_height": 1.55,
+          "weight": 400
+        }
+      },
+      "mobile_layout": {
+        "max_width_px": null,
+        "columns": 1,
+        "column_gap_px": 0,
+        "reading_width_ch": 36,
+        "density": "productive"
+      },
+      "mobile_spacing": {
+        "gutter_px": 20,
+        "section_gap_px": 32,
+        "group_gap_px": 20,
+        "component_padding_px": 20
+      },
+      "comparison_record": {
+        "plan": "enterprise-plan.json",
+        "observations": "enterprise-observations.json"
+      }
+    },
+    {
+      "route": "/study?case=industrial",
+      "page_role": "offering",
+      "user_question": "Does this scope cover my inputs, constraints and required outputs?",
+      "cta": "Review this scope",
+      "decisions": [
+        {
+          "axis": "layout",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "Scope matrix followed by explicit boundary",
+          "rejected_alternative": "Three-step sequence; loses horizontal attribute scanning"
+        },
+        {
+          "axis": "font",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "System Arial, sans-serif for direct scope reading",
+          "rejected_alternative": "System Georgia serif for expressive entry; no supplied brand font"
+        },
+        {
+          "axis": "typography",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "42/32 title; 18/16 body; no condensed uppercase",
+          "rejected_alternative": "68/42 title; more mobile wraps"
+        },
+        {
+          "axis": "spacing",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "40/32 section gaps,20 group/padding",
+          "rejected_alternative": "72/48 section gaps,32 groups,32/24 padding"
+        },
+        {
+          "axis": "media",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "Actual rendered synthetic matrix with labelled scope fields",
+          "rejected_alternative": "Rendered stage chain with the same facts"
+        },
+        {
+          "axis": "voice",
+          "source": {
+            "kind": "hypothesis",
+            "ref": "Illustrative direction study; numerical values and review are authored hypotheses"
+          },
+          "value": "Concrete inputs, decisions, unresolved boundaries",
+          "rejected_alternative": "Unverified outcome or commercial proof claims"
+        }
+      ],
+      "selected_composition": "register",
+      "compositions": [
+        {
+          "id": "register",
+          "anchor": "scope-matrix",
+          "structure": {
+            "regions": [
+              {
+                "role": "entry",
+                "layout": "statement-and-action",
+                "contains": [
+                  "title",
+                  "lead",
+                  "cta"
+                ]
+              },
+              {
+                "role": "scope",
+                "layout": "labelled-matrix",
+                "contains": [
+                  "facts",
+                  "boundary"
+                ]
+              }
+            ],
+            "relationships": [
+              [
+                "entry",
+                "introduces",
+                "scope"
+              ],
+              [
+                "facts",
+                "compared-as-attributes",
+                "boundary"
+              ]
+            ],
+            "mobile_layout": "stacked-labelled-matrix-rows",
+            "mobile_grouping": [
+              [
+                "row-header",
+                "label-value-cell",
+                "boundary"
+              ]
+            ]
+          },
+          "direction": {
+            "desktop_typography": {
+              "family": "Arial, sans-serif",
+              "title": {
+                "size_px": 42,
+                "line_height": 1.18,
+                "weight": 700
+              },
+              "body": {
+                "size_px": 18,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.025,
+              "reading_width_ch": 65
+            },
+            "desktop_density": {
+              "mode": "productive",
+              "section_gap_px": 40,
+              "group_gap_px": 20,
+              "object_padding_px": 20
+            },
+            "mobile_typography": {
+              "family": "Arial, sans-serif",
+              "title": {
+                "size_px": 32,
+                "line_height": 1.18,
+                "weight": 700
+              },
+              "body": {
+                "size_px": 16,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.025,
+              "reading_width_ch": 36
+            },
+            "mobile_density": {
+              "mode": "productive",
+              "section_gap_px": 32,
+              "group_gap_px": 20,
+              "object_padding_px": 20
+            },
+            "visual_object": {
+              "kind": "scope-matrix",
+              "information_task": "Does this scope cover my inputs, constraints and required outputs?",
+              "anatomy": [
+                "row-header",
+                "label-value-cell",
+                "boundary-after-register"
+              ],
+              "reality": "illustrative"
+            }
+          },
+          "proof": "examples/direction-study/index.html?case=industrial&direction=register",
+          "tradeoff": "Register supports compact comparison; expressive chain emphasizes sequence and pushes first decision object lower on mobile."
+        },
+        {
+          "id": "sequence",
+          "anchor": "stage-chain",
+          "structure": {
+            "regions": [
+              {
+                "role": "entry",
+                "layout": "statement-and-action",
+                "contains": [
+                  "title",
+                  "lead",
+                  "cta"
+                ]
+              },
+              {
+                "role": "scope",
+                "layout": "parallel-stage-chain",
+                "contains": [
+                  "facts",
+                  "boundary"
+                ]
+              }
+            ],
+            "relationships": [
+              [
+                "entry",
+                "introduces",
+                "scope"
+              ],
+              [
+                "facts",
+                "grouped-by-stage",
+                "boundary"
+              ]
+            ],
+            "mobile_layout": "vertical-numbered-stages",
+            "mobile_grouping": [
+              [
+                "stage-number",
+                "stage-owned-facts"
+              ],
+              [
+                "boundary"
+              ]
+            ]
+          },
+          "direction": {
+            "desktop_typography": {
+              "family": "Georgia, serif",
+              "title": {
+                "size_px": 68,
+                "line_height": 1.12,
+                "weight": 400
+              },
+              "body": {
+                "size_px": 18,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.02,
+              "reading_width_ch": 65
+            },
+            "desktop_density": {
+              "mode": "expressive",
+              "section_gap_px": 72,
+              "group_gap_px": 32,
+              "object_padding_px": 32
+            },
+            "mobile_typography": {
+              "family": "Georgia, serif",
+              "title": {
+                "size_px": 42,
+                "line_height": 1.12,
+                "weight": 400
+              },
+              "body": {
+                "size_px": 16,
+                "line_height": 1.55,
+                "weight": 400
+              },
+              "title_tracking_em": -0.02,
+              "reading_width_ch": 36
+            },
+            "mobile_density": {
+              "mode": "expressive",
+              "section_gap_px": 48,
+              "group_gap_px": 32,
+              "object_padding_px": 24
+            },
+            "visual_object": {
+              "kind": "stage-chain",
+              "information_task": "Does this scope cover my inputs, constraints and required outputs?",
+              "anatomy": [
+                "ordered-stage",
+                "stage-owned-facts",
+                "boundary-after-chain"
+              ],
+              "reality": "illustrative"
+            }
+          },
+          "proof": "examples/direction-study/index.html?case=industrial&direction=sequence",
+          "tradeoff": "Register supports compact comparison; expressive chain emphasizes sequence and pushes first decision object lower on mobile."
+        }
+      ],
+      "reference_transfers": [
+        {
+          "reference_id": "industrial-service-operations:offering",
+          "source": {
+            "kind": "reference",
+            "ref": "https://www.rockwellautomation.com/en-us/capabilities/industrial-maintenance-support/modernization.html"
+          },
+          "action": "ADAPT",
+          "property": "installed base \u2192 assessment \u2192 plan \u2192 execution boundary",
+          "reason": "Plant team must understand what is assessed, engineered and commissioned, and what remains outside scope.",
+          "boundary": "Transfer information relationships only. Geometry and type are hypotheses; no vendor claims or assets copied."
+        }
+      ],
+      "comparison_protocol": {
+        "buyer_task": "Plant team must understand what is assessed, engineered and commissioned, and what remains outside scope.",
+        "held_constant": {
+          "audience": "industrial-services",
+          "content": "study.json semantic brief SHA256=c8e1e74b37cae2b9dad312afb22a46a6bcbfb6ca24674dec15692a88628da449",
+          "claims": "Illustrative/synthetic only; identical boundary text",
+          "cta": "Review this scope",
+          "state": "Static scoped illustration; no fulfillment/submission",
+          "assets": "Same text and DOM facts; no stock photos or vendor assets",
+          "viewports": "1440\u00d71000,390\u00d7900,320\u00d7900; same width/height for every candidate"
+        },
+        "questions": [
+          {
+            "id": "scope",
+            "dimension": "comprehension",
+            "prompt": "What is the input/permission, who or what controls the decision, and what remains unresolved?",
+            "criteria": [
+              "Identifies the request permission or installed-base input",
+              "Distinguishes the decision/scope boundary from completed execution"
+            ]
+          },
+          {
+            "id": "identity",
+            "dimension": "distinctiveness",
+            "prompt": "Without the logo or color, which object relationship identifies this domain? Is there an ownable visual signature?",
+            "criteria": [
+              "Names a domain-specific information relationship",
+              "Identifies a visual signature beyond a conventional register or three-step sequence"
+            ]
+          }
+        ]
+      },
+      "desktop_type": {
+        "title": {
+          "size_px": 42,
+          "line_height": 1.18,
+          "weight": 700
+        },
+        "body": {
+          "size_px": 18,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "section": {
+          "size_px": 24,
+          "line_height": 1.3,
+          "weight": 700
+        },
+        "ui": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "meta": {
+          "size_px": 13,
+          "line_height": 1.55,
+          "weight": 400
+        }
+      },
+      "desktop_layout": {
+        "max_width_px": 1280,
+        "columns": 1,
+        "column_gap_px": 0,
+        "reading_width_ch": 65,
+        "density": "productive"
+      },
+      "desktop_spacing": {
+        "gutter_px": 32,
+        "section_gap_px": 40,
+        "group_gap_px": 20,
+        "component_padding_px": 20
+      },
+      "mobile_type": {
+        "title": {
+          "size_px": 32,
+          "line_height": 1.18,
+          "weight": 700
+        },
+        "body": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "section": {
+          "size_px": 22,
+          "line_height": 1.3,
+          "weight": 700
+        },
+        "ui": {
+          "size_px": 16,
+          "line_height": 1.55,
+          "weight": 400
+        },
+        "meta": {
+          "size_px": 13,
+          "line_height": 1.55,
+          "weight": 400
+        }
+      },
+      "mobile_layout": {
+        "max_width_px": null,
+        "columns": 1,
+        "column_gap_px": 0,
+        "reading_width_ch": 36,
+        "density": "productive"
+      },
+      "mobile_spacing": {
+        "gutter_px": 20,
+        "section_gap_px": 32,
+        "group_gap_px": 20,
+        "component_padding_px": 20
+      },
+      "comparison_record": {
+        "plan": "industrial-plan.json",
+        "observations": "industrial-observations.json"
+      }
+    }
+  ],
+  "captures": [
+    {
+      "route": "/study?case=enterprise",
+      "composition_id": "register",
+      "file": "screenshots/enterprise-register-1440.png",
+      "sha256": "e6da5d9f73ab82c2e037e9a430ed45fa148d8d1ae624b62a28b93e4f957ea04d",
+      "width": 1440,
+      "viewport_height": 1000,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 426.2px. Scope/boundary labels remain present.",
+        "typography": "Compact sans42 retains fewer title lines.",
+        "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=enterprise",
+      "composition_id": "register",
+      "file": "screenshots/enterprise-register-390.png",
+      "sha256": "9f7e27a96c4e1d50f8f1ec23d02269dbb684df7fbaad810a047d65b5ddf104d4",
+      "width": 390,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 413.3px. Scope/boundary labels remain present.",
+        "typography": "Compact sans32 retains fewer title lines.",
+        "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=enterprise",
+      "composition_id": "register",
+      "file": "screenshots/enterprise-register-320.png",
+      "sha256": "9f016578f4445db7d5110ef5b17f9e58dd19abbcd14a82c4a19a6b762540b6ab",
+      "width": 320,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 451.1px. Scope/boundary labels remain present.",
+        "typography": "Compact sans32 retains fewer title lines.",
+        "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=enterprise",
+      "composition_id": "sequence",
+      "file": "screenshots/enterprise-sequence-1440.png",
+      "sha256": "bbdcc9e37f5cf1e381f6b1837dc13404fc8ab94710c1b68d62f6162654baa10f",
+      "width": 1440,
+      "viewport_height": 1000,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 511.4px. Scope/boundary labels remain present.",
+        "typography": "Serif68 emphasizes narrative but spends more height before scope.",
+        "spacing": "Actual object padding 32px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=enterprise",
+      "composition_id": "sequence",
+      "file": "screenshots/enterprise-sequence-390.png",
+      "sha256": "1a9cea20c0b2e0fd72b525ac227ea5f1c5af15db80c5847dc3dca2227f6c65c1",
+      "width": 390,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 494.9px. Scope/boundary labels remain present.",
+        "typography": "Serif42 makes more headline lines at320; subject object arrives later.",
+        "spacing": "Actual object padding 24px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=enterprise",
+      "composition_id": "sequence",
+      "file": "screenshots/enterprise-sequence-320.png",
+      "sha256": "dcdf7755e144914fc3c6ee8eae8d4187999d98b94fe1f5ac3532372f9578cfaa",
+      "width": 320,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 541.9px. Scope/boundary labels remain present.",
+        "typography": "Serif42 makes more headline lines at320; subject object arrives later.",
+        "spacing": "Actual object padding 24px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=industrial",
+      "composition_id": "register",
+      "file": "screenshots/industrial-register-1440.png",
+      "sha256": "ae62ac6e0294ecb1ae5410724245a5c5acfe06639a871fa8072ac174a823d066",
+      "width": 1440,
+      "viewport_height": 1000,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 454.0px. Scope/boundary labels remain present.",
+        "typography": "Compact sans42 retains fewer title lines.",
+        "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=industrial",
+      "composition_id": "register",
+      "file": "screenshots/industrial-register-390.png",
+      "sha256": "6ff6b2f8d77fbab3b7332252bd3f54f55e70ec69479c492584c083cc41469d11",
+      "width": 390,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 451.1px. Scope/boundary labels remain present.",
+        "typography": "Compact sans32 retains fewer title lines.",
+        "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=industrial",
+      "composition_id": "register",
+      "file": "screenshots/industrial-register-320.png",
+      "sha256": "57a70608531d198bfb1058fabb50360506853ba6298aeb942e5f4b88de279df6",
+      "width": 320,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 475.9px. Scope/boundary labels remain present.",
+        "typography": "Compact sans32 retains fewer title lines.",
+        "spacing": "Actual object padding 20px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=industrial",
+      "composition_id": "sequence",
+      "file": "screenshots/industrial-sequence-1440.png",
+      "sha256": "c65bf638d0104940cefe429bd7bdacad061a798aa335e7fd65fef1fb641aca2b",
+      "width": 1440,
+      "viewport_height": 1000,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 539.3px. Scope/boundary labels remain present.",
+        "typography": "Serif68 emphasizes narrative but spends more height before scope.",
+        "spacing": "Actual object padding 32px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=industrial",
+      "composition_id": "sequence",
+      "file": "screenshots/industrial-sequence-390.png",
+      "sha256": "1ebe1476fbb5e3759fcafbe4d229be89d86e801597f26f25f783307532d09a03",
+      "width": 390,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 494.9px. Scope/boundary labels remain present.",
+        "typography": "Serif42 makes more headline lines at320; subject object arrives later.",
+        "spacing": "Actual object padding 24px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    },
+    {
+      "route": "/study?case=industrial",
+      "composition_id": "sequence",
+      "file": "screenshots/industrial-sequence-320.png",
+      "sha256": "b83b1a3dc905be88c30b8744c769b73729e98dc1c4628525e8d78fd04903dc07",
+      "width": 320,
+      "viewport_height": 900,
+      "inspected": true,
+      "review_source": "agent-heuristic",
+      "critique": {
+        "hierarchy": "CTA precedes scope; first object starts at 566.7px. Scope/boundary labels remain present.",
+        "typography": "Serif42 makes more headline lines at320; subject object arrives later.",
+        "spacing": "Actual object padding 24px; compact matrix and more open numbered chain have different group rhythm.",
+        "media": "Readable DOM scope fields; labels and simulation boundary carry meaning, no image crop/dependency.",
+        "distinctiveness": "Permission/fulfillment cues identify software; input/test/handover cues identify industrial. Matrix and three-stage grammar are still conventional and do not establish ownable brand identity."
+      }
+    }
+  ]
+}

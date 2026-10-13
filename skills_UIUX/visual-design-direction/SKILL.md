@@ -42,6 +42,30 @@ Nếu domain có physical/printed/spatial/service artifacts mạnh và visual di
 12. Define a **page-role composition matrix** before coding.
 13. Stress-test trên ít nhất 3 materially different page types + mobile trước khi khóa system.
 
+### Decision provenance gate
+
+- Tách `hard constraint | starting suggestion | free axis`; không biến starting palette/font thành constraint nếu user cho phép điều chỉnh có rationale.
+- Ghi cho mỗi material choice: `decision → source rule/reference/user constraint hoặc professional hypothesis → applied role/value → rejected alternative → rendered verification`. Skill nằm trong manifest không chứng minh rule đã được đọc hoặc áp dụng.
+- Với representative decision page, so sánh ít nhất hai cấu trúc có khác biệt nội tại; mỗi candidate còn phải ghi typography desktop/mobile, density định lượng và anatomy của visual object. Với art direction còn tự do, một cặp phải khác có ý nghĩa trên cả ba trục typography/density/visual object. Đổi màu hoặc tên không tính; thay font đơn thuần không chứng minh layout khác.
+- Tách hai thí nghiệm: `layout isolation` giữ style/density/object để xét composition; `direction exploration` giữ buyer/content/claims/CTA/state/assets/viewports, thay các trục direction tự do để chọn phương án. Không suy ra tác động riêng của font/density từ thí nghiệm nhiều trục. Hard constraint do user có thể khóa một trục; suggestion không tự khóa.
+- Chỉ đổi tên phương án, anchor label hoặc đảo thứ tự các section giữ nguyên anatomy không tính là hai composition. Phân biệt anatomy bên trong decision object, quan hệ vùng hoặc mobile grouping; không ép novelty khi user đã giữ composition.
+- Type scale phải có số cho desktop/mobile theo display/title/section/body/UI/meta; spacing phải có container/gutters/section/group/component và density theo page role. Nếu thiếu domain-specific quantitative knowledge, ghi rõ `KHÔNG CÓ`, dùng working hypothesis có rationale và verify; không gán số tự chọn cho repo.
+- Gate không PASS chỉ vì Design Contract tồn tại, đủ byte/ký tự, có checklist hoặc technical QA xanh. Phải có decision traces và representative rendered critique; aesthetic preference chưa được human validate vẫn là hypothesis.
+
+Resources: [Decision provenance and controlled comparisons](references/decision-provenance.md).
+
+### Executable knowledge and handoff
+
+- Khi scale/layout/density/media/voice chưa đủ cụ thể, dùng [page-job knowledge](data/design-knowledge.json) qua retrieval adapter với structured identity và **một page role**; không load toàn bộ catalog mặc định. Six roles có candidate composition và quantitative ranges. Domain chưa có profile phải hiện gap; mọi range là professional hypothesis.
+- External manifest và managed provider request có `design_workflow` cho active stage. `LOADED` không phải `ADOPTED`; ghi nguồn/hypothesis, actual values và rejected alternative trong `docs/uiux/design-decisions.json` cho PAGE/REDESIGN/PRODUCT có gate.
+- [Canonical checker](scripts/check-design-decisions.py) hỗ trợ `--schema`, `--phase design`, `--phase rendered`. Contract mới dùng `schema_version=2.0`; gate của ba design flows yêu cầu v2. V1 vẫn đọc được và trả `LEGACY_LAYOUT_ONLY`, không thỏa gate v2. Dùng schema theo project thật, không copy sample thành preset. Receipt là `DECISION_INTEGRITY_ONLY`; không gọi PASS là đẹp hoặc human validated.
+- Rendered phase kiểm capture digest/dimensions, desktop/mobile cho alternatives và critique fields. `inspected`/review là declaration của reviewer, không independently verified user evidence. Phải mở ảnh review theo `ui-craft-and-visual-qa`, không dùng JSON self-report thay visual judgement.
+- Existing explicit composition preserve contract được ghi với source kind=user; giữ đúng user constraint, không lấy starting suggestion làm exemption.
+- Chỉ so sánh alternatives ở representative decision pages. Rollout page có thể dùng `comparison_required=false` và `inherited_from` trỏ route đại diện trong cùng contract; vẫn ghi actual values và review selected composition ở desktop/mobile. Không nhân đôi mọi route/state để thỏa gate.
+- Retrieval nối structured domain profile + page role với [reference anatomy](data/reference-anatomies.json). Ghi property cụ thể → ADOPT/ADAPT/REJECT → lý do → boundary trong `reference_transfers`. Nội dung quan sát từ first-party page khác với pixel geometry; chưa mở ảnh thì geometry vẫn UNKNOWN. Không có card đúng context phải hiện `NO_CURATED_REFERENCE_ANATOMY`; research thêm, không mượn style ngành khác.
+- Trước render, khai báo `comparison_protocol`: buyer task, các input giữ nguyên, câu hỏi comprehension/distinctiveness và criteria. Sau render, dùng [comparison CLI](scripts/evaluate-design-comparison.py) tạo packet nhãn A/B và ghi câu trả lời gắn capture digest + observed element. Tách reviewer packet khỏi facilitator mapping/answer criteria; counterbalance thứ tự theo reviewer. Tự review ghi `agent-heuristic`, không thành independent/human research. Không có người thật thì vẫn `PLANNED_VALIDATION` hoặc `HEURISTIC_ONLY`, không chặn prototype chỉ để đợi recruitment.
+- Rendered v2 cần `comparison_record={plan,observations}` cho từng representative route chưa bị explicit composition constraint khóa. Gate kiểm recorded pairs thực tế và current contract/capture binding; plan trống chưa đủ. Agent review ảnh thật có thể hoàn thành prototype integrity, human validation vẫn UNKNOWN. [Portable specimen](examples/direction-study/README.md) minh họa cách chạy, không là visual preset.
+
 ## Mandatory page-role composition matrix
 
 Với mỗi primary page/template, ghi rõ:

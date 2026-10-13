@@ -1,0 +1,66 @@
+{
+  "status": "HEURISTIC_ONLY",
+  "returncode": 0,
+  "errors": [],
+  "review_count": 1,
+  "human_review_count": 0,
+  "heuristic_review_count": 1,
+  "criterion_totals": {
+    "agent-heuristic": {
+      "A": {
+        "comprehension": {
+          "met": 2,
+          "total": 2
+        },
+        "distinctiveness": {
+          "met": 1,
+          "total": 2
+        }
+      },
+      "B": {
+        "comprehension": {
+          "met": 2,
+          "total": 2
+        },
+        "distinctiveness": {
+          "met": 1,
+          "total": 2
+        }
+      }
+    },
+    "human": {
+      "A": {
+        "comprehension": {
+          "met": 0,
+          "total": 0
+        },
+        "distinctiveness": {
+          "met": 0,
+          "total": 0
+        }
+      },
+      "B": {
+        "comprehension": {
+          "met": 0,
+          "total": 0
+        },
+        "distinctiveness": {
+          "met": 0,
+          "total": 0
+        }
+      }
+    }
+  },
+  "preferences": [
+    {
+      "reviewer_id": "author-agent",
+      "source": "agent-heuristic",
+      "label": null,
+      "tradeoff": "Compact scope is visible earlier on mobile. Expressive type highlights narrative. Both lack a strong unique visual signature; no preference or comprehension effect from real buyers measured."
+    }
+  ],
+  "human_preference": "UNKNOWN",
+  "aesthetic_quality": "UNKNOWN",
+  "causal_effect": "UNKNOWN",
+  "interpretation": "Criterion counts summarize recorded judgments, not a beauty score. Report comprehension regressions and domain cues separately; multi-axis direction selection cannot identify which axis caused an effect. No automatic winner or human research claim."
+}

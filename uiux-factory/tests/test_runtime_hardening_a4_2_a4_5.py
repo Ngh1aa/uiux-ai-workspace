@@ -123,6 +123,9 @@ def test_a4_2_managed_handoff_preserves_workspace_owner_and_reads_worktree(tmp_p
                   else {"tool": "run_validator", "args": {"name": "validate-flows"}})
         stage = harness.execute_plan(manager.start_stage(managed), [action])
         assert stage.state == "COMPLETED"
+        if expected == 'design':
+            from fixtures.executor_evidence import attach_design_fixture
+            attach_design_fixture(harness, stage)
         manager.complete_stage(managed)
 
     assert managed.active_stage == "implementation"
