@@ -11,6 +11,7 @@ from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.evidence import evidence_from_tool
 from core.runtime.flow_os.managed import ManagedFlowController
 from test_factory_render_gates import _png, rendered
+from fixtures.executor_evidence import attach_design_fixture
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILLS = ROOT / "skills_UIUX"
@@ -74,10 +75,9 @@ def test_manual_approval_does_not_replace_machine_evidence(tmp_path):
     with pytest.raises(ValueError, match="evidence"):
         manager.complete_stage(managed)
     assert managed.active_stage == "design"
-    # Explicit validator fixture, not a real design review.
+    # Synthetic contract checked by the real owner; not a human design review.
     design.state = "COMPLETED"
-    design.context["evidence_records"] = [evidence_from_tool("design", "run_validator", {"name": "fixture", "returncode": 0}).to_dict()]
-    harness.checkpoints.save(design.run_id, design.to_dict())
+    attach_design_fixture(harness, design)
     assert manager.complete_stage(managed) == "implementation"
 
 
@@ -87,8 +87,7 @@ def test_auto_approval_is_explicitly_human_unreviewed(tmp_path):
     manager.complete_stage(managed)
     design = manager.start_stage(managed)
     design.state = "COMPLETED"
-    design.context["evidence_records"] = [evidence_from_tool("design", "run_validator", {"name": "fixture", "returncode": 0}).to_dict()]
-    harness.checkpoints.save(design.run_id, design.to_dict())
+    attach_design_fixture(harness, design)
     manager.complete_stage(managed)
     assessment = managed.task_context["completion_assessments"]["design"]
     assert assessment == {"machine_gate_status": "PASS", "human_approval_status": "UNREVIEWED"}
@@ -103,7 +102,7 @@ def test_qa_completion_rechecks_current_capture_bytes(tmp_path, rendered, stale)
     record, image = rendered
     state.context["evidence_records"] = [record]
     state.state = "COMPLETED"
-    harness.checkpoints.save(state.run_id, state.to_dict())
+    attach_design_fixture(harness, state)
     if stale:
         image.write_bytes(_png(width=321))
         with pytest.raises(ValueError, match="stale evidence"):
@@ -122,7 +121,8 @@ def test_manual_browser_attachment_can_satisfy_qa_completion(tmp_path, rendered)
     from core.runtime.flow_os.release import ProductionReleaseController
     harness, manager, managed = _fresh(tmp_path)
     managed.active_stage = "qa"  # Isolated QA acceptance boundary.
-    harness.execute_plan(manager.start_stage(managed), [])
+    state = harness.execute_plan(manager.start_stage(managed), [])
+    attach_design_fixture(harness, state)
     record, _image = rendered
     ProductionReleaseController(harness).attach_release_evidence(managed, [EvidenceRecord.from_dict(record)])
     assert manager.complete_stage(managed) is None

@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from executor_evidence import file_proof, render_fixture
+from executor_evidence import file_proof, render_fixture, design_fixture
 from core.runtime.flow_os.execution_driver import ArtifactRegistry
 
 
@@ -89,6 +89,8 @@ else:
         proof = workspace / f'{attempt_tag}-command.json'
         proof.write_text(json.dumps({'returncode': check.returncode, 'stdout': check.stdout}), encoding='utf-8')
         evidence.append(file_proof(request['active_stage_id'], 'run_target_command', proof, {'returncode': check.returncode}))
+    if phase in {'design', 'qa'}:
+        evidence.append(design_fixture(workspace, request['active_stage_id'], attempt_tag))
     if phase == 'qa':
         if os.environ.get('P16_FILE_ONLY_QA') == '1':
             evidence = []  # Deliberate negative fixture: text labeled screenshot must fail.
