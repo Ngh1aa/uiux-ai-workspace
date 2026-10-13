@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from fixtures.executor_evidence import render_fixture
 
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness
 from core.runtime.flow_os.browser_evidence import BrowserEvidenceError, PlaywrightBrowserEvidenceAdapter
@@ -193,15 +194,7 @@ def test_a4_8_release_requires_release_authority_confirmation_and_evidence(tmp_p
     manager._checkpoint_managed(managed)
 
     controller = ProductionReleaseController(harness)
-    browser = EvidenceRecord(
-        id="browser-release",
-        type="browser_render",
-        stage_id="qa",
-        tool="playwright",
-        status="PASS",
-        summary="rendered",
-        data={"route": "/"},
-    )
+    browser = EvidenceRecord.from_dict(render_fixture(source, "release-authority")[0])
     check = EvidenceRecord(
         id="check-release",
         type="validator_result",

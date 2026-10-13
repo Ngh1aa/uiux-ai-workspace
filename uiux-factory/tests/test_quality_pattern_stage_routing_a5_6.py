@@ -82,8 +82,7 @@ def test_a5_6_quality_memory_is_injected_when_implementation_stage_starts(tmp_pa
     managed = _start_redesign(manager)
 
     research = manager.start_stage(managed)
-    research.state = "COMPLETED"
-    harness.checkpoints.save(research.run_id, research.to_dict())
+    harness.execute_plan(research, [{"tool": "read_text", "args": {"path": "app.txt"}}])
     assert manager.complete_stage(managed) == "design"
 
     assert "prior_quality_insight" not in managed.task_context
@@ -101,8 +100,7 @@ def test_a5_6_routing_removes_quality_memory_if_run_returns_to_research(tmp_path
     managed = _start_redesign(manager)
 
     research = manager.start_stage(managed)
-    research.state = "COMPLETED"
-    harness.checkpoints.save(research.run_id, research.to_dict())
+    harness.execute_plan(research, [{"tool": "read_text", "args": {"path": "app.txt"}}])
     manager.complete_stage(managed)
     manager.start_stage(managed)
     assert "prior_quality_insight" in managed.task_context

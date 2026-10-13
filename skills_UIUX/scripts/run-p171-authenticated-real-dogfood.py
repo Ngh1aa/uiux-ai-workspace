@@ -22,6 +22,7 @@ def main() -> int:
     parser.add_argument("--transaction-id", required=True)
     parser.add_argument("--workspace-root", required=True)
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--browser-artifact-dir", help="Current locally captured browser evidence within the transaction workspace; source-only QA fails closed")
     parser.add_argument("--github-output", default="")
     args = parser.parse_args()
 
@@ -32,6 +33,7 @@ def main() -> int:
         github_token=token,
         workspace_root=Path(args.workspace_root),
         output_dir=Path(args.output_dir),
+        browser_artifact_dir=args.browser_artifact_dir,
     )
     summary = {
         "passed": report["passed"],

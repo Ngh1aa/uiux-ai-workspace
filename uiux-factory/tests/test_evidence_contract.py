@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from core.contracts.evidence_contract_schema import EvidenceOutcome
 from core.verification.evidence_contract import EvidenceContractEvaluator, RequirementRegistry
 
@@ -48,6 +50,45 @@ def test_project_digest_changes_when_output_changes(tmp_path: Path):
     page.write_text("beta", encoding="utf-8")
     second = evaluator.project_digest(project_dir)
     assert first != second
+
+
+def test_project_digest_is_stable_after_real_advisory_memory_write(tmp_path: Path):
+    from core.memory.evaluation_memory import EvaluationMemoryStore
+
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "index.html").write_text("<main>Current output</main>", encoding="utf-8")
+    before = EvidenceContractEvaluator.project_digest(project)
+    store = EvaluationMemoryStore(project, {"evaluation_memory": {"enabled": True}})
+    report = {
+        "schema_version": 1,
+        "evaluator": "touch-target-metrics",
+        "requirements": {"RESPONSIVE-003": {"outcome": "passed", "applicable": True,
+                                             "test_targets": ["/@mobile"]}},
+    }
+    assert store.record_post_render_report(report) == 1
+    assert store.path.is_file()
+    assert EvidenceContractEvaluator.project_digest(project) == before
+    assert store.record_post_render_report(report) == 1
+    assert EvidenceContractEvaluator.project_digest(project) == before
+
+
+@pytest.mark.parametrize("relative", [
+    "index.html", "styles.css", "script.js", "memory/content.json",
+    ".uiux-agent-runs/design-contract.json",
+    ".uiux-agent-runs/memory-backup/content.json",
+    ".uiux-agent-runs/memory/source.js",
+    ".uiux-agent-runs/memory/evaluation-memory.json.bak",
+])
+def test_project_digest_keeps_source_and_non_memory_artifacts_bound(tmp_path: Path, relative: str):
+    project = tmp_path / "project"
+    project.mkdir()
+    target = project / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("current", encoding="utf-8")
+    before = EvidenceContractEvaluator.project_digest(project)
+    target.write_text("changed", encoding="utf-8")
+    assert EvidenceContractEvaluator.project_digest(project) != before
 
 
 def test_human_review_requires_reviewer_and_explicit_approval(tmp_path: Path):

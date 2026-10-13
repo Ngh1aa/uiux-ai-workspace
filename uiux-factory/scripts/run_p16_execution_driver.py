@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 
 from core.orchestration.intelligent_flow import ProfessionalWebsiteFlow
-from core.runtime.flow_os.execution_driver import CommandRunnerAdapter
+from core.runtime.flow_os.execution_driver import CommandRunnerAdapter, ExecutionGrant
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,6 +43,7 @@ def main() -> int:
             GOAL,
             runner,
             workspace_root=target,
+            grant=ExecutionGrant("branch_write"),
             checkpoint_path=temp_root / "checkpoint.json",
         )
         completion = driver.run_until_blocked(max_steps=10)

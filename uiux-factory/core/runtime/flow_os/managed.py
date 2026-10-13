@@ -7,6 +7,7 @@ from core.evaluation.run_evaluator import RunEvaluation, RunEvaluator
 from core.memory.evaluation_memory import EvaluationMemoryError, EvaluationMemoryStore
 from core.memory.quality_pattern_recall import build_quality_pattern_insight
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
+from core.runtime.flow_os.evidence import gate_evidence_errors
 from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
 from core.runtime.flow_os.target_truth import ROUTING_OVERRIDE_FIELDS, build_truth_aware_context
@@ -266,6 +267,30 @@ class ManagedFlowController:
         self._checkpoint_managed(managed)
         return managed
 
+    @staticmethod
+    def _validate_stage_identity(managed: ManagedWebsiteRun, stage: ResolvedStage, latest: RunState, authority: str) -> None:
+        expected = {
+            "manager_run_id": managed.manager_run_id,
+            "flow_id": managed.flow.id,
+            "stage_id": stage.id,
+            "flow_revision": managed.flow.revision,
+        }
+        for key, value in expected.items():
+            actual = latest.context.get(key)
+            if actual != value or (key == "flow_revision" and isinstance(actual, bool)):
+                raise ValueError(f"stage checkpoint {key} mismatch: expected {value!r}, got {actual!r}")
+        if latest.agent != stage.agent or latest.active_role != stage.agent:
+            raise ValueError(
+                f"stage checkpoint agent mismatch for {stage.id}: expected {stage.agent}, "
+                f"got agent={latest.agent}, active_role={latest.active_role}"
+            )
+        if latest.authority != authority:
+            raise ValueError(
+                f"stage checkpoint authority mismatch for {stage.id}: expected {authority}, got {latest.authority}"
+            )
+        if list(latest.context.get("stage_gates", [])) != list(stage.gates):
+            raise ValueError(f"stage checkpoint gates do not match current Flow revision for {stage.id}")
+
     def _resume_current_stage(
         self,
         managed: ManagedWebsiteRun,
@@ -299,29 +324,7 @@ class ManagedFlowController:
                 f"{managed.flow.revision}"
             )
 
-        expected = {
-            "manager_run_id": managed.manager_run_id,
-            "flow_id": managed.flow.id,
-            "stage_id": stage.id,
-        }
-        for key, value in expected.items():
-            actual = str(latest.context.get(key, ""))
-            if actual != str(value):
-                raise ValueError(
-                    f"stage checkpoint {key} mismatch: expected {value!r}, got {actual!r}"
-                )
-        if latest.agent != stage.agent or latest.active_role != stage.agent:
-            raise ValueError(
-                f"stage checkpoint agent mismatch for {stage.id}: expected {stage.agent}, "
-                f"got agent={latest.agent}, active_role={latest.active_role}"
-            )
-        if latest.authority != authority:
-            raise ValueError(
-                f"stage checkpoint authority mismatch for {stage.id}: expected {authority}, "
-                f"got {latest.authority}"
-            )
-        if list(latest.context.get("stage_gates", [])) != list(stage.gates):
-            raise ValueError(f"stage checkpoint gates do not match current Flow revision for {stage.id}")
+        self._validate_stage_identity(managed, stage, latest, authority)
 
         if explicit_sources is not None:
             requested_sources = [str(item) for item in explicit_sources]
@@ -427,7 +430,7 @@ class ManagedFlowController:
         target = stage_id or managed.active_stage
         if target != managed.active_stage:
             raise ValueError(f"cannot complete stage {target}; active stage is {managed.active_stage}")
-        self._stage(managed, target)
+        stage = self._stage(managed, target)
         pending = self.required_human_approvals(managed, target)
         if pending:
             managed.state = "AWAITING_APPROVAL"
@@ -442,6 +445,31 @@ class ManagedFlowController:
         latest = self.harness.resume(runs[-1])
         if latest.state != "COMPLETED":
             raise ValueError(f"cannot complete stage {target}; latest specialist run is {latest.state}")
+        order = tuple(self.harness.permissions.order)
+        role_cap = self.harness.policy_doc["roles"][stage.agent]["max_authority"]
+        authority = min((managed.authority, role_cap), key=order.index)
+        try:
+            self._validate_stage_identity(managed, stage, latest, authority)
+            records = list(latest.context.get("evidence_records", []))
+            records.extend(self.harness.resume(managed.manager_run_id).context.get("release_evidence", []))
+            # Even an approval-only stage needs machine evidence; human approval is separate.
+            errors = gate_evidence_errors(list(stage.gates) + [{"id": "stage-completion-evidence"}], target, records, agent=stage.agent)
+            if errors:
+                raise ValueError("completion evidence failed: " + "; ".join(errors))
+        except (TypeError, ValueError) as exc:
+            managed.task_context.get("completion_assessments", {}).pop(target, None)
+            latest.state = "FAILED"
+            latest.limitations.append(str(exc))
+            self.harness.checkpoints.save(latest.run_id, latest.to_dict())
+            managed.state = "FAILED"
+            self._checkpoint_managed(managed)
+            raise ValueError(f"cannot complete stage {target}; {exc}") from exc
+        human_gates = [str(gate["id"]) for gate in stage.gates if gate.get("approval") == "human"]
+        managed.task_context.setdefault("completion_assessments", {})[target] = {
+            "machine_gate_status": "PASS",
+            "human_approval_status": ("APPROVED" if all(gate in managed.approved_gates for gate in human_gates)
+                                      else "UNREVIEWED") if human_gates else "NOT_REQUIRED",
+        }
         if target not in managed.completed_stages:
             managed.completed_stages.append(target)
 
@@ -502,6 +530,9 @@ class ManagedFlowController:
             managed.completed_stages = [
                 item for item in managed.completed_stages if stage_ids.index(item) < target_index
             ]
+            assessments = managed.task_context.get("completion_assessments", {})
+            for item in stage_ids[target_index:]:
+                assessments.pop(item, None)
             self._checkpoint_managed(managed)
 
         return decision

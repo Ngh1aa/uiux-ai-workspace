@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from executor_evidence import file_proof, render_fixture
+from core.runtime.flow_os.execution_driver import ArtifactRegistry
 
 
 request_path = Path(os.environ["UIUX_EXECUTION_REQUEST"])
@@ -43,7 +45,7 @@ if phase == "implementation":
     if marker not in current:
         target.write_text(current + marker, encoding="utf-8")
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "passed",
         "artifacts": [],
         "metadata": {"worker": "p17-github-fixture"},
@@ -53,7 +55,7 @@ elif phase == "qa" and os.environ.get("P17_FAIL_QA_ONCE") == "1":
     if not marker.exists():
         marker.write_text("failed\n", encoding="utf-8")
         payload = {
-            "schema_version": "1.0",
+            "schema_version": "2.0",
             "status": "failed",
             "failure_class": "PRODUCT_QA_FAILED",
             "reason": "fixture browser QA detected rendered drift",
@@ -70,7 +72,7 @@ elif phase == "qa" and os.environ.get("P17_FAIL_QA_ONCE") == "1":
                 "skills": request.get("skills", []),
             }, ensure_ascii=False)))
         payload = {
-            "schema_version": "1.0",
+            "schema_version": "2.0",
             "status": "passed",
             "artifacts": artifacts,
             "metadata": {"worker": "p17-github-fixture"},
@@ -95,10 +97,27 @@ else:
             "inputs": [item.get("id") for item in request.get("input_artifacts", [])],
         }, ensure_ascii=False)))
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "status": "passed",
         "artifacts": artifacts,
         "metadata": {"worker": "p17-github-fixture"},
     }
+
+if payload['status'] == 'passed':
+    stage = request['active_stage_id']
+    payload['evidence_records'] = [file_proof(stage, 'read_text' if phase == 'audit' else 'write_artifact', item['path'])
+                                   for item in payload['artifacts'] if item.get('path')]
+    if phase == 'implementation':
+        payload['evidence_records'].append(file_proof(stage, 'write_project_file', Path('index.html')))
+    if phase == 'qa' and os.environ.get('P17_FILE_ONLY_QA') != '1':
+        record, image = render_fixture(artifact_dir, f'{segment_id}-{attempt}', stage)
+        payload['evidence_records'].append(record)
+        for item in payload['artifacts']:
+            if item['kind'] == 'qa-evidence':
+                item['path'] = str(image)
+
+for artifact in payload.get("artifacts", []):
+    if artifact["kind"] == "qa-evidence":
+        artifact["digest"] = ArtifactRegistry._sha256(Path(artifact["path"]))
 
 result_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

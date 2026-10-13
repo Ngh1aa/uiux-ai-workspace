@@ -7,6 +7,7 @@ from pathlib import Path
 from core.contracts.creative_review_schema import CreativeDirective
 from core.manager.creative_director_manager import CreativeDirectorDevelopmentManager
 from core.runtime.run_lock import RunLock
+from core.runtime.flow_os.execution_driver import ExecutionGrant
 
 
 ROOT = Path(__file__).resolve().parent
@@ -43,6 +44,7 @@ async def main(
     source_run_id: str | None = None,
     creative_directive_path: str | None = None,
     runtime_preset: str | None = None,
+    authority: str = "read_only",
 ) -> None:
     print()
     print("=" * 64)
@@ -80,6 +82,7 @@ async def main(
                 directive=directive,
                 run_id=run_id,
                 engine=engine,
+                execution_grant=ExecutionGrant(authority),
             )
         else:
             from core.contracts.design_context_schema import DesignContext
@@ -99,6 +102,7 @@ async def main(
                 intelligence_only,
                 engine,
                 runtime_preset or "standard",
+                execution_grant=ExecutionGrant(authority),
             )
 
         print()
@@ -127,6 +131,7 @@ if __name__ == "__main__":
         "--goal-file",
         help="Read the natural language product goal from a UTF-8 text file",
     )
+    parser.add_argument("--authority", choices=["read_only", "branch_write"], default="read_only", help="Explicit caller grant for internal implementation/repair; defaults to read_only")
     parser.add_argument(
         "--context",
         help="Path to a V3 design-context JSON file",
@@ -184,5 +189,6 @@ if __name__ == "__main__":
             args.source_run_id,
             args.creative_directive,
             args.runtime_preset,
+            args.authority,
         )
     )

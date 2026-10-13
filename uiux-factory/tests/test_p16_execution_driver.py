@@ -12,6 +12,7 @@ from core.runtime.flow_os.execution_driver import (
     ArtifactRegistry,
     CommandRunnerAdapter,
     ExecutionDriver,
+    ExecutionGrant,
     JsonCheckpointStore,
     RunnerResult,
     RunnerContractError,
@@ -46,6 +47,7 @@ def _build_driver(tmp_path: Path, *, fail_qa_once: bool = False, goal: str = GOA
         workspace_root=target,
         checkpoint_path=tmp_path / "checkpoint.json",
         max_repair_attempts=max_repair_attempts,
+        grant=ExecutionGrant("branch_write"),
     )
     return factory, profile, driver, runner, target, exchange
 
@@ -119,7 +121,7 @@ def test_p16_checkpoint_resume_continues_from_first_unfinished_segment(tmp_path:
         driver.work_plan,
         resumed_runner,
         workspace_root=target,
-        checkpoint_store=checkpoint,
+        checkpoint_store=checkpoint, grant=driver.grant,
     )
     assert [node.status for node in resumed.execution_plan.nodes[:2]] == ["passed", "passed"]
     assert resumed.execution_plan.runnable_segment_ids() == ["work-3"]
@@ -178,10 +180,11 @@ def test_p16_runner_pass_without_expected_outputs_fails_gate_and_keeps_downstrea
     target.mkdir()
 
     class EmptyPassRunner:
+        required_authority = "read_only"
         def run(self, _request):
-            return RunnerResult(schema_version="1.0", status="passed", artifacts=[])
+            return RunnerResult(schema_version="2.0", status="passed", artifacts=[])
 
-    driver = ExecutionDriver(work_plan, execution, EmptyPassRunner(), ArtifactRegistry(target))
+    driver = ExecutionDriver(work_plan, execution, EmptyPassRunner(), ArtifactRegistry(target), grant=ExecutionGrant("read_only"))
     event = driver.run_next()
     assert event is not None
     assert event["status"] == "failed"
@@ -201,7 +204,7 @@ def test_p16_resume_rejects_checkpoint_for_different_resolved_plan(tmp_path: Pat
             different_plan,
             driver.runner,
             workspace_root=target,
-            checkpoint_store=JsonCheckpointStore(tmp_path / "checkpoint.json"),
+            checkpoint_store=JsonCheckpointStore(tmp_path / "checkpoint.json"), grant=driver.grant,
         )
 
 
@@ -263,7 +266,7 @@ def test_b12_resume_preserves_checkpoint_when_writes_are_interrupted(
     try:
         resumed = ExecutionDriver.resume(
             driver.work_plan, runner, workspace_root=target,
-            checkpoint_store=checkpoint, max_repair_attempts=1,
+            checkpoint_store=checkpoint, grant=driver.grant, max_repair_attempts=1,
         )
     finally:
         assert checkpoint.path.read_bytes() == before
@@ -289,7 +292,7 @@ def test_b12_invalid_resume_payload_never_overwrites_checkpoint(
     before = checkpoint.path.read_bytes()
     with pytest.raises((RunnerContractError, TypeError, ValueError, KeyError)):
         ExecutionDriver.resume(
-            driver.work_plan, runner, workspace_root=target, checkpoint_store=checkpoint,
+            driver.work_plan, runner, workspace_root=target, checkpoint_store=checkpoint, grant=driver.grant,
         )
     assert checkpoint.path.read_bytes() == before
     assert runner.invocations == 4
@@ -299,7 +302,7 @@ def test_b12_resume_keeps_repair_budget_and_passed_stages(tmp_path: Path) -> Non
     driver, runner, target, checkpoint, payload = _b12_pending_repair_checkpoint(tmp_path)
     resumed = ExecutionDriver.resume(
         driver.work_plan, runner, workspace_root=target,
-        checkpoint_store=checkpoint, max_repair_attempts=1,
+        checkpoint_store=checkpoint, grant=driver.grant, max_repair_attempts=1,
     )
     assert resumed.checkpoint_payload() == payload
     assert resumed.execution_plan.runnable_segment_ids() == ["work-3"]

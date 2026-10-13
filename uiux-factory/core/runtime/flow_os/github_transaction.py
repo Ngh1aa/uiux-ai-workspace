@@ -10,7 +10,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +20,9 @@ from core.runtime.flow_os.execution_driver import (
     RunnerContractError,
     RunnerResult,
     SegmentExecutionRequest,
+    validate_execution_request,
+    validate_runner_evidence,
+    validate_runner_outputs,
 )
 
 
@@ -292,6 +295,8 @@ class GitHubRestClient:
 class GitHubProductionRunner:
     """P1.7 SegmentRunner that fences target mutation inside one GitHub transaction branch."""
 
+    required_authority = "external_write"
+
     def __init__(self, config: GitHubTransactionConfig) -> None:
         self.config = config
         tx_slug = _slug(config.transaction_id)
@@ -311,6 +316,12 @@ class GitHubProductionRunner:
         self.exchange_dir.mkdir(parents=True, exist_ok=True)
         self.evidence_dir.mkdir(parents=True, exist_ok=True)
         self.state = self._load_or_create_state()
+        self.plan_fingerprint: str | None = None
+
+    def bind_plan(self, plan_fingerprint: str) -> None:
+        if self.plan_fingerprint is not None and self.plan_fingerprint != plan_fingerprint:
+            raise RunnerContractError("transaction runner cannot be rebound to a different plan fingerprint")
+        self.plan_fingerprint = plan_fingerprint
 
     @property
     def artifact_root(self) -> Path:
@@ -527,7 +538,10 @@ class GitHubProductionRunner:
                 metadata={"returncode": str(completed.returncode)},
             )
         try:
-            return RunnerResult.from_dict(json.loads(result_path.read_text(encoding="utf-8")))
+            result = RunnerResult.from_dict(json.loads(result_path.read_text(encoding="utf-8")))
+            if completed.returncode != 0 and result.status == "passed":
+                raise RunnerContractError(f"worker exited {completed.returncode} but claimed PASS")
+            return result
         except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
             raise RunnerContractError(f"invalid production worker result: {exc}") from exc
 
@@ -735,6 +749,11 @@ class GitHubProductionRunner:
         )
 
     def run(self, request: SegmentExecutionRequest) -> RunnerResult:
+        validate_execution_request(request, self.required_authority)
+        if Path(request.workspace_root).resolve() != self.artifact_root.resolve():
+            raise RunnerContractError("request workspace does not match transaction workspace")
+        if self.plan_fingerprint is None or request.plan_fingerprint != self.plan_fingerprint:
+            raise RunnerContractError("request fingerprint does not match caller-bound transaction plan")
         try:
             self._check_cancelled()
             self._ensure_checkout_and_claim()
@@ -771,6 +790,12 @@ class GitHubProductionRunner:
                     metadata={**result.metadata, "transaction_branch": self.config.transaction_branch},
                 )
 
+            validate_runner_evidence(request, result)
+            # The broker produces the real implementation commit; all other
+            # outputs belong to the worker and must pass before commit/PR effects.
+            worker_outputs = [kind for kind in request.expected_output_kinds
+                              if not (request.phase == "implementation" and kind == "implementation-artifact")]
+            validate_runner_outputs(replace(request, expected_output_kinds=worker_outputs), result)
             if request.phase == "implementation":
                 commit_artifact = self._commit_implementation(request)
                 artifacts = [artifact for artifact in artifacts if artifact.kind != "implementation-artifact"]
@@ -794,6 +819,7 @@ class GitHubProductionRunner:
                     "last_commit_sha": self.state.last_commit_sha or "",
                     "pr_url": self.state.pr_url or "",
                 },
+                evidence_records=list(result.evidence_records),
             )
         except TransactionCancelled as exc:
             return RunnerResult(

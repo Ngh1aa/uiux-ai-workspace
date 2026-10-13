@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from core.runtime.flow_os.browser_observation import PlaywrightBrowserObservationAdapter
+from core.runtime.flow_os.evidence import evidence_from_tool
 from core.runtime.flow_os.safe_read import SafeReader
 from core.runtime.flow_os.skill_sections import build_skill_section_registry, read_skill_section
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
@@ -515,6 +516,7 @@ class ProviderNeutralAgentHarness:
                             "flow_revision",
                             "stage_id",
                             "stage_gates",
+                            "evidence_records",
                         )
                         if key in state.context
                     }
@@ -567,6 +569,9 @@ class ProviderNeutralAgentHarness:
                     trace.emit("tool.call", "START", tool=name, args=args)
                     result = active_registry.execute(name, args)
                     trace.emit("tool.call", "OK", tool=name, result=result)
+                    records = list(state.context.get("evidence_records", []))
+                    records.append(evidence_from_tool(str(state.context.get("stage_id", state.active_role)), name, result).to_dict())
+                    state.context["evidence_records"] = records[-128:]
 
                 state.completed_actions.append(f"{index}:{name}")
                 if name == "write_artifact" and isinstance(result, dict) and result.get("path"):
