@@ -115,11 +115,14 @@ def test_file_checker_refuses_escape_and_cli_rejects_prose(tmp_path):
     assert json.loads(result.stdout)['aesthetic_quality'] == 'UNKNOWN'
 
 
-def test_generic_validator_or_provider_pass_cannot_satisfy_design_gate():
+def test_generic_validator_or_provider_pass_cannot_satisfy_design_gate(tmp_path):
     gates = [{'id':'design-decision-integrity','evidence_types':['design_contract_check'],'design_phase':'design'}]
     records = [evidence_from_tool('design','run_validator',{'returncode':0}).to_dict()]
     assert gate_evidence_errors(gates,'design',records,'implementation')
     records.append(evidence_from_tool('design','check_design_decisions',check_design_decisions(contract_fixture())).to_dict())
+    assert gate_evidence_errors(gates,'design',records,'implementation')  # unbound authoring result
+    (tmp_path/'contract.json').write_text(json.dumps(contract_fixture()), encoding='utf-8')
+    records = [evidence_from_tool('design','check_design_decisions',check_design_file(tmp_path,'contract.json')).to_dict()]
     assert gate_evidence_errors(gates,'design',records,'implementation') == []
     gates[0]['design_phase'] = 'rendered'
     assert gate_evidence_errors(gates,'design',records,'implementation')

@@ -104,6 +104,7 @@ def validate_runner_evidence(request: SegmentExecutionRequest, result: RunnerRes
     errors = gate_evidence_errors(
         list(request.gates) + [{"id": "stage-completion-evidence"}],
         request.active_stage_id, result.evidence_records, agent=request.agent,
+        workspace_root=root,
     )
     if errors:
         raise RunnerContractError("executor completion evidence failed: " + "; ".join(errors))

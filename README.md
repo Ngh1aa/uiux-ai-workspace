@@ -31,6 +31,8 @@ Post-closure hardening currently includes:
 
 CI green means the relevant automated contracts/regressions passed. It does **not** by itself prove visual quality, real-user preference, product impact, accessibility of an untested target, or release readiness outside the evidence actually collected.
 
+For a concrete research-to-handoff workflow, use the [professional delivery guide](skills_UIUX/website-delivery-pipeline/references/professional-practice.md). Active-stage packets include deliverable cards for briefs, evidence, IA/content, direction comparison, responsive states, implementation, rendered QA and handoff. The optional coverage checker verifies current artifact records; design judgment and real-user validation remain distinct from machine checks. External collaborators can perform this work using their existing agent session; a local LLM or separate paid provider API is not required for that path.
+
 ## Architecture at a glance
 
 ```mermaid

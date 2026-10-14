@@ -182,6 +182,11 @@
           "design_phase": "rendered", "design_contract_version": "2.0"
         },
         {
+          "id": "keyboard-focus",
+          "require": "Current rendered controls have verified focus indicators; source CSS lint is insufficient.",
+          "evidence_types": ["browser_render"]
+        },
+        {
           "id": "critical-route-link-audit",
           "require": "flagship/supporting case routes, canonical CV and other recruiter-critical links resolve; raw source does not depend on a hidden runtime patch to mask placeholder critical links"
         },

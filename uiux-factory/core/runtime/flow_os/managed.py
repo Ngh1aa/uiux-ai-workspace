@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from hashlib import sha256
+import json
 from typing import Any
 
 from core.evaluation.run_evaluator import RunEvaluation, RunEvaluator
 from core.memory.evaluation_memory import EvaluationMemoryError, EvaluationMemoryStore
 from core.memory.quality_pattern_recall import build_quality_pattern_insight
 from core.runtime.flow_os.agent import ProviderNeutralAgentHarness, RunState
-from core.runtime.flow_os.evidence import gate_evidence_errors
+from core.runtime.flow_os.evidence import gate_evidence_errors, effective_stage_evidence
 from core.runtime.flow_os.flow import FlowPlanner, ReplanDecision, ResolvedFlow, ResolvedStage
 from core.runtime.flow_os.task_context import AUTHORITY_LEVELS, GoalInterpreter
 from core.runtime.flow_os.target_truth import ROUTING_OVERRIDE_FIELDS, build_truth_aware_context
@@ -26,6 +28,7 @@ class ManagedWebsiteRun:
     stage_runs: dict[str, list[str]] = field(default_factory=dict)
     replan_history: list[dict[str, Any]] = field(default_factory=list)
     approved_gates: list[str] = field(default_factory=list)
+    approval_bindings: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "ManagedWebsiteRun":
@@ -44,6 +47,7 @@ class ManagedWebsiteRun:
             stage_runs={key: list(value) for key, value in dict(payload.get("stage_runs", {})).items()},
             replan_history=list(payload.get("replan_history", [])),
             approved_gates=list(payload.get("approved_gates", [])),
+            approval_bindings=dict(payload.get("approval_bindings", {})),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -59,6 +63,7 @@ class ManagedWebsiteRun:
             "stage_runs": {key: list(value) for key, value in self.stage_runs.items()},
             "replan_history": list(self.replan_history),
             "approved_gates": list(self.approved_gates),
+            "approval_bindings": dict(self.approval_bindings),
         }
 
 
@@ -345,6 +350,27 @@ class ManagedFlowController:
         self._checkpoint_managed(managed)
         return latest
 
+    def _validate_upstream_design(self, managed: ManagedWebsiteRun, target: str) -> None:
+        """A completed design cannot authorize downstream work after its proof changes."""
+        for stage in managed.flow.stages:
+            if stage.id == target:
+                break
+            if stage.id not in managed.completed_stages or not any(
+                'design_contract_check' in gate.get('evidence_types', []) for gate in stage.gates
+            ):
+                continue
+            runs = managed.stage_runs.get(stage.id, [])
+            if not runs:
+                raise ValueError('upstream design has no current specialist evidence; replan design')
+            state = self.harness.resume(runs[-1])
+            errors = gate_evidence_errors(list(stage.gates), stage.id,
+                list(state.context.get('evidence_records', [])), agent=stage.agent,
+                workspace_root=self.harness._active_project_root(state))
+            if errors:
+                raise ValueError('upstream design evidence changed; replan design: ' + '; '.join(errors))
+            if self.required_human_approvals(managed, stage.id):
+                raise ValueError('upstream design requires current human approval; replan design')
+
     def start_stage(
         self,
         managed: ManagedWebsiteRun,
@@ -358,6 +384,8 @@ class ManagedFlowController:
                 "Complete the active stage or apply an explicit replan first."
             )
         stage = self._stage(managed, target)
+
+        self._validate_upstream_design(managed, target)
 
         role = self.harness.policy_doc["roles"][stage.agent]
         order = tuple(self.harness.permissions.order)
@@ -405,13 +433,25 @@ class ManagedFlowController:
         self._checkpoint_managed(managed)
         return state
 
+    def _approval_fingerprint(self, managed: ManagedWebsiteRun, stage: ResolvedStage) -> str:
+        runs = managed.stage_runs.get(stage.id, [])
+        records = self.harness.resume(runs[-1]).context.get('evidence_records', []) if runs else []
+        records = list(records) + list(self.harness.resume(managed.manager_run_id).context.get('release_evidence', []))
+        proofs = [{'type': record.type, 'tool': record.tool, 'status': record.status, 'data': record.data}
+                  for record in effective_stage_evidence(records, stage.id)]
+        payload = {'revision': managed.flow.revision, 'stage': stage.id, 'gates': stage.gates, 'proofs': proofs}
+        return sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
     def required_human_approvals(self, managed: ManagedWebsiteRun, stage_id: str | None = None) -> list[str]:
         if str(managed.task_context.get("approval_mode", "auto")) != "manual":
             return []
         stage = self._stage(managed, stage_id or managed.active_stage)
         required: list[str] = []
         for gate in stage.gates:
-            if gate.get("approval") == "human" and str(gate.get("id", "")) not in managed.approved_gates:
+            if gate.get("approval") == "human" and (
+                str(gate.get("id", "")) not in managed.approved_gates
+                or managed.approval_bindings.get(str(gate['id'])) != self._approval_fingerprint(managed, stage)
+            ):
                 required.append(str(gate["id"]))
         return required
 
@@ -424,6 +464,7 @@ class ManagedFlowController:
             raise ValueError(f"gate {gate_id} does not require human approval")
         if gate_id not in managed.approved_gates:
             managed.approved_gates.append(gate_id)
+        managed.approval_bindings[gate_id] = self._approval_fingerprint(managed, stage)
         self._checkpoint_managed(managed)
 
     def complete_stage(self, managed: ManagedWebsiteRun, stage_id: str | None = None) -> str | None:
@@ -453,7 +494,8 @@ class ManagedFlowController:
             records = list(latest.context.get("evidence_records", []))
             records.extend(self.harness.resume(managed.manager_run_id).context.get("release_evidence", []))
             # Even an approval-only stage needs machine evidence; human approval is separate.
-            errors = gate_evidence_errors(list(stage.gates) + [{"id": "stage-completion-evidence"}], target, records, agent=stage.agent)
+            errors = gate_evidence_errors(list(stage.gates) + [{"id": "stage-completion-evidence"}], target, records,
+                                          agent=stage.agent, workspace_root=self.harness._active_project_root(latest))
             if errors:
                 raise ValueError("completion evidence failed: " + "; ".join(errors))
         except (TypeError, ValueError) as exc:
@@ -533,6 +575,11 @@ class ManagedFlowController:
             assessments = managed.task_context.get("completion_assessments", {})
             for item in stage_ids[target_index:]:
                 assessments.pop(item, None)
+                for gate in self._stage(managed, item).gates:
+                    gate_id = str(gate.get('id', ''))
+                    managed.approval_bindings.pop(gate_id, None)
+                    if gate_id in managed.approved_gates:
+                        managed.approved_gates.remove(gate_id)
             self._checkpoint_managed(managed)
 
         return decision
