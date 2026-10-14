@@ -72,6 +72,12 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
+      - name: Select sandbox-supported Chrome for focus checks
+        run: |
+          # Ubuntu's AppArmor profile permits the installed Chrome sandbox.
+          # Keep chromiumSandbox enabled; do not relax host userns policy.
+          test -x /opt/google/chrome/chrome
+          echo "QA_CHROME_EXECUTABLE=/opt/google/chrome/chrome" >> "$GITHUB_ENV"
       - name: Prepare, serve and audit target project
         env:
           INPUT_TARGET_REPOSITORY: ${{ github.event.inputs.target_repository || '' }}
