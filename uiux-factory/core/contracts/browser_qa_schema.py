@@ -33,6 +33,7 @@ class RouteViewportEvidence(BaseModel):
     unlabeled_control_count: int = 0
     small_control_target_count: int = 0
     focus_obscured_count: int = 0
+    keyboard_focus: dict = Field(default_factory=dict)
     catastrophic_contrast_count: int = 0
 
 

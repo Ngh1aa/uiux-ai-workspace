@@ -35,6 +35,7 @@ def rendered(tmp_path):
         "viewport": {"width": 320, "height": 240}, "screenshot": "home.png",
         "box": {"x": 0, "y": 0, "width": 320, "height": 240},
         "pageErrors": [], "consoleMessages": [], "blockedRequests": [], "failedRequests": [],
+        "keyboardFocus": {"status": "PASS", "total": 0, "checked": []},  # synthetic blank image
     }
     (artifacts / "browser-evidence-home.json").write_text(json.dumps(observation), encoding="utf-8")
     record = PlaywrightBrowserEvidenceAdapter(tmp_path, {}).collect(artifacts)[0].to_dict()
@@ -45,6 +46,18 @@ def test_file_read_cannot_pass_any_website_qa_gate():
     record = evidence_from_tool("qa", "read_text", {"path": "index.html", "bytes": 100}).to_dict()
     errors = gate_evidence_errors(GATES, "qa", [record], agent="qa")
     assert len(errors) >= 3
+
+
+@pytest.mark.parametrize('row_filter', [0, 1, 2, 3, 4, 5, 255])
+def test_png_gate_checks_scanline_filters_not_only_hash_and_size(row_filter):
+    from core.runtime.flow_os.evidence import _valid_png
+    def chunk(kind, payload):
+        return struct.pack('>I', len(payload)) + kind + payload + struct.pack('>I', zlib.crc32(kind + payload))
+    raw = (b'\x89PNG\r\n\x1a\n'
+           + chunk(b'IHDR', struct.pack('>IIBBBBB', 1, 1, 8, 2, 0, 0, 0))
+           + chunk(b'IDAT', zlib.compress(bytes([row_filter, 0, 0, 0])))
+           + chunk(b'IEND', b''))
+    assert _valid_png(raw) is (row_filter <= 4)
 
 
 @pytest.mark.parametrize("case", ["missing_image", "missing_route", "wrong_route", "missing_viewport",
@@ -81,6 +94,24 @@ def test_render_gate_rejects_invalid_evidence(rendered, case):
 def test_valid_adapter_render_passes_gate(rendered):
     record, _ = rendered
     assert gate_evidence_errors(GATES, "qa", [record], agent="qa") == []
+
+
+@pytest.mark.parametrize('case', ['missing', 'failed', 'review', 'incomplete', 'hidden'])
+def test_keyboard_focus_cannot_be_replaced_by_css_or_partial_report(rendered, case):
+    record, image = rendered
+    report = {'status': 'PASS', 'total': 1, 'checked': [{'status': 'PASS', 'focused': True, 'hidden': False}]}
+    if case == 'missing': report = None
+    elif case == 'failed': report['status'] = 'FAIL'
+    elif case == 'review': report['status'] = 'NEEDS_REVIEW'
+    elif case == 'incomplete': report['checked'] = []
+    else: report['checked'][0]['hidden'] = True
+    observation = image.parent / record['data']['evidence_json']
+    payload = json.loads(observation.read_text())
+    payload['keyboardFocus'] = report
+    observation.write_text(json.dumps(payload), encoding='utf-8')
+    record['data']['keyboard_focus'] = report
+    record['data']['evidence_sha256'] = hashlib.sha256(observation.read_bytes()).hexdigest()
+    assert gate_evidence_errors([{'id':'keyboard-focus'}], 'qa', [record], 'qa')
 
 
 def test_explicit_browser_type_also_requires_image(rendered):

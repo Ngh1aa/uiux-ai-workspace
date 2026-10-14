@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      NOVA_SHA: e206f51f2fda006adcf52497d8b827e048e157ec
+      NOVA_SHA: b4cc64906b3f5739005f5d80f7ac9e6dc5e6ad10
       NOVA_ROOT: ${{ github.workspace }}/.dogfood/Nova
       A13_REPORT: ${{ github.workspace }}/a13-artifacts/nova-dogfood.json
 
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: Ngh1aa/Nova
-          ref: e206f51f2fda006adcf52497d8b827e048e157ec
+          ref: b4cc64906b3f5739005f5d80f7ac9e6dc5e6ad10
           path: .dogfood/Nova
 
       - name: Set up Python

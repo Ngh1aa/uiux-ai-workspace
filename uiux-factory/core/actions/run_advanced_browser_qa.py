@@ -192,7 +192,9 @@ class RunAdvancedBrowserQA(RunBrowserQA):
         base.gates.image_alt_smoke_passed = missing_alt == 0
         base.gates.accessible_name_smoke_passed = unlabeled == 0
         base.gates.control_target_smoke_passed = small_targets == 0
-        base.gates.focus_visibility_smoke_passed = focus_obscured == 0
+        base.gates.focus_visibility_smoke_passed = (
+            focus_obscured == 0 and all(item.keyboard_focus.get('status') == 'PASS' for item in base.evidence)
+        )
         base.gates.elementary_visual_sanity_passed = catastrophic == 0
 
         base.gates.ready_for_visual_critic = bool(

@@ -78,6 +78,9 @@ def test_manual_approval_does_not_replace_machine_evidence(tmp_path):
     # Synthetic contract checked by the real owner; not a human design review.
     design.state = "COMPLETED"
     attach_design_fixture(harness, design)
+    with pytest.raises(ValueError, match='human approval required'):
+        manager.complete_stage(managed)
+    manager.approve_gate(managed, 'design-contract')  # approve the newly supplied design
     assert manager.complete_stage(managed) == "implementation"
 
 
