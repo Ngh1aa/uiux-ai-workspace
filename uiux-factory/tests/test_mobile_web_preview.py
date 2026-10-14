@@ -154,3 +154,17 @@ def test_preview_cli_and_flow_json_schema_accept_the_new_output(tmp_path):
     assert not validate_flow_document(flow)
     schema = json.loads((SKILLS / 'schemas/flow.schema.json').read_text(encoding='utf-8'))
     assert 'browser-prototype' in schema['properties']['match']['properties']['requested_outputs']['items']['enum']
+
+
+def test_actual_mobile_example_fits_the_project_profile_schema_and_routes_preview():
+    target = SKILLS / 'examples/projects/mobile-appointment'
+    profile = json.loads((target / '.uiux-profile.json').read_text(encoding='utf-8'))
+    schema = json.loads((SKILLS / 'schemas/uiux-profile.schema.json').read_text(encoding='utf-8'))
+    assert set(schema['required']).issubset(profile)
+    assert set(profile).issubset(schema['properties'])
+    assert profile['platform_family'] in schema['properties']['platform_family']['enum']
+    assert profile['implementation_stack'] in schema['properties']['implementation_stack']['enum']
+    assert all(item in schema['properties']['target_platforms']['items']['enum'] for item in profile['target_platforms'])
+    result = manifest('Design current app', target_root=target, overrides={'requested_output': 'browser-prototype'})
+    assert result['resolved_flow']['id'] == 'mobile-web-preview'
+    assert result['task_contract']['target_truth']['status'] == 'PROBED'

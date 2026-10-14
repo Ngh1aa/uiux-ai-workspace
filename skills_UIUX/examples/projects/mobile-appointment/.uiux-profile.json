@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "profile": "mobile-app-design",
-  "domain": "generic",
+  "project": {"name": "Synthetic mobile appointment prototype", "domain": "generic"},
   "platform_family": "mobile_app",
   "target_platforms": ["ios", "android"],
   "implementation_stack": "unknown",
