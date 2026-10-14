@@ -17,6 +17,8 @@ The universal behavior/evidence policy belongs to `AGENTS.md`; authority/provide
 
 ## Active flow families
 
+Mobile browser prototypes use `mobile-web-preview` (research/design/implementation/qa) with `requested_output=browser-prototype`; website flows are reused only for their browser skills/evidence, not native implementation. Publication is separate authorized work and a prepared packet is not a live client URL. Mobile design uses `mobile-app-design` (research/design/qa) and `mobile-app-audit` (read-only research/qa). `platform_family=mobile_app` must be explicit or supported by bounded goal/target truth; `requested_output=design` preserves the design-only scope. Unannotated flows retain web semantics. Native code requests do not fall back to a web flow. See [mobile practice](../mobile-app-design/references/professional-practice.md).
+
 - `micro-ui-change` — atomic visual/component edits.
 - `existing-ui-improvement` — focused fixes/improvements to existing UI surfaces.
 - `page-ui-work` — page/route-sized work.

@@ -251,6 +251,19 @@ def build_external_task_manifest(
         research_packet=_research_packet(context),
         execution_advice=execution_advice,
         evidence_boundary={
+            **({"mobile_completion_scope": (
+                    "browser_prototype_and_client_handoff"
+                    if context.get("requested_output") == "browser-prototype"
+                    and context.get("intent") not in NON_MUTATING_INTENTS
+                    else "design_or_read_only_review"),
+                "browser_prototype_available": True,
+                "browser_preview_is_not_native_app": True,
+                "published_link_requires_deployment_truth": True,
+                "publication_requires_separate_release_authority": True,
+                "native_implementation_available": False,
+                "native_runtime_qa_available": False,
+                "design_records_do_not_prove_native_runtime": True}
+               if context.get("platform_family") == "mobile_app" else {}),
             "manifest_is_not_qa_pass": True,
             "provider_self_report_is_not_gate_evidence": True,
             "target_repository_audit_required_before_mutation": True,

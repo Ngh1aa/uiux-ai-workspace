@@ -306,6 +306,14 @@ They are useful for audit/history, but must not be used as current architecture/
 
 This public repository currently has **no declared software license**. Do not assume reuse/redistribution rights from repository visibility alone. A license should be selected explicitly by the repository owner before presenting the project as generally reusable open source.
 
+## Mobile design capability
+
+The same Flow OS now supports iOS/Android research, interface design, prototype review and engineering handoff through platform-aware mobile design/audit flows. Seven owned skills and a dated source/license registry cover platform conventions, navigation/state, semantic components and verification planning. Existing responsive-website flows remain web; native implementation requests fail closed until an appropriate runner and evidence contract are added.
+
+Interactive browser demos use [mobile-web-preview](skills_UIUX/mobile-web-preview/SKILL.md) with `requested_output=browser-prototype`: design → browser implementation → rendered QA → prepared or verified client-link handoff. The opt-in Pages workflow belongs in the target app repository; this upgrade does not deploy the Factory or a client app automatically.
+
+Start with [mobile professional practice](skills_UIUX/mobile-app-design/references/professional-practice.md). Design artifacts and file-integrity receipts do not prove native runtime behavior, human validation or store release.
+
 ## Capability upgrades
 
 See `uiux-factory/docs/AI-CAPABILITY-UPGRADE-SOURCES.md` for optional future improvements to model routing, vision review, browser observation and evaluation depth.

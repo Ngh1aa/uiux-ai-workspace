@@ -1,0 +1,47 @@
+# Opt-in asset for a TARGET app repository; not a Factory deployment workflow.
+# Adapt preview/ to the target's verified static output, enable Pages via Actions,
+# and run target browser QA before an explicitly authorized dispatch.
+name: Publish mobile browser prototype
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-prototype-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Require exported entrypoint
+        run: test -s preview/index.html
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static output
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: preview
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy verified candidate
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -93,7 +93,9 @@ Responsive design không chỉ là media queries. Skill này đảm bảo websit
 ```css
 /* === TOUCH TARGETS === */
 
-/* Minimum touch target: 44x44px (WCAG 2.2 Level AA) */
+/* Project comfort target: 44x44 CSS px. WCAG 2.2 AA SC 2.5.8 has
+   a 24x24 CSS px minimum with exceptions; 44x44 enhanced is AAA SC 2.5.5.
+   Native iOS uses points and Android uses dp; do not convert these blindly. */
 .btn, .nav__link, a, button, [role="button"],
 input[type="checkbox"], input[type="radio"] {
   min-height: 44px;

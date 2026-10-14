@@ -1,6 +1,22 @@
 # Skill Catalog — V5
 
-## Core pipeline
+## Mobile app design
+
+Native iOS/Android design and read-only review use the same Flow OS and platform-specific work cards. The current mobile lane produces design/prototype/handoff artifacts; native implementation/runtime/store verification remains separate and unsupported requests fail closed.
+
+| Skill | Decision owner |
+|---|---|
+| `mobile-app-design` | Mobile lifecycle, source registry and stage work cards |
+| `mobile-web-preview` | Interactive browser app prototype, static-host QA and client-link handoff |
+| `ios-app-design` | Apple platform navigation, controls, typography and accessibility |
+| `android-app-design` | Material/adaptive design, insets, system Back and accessibility |
+| `mobile-navigation-and-state-ux` | Screen/state inventory, transitions, interruptions and recovery |
+| `mobile-design-system-and-handoff` | Shared semantic tokens, platform variants and implementation mapping |
+| `mobile-prototype-and-qa` | Prototype/design review, native QA plan and claim boundaries |
+
+See [mobile practice](mobile-app-design/references/professional-practice.md), [sources](mobile-app-design/data/sources.json), [design flow](flows/mobile-app-design.json) and [audit flow](flows/mobile-app-audit.json). Responsive websites remain on web flows.
+
+## Shared and website pipeline
 
 | Skill | Vai trò |
 |---|---|

@@ -7,7 +7,7 @@ from typing import Any, Iterable
 
 from core.runtime.flow_os.adaptive_surface import CHANGE_SURFACES, default_change_surface_for_intent
 from core.runtime.flow_os.specialist_composition import SpecialistComposer, _as_set, _condition_matches
-from core.runtime.flow_os.task_context import NON_MUTATING_INTENTS
+from core.runtime.flow_os.task_context import NON_MUTATING_INTENTS, PLATFORM_FAMILIES, REQUESTED_OUTPUTS
 
 REPLAN_SIGNALS = {
     "GATE_FAIL",
@@ -37,6 +37,10 @@ CONTEXT_KEYS = {
     "risk",
     "features",
     "signals",
+    "platform_family",
+    "target_platforms",
+    "implementation_stack",
+    "requested_output",
 }
 
 
@@ -63,6 +67,12 @@ def validate_flow_document(doc: dict[str, Any]) -> list[str]:
     if not isinstance(match, dict):
         errors.append("match must be an object")
     else:
+        for key, allowed in (("platform_families", PLATFORM_FAMILIES),
+                             ("requested_outputs", REQUESTED_OUTPUTS)):
+            if key in match:
+                values = match[key]
+                if not isinstance(values, list) or not values or any(not isinstance(item, str) or item not in allowed for item in values):
+                    errors.append(f"match.{key} must be a nonempty array of supported values")
         surfaces = match.get("change_surfaces", [])
         if not isinstance(surfaces, list) or any(not isinstance(item, str) for item in surfaces):
             errors.append("match.change_surfaces must be an array of strings")
@@ -281,10 +291,8 @@ class FlowResolver:
     def normalize_context(context: dict[str, Any]) -> dict[str, Any]:
         normalized = dict(context)
         authority = normalized.get("effective_authority", normalized.get("authority"))
-        requested_authority = normalized.get("requested_authority", normalized.get("authority"))
         if (
             authority == "read_only"
-            and requested_authority == "read_only"
             and normalized.get("intent") not in NON_MUTATING_INTENTS
         ):
             normalized["intent"] = "audit"
@@ -300,6 +308,12 @@ class FlowResolver:
         return normalized
 
     def _score(self, doc: dict[str, Any], context: dict[str, Any]) -> int | None:
+        platform = context.get("platform_family", "web")
+        match = doc.get("match", {})
+        # Unannotated flows retain their web behavior. A browser flow cannot
+        # implement an app and a design-only lane cannot complete native code.
+        if platform not in _as_set(match.get("platform_families", ["web"])):
+            return None
         # A small surface cannot outrank the non-mutating intent boundary.
         if context.get("intent") in NON_MUTATING_INTENTS and any(
             stage.get("agent") == "implementation" for stage in doc.get("stages", [])
@@ -313,6 +327,7 @@ class FlowResolver:
             ("website_types", 10),
             ("modes", 6),
             ("risks", 4),
+            ("requested_outputs", 6),
         ):
             allowed = _as_set(match.get(key))
             if not allowed:

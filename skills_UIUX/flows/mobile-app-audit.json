@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "id": "mobile-app-audit",
+  "description": "Read-only mobile app research/review with platform guidance and explicit native evidence limitations.",
+  "match": {"priority": 100, "platform_families": ["mobile_app"], "intents": ["audit", "review", "research", "validate", "qa"]},
+  "stages": [
+    {"id": "research", "agent": "research", "purpose": "Audit existing mobile source/design evidence without target mutation.",
+     "required_skills": ["mobile-app-design", "mobile-navigation-and-state-ux"],
+     "conditional_skills": [
+       {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["research-evidence-pipeline"]},
+       {"when": {"target_platforms": ["ios"]}, "skills": ["ios-app-design"]},
+       {"when": {"target_platforms": ["android"]}, "skills": ["android-app-design"]}
+     ],
+     "gates": [{"id": "mobile-audit-scope", "require": "scope, target truth, source observations and non-mutation boundary are explicit", "evidence_types": ["file_read"]}]},
+    {"id": "qa", "agent": "qa", "purpose": "Verify findings and separate inspected design/source from untested native runtime.",
+     "required_skills": ["mobile-app-design", "mobile-prototype-and-qa"],
+     "gates": [{"id": "mobile-audit-findings", "require": "each material finding has evidence, severity, confidence and a verification path; planned checks cannot claim native PASS", "evidence_types": ["validator_result"]}]}
+  ],
+  "replanning": {"max_replans": 1, "triggers": ["GATE_FAIL", "INVALID_ASSUMPTION"], "policies": [
+    {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "Re-establish the mobile evidence owner.", "target_stage": "research"},
+    {"when": {"signal": "GATE_FAIL"}, "reason": "Verify the finding before restating it.", "target_stage": "research"}
+  ]}
+}
