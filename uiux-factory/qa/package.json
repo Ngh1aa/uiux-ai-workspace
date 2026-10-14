@@ -10,8 +10,9 @@
     "test:media": "node scripts/media-smoke.mjs",
     "test:state": "node scripts/state-coverage.mjs",
     "test:deployment": "node scripts/deployment-truth.mjs",
+    "test:mobile-preview": "node --test tests/mobile-preview-contract.spec.mjs",
     "classify:infra": "node scripts/infra-failure-classifier.mjs",
-    "test": "npm run test:unit && npm run test:focus && npm run test:a11y && npm run test:browser && npm run test:media"
+    "test": "npm run test:unit && npm run test:focus && npm run test:a11y && npm run test:browser && npm run test:media && npm run test:mobile-preview"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

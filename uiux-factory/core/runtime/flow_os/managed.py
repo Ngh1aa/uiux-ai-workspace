@@ -231,6 +231,9 @@ class ManagedFlowController:
         planning_context = dict(task_context)
         for key in self.ADVISORY_MEMORY_CONTEXT_KEYS:
             planning_context.pop(key, None)
+        if authority == "read_only":
+            planning_context["effective_authority"] = "read_only"
+        planning_context = self.planner.flow_resolver.normalize_context(planning_context)
         flow = self.resolve_flow(planning_context, additional_skills, exclude_skills)
         enriched_context = dict(planning_context)
         signature = self.run_evaluator.signature(planning_context)
@@ -253,6 +256,7 @@ class ManagedFlowController:
             authority,
             selected_skills=[],
             explicit_sources=[],
+            platform_family=str(planning_context.get("platform_family", "web")),
         )
         managed = ManagedWebsiteRun(
             manager_run_id=manager_state.run_id,
@@ -414,6 +418,7 @@ class ManagedFlowController:
             authority=authority,
             selected_skills=stage.skills,
             explicit_sources=explicit_sources or [],
+            platform_family=str(managed.task_context.get("platform_family", "web")),
         )
         state.context["manager_run_id"] = managed.manager_run_id
         state.context["flow_id"] = managed.flow.id

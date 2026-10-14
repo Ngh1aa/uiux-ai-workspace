@@ -1,0 +1,28 @@
+{
+  "id": "mobile-design-001-ios-android",
+  "category": "capability",
+  "prompt": "Thiết kế UI UX app mobile iOS Android cho quản lý lịch hẹn. Chỉ thiết kế và prototype: dùng brand hiện tại, thiết kế đường đi đặt/hủy lịch, trạng thái lỗi và handoff. Không viết code app.",
+  "recommended_skills": [
+    "mobile-app-design",
+    "mobile-navigation-and-state-ux",
+    "ios-app-design",
+    "android-app-design",
+    "mobile-design-system-and-handoff"
+  ],
+  "expected_outcomes": [
+    "Platform-specific behavior mapped to shared task and brand",
+    "Screen/state inventory and consequential recovery",
+    "Source-linked decisions and native QA gaps explicit"
+  ],
+  "must_not": [
+    "Implement app code or publish a store build",
+    "Claim participant results without sessions",
+    "Copy one platform chrome onto the other"
+  ],
+  "rubric": {
+    "scope_and_authority": 30,
+    "platform_fit": 25,
+    "evidence_truth": 30,
+    "handoff": 15
+  }
+}

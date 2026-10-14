@@ -1,0 +1,5 @@
+{
+  "name": "mobile-platforms",
+  "description": "Platform guidance for native app design. Resolve only the iOS/Android owners actually in target scope through the mobile Flow.",
+  "skills": ["ios-app-design", "android-app-design"]
+}

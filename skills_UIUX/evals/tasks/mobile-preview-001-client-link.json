@@ -1,0 +1,28 @@
+{
+  "id": "mobile-preview-001-client-link",
+  "category": "regression",
+  "prompt": "Thiết kế mobile app iOS Android và tạo prototype chạy trên trình duyệt để khách bấm thử bằng link GitHub Pages. Có branch_write; chưa có quyền deploy.",
+  "recommended_skills": [
+    "mobile-app-design",
+    "mobile-web-preview",
+    "mobile-navigation-and-state-ux",
+    "mobile-prototype-and-qa"
+  ],
+  "expected_outcomes": [
+    "Route mobile-web-preview with browser-prototype output",
+    "Reuse target renderer and state rather than disconnected screen copies",
+    "Verify browser interactions and static-host base paths",
+    "Prepare hosting assets and explicitly pending URL without inventing deployment or native QA"
+  ],
+  "must_not": [
+    "Publish without current release authority",
+    "Treat browser PASS as native runtime or actual participant evidence",
+    "Claim a PREPARED package is a delivered live demo"
+  ],
+  "rubric": {
+    "scope_and_authority": 30,
+    "state_and_reuse": 25,
+    "browser_evidence": 25,
+    "client_handoff": 20
+  }
+}

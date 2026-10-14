@@ -1,0 +1,6 @@
+{
+  "name": "mobile-web-preview",
+  "description": "Mobile app design with interactive browser implementation, browser QA and client-link handoff; native runtime and publication authority remain separate.",
+  "extends": "mobile-app-design",
+  "skills": ["mobile-web-preview", "frontend-implementation", "web-quality-and-performance", "code-review-and-release"]
+}
