@@ -33,7 +33,7 @@ def _condition_matches(condition: dict[str, Any], context: dict[str, Any]) -> bo
             continue
         actual = context.get(key)
         expected_set = _as_set(expected)
-        if key in {"features", "signals"}:
+        if key in {"features", "signals", "target_platforms"}:
             if expected_set and not expected_set.intersection(_as_set(actual)):
                 return False
         elif expected_set and str(actual) not in expected_set:
@@ -265,11 +265,12 @@ class SpecialistComposer:
         surface = str(context.get("change_surface", "PRODUCT")).upper()
         features = [str(item) for item in context.get("features", []) or []]
 
-        selected.extend(self.DOMAIN_SKILLS.get(domain, {}).get(stage_id, ()))
-        selected.extend(self.ARCHETYPE_SKILLS.get(archetype, {}).get(stage_id, ()))
-        selected.extend(self.SURFACE_SKILLS.get(surface, {}).get(stage_id, ()))
-        for feature in features:
-            selected.extend(self.FEATURE_SKILLS.get(feature, {}).get(stage_id, ()))
+        if context.get("platform_family", "web") == "web":
+            selected.extend(self.DOMAIN_SKILLS.get(domain, {}).get(stage_id, ()))
+            selected.extend(self.ARCHETYPE_SKILLS.get(archetype, {}).get(stage_id, ()))
+            selected.extend(self.SURFACE_SKILLS.get(surface, {}).get(stage_id, ()))
+            for feature in features:
+                selected.extend(self.FEATURE_SKILLS.get(feature, {}).get(stage_id, ()))
         if flow_id in _as_set(self.document.get("flows")):
             for rule in self.document.get("rules", []):
                 rule_flows = _as_set(rule.get("flows"))

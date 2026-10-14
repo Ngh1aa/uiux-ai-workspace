@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "mobile-app-design",
+  "description": "Native app design/prototype/handoff; does not implement app source or claim native runtime QA.",
+  "match": {"priority": 100, "platform_families": ["mobile_app"], "requested_outputs": ["design"], "intents": ["build", "redesign", "rebuild", "improve", "fix", "polish"]},
+  "stages": [
+    {"id": "research", "agent": "research", "purpose": "Establish mobile target truth, top tasks and source-to-decision evidence.",
+     "required_skills": ["mobile-app-design", "product-discovery", "ux-research-and-journey"],
+     "conditional_skills": [
+       {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["research-evidence-pipeline"]},
+       {"when": {"features": ["user-validation"]}, "skills": ["user-research-planning-and-recruitment"]}
+     ],
+     "gates": [{"id": "mobile-scope-truth", "require": "requested design output, target platforms/OS/stack, baseline, authority and research limitations are explicit", "evidence_types": ["file_read"]}]},
+    {"id": "design", "agent": "implementation", "purpose": "Produce design artifacts and prototype specifications in the authorized artifact workspace; do not edit native app source.",
+     "required_skills": ["mobile-app-design", "mobile-navigation-and-state-ux", "mobile-design-system-and-handoff", "ux-writing-and-microcopy"],
+     "conditional_skills": [
+       {"when": {"target_platforms": ["ios"]}, "skills": ["ios-app-design"]},
+       {"when": {"target_platforms": ["android"]}, "skills": ["android-app-design"]},
+       {"when": {"features": ["auth"]}, "skills": ["authentication-account-and-recovery-ux"]},
+       {"when": {"features": ["forms"]}, "skills": ["interaction-patterns-and-form-ux"]},
+       {"when": {"features": ["i18n"]}, "skills": ["localization-and-i18n"]}
+     ],
+     "gates": [{"id": "mobile-design-artifacts", "require": "current screen/state inventory, navigation/recovery, platform/component mapping and source-linked design contract exist; this proves artifact production only", "evidence_types": ["file_change"]}]},
+    {"id": "qa", "agent": "qa", "purpose": "Review actual design/prototype evidence and hand off native implementation/verification gaps honestly.",
+     "required_skills": ["mobile-app-design", "mobile-prototype-and-qa"],
+     "conditional_skills": [
+       {"when": {"target_platforms": ["ios"]}, "skills": ["ios-app-design"]},
+       {"when": {"target_platforms": ["android"]}, "skills": ["android-app-design"]}
+     ],
+     "gates": [{"id": "mobile-design-review", "require": "design/prototype observations, issue owners and current handoff records are reviewed; native/runtime/user/store checks remain UNKNOWN unless separately verified", "evidence_types": ["validator_result"]}]}
+  ],
+  "replanning": {"max_replans": 2, "triggers": ["GATE_FAIL", "INVALID_ASSUMPTION", "NEW_RISK", "CONTEXT_DRIFT"], "policies": [
+    {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "Mobile scope/platform assumption changed; re-establish project truth.", "target_stage": "research"},
+    {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "Repair design evidence and affected platform/state decisions.", "target_stage": "design"}
+  ]}
+}

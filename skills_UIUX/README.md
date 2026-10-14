@@ -4,6 +4,8 @@ Bộ skill cho AI coding agent xây dựng/nâng cấp website theo pipeline chu
 
 V5.4 là **library/agent-OS version**. Các prompt có version riêng; không suy ra library version từ prompt version.
 
+Native mobile design is available through [mobile-app-design](mobile-app-design/SKILL.md), the [mobile profile](profiles/mobile-app-design.json) and platform-specific Flow/work cards. Read [mobile practice](mobile-app-design/references/professional-practice.md) for research, screen/state design, prototype review and handoff. For an app prototype clients can open by link, use [mobile-web-preview](mobile-web-preview/SKILL.md) with `requested_output=browser-prototype`. Responsive web remains on the website pipeline; no native code runner or store-release capability is implied.
+
 ## V5.4 visual-sanity reliability hardening
 
 V5.4 bổ sung hard gate để chặn các lỗi rendered sơ đẳng nhưng có thể lọt qua build/CI/screenshot-generation:

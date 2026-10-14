@@ -26,6 +26,7 @@ from core.runtime.flow_os.provider_budget import (
 from core.runtime.flow_os.provider_routing import StageProviderRouter
 from core.runtime.flow_os.provider_runner import ProviderManagedRunner, ProviderRunResult
 from core.runtime.flow_os.release import ProductionReleaseController
+from core.runtime.flow_os.task_context import IMPLEMENTATION_STACKS, PLATFORM_FAMILIES, REQUESTED_OUTPUTS, TARGET_PLATFORMS
 
 
 def _managed_overrides(args: argparse.Namespace) -> dict[str, object]:
@@ -38,6 +39,10 @@ def _managed_overrides(args: argparse.Namespace) -> dict[str, object]:
         "validation_lane": args.validation_lane,
         "mode": args.mode,
         "risk": args.risk,
+        "platform_family": args.platform_family,
+        "target_platforms": args.target_platform or None,
+        "implementation_stack": args.implementation_stack,
+        "requested_output": args.requested_output,
         "features": args.feature,
         "approval_mode": args.approval_mode,
     }
@@ -221,6 +226,10 @@ def main() -> int:
     parser.add_argument("--validation-lane", choices=["prototype", "evidence-led", "production-learning"], help="Optional lifecycle rigor override; otherwise inferred from mode/risk/features")
     parser.add_argument("--mode", choices=["visual-prototype", "interactive-prototype", "production-candidate", "production"], help="Optional override; otherwise inferred from --task")
     parser.add_argument("--risk", help="Optional override; otherwise inferred from --task")
+    parser.add_argument("--platform-family", choices=PLATFORM_FAMILIES)
+    parser.add_argument("--target-platform", choices=TARGET_PLATFORMS, action="append", default=[])
+    parser.add_argument("--implementation-stack", choices=IMPLEMENTATION_STACKS)
+    parser.add_argument("--requested-output", choices=REQUESTED_OUTPUTS)
     parser.add_argument("--feature", action="append", default=[], help="Optional feature override(s); otherwise inferred from --task")
     parser.add_argument("--approval-mode", choices=["auto", "manual"], default="auto", help="Require explicit human approval for human-marked gates when set to manual")
     parser.add_argument("--approve-gate", help="Approve a human gate on the active managed stage")

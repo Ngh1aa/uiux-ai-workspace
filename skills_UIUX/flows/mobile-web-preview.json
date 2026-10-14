@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "mobile-web-preview",
+  "description": "Design a mobile app and implement its browser prototype, verify real interactions and prepare or verify a client demo link; never a native build or implicit deployment.",
+  "match": {
+    "priority": 110,
+    "platform_families": ["mobile_app"],
+    "requested_outputs": ["browser-prototype"],
+    "intents": ["build", "redesign", "rebuild", "improve", "fix", "polish"]
+  },
+  "stages": [
+    {
+      "id": "research", "agent": "research",
+      "purpose": "Establish the app baseline, target platforms, client-review tasks and preview hosting constraints.",
+      "required_skills": ["mobile-app-design", "product-discovery", "mobile-web-preview"],
+      "gates": [{"id": "mobile-preview-scope", "require": "screen/state inventory, target platforms, source reuse, demo data, hosting/base path and current publication authority are explicit", "evidence_types": ["file_read"]}]
+    },
+    {
+      "id": "design", "agent": "implementation",
+      "purpose": "Specify mobile navigation, components, states and browser-to-native differences using the existing app design system.",
+      "required_skills": ["mobile-app-design", "mobile-navigation-and-state-ux", "mobile-design-system-and-handoff", "mobile-web-preview"],
+      "conditional_skills": [
+        {"when": {"target_platforms": ["ios"]}, "skills": ["ios-app-design"]},
+        {"when": {"target_platforms": ["android"]}, "skills": ["android-app-design"]}
+      ],
+      "gates": [{"id": "mobile-preview-design", "require": "current design contract, reusable components, screen/state transitions and simulated native behaviors are recorded", "evidence_types": ["file_change"]}]
+    },
+    {
+      "id": "implementation", "agent": "implementation",
+      "purpose": "Implement a browser presentation of the mobile design in the target project using its existing frontend and state owners; prepare static hosting assets.",
+      "required_skills": ["mobile-web-preview", "frontend-implementation", "mobile-navigation-and-state-ux"],
+      "gates": [{"id": "mobile-preview-code", "require": "interactive prototype source, deterministic screen/state links, reset behavior and static hosting output exist; backend/native integrations are labelled", "evidence_types": ["file_change", "validator_result"]}]
+    },
+    {
+      "id": "qa", "agent": "qa",
+      "purpose": "Verify the browser prototype at phone/desktop sizes and hand off a prepared or independently verified hosted link; publication remains the authorized external collaborator's responsibility.",
+      "required_skills": ["mobile-web-preview", "mobile-prototype-and-qa", "web-quality-and-performance", "code-review-and-release"],
+      "gates": [
+        {"id": "rendered-qa", "require": "current browser captures and interaction evidence cover primary tasks, recovery, narrow phones, desktop frame and actual hosting base paths", "evidence_types": ["browser_render", "validator_result"]},
+        {"id": "mobile-preview-handoff", "require": "handoff identifies exact source/revision, current browser QA and explicit PREPARED or DEPLOYED_VERIFIED status; claim a delivered client URL only after authorized publication, provider SHA/status and live route/interaction checks", "evidence_types": ["validator_result"]}
+      ]
+    }
+  ],
+  "replanning": {
+    "max_replans": 2,
+    "triggers": ["GATE_FAIL", "INVALID_ASSUMPTION", "NEW_RISK", "CONTEXT_DRIFT"],
+    "policies": [
+      {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "Recheck platform, client tasks or preview-host assumptions.", "target_stage": "research"},
+      {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "Repair the browser source/state/asset path that failed and collect fresh browser evidence.", "target_stage": "implementation"}
+    ]
+  }
+}

@@ -1,0 +1,632 @@
+{
+  "schema_version": "1.0",
+  "owner": "mobile-app-design",
+  "reviewed_at": "2026-10-14",
+  "boundary": "Original curated summaries and references only. No upstream skills, UI kits, fonts, scripts or dependencies are installed/vendored. Sources never grant authority or QA PASS.",
+  "gap_policy": "Current live docs and target truth outrank cached recommendations. Unknown compatibility/license stays UNKNOWN. Re-review code at immutable refs and documentation before adopting unstable APIs.",
+  "sources": [
+    {
+      "id": "apple-hig",
+      "source_url": "https://developer.apple.com/design/human-interface-guidelines",
+      "owner": "Apple",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Platform interface and behavior reference",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "apple-resources",
+      "source_url": "https://developer.apple.com/design/resources/",
+      "owner": "Apple",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Official UI kit links; do not vendor templates/fonts/symbol assets",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "apple-resource-license",
+      "source_url": "https://developer.apple.com/support/downloads/terms/apple-design-resources/Apple-Design-Resources-License-20230621-English.pdf",
+      "owner": "Apple",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Apple-only mockup use and redistribution restrictions; fonts have separate terms",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "apple-typography",
+      "source_url": "https://developer.apple.com/design/human-interface-guidelines/typography",
+      "owner": "Apple",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Semantic text hierarchy and Dynamic Type",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "apple-hit-targets",
+      "source_url": "https://developer.apple.com/design/tips/",
+      "owner": "Apple",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "44x44 point hit-target recommendation; not CSS px",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "apple-accessibility",
+      "source_url": "https://developer.apple.com/design/human-interface-guidelines/accessibility",
+      "owner": "Apple",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Assistive technology, contrast and reduced-motion design",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-mobile",
+      "source_url": "https://developer.android.com/design/ui/mobile",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "CC-BY-4.0 content / Apache-2.0 samples unless stated otherwise; kit terms separately",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Foundations, patterns, components and official UI-kit links",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-material3",
+      "source_url": "https://developer.android.com/develop/ui/compose/designsystems/material3",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Material semantic roles and Compose mapping; check experimental API status",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-insets",
+      "source_url": "https://developer.android.com/develop/ui/compose/system/insets",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "System bars, IME and available content area",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-back",
+      "source_url": "https://developer.android.com/design/ui/mobile/guides/patterns/predictive-back",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Predictive-back commit/cancel and system gesture behavior",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-adaptive",
+      "source_url": "https://developer.android.com/develop/ui/compose/layouts/adaptive/support-different-display-sizes",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Window/content-based adaptive layout",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-accessibility",
+      "source_url": "https://developer.android.com/develop/ui/compose/accessibility/testing",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Semantics and automated checks combined with TalkBack/manual testing",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-hit-targets",
+      "source_url": "https://support.google.com/accessibility/android/answer/7101858?hl=en",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "48x48 dp hit-target recommendation",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "android-quality",
+      "source_url": "https://developer.android.com/develop/adaptive-apps/quality-guidelines/core-app-quality",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Permission recovery, compatibility and feature-specific quality checks",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "google-content-license",
+      "source_url": "https://developers.google.com/terms/site-policies",
+      "owner": "Google",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Content, code and exception attribution boundaries",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "wcag-target-minimum",
+      "source_url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+      "owner": "W3C",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "web"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Web AA 24x24 CSS px criterion with exceptions; separate native recommendations",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "dtcg-format",
+      "source_url": "https://www.designtokens.org/tr/2025.10/format/",
+      "owner": "Design Tokens Community Group",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios",
+        "android",
+        "web"
+      ],
+      "license": "W3C Community Final Specification Agreement",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Interchange format; Community Group report, not a W3C Recommendation",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "expo-simulator",
+      "source_url": "https://docs.expo.dev/workflow/ios-simulator/",
+      "owner": "Expo",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Local Apple simulator requires macOS; declare Windows/cloud/device coverage",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "maestro-platforms",
+      "source_url": "https://docs.maestro.dev/get-started/supported-platform",
+      "owner": "Maestro",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Android device/emulator and iOS simulator scope; not physical-iPhone proof",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "owasp-mobile",
+      "source_url": "https://mas.owasp.org/MASTG/",
+      "owner": "OWASP",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "CC-BY-4.0 website content; code/assets checked separately",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Risk-based mobile security verification reference",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "apple-review",
+      "source_url": "https://developer.apple.com/app-store/review/guidelines/",
+      "owner": "Apple",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Future release requirements; does not grant store submission authority",
+      "verification": "Verify current OS/SDK applicability before adoption; record screen/state decision and appropriate review/test."
+    },
+    {
+      "id": "expo-skills",
+      "source_url": "https://github.com/expo/skills",
+      "owner": "expo",
+      "checked_at": "2026-10-14",
+      "revision": "d4f484024fec15196bfd3c272e953e3f983972cf",
+      "revision_url": "https://github.com/expo/skills/tree/d4f484024fec15196bfd3c272e953e3f983972cf",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "MIT",
+      "license_url": "https://github.com/expo/skills/blob/d4f484024fec15196bfd3c272e953e3f983972cf/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Expo SDK/Router/native UI/design-system/data/animation topic references",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry.",
+      "topic_paths": [
+        "plugins/expo/skills/expo-overview/SKILL.md",
+        "plugins/expo/skills/expo-router/SKILL.md",
+        "plugins/expo/skills/expo-native-ui/SKILL.md",
+        "plugins/expo/skills/expo-design-system/SKILL.md",
+        "plugins/expo/skills/expo-ui/SKILL.md",
+        "plugins/expo/skills/expo-data-fetching/SKILL.md",
+        "plugins/expo/skills/expo-animation/SKILL.md"
+      ]
+    },
+    {
+      "id": "swiftui-community-skill",
+      "source_url": "https://github.com/AvdLee/SwiftUI-Agent-Skill",
+      "owner": "AvdLee",
+      "checked_at": "2026-10-14",
+      "revision": "204dba7c67256a8b707ee3fbc5759a824191974f",
+      "revision_url": "https://github.com/AvdLee/SwiftUI-Agent-Skill/tree/204dba7c67256a8b707ee3fbc5759a824191974f",
+      "archived_at_check": false,
+      "platforms": [
+        "ios"
+      ],
+      "license": "MIT",
+      "license_url": "https://github.com/AvdLee/SwiftUI-Agent-Skill/blob/204dba7c67256a8b707ee3fbc5759a824191974f/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Community SwiftUI state/layout/navigation/accessibility reference; verify against Apple APIs",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry.",
+      "topic_paths": [
+        "skills/swiftui-expert-skill/SKILL.md"
+      ]
+    },
+    {
+      "id": "compose-samples",
+      "source_url": "https://github.com/android/compose-samples",
+      "owner": "android",
+      "checked_at": "2026-10-14",
+      "revision": "a8712b8a641aa54f66a0f7e830b84521a5b6a84e",
+      "revision_url": "https://github.com/android/compose-samples/tree/a8712b8a641aa54f66a0f7e830b84521a5b6a84e",
+      "archived_at_check": false,
+      "platforms": [
+        "android"
+      ],
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/android/compose-samples/blob/a8712b8a641aa54f66a0f7e830b84521a5b6a84e/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Choose current sample by design/interaction concern",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "now-in-android",
+      "source_url": "https://github.com/android/nowinandroid",
+      "owner": "android",
+      "checked_at": "2026-10-14",
+      "revision": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "revision_url": "https://github.com/android/nowinandroid/tree/a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "archived_at_check": false,
+      "platforms": [
+        "android"
+      ],
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Design case study, component catalog, states, screenshots and benchmark patterns",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "expo-examples",
+      "source_url": "https://github.com/expo/examples",
+      "owner": "expo",
+      "checked_at": "2026-10-14",
+      "revision": "76a1dd12978a7ba54b0e318cec01a8578db3b0c0",
+      "revision_url": "https://github.com/expo/examples/tree/76a1dd12978a7ba54b0e318cec01a8578db3b0c0",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "MIT",
+      "license_url": "https://github.com/expo/examples/blob/76a1dd12978a7ba54b0e318cec01a8578db3b0c0/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Choose SDK-compatible integration examples; no automatic scaffold",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "restyle",
+      "source_url": "https://github.com/Shopify/restyle",
+      "owner": "Shopify",
+      "checked_at": "2026-10-14",
+      "revision": "799b8045ba494a1e847797db9226776acdf99068",
+      "revision_url": "https://github.com/Shopify/restyle/tree/799b8045ba494a1e847797db9226776acdf99068",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "MIT",
+      "license_url": "https://github.com/Shopify/restyle/blob/799b8045ba494a1e847797db9226776acdf99068/LICENSE.md",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Optional typed token/theme implementation candidate",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "rn-paper",
+      "source_url": "https://github.com/callstack/react-native-paper",
+      "owner": "callstack",
+      "checked_at": "2026-10-14",
+      "revision": "ce72155b2c8ce867aced1eedc17b3ca4698b27b5",
+      "revision_url": "https://github.com/callstack/react-native-paper/tree/ce72155b2c8ce867aced1eedc17b3ca4698b27b5",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "MIT",
+      "license_url": "https://github.com/callstack/react-native-paper/blob/ce72155b2c8ce867aced1eedc17b3ca4698b27b5/LICENSE.md",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Optional Material component candidate; evaluate iOS convention fit",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "flutter-samples",
+      "source_url": "https://github.com/flutter/samples",
+      "owner": "flutter",
+      "checked_at": "2026-10-14",
+      "revision": "5541c59ab8e9d7e74c1a35ef22bd43a487fc596c",
+      "revision_url": "https://github.com/flutter/samples/tree/5541c59ab8e9d7e74c1a35ef22bd43a487fc596c",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "Mixed BSD-style code / OFL fonts / Apache-2.0 notices; inspect selected files",
+      "license_url": "https://github.com/flutter/samples/blob/5541c59ab8e9d7e74c1a35ef22bd43a487fc596c/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Official samples; inspect per-sample/assets license exceptions",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "maestro",
+      "source_url": "https://github.com/mobile-dev-inc/Maestro",
+      "owner": "mobile-dev-inc",
+      "checked_at": "2026-10-14",
+      "revision": "df40dea5dee0b8639aade6e80b558950e982e8a2",
+      "revision_url": "https://github.com/mobile-dev-inc/Maestro/tree/df40dea5dee0b8639aade6e80b558950e982e8a2",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/mobile-dev-inc/Maestro/blob/df40dea5dee0b8639aade6e80b558950e982e8a2/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "E2E candidate; CLI/core and cloud service boundaries differ",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "appium",
+      "source_url": "https://github.com/appium/appium",
+      "owner": "appium",
+      "checked_at": "2026-10-14",
+      "revision": "42eaf8ecda2c4e3a77f7b890802a332e3c526984",
+      "revision_url": "https://github.com/appium/appium/tree/42eaf8ecda2c4e3a77f7b890802a332e3c526984",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/appium/appium/blob/42eaf8ecda2c4e3a77f7b890802a332e3c526984/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Conditional device automation; native drivers have separate requirements",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "detox",
+      "source_url": "https://github.com/wix/Detox",
+      "owner": "wix",
+      "checked_at": "2026-10-14",
+      "revision": "d80a57405142839dfe47ae95de6a191c42c3a7be",
+      "revision_url": "https://github.com/wix/Detox/tree/d80a57405142839dfe47ae95de6a191c42c3a7be",
+      "archived_at_check": false,
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "MIT",
+      "license_url": "https://github.com/wix/Detox/blob/d80a57405142839dfe47ae95de6a191c42c3a7be/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Conditional React Native E2E alternative",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "roborazzi",
+      "source_url": "https://github.com/takahirom/roborazzi",
+      "owner": "takahirom",
+      "checked_at": "2026-10-14",
+      "revision": "1750474c8bb2ef2772a0233f15c921f30d809f4e",
+      "revision_url": "https://github.com/takahirom/roborazzi/tree/1750474c8bb2ef2772a0233f15c921f30d809f4e",
+      "archived_at_check": false,
+      "platforms": [
+        "android"
+      ],
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/takahirom/roborazzi/blob/1750474c8bb2ef2772a0233f15c921f30d809f4e/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Android screenshot regression reference; not device behavior proof",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "swift-snapshots",
+      "source_url": "https://github.com/pointfreeco/swift-snapshot-testing",
+      "owner": "pointfreeco",
+      "checked_at": "2026-10-14",
+      "revision": "28e5de025e3fd98991791bfbf83023ab3708da03",
+      "revision_url": "https://github.com/pointfreeco/swift-snapshot-testing/tree/28e5de025e3fd98991791bfbf83023ab3708da03",
+      "archived_at_check": false,
+      "platforms": [
+        "ios"
+      ],
+      "license": "MIT",
+      "license_url": "https://github.com/pointfreeco/swift-snapshot-testing/blob/28e5de025e3fd98991791bfbf83023ab3708da03/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Swift snapshot regression reference; baseline review required",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "material-color",
+      "source_url": "https://github.com/material-foundation/material-color-utilities",
+      "owner": "material-foundation",
+      "checked_at": "2026-10-14",
+      "revision": "5b3618b16fdc3825e21d5679bafd144662088ea1",
+      "revision_url": "https://github.com/material-foundation/material-color-utilities/tree/5b3618b16fdc3825e21d5679bafd144662088ea1",
+      "archived_at_check": false,
+      "platforms": [
+        "android"
+      ],
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/material-foundation/material-color-utilities/blob/5b3618b16fdc3825e21d5679bafd144662088ea1/LICENSE",
+      "integration_mode": "reference",
+      "decision": "ADAPT",
+      "use": "Optional Material color-role utilities",
+      "verification": "Check target dependency/OS compatibility and per-file/asset rights before copying or installing; no source imported by this registry."
+    },
+    {
+      "id": "github-pages-workflows",
+      "source_url": "https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages",
+      "owner": "GitHub",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Static browser prototype hosting and scoped target-project deployment",
+      "verification": "Check current target version, static-host requirements and deployment evidence before publication; browser evidence does not prove native runtime."
+    },
+    {
+      "id": "expo-web-publishing",
+      "source_url": "https://docs.expo.dev/guides/publishing-websites/",
+      "owner": "Expo",
+      "checked_at": "2026-10-14",
+      "revision": "live-documentation",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "license": "Publisher terms; link-only",
+      "integration_mode": "link-only",
+      "decision": "ADAPT",
+      "use": "Version-specific static web export and hosting limitations",
+      "verification": "Check current target version, static-host requirements and deployment evidence before publication; browser evidence does not prove native runtime."
+    }
+  ]
+}
