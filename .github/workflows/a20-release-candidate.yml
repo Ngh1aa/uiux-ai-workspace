@@ -19,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      NOVA_SHA: b4cc64906b3f5739005f5d80f7ac9e6dc5e6ad10
+      NOVA_SHA: e206f51f2fda006adcf52497d8b827e048e157ec
       LUMEN_SHA: 219f3e49f9956290ef69a2e49cb91fefddd5f561
-      CENNEXT_SHA: 384cb62fa5c880cc3ef3e596c45b85d46df2e04d
+      CENNEXT_SHA: 273403accf8979608fbb16dbe2741cedb0430fb6
       LUXROOM_SHA: 37e6a8c4a2aecdb9cefd9fd4291b353252d5356b
       NOVA_ROOT: ${{ github.workspace }}/.dogfood/Nova
       LUMEN_ROOT: ${{ github.workspace }}/.dogfood/Lumen
@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: Ngh1aa/Nova
-          ref: b4cc64906b3f5739005f5d80f7ac9e6dc5e6ad10
+          ref: e206f51f2fda006adcf52497d8b827e048e157ec
           path: .dogfood/Nova
 
       - name: Checkout pinned Lumen
@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: Ngh1aa/cennext-b2b-prototype
-          ref: 384cb62fa5c880cc3ef3e596c45b85d46df2e04d
+          ref: 273403accf8979608fbb16dbe2741cedb0430fb6
           path: .dogfood/CENNEXT
 
       - name: Checkout pinned LuxRoom
