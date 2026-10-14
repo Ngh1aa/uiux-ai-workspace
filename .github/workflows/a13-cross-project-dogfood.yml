@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 10
     env:
       LUMEN_SHA: 219f3e49f9956290ef69a2e49cb91fefddd5f561
-      CENNEXT_SHA: 273403accf8979608fbb16dbe2741cedb0430fb6
+      CENNEXT_SHA: 384cb62fa5c880cc3ef3e596c45b85d46df2e04d
       LUMEN_ROOT: ${{ github.workspace }}/.dogfood/Lumen
       CENNEXT_ROOT: ${{ github.workspace }}/.dogfood/CENNEXT
       REPORT_ROOT: ${{ github.workspace }}/a13-artifacts/cross-project
@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: Ngh1aa/cennext-b2b-prototype
-          ref: 273403accf8979608fbb16dbe2741cedb0430fb6
+          ref: 384cb62fa5c880cc3ef3e596c45b85d46df2e04d
           path: .dogfood/CENNEXT
 
       - name: Set up Python
