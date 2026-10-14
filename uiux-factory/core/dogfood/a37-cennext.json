@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "project_id": "cennext",
   "target_repository": "Ngh1aa/cennext-b2b-prototype",
-  "target_sha": "273403accf8979608fbb16dbe2741cedb0430fb6",
+  "target_sha": "384cb62fa5c880cc3ef3e596c45b85d46df2e04d",
   "task": "Audit the CENNEXT B2B component-state handoff as a real external-agent target, verify rendered component states without inventing missing async states, and produce release evidence that keeps deployment uncertainty explicit.",
   "authority": "read_only",
   "routes": ["/component-states.html"],

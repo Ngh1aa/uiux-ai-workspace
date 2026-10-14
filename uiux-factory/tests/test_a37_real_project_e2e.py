@@ -10,7 +10,7 @@ def test_a37_cennext_config_is_pinned_and_truthful() -> None:
     contract = json.loads((root / "uiux-factory/qa/dogfood/cennext-state-coverage.json").read_text(encoding="utf-8"))
 
     assert config["target_repository"] == "Ngh1aa/cennext-b2b-prototype"
-    assert config["target_sha"] == "273403accf8979608fbb16dbe2741cedb0430fb6"
+    assert config["target_sha"] == "384cb62fa5c880cc3ef3e596c45b85d46df2e04d"
     assert config["authority"] == "read_only"
     assert config["expected_deployment_classification_without_provider_sha"] == "READY_BUT_NOT_DEPLOYED"
     assert contract["entry_route"] == "/component-states.html"
