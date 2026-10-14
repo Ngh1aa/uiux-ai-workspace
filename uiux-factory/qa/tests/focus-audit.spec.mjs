@@ -21,6 +21,11 @@ test('rendered focus rejects selector/cascade failures and preserves valid indic
       ['button{outline:none}button:focus-visible{background:yellow}', 'NEEDS_REVIEW'],
       ['button:focus-visible{outline:2px solid blue;opacity:0}', 'FAIL'],
       ['button:focus-visible{outline:2px solid blue;position:absolute;clip:rect(0,0,0,0)}', 'FAIL'],
+      ['button{pointer-events:none}button:focus-visible{outline:2px solid blue}', 'NEEDS_REVIEW'],
+      ['button{pointer-events:none}button:focus-visible{outline:2px solid blue;opacity:0}', 'FAIL'],
+      ['button{outline:0 solid blue;transition:outline-width .1s}button:focus-visible{outline-width:3px}', 'PASS'],
+      ['button{transition:opacity .1s}button:focus-visible{outline:3px solid blue;opacity:0}', 'FAIL'],
+      ['@keyframes pulse{to{outline-width:6px}}button:focus-visible{outline:3px solid blue;animation:pulse .2s infinite alternate}', 'NEEDS_REVIEW'],
     ];
     for (const [css, expected] of cases) {
       await page.setContent(`<style>${css}</style><button>Submit</button>`);

@@ -1,4 +1,4 @@
-(() => {
+(async () => {
   // Run after a trusted keyboard event. This is rendered smoke, not WCAG certification.
   const visible = el => {
     const r = el.getBoundingClientRect();
@@ -15,6 +15,20 @@
     return lengths.length === 4 && lengths.some(length => length !== 0);
   });
   const checked = [];
+  const settleFocus = async el => {
+    let previous = '', stableFrames = 0;
+    for (let frame = 0; frame < 60; frame++) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      const box = el.getBoundingClientRect(), style = getComputedStyle(el);
+      const signature = [box.x, box.y, box.width, box.height, outlineSignature(style),
+        style.boxShadow, style.opacity].join('|');
+      const animating = el.getAnimations().some(animation => animation.playState === 'running');
+      stableFrames = !animating && signature === previous ? stableFrames + 1 : 0;
+      if (stableFrames >= 2) return true;
+      previous = signature;
+    }
+    return false;
+  };
   for (const [index, el] of controls.slice(0, 120).entries()) {
     el.blur();
     const before = getComputedStyle(el);
@@ -22,9 +36,12 @@
     const beforeShadow = before.boxShadow;
     const beforeOutline = outlineSignature(before);
     el.focus();
+    const settled = await settleFocus(el);
     const style = getComputedStyle(el), box = el.getBoundingClientRect();
     const point = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
-    let hidden = !point || !(point === el || el.contains(point));
+    // Pointer hit testing cannot prove visual occlusion for pointer-events:none.
+    const hitTestUnavailable = style.pointerEvents === 'none';
+    let hidden = !hitTestUnavailable && (!point || !(point === el || el.contains(point)));
     for (let ancestor = el; ancestor; ancestor = ancestor.parentElement) {
       const s = getComputedStyle(ancestor);
       hidden ||= Number(s.opacity) <= 0.01 || s.visibility === 'hidden' || s.display === 'none';
@@ -37,10 +54,12 @@
       && !transparent(style.boxShadow) && visibleShadow(style.boxShadow);
     const otherChanged = beforeOther !== [style.borderColor, style.backgroundColor, style.color, style.textDecoration].join('|');
     // Borders/backgrounds/caret/custom indicators need inspection, not automatic rejection or PASS.
-    const status = !focused || hidden ? 'FAIL' : outline || shadow ? 'PASS'
+    const status = !settled ? 'NEEDS_REVIEW' : !focused || hidden ? 'FAIL' : hitTestUnavailable ? 'NEEDS_REVIEW' : outline || shadow ? 'PASS'
       : otherChanged || el.matches('input,textarea,[contenteditable="true"]') ? 'NEEDS_REVIEW' : 'FAIL';
     checked.push({ index, tag: el.tagName.toLowerCase(), name: (el.getAttribute('aria-label') || el.textContent || '').trim().slice(0, 160),
-      focused, hidden, outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth,
+      focused, hidden, settled, hitTestUnavailable, bounds: {x: box.x, y: box.y, width: box.width, height: box.height},
+      coveringElement: hidden && point ? {tag: point.tagName.toLowerCase(), class: point.getAttribute('class')} : null,
+      outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth,
       outlineColor: style.outlineColor, boxShadow: style.boxShadow, status });
   }
   const unsupported = document.querySelector('iframe') !== null
