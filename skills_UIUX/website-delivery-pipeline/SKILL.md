@@ -10,6 +10,12 @@ description: Orchestrates the full lifecycle of building or redesigning a profes
 
 Route the **smallest useful skill graph**. Do not load the whole library.
 
+## Executable-stage work cards
+
+`data/lifecycle.json` maps professional deliverables to the existing research/design/implementation/qa stages. External manifests and managed provider requests carry the active card as `delivery_workflow`; read its decision, output fields and exit questions before working. Reuse project artifacts and load linked skills only for unresolved decisions.
+
+Use `references/professional-practice.md` for the operating guide, no-participant research boundary, handoff/release/learning and the read-only `scripts/check-delivery.py` coverage checker. The checker establishes current file records only; it never satisfies Flow gates, creates authority, certifies aesthetics or manufactures human evidence.
+
 ## Step 0 — Read project context
 If `.uiux-profile.json` exists, read it plus every `source_of_truth` file before applying generic rules. Project evidence overrides generic defaults unless a higher-priority user instruction changes direction.
 

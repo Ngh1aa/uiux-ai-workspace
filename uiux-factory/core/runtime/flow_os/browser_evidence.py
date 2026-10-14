@@ -288,6 +288,7 @@ class PlaywrightBrowserEvidenceAdapter:
                         "viewport": dict(payload.get("viewport", {})),
                         "box": box,
                         "screenshot": screenshot_raw,
+                        "keyboard_focus": payload.get('keyboardFocus'),
                         "screenshot_sha256": screenshot_hash,
                         "evidence_json": path.name,
                         "evidence_sha256": _sha256(path),

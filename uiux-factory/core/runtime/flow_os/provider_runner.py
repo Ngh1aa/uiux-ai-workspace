@@ -14,6 +14,7 @@ from core.runtime.flow_os.provider import ModelProvider, ProviderStageRequest, l
 from core.runtime.flow_os.sandbox import ContainerSandbox
 from core.runtime.flow_os.workspace import WorkspaceMetadata, WorktreeManager
 from core.skills.design_knowledge import design_workflow_packet, retrieve_design_knowledge
+from core.skills.website_delivery import delivery_packet
 from core.skills.design_decisions import check_design_file
 from core.skills.design_comparison import prepare_comparison, evaluate_comparison, read_comparison_json
 
@@ -460,6 +461,7 @@ class ProviderManagedRunner:
         task_context = dict(managed.task_context)
         design_workflow = design_workflow_packet(task_context, active_names, list(stage.gates))
         task_context['design_workflow'] = design_workflow
+        task_context['delivery_workflow'] = delivery_packet(self.harness.repo_root, stage.id, managed.task_context)
         task_context["jit_skill_context"] = {
             "enabled": bool(jit["enabled"]),
             "mandatory_skills": list(jit["mandatory"]),
@@ -631,6 +633,7 @@ class ProviderManagedRunner:
             stage.id,
             list(stage_state.context.get("evidence_records", [])),
             agent=stage.agent,
+            workspace_root=self._active_root(managed, stage_state),
         )
 
     def run_active_stage(

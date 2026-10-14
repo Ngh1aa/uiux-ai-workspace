@@ -65,6 +65,9 @@
                 "id": {"type": "string", "minLength": 1},
                 "require": {"type": "string", "minLength": 1},
                 "approval": {"enum": ["human"]},
+                "evidence_types": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+                "design_phase": {"enum": ["design", "rendered"]},
+                "design_contract_version": {"enum": ["1.0", "2.0"]},
                 "when": {
                   "type": "object",
                   "additionalProperties": {

@@ -179,6 +179,10 @@ class ProductionReleaseController:
         if any(record.status == "FAIL" for record in records):
             errors.append("latest effective trusted runtime evidence contains a failing result")
         browser = [record for record in records if record.type == "browser_render" and record.status == "PASS"]
+        from core.skills.design_decisions import design_receipt_errors
+        for record in records:
+            if record.type == 'design_contract_check' and record.status == 'PASS':
+                errors.extend(design_receipt_errors(record.data))
         for record in browser:
             errors.extend(browser_render_errors(record))
         if not browser:

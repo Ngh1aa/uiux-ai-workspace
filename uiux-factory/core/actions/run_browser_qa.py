@@ -336,6 +336,14 @@ class RunBrowserQA(Action):
             full_page=True,
         )
 
+        await page.keyboard.press('Tab')
+        focus_script = Path(__file__).resolve().parents[2] / 'qa/scripts/focus-audit.js'
+        keyboard_focus = await page.evaluate(focus_script.read_text(encoding='utf-8'))
+        focus_screenshot = screenshot_path.with_name(screenshot_path.stem + '-focus.png')
+        await page.screenshot(path=str(focus_screenshot), full_page=True)
+        keyboard_focus['screenshot'] = str(focus_screenshot)
+        keyboard_focus['screenshot_sha256'] = hashlib.sha256(focus_screenshot.read_bytes()).hexdigest()
+
         status = (
             "passed"
             if (
@@ -345,6 +353,7 @@ class RunBrowserQA(Action):
                 and not broken_links
                 and metrics["mainCount"] == 1
                 and metrics["h1Count"] == 1
+                and keyboard_focus['status'] == 'PASS'
             )
             else "failed"
         )
@@ -354,6 +363,7 @@ class RunBrowserQA(Action):
             viewport=viewport,
             screenshot=str(screenshot_path),
             screenshot_sha256=hashlib.sha256(screenshot_path.read_bytes()).hexdigest(),
+            keyboard_focus=keyboard_focus,
             status=status,
             console_errors=console_errors,
             page_errors=page_errors,
@@ -511,6 +521,7 @@ class RunBrowserQA(Action):
             and no_overflow
             and links_valid
             and semantic_smoke
+            and all(item.keyboard_focus.get('status') == 'PASS' for item in evidence)
         )
 
         clean_pass = (
@@ -548,6 +559,7 @@ class RunBrowserQA(Action):
                 no_horizontal_overflow=no_overflow,
                 internal_links_valid=links_valid,
                 semantic_smoke_passed=semantic_smoke,
+                focus_visibility_smoke_passed=all(item.keyboard_focus.get('status') == 'PASS' for item in evidence),
                 ready_for_visual_critic=ready,
             ),
             summary={

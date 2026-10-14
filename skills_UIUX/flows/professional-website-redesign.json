@@ -597,6 +597,11 @@
           "design_phase": "rendered", "design_contract_version": "2.0"
         },
         {
+          "id": "keyboard-focus",
+          "require": "Current browser evidence checks focus indicators on actual controls; source CSS lint and unresolved manual review cannot establish PASS.",
+          "evidence_types": ["browser_render"]
+        },
+        {
           "id": "prototype-experience-qa",
           "require": "for prototype modes, squint hierarchy, 5-second comprehension prompts, signature moment, domain media relevance, interaction states and anti-generic repetition are explicitly reviewed"
         },

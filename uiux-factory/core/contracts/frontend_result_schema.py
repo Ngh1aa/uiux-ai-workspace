@@ -25,7 +25,7 @@ class FrontendBuildGate(BaseModel):
     required_skills_loaded: bool = False
     semantic_html_passed: bool = False
     responsive_contract_passed: bool = False
-    focus_contract_passed: bool = False
+    focus_contract_passed: bool = Field(default=False, description='Source lint only; rendered keyboard-focus QA is still required.')
     technical_copy_gate_passed: bool = False
 
     ready_for_dependency_install: bool = False

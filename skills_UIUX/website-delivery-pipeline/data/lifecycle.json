@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "owner": "website-delivery-pipeline",
+  "boundary": "Professional practice coverage, not years of experience, human research, aesthetic quality or production readiness. Existing Flow stages, authority and gates remain canonical.",
+  "stages": {
+    "research": {
+      "decision": "Which problem, audience, journey and evidence justify building or changing this website?",
+      "exit_checks": ["Owner and scope agreed; missing decisions named", "Facts separated from brief, inference and concept", "Research tied to decisions; human validation UNKNOWN without sessions", "Preservation and new-site content gaps explicit"],
+      "deliverables": [
+        {"id": "research.brief", "output": "brief and decision log", "fields": ["business goal and user JTBD", "buyer, user, operator and approver (unknown or same person when justified)", "top tasks and entry intents", "budget, languages, devices, risk and exclusions", "success metric with baseline/data source or UNKNOWN", "decision owner and open questions"], "resources": ["product-discovery/SKILL.md", "product-decision-and-stakeholder-framing/SKILL.md"]},
+        {"id": "research.baseline", "output": "source and rendered baseline inventory", "fields": ["routes, page roles, states and journeys", "screenshots with route/viewport/time", "brand/content/assets rights and sources", "preserve/change/retire and dirty-worktree boundaries", "new project: available material and explicitly absent baseline"], "resources": ["project-context/SKILL.md", "website-audit-and-redesign/SKILL.md"]},
+        {"id": "research.evidence", "output": "research plan, evidence ledger and decision links", "fields": ["question -> method -> evidence -> decision -> page/state -> verification", "dated desk sources, limitations and counterevidence", "FACT / ASSUMPTION / CONCEPT / UNKNOWN", "direct-user sessions only with actual participation and consent", "access constraints; PLANNED_VALIDATION without participants", "privacy, retention and decision-changing uncertainty"], "resources": ["research-evidence-pipeline/SKILL.md", "user-research-planning-and-recruitment/SKILL.md", "research-synthesis-and-insight-management/SKILL.md"]},
+        {"id": "research.references", "output": "reference transfer matrix", "fields": ["references chosen for audience and decision, not popularity", "source-backed observation", "ADOPT / ADAPT / REJECT with rationale", "transfer mechanism and differences from this project", "no copied brand assets, distinctive copy or complete composition"], "resources": ["design-reference-research-and-benchmark/SKILL.md"]},
+        {"id": "research.structure", "output": "journey, IA and content model", "fields": ["entry -> evaluation -> action -> recovery", "sitemap and role of each page", "content entities, owners, proof and claim provenance", "CTA and required real data", "findability risks and validation plan"], "resources": ["information-architecture/SKILL.md", "journey-driven-content-and-layout/SKILL.md", "content-design-and-question-design/SKILL.md"]}
+      ]
+    },
+    "design": {
+      "decision": "Which composition and interaction serves each page job, and how will it be tested?",
+      "exit_checks": ["Decisions link to current evidence", "Materially different directions compared with real content", "Desktop/mobile and critical states specified", "Contract checked; human approval applies to this version only"],
+      "deliverables": [
+        {"id": "design.directions", "output": "direction comparison and rationale", "fields": ["distinct composition hypotheses, not palette swaps", "real headings, proof objects, imagery and density", "comprehension/brand tradeoffs", "questions, capture-bound observations and chosen rationale", "no human preference claim without actual observers"], "resources": ["visual-design-direction/SKILL.md", "design-critique-and-rationale/SKILL.md", "brand-distinctiveness-and-visual-signature/SKILL.md"]},
+        {"id": "design.layout", "output": "wireframes and responsive rules", "fields": ["section purpose and content priority", "desktop, narrow mobile and intermediate transformations", "long/empty/localized content, zoom and reading order", "navigation, CTA and recovery paths", "brand signatures without one hero repeated on every page"], "resources": ["responsive-and-device-strategy/SKILL.md", "information-architecture/SKILL.md"]},
+        {"id": "design.system", "output": "tokens and component/state specification", "fields": ["type, spacing, color roles, contrast and density", "licensed imagery/icon direction and crop behavior", "existing renderer/tokens before new variants", "hover/focus/active/loading/disabled/error/empty/success", "reduced motion, keyboard behavior and semantic names"], "resources": ["design-system-and-components/SKILL.md", "accessibility/SKILL.md", "motion-and-microinteractions/SKILL.md"]},
+        {"id": "design.prototype", "output": "critical-journey prototype and validation plan", "fields": ["task entry, action, result and recovery", "real/static/mock/simulated boundaries", "validation, permission, offline/interruption states when relevant", "risky assumptions and test tasks", "PLANNED_VALIDATION or actual session records"], "resources": ["prototype-strategy-and-concept-testing/SKILL.md", "interaction-patterns-and-form-ux/SKILL.md"]},
+        {"id": "design.contract", "output": "canonical docs/uiux/design-decisions.json", "fields": ["goals, evidence links, page roles and compositions", "visual signatures and do/do-not rules", "component/token and responsive decisions", "source/capture hashes and current checker receipt", "version-specific approval and remaining uncertainty"], "resources": ["visual-design-direction/SKILL.md", "system-reality-and-production-readiness/SKILL.md"]}
+      ]
+    },
+    "implementation": {
+      "decision": "How does the approved design become maintainable, truthful behavior without breaking the product?",
+      "exit_checks": ["Compiled spec and design are current", "Authority and preservation respected", "Critical paths work; real/mock behavior disclosed", "Local checks and unresolved QA gaps recorded"],
+      "deliverables": [
+        {"id": "implementation.plan", "output": "bounded implementation plan", "fields": ["renderer/components/tokens to reuse", "files and owners", "acceptance by route/state", "dependencies and rollback", "no unrelated architecture replacement"], "resources": ["frontend-architecture-and-refactoring/SKILL.md", "testing-strategy/SKILL.md"]},
+        {"id": "implementation.product", "output": "working responsive implementation", "fields": ["content and Design Contract mapping", "semantic HTML and keyboard controls", "states and error recovery", "form/API/auth/CMS reality status", "secrets, permissions, validation and privacy when relevant"], "resources": ["frontend-implementation/SKILL.md", "system-reality-and-production-readiness/SKILL.md", "security-and-privacy/SKILL.md"]},
+        {"id": "implementation.checks", "output": "build and regression evidence", "fields": ["type/lint/build/tests: commands and actual results", "content/claim and asset-license checks", "SEO metadata and crawlability when applicable", "performance budget and measurement environment", "deviations with rationale; no self-certified quality"], "resources": ["web-quality-and-performance/SKILL.md", "testing-strategy/SKILL.md", "content-governance-and-cms/SKILL.md"]}
+      ]
+    },
+    "qa": {
+      "decision": "What works on the rendered product, what remains uncertain, and what is safe to hand over?",
+      "exit_checks": ["Current captures cover declared route/viewport/state matrix", "Visual, keyboard and journey observations recorded", "Issues have severity and owner; approvals current", "Handoff separates machine checks, human validation and release authorization"],
+      "deliverables": [
+        {"id": "qa.rendered", "output": "visual review and regression matrix", "fields": ["desktop/mobile/intermediate routes and key states", "hierarchy, typography, spacing, density, crop and content", "comparison to current contract and baseline", "interaction/console/broken links", "captures, hashes, observations and severity; PNG alone does not prove good design"], "resources": ["ui-craft-and-visual-qa/SKILL.md", "visual-regression-and-design-drift/SKILL.md"]},
+        {"id": "qa.accessibility", "output": "accessibility and keyboard findings", "fields": ["automated findings plus manual Tab order, traps and focus", "labels, errors, names/roles, zoom/reflow, reduced motion", "contrast and applicable WCAG criteria", "assistive technology sample and limitations", "rendered focus smoke is not WCAG conformance"], "resources": ["accessibility/SKILL.md", "assistive-technology-testing/SKILL.md", "accessibility-conformance-evaluation/SKILL.md"]},
+        {"id": "qa.validation", "output": "critical-journey and user-validation report", "fields": ["tasks, recovery and boundary states", "desk/synthetic/browser/direct-user evidence separated", "actual sessions only when available", "human validation UNKNOWN without participants", "unresolved hypotheses and next research"], "resources": ["moderated-usability-testing/SKILL.md", "research-evidence-pipeline/SKILL.md"]},
+        {"id": "qa.handoff", "output": "delivery manifest and known issues", "fields": ["version, preview/run instructions, artifact inventory", "component/token/content ownership", "test matrix PASS/FAIL/NOT_RUN/UNKNOWN", "issue severity, owner and acceptance decision", "machine, agent and human checks separated"], "resources": ["code-review-and-release/SKILL.md", "design-system-governance-and-adoption/SKILL.md"]},
+        {"id": "qa.release_learning", "output": "release/measurement plan or explicit future-phase boundary", "fields": ["prototype: no production claim; next owner and verification plan", "production candidate: approvals, deploy/rollback, security and monitoring", "existing release authority/gates still required", "metric event/data source and privacy/consent", "review cadence, real baseline and experiment decision rule"], "resources": ["production-monitoring-and-maintenance/SKILL.md", "outcome-metrics-and-instrumentation/SKILL.md", "analytics-and-experimentation/SKILL.md"]}
+      ]
+    }
+  },
+  "sources": [
+    {"url": "https://www.designcouncil.org.uk/resources/the-double-diamond/", "use": "Explore and define the problem before converging; iterate when evidence changes."},
+    {"url": "https://www.gov.uk/service-manual/user-research/plan-user-research-for-your-service", "use": "Research questions and methods follow decisions and learning needs."},
+    {"url": "https://www.gov.uk/service-manual/service-standard", "use": "Whole-service responsibility, accessible delivery and measured outcomes."},
+    {"url": "https://www.w3.org/WAI/test-evaluate/", "use": "Scoped accessibility evaluation including human review."},
+    {"url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html", "use": "Keyboard users need visible focus; static CSS is insufficient proof."},
+    {"url": "https://web.dev/articles/vitals", "use": "Separate field metrics from local lab observations."},
+    {"url": "https://developers.google.com/search/docs/essentials", "use": "Helpful content, crawlability and technical search requirements."},
+    {"url": "https://owasp.org/projects/asvs", "use": "Risk-based security verification; a visual prototype does not prove security."}
+  ],
+  "sources_reviewed_on": "2026-10-13"
+}

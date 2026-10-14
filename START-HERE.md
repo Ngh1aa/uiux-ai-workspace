@@ -66,6 +66,8 @@ START-HERE.md
 
 Do not preload old A-series design notes, every skill, every flow, or every runtime document. They are historical/implementation context unless the active task specifically needs them.
 
+For website delivery, use the active stage's `delivery_workflow` card in the packet. It names decisions, minimum useful outputs and relevant resource links. The [professional practice guide](skills_UIUX/website-delivery-pipeline/references/professional-practice.md) explains research through handoff without treating document coverage as proof of design quality. No separate LLM API is required when the external collaborator is the agent already working with you.
+
 Machine-readable loading profiles live in `skills_UIUX/runtime/context-routing.json`.
 
 For active visual-design work, the stage packet now includes `design_workflow`: use structured project identity + one page-role lookup, then record adopted numeric/media/composition decisions and run its canonical integrity checker. A SKILL.md name in the packet is not proof the resource was retrieved or applied. The decision owner is `skills_UIUX/visual-design-direction/SKILL.md`; load its resources only for the current decision. Technical/contract PASS never proves aesthetic quality.
