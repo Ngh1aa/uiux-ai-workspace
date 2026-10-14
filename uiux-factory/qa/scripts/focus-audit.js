@@ -10,9 +10,10 @@
   )).filter(el => el.tabIndex >= 0 && !el.disabled && !el.closest('[inert]') && visible(el));
   const transparent = value => value === 'transparent' || /(?:,|\/)\s*0(?:\.0+)?\s*\)$/.test(value);
   const outlineSignature = s => [s.outlineStyle, s.outlineWidth, s.outlineColor, s.outlineOffset].join('|');
-  const visibleShadow = value => value.replace(/\([^)]*\)/g, '').split(',').some(layer => {
-    const lengths = (layer.match(/-?[\d.]+px/g) || []).map(parseFloat);
-    return lengths.length === 4 && lengths.some(length => length !== 0);
+  const visibleShadow = value => value.split(/,(?![^()]*\))/).some(layer => {
+    const color = layer.match(/(?:rgba?|color|oklch|oklab|lab|lch)\([^)]*\)/)?.[0] || '';
+    const lengths = (layer.replace(/\([^)]*\)/g, '').match(/-?[\d.]+px/g) || []).map(parseFloat);
+    return color !== '' && !transparent(color) && lengths.length === 4 && lengths.some(length => length !== 0);
   });
   const checked = [];
   const settleFocus = async el => {
@@ -51,7 +52,7 @@
       && parseFloat(style.outlineWidth) > 0 && !transparent(style.outlineColor)
       && outlineSignature(style) !== beforeOutline;
     const shadow = style.boxShadow !== 'none' && style.boxShadow !== beforeShadow
-      && !transparent(style.boxShadow) && visibleShadow(style.boxShadow);
+      && visibleShadow(style.boxShadow);
     const otherChanged = beforeOther !== [style.borderColor, style.backgroundColor, style.color, style.textDecoration].join('|');
     // Borders/backgrounds/caret/custom indicators need inspection, not automatic rejection or PASS.
     const status = !settled ? 'NEEDS_REVIEW' : !focused || hidden ? 'FAIL' : hitTestUnavailable ? 'NEEDS_REVIEW' : outline || shadow ? 'PASS'
