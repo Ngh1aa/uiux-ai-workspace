@@ -11,6 +11,10 @@ from core.runtime.flow_os.specialist_taxonomy import assess_domain_ambiguity, co
 TASK_CONTRACT_VERSION = "1.0"
 DEFAULT_DELIVERY_POLICY_ID = "adaptive-prompt-os-v4"
 DEFAULT_FACTORY_DELIVERY_LANE = "full_prompt_os"
+PLATFORM_FAMILIES = ("web", "mobile_app")
+TARGET_PLATFORMS = ("ios", "android")
+IMPLEMENTATION_STACKS = ("expo", "react-native", "swiftui", "jetpack-compose", "flutter", "unknown")
+REQUESTED_OUTPUTS = ("design", "browser-prototype", "application")
 AUTHORITY_LEVELS = ("read_only", "branch_write", "external_write", "release")
 NON_MUTATING_INTENTS = frozenset({"audit", "review", "research", "validate", "qa"})
 URL_PATTERN = re.compile(r"https?://[^\s,;)\]}>]+", re.IGNORECASE)
@@ -129,6 +133,10 @@ class GoalInterpretation:
     delivery_policy: str = DEFAULT_DELIVERY_POLICY_ID
     delivery_lane: str = DEFAULT_FACTORY_DELIVERY_LANE
     task_contract_version: str = TASK_CONTRACT_VERSION
+    platform_family: str = "web"
+    target_platforms: list[str] = field(default_factory=list)
+    implementation_stack: str = "unknown"
+    requested_output: str = "application"
 
     def to_context(self) -> dict[str, object]:
         payload = asdict(self)
@@ -147,6 +155,10 @@ class GoalInterpretation:
             "forbidden": payload["forbidden"],
             "references": payload["references"],
             "authority": payload["authority"],
+            "platform_family": payload["platform_family"],
+            "target_platforms": payload["target_platforms"],
+            "implementation_stack": payload["implementation_stack"],
+            "requested_output": payload["requested_output"],
             "task_contract_version": payload["task_contract_version"],
             "delivery": {
                 "policy": payload["delivery_policy"],
@@ -171,6 +183,69 @@ GoalProfile = GoalInterpretation
 
 class GoalInterpreter:
     """Single canonical compiler for intent, scope, lifecycle and change surface."""
+
+    @staticmethod
+    def _platform_context(text: str) -> dict[str, object]:
+        # Responsive websites and reference URLs are not native app requests.
+        active = URL_PATTERN.sub(" ", requested_text(text))
+        for pattern in GoalInterpreter.REFERENCE_PATTERNS:
+            active = re.sub(pattern, " ", active, flags=re.IGNORECASE)
+        native = _contains_token(active, (
+            "mobile app", "mobile application", "native app", "native application",
+            "ios app", "android app", "app mobile", "app di động",
+            "app điện thoại", "ứng dụng điện thoại", "ứng dụng di động", "ứng dụng ios", "ứng dụng android",
+            "app ios", "app android", "swiftui", "jetpack compose", "react native",
+            "flutter app", "expo app",
+        ))
+        platforms = [name for name in TARGET_PLATFORMS if _contains_token(active, (name,))]
+        stack = next((name for name, terms in (
+            ("expo", ("expo",)), ("react-native", ("react native",)),
+            ("swiftui", ("swiftui",)), ("jetpack-compose", ("jetpack compose",)),
+            ("flutter", ("flutter",)),
+        ) if _contains_token(active, terms)), "unknown")
+        if not platforms and stack in {"swiftui", "jetpack-compose"}:
+            platforms = ["ios" if stack == "swiftui" else "android"]
+        design = _contains_token(active, (
+            "design", "redesign", "thiết kế", "ui ux", "ui/ux", "ux", "figma",
+            "ui", "giao diện", "wireframe", "prototype", "mockup", "handoff",
+        ))
+        code = _contains_token(active, (
+            "implement", "implementation", "build", "develop", "code", "coding",
+            "viết code", "lập trình", "triển khai", "xây dựng",
+        ))
+        design_only = _contains_token(active, ("design only", "design-only", "chỉ thiết kế", "chỉ giao diện"))
+        output = "design" if design_only or design and not code else "application"
+        explicit_web = _contains_token(active, ("website", "web app", "webpage", "web page", "trang web"))
+        native = native or design and bool(platforms) and not explicit_web
+        if not native:
+            return {"requested_output": output}
+        browser_preview = _contains_token(active, (
+            "browser prototype", "browser-prototype", "web prototype", "web preview",
+            "browser preview", "mobile-web-preview", "interactive browser prototype",
+            "prototype trên trình duyệt", "prototype chạy trên trình duyệt",
+            "prototype trên browser", "prototype chạy trên browser", "prototype trên web",
+            "prototype tương tác trên web", "demo trên trình duyệt",
+        )) or design and (
+            _contains_token(active, ("github pages",))
+            or not _contains_token(active, ("figma",))
+            and _contains_token(active, ("link demo", "demo link"))
+        )
+        native_delivery = _contains_token(active, (
+            "native implementation", "implement native", "implement a native",
+            "implement mobile app", "implement a mobile app", "implement a mobile application",
+            "develop a mobile app", "implement an expo", "implement a react native", "implement a flutter",
+            "implement swiftui", "implement a swiftui", "implement jetpack compose",
+            "implement a jetpack compose", "build native", "build a native",
+            "native build", "build apk", "build ipa", "generate apk", "testflight",
+            "lập trình app native", "triển khai app native",
+        ))
+        if browser_preview and not native_delivery and not design_only:
+            output = "browser-prototype"
+        return {
+            "platform_family": "mobile_app", "target_platforms": platforms,
+            "implementation_stack": stack,
+            "requested_output": output,
+        }
 
     WEBSITE_TYPES = (
         ("ecommerce", ("ecommerce", "e-commerce", "online store", "shop", "store", "bán hàng", "giỏ hàng", "checkout", "sản phẩm")),
@@ -395,6 +470,7 @@ class GoalInterpreter:
     ) -> GoalInterpretation:
         original = re.sub(r"[^\S\n]+", " ", goal.strip().lower())
         normalized = re.sub(r"\s+", " ", requested_text(original))
+        platform_context = self._platform_context(original)
         evidence: list[str] = []
 
         intent = self._intent(original)
@@ -571,4 +647,5 @@ class GoalInterpreter:
             routing_status=routing_status,
             candidate_domains=candidate_domains,
             resolution_source=resolution_source,
+            **platform_context,
         )

@@ -9,6 +9,7 @@ from typing import Any
 from core.runtime.flow_os.safe_read import SafeReader
 
 CATALOG = 'website-delivery-pipeline/data/lifecycle.json'
+MOBILE_CATALOG = 'mobile-app-design/data/lifecycle.json'
 CHECKER = 'skills_UIUX/website-delivery-pipeline/scripts/check-delivery.py'
 
 
@@ -19,17 +20,20 @@ def _digest(value: Any) -> str:
 def delivery_packet(skills_root: Path, stage: str, context: dict[str, Any]) -> dict[str, Any]:
     if context.get('change_surface') in {'MICRO', 'FOCUSED'}:
         return {'active': False, 'stage': stage, 'reason': 'Bounded change: use the resolved Flow and existing project artifacts, not a whole-site deliverable set.'}
-    catalog = json.loads(SafeReader(skills_root).read_text(CATALOG).content)
+    catalog_path = MOBILE_CATALOG if context.get('platform_family') == 'mobile_app' else CATALOG
+    catalog = json.loads(SafeReader(skills_root).read_text(catalog_path).content)
     if catalog.get('schema_version') != '1.0':
         raise ValueError('unsupported website lifecycle catalog')
     card = catalog['stages'].get(stage)
+    if context.get('platform_family') == 'mobile_app' and context.get('requested_output') == 'browser-prototype':
+        card = catalog.get('browser_preview_stages', {}).get(stage, card)
     if card is None:
         return {'active': False, 'stage': stage, 'reason': 'No lifecycle card for this Flow stage; use its routed skills.'}
     baseline = ('Existing project: inspect source and rendered UI; preserve explicit invariants and uncommitted work.'
                 if context.get('intent') in {'redesign', 'rebuild', 'improve', 'fix', 'polish'}
                 else 'Confirm whether a baseline exists; build does not imply greenfield. Record absent content/brand/data as UNKNOWN.')
     return {'active': True, 'stage': stage, 'owner': catalog['owner'],
-            'source': 'skills_UIUX/' + CATALOG, 'catalog_sha256': _digest(catalog),
+            'source': 'skills_UIUX/' + catalog_path, 'catalog_sha256': _digest(catalog),
             'baseline_rule': baseline, 'mode': context.get('mode', 'unresolved'), **card,
             'checker': CHECKER, 'human_validation': 'UNKNOWN', 'aesthetic_quality': 'UNKNOWN',
             'gate_effect': 'none', 'authority_effect': 'none',

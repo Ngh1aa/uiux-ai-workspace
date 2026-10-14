@@ -6,7 +6,9 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from core.runtime.flow_os.task_context import GoalInterpreter
+from core.runtime.flow_os.task_context import (
+    GoalInterpreter, IMPLEMENTATION_STACKS, PLATFORM_FAMILIES, REQUESTED_OUTPUTS, TARGET_PLATFORMS,
+)
 
 
 ROUTING_FIELDS = (
@@ -17,11 +19,14 @@ ROUTING_FIELDS = (
     "mode",
     "risk",
     "features",
+    "platform_family",
+    "target_platforms",
+    "implementation_stack",
 )
 
 ROUTING_PRECEDENCE = ("explicit_override", "target_project_truth", "goal_inference")
-ROUTING_OVERRIDE_FIELDS = frozenset((*ROUTING_FIELDS, "intent", "change_surface"))
-_STABLE_TRUTH_FIELDS = {"website_type", "domain", "product_archetype"}
+ROUTING_OVERRIDE_FIELDS = frozenset((*ROUTING_FIELDS, "intent", "change_surface", "requested_output"))
+_STABLE_TRUTH_FIELDS = {"website_type", "domain", "product_archetype", "platform_family", "target_platforms", "implementation_stack"}
 _LIFECYCLE_DEFAULTS = {
     "mode": "interactive-prototype",
     "risk": "standard",
@@ -211,6 +216,14 @@ def _canonical_features(value: object) -> list[str]:
 
 
 def _normalize_field(field_name: str, value: object, *, raw_doc: dict[str, Any] | None = None) -> object | None:
+    if field_name == "platform_family":
+        return value if value in PLATFORM_FAMILIES else None
+    if field_name == "implementation_stack":
+        return value if value in IMPLEMENTATION_STACKS else None
+    if field_name == "target_platforms":
+        if isinstance(value, list) and value and all(item in TARGET_PLATFORMS for item in value):
+            return list(dict.fromkeys(value))
+        return None
     if field_name == "website_type":
         return _canonical_website_type(value)
     if field_name == "domain":
@@ -410,6 +423,9 @@ class TargetTruthProbe:
             "mode": ("mode",),
             "risk": ("risk",),
             "features": ("features",),
+            "platform_family": ("platform_family",),
+            "target_platforms": ("target_platforms",),
+            "implementation_stack": ("implementation_stack",),
         }
         for field_name, keys in aliases.items():
             raw = next((payload[key] for key in keys if key in payload and not _is_unknown(payload[key])), None)
@@ -496,6 +512,21 @@ class TargetTruthProbe:
                 diagnostics.append("ignored_malformed_fallback:package.json")
             else:
                 if isinstance(package, dict):
+                    dependencies = {}
+                    for key in ("dependencies", "devDependencies"):
+                        if isinstance(package.get(key), dict):
+                            dependencies.update(package[key])
+                    native_dependency = dependencies.get("react-native")
+                    if isinstance(native_dependency, str) and native_dependency.strip() and "platform_family" not in fields:
+                        for key, value in {
+                            "platform_family": "mobile_app",
+                            "implementation_stack": "expo" if isinstance(dependencies.get("expo"), str) and dependencies["expo"].strip() else "react-native",
+                        }.items():
+                            if key not in fields:
+                                fields[key] = value
+                                provenance[key] = {"source": "package.json", "raw": "dependency_markers",
+                                                   "normalized": value, "confidence": "fallback_inference",
+                                                   "authority_effect": "none", "evidence_effect": "none", "release_effect": "none"}
                     fragments.extend(
                         _compact(package.get(key))
                         for key in ("name", "description", "keywords")
@@ -603,7 +634,11 @@ def _apply_target_truth(
                 if fallback_domain not in {None, "", "generic"} and final_domain != fallback_domain:
                     merge_diagnostics.append("fallback_not_applied:product_archetype:domain_mismatch")
                     continue
-            if context.get(field_name) not in {None, "", "generic"}:
+            current = context.get(field_name)
+            unknown = current is None or current == "" or current == "generic" or current == "unknown" or current == []
+            if field_name == "platform_family":
+                unknown = current in {None, "", "web"}
+            if not unknown:
                 merge_diagnostics.append(f"fallback_not_applied:{field_name}:goal_inference_is_specific")
                 continue
             context[field_name] = value
@@ -699,10 +734,12 @@ def build_truth_aware_context(
 
     context = GoalInterpreter().interpret(goal).to_context()
     initial_context = {
-        field_name: list(context[field_name]) if field_name == "features" else context.get(field_name)
+        field_name: list(context[field_name]) if field_name in {"features", "target_platforms"} else context.get(field_name)
         for field_name in ROUTING_FIELDS
     }
     field_sources = {field_name: "goal_inference" for field_name in ROUTING_FIELDS}
+    # Requested output belongs to the caller, never to target metadata.
+    field_sources["requested_output"] = "goal_inference"
     merge_diagnostics: list[str] = []
     derived_fields: dict[str, str] = {}
 
@@ -715,9 +752,16 @@ def build_truth_aware_context(
     for key, value in dict(overrides or {}).items():
         if key not in ROUTING_OVERRIDE_FIELDS or value is None or value == "":
             continue
+        if key in {"platform_family", "target_platforms", "implementation_stack"}:
+            normalized = _normalize_field(key, value)
+            if normalized is None:
+                raise ValueError(f"invalid explicit mobile routing field: {key}")
+            value = normalized
+        if key == "requested_output" and value not in REQUESTED_OUTPUTS:
+            raise ValueError(f"requested_output must be one of {REQUESTED_OUTPUTS}")
         context[key] = value
         explicit_fields.add(key)
-        if key in ROUTING_FIELDS:
+        if key in field_sources:
             field_sources[key] = "explicit_override"
 
     if (

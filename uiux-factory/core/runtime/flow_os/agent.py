@@ -447,13 +447,15 @@ class ProviderNeutralAgentHarness:
         selected_skills: list[str] | None = None,
         explicit_sources: list[str] | None = None,
         run_id: str | None = None,
+        platform_family: str = "web",
     ) -> RunState:
         role = self._role(agent)
         order = tuple(self.permissions.order)
         if order.index(authority) > order.index(role["max_authority"]):
             raise ValueError(f"role {agent} caps authority at {role['max_authority']}")
 
-        effective_skills = _unique(list(role.get("default_skills", [])) + list(selected_skills or []))
+        defaults = role.get("default_skills_by_platform", {}).get(platform_family, role.get("default_skills", []))
+        effective_skills = _unique(list(defaults) + list(selected_skills or []))
         effective_run_id = run_id or uuid.uuid4().hex[:16]
         state = RunState(
             run_id=effective_run_id,
@@ -476,6 +478,7 @@ class ProviderNeutralAgentHarness:
                 "branch-write actions require a clean git source checkout and execute in an isolated worktree",
             ],
         )
+        state.context["platform_family"] = platform_family
         self.checkpoints.save(state.run_id, state.to_dict())
         return state
 
@@ -505,7 +508,8 @@ class ProviderNeutralAgentHarness:
                     if order.index(state.authority) > order.index(target_role["max_authority"]):
                         state.authority = target_role["max_authority"]
                     state.active_role = target
-                    target_defaults = list(target_role.get("default_skills", []))
+                    target_defaults = list(target_role.get("default_skills_by_platform", {}).get(
+                        state.context.get("platform_family", "web"), target_role.get("default_skills", [])))
                     loaded_sources = list(state.context.get("loaded_sources", []))
                     runtime_metadata = {
                         key: state.context[key]
@@ -517,6 +521,7 @@ class ProviderNeutralAgentHarness:
                             "stage_id",
                             "stage_gates",
                             "evidence_records",
+                            "platform_family",
                         )
                         if key in state.context
                     }

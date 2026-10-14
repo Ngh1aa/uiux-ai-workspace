@@ -74,6 +74,12 @@ For active visual-design work, the stage packet now includes `design_workflow`: 
 
 New design contracts use v2: retrieve domain/page-role reference anatomy, explain each transfer, compare materially different free typography/density/object axes, and predeclare comprehension/distinctiveness questions. Use the comparison CLI or routed read-only provider tools to prepare labelled reviews and summarize capture-bound observations. Legacy v1 remains inspectable as layout-only evidence and cannot satisfy a v2 gate. Human participation and causal improvement remain UNKNOWN until appropriate evidence exists.
 
+## Mobile app design
+
+Native mobile **design** and read-only app review now use `mobile-app-design` / `mobile-app-audit` through the same Task Contract, target-truth probe and Flow OS. Responsive websites remain web. Pass `--platform-family mobile_app --requested-output design` when goal/source inference is insufficient; `--target-platform ios --target-platform android` declares scope and `--implementation-stack` records the existing stack.
+
+Load [mobile practice](skills_UIUX/mobile-app-design/references/professional-practice.md) only for a mobile task. Platform metadata in `.uiux-profile.json` can route knowledge but cannot grant authority or choose the user's requested output. The shared `delivery_workflow` packet carries the active mobile work card. For an interactive client demo link, use `--requested-output browser-prototype` and [mobile-web-preview](skills_UIUX/mobile-web-preview/SKILL.md). That Flow reuses browser implementation/QA and hands off PREPARED assets or an authorized, independently verified deployment. Native app implementation requests currently fail closed; this capability does not install native runners, claim simulator/device QA or submit to stores.
+
 ## External model-selection preflight
 
 For ChatGPT, Codex, Claude or another consumer UI where the model is selected manually before execution, the Factory exposes an advisory preflight instead of pretending it can switch the consumer model mid-run:

@@ -1,5 +1,9 @@
 # Third-Party Notices
 
+## Mobile knowledge references
+
+`skills_UIUX/mobile-app-design/data/sources.json` records official Apple/Android/W3C/OWASP guidance and immutable GitHub references for Expo, SwiftUI community guidance, samples, design-system and QA tools. This extension contains original curated instructions and links; it does not vendor upstream skills/scripts, UI kits, fonts, app source or dependencies. Registry entries preserve source, checked date, revision and license/exception boundaries. Publisher/license terms must be checked for the exact file/asset before later copying or installing it. Apple Design Resources remain link-only and are not repackaged for Android. These notices do not select a license for the project-owned Factory source.
+
 ## Anthropic Skills
 
 This repository vendors the public `anthropics/skills` repository as a pinned Git submodule at:

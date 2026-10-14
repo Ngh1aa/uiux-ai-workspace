@@ -1,0 +1,13 @@
+{
+  "schema_version": 2,
+  "profile": "mobile-app-design",
+  "project": {"name": "Synthetic mobile appointment prototype", "domain": "generic"},
+  "platform_family": "mobile_app",
+  "target_platforms": ["ios", "android"],
+  "implementation_stack": "unknown",
+  "packs": [],
+  "additional_skills": [],
+  "exclude_skills": [],
+  "source_of_truth": [],
+  "constraints": ["SYNTHETIC configuration example; no real app or participant evidence", "Scope and minimum OS must come from the actual target", "No native implementation or release authorization is supplied by this file"]
+}

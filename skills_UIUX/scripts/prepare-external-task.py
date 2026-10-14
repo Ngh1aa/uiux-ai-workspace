@@ -15,6 +15,7 @@ if str(FACTORY_ROOT) not in sys.path:
 
 from core.runtime.flow_os.external_task import build_external_task_manifest
 from core.runtime.flow_os.agent import configure_cli_utf8
+from core.runtime.flow_os.task_context import IMPLEMENTATION_STACKS, PLATFORM_FAMILIES, REQUESTED_OUTPUTS, TARGET_PLATFORMS
 
 
 def _overrides(args: argparse.Namespace) -> dict[str, object]:
@@ -28,12 +29,17 @@ def _overrides(args: argparse.Namespace) -> dict[str, object]:
         "validation_lane",
         "mode",
         "risk",
+        "platform_family",
+        "implementation_stack",
+        "requested_output",
     ):
         value = getattr(args, key)
         if value not in {None, ""}:
             values[key] = value
     if args.feature:
         values["features"] = list(args.feature)
+    if args.target_platform:
+        values["target_platforms"] = list(args.target_platform)
     return values
 
 
@@ -65,6 +71,10 @@ def main() -> int:
     parser.add_argument("--validation-lane", dest="validation_lane", choices=["prototype", "evidence-led", "production-learning"])
     parser.add_argument("--mode", choices=["visual-prototype", "interactive-prototype", "production-candidate", "production"])
     parser.add_argument("--risk")
+    parser.add_argument("--platform-family", choices=PLATFORM_FAMILIES)
+    parser.add_argument("--target-platform", choices=TARGET_PLATFORMS, action="append", default=[])
+    parser.add_argument("--implementation-stack", choices=IMPLEMENTATION_STACKS)
+    parser.add_argument("--requested-output", choices=REQUESTED_OUTPUTS)
     parser.add_argument("--feature", action="append", default=[], help="Explicit feature override; repeat as needed")
     parser.add_argument("--acceptance", action="append", default=[], help="Additional acceptance criterion; repeat as needed")
     parser.add_argument("--qa-route", action="append", default=[], help="Target route expected in rendered QA; repeat as needed")
