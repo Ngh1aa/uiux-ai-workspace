@@ -336,8 +336,9 @@ def check_design_decisions(payload: dict, *, phase: str = "design", project_root
                 raw = path.read_bytes()
                 if sha256(raw).hexdigest() != capture.sha256:
                     raise ValueError("capture digest mismatch")
-                if raw[:8] != b'\x89PNG\r\n\x1a\n' or raw[12:16] != b'IHDR' or len(raw) < 33:
-                    raise ValueError("capture must be a PNG with dimensions")
+                from core.runtime.flow_os.evidence import _valid_png
+                if not _valid_png(raw):
+                    raise ValueError("capture must be a structurally valid PNG with encoded pixels")
                 width, height = struct.unpack('>II', raw[16:24])
                 if width != capture.width or height < capture.viewport_height:
                     raise ValueError("capture dimensions disagree with viewport")
@@ -399,4 +400,41 @@ def check_design_file(project_root: Path, relative_path: str, phase: str = "desi
     result = check_design_decisions(json.loads(loaded.content), phase=phase, project_root=root)
     result["contract_sha256"] = sha256(loaded.content.encode('utf-8')).hexdigest()
     result["path"] = relative_path
+    result["project_root"] = str(root)
+    result["artifact_path"] = str(loaded.path)
+    result["artifact_sha256"] = "sha256:" + sha256(loaded.path.read_bytes()).hexdigest()
+    result["dependency_hashes"] = {}
+    if result['status'] == 'PASS' and phase == 'rendered':
+        contract = DesignDecisions.model_validate_json(loaded.content)
+        dependencies = {capture.file for capture in contract.captures}
+        for page in contract.pages:
+            if page.comparison_record:
+                dependencies.update((page.comparison_record.plan, page.comparison_record.observations))
+        for dependency in sorted(dependencies):
+            path, _ = SafeReader(root).resolve_file(dependency)
+            result['dependency_hashes'][dependency] = sha256(path.read_bytes()).hexdigest()
     return result
+
+
+def design_receipt_errors(data: dict, workspace_root: Path | None = None) -> list[str]:
+    """Revalidate current contract and its full dependency closure at acceptance.
+
+    Receipts come from trusted runtime adapters, not a hostile-writer signature.
+    Legacy in-memory checks remain useful for authoring but cannot complete work.
+    """
+    try:
+        root = Path(data.get('project_root', ''))
+        path = Path(data.get('artifact_path', ''))
+        if not root.is_absolute() or not path.is_absolute():
+            raise ValueError('design receipt requires bound project_root and artifact_path; rerun checker')
+        if workspace_root is not None:
+            root.resolve().relative_to(Path(workspace_root).resolve())
+        current = check_design_file(root, str(path), data.get('phase', ''))
+        if current['status'] != 'PASS':
+            raise ValueError('current design check failed: ' + '; '.join(current['errors']))
+        for key in ('artifact_sha256', 'contract_sha256', 'contract_version', 'dependency_hashes'):
+            if key not in data or data[key] != current[key]:
+                raise ValueError(f'stale design receipt: {key} changed or missing; rerun checker')
+    except (OSError, ValueError, TypeError, KeyError) as error:
+        return [f'design evidence invalid: {error}']
+    return []

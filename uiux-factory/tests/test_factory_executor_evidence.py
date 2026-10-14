@@ -137,14 +137,15 @@ def test_driver_typed_evidence_negative_matrix(tmp_path, rendered, case):
         validate_runner_evidence(request, RunnerResult('2.0', 'passed', [], evidence_records=records))
 
 
-@pytest.mark.parametrize('case', ['valid', 'missing_hash', 'stale', 'missing_image', 'wrong_route', 'wrong_viewport', 'empty'])
+@pytest.mark.parametrize('case', ['valid', 'missing_hash', 'stale', 'missing_image', 'wrong_route', 'wrong_viewport', 'empty', 'focus_stale', 'focus_missing'])
 def test_native_render_matrix_checks_actual_png_bytes(tmp_path, case):
     from core.runtime.flow_os.evidence import native_browser_evidence_errors
     image = tmp_path / 'native.png'
     image.write_bytes(_png())
     report = {'base_url': 'http://localhost:4173', 'routes': ['/'], 'viewports': [{'width': 320, 'height': 240}],
               'evidence': [{'route': '/', 'viewport': {'width': 320, 'height': 240}, 'screenshot': str(image),
-                            'screenshot_sha256': hashlib.sha256(image.read_bytes()).hexdigest(), 'status': 'passed'}]}
+                            'screenshot_sha256': hashlib.sha256(image.read_bytes()).hexdigest(), 'status': 'passed',
+                            'keyboard_focus': {'status':'PASS','total':0,'checked':[]}}]}
     if case == 'missing_hash':
         report['evidence'][0].pop('screenshot_sha256')
     elif case == 'stale':
@@ -157,6 +158,12 @@ def test_native_render_matrix_checks_actual_png_bytes(tmp_path, case):
         report['evidence'][0]['viewport']['width'] = 1000
     elif case == 'empty':
         image.write_bytes(b'')
+    elif case.startswith('focus_'):
+        focus = tmp_path / 'focus.png'
+        focus.write_bytes(_png(width=320, height=240))
+        report['evidence'][0]['keyboard_focus'].update(screenshot=str(focus), screenshot_sha256='0' * 64)
+        if case == 'focus_missing':
+            focus.unlink()
     errors = native_browser_evidence_errors(report, tmp_path)
     assert bool(errors) == (case != 'valid')
 

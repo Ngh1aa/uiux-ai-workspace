@@ -207,6 +207,8 @@ for (const route of routes) {
         };
       }));
       const safeRoute = route.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'root';
+      await page.keyboard.press('Tab');
+      const keyboardFocus = await page.evaluate(fs.readFileSync(new URL('../scripts/focus-audit.js', import.meta.url), 'utf8'));
       const viewportSuffix = requestedViewport ? `-${requestedViewport.name}` : '';
       const evidenceStem = `${safeRoute}${viewportSuffix}`;
       const screenshotName = `${evidenceStem}-render.png`;
@@ -224,6 +226,7 @@ for (const route of routes) {
         computedStyle,
         elements,
         screenshot: screenshotName,
+        keyboardFocus,
         consoleMessages,
         pageErrors,
         blockedRequests,
@@ -237,6 +240,7 @@ for (const route of routes) {
 
       expect(box).not.toBeNull();
       expect(pageErrors).toEqual([]);
+      expect(keyboardFocus.status, JSON.stringify(keyboardFocus)).toBe('PASS');
       expect(consoleMessages.filter(item => item.type === 'error')).toEqual([]);
     });
   }

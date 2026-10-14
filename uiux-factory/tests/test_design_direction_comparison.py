@@ -126,13 +126,15 @@ def test_v2_missing_transfer_or_evaluation_cannot_pass(field):
     assert check_design_decisions(payload)['status']=='FAIL'
 
 
-def test_new_gate_rejects_legacy_receipt_but_manual_v1_stays_readable():
+def test_new_gate_rejects_legacy_receipt_but_manual_v1_stays_readable(tmp_path):
     old=check_design_decisions(contract_fixture())
     assert old['status']=='PASS' and old['direction_comparison']=='LEGACY_LAYOUT_ONLY'
     gate=[{'id':'v2','evidence_types':['design_contract_check'],'design_phase':'design','design_contract_version':'2.0'}]
     record=evidence_from_tool('design','check_design_decisions',old).to_dict()
     assert gate_evidence_errors(gate,'design',[record],'implementation')
-    record=evidence_from_tool('design','check_design_decisions',check_design_decisions(v2_fixture())).to_dict()
+    from core.skills.design_decisions import check_design_file
+    (tmp_path/'contract.json').write_text(json.dumps(v2_fixture()), encoding='utf-8')
+    record=evidence_from_tool('design','check_design_decisions',check_design_file(tmp_path,'contract.json')).to_dict()
     assert gate_evidence_errors(gate,'design',[record],'implementation')==[]
 
 

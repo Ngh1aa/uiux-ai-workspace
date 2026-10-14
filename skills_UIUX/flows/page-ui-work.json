@@ -75,6 +75,7 @@
       "gates": [
         {"id": "page-rendered-check", "require": "target page is inspected at representative desktop/mobile widths and affected shared components show no material regression"},
         {"id": "design-render-integrity", "require": "decision contract references inspected desktop/mobile alternatives with actual capture digests and critique; preference remains unvalidated", "evidence_types": ["design_contract_check"], "design_phase": "rendered", "design_contract_version": "2.0"},
+        {"id": "keyboard-focus", "require": "Current rendered controls have verified focus indicators; source CSS lint is insufficient.", "evidence_types": ["browser_render"]},
         {"id": "truthful-completion", "require": "verified versus unverified areas are explicit; no production/accessibility/UX improvement claim exceeds evidence"},
         {"id": "human-release-governance", "approval": "human", "require": "an authorized human decision owner reviews unresolved risk, user evidence, outcome readiness and rollback/learning plan before production release when project policy requires it", "when": {"validation_lane": "production-learning"}},
         {"id": "live-learning-ready", "require": "post-launch signals, critical experiences, research/feedback sources, review cadence and experiment/rollout/rollback criteria are explicit", "when": {"validation_lane": "production-learning"}}

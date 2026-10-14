@@ -58,6 +58,8 @@ def render_fixture(root, tag, stage='qa'):
                    'viewport': {'width': 320, 'height': 240}, 'screenshot': image.name,
                    'box': {'x': 0, 'y': 0, 'width': 320, 'height': 240},
                    'pageErrors': [], 'consoleMessages': [], 'blockedRequests': [], 'failedRequests': []}
+    # Explicit synthetic blank page: no interactive controls to inspect.
+    observation['keyboardFocus'] = {'status':'PASS','total':0,'checked':[]}
     (artifacts / 'browser-evidence-capture.json').write_text(json.dumps(observation), encoding='utf-8')
     record = PlaywrightBrowserEvidenceAdapter(root, {}).collect(artifacts)[0].to_dict()
     record['stage_id'] = stage

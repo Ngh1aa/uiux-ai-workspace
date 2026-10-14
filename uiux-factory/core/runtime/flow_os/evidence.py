@@ -254,13 +254,14 @@ def effective_stage_evidence(records: list[dict[str, Any]], stage_id: str) -> li
 
 
 def _valid_png(raw: bytes) -> bool:
-    """Check encoded PNG structure and CRCs without optional image dependencies."""
+    """Check PNG structure, CRCs, decoded size and row filters without optional dependencies."""
     if not raw.startswith(b"\x89PNG\r\n\x1a\n"):
         return False
     offset = 8
     kinds: list[bytes] = []
     compressed = bytearray()
     expected_bytes = 0
+    row_sizes = []
     while offset + 12 <= len(raw):
         size = struct.unpack(">I", raw[offset:offset + 4])[0]
         end = offset + size + 12
@@ -288,7 +289,9 @@ def _valid_png(raw: bytes) -> bool:
                 columns = max(0, (width - x + dx - 1) // dx)
                 rows = max(0, (height - y + dy - 1) // dy)
                 if columns and rows:
-                    expected_bytes += (1 + (columns * channels * depth + 7) // 8) * rows
+                    row_size = 1 + (columns * channels * depth + 7) // 8
+                    row_sizes.append((row_size, rows))
+                    expected_bytes += row_size * rows
         kinds.append(kind)
         if kind == b"IDAT":
             compressed.extend(payload)
@@ -299,11 +302,19 @@ def _valid_png(raw: bytes) -> bool:
             decoder = zlib.decompressobj()
             remaining = bytes(compressed)
             decoded_bytes = 0
+            lengths = (size for size, rows in row_sizes for _ in range(rows))
+            next_filter = 0
             try:
                 while remaining:
-                    decoded_bytes += len(decoder.decompress(remaining, 1024 * 1024))
-                    if decoded_bytes > expected_bytes:
+                    block = decoder.decompress(remaining, 1024 * 1024)
+                    end_bytes = decoded_bytes + len(block)
+                    if end_bytes > expected_bytes:
                         return False
+                    while next_filter < end_bytes:
+                        if block[next_filter - decoded_bytes] > 4:
+                            return False
+                        next_filter += next(lengths)
+                    decoded_bytes = end_bytes
                     remaining = decoder.unconsumed_tail
             except zlib.error:
                 return False
@@ -363,12 +374,30 @@ def browser_render_errors(record: EvidenceRecord) -> list[str]:
             payload.get(key) != data.get(key) for key in ("route", "url", "viewport", "screenshot")
         ):
             return ["browser render metadata does not match captured route/viewport/image"]
+        if payload.get('keyboardFocus') != data.get('keyboard_focus'):
+            return ['browser render focus metadata does not match captured observation']
+        if 'keyboardFocus' in payload and keyboard_focus_errors(payload['keyboardFocus']):
+            return keyboard_focus_errors(payload['keyboardFocus'])
         if payload.get("pageErrors") or payload.get("failedRequests") or payload.get("blockedRequests") or any(
             isinstance(item, dict) and item.get("type") == "error" for item in payload.get("consoleMessages", [])
         ):
             return ["browser render observation contains failing browser signals"]
     except (OSError, TypeError, ValueError, RuntimeError) as error:
         return [f"browser render artifact validation failed: {error}"]
+    return []
+
+
+def keyboard_focus_errors(report: Any) -> list[str]:
+    """Bounded rendered smoke; source CSS flags cannot substitute this report."""
+    if not isinstance(report, dict) or report.get('status') != 'PASS':
+        return ['rendered keyboard focus requires a current PASS report; missing/NEEDS_REVIEW is not PASS']
+    count = report.get('total')
+    checks = report.get('checked')
+    if type(count) is not int or not 0 <= count <= 120 or not isinstance(checks, list) or len(checks) != count:
+        return ['rendered keyboard focus coverage is incomplete']
+    if any(not isinstance(item, dict) or item.get('status') != 'PASS'
+           or item.get('focused') is not True or item.get('hidden') is not False for item in checks):
+        return ['rendered keyboard focus contains an unverified or invisible control']
     return []
 
 
@@ -404,6 +433,20 @@ def native_browser_evidence_errors(report: dict[str, Any], artifact_root: Path) 
                 raise ValueError("capture image dimensions do not match viewport")
             if item.get("status") != "passed":
                 raise ValueError("capture has failed browser QA")
+            focus_errors = keyboard_focus_errors(item.get('keyboard_focus'))
+            if focus_errors:
+                raise ValueError('; '.join(focus_errors))
+            focus = item['keyboard_focus']
+            if focus['total'] or 'screenshot' in focus or 'screenshot_sha256' in focus:
+                focus_path = Path(str(focus.get('screenshot', ''))).resolve()
+                if not focus_path.is_relative_to(root) or not focus_path.is_file():
+                    raise ValueError('focus screenshot is missing or outside artifact root')
+                focus_raw = focus_path.read_bytes()
+                if not _valid_png(focus_raw) or focus.get('screenshot_sha256') != hashlib.sha256(focus_raw).hexdigest():
+                    raise ValueError('focus screenshot is invalid or stale')
+                focus_width, focus_height = struct.unpack('>II', focus_raw[16:24])
+                if focus_width != viewport['width'] or focus_height < viewport['height']:
+                    raise ValueError('focus screenshot dimensions do not match viewport')
             seen.add(key)
         except (TypeError, ValueError, OSError) as exc:
             errors.append(str(exc))
@@ -417,6 +460,7 @@ def gate_evidence_errors(
     stage_id: str,
     records: list[dict[str, Any]],
     agent: str = "",
+    workspace_root: Path | None = None,
 ) -> list[str]:
     """Evaluate typed evidence requirements without treating model prose as proof."""
     effective = effective_stage_evidence(records, stage_id)
@@ -430,6 +474,12 @@ def gate_evidence_errors(
             errors.extend(render_errors)
             if not render_errors:
                 available.add("browser_render")
+        elif record.type == 'design_contract_check':
+            from core.skills.design_decisions import design_receipt_errors
+            receipt_errors = design_receipt_errors(record.data, workspace_root)
+            errors.extend(receipt_errors)
+            if receipt_errors:
+                available.discard('design_contract_check')
 
     role_defaults = {
         "research": {"file_read", "search_result", "validator_result", "command_result"},
@@ -445,6 +495,10 @@ def gate_evidence_errors(
         if gate.get("approval") == "human":
             continue
         gate_id = str(gate.get("id", "unnamed"))
+        if gate_id == 'keyboard-focus':
+            renders = [record for record in effective if record.type == 'browser_render']
+            if not renders or any(keyboard_focus_errors(record.data.get('keyboard_focus')) for record in renders):
+                errors.append('gate keyboard-focus requires complete rendered focus evidence, not CSS lint')
         if gate_id in {"rendered-qa", "prototype-experience-qa", "rendered-check", "micro-rendered-check",
                        "page-rendered-check", "rendered-recruiter-path"} and "browser_render" not in available:
             errors.append(f"gate {gate_id} missing typed evidence: browser_render")
