@@ -291,8 +291,10 @@ class FlowResolver:
     def normalize_context(context: dict[str, Any]) -> dict[str, Any]:
         normalized = dict(context)
         authority = normalized.get("effective_authority", normalized.get("authority"))
+        requested_authority = normalized.get("requested_authority", normalized.get("authority"))
         if (
             authority == "read_only"
+            and requested_authority == "read_only"
             and normalized.get("intent") not in NON_MUTATING_INTENTS
         ):
             normalized["intent"] = "audit"

@@ -12,6 +12,8 @@ For a static preview, relative asset paths and query/hash state links normally w
 
 The [Pages workflow asset](../assets/github-pages.yml) assumes authorized deployment from the target's `main` and static files in `preview/`. Copy it into that target's `.github/workflows/` only when publication is in scope. Adapt the build/output directory to existing project commands; do not enable deployment for the Factory as a side effect. Configure Pages to use GitHub Actions and inspect existing hosting before changing it.
 
+If the target already publishes a website, retain its workflow and include the mobile preview as a subdirectory of the existing static artifact, or use a separately authorized demo repository. Uploading only `preview/` as the entire site would replace that site's published content; do not use the standalone template to overwrite an existing website.
+
 The template runs only on an explicit workflow dispatch, separates build from deployment and scopes `pages: write` / `id-token: write` to deployment. It does not install packages, manufacture QA or collect native evidence. Use the project's existing QA before dispatch. Consult [custom Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) for current hosting requirements. No secrets or backend services belong in a public static bundle.
 
 ## Bind the client handoff to actual evidence

@@ -90,15 +90,22 @@ def test_explicit_preview_output_keeps_target_stack_and_output_provenance(tmp_pa
     assert 'ios-app-design' in result['stages'][1]['skills']
 
 
-def test_read_only_preview_request_stays_on_app_audit_and_cannot_implement():
+def test_read_only_preview_planning_cannot_write_branch_scoped_artifacts(tmp_path):
     result = manifest('Design mobile app browser prototype', authority='read_only')
-    assert result['resolved_flow']['id'] == 'mobile-app-audit'
-    assert all(stage['agent'] != 'implementation' for stage in result['stages'])
-    assert result['evidence_boundary']['mobile_completion_scope'] == 'design_or_read_only_review'
+    assert result['resolved_flow']['id'] == 'mobile-web-preview'
+    assert result['task_contract']['intent'] == 'build'
+    assert result['authority'] == 'read_only'
+    harness = ProviderNeutralAgentHarness(SKILLS, tmp_path)
+    state = harness.create_run(result['task'], 'implementation', authority=result['authority'],
+                          selected_skills=['mobile-web-preview'], platform_family='mobile_app')
+    finished = harness.execute_plan(state, [{'tool': 'write_artifact', 'args': {
+        'path': 'docs/uiux/preview-review.md', 'content': 'Must not be written'}}])
+    assert finished.state == 'BLOCKED'
+    assert not (tmp_path / 'docs/uiux/preview-review.md').exists()
 
 
-def test_read_only_caller_also_preserves_website_non_mutation():
-    result = manifest('Redesign the corporate website', authority='read_only')
+def test_explicit_read_only_website_intent_cannot_be_overridden_into_implementation():
+    result = manifest('Audit the corporate website, read-only', authority='release', overrides={'intent': 'fix'})
     assert result['resolved_flow']['id'] == 'audit-review'
     assert result['task_contract']['intent'] == 'audit'
     assert all(stage['agent'] != 'implementation' for stage in result['stages'])
@@ -128,16 +135,16 @@ def test_managed_preview_and_external_preview_share_the_canonical_flow(tmp_path)
     assert 'website-delivery-pipeline' not in manager.context['selected_skills']
 
 
-def test_managed_read_only_preview_context_matches_its_non_mutating_flow(tmp_path):
+def test_managed_read_only_preview_keeps_planning_intent_and_caller_grant(tmp_path):
     harness = ProviderNeutralAgentHarness(SKILLS, tmp_path)
     controller = ManagedFlowController(harness)
     goal = 'Design mobile app iOS browser prototype'
     context = GoalInterpreter().interpret(goal).to_context()
     managed = controller.start(goal, context, authority='read_only')
-    assert managed.flow.id == 'mobile-app-audit'
-    assert managed.task_context['intent'] == 'audit'
+    assert managed.flow.id == 'mobile-web-preview'
+    assert managed.task_context['intent'] == context['intent'] == 'build'
     assert managed.task_context['effective_authority'] == 'read_only'
-    assert all(stage.agent != 'implementation' for stage in managed.flow.stages)
+    assert managed.authority == 'read_only'
 
 
 def test_preview_cli_and_flow_json_schema_accept_the_new_output(tmp_path):
