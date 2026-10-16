@@ -20,6 +20,8 @@ project truth/source
 → rendered verification
 ```
 
+For recruiter-facing or handoff-facing Figma quality, route `figma-professional-artifact`. The integration boundary explains how Figma enters the system; the skill defines what makes the design file itself inspectable and professionally structured.
+
 ## Component mapping evidence
 
 Projects may maintain a mapping artifact using the shape in `integrations/figma/component-map.example.json`.
