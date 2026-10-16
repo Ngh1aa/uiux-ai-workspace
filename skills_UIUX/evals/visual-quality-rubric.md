@@ -89,9 +89,11 @@ Automated signal: `scripts/template-monotony-detector.py` provides structural di
 
 ### 7. Anti-generic-AI — 10%
 
-- 0: obvious AI-template: glass cards, gradient borders, rounded everything, identical section spacing, over-decorated.
-- 1: 3+ generic AI patterns present; decorative gradients, unnecessary blur effects.
-- 2: mostly clean but 1–2 template-ish patterns.
+Use the [canonical seven-sign screenshot checklist](../ui-craft-and-visual-qa/SKILL.md#anti-generic-ui-checks) for per-sign verdicts, rendered locations, role/rationale, evidence gaps and repair handling. Record all seven before scoring this dimension. Pattern presence alone does not establish poor quality or AI authorship; assess its purpose and observed effect on the specific brand/task.
+
+- 0: pervasive unexplained decoration or repeated containers obscure content priority and task comprehension.
+- 1: 3+ unjustified patterns compete with hierarchy or weaken brand/task fit.
+- 2: mostly purposeful but 1–2 unjustified patterns remain; record their locations and impact.
 - 3: purposeful design choices; decoration justified by function.
 - 4: no template smell; design choices are specific to the domain/brand/content; ornamentation serves hierarchy or brand, never filler.
 
@@ -125,7 +127,7 @@ Regardless of dimension scores, the visual quality eval FAILS if:
 2. Deterministic gates — any gate failure → score capped at 30 and overall FAIL when it is a DUE-NOW P0/P1.
 3. Capture screenshots for declared representative viewports/page roles.
 4. For shared owner changes, run elementary sanity across all affected routes/templates; deep aesthetic scoring may use representative routes.
-5. Score each dimension 0–4.
+5. Complete the canonical seven-sign screenshot checklist, then score each dimension 0–4. Incomplete evidence stays UNVERIFIED/BLOCKED; unresolved DUE-NOW P0/P1 findings cannot be offset by the composite score.
 6. Compute composite score.
 7. Check hard fail triggers.
 8. Record confidence: `high` (clear) / `medium` (borderline) / `low` (needs human).
