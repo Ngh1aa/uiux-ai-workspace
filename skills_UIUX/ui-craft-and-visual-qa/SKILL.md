@@ -71,7 +71,41 @@ Với site có 5+ materially different primary page roles, nếu gần như toà
 
 ## Anti-generic UI checks
 
-Cảnh báo nếu xuất hiện hàng loạt pattern thiếu rationale:
+### Checklist review ảnh — đủ 7 dấu hiệu
+
+Với mỗi representative route/viewport/state trong phạm vi visual review, ghi nhận **đủ 7 dấu hiệu** dưới đây sau khi mở ảnh hoặc live render. Đây là cách phát hiện lựa chọn thiếu chủ đích, **không phải bộ nhận diện tác giả AI hay danh sách cấm phong cách**. Neon, dark mode, glow, emoji, gradient tím, card, thanh màu và status dot có thể phù hợp với brand/task; sự hiện diện của chúng không tự tạo thành lỗi.
+
+| ID | Dấu hiệu cần kiểm tra trên ảnh | Vai trò hoặc vấn đề cần xác minh |
+|---|---|---|
+| AI-01 | Nhiều màu neon/high-chroma cạnh tranh | Map màu vào primary action, supporting, neutral, semantic hoặc brand role; kiểm xem decision object/CTA còn thắng về hierarchy hay mọi thứ cùng nổi bật. |
+| AI-02 | Dark mode kèm glow/bloom/aurora trang trí | Dark mode có phù hợp context; từng effect hỗ trợ feedback, orientation, hierarchy hoặc brand expression cụ thể thế nào; kiểm legibility và mức cạnh tranh với content. |
+| AI-03 | Emoji thay icon, bullet hoặc navigation | Giải thích vai trò tone/content hoặc interaction; kiểm consistency, cách render và accessible label. Emoji trong giao tiếp có thể đúng, nhưng không được làm action khó hiểu hoặc phá icon system. |
+| AI-04 | Gradient tím–indigo dùng mặc định khắp nơi | Trace màu/effect về brand hoặc mục tiêu trang; kiểm chỗ nào cần nhấn, contrast và việc gradient có bị lặp như filler. Không coi màu tím là lỗi tự thân. |
+| AI-05 | Mọi block thành card hoặc card lồng card | Mỗi lớp card phải có grouping, comparison, interaction hoặc hierarchy role rõ; cân nhắc proximity, whitespace, divider và typography nếu border/surface không thêm nghĩa. |
+| AI-06 | Thanh màu bên trái nhiều block, mỗi block một màu | Mỗi màu/bar biểu đạt selection, category, severity, wayfinding hoặc brand role nào; mapping phải nhất quán và không tạo rainbow emphasis vô nghĩa. |
+| AI-07 | Status dot không có trạng thái xác định | Nối dot với named state và nguồn dữ liệu/điều kiện thay đổi thực tế; có text label/legend và không dựa vào màu đơn thuần. Nếu chỉ là motif trang trí, phải nhận diện rõ như decoration, không gợi trạng thái online/live/health giả. |
+
+Mỗi dấu hiệu dùng **đúng một kết luận**:
+
+- `không xuất hiện` — không quan sát thấy trong scope đã inspect; ghi route, viewport/state và ảnh/vùng đã kiểm, không bịa tọa độ của phần tử không tồn tại.
+- `có mục đích rõ` — có xuất hiện; ghi mọi vị trí liên quan hoặc nhóm vị trí có cùng owner/role, rationale cụ thể và bằng chứng rendered cho thấy vai trò đó hoạt động. “Modern”, “premium” hoặc “brand yêu cầu” không kèm nguồn/biểu hiện cụ thể chưa đủ.
+- `cần sửa` — có xuất hiện nhưng vai trò không rõ, mapping sai hoặc gây vấn đề hierarchy/usability/brand; ghi vị trí, impact, severity, owning component/token/composition và cách sửa/re-test.
+
+Ghi vào visual QA report hiện có, mỗi dấu hiệu một dòng; nếu cùng dấu hiệu vừa có vị trí hợp lý vừa có vị trí lỗi, dùng `cần sửa` và liệt kê riêng hai nhóm để không che lỗi:
+
+```text
+ID | kết luận | route + viewport + data/interaction state | capture/link + vùng/element (tọa độ nếu cần) | role/rationale + source/observed evidence | issue/severity/owner + fix/re-test khi cần
+```
+
+Màu, effect, card và status phải giải thích được **vai trò**, không chỉ mô tả CSS. Với status, screenshot chứng minh appearance; named-state/data binding cần đối chiếu source/runtime, không suy ra service đang online chỉ từ dot xanh. Với lựa chọn brand có chủ đích, ghi source constraint và kiểm hierarchy/accessibility thực tế thay vì loại bỏ phong cách đó.
+
+Nếu ảnh thiếu, chưa mở, bị crop mất vùng cần kiểm hoặc chưa render state cần thiết: ghi scope/evidence gap là `UNVERIFIED`/`BLOCKED`, để kết luận tương ứng chưa hoàn tất; **không** điền `không xuất hiện`. Không suy rộng representative review thành all-route coverage; shared-owner elementary sanity vẫn theo coverage gate hiện có.
+
+Checklist chỉ hoàn tất khi đủ 7 kết luận có evidence cho scope đã khai báo. `cần sửa` phải được đưa vào fix loop; DUE-NOW P0/P1 chặn handoff theo gate hiện có, không được bù bằng điểm trung bình. Sau sửa, recapture cùng scope và cập nhật kết luận. Một checklist điền đủ không tự chứng minh UI đẹp hoặc đã được người dùng xác nhận.
+
+### Các pattern liên quan
+
+Tiếp tục cảnh báo nếu xuất hiện hàng loạt pattern thiếu rationale:
 
 - Mọi section đều là card bo tròn.
 - Gradient/glass/shadow dùng khắp nơi.
@@ -276,6 +310,7 @@ Ghi issue severity P0/P1/P2 và phân biệt:
 - [ ] Không có component variant trùng chức năng.
 - [ ] Visual hierarchy đọc được trong 5–10 giây.
 - [ ] Cross-page composition không rơi vào template monotony vô lý.
+- [ ] Checklist 7 dấu hiệu có kết luận, vị trí/scope và role/evidence; không biến evidence gap thành `không xuất hiện` hoặc cấm phong cách có chủ đích.
 - [ ] Primary page roles có first visual anchor phù hợp user task.
 - [ ] Responsive claims đúng declared scope; mobile không bị “compressed desktop” khi mobile in-scope.
 - [ ] Focus/error/loading states nhìn thấy được.
