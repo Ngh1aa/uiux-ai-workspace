@@ -136,3 +136,14 @@ feedback target. The target's explicit performance-budget check therefore return
 FAIL; the trial is reviewable, not QA-accepted against every requested criterion.
 See `docs/ux-trial/review.md` and `performance-budget.json` in the target checkout.
 No target or Factory changes were committed, pushed or merged in this trial.
+
+### Publication scope authorized 2026-10-21
+
+The user subsequently authorized merging the Factory upgrade into `main`.
+The publication branch integrates the existing seven-sign review from `main`
+without weakening it. Patient-Journey-App source remains a separate, unpublished
+trial; its open performance, participant and integration criteria are unchanged.
+The specimen was recaptured and inspected on Chromium/WebKit before publication.
+Its source-byte hashes now use enforced LF checkouts, with a regression protecting
+the source/capture manifest across Windows and Linux. Historical trial results
+above retain their original scope; publication CI is separate technical evidence.

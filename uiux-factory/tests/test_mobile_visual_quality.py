@@ -68,6 +68,15 @@ def test_missing_and_conflicting_identity_never_get_healthcare_by_role_alone():
     assert not conflict["reference_anatomy"]["cards"]
 
 
+def test_mobile_specimen_review_hashes_match_portable_checkout():
+    from hashlib import sha256
+
+    specimen = SKILLS / "visual-design-direction/examples/mobile-care"
+    manifest = json.loads((specimen / "review/manifest.json").read_text(encoding="utf-8"))
+    for relative, expected in manifest["source_and_capture_sha256"].items():
+        assert sha256((specimen / relative).read_bytes()).hexdigest() == expected, relative
+
+
 def test_ux_blockers_cannot_be_bought_off_by_visual_eval_points():
     task = json.loads((SKILLS / "evals/tasks/mobile-design-001-ios-android.json").read_text(encoding="utf-8"))
     assert sum(task["rubric"].values()) == 100

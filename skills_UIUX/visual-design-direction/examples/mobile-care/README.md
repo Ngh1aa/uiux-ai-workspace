@@ -34,10 +34,12 @@ a formal browser-zoom accessibility audit. Capturing does not mark images inspec
 
 ## Recorded visual review
 
-Reviewer: agent heuristic, 2026-10-20. No human preference study.
+Reviewer: agent heuristic, recaptured and inspected 2026-10-21. No human preference study.
 Opened `review/chromium-1280.png`, `review/chromium-320.png` and
 `review/webkit-390.png`; see `review/manifest.json` for source/capture hashes.
 Browser matrix: `review/browser-report.json`. Color pairs: `review/contrast.json`.
+Source files use LF line endings so the recorded byte hashes survive Windows/Linux
+checkouts; the regression suite checks the recorded source and capture hashes.
 
 Observed fixes:
 

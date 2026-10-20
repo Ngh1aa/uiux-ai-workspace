@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# The specimen review records source-byte hashes; keep them portable across checkouts.
+skills_UIUX/visual-design-direction/examples/mobile-care/index.html text eol=lf
+skills_UIUX/visual-design-direction/examples/mobile-care/capture.cjs text eol=lf
