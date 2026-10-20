@@ -91,14 +91,31 @@ def _record_smoke_design_check(harness, state) -> None:
     rendered UI, human preference or the quality of a generated website.
     """
     from core.runtime.flow_os.evidence import evidence_from_tool
-    from core.skills.design_decisions import check_design_file
+    from core.skills.design_decisions import check_design_decisions, check_design_file
 
     harness._ensure_workspace(state)
     root = harness._active_project_root(state)
     relative = "docs/uiux/runtime-smoke-design.json"
     path = root / relative
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(DESIGN_SMOKE_CONTRACT.read_bytes())
+    fixture = json.loads(DESIGN_SMOKE_CONTRACT.read_text(encoding="utf-8"))
+    if check_design_decisions(fixture)["status"] != "PASS":
+        raise ValueError("runtime smoke source design fixture is invalid")
+    for page in fixture["pages"]:
+        page["ux"] = {
+            "entry_state": "Synthetic smoke entry",
+            "user_goal": page["user_question"],
+            "information_priority": ["scope", "constraints", "next action"],
+            "primary_action": page["cta"],
+            "destination": "Synthetic review screen",
+            "feedback": "Synthetic retained selection",
+            "recovery": "Synthetic back path retains inputs",
+            "walkthrough_observation": "Synthetic lifecycle fixture only; no user or visual review performed",
+            "evidence_ref": "validate-runtime-foundation.py synthetic fixture",
+            "review_source": "agent-heuristic",
+            "findings": [],
+        }
+    path.write_text(json.dumps(fixture, ensure_ascii=False), encoding="utf-8")
     result = check_design_file(root, relative, "design")
     if result["returncode"]:
         raise ValueError("runtime smoke design fixture is invalid: " + str(result["errors"]))

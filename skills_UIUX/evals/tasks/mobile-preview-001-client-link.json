@@ -6,23 +6,32 @@
     "mobile-app-design",
     "mobile-web-preview",
     "mobile-navigation-and-state-ux",
-    "mobile-prototype-and-qa"
+    "mobile-prototype-and-qa",
+    "journey-driven-content-and-layout",
+    "visual-design-direction",
+    "ui-craft-and-visual-qa"
   ],
   "expected_outcomes": [
     "Route mobile-web-preview with browser-prototype output",
     "Reuse target renderer and state rather than disconnected screen copies",
     "Verify browser interactions and static-host base paths",
-    "Prepare hosting assets and explicitly pending URL without inventing deployment or native QA"
+    "Prepare hosting assets and explicitly pending URL without inventing deployment or native QA",
+    "Inspect UX wireframes before visual styling; current state, next action and recovery are clear",
+    "Compare representative compositions beyond color/copy; inspect actual captures for hierarchy, typography, purposeful density, media and seven visual signs"
   ],
   "must_not": [
     "Publish without current release authority",
     "Treat browser PASS as native runtime or actual participant evidence",
-    "Claim a PREPARED package is a delivered live demo"
+    "Claim a PREPARED package is a delivered live demo",
+    "Accept broken task navigation because the screen looks polished",
+    "Claim beauty from JSON, screenshots not opened, or technical PASS",
+    "Force every screen into bento or add stock imagery solely to fill space"
   ],
   "rubric": {
-    "scope_and_authority": 30,
-    "state_and_reuse": 25,
-    "browser_evidence": 25,
-    "client_handoff": 20
+    "task_clarity_and_recovery": 35,
+    "visual_hierarchy_and_composition": 25,
+    "typography_density_and_media": 20,
+    "evidence_and_authority": 15,
+    "handoff": 5
   }
 }

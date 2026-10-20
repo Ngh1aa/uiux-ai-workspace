@@ -134,6 +134,20 @@
       "pixel_geometry": "UNKNOWN",
       "human_usability": "UNKNOWN",
       "boundary": "Content sections observed on first-party page; spatial layout/type/density below are transfer hypotheses. Re-open current source before adoption. No supplier claims, branding, copy or assets transfer."
+    },
+    "mobile-care-specimen": {
+      "url": "skills_UIUX/visual-design-direction/examples/mobile-care/index.html",
+      "checked": "2026-10-20",
+      "observation_method": "local-authored-specimen",
+      "observed_information_anatomy": [
+        "current state and next action",
+        "filterable appointment selection",
+        "input and review with recovery"
+      ],
+      "pixel_geometry": "LOCAL_RENDER_INSPECTED: Chromium 320/1280 and WebKit 390 CSS px; source/capture hashes in specimen review/manifest.json",
+      "human_usability": "UNKNOWN",
+      "boundary": "Original synthetic teaching specimen. Not a real clinic, copied UI kit, approved customer design or human-validated pattern. Colors and dimensions are hypotheses; do not apply as a universal preset.",
+      "capture": "skills_UIUX/visual-design-direction/examples/mobile-care/review/chromium-1280.png"
     }
   },
   "cards": [
@@ -459,6 +473,66 @@
       ],
       "mobile_transformation": "Keep rationale beside the relevant artifact and separate verified results from planned validation.",
       "reject": "Reject transferred claims, vendor identity, fixed fonts/palette and missing decision content. These references establish information anatomy; they do not prove a spatial layout or aesthetic preference."
+    },
+    {
+      "id": "healthcare-patient-journey:app-overview",
+      "profile_id": "healthcare-patient-journey",
+      "page_role": "app-overview",
+      "reference_ids": [
+        "mobile-care-specimen"
+      ],
+      "buyer_task": "What needs my attention and what can I do next?",
+      "observed_relationship": "Current-state summary with one contextual next action",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Choose the information relationship only when the target task matches; inspect the runnable specimen before transfer.",
+      "typography_reason": "Readable body and consistent metadata; the task title should not become a marketing headline.",
+      "density_reason": "Grouping and relative emphasis should help the next decision, not maximize card count.",
+      "visual_object_candidates": [
+        "next-action-ticket: Current state, time/context and action share a compact ticket; supporting shortcuts form a quieter group.",
+        "activity-rail: A chronological activity spine leads, with the next actionable event expanded."
+      ],
+      "mobile_transformation": "Keep state, context and action attached; test 320/390 CSS px and enlarged text. Browser evidence does not prove native behavior.",
+      "reject": "Decorative hero displaces the next useful action. Palette, copy and data are synthetic, not transferable project truth."
+    },
+    {
+      "id": "healthcare-patient-journey:app-selection",
+      "profile_id": "healthcare-patient-journey",
+      "page_role": "app-selection",
+      "reference_ids": [
+        "mobile-care-specimen"
+      ],
+      "buyer_task": "Which option matches my needs?",
+      "observed_relationship": "Comparable choices with visible filtering and selection",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Choose the information relationship only when the target task matches; inspect the runnable specimen before transfer.",
+      "typography_reason": "Readable body and consistent metadata; the task title should not become a marketing headline.",
+      "density_reason": "Grouping and relative emphasis should help the next decision, not maximize card count.",
+      "visual_object_candidates": [
+        "comparison-list: Aligned rows keep identical attributes and selection controls in the same positions.",
+        "date-agenda: Date rail controls a grouped agenda with explicit empty and unavailable states."
+      ],
+      "mobile_transformation": "Keep state, context and action attached; test 320/390 CSS px and enlarged text. Browser evidence does not prove native behavior.",
+      "reject": "Different card anatomy prevents comparison or filters silently reset. Palette, copy and data are synthetic, not transferable project truth."
+    },
+    {
+      "id": "healthcare-patient-journey:app-task",
+      "profile_id": "healthcare-patient-journey",
+      "page_role": "app-task",
+      "reference_ids": [
+        "mobile-care-specimen"
+      ],
+      "buyer_task": "What information is needed and how do I correct it?",
+      "observed_relationship": "Focused input and review with preserved context",
+      "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+      "why": "Choose the information relationship only when the target task matches; inspect the runnable specimen before transfer.",
+      "typography_reason": "Readable body and consistent metadata; the task title should not become a marketing headline.",
+      "density_reason": "Grouping and relative emphasis should help the next decision, not maximize card count.",
+      "visual_object_candidates": [
+        "guided-step: One active input group with concise progress and contextual validation.",
+        "editable-summary: Reviewable summary groups expose change actions with preserved input and clear return."
+      ],
+      "mobile_transformation": "Keep state, context and action attached; test 320/390 CSS px and enlarged text. Browser evidence does not prove native behavior.",
+      "reject": "Hero, photos or decorative cards obscure input, error or submit. Palette, copy and data are synthetic, not transferable project truth."
     }
   ],
   "gap_policy": "No exact profile/page-role card is a visible knowledge gap. Research the current first-party page and author a grounded transfer; never borrow an unrelated industry preset."

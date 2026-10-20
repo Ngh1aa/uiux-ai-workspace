@@ -74,6 +74,14 @@ For active visual-design work, the stage packet now includes `design_workflow`: 
 
 New design contracts use v2: retrieve domain/page-role reference anatomy, explain each transfer, compare materially different free typography/density/object axes, and predeclare comprehension/distinctiveness questions. Use the comparison CLI or routed read-only provider tools to prepare labelled reviews and summarize capture-bound observations. Legacy v1 remains inspectable as layout-only evidence and cannot satisfy a v2 gate. Human participation and causal improvement remain UNKNOWN until appropriate evidence exists.
 
+UX comes first: the five page/redesign/mobile design flows now require each page's
+task, next action, feedback, recovery and walkthrough record before visual acceptance.
+Open UX blockers fail the canonical check; a high visual score cannot compensate.
+See [upgrade and migration](docs/UX-FIRST-VISUAL-UPGRADE.md) and the
+[runnable mobile specimen](skills_UIUX/visual-design-direction/examples/mobile-care/README.md).
+Use references as grounded candidates, not universal presets; a short style label
+or a passing checker cannot guarantee beauty.
+
 ## Mobile app design
 
 Native mobile **design** and read-only app review now use `mobile-app-design` / `mobile-app-audit` through the same Task Contract, target-truth probe and Flow OS. Responsive websites remain web. Pass `--platform-family mobile_app --requested-output design` when goal/source inference is insufficient; `--target-platform ios --target-platform android` declares scope and `--implementation-stack` records the existing stack.

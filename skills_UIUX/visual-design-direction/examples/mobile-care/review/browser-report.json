@@ -1,0 +1,50 @@
+[
+  {
+    "engine": "chromium",
+    "width": 320,
+    "task_recovery": "PASS",
+    "overflow": "PASS",
+    "enlarged_text": "PASS",
+    "console": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "width": 390,
+    "task_recovery": "PASS",
+    "overflow": "PASS",
+    "enlarged_text": "PASS",
+    "console": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "width": 1280,
+    "task_recovery": "PASS",
+    "overflow": "PASS",
+    "enlarged_text": "PASS",
+    "console": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "width": 320,
+    "task_recovery": "PASS",
+    "overflow": "PASS",
+    "enlarged_text": "PASS",
+    "console": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "width": 390,
+    "task_recovery": "PASS",
+    "overflow": "PASS",
+    "enlarged_text": "PASS",
+    "console": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "width": 1280,
+    "task_recovery": "PASS",
+    "overflow": "PASS",
+    "enlarged_text": "PASS",
+    "console": "PASS"
+  }
+]

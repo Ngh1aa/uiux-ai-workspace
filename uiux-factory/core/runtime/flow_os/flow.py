@@ -137,6 +137,11 @@ def validate_flow_document(doc: dict[str, Any]) -> list[str]:
                     errors.append(f"{prefix}.gates[{gidx}].when must be an object")
                 if gate.get("approval") not in {None, "human"}:
                     errors.append(f"{prefix}.gates[{gidx}].approval must be human when set")
+                if "ux_contract_required" in gate:
+                    if not isinstance(gate["ux_contract_required"], bool):
+                        errors.append(f"{prefix}.gates[{gidx}].ux_contract_required must be boolean")
+                    if "design_contract_check" not in gate.get("evidence_types", []):
+                        errors.append(f"{prefix}.gates[{gidx}].ux_contract_required needs the canonical design checker")
 
     replanning = doc.get("replanning", {})
     if not isinstance(replanning, dict):

@@ -29,7 +29,7 @@ def test_provider_receives_bounded_actual_knowledge_not_only_a_skill_name(tmp_pa
     data = json.loads(knowledge['content'])
     assert data['domain_profiles'][0]['id'] == 'industrial-service-operations'
     assert data['role_card'] is None
-    assert len(data['available_roles']) == 6
+    assert set(data['available_roles']) == {'orientation', 'offering', 'evidence', 'conversion', 'catalog', 'editorial', 'app-overview', 'app-selection', 'app-task', 'app-record', 'app-support'}
     assert {'retrieve_design_knowledge','check_design_decisions','prepare_design_comparison','evaluate_design_comparison'} <= {tool['name'] for tool in request.tools}
     assert data['reference_anatomy']['cards'] == []
     assert request.task_context['design_workflow']['contract_version'] == '2.0'

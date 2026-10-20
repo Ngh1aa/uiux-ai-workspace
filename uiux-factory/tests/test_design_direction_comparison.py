@@ -18,6 +18,14 @@ from test_design_decision_integrity import contract_fixture, ROOT
 
 def v2_fixture():
     value = contract_fixture()
+    value['pages'][0]['ux'] = {
+        'entry_state': 'Fixture entry', 'user_goal': 'Choose a scope',
+        'information_priority': ['scope', 'constraints'], 'primary_action': 'Review',
+        'destination': 'Fixture review', 'feedback': 'Scope retained',
+        'recovery': 'Return to selection', 'walkthrough_observation': 'Synthetic fixture only',
+        'evidence_ref': 'Synthetic fixture, not a real walkthrough',
+        'review_source': 'agent-heuristic', 'findings': [],
+    }
     value['schema_version'] = '2.0'
     page = value['pages'][0]
     for index, composition in enumerate(page['compositions']):

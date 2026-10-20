@@ -40,7 +40,9 @@ def test_browser_request_routes_implementation_and_browser_qa_without_native_cla
     assert {'mobile-web-preview', 'frontend-implementation'}.issubset(implementation['skills'])
     assert 'web-quality-and-performance' in qa['skills']
     assert {'browser_render', 'validator_result'} == set(qa['gates'][0]['evidence_types'])
-    assert not any(stage['design_workflow']['active'] for stage in result['stages'])
+    assert result['stages'][1]['design_workflow']['active']
+    assert result['stages'][1]['design_workflow']['required_check_phases'] == ['design']
+    assert qa['design_workflow']['required_check_phases'] == ['rendered']
     assert result['authority'] == 'branch_write'
     assert result['evidence_boundary']['mobile_completion_scope'] == 'browser_prototype_and_client_handoff'
     assert result['evidence_boundary']['native_runtime_qa_available'] is False
