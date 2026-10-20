@@ -2,10 +2,11 @@
   "review_source": "agent-heuristic",
   "human_preference": "UNKNOWN",
   "source_and_capture_sha256": {
-    "index.html": "ad7d7b04d07b73100700dd7e29ab7bfc13617324e3d6e35468efdc98ce09ef90",
-    "capture.cjs": "22dc140b4e2b2666144ea635c0bd4e84ba308a7257508fc8629f4c17accd9ac1",
+    "index.html": "d5c386427e8ce3616aca1aa68e988352a6b7700a6381de11aa8795d69a3660b5",
+    "capture.cjs": "f5bed4943786067f116b29bc3c79938eade8977e3a42f1fd193bd2137b73cd97",
     "review/chromium-1280.png": "e306cfc43e94cb021ee926402253a971c7862501cc545420e9bd6d93e4496bb5",
     "review/chromium-320.png": "a73759e21ea60f0de7abf27e45a3312f5b2736486deb0f9af0412ab57ee82951",
     "review/webkit-390.png": "5884c5b155108c59c02c07a40087b9b1dc82393c068f454178013a98fb8b1b75"
-  }
+  },
+  "reviewed_at": "2026-10-21"
 }
