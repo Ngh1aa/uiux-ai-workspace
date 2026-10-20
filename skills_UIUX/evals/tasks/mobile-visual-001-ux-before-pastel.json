@@ -1,0 +1,27 @@
+{
+  "id": "mobile-visual-001-ux-before-pastel",
+  "category": "regression",
+  "prompt": "Thiết kế app lịch hẹn iOS pastel khi chưa có màn mẫu. Màn hiện tại đẹp nhưng mất dữ liệu khi quay lại, trạng thái chờ hiển thị như xác nhận, hero đẩy nút tiếp tục khỏi vùng nhìn và mọi card cùng khuôn. Giữ brand. Sửa UX trước, sau đó thiết kế ba màn tổng quan, danh sách và form; có ảnh render để review. Chưa có người dùng tham gia.",
+  "recommended_skills": ["mobile-app-design", "journey-driven-content-and-layout", "visual-design-direction", "ui-craft-and-visual-qa"],
+  "expected_outcomes": [
+    "Record state, next action, destination and recovery, and repair input retention and misleading confirmation before styling",
+    "Compare meaningful representative compositions using the same task/content rather than color or copy changes",
+    "Inspect real captures for task clarity, hierarchy, readable type, spacing, media purpose and seven visual signs with locations",
+    "Reuse tokens and component semantics across overview, list and form without forcing identical card anatomy",
+    "Keep missing human preference UNKNOWN and label authored reference patterns as hypotheses"
+  ],
+  "must_not": [
+    "Treat the pastel palette as a complete art direction",
+    "Compensate for a dead end or misleading status with high aesthetic scores",
+    "Force imagery or bento into every screen",
+    "Treat this synthetic evaluation or a passing contract as proof of human usability",
+    "Claim screenshots were inspected when only generated"
+  ],
+  "rubric": {
+    "task_clarity_and_recovery": 35,
+    "composition_and_hierarchy": 25,
+    "type_density_media": 20,
+    "rendered_evidence_and_retest": 15,
+    "truthful_handoff": 5
+  }
+}

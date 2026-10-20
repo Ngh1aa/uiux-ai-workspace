@@ -88,6 +88,7 @@ def design_workflow_packet(context: dict[str, Any], skill_names: list[str] | set
     return {
         "active": active,
         "decision_contract_required": required,
+        "ux_contract_required": any(gate.get("ux_contract_required") for gate in (gates or [])),
         "required_check_phases": checks,
         "knowledge_source": "skills_UIUX/" + KNOWLEDGE_PATH if active else None,
         "lookup_tool": "retrieve_design_knowledge" if active else None,
@@ -103,7 +104,12 @@ def design_workflow_packet(context: dict[str, Any], skill_names: list[str] | set
             "evaluate": ['comprehension', 'distinctiveness'],
             "boundary": 'Material declared differences and recorded judgments are inspectable; neither proves beauty, authentic human participation or a causal Factory upgrade.',
         } if active else None,
-        "sequence": ["load project truth and classify hard/suggested/free axes", "lookup identity + one page role + reference anatomy", "ADOPT/ADAPT/REJECT reference properties with reasons", "declare numeric type/density and object anatomy for alternatives", "compare distinct topologies and every free direction axis on representative pages", "predeclare comprehension/distinctiveness questions and constant inputs", "check v2 decision contract", "render/inspect representative desktop/mobile", "prepare counterbalanced review and record observations", "repair before rollout"] if active else [],
+        "sequence": ["load project truth and classify hard/suggested/free axes", "map entry state, user question, prioritized information, primary action, feedback and recovery", "walk through representative wireframes and repair UX blockers before visual styling", "lookup identity + one page role + reference anatomy", "ADOPT/ADAPT/REJECT reference properties with reasons", "declare numeric type/density and object anatomy for alternatives", "compare distinct topologies and every free direction axis on representative pages", "predeclare comprehension/distinctiveness questions and constant inputs", "check v2 decision contract", "render/inspect representative desktop/mobile", "prepare counterbalanced review and record observations", "repair before rollout"] if active else [],
+        "ux_first": {
+            "review_order": ["task comprehension", "navigation and recovery", "hierarchy and composition", "type spacing and media", "visual consistency"],
+            "blockers": ["unclear next action", "dead end", "misleading status", "lost input", "unreadable essential content"],
+            "rule": "Visual scores cannot compensate for a UX blocker. Record observations and retest in the existing design/review artifact; this packet does not perform the review.",
+        } if active or checks else None,
         "structural_rule": "Two representative alternatives must differ in the decision object's anatomy, region relationships or mobile grouping. Renaming anchors, skin changes or only swapping unchanged sections do not count. Rollout pages may inherit a representative decision owner." if active else None,
         "authority_effect": "none",
         "gate_effect": "none",

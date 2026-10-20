@@ -47,7 +47,8 @@ def test_mobile_design_routes_only_platform_owners(goal, platforms, stack):
     for stage in result['stages']:
         assert not forbidden.intersection(stage['skills'])
         assert stage['delivery_workflow'] == delivery_packet(SKILLS, stage['id'], context)
-        assert not stage['design_workflow']['active']
+        assert stage['design_workflow']['active'] == (stage['id'] == 'design')
+        assert stage['design_workflow']['decision_contract_required'] == (stage['id'] in {'design', 'qa'})
     assert result['status'] == 'READY_FOR_EXTERNAL_COLLABORATOR'
     assert result['evidence_boundary']['native_implementation_available'] is False
     assert result['evidence_boundary']['native_runtime_qa_available'] is False

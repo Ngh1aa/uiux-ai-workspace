@@ -516,6 +516,13 @@ def gate_evidence_errors(
                     errors.append(f"gate {gate_id} requires canonical design check phase={phase}; file length, general validators and provider prose cannot substitute")
                 elif version and not any(record.type == 'design_contract_check' and record.status == 'PASS' and record.data.get('phase') == phase and record.data.get('contract_version') == version for record in effective):
                     errors.append(f"gate {gate_id} requires design contract version={version}; a legacy layout receipt cannot satisfy multi-axis direction requirements")
+                if gate.get('ux_contract_required') and not any(
+                    record.type == 'design_contract_check' and record.status == 'PASS'
+                    and record.data.get('phase') == phase
+                    and record.data.get('ux_integrity') == 'RECORDED'
+                    for record in effective
+                ):
+                    errors.append(f"gate {gate_id} requires task, action, feedback, recovery and UX walkthrough records for every declared page")
             continue
         acceptable = role_defaults.get(agent, set(TRUSTED_EVIDENCE_TYPES))
         if not available.intersection(acceptable):

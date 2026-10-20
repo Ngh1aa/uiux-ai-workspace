@@ -19,6 +19,9 @@ Identify the top task, domain, existing screens/components, target platforms, mi
 Use [professional practice](references/professional-practice.md) for the complete flow and [source registry](data/sources.json) when selecting guidance. Use [design contract](templates/mobile-design-contract.md) as a starting structure; merge with existing project artifacts rather than creating duplicate specs. Stage cards live in [lifecycle.json](data/lifecycle.json) and are transported by the shared delivery packet owner.
 
 ## Stage routing
+- UX before visual styling: use [mobile UX-first practice](../visual-design-direction/references/mobile-ux-first.md). Walk through representative tasks and recovery before selecting composition, typography or imagery.
+- Visual direction and reference gaps: `visual-design-direction` + `design-reference-research-and-benchmark`; use app-specific page roles when website overview/conversion roles do not fit.
+- Rendered visual acceptance: `ui-craft-and-visual-qa`; technical checks and design artifact existence never establish beauty.
 - Navigation or lifecycle uncertainty: `mobile-navigation-and-state-ux`.
 - iOS in scope: `ios-app-design`; Android in scope: `android-app-design`.
 - Reusable visual/interaction decisions and engineering handoff: `mobile-design-system-and-handoff`.

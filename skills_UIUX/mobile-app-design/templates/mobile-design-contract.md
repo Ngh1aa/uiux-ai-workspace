@@ -19,6 +19,21 @@ Link one canonical state/render owner; do not clone every screen. Record loading
 - Keyboard, safe areas/insets, gestures and reachable CTA:
 - Entry via deep link/notification and auth/entity/error conditions:
 
+## UX walkthrough before visual styling
+| Screen/state | User question | Information priority | Main action + destination | Feedback/recovery | Observed blocker + retest |
+|---|---|---|---|---|---|
+
+Use actual content and existing data rules. Include overview, selection and
+form/review, plus relevant empty/error paths. Label expert walkthroughs as heuristic.
+Resolve blocking comprehension/navigation defects before choosing a visual direction.
+
+## Visual direction after UX
+- Canonical `docs/uiux/design-decisions.json` (v2) or current project owner:
+- Representative compositions and inherited rollout routes:
+- Measured typography/spacing roles and media purpose/source/crop/fallback:
+- Actual captures inspected; comparison observations and unresolved preference:
+- Seven-sign review location and each issue's repair/retest:
+
 ## Platform/system mapping
 | Semantic purpose | Shared brand/state | iOS behavior/control | Android behavior/control | Availability/fallback |
 |---|---|---|---|---|

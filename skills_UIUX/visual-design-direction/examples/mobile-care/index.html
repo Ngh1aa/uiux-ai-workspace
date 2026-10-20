@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mobile care — task-led composition specimen</title>
+<style>
+:root{--ink:#001d57;--action:#0b1220;--muted:#5b6b8c;--blue:#cfe2ff;--mint:#cdefe4;--surface:#fff;--canvas:#f5f8fd;--line:#dce4f2;--error:#a32232;--error-bg:#fff1f1;--pending:#fff0d6;--radius:24px;--small:16px;--gap:16px;--shadow:0 12px 40px #001d570c}
+[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--ink);font:16px/1.5 system-ui,sans-serif}button,input,select{font:inherit;color:inherit}button,a{touch-action:manipulation}button{cursor:pointer;border:1px solid var(--line);background:var(--surface);min-height:44px;border-radius:999px;padding:10px 16px}button:hover{border-color:var(--muted)}button:active{transform:translateY(1px)}:focus-visible{outline:3px solid var(--ink);outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.5}h1,h2,h3,p{margin:0}h1{font-size:28px;line-height:1.2;letter-spacing:-.8px}h2{font-size:20px;line-height:1.35}h3{font-size:17px;line-height:1.4}small,.muted{color:var(--muted)}small{font-size:13px}a{color:var(--ink)}.lab{max-width:1250px;margin:auto;padding:32px 24px}.intro{max-width:760px;margin-bottom:28px}.intro p{margin-top:12px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}.phone{background:var(--surface);border:1px solid var(--line);border-radius:32px;overflow:hidden;box-shadow:var(--shadow)}.header{padding:28px 20px 24px;background:radial-gradient(at 90% 15%,var(--blue),transparent 70%),var(--canvas)}.eyebrow{display:block;font-size:13px;margin-bottom:8px}.header p{margin-top:8px}.content{padding:20px;display:grid;gap:24px}.ticket small{color:var(--ink)}input::placeholder{color:var(--muted);opacity:1}.ticket{background:radial-gradient(at 10% 0%,var(--mint),transparent 70%),var(--canvas);border-radius:var(--radius);padding:20px;display:grid;gap:16px}.top,.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.badge{font-size:12px;background:var(--blue);border-radius:8px;padding:4px 8px;display:inline-flex;gap:6px}.date{font-size:36px;line-height:1.15;letter-spacing:-1px}.primary{background:var(--action);color:var(--surface);border-color:var(--action)}.secondary{background:var(--blue);border-color:transparent}.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tile{border-radius:var(--small);border:1px solid var(--line);padding:16px;text-align:left;min-height:112px;display:grid;gap:8px;align-content:start}.tile strong{font-size:16px}.icon{font-size:22px;line-height:1}.section{display:grid;gap:12px}.section .top a{font-size:13px;min-height:44px;display:flex;align-items:center}.line{border-top:1px solid var(--line);padding-top:16px}.person{width:40px;height:40px;display:grid;place-items:center;background:var(--mint);border-radius:50%;flex:none;font-size:13px}.person-row{display:flex;gap:12px;align-items:center}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button{font-size:13px;padding:8px 12px}.tabs [aria-pressed=true]{background:var(--action);color:var(--surface);border-color:var(--action)}.appointment{padding:16px 0;border-bottom:1px solid var(--line);display:grid;gap:12px}.appointment:last-child{border-bottom:0}.time{font-size:22px;font-weight:650}.appointment .badge{background:var(--blue)}.appointment[data-state="done"] .badge{background:var(--mint)}.appointment[data-pending="true"] .badge{background:var(--pending)}label{display:grid;gap:8px;font-weight:600;font-size:14px}input,select{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:48px;padding:10px 12px;font-weight:400}.form{display:grid;gap:20px}.helper{font-weight:400;font-size:13px}.error{color:var(--error);font-size:14px}.error:not(:empty){background:var(--error-bg);padding:12px;border-radius:12px}.review{background:var(--canvas);border-radius:var(--small);padding:16px}.review p+p{margin-top:8px}.nav{display:flex;justify-content:space-evenly;padding:12px 8px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);gap:4px}.nav a{font-size:12px;text-decoration:none;min-height:44px;padding:8px;border-radius:12px;display:flex;align-items:center}.nav [aria-current=page]{background:var(--blue);font-weight:700}.message{font-size:14px}.spinner{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.grid{grid-template-columns:1fr}.lab{padding:20px 12px}.phone{max-width:430px;width:100%;margin:auto}.intro h1{font-size:24px}}
+</style>
+<main class="lab">
+<header class="intro"><small>Factory · ví dụ thiết kế tổng hợp, dữ liệu giả định</small><h1>Ba nhiệm vụ. Ba bố cục.</h1><p>Cùng hệ chữ, khoảng cách và màu; cấu trúc thay đổi theo việc cần làm. Đây là ví dụ để đánh giá, không phải phong cách bắt buộc hay ứng dụng y tế thật.</p></header>
+<div class="grid">
+<article class="phone" id="overview" aria-label="Màn tổng quan">
+ <header class="header"><span class="eyebrow">TỔNG QUAN</span><h2>Chào Minh Anh</h2><p>Thông tin cho lần khám tiếp theo.</p></header>
+ <div class="content">
+  <section class="ticket"><div class="top"><small>Lịch hẹn tiếp theo</small><span class="badge">✓ Đã xác nhận</span></div>
+   <div><div class="date">09:30</div><p>Thứ Ba, 20/10/2026</p></div>
+   <div class="line"><h3>Khám tổng quát</h3><p>Phòng khám An Bình</p><small>Người khám: Nguyễn Minh Anh</small></div>
+   <button class="primary" data-message="Phiếu CF-0001 · Đã xác nhận · Nguyễn Minh Anh · 09:30, 20/10/2026">Xem phiếu khám →</button>
+  </section>
+  <section class="section"><h3>Chuẩn bị cho buổi khám</h3><div class="split">
+   <button class="tile" data-message="Giấy tờ: mang giấy tờ tùy thân và kết quả khám trước đây nếu có. Nội dung giả định cho ví dụ."><span class="icon" aria-hidden="true">▤</span><strong>Giấy tờ</strong><small>Xem danh sách cần mang</small></button>
+   <button class="tile" data-message="Địa điểm ví dụ: Phòng khám An Bình. Chưa có địa chỉ thật để mở chỉ đường."><span class="icon" aria-hidden="true">⌖</span><strong>Địa điểm</strong><small>Xem thông tin phòng khám</small></button>
+  </div></section>
+  <section class="section"><div class="top"><h3>Hồ sơ của bạn</h3><a href="#task">Chọn hồ sơ →</a></div><div class="person-row"><span class="person" aria-hidden="true">MA</span><div><strong>Nguyễn Minh Anh</strong><p class="muted">Bản thân</p></div></div></section>
+  <p class="message" role="status"></p>
+ </div><nav class="nav" aria-label="Điều hướng ví dụ tổng quan"><a href="#overview" aria-current="page">Trang chủ</a><a href="#selection">Lịch hẹn</a><a href="#task">Đặt lịch</a></nav>
+</article>
+<article class="phone" id="selection" aria-label="Màn chọn lịch hẹn">
+ <header class="header"><span class="eyebrow">LỊCH HẸN</span><h2>Sắp xếp lần khám</h2><p>Tìm lịch và xem việc cần chuẩn bị.</p></header>
+ <div class="content">
+  <div class="tabs" role="group" aria-label="Lọc lịch hẹn"><button aria-pressed="true" data-filter="upcoming">Sắp tới</button><button aria-pressed="false" data-filter="done">Đã khám</button><button aria-pressed="false" data-filter="cancelled">Đã hủy</button></div>
+  <label>Tìm chuyên khoa<input id="search" type="search" placeholder="Ví dụ: Tổng quát"></label>
+  <div id="results" aria-live="polite"></div>
+  <p class="message" role="status"></p>
+ </div><nav class="nav" aria-label="Điều hướng ví dụ lịch hẹn"><a href="#overview">Trang chủ</a><a href="#selection" aria-current="page">Lịch hẹn</a><a href="#task">Đặt lịch</a></nav>
+</article>
+<article class="phone" id="task" aria-label="Màn nhập thông tin">
+ <header class="header"><span class="eyebrow">BƯỚC 1 / 2 · THÔNG TIN</span><h2>Người đi khám</h2><p>Kiểm tra thông tin trước khi tiếp tục.</p></header>
+ <div class="content">
+  <form class="form" novalidate>
+   <label>Hồ sơ<select id="person"><option>Nguyễn Minh Anh</option><option>Trần Thu Mai</option></select></label>
+   <label>Số điện thoại<input id="phone" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="phone-help error"><span id="phone-help" class="helper muted">Dùng để liên hệ về yêu cầu này.</span></label>
+   <div class="error" id="error" role="alert"></div>
+   <div class="review"><small>Bạn đang chọn</small><p><strong>Khám tổng quát</strong></p><p>09:30 · 20/10/2026</p><p class="muted">Phòng khám An Bình</p></div>
+   <button type="submit" class="primary" id="next">Kiểm tra thông tin →</button>
+  </form>
+  <section id="confirmation" hidden class="section" aria-live="polite"><h3>Kiểm tra yêu cầu</h3><p id="summary"></p><p class="muted">Ví dụ dừng trước bước gửi. Chưa tạo lịch hẹn.</p><button id="back">← Sửa thông tin</button></section>
+ </div><nav class="nav" aria-label="Điều hướng ví dụ nhập thông tin"><a href="#overview">Trang chủ</a><a href="#selection">Lịch hẹn</a><a href="#task" aria-current="page">Đặt lịch</a></nav>
+</article>
+</div></main>
+<script>
+const appointments=[
+ {state:'upcoming',name:'Khám tổng quát',time:'09:30',date:'20/10/2026',status:'✓ Đã xác nhận'},
+ {state:'upcoming',name:'Khám mắt',time:'14:00',date:'24/10/2026',status:'◷ Chờ xác nhận'},
+ {state:'done',name:'Khám tổng quát',time:'08:00',date:'02/09/2026',status:'✓ Đã khám'}
+];
+let filter='upcoming';
+const results=document.querySelector('#results'),search=document.querySelector('#search');
+function render(){
+ const items=appointments.filter(x=>x.state===filter&&x.name.toLocaleLowerCase('vi').includes(search.value.trim().toLocaleLowerCase('vi')));
+ results.replaceChildren();
+ if(!items.length){results.innerHTML='<div class="section"><h3>Chưa có lịch phù hợp</h3><p>Thử xem lịch sắp tới hoặc xóa từ khóa.</p><button id="reset">Xóa bộ lọc</button></div>';document.querySelector('#reset').onclick=()=>{search.value='';selectFilter('upcoming')};return}
+ for(const item of items){const card=document.createElement('section');card.className='appointment';card.dataset.state=item.state;card.dataset.pending=String(item.status.includes('Chờ'));card.innerHTML=`<div class="top"><strong class="time">${item.time}</strong><span class="badge">${item.status}</span></div><h3>${item.name}</h3><p class="muted">${item.date} · Nguyễn Minh Anh</p><button data-message="${item.name} · ${item.date} · ${item.status}">Xem chi tiết →</button>`;results.append(card)}
+}
+function selectFilter(value){filter=value;document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===value)));render()}
+document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>selectFilter(b.dataset.filter));search.oninput=render;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-message]');if(b)b.closest('.phone').querySelector('.message').textContent=b.dataset.message});
+document.querySelector('form').onsubmit=e=>{
+ e.preventDefault();const field=document.querySelector('#phone'),error=document.querySelector('#error');
+ if(!/^[0-9 +()-]{9,16}$/.test(field.value.trim())){error.textContent='Kiểm tra số điện thoại: nhập từ 9 đến 16 ký tự số và ký hiệu điện thoại.';field.setAttribute('aria-invalid','true');field.focus();return}
+ error.textContent='';field.removeAttribute('aria-invalid');
+ document.querySelector('#summary').textContent=document.querySelector('#person').value+' · '+field.value;
+ e.target.hidden=true;document.querySelector('#confirmation').hidden=false;document.querySelector('#back').focus();
+};
+document.querySelector('#back').onclick=()=>{document.querySelector('form').hidden=false;document.querySelector('#confirmation').hidden=true;document.querySelector('#phone').focus()};render();
+</script>
+</html>

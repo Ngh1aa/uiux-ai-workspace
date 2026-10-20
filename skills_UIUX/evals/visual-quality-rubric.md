@@ -1,6 +1,22 @@
 # Visual Quality Eval Rubric — V5.4
 
-Chuyên dùng để chấm **visual output quality** của website được tạo/redesign bởi agent. CI chứng minh "không hỏng"; rubric này chứng minh "đẹp, đọc được và ổn định hơn".
+Chuyên dùng để đánh giá **visual output quality** của website/app được tạo hoặc redesign.
+CI chỉ kiểm những điều đã được chạy; rubric ghi nhận đánh giá từ ảnh thực tế,
+không tự chứng minh giao diện đẹp hơn, người dùng thích hơn hay tác động sản phẩm.
+
+## UX before visual scoring
+
+Walk through the primary task before scoring appearance: can the user identify the
+current state, choose the next action, reach the intended destination and recover?
+Open blockers (dead ends, misleading status, lost input, unreadable essential
+content) fail acceptance regardless of visual score. Record screen/state, observation,
+owner and same-scenario retest. Expert review is not direct-user research.
+
+For mobile, inspect overview, selection and input/review as different task families.
+Forms/settings may deliberately reuse a compact list; do not demand bento, photos or
+novel layouts when these reduce comprehension. Media absence with a documented task
+rationale is not a defect; mark the dimension N/A and explain adjusted weighting.
+Never insert imagery merely to earn media points.
 
 ## Grading approach
 
@@ -89,9 +105,11 @@ Automated signal: `scripts/template-monotony-detector.py` provides structural di
 
 ### 7. Anti-generic-AI — 10%
 
-- 0: obvious AI-template: glass cards, gradient borders, rounded everything, identical section spacing, over-decorated.
-- 1: 3+ generic AI patterns present; decorative gradients, unnecessary blur effects.
-- 2: mostly clean but 1–2 template-ish patterns.
+Use the [canonical seven-sign screenshot checklist](../ui-craft-and-visual-qa/SKILL.md#anti-generic-ui-checks) for per-sign verdicts, rendered locations, role/rationale, evidence gaps and repair handling. Record all seven before scoring this dimension. Pattern presence alone does not establish poor quality or AI authorship; assess its purpose and observed effect on the specific brand/task.
+
+- 0: pervasive unexplained decoration or repeated containers obscure content priority and task comprehension.
+- 1: 3+ unjustified patterns compete with hierarchy or weaken brand/task fit.
+- 2: mostly purposeful but 1–2 unjustified patterns remain; record their locations and impact.
 - 3: purposeful design choices; decoration justified by function.
 - 4: no template smell; design choices are specific to the domain/brand/content; ornamentation serves hierarchy or brand, never filler.
 
@@ -125,7 +143,7 @@ Regardless of dimension scores, the visual quality eval FAILS if:
 2. Deterministic gates — any gate failure → score capped at 30 and overall FAIL when it is a DUE-NOW P0/P1.
 3. Capture screenshots for declared representative viewports/page roles.
 4. For shared owner changes, run elementary sanity across all affected routes/templates; deep aesthetic scoring may use representative routes.
-5. Score each dimension 0–4.
+5. Complete the canonical seven-sign screenshot checklist, then score each dimension 0–4. Incomplete evidence stays UNVERIFIED/BLOCKED; unresolved DUE-NOW P0/P1 findings cannot be offset by the composite score.
 6. Compute composite score.
 7. Check hard fail triggers.
 8. Record confidence: `high` (clear) / `medium` (borderline) / `low` (needs human).

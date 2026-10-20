@@ -198,6 +198,44 @@ def direction_differences(first: Direction, second: Direction) -> set[str]:
     return axes
 
 
+class UXFinding(StrictModel):
+    observation: str = Field(min_length=1, max_length=2000)
+    severity: Literal["blocker", "major", "minor"]
+    status: Literal["open", "resolved"]
+    retest: str | None = Field(default=None, min_length=1, max_length=2000)
+
+    @model_validator(mode="after")
+    def resolution(self):
+        if self.severity == "blocker" and self.status == "open":
+            raise ValueError("repair blocking UX findings before visual acceptance")
+        if self.status == "resolved" and not (self.retest or "").strip():
+            raise ValueError("resolved UX findings require a concrete retest observation")
+        return self
+
+
+class UXTask(StrictModel):
+    entry_state: str = Field(min_length=1, max_length=1000)
+    user_goal: str = Field(min_length=1, max_length=1000)
+    information_priority: list[str] = Field(min_length=1, max_length=12)
+    primary_action: str = Field(min_length=1, max_length=300)
+    destination: str = Field(min_length=1, max_length=1000)
+    feedback: str = Field(min_length=1, max_length=1000)
+    recovery: str = Field(min_length=1, max_length=1000)
+    walkthrough_observation: str = Field(min_length=1, max_length=3000)
+    evidence_ref: str = Field(min_length=1, max_length=1000)
+    review_source: Literal["agent-heuristic", "human"]
+    findings: list[UXFinding] = Field(default_factory=list, max_length=30)
+
+    @model_validator(mode="after")
+    def nonblank(self):
+        values = [self.entry_state, self.user_goal, self.primary_action, self.destination,
+                  self.feedback, self.recovery, self.walkthrough_observation, self.evidence_ref,
+                  *self.information_priority]
+        if any(not value.strip() for value in values):
+            raise ValueError("UX task fields must describe a concrete decision, not whitespace")
+        return self
+
+
 class PageDecision(StrictModel):
     route: str = Field(min_length=1, max_length=1000)
     page_role: str = Field(min_length=1, max_length=120)
@@ -219,6 +257,7 @@ class PageDecision(StrictModel):
     reference_transfers: list[ReferenceTransfer] = Field(default_factory=list, max_length=12)
     comparison_protocol: ComparisonProtocol | None = None
     comparison_record: ComparisonRecord | None = None
+    ux: UXTask | None = None
 
     @model_validator(mode="after")
     def check_choices(self):
@@ -253,7 +292,8 @@ class Capture(StrictModel):
 
 class DesignDecisions(StrictModel):
     schema_version: Literal["1.0", "2.0"]
-    pages: list[PageDecision] = Field(min_length=1, max_length=30)
+    # A whole mobile product can exceed 30 screens; keep one bounded, traceable contract.
+    pages: list[PageDecision] = Field(min_length=1, max_length=100)
     captures: list[Capture] = Field(default_factory=list, max_length=200)
 
     @model_validator(mode="after")
@@ -386,6 +426,7 @@ def check_design_decisions(payload: dict, *, phase: str = "design", project_root
         "page_count": len(contract.pages) if contract else 0,
         "verification": "DECISION_INTEGRITY_ONLY",
         "aesthetic_quality": "UNKNOWN",
+        "ux_integrity": "RECORDED" if contract and all(page.ux for page in contract.pages) else "MISSING",
         "human_preference": "UNKNOWN",
         "comparison_reviews": comparison_reviews,
         "direction_comparison": 'LEGACY_LAYOUT_ONLY' if contract and contract.schema_version == '1.0' else 'MULTI_AXIS_DECLARED' if contract else 'UNKNOWN',
@@ -435,6 +476,8 @@ def design_receipt_errors(data: dict, workspace_root: Path | None = None) -> lis
         for key in ('artifact_sha256', 'contract_sha256', 'contract_version', 'dependency_hashes'):
             if key not in data or data[key] != current[key]:
                 raise ValueError(f'stale design receipt: {key} changed or missing; rerun checker')
+        if 'ux_integrity' in data and data['ux_integrity'] != current['ux_integrity']:
+            raise ValueError('UX integrity claim does not match the current contract')
     except (OSError, ValueError, TypeError, KeyError) as error:
         return [f'design evidence invalid: {error}']
     return []
