@@ -346,7 +346,7 @@
           "id": "design-decision-integrity",
           "require": "canonical decision checker verifies numeric roles, source traces and distinct internal composition topology; integrity is not aesthetic acceptance",
           "evidence_types": ["design_contract_check"],
-          "design_phase": "design", "design_contract_version": "2.0"
+          "design_phase": "design", "design_contract_version": "2.0", "ux_contract_required": true
         },
         {
           "id": "solution-validation",
@@ -594,7 +594,7 @@
           "id": "design-render-integrity",
           "require": "decision contract references inspected desktop/mobile alternatives with capture digests and concrete critique; human preference remains unknown",
           "evidence_types": ["design_contract_check"],
-          "design_phase": "rendered", "design_contract_version": "2.0"
+          "design_phase": "rendered", "design_contract_version": "2.0", "ux_contract_required": true
         },
         {
           "id": "keyboard-focus",

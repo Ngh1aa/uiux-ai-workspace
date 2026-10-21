@@ -1,6 +1,22 @@
 # Visual Quality Eval Rubric — V5.4
 
-Chuyên dùng để chấm **visual output quality** của website được tạo/redesign bởi agent. CI chứng minh "không hỏng"; rubric này chứng minh "đẹp, đọc được và ổn định hơn".
+Chuyên dùng để đánh giá **visual output quality** của website/app được tạo hoặc redesign.
+CI chỉ kiểm những điều đã được chạy; rubric ghi nhận đánh giá từ ảnh thực tế,
+không tự chứng minh giao diện đẹp hơn, người dùng thích hơn hay tác động sản phẩm.
+
+## UX before visual scoring
+
+Walk through the primary task before scoring appearance: can the user identify the
+current state, choose the next action, reach the intended destination and recover?
+Open blockers (dead ends, misleading status, lost input, unreadable essential
+content) fail acceptance regardless of visual score. Record screen/state, observation,
+owner and same-scenario retest. Expert review is not direct-user research.
+
+For mobile, inspect overview, selection and input/review as different task families.
+Forms/settings may deliberately reuse a compact list; do not demand bento, photos or
+novel layouts when these reduce comprehension. Media absence with a documented task
+rationale is not a defect; mark the dimension N/A and explain adjusted weighting.
+Never insert imagery merely to earn media points.
 
 ## Grading approach
 

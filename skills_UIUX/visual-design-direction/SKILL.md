@@ -28,6 +28,11 @@ Nếu domain có physical/printed/spatial/service artifacts mạnh và visual di
 
 ## Workflow
 
+For apps, first apply [mobile UX-first practice](references/mobile-ux-first.md).
+For any surface, establish the user task, current state, next action and recovery
+in a wireframe walkthrough before visual styling. Repair blocking UX findings first;
+craft scores cannot compensate for a broken journey.
+
 1. Audit reference benchmark theo *principle*, không copy surface; nếu chưa có benchmark và task cần reference intelligence, tạo nó trước.
 2. Khi applicable, audit domain-artifact research theo *mental model + transferable property*, không literal imitation; ưu tiên lowest useful metaphor fidelity.
 3. Synthesize digital references + domain artifacts + brand truth thành một design DNA coherent; không Frankenstein nhiều style/metaphor.
@@ -60,6 +65,7 @@ Resources: [Decision provenance and controlled comparisons](references/decision-
 - External manifest và managed provider request có `design_workflow` cho active stage. `LOADED` không phải `ADOPTED`; ghi nguồn/hypothesis, actual values và rejected alternative trong `docs/uiux/design-decisions.json` cho PAGE/REDESIGN/PRODUCT có gate.
 - [Canonical checker](scripts/check-design-decisions.py) hỗ trợ `--schema`, `--phase design`, `--phase rendered`. Contract mới dùng `schema_version=2.0`; gate của ba design flows yêu cầu v2. V1 vẫn đọc được và trả `LEGACY_LAYOUT_ONLY`, không thỏa gate v2. Dùng schema theo project thật, không copy sample thành preset. Receipt là `DECISION_INTEGRITY_ONLY`; không gọi PASS là đẹp hoặc human validated.
 - Rendered phase kiểm capture digest/dimensions, desktop/mobile cho alternatives và critique fields. `inspected`/review là declaration của reviewer, không independently verified user evidence. Phải mở ảnh review theo `ui-craft-and-visual-qa`, không dùng JSON self-report thay visual judgement.
+- New page, website/portfolio redesign and mobile design gates also require each page's `ux` record (task, action, destination, feedback, recovery and walkthrough). Use the canonical schema and [field guide](references/mobile-ux-first.md); open blocking findings fail integrity and resolved findings need retest. `ux_integrity=RECORDED` is record coverage, not proof of usability or the chronology of a review.
 - Existing explicit composition preserve contract được ghi với source kind=user; giữ đúng user constraint, không lấy starting suggestion làm exemption.
 - Chỉ so sánh alternatives ở representative decision pages. Rollout page có thể dùng `comparison_required=false` và `inherited_from` trỏ route đại diện trong cùng contract; vẫn ghi actual values và review selected composition ở desktop/mobile. Không nhân đôi mọi route/state để thỏa gate.
 - Retrieval nối structured domain profile + page role với [reference anatomy](data/reference-anatomies.json). Ghi property cụ thể → ADOPT/ADAPT/REJECT → lý do → boundary trong `reference_transfers`. Nội dung quan sát từ first-party page khác với pixel geometry; chưa mở ảnh thì geometry vẫn UNKNOWN. Không có card đúng context phải hiện `NO_CURATED_REFERENCE_ANATOMY`; research thêm, không mượn style ngành khác.
