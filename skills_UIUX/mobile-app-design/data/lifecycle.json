@@ -7,7 +7,8 @@
       "decision": "Which mobile task, target truth and evidence justify the design?",
       "exit_checks": [
         "Platform/output/scope and baseline explicit",
-        "Source-to-decision trace and actual participant access declared"
+        "Source-to-decision trace and actual participant access declared",
+        "UX walkthrough precedes visual direction: current state, next action and recovery are understandable"
       ],
       "deliverables": [
         {
@@ -17,7 +18,9 @@
             "problem/audience/top tasks",
             "platform/OS/device/stack or UNKNOWN",
             "screen/state inventory and preserved components",
-            "authority and excluded native implementation/release"
+            "authority and excluded native implementation/release",
+            "screen job, priority order, CTA destination, feedback and recovery",
+            "wireframe walkthrough observations, blockers and retest; agent review is not user research"
           ],
           "resources": [
             "mobile-app-design/SKILL.md",
@@ -55,11 +58,15 @@
             "entry/task/state/transition",
             "back/dismiss/keyboard/permissions/offline when relevant",
             "brand/component reuse and platform mapping",
-            "source-to-decision trace and current revision"
+            "source-to-decision trace and current revision",
+            "overview / selection / form representative compositions and justified inheritance",
+            "canonical v2 design-decisions.json with reference transfers and numeric roles"
           ],
           "resources": [
             "mobile-app-design/templates/mobile-design-contract.md",
-            "mobile-navigation-and-state-ux/SKILL.md"
+            "mobile-navigation-and-state-ux/SKILL.md",
+            "visual-design-direction/SKILL.md",
+            "visual-design-direction/references/mobile-ux-first.md"
           ]
         },
         {
@@ -96,7 +103,9 @@
       "exit_checks": [
         "Current captures/findings and handoff records reviewed",
         "File coverage does not claim aesthetics/native QA",
-        "Missing runtime/user/store evidence stays UNKNOWN"
+        "Missing runtime/user/store evidence stays UNKNOWN",
+        "Task comprehension before visual craft; actual captures opened and reviewed",
+        "Seven visual signs with location and purpose; no automatic beauty PASS"
       ],
       "deliverables": [
         {
@@ -109,7 +118,8 @@
             "evidence type and limitations"
           ],
           "resources": [
-            "mobile-prototype-and-qa/SKILL.md"
+            "mobile-prototype-and-qa/SKILL.md",
+            "ui-craft-and-visual-qa/SKILL.md"
           ]
         },
         {
@@ -172,7 +182,9 @@
       "exit_checks": [
         "Current browser task/recovery captures inspected",
         "Phone and desktop/subpath tests pass",
-        "Client URL verified or explicitly pending; native runtime NOT_RUN"
+        "Client URL verified or explicitly pending; native runtime NOT_RUN",
+        "Task comprehension before visual craft; actual captures opened and reviewed",
+        "Seven visual signs with location and purpose; no automatic beauty PASS"
       ],
       "deliverables": [
         {
@@ -186,7 +198,8 @@
           ],
           "resources": [
             "mobile-web-preview/SKILL.md",
-            "mobile-prototype-and-qa/SKILL.md"
+            "mobile-prototype-and-qa/SKILL.md",
+            "ui-craft-and-visual-qa/SKILL.md"
           ]
         },
         {

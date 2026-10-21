@@ -19,6 +19,8 @@ For data-backed tasks cover loading, content, empty, error and retry; add pendin
 
 Decide which data is local, cached, remote, queued or simulated. State what happens when connectivity returns and how duplicate actions/conflicts are prevented. Reuse `state-feedback-and-error-recovery`, `authentication-account-and-recovery-ux` and form skills for their own decisions.
 
+Presentation fallbacks must not invent a domain fact. For example, a pending appointment must not inherit a named doctor from a decorative default; an unpaid receipt must not become paid because its card looks complete. Put synthetic named facts in labelled fixtures, read facts from the canonical state, and render unknown/unassigned values explicitly. Test the same fact in list, detail, confirmation and notification entry.
+
 ## Output and verification
 Deliver a navigation graph, transition/state table and critical task scenarios with preconditions, action, expected outcome and evidence owner. Test one recovery path for each consequential action. Generic success toasts and empty handlers do not implement the task.
 
