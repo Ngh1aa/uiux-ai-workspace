@@ -28,6 +28,7 @@ See [mobile practice](mobile-app-design/references/professional-practice.md), [s
 | `website-audit-and-redesign` | Audit live/legacy site before redesign |
 | `brand-guidelines` | Brand foundation, color, type, voice |
 | `ux-research-and-journey` | Journey, task analysis and flows |
+| `ux-structure-and-flow-design` | UX structure layer: task model, user/task flows with failure paths, screen/state inventory, navigation model, wireframe spec, walkthrough and UX Readiness verdict before visual direction |
 | `information-architecture` | Inventory, taxonomy, labels, hierarchy, navigation/findability, page roles and URL migration |
 | `ux-laws-and-heuristics` | Heuristic review |
 | `design-reference-research-and-benchmark` | Search, score and synthesize real/curated design references by domain, audience, business goal and implementation fit |
@@ -177,6 +178,7 @@ Pinned source provenance lives in `vendor/cross-functional-intelligence/SOURCE-L
 - `human-ai-interaction-design`
 
 ## Capability packs
+- `ux-foundation` (UX-first core; see `../UX-FIRST-WORKFLOW.md` and `templates/ux/`)
 - `measurement-reliability` (V5)
 - `production-delivery` (V5 production hardening)
 - `product-growth-intelligence` (cross-functional product/growth/search/experimentation)

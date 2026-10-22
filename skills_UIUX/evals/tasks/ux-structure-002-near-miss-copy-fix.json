@@ -1,0 +1,16 @@
+{
+  "id": "ux-structure-002",
+  "category": "regression",
+  "prompt": "Đổi chữ nút 'Submit' thành 'Gửi đăng ký' và sửa thông báo lỗi số điện thoại cho rõ hơn trên form hiện có.",
+  "recommended_skills": ["ux-writing-and-microcopy", "state-feedback-and-error-recovery"],
+  "expected_outcomes": [
+    "Nhận ra đây là micro change, không mở toàn bộ quy trình UX structure",
+    "Thông báo lỗi nêu cách sửa cụ thể và giữ nguyên dữ liệu đã nhập",
+    "Nhãn nút nêu rõ hệ quả hành động"
+  ],
+  "must_not": [
+    "Tạo task model, user flow, sitemap cho một thay đổi copy nhỏ",
+    "Đổi layout hoặc visual không được yêu cầu"
+  ],
+  "rubric": {"alignment": 30, "ux": 30, "visual": 0, "system": 10, "inclusive": 15, "web_quality": 0, "verification": 15}
+}
