@@ -5,11 +5,11 @@ description: Map end-to-end experience across user actions, frontstage touchpoin
 
 # Service Blueprinting
 
-## Goal
+## Goal and scope
 
 Make the whole service visible, from what the user does to the people, processes and systems that make it work, so the team can tell which problems the interface can fix and which need operational change. A good blueprint ends arguments of the form "the website is confusing" by showing that step 4 waits three days for a manual approval nobody owns.
 
-## When not to use
+**When not to use**
 
 - Mapping only user goals, emotions and touchpoints with no backstage: use `ux-research-and-journey`.
 - Keeping continuity across email, phone, staff and locations once the service is understood: use `omnichannel-experience-continuity`.
@@ -17,7 +17,7 @@ Make the whole service visible, from what the user does to the people, processes
 - Translating a physical service ritual into a digital journey: use `service-experience-to-digital-journey`.
 - Designing in-product progress for a long-running process: use `complex-workflow-and-progress-ux`.
 
-## Prerequisites
+**Prerequisites**
 
 - A named service and one primary scenario (persona plus goal), not "all users".
 - Access to at least one person who does the backstage work, plus any process docs, SLAs, ticket data or logs.
@@ -65,7 +65,7 @@ Only UI problems are fixed by redesign alone. Service and policy problems may ne
 6. Separate UI problems from service and operational problems (and policy).
 7. Prioritize opportunities by user and operational impact, and list evidence gaps needing research.
 
-## Anti-patterns
+**Anti-patterns**
 
 - A journey map labelled "blueprint": no backstage lanes, no systems, no owners.
 - Mapping the documented process instead of what staff actually do; workarounds (spreadsheets, side chats) are missing.
@@ -76,12 +76,12 @@ Only UI problems are fixed by redesign alone. Service and policy problems may ne
 - Blueprint made in a workshop without anyone from operations or support.
 - Status page invented in the UI that the backstage cannot actually update.
 
-## Resources
+**Resources**
 
 - Need lane definitions, notation, cell templates or a filled example? Read [blueprint notation reference](references/blueprint-notation.md).
 - Before handing off a blueprint, run [blueprint gate](checklists/blueprint-gate.md).
 
-## Output
+**Output**
 
 1. Blueprint canvas (or table) with the eight lanes and step columns.
 2. Step table:
@@ -103,7 +103,7 @@ Only UI problems are fixed by redesign alone. Service and policy problems may ne
 - FAIL if a UI change is proposed to hide or disguise a broken backstage process without an operational owner logged (UI is not used to disguise a broken backstage process).
 - PASS only if the blueprint identifies evidence gaps that need research (assumed cells listed with a verification method).
 
-## Baseline and sources
+**Baseline and sources**
 
 - G. Lynn Shostack, "Designing Services That Deliver" (Harvard Business Review, 1984), origin of blueprinting and fail points.
 - Bitner, Ostrom and Morgan, "Service Blueprinting: A Practical Technique for Service Innovation" (lanes and lines).

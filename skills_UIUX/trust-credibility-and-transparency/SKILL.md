@@ -5,11 +5,11 @@ description: Design evidence architecture so users can judge who an organization
 
 # Trust, Credibility & Transparency
 
-## Goal
+## Goal and scope
 
 Give users enough verifiable evidence, at the moment they decide, to judge whether an organization is real, competent and honest. Trust is not a visual style; it is the ratio of checkable proof to unsupported claims, placed where doubt actually arises.
 
-## When not to use
+**When not to use**
 
 - Persuasive argument, objection handling and CTA strategy for a landing page: use `conversion-and-content`.
 - Manipulative patterns (fake urgency, hidden costs, confirmshaming): use `ethical-ux-and-deceptive-patterns`.
@@ -17,7 +17,7 @@ Give users enough verifiable evidence, at the moment they decide, to judge wheth
 - Tracing research claims to sources inside the design team: use `evidence-provenance-and-research-ops`.
 - Ongoing content ownership, review cycles and expiry in the CMS: use `content-governance-and-cms`.
 
-## Prerequisites
+**Prerequisites**
 
 - List of the decisions users make on the site (enquire, apply, donate, book a viewing, buy).
 - Inventory of what the organization can actually prove: registrations, accreditations, named people, case studies with permission, policies, audited figures.
@@ -58,7 +58,7 @@ Give users enough verifiable evidence, at the moment they decide, to judge wheth
 6. Remove or soften unsupported superlatives; disclose material connections on endorsements.
 7. Re-audit after launch on a review cadence tied to the most volatile fact type.
 
-## Anti-patterns
+**Anti-patterns**
 
 - Logo walls of companies whose one employee once attended a webinar.
 - Testimonials with first name, initial and stock headshot, no date, no way to tell if real.
@@ -70,12 +70,12 @@ Give users enough verifiable evidence, at the moment they decide, to judge wheth
 - "Award-winning" with no award named.
 - Influencer or affiliate content with disclosure hidden behind "more" or at the end.
 
-## Resources
+**Resources**
 
 - Need the claim-evidence matrix template, placement patterns by site type, disclosure wording or a worked example? Read [evidence architecture reference](references/evidence-architecture.md).
 - Before release, run [trust gate](checklists/trust-gate.md).
 
-## Output
+**Output**
 
 1. Claim-evidence matrix:
 
@@ -96,7 +96,7 @@ Give users enough verifiable evidence, at the moment they decide, to judge wheth
 - PASS only if evidence for a claim made at a decision point is visible or linked inline at that point.
 - PASS only if representative imagery or data that could be mistaken for real is labelled.
 
-## Baseline and sources
+**Baseline and sources**
 
 - B. J. Fogg and Stanford Persuasive Technology Lab, Stanford Web Credibility Guidelines and Prominence-Interpretation theory.
 - US FTC, Guides Concerning the Use of Endorsements and Testimonials in Advertising (16 CFR Part 255) and the FTC rule on consumer reviews and testimonials. Verify current text and jurisdiction; this is design guidance, not legal advice.

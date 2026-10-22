@@ -5,11 +5,11 @@ description: Define and measure usability outcomes so redesign quality can be co
 
 # UX Benchmarking & Metrics
 
-## Goal
+## Goal and scope
 
 Produce a repeatable measurement of how well representative users complete critical tasks, so a redesign can be judged against a documented baseline with honest uncertainty. A benchmark answers "did it get better, by how much, and how sure are we", not "does it look better".
 
-## When not to use
+**When not to use**
 
 - Defining product analytics events, funnels or A/B test plans: use `analytics-and-experimentation`.
 - Reading a finished experiment (ship, kill, iterate): use `experimentation-interpretation`.
@@ -17,7 +17,7 @@ Produce a repeatable measurement of how well representative users complete criti
 - Journey or service-level outcome loops across channels: use `journey-outcome-and-service-health`.
 - Connecting outcomes to production instrumentation: use `outcome-metrics-and-instrumentation`.
 
-## Prerequisites
+**Prerequisites**
 
 - A named decision the benchmark informs (release go/no-go, redesign comparison, quarterly health).
 - Top tasks list (see `audience-intent-and-top-tasks`) and the segments that matter.
@@ -57,14 +57,14 @@ Produce a repeatable measurement of how well representative users complete criti
 6. Pair numbers with qualitative causes: observed failure points, quotes, error codes per task.
 7. Report trend, uncertainty and limitations: intervals, sample, what changed in protocol, what the data cannot say.
 
-## Rules
+**Rules**
 
 - Do not optimize vanity metrics at the expense of task success.
 - Keep task definitions stable across benchmark rounds; version them.
 - Segment by device or context only when it materially affects interpretation; small segments inflate noise.
 - Treat small samples cautiously; do not fake statistical certainty. No significance claims without a test that fits the design.
 
-## Anti-patterns
+**Anti-patterns**
 
 - Moving the goalposts: rewording a task or loosening the success criterion in round two, then claiming improvement.
 - Reporting means of SUS item scores, or calling a SUS score a percentage.
@@ -75,12 +75,12 @@ Produce a repeatable measurement of how well representative users complete criti
 - Dashboards full of engagement metrics with no task success metric and no guardrail.
 - Five-user test results presented as "80% of users".
 
-## Resources
+**Resources**
 
 - Need formulas, sample-size reasoning, HEART worksheet or a filled example? Read [benchmark methods reference](references/benchmark-methods.md).
 - Before publishing a benchmark report, run [benchmark gate](checklists/benchmark-gate.md).
 
-## Output
+**Output**
 
 A benchmark report containing:
 
@@ -105,7 +105,7 @@ Metrics answer a real product question and use the same success definition befor
 - PASS only if each primary metric has at least one guardrail.
 - FAIL if formative-round numbers are presented as benchmark percentages.
 
-## Baseline and sources
+**Baseline and sources**
 
 - Sauro and Lewis, Quantifying the User Experience (adjusted Wald, geometric mean task time, sample size, SUS norms). Verify current norms before quoting thresholds.
 - Brooke, SUS (1986); Lewis and colleagues on UMUX-Lite; Sauro on SEQ.

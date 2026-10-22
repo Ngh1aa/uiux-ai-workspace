@@ -38,7 +38,8 @@ font-size stress.
 | Evidence | Status |
 |---|---|
 | Playwright Chromium (build 1194), 3 widths x 2 themes x 2 pages, task flows, overflow, console | VERIFIED, `review/browser-report.json` |
-| axe-core 4.14.0, WCAG A/AA tags: 0 violations, 0 incomplete | VERIFIED for automated rules only |
+| axe-core 4.14.0, WCAG A/AA tags: 0 violations on both pages | VERIFIED for automated rules only |
+| 4 axe `incomplete` `color-contrast` results, docs page at 320 and 390 px | Reviewed: contrast-table cells clipped inside the horizontal scroll region, so axe cannot sample the background. They render `text.primary` on `surface.page`, a declared pair at 15.29:1 in both modes. No issue |
 | Screenshots opened and inspected by the agent | `review/*.png` (palette-quantised to keep the repo light) |
 | WebKit and Firefox | NOT RUN: engines not installed in the build environment |
 | Screen reader (VoiceOver, TalkBack), native Dynamic Type | UNKNOWN |

@@ -5,11 +5,11 @@ description: Govern component/token evolution, contribution, deprecation, docume
 
 # Design System Governance & Adoption
 
-## Goal
+## Goal and scope
 
 Keep one system trustworthy enough that teams choose it over building their own, while it changes fast enough to meet their needs. Governance is a service with a decision process, not a gatekeeping committee: every request gets a fast, predictable answer (use existing, extend, compose locally, or add to the system), and every change ships with a version, a changelog and a migration path. Health is measured by adoption, exception rate and accessibility, never by component count.
 
-## When not to use
+**When not to use**
 
 - Building or extending tokens and component contracts themselves: use `design-system-and-components`.
 - Implementing components in code with stories and tests: use `component-driven-development`.
@@ -17,7 +17,7 @@ Keep one system trustworthy enough that teams choose it over building their own,
 - Mobile token and handoff specifics: use `mobile-design-system-and-handoff`.
 - A single product with one team and no consumers yet: use `design-system-and-components`; governance overhead is premature.
 
-## Prerequisites
+**Prerequisites**
 
 - Inventory of consuming products, their framework and their current package version.
 - Current owners (named people or a team) for design assets, code packages and docs.
@@ -72,7 +72,7 @@ Run a gap analysis before any new component: list the nearest existing component
 7. Document intentional escape hatches and review exceptions on a cadence; promote recurring ones into the system.
 8. Report system health to stakeholders with the metrics below and a decision list.
 
-## Anti-patterns
+**Anti-patterns**
 
 - "Button2", "NewCard" and "CardV3" coexisting with no deprecation of the old ones.
 - Breaking prop rename shipped in a minor version because "it is just a rename".
@@ -83,11 +83,11 @@ Run a gap analysis before any new component: list the nearest existing component
 - Every product overriding internal CSS classes because the system lacks one prop.
 - Docs that show the ideal state only, with no do/don't, no accessibility notes and no code.
 
-## Resources
+**Resources**
 
 - Need the metric definitions, deprecation timeline template, RFC template or worked example? Read [governance operations reference](references/governance-operations.md).
 
-## Output
+**Output**
 
 Deliver a governance package:
 
@@ -113,7 +113,7 @@ Pass only if every statement is true:
 - [ ] System health includes usage and accessibility, not component count: report shows adoption, exceptions and a11y status per component.
 - [ ] Escape hatches are named, documented and countable.
 
-## Baseline / sources
+**Baseline / sources**
 
 - Semantic Versioning 2.0.0 specification.
 - W3C Design Tokens Community Group format (verify current specification status).

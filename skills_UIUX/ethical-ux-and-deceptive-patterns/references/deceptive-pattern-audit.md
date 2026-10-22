@@ -13,9 +13,9 @@ Names follow the deceptive.design taxonomy (Brignull) with groupings used in Mat
 | Drip pricing / hidden costs | Do mandatory fees appear after the first price display? | FTC fee rules (verify scope); EU price indication rules |
 | Sneak into basket | Does an item enter the cart without an explicit add action? | EU Consumer Rights Directive; UCPD |
 | Forced continuity | Does a trial convert to paid without clear prior disclosure and easy cancel? | ROSCA; state auto-renewal laws (verify) |
-| Hard to cancel (roach motel) | Is exit harder, longer or in a different channel than entry? | ROSCA simple cancellation; CPRA symmetry; DSA Art. 25 |
-| Obstruction | Are extra steps added to the user's preferred path only? | DSA Art. 25; CPRA regs |
-| Nagging | Does the prompt return after decline with no lasting "no"? | DSA Art. 25 (repeated requests) |
+| Hard to cancel (roach motel) | Is exit harder, longer or in a different channel than entry? | ROSCA simple cancellation; state auto-renewal laws; CPRA symmetry (privacy choices); DSA Art. 25 (platforms only) |
+| Obstruction | Are extra steps added to the user's preferred path only? | UCPD; DSA Art. 25 (platforms only); CPRA regs |
+| Nagging | Does the prompt return after decline with no lasting "no"? | DSA Art. 25 (platforms only, repeated requests); UCPD |
 | Fake urgency | Does the countdown reset, or is the deadline untrue? | FTC Act Section 5; UCPD (false limited-time claims) |
 | Fake scarcity | Is the stock or demand claim not tied to real data? | FTC Act Section 5; UCPD |
 | Fake social proof | Are reviews, counts or activity notices fabricated or cherry-picked? | FTC rules on fake reviews and testimonials (verify) |

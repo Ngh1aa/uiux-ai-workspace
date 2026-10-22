@@ -61,7 +61,7 @@ Scenario: tenant moves out and wants their deposit back. End state: money receiv
 
 | Step | Evidence | Customer action | Frontstage (owner) | Backstage (owner) | Support systems (owner) | Wait (observed) | Fail point and detection | Problem type | Evidence quality |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Online form confirmation screen | Submits move-out form with bank details | Form validates IBAN (web team) | None | CRM record created (CRM admin) | None | F: bank details typed into free-text field, not validated; detected only at payout | UI | Observed |
+| 1 | Online form confirmation screen | Submits move-out form with bank details | Form accepts bank details as free text, no IBAN validation (web team) | None | CRM record created (CRM admin) | None | F: bank details typed into free-text field, not validated; detected only at payout | UI | Observed |
 | 2 | None (E?) | Waits for inspection | None | Property manager schedules inspection (property ops) | Shared spreadsheet calendar (G: no owner) | 3 to 12 days | F: request missed when spreadsheet not checked; detected when tenant calls | Service | Staff reported |
 | 3 | Email with inspection result | Reads deductions | Email sent (property ops) | Manager enters deductions | Finance queue (finance team) | A: unknown | H: property ops to finance, via email to shared inbox, receiver unnamed (G) | Service | Assumed |
 

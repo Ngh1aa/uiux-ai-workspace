@@ -5,11 +5,11 @@ description: Design AI-assisted experiences with clear mental models, capability
 
 # Human-AI Interaction Design
 
-## Goal
+## Goal and scope
 
 Give users an accurate mental model of what the AI can and cannot do, keep them in control of outcomes they are accountable for, and make wrong output cheap to notice, fix or undo. The design target is calibrated trust: users rely on the system when it is right and catch it when it is wrong. Over-trust and under-trust are both failures.
 
-## When not to use
+**When not to use**
 
 - Evaluating the reliability of UI/UX coding agents in this repository: use `agent-evaluation-and-reliability`.
 - Remembered preferences, saved filters and recommendations that are rules, not models: use `personalization-and-preference-ux`.
@@ -17,7 +17,7 @@ Give users an accurate mental model of what the AI can and cannot do, keep them 
 - Generic loading, empty and error states with no AI-specific uncertainty: use `state-feedback-and-error-recovery`.
 - Data collection, retention and consent mechanics for training data: use `security-and-privacy`, then return here for the in-product explanation.
 
-## Prerequisites
+**Prerequisites**
 
 - The user task and who is accountable for its outcome (the user, a reviewer, the organization).
 - Error cost: what happens when the AI is wrong and nobody notices.
@@ -73,7 +73,7 @@ Agentic actions with side effects show the plan before execution, name each exte
 7. Clarify data use and whether user feedback changes the system, in plain language next to the control.
 8. Test with real model output, including bad output, not with hand-written ideal responses.
 
-## Anti-patterns
+**Anti-patterns**
 
 - Mockups populated with perfect AI output; the shipped model is never shown failing in design review.
 - "98% confident" badges from uncalibrated scores.
@@ -86,11 +86,11 @@ Agentic actions with side effects show the plan before execution, name each exte
 - AI feature cannot be turned off, or reappears after dismissal.
 - Generic "Something went wrong" for refusals, so users retry the same request forever.
 
-## Resources
+**Resources**
 
 - Need the HAX guideline map, state inventory or the worked before/after example? Read [human-AI pattern reference](references/human-ai-pattern-reference.md).
 
-## Output
+**Output**
 
 Deliver an AI experience specification containing:
 
@@ -116,7 +116,7 @@ Pass only if every statement is true:
 - [ ] Every feedback control states what happens to the feedback.
 - [ ] Design was reviewed with real model output, including failure cases.
 
-## Baseline / sources
+**Baseline / sources**
 
 - Google PAIR People + AI Guidebook: user needs and defining success, data collection and evaluation, mental models, explainability and trust, feedback and control, errors and graceful failure.
 - Microsoft Guidelines for Human-AI Interaction (Amershi et al., CHI 2019), 18 guidelines, and the HAX Toolkit.
