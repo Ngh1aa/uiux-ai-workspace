@@ -74,6 +74,12 @@ For active visual-design work, the stage packet now includes `design_workflow`: 
 
 New design contracts use v2: retrieve domain/page-role reference anatomy, explain each transfer, compare materially different free typography/density/object axes, and predeclare comprehension/distinctiveness questions. Use the comparison CLI or routed read-only provider tools to prepare labelled reviews and summarize capture-bound observations. Legacy v1 remains inspectable as layout-only evidence and cannot satisfy a v2 gate. Human participation and causal improvement remain UNKNOWN until appropriate evidence exists.
 
+UX structure before visual: web page/redesign flows now activate
+`ux-structure-and-flow-design` in research with a `ux-before-visual` gate (task model,
+flows with failure paths, screen/state inventory, navigation model, wireframe spec,
+5-scenario walkthrough, UX Readiness verdict). Human-facing guide:
+[UX-FIRST-WORKFLOW.md](UX-FIRST-WORKFLOW.md); templates: `skills_UIUX/templates/ux/`.
+
 UX comes first: the five page/redesign/mobile design flows now require each page's
 task, next action, feedback, recovery and walkthrough record before visual acceptance.
 Open UX blockers fail the canonical check; a high visual score cannot compensate.

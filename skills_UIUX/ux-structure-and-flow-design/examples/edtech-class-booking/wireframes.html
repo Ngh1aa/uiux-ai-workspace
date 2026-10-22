@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframe: Đổi buổi học (U5)</title>
+<style>
+  /* Greyscale on purpose: reviewers judge structure, not taste. One typeface, no brand colour. */
+  :root { --ink:#1a1a1a; --mute:#5c5c5c; --line:#c9c9c9; --fill:#efefef; --page:#fafafa; --white:#fff; }
+  * { box-sizing:border-box; margin:0; }
+  body { font:15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--ink); background:var(--page); padding:24px 16px 48px; }
+  header.doc { max-width:1180px; margin:0 auto 20px; }
+  header.doc h1 { font-size:20px; }
+  header.doc p { color:var(--mute); max-width:70ch; margin-top:6px; }
+  .legend { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:10px; font-size:13px; color:var(--mute); }
+  .legend b { color:var(--ink); }
+  .board { max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:28px 20px; }
+  figure { display:flex; flex-direction:column; gap:8px; }
+  figcaption { font-size:13px; color:var(--mute); min-height:3.6em; }
+  figcaption b { color:var(--ink); display:block; font-size:14px; }
+  .phone { width:100%; max-width:360px; min-height:640px; border:2px solid var(--ink); border-radius:28px; background:var(--white); display:flex; flex-direction:column; overflow:hidden; }
+  .bar { display:flex; align-items:center; gap:10px; padding:16px 16px 12px; border-bottom:1px solid var(--line); }
+  .bar .back { width:28px; height:28px; border:1px solid var(--line); border-radius:50%; display:grid; place-items:center; font-size:14px; }
+  .bar h2 { font-size:16px; }
+  .body { flex:1; padding:16px; display:flex; flex-direction:column; gap:14px; }
+  .note { font-size:11px; letter-spacing:.02em; color:var(--mute); text-transform:uppercase; }
+  .block { border:1px dashed var(--line); border-radius:10px; padding:12px; position:relative; }
+  .tag { position:absolute; top:-9px; left:10px; background:var(--white); padding:0 6px; font-size:11px; color:var(--mute); }
+  .big { font-size:22px; font-weight:700; }
+  .row { display:flex; justify-content:space-between; gap:10px; align-items:center; }
+  .muted { color:var(--mute); font-size:13px; }
+  .chips { display:flex; gap:6px; overflow:hidden; }
+  .chip { flex:0 0 auto; border:1px solid var(--line); border-radius:999px; padding:6px 10px; font-size:13px; }
+  .chip.on { border:2px solid var(--ink); font-weight:600; }
+  .chip.off { color:#9a9a9a; text-decoration:line-through; }
+  .slot { border:1px solid var(--line); border-radius:10px; padding:10px 12px; display:flex; justify-content:space-between; gap:8px; }
+  .slot.on { border:2px solid var(--ink); }
+  .slot small { display:block; color:var(--mute); font-size:12px; }
+  .seats { font-size:12px; border:1px solid var(--ink); border-radius:6px; padding:1px 6px; align-self:flex-start; white-space:nowrap; }
+  .cta { margin:0 16px 20px; padding:14px; border-radius:12px; background:var(--ink); color:var(--white); text-align:center; font-weight:600; }
+  .cta.ghost { background:var(--white); color:var(--ink); border:1px solid var(--ink); }
+  .cta.wait { background:#6b6b6b; }
+  .link { text-align:center; font-size:14px; text-decoration:underline; margin:-8px 16px 20px; }
+  .helper { text-align:center; font-size:12px; color:var(--mute); margin:-12px 16px 16px; }
+  .alert { border:2px solid var(--ink); border-radius:10px; padding:12px; display:flex; gap:10px; }
+  .alert .ic { width:22px; height:22px; flex:0 0 22px; border:2px solid var(--ink); border-radius:50%; display:grid; place-items:center; font-weight:700; font-size:13px; }
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; }
+  .compare .x { text-decoration:line-through; color:var(--mute); }
+  .empty { text-align:center; padding:24px 8px; display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .empty .ph { width:56px; height:56px; border-radius:50%; background:var(--fill); }
+  .tabs { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); font-size:11px; text-align:center; }
+  .tabs span { padding:10px 0 14px; color:var(--mute); }
+  .tabs span.on { color:var(--ink); font-weight:700; }
+</style>
+</head>
+<body>
+<header class="doc">
+  <h1>Wireframe greyscale: luồng "Đổi buổi học" (F1)</h1>
+  <p>Mẫu cho bước U5 của <code>ux-structure-and-flow-design</code>. Dữ liệu là SAMPLE. Mỗi khối có nhãn ghi câu hỏi người dùng mà khối đó trả lời. Chưa có màu brand, font hay hình ảnh: phần đó thuộc stage visual.</p>
+  <div class="legend"><span><b>Khung đứt</b> = khối nội dung theo thứ tự ưu tiên</span><span><b>Nút đen</b> = hành động chính duy nhất</span><span><b>Gạch ngang</b> = không khả dụng, chạm để xem lý do</span></div>
+</header>
+
+<main class="board">
+  <figure>
+    <figcaption><b>1. Chi tiết buổi học</b>Câu hỏi: "Hôm nay mấy giờ, phòng nào, đổi được không?"</figcaption>
+    <div class="phone">
+      <div class="bar"><span class="back" aria-hidden="true">‹</span><h2>Tiếng Anh B1</h2></div>
+      <div class="body">
+        <div class="block"><span class="tag">1 · Thời gian và phòng</span>
+          <div class="big">17:30 hôm nay</div><div class="muted">Thứ Ba 22/10 · Phòng 204, cơ sở Cầu Giấy</div></div>
+        <div class="block"><span class="tag">2 · Giáo viên</span>
+          <div class="row"><span>Cô Nguyễn Thị Phương Thảo</span><span class="muted">Gọi</span></div></div>
+        <div class="block"><span class="tag">3 · Chính sách</span>
+          <div class="muted">Đổi miễn phí trước giờ học. Buổi học được giữ nguyên cho con.</div></div>
+      </div>
+      <div class="cta">Đổi buổi học này</div>
+      <div class="link">Liên hệ trung tâm</div>
+      <div class="tabs" aria-hidden="true"><span class="on">Trang chủ</span><span>Lịch học</span><span>Học tập</span><span>Tài khoản</span></div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>2. Chọn buổi học bù</b>Câu hỏi: "Buổi nào hợp, cùng trình độ không?"</figcaption>
+    <div class="phone">
+      <div class="bar"><span class="back" aria-hidden="true">‹</span><h2>Chọn buổi học bù</h2></div>
+      <div class="body">
+        <div class="block"><span class="tag">1 · Đang đổi</span><div class="muted">Tiếng Anh B1 · Thứ Ba 17:30 · Lý do: con ốm</div></div>
+        <div class="chips"><span class="chip on">T4 23</span><span class="chip">T5 24</span><span class="chip off">T6 25</span><span class="chip">T7 26</span><span class="chip">CN 27</span></div>
+        <div class="note">Thứ Tư 23/10 · cùng trình độ B1</div>
+        <div class="slot on"><div>17:30 – 19:00<small>Cô Thảo · Phòng 204</small></div><span class="seats">Còn 2 chỗ</span></div>
+        <div class="slot"><div>19:15 – 20:45<small>Thầy Lê Minh Quân · Phòng 301</small></div></div>
+      </div>
+      <div class="cta">Tiếp tục</div>
+      <div class="helper">Đã chọn: Thứ Tư 23/10, 17:30</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>2b. Trạng thái trống</b>Không có buổi B1 trong tuần: gợi ý tuần sau, không bỏ người dùng ở ngõ cụt.</figcaption>
+    <div class="phone">
+      <div class="bar"><span class="back" aria-hidden="true">‹</span><h2>Chọn buổi học bù</h2></div>
+      <div class="body">
+        <div class="block"><span class="tag">1 · Đang đổi</span><div class="muted">Tiếng Anh B1 · Thứ Ba 17:30 · Lý do: con ốm</div></div>
+        <div class="empty"><div class="ph" aria-hidden="true"></div><b>Tuần này hết buổi B1 để học bù</b><span class="muted">Tuần sau có 4 buổi phù hợp. Buổi học của con vẫn được giữ.</span></div>
+      </div>
+      <div class="cta">Xem tuần sau</div>
+      <div class="cta ghost">Báo cho tôi khi có chỗ</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>3. Xác nhận</b>Câu hỏi: "Chắc chưa, thay đổi những gì?"</figcaption>
+    <div class="phone">
+      <div class="bar"><span class="back" aria-hidden="true">‹</span><h2>Xác nhận đổi buổi</h2></div>
+      <div class="body">
+        <div class="block"><span class="tag">1 · Cũ → mới</span>
+          <div class="compare"><div class="x">T3 22/10<br>17:30 · P.204</div><span aria-hidden="true">→</span><div><b>T4 23/10</b><br>17:30 · P.204</div></div></div>
+        <div class="block"><span class="tag">2 · Chính sách</span><div class="muted">Miễn phí. Cô Thảo sẽ nhận thông báo ngay.</div></div>
+        <div class="block"><span class="tag">3 · Phí</span><div class="row"><span>Phí đổi buổi</span><b>0đ</b></div></div>
+      </div>
+      <div class="cta">Xác nhận đổi buổi</div>
+      <div class="link">Chọn buổi khác</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>3b. Lỗi: buổi vừa hết chỗ</b>Giữ lý do đã chọn, giải thích, đưa về danh sách buổi (sửa finding W2).</figcaption>
+    <div class="phone">
+      <div class="bar"><span class="back" aria-hidden="true">‹</span><h2>Xác nhận đổi buổi</h2></div>
+      <div class="body">
+        <div class="alert" role="alert"><span class="ic" aria-hidden="true">!</span><div><b>Buổi 17:30 Thứ Tư vừa hết chỗ</b><div class="muted">Có người đặt trước vài giây. Lý do "con ốm" vẫn được giữ.</div></div></div>
+        <div class="block"><span class="tag">Gợi ý gần nhất</span>
+          <div class="slot"><div>19:15 – 20:45, Thứ Tư<small>Thầy Lê Minh Quân · Phòng 301</small></div></div></div>
+      </div>
+      <div class="cta">Chọn buổi khác</div>
+      <div class="helper">Buổi học gốc Thứ Ba vẫn giữ nguyên cho tới khi đổi xong</div>
+    </div>
+  </figure>
+</main>
+</body>
+</html>

@@ -12,7 +12,7 @@
       "id": "research",
       "agent": "research",
       "purpose": "Establish the page role, existing owner, user intent, constraints and reference evidence without expanding into unrelated product research.",
-      "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "audience-intent-and-top-tasks", "design-reference-research-and-benchmark"],
+      "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "audience-intent-and-top-tasks", "ux-structure-and-flow-design", "design-reference-research-and-benchmark"],
       "conditional_skills": [
         {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["real-user-validation"]},
         {"when": {"validation_lane": "production-learning"}, "skills": ["outcome-metrics-and-instrumentation"]},
@@ -23,6 +23,7 @@
       ],
       "gates": [
         {"id": "page-role-known", "require": "target route/screen, audience intent, preserve/forbidden constraints and source owner are explicit"},
+        {"id": "ux-before-visual", "require": "Before visual direction, the UX Readiness verdict from ux-structure-and-flow-design is READY or READY_WITH_RISKS: every top task has a user flow with a happy path and a failure path ending in recovery; every key screen records user question, information priority, one primary action, destination, feedback and recovery; walkthrough findings have severity, fix and retest with no open blocker. When docs/ux/ux-structure.json exists, check-ux-structure.py must PASS. Expert walkthroughs are agent-heuristic evidence, never participant research."},
         {"id": "evidence-led-problem-validation", "require": "material user/problem claims distinguish direct evidence from proxy/inference and define a truthful validation plan when direct evidence is unavailable", "when": {"validation_lane": ["evidence-led", "production-learning"]}},
         {"id": "outcome-definition", "require": "intended user and owner outcomes, baseline or UNKNOWN, measurement source and instrumentation owner are explicit", "when": {"validation_lane": "production-learning"}}
       ]
