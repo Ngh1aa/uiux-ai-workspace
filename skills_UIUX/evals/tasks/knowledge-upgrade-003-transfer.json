@@ -1,0 +1,26 @@
+{
+  "id": "knowledge-upgrade-003-transfer",
+  "category": "capability",
+  "prompt": "Bạn được giao UX cho công cụ quản lý nuôi trồng thủy sản ở một ngành chưa quen. Chưa có quy trình nghiệp vụ, người dùng hoặc reference được kiểm tra. Có thể tận dụng một thư viện hiện có với profile healthcare và industrial. Hãy nêu cách bắt đầu, chọn pattern, xử lý chỗ chưa biết và kiểm chứng một quyết định; chưa code hoặc nghiên cứu người thật.",
+  "recommended_skills": [
+    "design-intelligence-retrieval",
+    "visual-design-direction"
+  ],
+  "expected_outcomes": [
+    "Keep an unsupported industry visible as a gap",
+    "Learn actual actors, objects, states, consequences and source hierarchy before transferring a pattern",
+    "Explain conditional transfer and a falsifiable decision test",
+    "Separate authored hypotheses from field/domain validation"
+  ],
+  "must_not": [
+    "Apply healthcare/industrial domain policy or visual preset without fit evidence",
+    "Invent workflows, participants or outcome improvement",
+    "Treat novelty or document coverage as design quality"
+  ],
+  "rubric": {
+    "domain_grounding": 35,
+    "transfer_reasoning": 30,
+    "verification": 25,
+    "evidence_boundary": 10
+  }
+}

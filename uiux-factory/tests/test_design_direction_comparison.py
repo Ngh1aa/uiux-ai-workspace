@@ -165,7 +165,12 @@ def test_reference_anatomy_is_domain_and_role_bounded(context,role,profile):
 
 def test_reference_gaps_and_index_do_not_load_wrong_role_or_all_sources():
     context={'website_type':'portfolio','domain':'career'}
-    assert retrieve_design_knowledge(ROOT/'skills_UIUX',context,'rfq')['reference_anatomy']['status']=='NO_CURATED_REFERENCE_ANATOMY'
+    # Conversion now has an explicitly synthetic teaching reference. Unsupported
+    # portfolio catalog still stays a gap; role knowledge must not cross domains.
+    assert retrieve_design_knowledge(ROOT/'skills_UIUX',context,'catalog')['reference_anatomy']['status']=='NO_CURATED_REFERENCE_ANATOMY'
+    conversion = retrieve_design_knowledge(ROOT/'skills_UIUX',context,'rfq')['reference_anatomy']
+    assert conversion['status']=='CONTEXT_MATCHED_CANDIDATES'
+    assert conversion['sources']['decision-lab-portfolio']['human_usability']=='UNKNOWN'
     index=retrieve_design_knowledge(ROOT/'skills_UIUX',context)['reference_anatomy']
     assert index['cards']==[] and index['sources']=={}
     wrong=retrieve_design_knowledge(ROOT/'skills_UIUX',{'website_type':'ecommerce','domain':'industrial-services'},'home')['reference_anatomy']

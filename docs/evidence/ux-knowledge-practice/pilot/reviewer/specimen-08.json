@@ -1,0 +1,26 @@
+{
+  "task_id": "knowledge-upgrade-003-transfer",
+  "decisions": [
+    "Bắt đầu bằng bảng điều đã biết, giả định và câu hỏi còn thiếu. Chưa chọn profile theo tên ngành hoặc dựng workflow như thể đã xác thực.",
+    "Lập bản đồ nghiệp vụ dưới dạng câu hỏi: ai thao tác, quản lý đối tượng nào, sự kiện khởi động, nguồn dữ liệu, người quyết định và hậu quả lỗi. Ví dụ ao hoặc lô nuôi chỉ là giả thuyết để hỏi.",
+    "Kiểm kê thư viện theo chức năng và điều kiện áp dụng. Có thể tái sử dụng danh sách, lọc, biểu mẫu, lịch sử, trạng thái và recovery nếu phù hợp nhiệm vụ. Không chuyển nguyên ngưỡng cảnh báo, thuật ngữ hoặc quy trình đặc thù healthcare/industrial.",
+    "Đánh dấu ‘Cần xác nhận’ trong tài liệu làm việc cho phần chưa biết. Không biến giả định thành cảnh báo vận hành, hướng dẫn xử lý hoặc dữ liệu production. Chưa code."
+  ],
+  "tradeoffs": [
+    "Pattern có sẵn tiết kiệm công nhưng có thể mang giả định sai về vai trò, kết nối và rủi ro. Chọn theo nhiệm vụ, không theo mức giống bề ngoài.",
+    "Bản nháp ít chi tiết khó trình diễn hơn nhưng giảm cảm giác đã hiểu nghiệp vụ; ưu tiên làm rõ quyết định có hậu quả lớn."
+  ],
+  "verification": [
+    "Chọn giả thuyết: danh sách có trạng thái và thời điểm cập nhật giúp tìm bản ghi cần xem lại. Phác thảo bằng dữ liệu tổng hợp có nhãn minh họa.",
+    "Trước mắt walkthrough tính nhất quán cho thiếu dữ liệu, dữ liệu cũ, chưa đồng bộ và thao tác thất bại; kiểm tra đường xem chi tiết và recovery. Không tự đặt ngưỡng sinh học.",
+    "Sau này thu thập quy trình và reference chính thức, nhờ chuyên gia xác nhận ý nghĩa trạng thái rồi thử nhiệm vụ với vai trò thực tế. Đo chọn đúng bản ghi, hiểu độ mới dữ liệu và bước tiếp theo; chốt tiêu chí trước khi thử. Hiện chưa thực hiện các bước này."
+  ],
+  "unsupported_claims": [
+    "Chưa có bằng chứng profile nào phù hợp hoặc thiết kế cải thiện vận hành.",
+    "Walkthrough nội bộ không thay thế xác thực chuyên môn hay nghiên cứu người dùng."
+  ],
+  "open_questions": [
+    "Người dùng ưu tiên, nhiệm vụ thường xuyên và quyết định rủi ro cao là gì?",
+    "Nguồn dữ liệu, yêu cầu offline và người xác nhận nghiệp vụ là ai?"
+  ]
+}

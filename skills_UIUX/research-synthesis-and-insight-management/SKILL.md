@@ -21,6 +21,11 @@ description: Turn interviews, usability notes and analytics observations into tr
 - Keep raw evidence accessible enough to audit conclusions.
 
 ## Output
+
+For conflicting signals, opinion vs behavior or a rare severe issue, read the
+[worked synthetic synthesis](examples/conflicting-evidence.md). Keep source class,
+observation, interpretation and decision separate; do not vote by frequency or
+convert an authored example into a research finding.
 Evidence repository, affinity clusters, insights, opportunity areas, confidence notes and decision links.
 
 ## Quality gate

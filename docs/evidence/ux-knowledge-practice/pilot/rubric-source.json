@@ -1,0 +1,79 @@
+[
+  {
+    "id": "knowledge-upgrade-001-standards",
+    "category": "regression",
+    "prompt": "Một cổng thông tin có 9 nhóm navigation với nhãn rõ và người dùng xem trực tiếp khi chọn. Đề xuất hiện tại là ép còn 7 vì Miller và gọi mọi control 28×28 CSS px là vi phạm WCAG AA vì dưới 44px. Hãy review quyết định, nêu thay đổi cần làm, trade-off và cách kiểm chứng. Chưa có người dùng tham gia.",
+    "recommended_skills": [
+      "ux-laws-and-heuristics",
+      "information-architecture"
+    ],
+    "expected_outcomes": [
+      "Separate visible recognition from recall; do not impose seven navigation items",
+      "Identify WCAG 2.2 AA 2.5.8 vs AAA 2.5.5 and actual exception checks",
+      "Separate conformance checks from usability judgments and human evidence"
+    ],
+    "must_not": [
+      "Claim 44 CSS px is the universal AA minimum",
+      "Use Miller as a fixed menu limit",
+      "Claim observed user success without sessions"
+    ],
+    "rubric": {
+      "knowledge_accuracy": 40,
+      "context_and_tradeoffs": 25,
+      "verification": 25,
+      "evidence_boundary": 10
+    }
+  },
+  {
+    "id": "knowledge-upgrade-002-workflow",
+    "category": "regression",
+    "prompt": "Một app yêu cầu lịch hẹn đang có record pending, chưa có bác sĩ được phân công. Quay lại từ review làm mất số liên hệ đã sửa. Đề xuất là thêm ảnh bác sĩ mẫu và đổi badge sang success cho nhẹ nhàng. Hãy đề xuất thứ tự sửa, thông tin trên record, recovery và cách đánh giá kết quả. Chưa có người dùng tham gia.",
+    "recommended_skills": [
+      "mobile-navigation-and-state-ux",
+      "visual-design-direction"
+    ],
+    "expected_outcomes": [
+      "Fix retained input at its owner before styling",
+      "Distinguish pending request from confirmed appointment without invented clinician",
+      "Expose next actor/action and recovery",
+      "Use meaningful metric definitions/guardrails without claiming patient outcomes"
+    ],
+    "must_not": [
+      "Invent clinic policy, response time or clinician assignment",
+      "Use appearance to compensate for task blockers",
+      "Claim human usability from synthetic scenarios"
+    ],
+    "rubric": {
+      "state_and_recovery": 40,
+      "domain_accuracy": 25,
+      "verification": 25,
+      "evidence_boundary": 10
+    }
+  },
+  {
+    "id": "knowledge-upgrade-003-transfer",
+    "category": "capability",
+    "prompt": "Bạn được giao UX cho công cụ quản lý nuôi trồng thủy sản ở một ngành chưa quen. Chưa có quy trình nghiệp vụ, người dùng hoặc reference được kiểm tra. Có thể tận dụng một thư viện hiện có với profile healthcare và industrial. Hãy nêu cách bắt đầu, chọn pattern, xử lý chỗ chưa biết và kiểm chứng một quyết định; chưa code hoặc nghiên cứu người thật.",
+    "recommended_skills": [
+      "design-intelligence-retrieval",
+      "visual-design-direction"
+    ],
+    "expected_outcomes": [
+      "Keep an unsupported industry visible as a gap",
+      "Learn actual actors, objects, states, consequences and source hierarchy before transferring a pattern",
+      "Explain conditional transfer and a falsifiable decision test",
+      "Separate authored hypotheses from field/domain validation"
+    ],
+    "must_not": [
+      "Apply healthcare/industrial domain policy or visual preset without fit evidence",
+      "Invent workflows, participants or outcome improvement",
+      "Treat novelty or document coverage as design quality"
+    ],
+    "rubric": {
+      "domain_grounding": 35,
+      "transfer_reasoning": 30,
+      "verification": 25,
+      "evidence_boundary": 10
+    }
+  }
+]

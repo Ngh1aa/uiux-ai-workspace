@@ -1,0 +1,937 @@
+SOURCE: skills_UIUX/ux-laws-and-heuristics/SKILL.md
+---
+name: ux-laws-and-heuristics
+description: |
+  Tham chiếu các UX laws và heuristics để đánh giá và cải thiện quyết định thiết kế.
+  KHÔNG áp dụng mọi law một cách máy móc — mỗi quyết định cần ghi rõ user task,
+  evidence, trade-off và cách kiểm chứng.
+globs:
+  - "docs/ux-review.md"
+  - "docs/decision-log.md"
+---
+
+# UX Laws & Heuristics
+
+## Mục đích
+
+Cung cấp framework để đánh giá thiết kế dựa trên các nguyên tắc UX đã được nghiên cứu. Đây là **heuristic để tạo giả thuyết**, KHÔNG phải luật tuyệt đối. Mỗi lần áp dụng phải ghi rõ context, evidence và trade-off.
+
+## ⚠️ Quy tắc quan trọng
+
+1. **KHÔNG** liệt kê tất cả laws rồi áp dụng hết vào mọi design
+2. **CÓ** chọn law phù hợp với user task cụ thể đang giải quyết
+3. Mỗi quyết định design dựa trên UX law phải ghi vào decision log theo format:
+
+```markdown
+### Decision: [Mô tả quyết định]
+- **User task**: [Task cụ thể]
+- **Law applied**: [Tên law]
+- **Rationale**: [Tại sao law này phù hợp cho context này]
+- **Trade-off**: [Đánh đổi gì khi áp dụng]
+- **How to verify**: [Cách kiểm chứng hiệu quả]
+```
+
+## UX Laws Reference
+
+### 1. Hick's Law — Thời gian quyết định tăng theo số lượng lựa chọn
+
+Mô hình choice-reaction thường có dạng `T = a + b·log₂(n + 1)` trong điều kiện
+thí nghiệm tương ứng. Không dùng số lựa chọn để dự đoán trực tiếp thời gian tìm
+kiếm trên website; familiarity, xác suất lựa chọn, grouping và labeling đều ảnh hưởng.
+
+**Khi nào áp dụng**:
+- Navigation có quá nhiều items
+- Form có quá nhiều options
+- Dashboard hiển thị quá nhiều actions cùng lúc
+- Pricing page có quá nhiều plans
+
+**Hướng dẫn thực thi**:
+- Giảm số lượng options hiển thị cùng lúc
+- Nhóm related options thành categories
+- Highlight recommended/default option
+- Progressive disclosure: hiển thị options dần dần
+
+**Cảnh báo**: Không áp dụng cực đoan. Nếu giảm options quá mức, user phải click nhiều lần hơn → tăng friction. Cân bằng giữa số lượng choices và số bước hoàn thành task.
+
+### 2. Fitts's Law — Target lớn + gần = dễ click hơn
+
+Một dạng Shannon thường dùng là `MT = a + b·log₂(D/W + 1)`; `a`, `b` phải được
+ước lượng theo điều kiện đo. `D/W` một mình không phải công thức thời gian.
+
+**Khi nào áp dụng**:
+- CTA button quá nhỏ hoặc ở vị trí khó reach
+- Touch targets trên mobile
+- Submit button xa form fields
+- Close button nhỏ trên modal
+
+**Hướng dẫn thực thi**:
+- Web: WCAG 2.2 **2.5.8, level AA** dùng **24×24 CSS px**, với các ngoại lệ
+  spacing/equivalent/inline/user-agent/essential. **2.5.5, level AAA** dùng
+  **44×44 CSS px** với ngoại lệ riêng. 44×44 có thể là mục tiêu usability của
+  project; không gọi đó là minimum AA hay đổi trực tiếp CSS px thành native pt/dp.
+- CTA buttons phải nổi bật và đủ lớn
+- Primary action gần vùng user đang tương tác
+- Navigation items có sufficient padding
+- Infinite edges: tận dụng screen edges cho actions (sticky nav, fixed CTA)
+
+**Cảnh báo**: Nút lớn hơn không phải lúc nào cũng tốt. Button quá lớn chiếm space và giảm visual hierarchy.
+
+### 3. Jakob's Law — Users spend most time on OTHER sites
+
+**Khi nào áp dụng**:
+- Thiết kế navigation pattern
+- Placement của logo, search, cart, login
+- Form conventions (labels, validation, submit)
+- Quyết định có dùng unconventional layout không
+
+**Hướng dẫn thực thi**:
+- Dùng navigation, search, back và form conventions quen thuộc với audience/platform.
+- Vị trí logo/search/submit phụ thuộc task, reading direction, viewport và platform;
+  không có yêu cầu phổ quát rằng submit phải ở bottom-right hay search ở top-right.
+- Giữ labels, affordances và kết quả hành động nhất quán với kỳ vọng đã có.
+
+**Cảnh báo**: Convention không phải lúc nào cũng best. Nếu convention gây confusion cho đối tượng cụ thể, có thể deviate — nhưng phải có evidence mạnh.
+
+### 4. Miller / Chunking — Phân biệt nhớ lại và nhận diện
+
+`7±2` là kết quả lịch sử về giới hạn xử lý/nhớ trong điều kiện cụ thể, không phải
+giới hạn số mục nhìn thấy trên UI. Navigation và catalog thường hỗ trợ recognition,
+khác với việc buộc user nhớ thông tin qua nhiều màn hình.
+
+**Khi nào áp dụng**:
+- Số items trong navigation
+- Số steps trong process/wizard
+- Số features hiển thị cùng lúc
+- Số data points trong comparison
+
+**Hướng dẫn thực thi**:
+- Chunk theo quan hệ có nghĩa, không ép số mục cố định.
+- Navigation: chọn breadth/depth theo information scent, grouping, familiarity và
+  scanning cost; dùng owner [information-architecture](../information-architecture/SKILL.md).
+- Step indicators cho multi-step processes
+- Comparison: chọn số option từ attributes/task và khả năng đối chiếu; cho pin/filter
+  khi cần, không dùng một giới hạn 5 option cho mọi bảng.
+- Dùng headings và visual grouping để break content
+
+**Cảnh báo**: Không dùng Miller để biện minh menu ≤7. Kiểm tra phần việc user phải
+nhớ, thông tin còn nhìn thấy và chỗ có thể externalize memory.
+
+### 5. Von Restorff Effect — Items khác biệt được nhớ tốt hơn
+
+**Khi nào áp dụng**:
+- CTA cần nổi bật giữa nội dung
+- Pricing table cần highlight recommended plan
+- Important information cần attention
+- New features cần giới thiệu
+
+**Hướng dẫn thực thi**:
+- Primary CTA khác biệt visual so với secondary actions
+- "Most popular" hoặc "Recommended" badge trên pricing
+- Highlight thay đổi mới bằng badge/color/animation
+- NHƯNG nếu mọi thứ đều "nổi bật" → không gì nổi bật cả
+
+**Cảnh báo**: Quá nhiều visual emphasis = visual noise. Chỉ 1-2 elements nên "stand out" per viewport.
+
+### 6. Gestalt Principles — Cách não nhóm visual elements
+
+#### Proximity
+- Items gần nhau perceived là related
+- **Áp dụng**: Group form labels gần inputs, space giữa sections > space giữa items trong section
+
+#### Similarity
+- Items giống nhau perceived là related
+- **Áp dụng**: Same styling cho same-level elements (cards, nav items, list items)
+
+#### Continuity
+- Mắt theo dõi lines và curves
+- **Áp dụng**: Alignment, grid consistency, visual flow từ top-left đến bottom-right (F-pattern)
+
+#### Closure
+- Não tự complete incomplete shapes
+- **Áp dụng**: Cards không cần visible borders nếu có clear background contrast
+
+#### Common Region
+- Items trong cùng khu vực perceived là group
+- **Áp dụng**: Cards, containers, sections dùng background/border để group content
+
+### 7. Response feedback — Chọn budget theo tác vụ
+
+**Khi nào áp dụng**:
+- Loading states
+- Form submission feedback
+- Navigation transitions
+- Search results
+
+**Hướng dẫn thực thi**:
+- Đặt feedback/performance budget có đơn vị, điều kiện đo và rationale theo task;
+  không trình bày 100/400ms như guarantee về engagement.
+- Chọn skeleton, spinner hoặc progress từ thời gian chờ và thông tin có thật;
+  skeleton không luôn tốt hơn spinner.
+- Optimistic UI chỉ khi rollback/reconciliation rõ và hệ quả phù hợp; pending
+  payment/booking/approval không được hiển thị thành hoàn tất trước xác nhận thật.
+- Cải thiện cả thời gian thực lẫn khả năng hiểu trạng thái; không che latency bằng
+  animation hoặc confirmation giả.
+
+### 8. Tesler's Law — Mọi ứng dụng có mức complexity không thể giảm
+
+**Khi nào áp dụng**:
+- Simplifying complex forms
+- Reducing feature scope
+- Hiding vs showing advanced options
+
+**Hướng dẫn thực thi**:
+- Accept rằng một số tasks inherently complex
+- Design choice: complexity ở phía system hay user?
+- Progressive disclosure: simple first, advanced on demand
+- Smart defaults giảm decisions cho user
+- Nhưng KHÔNG giấu critical information để "đơn giản hóa"
+
+### 9. Peak-End Rule — Trải nghiệm được đánh giá bởi peak moment và end moment
+
+**Khi nào áp dụng**:
+- Onboarding flow
+- Checkout process
+- Form completion
+- Task completion
+
+**Hướng dẫn thực thi**:
+- Chọn confirmation/closure hữu ích; animation/delight chỉ khi phù hợp cảm xúc và task.
+- End experience positively: confirmation page, next steps, thank you
+- Tránh negative peaks: long load, confusing error, data loss
+- Last impression matters: checkout confirmation, email follow-up
+
+### 10. Aesthetic-Usability Effect — Thiết kế đẹp perceived là dễ dùng hơn
+
+**Khi nào áp dụng**: Luôn luôn, nhưng đặc biệt khi:
+- First impression matters (landing page)
+- Building trust (finance, health, legal)
+- Competing with alternatives
+
+**Hướng dẫn thực thi**:
+- Invest vào visual polish
+- NHƯNG: beautiful UI che giấu usability issues → test cả hai
+- Aesthetics alone không thể cứu bad IA hoặc confusing flows
+
+## Nielsen's Heuristics (Quick Reference)
+
+| # | Heuristic | Application |
+|---|-----------|-------------|
+| 1 | Visibility of system status | Loading indicators, progress bars, current state |
+| 2 | Match between system & real world | Dùng ngôn ngữ user, không phải system language |
+| 3 | User control & freedom | Undo, back, exit rõ ràng |
+| 4 | Consistency & standards | Follow platform conventions |
+| 5 | Error prevention | Disable invalid actions, confirm destructive ones |
+| 6 | Recognition > recall | Show options, don't make users remember |
+| 7 | Flexibility & efficiency | Shortcuts cho expert, simplicity cho beginner |
+| 8 | Aesthetic & minimalist design | Chỉ hiển thị information cần thiết |
+| 9 | Help users with errors | Clear error messages, suggest recovery |
+| 10 | Help & documentation | Searchable, task-oriented, concise |
+
+## UX Review Template
+
+Khi review một page/component, dùng template sau:
+
+```markdown
+## UX Review: [Page/Component name]
+
+### Context
+- **Primary user task**: [Task]
+- **User persona**: [Persona]
+- **Device/context**: [Desktop/mobile/tablet]
+
+### Evaluation
+| Criterion | Rating | Evidence | Recommendation |
+|-----------|--------|----------|----------------|
+| Clarity of CTA | 🟢🟡🔴 | [What you observed] | [Improvement] |
+| Information hierarchy | 🟢🟡🔴 | [Evidence] | [Improvement] |
+| Cognitive load | 🟢🟡🔴 | [Evidence] | [Improvement] |
+| Findability | 🟢🟡🔴 | [Evidence] | [Improvement] |
+| Error handling | 🟢🟡🔴 | [Evidence] | [Improvement] |
+| Accessibility | 🟢🟡🔴 | [Evidence] | [Improvement] |
+| Responsiveness | 🟢🟡🔴 | [Evidence] | [Improvement] |
+
+### UX Laws Applied
+| Law | Specific application | Trade-off |
+|-----|---------------------|-----------|
+| [Law name] | [How it applies here] | [What was sacrificed] |
+```
+
+## Output bắt buộc
+
+## Source and scope review
+
+Khi chuẩn hoặc số định lượng ảnh hưởng quyết định, đọc
+[source/scope register](references/principle-sources.md). Ghi rõ version/level,
+đơn vị, ngoại lệ, nguồn, ngày kiểm và cách kiểm chứng; tách standard requirement
+khỏi heuristic và project hypothesis. Không thêm checklist cho law không liên quan.
+
+### `docs/ux-review.md`
+UX review cho mỗi major page/flow.
+
+### Updates to `docs/decision-log.md`
+Mỗi design decision dựa trên UX law phải được ghi lại.
+
+## Anti-patterns cần tránh
+
+❌ Áp dụng TẤT CẢ UX laws vào MỌI page/component
+❌ Cite UX law mà không ghi context và trade-off
+❌ Dùng UX law để justify preference thay vì improve user outcome
+❌ Confuse heuristics (guidelines) với rules (requirements)
+❌ Apply Fitts's Law mà không xét viewport và context
+❌ Enforce Miller's 7±2 như hard rule cho mọi list
+
+
+SOURCE: skills_UIUX/ux-laws-and-heuristics/references/principle-sources.md
+# Principle sources and applicability
+
+Last checked: 2026-10-22. Recheck primary sources when adopting a time-sensitive
+standard; this date is not a promise that a future standard is unchanged.
+
+| Decision | Source / kind | Applicability and boundary | Verification |
+|---|---|---|---|
+| Web pointer target minimum | [WCAG 2.2 SC 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html), AA requirement | 24×24 CSS px or a documented exception. Spacing uses the specified 24 CSS px circle test, not a blanket padding value. Inline/equivalent/UA/essential have separate conditions. | Inspect hit area, adjacent targets and actual exception at declared viewports. |
+| Enhanced web pointer target | [WCAG 2.2 SC 2.5.5](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html), AAA requirement | 44×44 CSS px with its own exceptions. A project can choose larger targets without claiming AAA conformance for the whole product. Native pt/dp require platform guidance. | Measure the interactive area, not only the visible icon. |
+| Target acquisition | [MacKenzie, Fitts' Law](https://www.yorku.ca/mack/hhci2018.html), HCI model | Distance, target width, input method and calibrated coefficients matter. This does not choose a universal CTA size or position. | Evaluate reach, error and acquisition in the actual interaction context. |
+| Recognition, consistency, feedback, recovery | [Nielsen's heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/), author guidance | General review principles, not a required page layout or evidence of observed user success. | Walk through tasks; record observed friction separately from interpretation. |
+| Chunking | [NN/g, Chunking](https://www.nngroup.com/articles/chunking/), practice guidance | Organize meaningful relationships. Memory experiments do not prescribe a visible menu count. The local IA owner explicitly rejects a 7-item navigation rule. | Inspect recall burden, labels and findability; test with users when the decision warrants it. |
+
+For other named effects, use the name as a hypothesis prompt until the relevant
+primary study and task fit are checked. Do not infer effect magnitude, a universal
+threshold or product impact from an effect name.
+
+Decision record:
+`task → requirement/heuristic/hypothesis → source + version/level + checked date →
+scope + exception → adopted value/behavior → trade-off → verification → remaining unknown`.
+
+Example: a dense desktop toolbar has 28×28 CSS px targets. This is not automatically
+a WCAG AA failure because it is below 44px. Inspect 2.5.8 and actual spacing, then
+separately judge usability for the audience. A touch booking action may intentionally
+use 48 CSS px as a project choice, not a clinical or universal standard.
+
+
+SOURCE: skills_UIUX/design-intelligence-retrieval/SKILL.md
+---
+name: design-intelligence-retrieval
+description: Retrieves focused product, style, color, typography, icon, motion, chart, UX and stack guidance from the pinned vendored design-intelligence corpus. Use after project truth, domain, audience and page/app role are known when a UI/UX decision benefits from broader design knowledge; query the smallest relevant subset instead of loading the whole database.
+---
+
+# Design Intelligence Retrieval
+
+## Goal
+Use the vendored UI UX Pro Max corpus as a searchable design-intelligence source while `skills_UIUX` remains authoritative for project truth, evidence discipline, Design Contract, implementation safety and QA.
+
+## Source precedence
+`current user request → project truth/source code → passed Design Contract/artifacts → routed local skills → retrieved design intelligence → generic model prior`
+
+Retrieved recommendations are normally `EVIDENCE_BACKED_INFERENCE` or `PROFESSIONAL_HYPOTHESIS`, not universal `FACT`.
+
+## Routing contract
+Read `project-context` first. Identify product/domain, audience, business goal, platform, page/app role and actual stack before choosing a search mode.
+
+Choose the **smallest mode that fits**:
+1. New page/project or system-wide visual direction → `--design-system`.
+2. Focused concern/component defect → one explicit `--domain`.
+3. Implementation-specific question with a known stack → `--stack`; add a separate domain query only for a distinct design concern.
+
+Do not route this skill for a trivial local fix when project truth already determines the answer.
+
+## Query contract
+- One dominant intent per query.
+- Prefer 2–5 meaningful terms plus one useful product/platform/interaction constraint.
+- Do not include secrets, private user data or unnecessary project content in queries or persisted output.
+- Verify returned domain/category, top result identity and fit before adopting it.
+- The local adapter exposes `factory_retrieval_review` in design-system JSON and a provenance header in text. `NO_VERIFIED_PRODUCT_MATCH` / `NO_CATEGORY_REASONING_PROFILE` means the engine used generic fallback; `MATCHED_CANDIDATE` is only a lexical/profile match, with semantic fit still `UNVALIDATED`. Review source identities, not just the displayed style/font names.
+- If output is empty or off-topic, retry **once** with a narrower query or explicit domain/stack.
+- If the retry still fails, record `no verified match`; use local/project guidance as fallback and do not pretend the database returned evidence.
+- Do not persist unverified retrieval output.
+
+## Stack detection
+Never assume a stack. Inspect project truth first, for example:
+- `package.json` dependencies for React/Next/Vue/Svelte/Nuxt/Angular;
+- `pubspec.yaml` for Flutter;
+- `*.xcodeproj` / `Package.swift` for SwiftUI;
+- `composer.json` for Laravel;
+- `app.json` plus React Native dependency markers for React Native.
+
+If stack-specific guidance is not material, do not spend context detecting it.
+
+## Recommended workflow
+1. Read project truth and relevant passed artifacts.
+2. Decide whether external design intelligence can improve an active decision.
+3. For broad direction, run one focused `--design-system` query.
+4. Supplement only unresolved active gaps using `--domain` or `--stack`.
+5. Keep only a small decision-ready result set.
+6. Classify each meaningful candidate `ADOPT / ADAPT / REJECT`.
+7. Reconcile with brand, accessibility, content density, platform conventions, actual component/tokens and implementation feasibility.
+8. Record adopted principles in the Design Contract or implementation artifact with source, pinned upstream commit and adaptation rationale.
+9. Verify the resulting decision in rendered/code/evidence checks appropriate to its owner phase.
+
+## Default command
+```bash
+python design-intelligence-retrieval/scripts/query.py "<domain product audience role character>" --design-system
+```
+
+Khi project identity đã có, ưu tiên structured query để tránh lexical guess:
+
+```bash
+python skills_UIUX/design-intelligence-retrieval/scripts/query.py "<focused domain words>" --design-system --website-type corporate --project-domain industrial-services --product-archetype b2b-service-operations --page-role offering --json
+```
+
+`--project-domain` khác `--domain` (upstream focused search). `--page-role` nhận orientation/offering/evidence/conversion/catalog/editorial hoặc declared aliases home/service-detail/project-detail/rfq/product-list/resource-detail. `factory_design_knowledge` chứa exact-context domain candidate, page-job anatomy, type/spacing ranges, density, voice/media rules và source digest. Không tự adopt palette/font từ upstream. Unknown identity → NO_CURATED_DOMAIN_PROFILE; contradictory structured fields → IDENTITY_CONFLICT; candidate fit vẫn UNVALIDATED. Keep upstream payload riêng để chẩn đoán, không merge consumer-app semantics vào domain thật. Current data covers three domain profiles, not all industries.
+
+Focused examples:
+```bash
+python design-intelligence-retrieval/scripts/query.py "error summary validation" --domain ux
+python design-intelligence-retrieval/scripts/query.py "editorial serif premium" --domain typography
+python design-intelligence-retrieval/scripts/query.py "dashboard overflow nowrap" --stack nextjs
+```
+
+## Design-system persistence policy
+The upstream engine can create `design-system/<project>/MASTER.md` and page overrides. In `skills_UIUX`:
+- a persisted upstream `MASTER.md` is a **retrieved candidate artifact**, not a second canonical source of truth;
+- the project Design Contract remains authoritative for adopted direction;
+- read existing persisted artifacts before regenerating;
+- never use upstream `--force` without explicit user authorization;
+- page overrides may specialize an adopted direction but may not silently contradict the Design Contract.
+
+Optional `--variance`, `--motion` and `--density` dials may be used only when the project direction needs those controls. They are tuning inputs, not quality scores.
+
+## Synthesis contract
+For each material result, capture only:
+- query/context;
+- returned candidate and upstream status when available;
+- `ADOPT / ADAPT / REJECT`;
+- reason;
+- affected project constraint/decision;
+- verification method.
+
+Do not paste entire catalogs into prompt context.
+
+## Hard gates
+- External recommendations never silently override current user/project/brand/source truth.
+- Deprecated/pending upstream records are not canonical recommendations without explicit review.
+- A database recommendation is not proof of UX, conversion, accessibility or business performance.
+- `design-intelligence-retrieval` augments, not replaces, `design-reference-research-and-benchmark` when real references are required.
+- For substantial redesign, it does not replace the Design Contract, `visual-redesign-delta-gate`, `media-crop-and-layout-integrity`, responsive/accessibility verification or rendered visual QA.
+- Stack guidance must be reconciled with the project’s actual framework/version/code before implementation.
+- Keep upstream license, provenance and immutable version lock intact.
+
+## Resources
+- [Upstream integration contract](references/upstream-integration-contract.md)
+- Vendored source: `../vendor/ui-ux-pro-max/`
+- Augmentation prompt: `../DESIGN-INTELLIGENCE-AUGMENTED-REDESIGN-PROMPT.md`
+
+## Verification
+```bash
+python scripts/validate-vendor-uiux-pro-max.py
+python -B design-intelligence-retrieval/scripts/query.py "education admissions mobile" --design-system
+python scripts/validate-skills.py
+python scripts/validate-v2.py
+python scripts/eval-harness.py smoke
+```
+
+
+BOUNDED LOOKUPS:
+[
+  {
+    "schema_version": "1.0",
+    "source": "skills_UIUX/visual-design-direction/data/design-knowledge.json",
+    "source_sha256": "c3c4751de17ba7e4280eb1b2b75015fc63e675fb2eea28790a3ee29057fce557",
+    "identity": {
+      "website_type": "healthcare",
+      "domain": "healthcare",
+      "product_archetype": "patient-journey"
+    },
+    "domain_status": "CONTEXT_MATCHED_CANDIDATE",
+    "conflicting_profile_ids": [],
+    "domain_profiles": [
+      {
+        "id": "healthcare-patient-journey",
+        "status": "PROFESSIONAL_HYPOTHESIS",
+        "objects": [
+          "next appointment",
+          "patient identity",
+          "available slot",
+          "request status",
+          "contact path"
+        ],
+        "voice": "Separate pending, confirmed and completed. Name who acts next. Do not invent clinician assignment, medical advice, fees or response promises.",
+        "media": "People/place images only with identifying or contextual purpose and verified rights. Do not imply a stock person is the assigned clinician. Forms can have no image.",
+        "icons": "Consistent family; unfamiliar icon-only actions need clear labels and accessible names.",
+        "avoid": [
+          "universal promotional hero",
+          "fake health metrics",
+          "photos inserted to fill whitespace",
+          "forced bento in every form"
+        ],
+        "role_ids": [
+          "app-overview",
+          "app-selection",
+          "app-task",
+          "app-record",
+          "app-support"
+        ]
+      }
+    ],
+    "page_role": "app-record",
+    "available_roles": [
+      "orientation",
+      "offering",
+      "evidence",
+      "conversion",
+      "catalog",
+      "editorial",
+      "app-overview",
+      "app-selection",
+      "app-task",
+      "app-record",
+      "app-support"
+    ],
+    "role_card": {
+      "question": "What is the status and who acts next?",
+      "decision_object": "Record identity, status, ownership and next action",
+      "compositions": [
+        {
+          "id": "status-ticket",
+          "anatomy": "Status and accountable owner lead; identifier and actionable details remain attached.",
+          "mobile": "Keep labels, state and action together; preserve reading order at narrow widths."
+        },
+        {
+          "id": "event-record",
+          "anatomy": "Actual event sequence explains state changes beside current next action.",
+          "mobile": "Use reachable controls and reflow without shrinking essential type."
+        }
+      ],
+      "type_px_candidates": {
+        "title": {
+          "desktop": [
+            24,
+            32
+          ],
+          "mobile": [
+            24,
+            28
+          ]
+        },
+        "section": {
+          "desktop": [
+            20,
+            24
+          ],
+          "mobile": [
+            18,
+            22
+          ]
+        },
+        "body": [
+          16,
+          18
+        ],
+        "meta": [
+          12,
+          14
+        ]
+      },
+      "spacing_px_candidates": {
+        "gutter": {
+          "desktop": [
+            20,
+            32
+          ],
+          "mobile": [
+            16,
+            24
+          ]
+        },
+        "section": {
+          "desktop": [
+            24,
+            32
+          ],
+          "mobile": [
+            24,
+            32
+          ]
+        },
+        "group": [
+          12,
+          16
+        ],
+        "component": [
+          16,
+          24
+        ]
+      },
+      "density": "Working hypothesis: compact within one decision, breathing room between unrelated tasks. Inspect real text and enlarged text.",
+      "reject_when": "Color-only status, fake assignment, or a pending request presented as confirmed.",
+      "sources": [
+        "mobile-ux-first",
+        "local-direction",
+        "local-journey",
+        "reflow"
+      ]
+    },
+    "foundations": {
+      "type_selection": [
+        "Choose productive vs expressive roles from the current task, not the website label alone.",
+        "Choose font by actual glyph coverage, legibility, numerals, weight availability, license and subject/brand fit. No prescribed family.",
+        "Measure headline wraps and first decision-object position; a large clamp value is not a hierarchy proof.",
+        "Set body, UI and metadata independently. Do not shrink explanatory body copy to fit a dense object."
+      ],
+      "spacing_selection": [
+        "Separate page gutters, section rhythm, group gaps and component padding.",
+        "Use tighter spacing within one decision object than between unrelated decisions.",
+        "Try a denser and a more expressive arrangement when density is a free axis; choose from real content and media.",
+        "Use a repeated base only when it helps alignment; optical exceptions need a reason."
+      ],
+      "art_direction": [
+        "Specify subject, view distance, detail level, lighting, safe crop zone, caption and mobile treatment.",
+        "Choose document, product, person, place or process media for the information it conveys.",
+        "Use one icon family with visible labels; technical appearance alone is not evidence.",
+        "Reserve one memorable visual commitment tied to subject matter; do not stack unrelated effects."
+      ],
+      "tone_of_voice": [
+        "Use concrete nouns, actions and outputs. State what the buyer can evaluate or do next.",
+        "Prefer one useful explanation to repeated brand adjectives or vague benefit slogans.",
+        "Separate actual evidence, design concepts and unknown capabilities.",
+        "Do not reproduce the vocabulary, numerical claims or identity of a reference supplier."
+      ],
+      "pressure_checks": [
+        "320 CSS px reflow",
+        "longest real heading and service name",
+        "one primary CTA visible and named",
+        "text-spacing override",
+        "media no-cut zones",
+        "hover/focus surface pairs"
+      ]
+    },
+    "sources": {
+      "mobile-ux-first": "skills_UIUX/visual-design-direction/references/mobile-ux-first.md",
+      "local-direction": "skills_UIUX/visual-design-direction/SKILL.md",
+      "local-journey": "skills_UIUX/journey-driven-content-and-layout/SKILL.md",
+      "reflow": {
+        "url": "https://www.w3.org/WAI/WCAG22/Understanding/reflow.html",
+        "checked": "2026-10-08",
+        "principle": "Check information and function at 320 CSS px; handle genuinely two-dimensional content separately."
+      }
+    },
+    "numeric_status": "PROFESSIONAL_HYPOTHESIS",
+    "domain_workflow": {
+      "status": "CONTEXT_MATCHED_CANDIDATES",
+      "source": "skills_UIUX/visual-design-direction/data/domain-workflows.json",
+      "profiles": [
+        {
+          "source_refs": [
+            "skills_UIUX/mobile-navigation-and-state-ux/SKILL.md",
+            "skills_UIUX/visual-design-direction/references/mobile-ux-first.md"
+          ],
+          "actors": [
+            {
+              "role": "Patient/caregiver",
+              "decision": "Check selected person, request context and next practical action"
+            },
+            {
+              "role": "Clinic scheduling owner",
+              "decision": "Confirm/clarify using verified clinic operations"
+            },
+            {
+              "role": "System",
+              "decision": "Report current stored state and actual receipt only"
+            }
+          ],
+          "objects": [
+            "selected patient",
+            "available slot",
+            "appointment request",
+            "confirmation record",
+            "contact path"
+          ],
+          "state_model": [
+            "select patient",
+            "choose eligible slot",
+            "draft request",
+            "review details",
+            "request pending",
+            "confirmed or action required"
+          ],
+          "critical_distinctions": [
+            "Requested is not confirmed",
+            "Stock portrait is not assigned clinician",
+            "Saved draft is not submitted request",
+            "Completed appointment is not a clinical outcome"
+          ],
+          "failure_and_recovery": [
+            {
+              "failure": "Slot unavailable",
+              "recovery": "Preserve patient/contact input; offer currently eligible choices"
+            },
+            {
+              "failure": "Back from review",
+              "recovery": "Retain entered values/selection; expose edit paths"
+            },
+            {
+              "failure": "Unclear status",
+              "recovery": "Show last-known state, source time when known and verified contact; invent no response promise"
+            }
+          ],
+          "metrics": [
+            {
+              "name": "Request completion",
+              "definition": "Actual received requests / eligible starts in a declared window",
+              "guardrail": "Do not label these confirmed visits"
+            },
+            {
+              "name": "Recovery success",
+              "definition": "Observed ability to correct input/slot error and continue the task",
+              "guardrail": "Synthetic browser scenarios are not patient study results"
+            }
+          ],
+          "validation_questions": [
+            "Can the patient distinguish pending from confirmed?",
+            "Can they correct details without losing person or slot?"
+          ],
+          "do_not_infer": [
+            "Clinical advice/triage",
+            "fees/coverage",
+            "clinician assignment",
+            "eligibility policy",
+            "response time",
+            "patient outcomes"
+          ],
+          "profile_id": "healthcare-patient-journey",
+          "page_task": "Read actual status, next accountable actor and verified action."
+        }
+      ],
+      "adopted": false,
+      "source_sha256": "58ae95ce27d69098d744c694b80b0660abe5065cb06efbd41b03906fc1fc25be",
+      "boundary": "Authored workflow candidates derived from local skill owners; not research findings, clinical rules, compliance advice or approved operating policy. Replace actors, states, rights and metrics with project truth. No outcome uplift has been measured."
+    },
+    "reference_anatomy": {
+      "status": "CONTEXT_MATCHED_CANDIDATES",
+      "source": "skills_UIUX/visual-design-direction/data/reference-anatomies.json",
+      "source_sha256": "7321cedf60d3a85355c69563c4cb96e7726fd7a77a76628dac4c4986687d0f55",
+      "cards": [
+        {
+          "id": "healthcare-patient-journey:app-record",
+          "profile_id": "healthcare-patient-journey",
+          "page_role": "app-record",
+          "reference_ids": [
+            "decision-lab-healthcare"
+          ],
+          "buyer_task": "Read actual status and who acts next",
+          "observed_relationship": "record identity → current status → owner → recovery",
+          "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+          "why": "Expose the information needed for this task; verify against actual project roles and state.",
+          "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+          "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+          "visual_object_candidates": [
+            "labelled decision record with attached status and next actor",
+            "editable review with preserved context and honest unknowns"
+          ],
+          "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+          "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+        }
+      ],
+      "sources": {
+        "decision-lab-healthcare": {
+          "url": "skills_UIUX/visual-design-direction/examples/decision-lab/index.html",
+          "query": "case=healthcare&variant=considered",
+          "checked": "2026-10-22",
+          "observation_method": "local-authored-specimen",
+          "observed_information_anatomy": [
+            "record identity → current status → owner → recovery",
+            "current task → help need → contact owner"
+          ],
+          "pixel_geometry": "UNKNOWN",
+          "human_usability": "UNKNOWN",
+          "boundary": "Original synthetic teaching example, not an approved target or user finding. Read its case annotations and inspect the render before transfer. Do not transfer facts, palette, policy or claims."
+        }
+      },
+      "rule": "No exact profile/page-role card is a visible knowledge gap. Research the current first-party page and author a grounded transfer; never borrow an unrelated industry preset.",
+      "adopted": false
+    },
+    "adopted": false,
+    "fit_status": "UNVALIDATED",
+    "aesthetic_quality": "UNKNOWN",
+    "rule": "Cards and ranges are candidates, not a preset or exhaustive catalog. Create another grounded composition when these examples do not fit. Choose from real content, constraints and renders; do not adopt lexical upstream matches as project truth."
+  },
+  {
+    "schema_version": "1.0",
+    "source": "skills_UIUX/visual-design-direction/data/design-knowledge.json",
+    "source_sha256": "c3c4751de17ba7e4280eb1b2b75015fc63e675fb2eea28790a3ee29057fce557",
+    "identity": {
+      "website_type": "saas",
+      "domain": "aquaculture",
+      "product_archetype": ""
+    },
+    "domain_status": "NO_CURATED_DOMAIN_PROFILE",
+    "conflicting_profile_ids": [],
+    "domain_profiles": [],
+    "page_role": "orientation",
+    "available_roles": [
+      "orientation",
+      "offering",
+      "evidence",
+      "conversion",
+      "catalog",
+      "editorial",
+      "app-overview",
+      "app-selection",
+      "app-task",
+      "app-record",
+      "app-support"
+    ],
+    "role_card": {
+      "question": "What is offered, is it relevant, and where should I start?",
+      "decision_object": "Offer/fit selector or concrete subject overview",
+      "compositions": [
+        {
+          "id": "decision-ledger",
+          "anatomy": "Offer statement integrated with a labelled need-to-scope register; CTA belongs to the selected scope.",
+          "mobile": "Each record carries its own need, outputs and action; do not detach column headings."
+        },
+        {
+          "id": "subject-stage",
+          "anatomy": "One dominant subject/process object with anchored explanations; a compact offer/action rail connects it to the buyer job.",
+          "mobile": "Use an alternate crop or linear subject model with meaningful annotations before secondary explanations."
+        }
+      ],
+      "type_px_candidates": {
+        "display": {
+          "desktop": [
+            40,
+            80
+          ],
+          "mobile": [
+            28,
+            44
+          ]
+        },
+        "section": {
+          "desktop": [
+            28,
+            44
+          ],
+          "mobile": [
+            24,
+            32
+          ]
+        },
+        "body": [
+          16,
+          20
+        ],
+        "meta": [
+          12,
+          14
+        ]
+      },
+      "spacing_px_candidates": {
+        "gutter": {
+          "desktop": [
+            24,
+            80
+          ],
+          "mobile": [
+            16,
+            24
+          ]
+        },
+        "section": {
+          "desktop": [
+            48,
+            112
+          ],
+          "mobile": [
+            32,
+            64
+          ]
+        },
+        "group": [
+          16,
+          32
+        ],
+        "component": [
+          12,
+          24
+        ]
+      },
+      "density": "Medium when fit is the entry decision; expressive only if the subject object earns the first viewport.",
+      "reject_when": "A decorative hero delays every actual decision; or a three-column feature grid merely repeats the headline.",
+      "sources": [
+        "local-direction",
+        "local-journey",
+        "carbon",
+        "govuk"
+      ]
+    },
+    "foundations": {
+      "type_selection": [
+        "Choose productive vs expressive roles from the current task, not the website label alone.",
+        "Choose font by actual glyph coverage, legibility, numerals, weight availability, license and subject/brand fit. No prescribed family.",
+        "Measure headline wraps and first decision-object position; a large clamp value is not a hierarchy proof.",
+        "Set body, UI and metadata independently. Do not shrink explanatory body copy to fit a dense object."
+      ],
+      "spacing_selection": [
+        "Separate page gutters, section rhythm, group gaps and component padding.",
+        "Use tighter spacing within one decision object than between unrelated decisions.",
+        "Try a denser and a more expressive arrangement when density is a free axis; choose from real content and media.",
+        "Use a repeated base only when it helps alignment; optical exceptions need a reason."
+      ],
+      "art_direction": [
+        "Specify subject, view distance, detail level, lighting, safe crop zone, caption and mobile treatment.",
+        "Choose document, product, person, place or process media for the information it conveys.",
+        "Use one icon family with visible labels; technical appearance alone is not evidence.",
+        "Reserve one memorable visual commitment tied to subject matter; do not stack unrelated effects."
+      ],
+      "tone_of_voice": [
+        "Use concrete nouns, actions and outputs. State what the buyer can evaluate or do next.",
+        "Prefer one useful explanation to repeated brand adjectives or vague benefit slogans.",
+        "Separate actual evidence, design concepts and unknown capabilities.",
+        "Do not reproduce the vocabulary, numerical claims or identity of a reference supplier."
+      ],
+      "pressure_checks": [
+        "320 CSS px reflow",
+        "longest real heading and service name",
+        "one primary CTA visible and named",
+        "text-spacing override",
+        "media no-cut zones",
+        "hover/focus surface pairs"
+      ]
+    },
+    "sources": {
+      "local-direction": "skills_UIUX/visual-design-direction/SKILL.md",
+      "local-journey": "skills_UIUX/journey-driven-content-and-layout/SKILL.md",
+      "carbon": {
+        "url": "https://www.carbondesignsystem.com/building-blocks/foundations/typography/type-sets",
+        "checked": "2026-10-08",
+        "principle": "Productive and expressive typography serve different information densities and moments; do not copy IBM's font or scale into every brand."
+      },
+      "govuk": {
+        "url": "https://design-system.service.gov.uk/styles/spacing/",
+        "checked": "2026-10-08",
+        "principle": "Spacing has relationships and responsive roles; published values belong to GOV.UK, not a universal website preset."
+      }
+    },
+    "numeric_status": "PROFESSIONAL_HYPOTHESIS",
+    "domain_workflow": {
+      "status": "NO_CURATED_DOMAIN_PROFILE",
+      "source": "skills_UIUX/visual-design-direction/data/domain-workflows.json",
+      "profiles": [],
+      "adopted": false
+    },
+    "reference_anatomy": {
+      "status": "NO_CURATED_REFERENCE_ANATOMY",
+      "source": "skills_UIUX/visual-design-direction/data/reference-anatomies.json",
+      "source_sha256": "7321cedf60d3a85355c69563c4cb96e7726fd7a77a76628dac4c4986687d0f55",
+      "cards": [],
+      "sources": {},
+      "rule": "No exact profile/page-role card is a visible knowledge gap. Research the current first-party page and author a grounded transfer; never borrow an unrelated industry preset.",
+      "adopted": false
+    },
+    "adopted": false,
+    "fit_status": "UNVALIDATED",
+    "aesthetic_quality": "UNKNOWN",
+    "rule": "Cards and ranges are candidates, not a preset or exhaustive catalog. Create another grounded composition when these examples do not fit. Choose from real content, constraints and renders; do not adopt lexical upstream matches as project truth."
+  }
+]

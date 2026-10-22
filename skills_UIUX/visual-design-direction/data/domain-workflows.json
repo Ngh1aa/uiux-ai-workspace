@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "status": "PROFESSIONAL_HYPOTHESES_NOT_PROJECT_POLICY",
+  "boundary": "Authored workflow candidates derived from local skill owners; not research findings, clinical rules, compliance advice or approved operating policy. Replace actors, states, rights and metrics with project truth. No outcome uplift has been measured.",
+  "profiles": {
+    "industrial-service-operations": {
+      "source_refs": ["skills_UIUX/real-world-artifact-and-domain-metaphor-design/SKILL.md", "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"],
+      "actors": [{"role": "Plant engineer", "decision": "Describe installed system and required scope"}, {"role": "Service owner", "decision": "Confirm feasibility, exclusions and handover"}, {"role": "Approver", "decision": "Authorize documented scope within verified authority"}],
+      "objects": ["installed-base record", "scope revision", "interface boundary", "acceptance evidence"],
+      "state_model": ["draft need", "scope clarification", "reviewable proposal", "authorized work", "acceptance review", "closed with evidence"],
+      "critical_distinctions": ["Request received is not an accepted scope", "Illustrative diagram is not an as-built drawing", "Approval is not proof of commissioning or safe operation"],
+      "failure_and_recovery": [{"failure": "Unknown equipment/interface", "recovery": "Keep unknown visible, retain request and assign clarification"}, {"failure": "Scope revision after approval", "recovery": "Expose changed boundary and follow the actual reapproval path"}],
+      "metrics": [{"name": "Clarification loops", "definition": "Clarification returns per scoped request; inspect reasons", "guardrail": "Do not hide exclusions to reduce the count"}, {"name": "Traceability coverage", "definition": "Accepted requirements with current acceptance evidence / accepted requirements", "guardrail": "A link does not prove the test passed"}],
+      "role_tasks": {"orientation": "Find the capability matching the operating need.", "offering": "Inspect inputs, outputs, interfaces and exclusions before requesting work.", "evidence": "Follow a requirement through decision, artifact and verification status.", "conversion": "Submit a scoped inquiry with unknowns preserved and a truthful receipt.", "catalog": "Compare capabilities using consistent operating attributes and responsibility boundaries.", "editorial": "Read a usable explanation; distinguish concept from approved operating instruction."},
+      "validation_questions": ["Can the engineer identify what remains outside scope?", "Can the service owner locate the current revision and next accountable person?"],
+      "do_not_infer": ["Safety certification", "uptime/SLA", "equipment compatibility", "commissioning success"]
+    },
+    "physical-product-commerce": {
+      "source_refs": ["skills_UIUX/ecommerce-website/SKILL.md", "skills_UIUX/state-feedback-and-error-recovery/SKILL.md"],
+      "actors": [{"role": "Shopper", "decision": "Compare attributes, select a real variant and review total"}, {"role": "Merchant", "decision": "Supply availability, price and fulfillment constraints"}, {"role": "Payment/fulfillment system", "decision": "Report actual authorization, order and delivery separately"}],
+      "objects": ["product variant", "availability result", "cart line", "cost breakdown", "order record"],
+      "state_model": ["browsing", "variant selected", "availability checked", "cart reviewed", "payment pending", "order confirmed or failed"],
+      "critical_distinctions": ["A cart line does not reserve stock unless verified", "Payment initiated is not paid", "Popularity, scarcity and delivery promises require real sources"],
+      "failure_and_recovery": [{"failure": "No results after filtering", "recovery": "Preserve query, show filters and offer a clear reset"}, {"failure": "Variant unavailable at checkout", "recovery": "Retain other lines; offer eligible alternatives with changed price explicit"}, {"failure": "Payment outcome uncertain", "recovery": "Show pending/reconciliation; avoid blind duplicate payment"}],
+      "metrics": [{"name": "Variant errors", "definition": "Observed wrong/unavailable selections / attempted selections", "guardrail": "Do not remove meaningful options to improve the rate"}, {"name": "Checkout completion", "definition": "Confirmed orders / eligible checkout starts in a declared window", "guardrail": "Track unexpected costs, duplicate orders and returns"}],
+      "role_tasks": {"orientation": "Route by shopper need using actual product evidence.", "catalog": "Compare consistent attributes and preserve filter context on mobile.", "offering": "Resolve variant, fit/material, availability and actual cost.", "conversion": "Review cost, correct input and distinguish payment pending from confirmed order.", "editorial": "Explain selection/care with usable examples and sourced product constraints."},
+      "validation_questions": ["Can the shopper identify selected variant and total?", "Can an empty filter recover without losing the query?"],
+      "do_not_infer": ["Inventory reservation", "shipping price/time", "reviews", "discount legitimacy", "payment settlement"]
+    },
+    "career-portfolio": {
+      "source_refs": ["skills_UIUX/portfolio-career-positioning/SKILL.md", "skills_UIUX/evidence-provenance-and-research-ops/SKILL.md"],
+      "actors": [{"role": "Recruiter", "decision": "Assess role relevance"}, {"role": "Hiring practitioner", "decision": "Inspect individual decisions and evidence"}, {"role": "Candidate", "decision": "State contribution and limitations accurately"}],
+      "objects": ["role statement", "work artifact", "decision rationale", "contribution boundary", "contact path"],
+      "state_model": ["scan relevance", "choose case", "inspect evidence", "assess contribution", "contact or exit"],
+      "critical_distinctions": ["Team output is not individual contribution", "Prototype is not shipped product", "Expert walkthrough is not participant research", "Screenshots do not prove business uplift"],
+      "failure_and_recovery": [{"failure": "Confidential evidence", "recovery": "Explain redaction; show permitted reasoning without inventing results"}, {"failure": "External case unavailable", "recovery": "Provide permitted readable summary and honest unavailable state"}],
+      "metrics": [{"name": "Evidence findability", "definition": "Observed ability to find role, contribution and decision artifact in a declared task", "guardrail": "Self-review does not measure recruiter success"}, {"name": "Claim integrity", "definition": "Claims with supporting evidence or explicit limitation / material claims", "guardrail": "Coverage is not hiring impact"}],
+      "role_tasks": {"orientation": "Show target role, relevant work and a clear route into evidence.", "evidence": "Pair decision with actual artifact, contribution, constraints and unknowns.", "conversion": "Offer working contact/CV paths with consistent identity.", "editorial": "Explain a design trade-off without replacing evidence with process jargon."},
+      "validation_questions": ["Can a reviewer separate individual from team work?", "Can they distinguish measured, inferred and planned outcomes?"],
+      "do_not_infer": ["Participant count", "conversion uplift", "client endorsement", "employment dates", "native Figma delivery"]
+    },
+    "enterprise-software-governance": {
+      "source_refs": ["skills_UIUX/authentication-account-and-recovery-ux/SKILL.md", "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"],
+      "actors": [{"role": "Requester", "decision": "Specify resource, role, reason and duration"}, {"role": "Approver", "decision": "Approve/deny within verified authority"}, {"role": "Provisioning owner/system", "decision": "Report actual execution and reconcile failures"}, {"role": "Reviewer", "decision": "Inspect scope, expiry and event evidence"}],
+      "objects": ["permission request", "approval decision", "provisioning job", "effective entitlement", "revocation event"],
+      "state_model": ["draft", "submitted", "review required", "approved or denied", "provisioning pending", "active or execution failed", "revocation pending", "revoked when verified"],
+      "critical_distinctions": ["Approval is not active access", "Expiry is not verified revocation", "Connector listing is not integration proof", "Event history does not establish compliance certification"],
+      "failure_and_recovery": [{"failure": "Approved request fails provisioning", "recovery": "Separate approval/execution; expose owner, reason and authorized retry"}, {"failure": "Stale review decision", "recovery": "Show current scope/version; review material changes"}],
+      "metrics": [{"name": "Unresolved fulfillment age", "definition": "Time from approval to verified execution grouped by actual pending/failed reason", "guardrail": "Do not count approval as fulfillment"}, {"name": "Revocation evidence coverage", "definition": "Revocations with verified execution / requested revocations", "guardrail": "Expiry alone does not satisfy the numerator"}],
+      "role_tasks": {"orientation": "Find requests needing attention with owner and next action.", "offering": "Inspect resource, scope, duration and integration boundary.", "evidence": "Trace request, decision and execution as distinct events.", "conversion": "Review and submit scoped request with retained input and pending feedback.", "catalog": "Compare eligible software resources/roles without universal provisioning claims.", "editorial": "Explain permissions/review using actual project policy."},
+      "validation_questions": ["Can an operator distinguish approved-but-pending from active?", "Can they identify the recovery owner?"],
+      "do_not_infer": ["Approval authority", "access granted", "revocation success", "compliance certification", "connector coverage"]
+    },
+    "healthcare-patient-journey": {
+      "source_refs": ["skills_UIUX/mobile-navigation-and-state-ux/SKILL.md", "skills_UIUX/visual-design-direction/references/mobile-ux-first.md"],
+      "actors": [{"role": "Patient/caregiver", "decision": "Check selected person, request context and next practical action"}, {"role": "Clinic scheduling owner", "decision": "Confirm/clarify using verified clinic operations"}, {"role": "System", "decision": "Report current stored state and actual receipt only"}],
+      "objects": ["selected patient", "available slot", "appointment request", "confirmation record", "contact path"],
+      "state_model": ["select patient", "choose eligible slot", "draft request", "review details", "request pending", "confirmed or action required"],
+      "critical_distinctions": ["Requested is not confirmed", "Stock portrait is not assigned clinician", "Saved draft is not submitted request", "Completed appointment is not a clinical outcome"],
+      "failure_and_recovery": [{"failure": "Slot unavailable", "recovery": "Preserve patient/contact input; offer currently eligible choices"}, {"failure": "Back from review", "recovery": "Retain entered values/selection; expose edit paths"}, {"failure": "Unclear status", "recovery": "Show last-known state, source time when known and verified contact; invent no response promise"}],
+      "metrics": [{"name": "Request completion", "definition": "Actual received requests / eligible starts in a declared window", "guardrail": "Do not label these confirmed visits"}, {"name": "Recovery success", "definition": "Observed ability to correct input/slot error and continue the task", "guardrail": "Synthetic browser scenarios are not patient study results"}],
+      "role_tasks": {"app-overview": "Identify selected patient, next actual appointment/request and contextual action.", "app-selection": "Compare eligible options and recover from empty filters.", "app-task": "Enter/review necessary details; back and validation retain input.", "app-record": "Read actual status, next accountable actor and verified action.", "app-support": "Find verified contact with context retained; do not generate clinical triage."},
+      "validation_questions": ["Can the patient distinguish pending from confirmed?", "Can they correct details without losing person or slot?"],
+      "do_not_infer": ["Clinical advice/triage", "fees/coverage", "clinician assignment", "eligibility policy", "response time", "patient outcomes"]
+    }
+  }
+}
