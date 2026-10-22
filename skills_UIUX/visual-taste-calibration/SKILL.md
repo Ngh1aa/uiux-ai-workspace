@@ -60,6 +60,11 @@ Visual taste calibration
 
 ## Progressive reference
 
+For deliberate practice, compare the same synthetic brief in the
+[annotated decision lab](../visual-design-direction/examples/decision-lab/index.html)
+and use the [exercise/retest rubric](../visual-design-direction/references/decision-practice.md).
+Hide annotations before critique. These are teaching pairs, not measured aesthetic winners.
+
 Read [references/visual-taste-calibration.md](references/visual-taste-calibration.md) when a deeper anti-generic critique is needed. It is an adapted synthesis of Anthropic Frontend Design pinned in `vendor/external-uiux/SOURCE-LOCKS.md`.
 
 ## Acceptance criteria

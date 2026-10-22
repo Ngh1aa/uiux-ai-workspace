@@ -1,0 +1,26 @@
+{
+  "id": "knowledge-upgrade-002-workflow",
+  "category": "regression",
+  "prompt": "Một app yêu cầu lịch hẹn đang có record pending, chưa có bác sĩ được phân công. Quay lại từ review làm mất số liên hệ đã sửa. Đề xuất là thêm ảnh bác sĩ mẫu và đổi badge sang success cho nhẹ nhàng. Hãy đề xuất thứ tự sửa, thông tin trên record, recovery và cách đánh giá kết quả. Chưa có người dùng tham gia.",
+  "recommended_skills": [
+    "mobile-navigation-and-state-ux",
+    "visual-design-direction"
+  ],
+  "expected_outcomes": [
+    "Fix retained input at its owner before styling",
+    "Distinguish pending request from confirmed appointment without invented clinician",
+    "Expose next actor/action and recovery",
+    "Use meaningful metric definitions/guardrails without claiming patient outcomes"
+  ],
+  "must_not": [
+    "Invent clinic policy, response time or clinician assignment",
+    "Use appearance to compensate for task blockers",
+    "Claim human usability from synthetic scenarios"
+  ],
+  "rubric": {
+    "state_and_recovery": 40,
+    "domain_accuracy": 25,
+    "verification": 25,
+    "evidence_boundary": 10
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "task_id": "knowledge-upgrade-002-workflow",
+  "decisions": [
+    "Sửa mất số liên hệ trước: dùng nguồn dữ liệu draft chung cho nhập và review; back chỉ đổi bước, không khởi tạo lại dữ liệu. Review phải hiển thị giá trị vừa sửa.",
+    "Giữ pending với nhãn rõ như ‘Đang chờ xử lý’. Chỉ báo thành công cho hành động đã hoàn tất thật, chẳng hạn gửi yêu cầu; không dùng success để diễn đạt đã xác nhận lịch.",
+    "Không thêm ảnh bác sĩ mẫu. Hiển thị ‘Chưa phân công bác sĩ’; giải thích bước tiếp theo theo quy trình đã xác nhận.",
+    "Record có mã yêu cầu, thời điểm gửi, lịch mong muốn nếu đã lưu, liên hệ, trạng thái và hành động khả dụng. Phân biệt lịch yêu cầu với lịch xác nhận; không tự đặt thời hạn hoặc đơn vị phụ trách."
+  ],
+  "tradeoffs": [
+    "Giữ draft giúp tiếp tục công việc nhưng cần quy định thời gian lưu và riêng tư. Ưu tiên giữ trong phiên; lưu lâu hơn cần yêu cầu rõ.",
+    "Trạng thái chưa phân công có thể gây lo lắng; giảm bất an bằng bước tiếp theo và kênh hỗ trợ đã xác thực."
+  ],
+  "verification": [
+    "Kiểm tra sửa số → review → back → review → gửi; giá trị phải giữ nguyên và payload phải khớp. Bao gồm lỗi validation và gửi thất bại.",
+    "Gửi lỗi phải giữ draft và có thử lại. Nếu kết quả lần gửi trước chưa rõ, cần cơ chế tra trạng thái và chống trùng từ backend.",
+    "Nếu dữ liệu đã mất, cho nhập lại và review; không tuyên bố khôi phục khi không có nguồn.",
+    "Kế hoạch thử với người dùng: đánh giá hiểu pending, biết bước tiếp theo và sửa đúng liên hệ. Hiện chỉ có đề xuất, chưa có kiểm tra kỹ thuật hay nghiên cứu thực tế."
+  ],
+  "unsupported_claims": [
+    "Chưa chứng minh giảm lỗi, tăng chuyển đổi hoặc giảm lo lắng.",
+    "Chưa xác nhận SLA, quy trình phân công hoặc quyền sửa yêu cầu đã gửi."
+  ],
+  "open_questions": [
+    "Ai xử lý yêu cầu và khi nào lịch được xác nhận?",
+    "Có hỗ trợ sửa sau gửi, hủy và khôi phục draft sau tải lại không?"
+  ]
+}

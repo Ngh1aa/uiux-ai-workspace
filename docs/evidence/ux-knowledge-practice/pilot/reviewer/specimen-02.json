@@ -1,0 +1,29 @@
+{
+  "task_id": "knowledge-upgrade-002-workflow",
+  "decisions": [
+    "Ưu tiên sửa mất dữ liệu khi quay lại từ review. Số liên hệ đã sửa phải thuộc một bản nháp dùng chung trong luồng; màn review và màn chỉnh sửa đọc cùng dữ liệu. Chỉ cập nhật record đã gửi khi thao tác lưu thực sự thành công.",
+    "Tiếp theo sửa biểu diễn trạng thái: record vẫn là yêu cầu đang chờ; hiển thị rõ chưa phân công bác sĩ. Không thêm ảnh bác sĩ mẫu hoặc badge success để tạo cảm giác đã xác nhận.",
+    "Record cần có mã yêu cầu, trạng thái hiện tại, thông tin lịch đã yêu cầu, số liên hệ đang được lưu, thời điểm cập nhật và hành động tiếp theo. Nêu ai đang xử lý nếu hệ thống biết; nếu chưa biết thì ghi rõ chưa xác định. Không tự đặt thời hạn phản hồi.",
+    "Thông báo gửi yêu cầu thành công có thể xác nhận riêng thao tác gửi, nhưng không biến trạng thái lịch thành đã xác nhận. Dùng cả chữ và tín hiệu thị giác cho trạng thái.",
+    "Recovery: quay lại vẫn giữ thay đổi; lưu lỗi thì giữ dữ liệu và cho thử lại; ngăn gửi lặp trong lúc đang gửi. Nếu kết quả gửi chưa rõ, kiểm tra record hiện có trước khi cho gửi tiếp. Việc khôi phục sau tải lại phải theo cơ chế lưu trữ và chính sách dữ liệu được xác nhận."
+  ],
+  "tradeoffs": [
+    "Giữ bản nháp giảm nhập lại nhưng cần quy định khi nào hết hạn, đồng bộ với record và bảo vệ thông tin liên hệ.",
+    "Trạng thái chờ có thể tạo cảm giác chậm, nhưng thông tin chính xác cùng bước tiếp theo giúp người dùng biết mình cần làm gì."
+  ],
+  "verification": [
+    "Khi triển khai: sửa số liên hệ → review → quay lại → review lần nữa; giá trị phải giữ nguyên và payload gửi phải khớp.",
+    "Kiểm tra lỗi lưu, mất kết nối, gửi lặp, quay lại và record chưa phân công; mọi màn phải phản ánh cùng trạng thái.",
+    "Kế hoạch đánh giá sau: người dùng xác định đúng lịch đã được xác nhận chưa, ai xử lý và bước tiếp theo; theo dõi mất dữ liệu, nhập lại và gửi trùng. Chưa có dữ liệu người dùng hoặc kết quả cải thiện."
+  ],
+  "unsupported_claims": [
+    "Đã có bác sĩ nhận lịch.",
+    "Yêu cầu pending tương đương lịch được xác nhận.",
+    "Đổi màu và ảnh đã cải thiện trải nghiệm."
+  ],
+  "open_questions": [
+    "Ai chịu trách nhiệm phân công và phản hồi?",
+    "Sau khi gửi có được sửa hoặc hủy yêu cầu không?",
+    "Backend lưu nháp và xác nhận kết quả gửi thế nào?"
+  ]
+}

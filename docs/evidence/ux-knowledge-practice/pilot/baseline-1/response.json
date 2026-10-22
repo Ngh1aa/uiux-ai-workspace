@@ -1,0 +1,80 @@
+[
+  {
+    "task_id": "knowledge-upgrade-001-standards",
+    "decisions": [
+      "Không ép 9 nhóm xuống 7 chỉ vì Miller. Người dùng thấy lựa chọn khi thao tác; cần đánh giá nhận biết, tìm mục và phân biệt nhãn thay vì áp giới hạn ghi nhớ.",
+      "Giữ 9 nhóm làm phương án hiện tại; chỉ gộp khi có trùng nội dung hoặc bằng chứng tìm kiếm cho thấy cần đổi.",
+      "Rút nhận định mọi control 28×28 CSS px đều vi phạm AA. WCAG 2.1 đặt Target Size 44×44 ở mức AAA; WCAG 2.2 đặt Target Size (Minimum) 24×24 ở mức AA, kèm ngoại lệ. Target thực sự 28×28 có thể đáp ứng tiêu chí kích thước 2.2 AA, chưa chứng minh toàn trang đạt AA. Xác định phiên bản áp dụng trước."
+    ],
+    "tradeoffs": [
+      "Gộp nhóm giảm mật độ nhưng có thể làm nhãn rộng và tăng tầng điều hướng. Chín nhóm vẫn cần kiểm tra trên mobile.",
+      "Target lớn giúp thao tác chạm nhưng chiếm diện tích; kích thước icon khác vùng bấm."
+    ],
+    "verification": [
+      "Kiểm kê nhãn, độ sâu, vùng bấm thực tế; đối chiếu đúng tiêu chí và ngoại lệ WCAG.",
+      "Kiểm tra bàn phím, focus, phóng to và responsive; phân biệt kiểm tra kỹ thuật với bằng chứng usability.",
+      "Lập tree test hoặc nhiệm vụ tìm thông tin với người dùng phù hợp: đo chọn đúng lần đầu, hoàn thành và quay lui. So sánh phương án gộp khi có giả thuyết cụ thể; chưa thực hiện nghiên cứu."
+    ],
+    "unsupported_claims": [
+      "Chưa có dữ liệu chứng minh 7 hay 9 nhóm hiệu quả hơn.",
+      "Chưa đo target và chưa biết chuẩn áp dụng; không thể kết luận toàn trang đạt hoặc trượt AA."
+    ],
+    "open_questions": [
+      "Áp dụng WCAG 2.1 hay 2.2?",
+      "Nhiệm vụ ưu tiên, thiết bị và mức độ quen thuộc của người dùng là gì?"
+    ]
+  },
+  {
+    "task_id": "knowledge-upgrade-002-workflow",
+    "decisions": [
+      "Sửa mất số liên hệ trước: dùng nguồn dữ liệu draft chung cho nhập và review; back chỉ đổi bước, không khởi tạo lại dữ liệu. Review phải hiển thị giá trị vừa sửa.",
+      "Giữ pending với nhãn rõ như ‘Đang chờ xử lý’. Chỉ báo thành công cho hành động đã hoàn tất thật, chẳng hạn gửi yêu cầu; không dùng success để diễn đạt đã xác nhận lịch.",
+      "Không thêm ảnh bác sĩ mẫu. Hiển thị ‘Chưa phân công bác sĩ’; giải thích bước tiếp theo theo quy trình đã xác nhận.",
+      "Record có mã yêu cầu, thời điểm gửi, lịch mong muốn nếu đã lưu, liên hệ, trạng thái và hành động khả dụng. Phân biệt lịch yêu cầu với lịch xác nhận; không tự đặt thời hạn hoặc đơn vị phụ trách."
+    ],
+    "tradeoffs": [
+      "Giữ draft giúp tiếp tục công việc nhưng cần quy định thời gian lưu và riêng tư. Ưu tiên giữ trong phiên; lưu lâu hơn cần yêu cầu rõ.",
+      "Trạng thái chưa phân công có thể gây lo lắng; giảm bất an bằng bước tiếp theo và kênh hỗ trợ đã xác thực."
+    ],
+    "verification": [
+      "Kiểm tra sửa số → review → back → review → gửi; giá trị phải giữ nguyên và payload phải khớp. Bao gồm lỗi validation và gửi thất bại.",
+      "Gửi lỗi phải giữ draft và có thử lại. Nếu kết quả lần gửi trước chưa rõ, cần cơ chế tra trạng thái và chống trùng từ backend.",
+      "Nếu dữ liệu đã mất, cho nhập lại và review; không tuyên bố khôi phục khi không có nguồn.",
+      "Kế hoạch thử với người dùng: đánh giá hiểu pending, biết bước tiếp theo và sửa đúng liên hệ. Hiện chỉ có đề xuất, chưa có kiểm tra kỹ thuật hay nghiên cứu thực tế."
+    ],
+    "unsupported_claims": [
+      "Chưa chứng minh giảm lỗi, tăng chuyển đổi hoặc giảm lo lắng.",
+      "Chưa xác nhận SLA, quy trình phân công hoặc quyền sửa yêu cầu đã gửi."
+    ],
+    "open_questions": [
+      "Ai xử lý yêu cầu và khi nào lịch được xác nhận?",
+      "Có hỗ trợ sửa sau gửi, hủy và khôi phục draft sau tải lại không?"
+    ]
+  },
+  {
+    "task_id": "knowledge-upgrade-003-transfer",
+    "decisions": [
+      "Bắt đầu bằng bảng điều đã biết, giả định và câu hỏi còn thiếu. Chưa chọn profile theo tên ngành hoặc dựng workflow như thể đã xác thực.",
+      "Lập bản đồ nghiệp vụ dưới dạng câu hỏi: ai thao tác, quản lý đối tượng nào, sự kiện khởi động, nguồn dữ liệu, người quyết định và hậu quả lỗi. Ví dụ ao hoặc lô nuôi chỉ là giả thuyết để hỏi.",
+      "Kiểm kê thư viện theo chức năng và điều kiện áp dụng. Có thể tái sử dụng danh sách, lọc, biểu mẫu, lịch sử, trạng thái và recovery nếu phù hợp nhiệm vụ. Không chuyển nguyên ngưỡng cảnh báo, thuật ngữ hoặc quy trình đặc thù healthcare/industrial.",
+      "Đánh dấu ‘Cần xác nhận’ trong tài liệu làm việc cho phần chưa biết. Không biến giả định thành cảnh báo vận hành, hướng dẫn xử lý hoặc dữ liệu production. Chưa code."
+    ],
+    "tradeoffs": [
+      "Pattern có sẵn tiết kiệm công nhưng có thể mang giả định sai về vai trò, kết nối và rủi ro. Chọn theo nhiệm vụ, không theo mức giống bề ngoài.",
+      "Bản nháp ít chi tiết khó trình diễn hơn nhưng giảm cảm giác đã hiểu nghiệp vụ; ưu tiên làm rõ quyết định có hậu quả lớn."
+    ],
+    "verification": [
+      "Chọn giả thuyết: danh sách có trạng thái và thời điểm cập nhật giúp tìm bản ghi cần xem lại. Phác thảo bằng dữ liệu tổng hợp có nhãn minh họa.",
+      "Trước mắt walkthrough tính nhất quán cho thiếu dữ liệu, dữ liệu cũ, chưa đồng bộ và thao tác thất bại; kiểm tra đường xem chi tiết và recovery. Không tự đặt ngưỡng sinh học.",
+      "Sau này thu thập quy trình và reference chính thức, nhờ chuyên gia xác nhận ý nghĩa trạng thái rồi thử nhiệm vụ với vai trò thực tế. Đo chọn đúng bản ghi, hiểu độ mới dữ liệu và bước tiếp theo; chốt tiêu chí trước khi thử. Hiện chưa thực hiện các bước này."
+    ],
+    "unsupported_claims": [
+      "Chưa có bằng chứng profile nào phù hợp hoặc thiết kế cải thiện vận hành.",
+      "Walkthrough nội bộ không thay thế xác thực chuyên môn hay nghiên cứu người dùng."
+    ],
+    "open_questions": [
+      "Người dùng ưu tiên, nhiệm vụ thường xuyên và quyết định rủi ro cao là gì?",
+      "Nguồn dữ liệu, yêu cầu offline và người xác nhận nghiệp vụ là ai?"
+    ]
+  }
+]

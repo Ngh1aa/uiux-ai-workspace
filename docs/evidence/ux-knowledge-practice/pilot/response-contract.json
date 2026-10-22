@@ -1,0 +1,13 @@
+{
+  "format": "JSON array, one object per task",
+  "fields": [
+    "task_id",
+    "decisions",
+    "tradeoffs",
+    "verification",
+    "unsupported_claims",
+    "open_questions"
+  ],
+  "limit": "At most 450 Vietnamese words per task",
+  "execution": "Decision review only; do not implement or claim real-user research"
+}

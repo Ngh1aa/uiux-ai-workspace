@@ -11,6 +11,7 @@ KNOWLEDGE_PATH = "visual-design-direction/data/design-knowledge.json"
 CHECKER_PATH = "skills_UIUX/visual-design-direction/scripts/check-design-decisions.py"
 REFERENCE_PATH = "visual-design-direction/data/reference-anatomies.json"
 COMPARISON_PATH = "skills_UIUX/visual-design-direction/scripts/evaluate-design-comparison.py"
+WORKFLOW_PATH = "visual-design-direction/data/domain-workflows.json"
 
 
 def retrieve_design_knowledge(skills_root: Path, context: dict[str, Any], page_role: str = "") -> dict[str, Any]:
@@ -43,9 +44,30 @@ def retrieve_design_knowledge(skills_root: Path, context: dict[str, Any], page_r
     if reference_data.get('schema_version') != '1.0':
         raise ValueError('unsupported reference anatomy version')
     profile_ids = {item['id'] for item in profiles}
+    supported_ids = {item['id'] for item in profiles if role in item['role_ids']}
     anatomy = [card for card in reference_data['cards']
-               if role and card['profile_id'] in profile_ids and card['page_role'] == role]
+               if role and card['profile_id'] in supported_ids and card['page_role'] == role]
     reference_ids = {ref for card in anatomy for ref in card['reference_ids']}
+    workflow = {
+        "status": "ROLE_NOT_REQUESTED" if not role else "ROLE_NOT_SUPPORTED_FOR_DOMAIN" if profile_ids and not supported_ids else "NO_CURATED_DOMAIN_PROFILE",
+        "source": "skills_UIUX/" + WORKFLOW_PATH, "profiles": [], "adopted": False,
+    }
+    # One-role lookup only. Initial packets and unknown identities stay bounded.
+    if role and supported_ids:
+        workflow_raw = SafeReader(Path(skills_root)).read_text(WORKFLOW_PATH).content.encode("utf-8")
+        workflow_data = json.loads(workflow_raw)
+        if workflow_data.get("schema_version") != "1.0":
+            raise ValueError("unsupported domain workflow version")
+        selected_workflows = []
+        for profile_id in sorted(supported_ids):
+            record = workflow_data["profiles"][profile_id]
+            selected_workflows.append({
+                **{key: value for key, value in record.items() if key != "role_tasks"},
+                "profile_id": profile_id, "page_task": record["role_tasks"][role],
+            })
+        workflow.update(status="CONTEXT_MATCHED_CANDIDATES", profiles=selected_workflows,
+                        source_sha256=sha256(workflow_raw).hexdigest(),
+                        boundary=workflow_data["boundary"])
     return {
         "schema_version": data["schema_version"],
         "source": "skills_UIUX/" + KNOWLEDGE_PATH,
@@ -60,6 +82,7 @@ def retrieve_design_knowledge(skills_root: Path, context: dict[str, Any], page_r
         "foundations": data["foundations"],
         "sources": {key: data["sources"][key] for key in source_ids},
         "numeric_status": data["numeric_status"],
+        "domain_workflow": workflow,
         "reference_anatomy": {
             "status": 'CONTEXT_MATCHED_CANDIDATES' if anatomy else 'ROLE_NOT_REQUESTED' if not role else 'NO_CURATED_REFERENCE_ANATOMY',
             "source": 'skills_UIUX/' + REFERENCE_PATH,

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "knowledge-upgrade-001-standards",
+    "prompt": "Một cổng thông tin có 9 nhóm navigation với nhãn rõ và người dùng xem trực tiếp khi chọn. Đề xuất hiện tại là ép còn 7 vì Miller và gọi mọi control 28×28 CSS px là vi phạm WCAG AA vì dưới 44px. Hãy review quyết định, nêu thay đổi cần làm, trade-off và cách kiểm chứng. Chưa có người dùng tham gia."
+  },
+  {
+    "id": "knowledge-upgrade-002-workflow",
+    "prompt": "Một app yêu cầu lịch hẹn đang có record pending, chưa có bác sĩ được phân công. Quay lại từ review làm mất số liên hệ đã sửa. Đề xuất là thêm ảnh bác sĩ mẫu và đổi badge sang success cho nhẹ nhàng. Hãy đề xuất thứ tự sửa, thông tin trên record, recovery và cách đánh giá kết quả. Chưa có người dùng tham gia."
+  },
+  {
+    "id": "knowledge-upgrade-003-transfer",
+    "prompt": "Bạn được giao UX cho công cụ quản lý nuôi trồng thủy sản ở một ngành chưa quen. Chưa có quy trình nghiệp vụ, người dùng hoặc reference được kiểm tra. Có thể tận dụng một thư viện hiện có với profile healthcare và industrial. Hãy nêu cách bắt đầu, chọn pattern, xử lý chỗ chưa biết và kiểm chứng một quyết định; chưa code hoặc nghiên cứu người thật."
+  }
+]

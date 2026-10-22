@@ -114,7 +114,7 @@
       "media": "Show identifiable equipment/interfaces or legible scope documents; caption conceptual diagrams; technical labels must carry information.",
       "icons": "One legible outline family; status/error meaning has text and shape, not accent alone.",
       "avoid": ["consumer plant-care or hydration profiles from lexical matching", "unverified safety certification or uptime proof", "decorative schematics with no scope meaning"],
-      "role_ids": ["orientation", "offering", "evidence", "conversion", "editorial"]
+      "role_ids": ["orientation", "offering", "evidence", "conversion", "catalog", "editorial"]
     },
     {
       "id": "physical-product-commerce",
