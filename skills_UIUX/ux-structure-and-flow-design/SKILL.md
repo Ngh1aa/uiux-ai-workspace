@@ -131,9 +131,22 @@ docs/ux/ux-readiness.md          U6 verdict + findings
 
 Small tasks (one page, one flow) may combine these into one `docs/ux/ux-structure.md`.
 
+**Machine-checkable record.** For gated flows also write `docs/ux/ux-structure.json`
+(schema: `python -B skills_UIUX/ux-structure-and-flow-design/scripts/check-ux-structure.py --schema`)
+and run the checker with `--root <project>`. It fails on: a top task without a flow, a flow
+without a failure path, a flow over the step budget without a reason, fewer than 5 walkthrough
+scenarios or none exercising failure, a resolved finding without retest, a verdict that
+contradicts open blockers/majors or HYPOTHESIS inputs, and a top task hidden in navigation.
+PASS means `READY` or `READY_WITH_RISKS` with consistent records; usability stays `UNKNOWN`.
+After PASS, `--export-page-ux <evidence_ref>` emits `pages[].ux` blocks for the
+visual-design-direction v2 contract so the visual stage reuses, not retypes, the UX record.
+
 **Resource routing**
 
 - Need artifact shapes? Use [UX templates](../templates/ux/README.md).
+- Handing to visual design? Fill [visual brief](../templates/ux/visual-brief.md) and [design principles](../templates/ux/design-principles.md).
+- Need a machine-checked example or a greyscale wireframe pattern? See [example record](examples/edtech-class-booking/docs/ux/ux-structure.json) and [wireframes](examples/edtech-class-booking/wireframes.html).
+- Unsure which UX skill owns a decision? Read [UX skill map](../../docs/UX-SKILL-MAP.md).
 - Need flow notation, step budgets, navigation trade-offs or wireframe rules? Read [practice](references/ux-structure-practice.md).
 - Before handing to visual design, run [UX Readiness gate](checklists/ux-readiness-gate.md).
 - Need a worked example? Read [edtech booking example](examples/edtech-class-booking.md).

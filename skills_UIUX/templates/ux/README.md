@@ -17,9 +17,13 @@ Copy into the target project's `docs/ux/` and fill in. Keep evidence labels hone
 | U5 Validate | [usability-test-plan.md](usability-test-plan.md) | `moderated-usability-testing` | Testing with real people |
 | U6 Decide | [design-rationale.md](design-rationale.md) | `design-critique-and-rationale` | Any consequential design choice |
 | U7 Measure | [ux-scorecard.md](ux-scorecard.md) | `ux-benchmarking-and-metrics` | Before/after comparison, release review |
+| U1 to V1 | [design-principles.md](design-principles.md) | `experience-principles-and-signature-moments` | After top tasks; principles that settle arguments |
+| V1 Handoff | [visual-brief.md](visual-brief.md) | `ux-structure-and-flow-design` → `visual-design-direction` | After UX Readiness passes, before visual exploration |
 
 Order of use for a new product: problem statement → assumption map → proto-persona →
 JTBD/top tasks → user flows → IA → wireframe spec → heuristic evaluation →
-UX readiness gate → (visual design) → usability test plan → design rationale → scorecard.
+UX readiness gate → design principles + visual brief → (visual design) → usability test plan → design rationale → scorecard.
 
 The full sequence and gates live in [UX-FIRST-WORKFLOW.md](../../../UX-FIRST-WORKFLOW.md).
+
+Machine-checkable record: `docs/ux/ux-structure.json`, checked by `skills_UIUX/ux-structure-and-flow-design/scripts/check-ux-structure.py`. The markdown templates stay the human-readable layer.
