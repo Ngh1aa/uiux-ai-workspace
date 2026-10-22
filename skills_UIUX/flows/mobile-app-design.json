@@ -28,6 +28,7 @@
         "mobile-app-design",
         "product-discovery",
         "ux-research-and-journey",
+        "ux-structure-and-flow-design",
         "journey-driven-content-and-layout",
         "design-reference-research-and-benchmark"
       ],
@@ -64,7 +65,7 @@
         },
         {
           "id": "ux-before-visual",
-          "require": "Before visual direction, inspect representative overview, selection and form/recovery tasks: entry state, user question, prioritized content, primary action, destination, feedback and recovery. Record wireframe walkthrough findings and repair blocking comprehension or navigation defects. No participant claims from expert review."
+          "require": "Before visual direction, inspect representative overview, selection and form/recovery tasks: entry state, user question, prioritized content, primary action, destination, feedback and recovery. Record wireframe walkthrough findings and repair blocking comprehension or navigation defects. Use ux-structure-and-flow-design flows, screen inventory and UX Readiness verdict as the record. No participant claims from expert review."
         }
       ]
     },

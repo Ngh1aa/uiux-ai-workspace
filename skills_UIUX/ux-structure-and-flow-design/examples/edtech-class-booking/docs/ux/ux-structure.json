@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "product": "Tutoring-centre parent app (SAMPLE, synthetic)",
+  "problem": {
+    "statement": {
+      "text": "Parents lose paid sessions when a child misses class, because moving a class requires calling the centre during office hours.",
+      "label": "HYPOTHESIS"
+    },
+    "outcome_metric": "Share of make-up bookings completed in-app without a phone call (baseline UNKNOWN)"
+  },
+  "audiences": [
+    {"text": "Working parent managing one or two children's classes on Android", "label": "HYPOTHESIS"},
+    {"text": "Secondary-school student checking own schedule", "label": "HYPOTHESIS"}
+  ],
+  "top_tasks": [
+    {"id": "T1", "task": "Move a class", "job": "When my child is sick on class day, I want to move the class to another slot, so I don't lose the session I already paid for.", "frequency": 3, "consequence": 3, "scenario": "Parent at work, 2 minutes between meetings, opened from a Zalo reminder, weak 4G.", "success_signal": "New slot confirmed, old slot released, teacher notified", "label": "HYPOTHESIS"},
+    {"id": "T2", "task": "Check today's schedule", "job": "When I plan my afternoon, I want to see today's classes and rooms, so I can drop my child at the right place and time.", "frequency": 4, "consequence": 2, "scenario": "Parent at 7am on the way to work, one hand.", "success_signal": "Knows time and room for every class today", "label": "HYPOTHESIS"},
+    {"id": "T3", "task": "Pay tuition", "job": "When a new term starts, I want to pay tuition quickly and get a receipt, so my child keeps their place.", "frequency": 2, "consequence": 3, "scenario": "Parent at home in the evening, banking app installed.", "success_signal": "Payment confirmed with receipt in app", "label": "HYPOTHESIS"}
+  ],
+  "flows": [
+    {
+      "id": "F1", "task_id": "T1",
+      "entry_points": ["Zalo reminder deep link", "cold open from Home", "return after app switch"],
+      "happy_path": ["class-detail", "move-reason", "pick-slot", "review-move", "move-success"],
+      "alternative_paths": [["home", "class-detail", "move-reason", "pick-slot", "review-move", "move-success"]],
+      "failure_paths": [
+        {"trigger": "No same-level slot this week", "recovery": "Show next week and offer notify-me", "keeps_user_input": true, "returns_to": "pick-slot"},
+        {"trigger": "Slot taken between pick and confirm", "recovery": "Return to slot list with message, keep chosen reason", "keeps_user_input": true, "returns_to": "pick-slot"},
+        {"trigger": "Server error on confirm", "recovery": "Keep choice, explain, retry button", "keeps_user_input": true, "returns_to": "review-move"}
+      ],
+      "diagram_ref": "../../../edtech-class-booking.md"
+    },
+    {
+      "id": "F2", "task_id": "T2",
+      "entry_points": ["cold open", "morning notification"],
+      "happy_path": ["home", "class-detail"],
+      "failure_paths": [
+        {"trigger": "Offline", "recovery": "Show last synced schedule with timestamp", "keeps_user_input": true, "returns_to": "home"}
+      ]
+    },
+    {
+      "id": "F3", "task_id": "T3",
+      "entry_points": ["Home due badge", "Account > Tuition"],
+      "happy_path": ["tuition-due", "pay-method", "bank-handoff", "pay-success"],
+      "failure_paths": [
+        {"trigger": "Bank declines or user cancels in bank app", "recovery": "Return with invoice kept, explain, choose other method", "keeps_user_input": true, "returns_to": "pay-method"}
+      ]
+    }
+  ],
+  "screens": [
+    {"id": "home", "route": "/home", "flows": ["F1", "F2"], "entry_state": "Signed in, morning", "user_goal": "Is anything happening today that I need to act on?", "information_priority": ["today's classes with time and room", "due payment if any", "new teacher feedback"], "primary_action": "Open today's class", "destination": "class-detail", "feedback": "Pressed state on card", "recovery": "Offline: last synced data with timestamp", "required_states": ["loading", "empty day", "offline", "default"]},
+    {"id": "class-detail", "route": "/class/:id", "flows": ["F1", "F2"], "entry_state": "From reminder or Home", "user_goal": "Is it today, where, and can I change it?", "information_priority": ["time and room", "teacher", "move option"], "primary_action": "Move this class", "destination": "move-reason", "feedback": "none", "recovery": "Class already started: show centre phone", "required_states": ["default", "started", "cancelled by centre"]},
+    {"id": "move-reason", "route": "/class/:id/move", "flows": ["F1"], "entry_state": "Chose to move", "user_goal": "Why am I moving it?", "information_priority": ["reason options", "free make-up policy"], "primary_action": "Choose reason", "destination": "pick-slot", "feedback": "Selected state", "recovery": "Back keeps class context", "required_states": ["default"]},
+    {"id": "pick-slot", "route": "/class/:id/move/slot", "flows": ["F1"], "entry_state": "Reason chosen", "user_goal": "Which slot fits and is the same level?", "information_priority": ["same-level slots by day", "seats left when under 5", "policy note"], "primary_action": "Continue", "destination": "review-move", "feedback": "Selected slot highlighted", "recovery": "No slot: next week + notify me", "required_states": ["loading", "empty week", "default", "slot taken"]},
+    {"id": "review-move", "route": "/class/:id/move/review", "flows": ["F1"], "entry_state": "Slot chosen", "user_goal": "Am I sure, and what changes?", "information_priority": ["old to new", "policy", "fee (none)"], "primary_action": "Confirm move", "destination": "move-success", "feedback": "Pending state on button", "recovery": "Server error keeps choice with retry", "required_states": ["default", "submitting", "error"]},
+    {"id": "move-success", "route": "/class/:id/move/done", "flows": ["F1"], "entry_state": "Move confirmed", "user_goal": "Is it done and does the teacher know?", "information_priority": ["confirmation", "teacher notified", "add to calendar"], "primary_action": "Add to calendar", "destination": "device calendar", "feedback": "Success status announced", "recovery": "Calendar permission denied: show manual details", "required_states": ["default"]},
+    {"id": "tuition-due", "route": "/account/tuition", "flows": ["F3"], "entry_state": "Due badge tapped", "user_goal": "How much, for what, and by when?", "information_priority": ["amount", "term and classes covered", "due date"], "primary_action": "Pay now", "destination": "pay-method", "feedback": "none", "recovery": "Nothing due: show last receipt", "required_states": ["default", "nothing due", "overdue"]},
+    {"id": "pay-method", "route": "/account/tuition/pay", "flows": ["F3"], "entry_state": "Chose to pay", "user_goal": "Which way is fastest for me?", "information_priority": ["bank app / QR", "card", "transfer details"], "primary_action": "Continue to bank", "destination": "bank-handoff", "feedback": "Selected method", "recovery": "Back keeps invoice", "required_states": ["default", "declined"]},
+    {"id": "bank-handoff", "route": "external", "flows": ["F3"], "entry_state": "Leaving to bank app", "user_goal": "Will I come back to the right place?", "information_priority": ["what happens next", "return instruction"], "primary_action": "Open bank app", "destination": "pay-success", "feedback": "Waiting for confirmation state on return", "recovery": "Cancelled in bank: back to pay-method with explanation", "required_states": ["waiting", "cancelled", "timeout"]},
+    {"id": "pay-success", "route": "/account/tuition/done", "flows": ["F3"], "entry_state": "Payment confirmed", "user_goal": "Is it paid and where is the receipt?", "information_priority": ["paid status", "receipt", "next due date"], "primary_action": "View receipt", "destination": "receipt", "feedback": "Success status announced", "recovery": "Receipt not ready: show pending with time estimate", "required_states": ["default", "receipt pending"]}
+  ],
+  "navigation": {
+    "model": "tab-bar",
+    "reason": "T1 and T2 are frequent peer tasks; payment is monthly so it lives in Account with a due badge on Home.",
+    "persistent": ["Home", "Schedule", "Learning", "Account"],
+    "hidden": []
+  },
+  "walkthrough": {
+    "review_source": "agent-heuristic",
+    "scenarios": [
+      {"id": "S1", "description": "First-time parent opens from a Zalo link", "varies": ["first-time", "low-confidence"]},
+      {"id": "S2", "description": "Returning parent rebooks between meetings, one hand", "varies": ["returning", "hurried"]},
+      {"id": "S3", "description": "Slot taken while paying attention elsewhere; bank declines", "varies": ["failure", "interruption"]},
+      {"id": "S4", "description": "Large text setting in bright sunlight on weak 4G", "varies": ["accessibility", "situational"]},
+      {"id": "S5", "description": "Long child name, zero slots, three children", "varies": ["edge-content"]}
+    ],
+    "findings": [
+      {"id": "W1", "screen_id": "class-detail", "scenario_ids": ["S1"], "observation": "'Can't attend' read as cancel with no refund", "severity": "major", "status": "resolved", "fix": "Rename to 'Move this class' with helper 'Free, keeps your session'", "retest": "S1 rerun: label read as reschedule"},
+      {"id": "W2", "screen_id": "review-move", "scenario_ids": ["S3"], "observation": "Slot taken between pick and confirm returned to Home and lost the reason", "severity": "blocker", "status": "resolved", "fix": "Return to pick-slot with message, keep reason", "retest": "S3 rerun: lands on pick-slot with reason kept"},
+      {"id": "W3", "screen_id": "pick-slot", "scenario_ids": ["S4"], "observation": "Teacher and room wrap; seats badge pushed off screen at large text", "severity": "minor", "status": "open", "fix": "Stack row on two lines (visual stage)"}
+    ]
+  },
+  "verdict": {
+    "status": "READY_WITH_RISKS",
+    "open_majors": [],
+    "hypotheses_to_validate": ["All tasks and audiences are team belief", "Parents understand 'Move this class'", "Parents expect to choose a teacher"],
+    "next_validation": "5 moderated sessions with parents on T1 and T3 using a greyscale clickable prototype"
+  }
+}
