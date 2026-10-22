@@ -68,6 +68,8 @@ The managed CLI uses that same canonical Flow OS and is **not a second Flow OS**
 
 For a human or external AI collaborator, read **`START-HERE.md` first**. Do not preload the entire repository.
 
+**Designers:** start with [`UX-FIRST-WORKFLOW.md`](UX-FIRST-WORKFLOW.md). It walks problem framing → top tasks → flows → screen/state inventory → navigation → wireframe spec → UX Readiness gate → visual design, with [12 UX artifact templates](skills_UIUX/templates/ux/README.md) and short prompts for Claude and Claude Design. The structure layer is owned by [`ux-structure-and-flow-design`](skills_UIUX/ux-structure-and-flow-design/SKILL.md).
+
 Normative ownership is defined in `docs/CONTRACT-OWNERSHIP.md`:
 
 - `AGENTS.md` — universal operating/evidence contract;

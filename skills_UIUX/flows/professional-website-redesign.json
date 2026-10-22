@@ -27,6 +27,7 @@
         "website-audit-and-redesign",
         "audience-intent-and-top-tasks",
         "information-architecture",
+        "ux-structure-and-flow-design",
         "design-reference-research-and-benchmark"
       ],
       "conditional_skills": [
@@ -220,6 +221,10 @@
               "production-learning"
             ]
           }
+        },
+        {
+          "id": "ux-before-visual",
+          "require": "Before visual direction, the UX Readiness verdict from ux-structure-and-flow-design is READY or READY_WITH_RISKS: every top task has a user flow with a happy path and a failure path ending in recovery; every key screen records user question, information priority, one primary action, destination, feedback and recovery; walkthrough findings have severity, fix and retest with no open blocker. Expert walkthroughs are agent-heuristic evidence, never participant research."
         },
         {
           "id": "outcome-definition",

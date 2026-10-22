@@ -1,0 +1,18 @@
+{
+  "name": "ux-foundation",
+  "description": "UX-first core: problem framing, top tasks, flows, screen/state inventory, navigation, wireframe spec, walkthrough, critique and usability validation before visual design.",
+  "skills": [
+    "product-discovery",
+    "audience-intent-and-top-tasks",
+    "ux-research-and-journey",
+    "ux-structure-and-flow-design",
+    "information-architecture",
+    "state-feedback-and-error-recovery",
+    "complex-forms-and-wizards",
+    "ux-writing-and-microcopy",
+    "ux-laws-and-heuristics",
+    "design-critique-and-rationale",
+    "prototype-strategy-and-concept-testing",
+    "moderated-usability-testing"
+  ]
+}
