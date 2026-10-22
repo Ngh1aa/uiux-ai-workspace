@@ -3,6 +3,15 @@
 Semantic versioning on the public surface (token paths, class names, state attributes, contracts).
 See [docs/governance.md](docs/governance.md).
 
+## Unreleased
+
+### Fixed
+- Browser review requires all declared engines and axe-core; CI requires all three engines.
+- Review reports transition from RUNNING to PASS/FAIL and retain failure diagnostics.
+- Explicit reduced local reviews remain PARTIAL when engines or axe are missing.
+- Browser gate regressions cover dependency, engine, partial-review and stale-report failures.
+- The aggregate local checker continues after failures and exits nonzero, including failed pipelines.
+
 ## 0.1.0 (2026-10-22)
 
 ### Added

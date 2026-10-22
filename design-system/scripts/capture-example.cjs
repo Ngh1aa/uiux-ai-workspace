@@ -1,11 +1,11 @@
 // Browser checks + screenshots for examples/appointment-app.
-//   NODE_PATH=<dir with playwright[, axe-core]> node design-system/scripts/capture-example.cjs <out-dir> [engines]
-// engines: comma list of chromium,webkit,firefox (default: every engine Playwright can launch).
+//   NODE_PATH=<dir with playwright and axe-core> node design-system/scripts/capture-example.cjs <out-dir> [engines] [--allow-partial]
+// All requested engines and axe-core are required by default. --allow-partial is local-only;
+// its incomplete results are PARTIAL, never PASS. CI always requires the full matrix.
 // Checks per engine x viewport: no horizontal overflow, filter/search/empty/reset, invalid input
 // recovery, back retains input, feedback toast, no page errors, enlarged-text stress, and (when
 // axe-core is resolvable) WCAG 2.2 A/AA automated rules in light and dark themes.
 // Automated checks are necessary, not sufficient: they do not replace a screen-reader session.
-const playwright = require('playwright');
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
@@ -25,22 +25,41 @@ function serve() {
 }
 let browser;
 let server;
-
-let axeSource = null;
-try { axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8'); } catch { /* optional */ }
+let report;
+let out;
+function saveReport() {
+  if (report && out) fs.writeFileSync(path.join(out, 'browser-report.json'), JSON.stringify(report, null, 2) + '\n');
+}
 
 (async () => {
-  const out = path.resolve(process.argv[2] || 'artifacts/appointment-app');
-  const wanted = (process.argv[3] || 'chromium,webkit,firefox').split(',');
+  const args = process.argv.slice(2).filter(arg => arg !== '--allow-partial');
+  out = path.resolve(args[0] || 'artifacts/appointment-app');
+  const wanted = [...new Set((args[1] || 'chromium,webkit,firefox').split(',').map(engine => engine.trim()).filter(Boolean))];
+  const strict = process.env.CI === 'true' || !process.argv.includes('--allow-partial');
   fs.mkdirSync(out, { recursive: true });
+  report = { status: 'RUNNING', strict, requested_engines: wanted, expected_runs: wanted.length * 12,
+    pages: ['examples/appointment-app/index.html', 'docs/index.html'], axe: 'NOT_RUN', engines_skipped: [], runs: [] };
+  saveReport();
+  if (!wanted.length || wanted.some(engine => !['chromium', 'webkit', 'firefox'].includes(engine))) {
+    throw new Error('engines must name chromium, webkit or firefox');
+  }
+  if (process.env.CI === 'true' && wanted.length !== 3) {
+    throw new Error('CI requires the complete chromium, webkit, firefox engine matrix');
+  }
+  const playwright = require('playwright');
+  let axeSource = null;
+  try {
+    axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
+    if (!axeSource.trim()) throw new Error('axe-core source is empty');
+    report.axe = 'RUN';
+  }
+  catch (e) { if (strict) throw new Error('axe-core is required for a complete browser review'); }
   server = await serve();
   const base = `http://127.0.0.1:${server.address().port}`;
   const pages = [
     { name: 'app', path: '/examples/appointment-app/index.html', tasks: true },
     { name: 'docs', path: '/docs/index.html', tasks: false },
   ];
-  const report = { pages: ['examples/appointment-app/index.html', 'docs/index.html'], axe: axeSource ? 'RUN' : 'NOT_RUN (axe-core not resolvable)', engines_skipped: [], runs: [] };
-
   for (const engine of wanted) {
     try { browser = await playwright[engine].launch({ headless: true }); }
     catch (e) { report.engines_skipped.push({ engine, reason: String(e.message).split('\n')[0] }); continue; }
@@ -120,7 +139,14 @@ try { axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8'
     browser = null;
   }
   if (!report.runs.length) throw new Error('no browser engine could be launched');
-  fs.writeFileSync(path.join(out, 'browser-report.json'), JSON.stringify(report, null, 2) + '\n');
-  console.log(JSON.stringify({ runs: report.runs.length, skipped: report.engines_skipped.map(s => s.engine), axe: report.axe }));
-})().catch(e => { console.error(e); process.exitCode = 1; })
+  if (strict && (report.engines_skipped.length || report.runs.length !== report.expected_runs)) {
+    throw new Error('incomplete browser matrix: ' + report.engines_skipped.map(s => s.engine).join(', '));
+  }
+  report.status = report.engines_skipped.length || !axeSource ? 'PARTIAL' : 'PASS';
+  saveReport();
+  console.log(JSON.stringify({ status: report.status, runs: report.runs.length, skipped: report.engines_skipped.map(s => s.engine), axe: report.axe }));
+})().catch(e => {
+  if (report) { report.status = 'FAIL'; report.error = String(e.message); saveReport(); }
+  console.error(e); process.exitCode = 1;
+})
   .finally(async () => { if (browser) await browser.close().catch(() => {}); if (server) server.close(); });
