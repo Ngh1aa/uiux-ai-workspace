@@ -1,0 +1,22 @@
+{
+  "task_id": "knowledge-upgrade-002-workflow",
+  "decisions": [
+    "Ưu tiên sửa mất số liên hệ khi Back từ review: xác định nơi draft bị khởi tạo lại hoặc không được đồng bộ; giữ một nguồn draft gồm liên hệ đã sửa và lựa chọn hiện tại. Chưa có code để kết luận nguyên nhân cụ thể.",
+    "Tiếp theo bảo đảm trạng thái trung thực: giữ pending, nhãn 'Đang chờ xác nhận'; không đổi sang success. Chỉ hiển thị 'Đã tiếp nhận yêu cầu' khi có xác nhận tiếp nhận thật, phân biệt với lịch hẹn đã xác nhận.",
+    "Record đặt mã yêu cầu, người được đặt, lịch mong muốn, trạng thái hiện tại, bên xử lý tiếp theo và hành động khả dụng gần nhau. Hiển thị 'Chưa được phân công bác sĩ'; bỏ ảnh bác sĩ mẫu vì dễ tạo nhận định đã được phân công. Owner chỉ dùng vai trò đã xác minh; chưa biết thì ghi chưa rõ.",
+    "Recovery: cho sửa liên hệ từ review rồi quay lại vẫn giữ dữ liệu; lỗi gửi giữ draft, giải thích phần chưa gửi và cho thử lại với kiểm soát gửi trùng. Slot hết chỗ giữ người/liên hệ, cung cấp lựa chọn còn hợp lệ nếu có dữ liệu. Kênh hỗ trợ và thời điểm cập nhật chỉ dùng thông tin thật."
+  ],
+  "tradeoffs": [
+    "Giữ draft cần quyết định vòng đời và bảo vệ dữ liệu cá nhân; không mặc định lưu lâu trên thiết bị. Trạng thái pending ít tạo cảm giác hoàn tất nhưng giúp người dùng hiểu đúng việc còn chờ."
+  ],
+  "verification": [
+    "Kịch bản dự kiến: sửa liên hệ → review → Back → review; lỗi gửi/thử lại; slot hết; pending/confirmed/action-required; kiểm tra dữ liệu và trạng thái nhất quán trên các bề mặt.",
+    "Review trên màn hẹp, chữ lớn, keyboard/screen reader: trạng thái không chỉ dùng màu, nhãn và CTA vẫn đi cùng record. Sau này test người dùng phân biệt pending/confirmed và tự sửa thông tin. Đo request thực được tiếp nhận/eligible starts theo cửa sổ xác định và recovery success; QA mô phỏng không phải nghiên cứu bệnh nhân."
+  ],
+  "unsupported_claims": [
+    "Chưa chứng minh tăng completion hay giảm lo lắng; không suy ra thời gian phản hồi, phân công bác sĩ, chính sách hoặc kết quả lâm sàng."
+  ],
+  "open_questions": [
+    "Ai xác nhận yêu cầu, quyền sửa ở pending là gì, hệ thống lưu draft và xác nhận receipt thế nào?"
+  ]
+}

@@ -34,7 +34,9 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 
 ### 1. Hick's Law — Thời gian quyết định tăng theo số lượng lựa chọn
 
-**Công thức mental**: Thời gian = log₂(n + 1)
+Mô hình choice-reaction thường có dạng `T = a + b·log₂(n + 1)` trong điều kiện
+thí nghiệm tương ứng. Không dùng số lựa chọn để dự đoán trực tiếp thời gian tìm
+kiếm trên website; familiarity, xác suất lựa chọn, grouping và labeling đều ảnh hưởng.
 
 **Khi nào áp dụng**:
 - Navigation có quá nhiều items
@@ -52,7 +54,8 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 
 ### 2. Fitts's Law — Target lớn + gần = dễ click hơn
 
-**Công thức mental**: Thời gian = khoảng cách / kích thước target
+Một dạng Shannon thường dùng là `MT = a + b·log₂(D/W + 1)`; `a`, `b` phải được
+ước lượng theo điều kiện đo. `D/W` một mình không phải công thức thời gian.
 
 **Khi nào áp dụng**:
 - CTA button quá nhỏ hoặc ở vị trí khó reach
@@ -61,7 +64,10 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 - Close button nhỏ trên modal
 
 **Hướng dẫn thực thi**:
-- Minimum touch target: **44×44px** (WCAG) hoặc 48×48px (Material Design)
+- Web: WCAG 2.2 **2.5.8, level AA** dùng **24×24 CSS px**, với các ngoại lệ
+  spacing/equivalent/inline/user-agent/essential. **2.5.5, level AAA** dùng
+  **44×44 CSS px** với ngoại lệ riêng. 44×44 có thể là mục tiêu usability của
+  project; không gọi đó là minimum AA hay đổi trực tiếp CSS px thành native pt/dp.
 - CTA buttons phải nổi bật và đủ lớn
 - Primary action gần vùng user đang tương tác
 - Navigation items có sufficient padding
@@ -78,17 +84,18 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 - Quyết định có dùng unconventional layout không
 
 **Hướng dẫn thực thi**:
-- Logo ở top-left, link về homepage
-- Search ở top-right hoặc center header
-- Navigation horizontal ở top
-- CTA button cuối navigation, visually distinct
-- Footer có links, contact, legal
-- Forms: labels above inputs, submit ở bottom-right (LTR)
-- Don't reinvent patterns mà user đã quen
+- Dùng navigation, search, back và form conventions quen thuộc với audience/platform.
+- Vị trí logo/search/submit phụ thuộc task, reading direction, viewport và platform;
+  không có yêu cầu phổ quát rằng submit phải ở bottom-right hay search ở top-right.
+- Giữ labels, affordances và kết quả hành động nhất quán với kỳ vọng đã có.
 
 **Cảnh báo**: Convention không phải lúc nào cũng best. Nếu convention gây confusion cho đối tượng cụ thể, có thể deviate — nhưng phải có evidence mạnh.
 
-### 4. Miller's Law — Bộ nhớ làm việc chứa ~7±2 items
+### 4. Miller / Chunking — Phân biệt nhớ lại và nhận diện
+
+`7±2` là kết quả lịch sử về giới hạn xử lý/nhớ trong điều kiện cụ thể, không phải
+giới hạn số mục nhìn thấy trên UI. Navigation và catalog thường hỗ trợ recognition,
+khác với việc buộc user nhớ thông tin qua nhiều màn hình.
 
 **Khi nào áp dụng**:
 - Số items trong navigation
@@ -97,13 +104,16 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 - Số data points trong comparison
 
 **Hướng dẫn thực thi**:
-- Chunk information thành nhóm 3-5 items
-- Navigation: ≤ 7 top-level items
+- Chunk theo quan hệ có nghĩa, không ép số mục cố định.
+- Navigation: chọn breadth/depth theo information scent, grouping, familiarity và
+  scanning cost; dùng owner [information-architecture](../information-architecture/SKILL.md).
 - Step indicators cho multi-step processes
-- Giữ comparison tables ≤ 5 options cùng lúc
+- Comparison: chọn số option từ attributes/task và khả năng đối chiếu; cho pin/filter
+  khi cần, không dùng một giới hạn 5 option cho mọi bảng.
 - Dùng headings và visual grouping để break content
 
-**Cảnh báo**: "7±2" là hướng dẫn, không phải giới hạn cứng. Familiar items (numbers, colors) có thể nhiều hơn. Unfamiliar items (new concepts) nên ít hơn.
+**Cảnh báo**: Không dùng Miller để biện minh menu ≤7. Kiểm tra phần việc user phải
+nhớ, thông tin còn nhìn thấy và chỗ có thể externalize memory.
 
 ### 5. Von Restorff Effect — Items khác biệt được nhớ tốt hơn
 
@@ -143,7 +153,7 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 - Items trong cùng khu vực perceived là group
 - **Áp dụng**: Cards, containers, sections dùng background/border để group content
 
-### 7. Doherty Threshold — Response time < 400ms giữ user engaged
+### 7. Response feedback — Chọn budget theo tác vụ
 
 **Khi nào áp dụng**:
 - Loading states
@@ -152,11 +162,14 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 - Search results
 
 **Hướng dẫn thực thi**:
-- Instant feedback (< 100ms) cho click/tap
-- Progress indication cho actions > 400ms
-- Skeleton screens thay vì spinner cho content loading
-- Optimistic UI cho predictable actions
-- Perceived performance > actual performance
+- Đặt feedback/performance budget có đơn vị, điều kiện đo và rationale theo task;
+  không trình bày 100/400ms như guarantee về engagement.
+- Chọn skeleton, spinner hoặc progress từ thời gian chờ và thông tin có thật;
+  skeleton không luôn tốt hơn spinner.
+- Optimistic UI chỉ khi rollback/reconciliation rõ và hệ quả phù hợp; pending
+  payment/booking/approval không được hiển thị thành hoàn tất trước xác nhận thật.
+- Cải thiện cả thời gian thực lẫn khả năng hiểu trạng thái; không che latency bằng
+  animation hoặc confirmation giả.
 
 ### 8. Tesler's Law — Mọi ứng dụng có mức complexity không thể giảm
 
@@ -181,7 +194,7 @@ Cung cấp framework để đánh giá thiết kế dựa trên các nguyên t�
 - Task completion
 
 **Hướng dẫn thực thi**:
-- Tạo "delight moment" ở peak (animation, success message, unexpected value)
+- Chọn confirmation/closure hữu ích; animation/delight chỉ khi phù hợp cảm xúc và task.
 - End experience positively: confirmation page, next steps, thank you
 - Tránh negative peaks: long load, confusing error, data loss
 - Last impression matters: checkout confirmation, email follow-up
@@ -241,6 +254,13 @@ Khi review một page/component, dùng template sau:
 |-----|---------------------|-----------|
 | [Law name] | [How it applies here] | [What was sacrificed] |
 ```
+
+## Source and scope review
+
+Khi chuẩn hoặc số định lượng ảnh hưởng quyết định, đọc
+[source/scope register](references/principle-sources.md). Ghi rõ version/level,
+đơn vị, ngoại lệ, nguồn, ngày kiểm và cách kiểm chứng; tách standard requirement
+khỏi heuristic và project hypothesis. Không thêm checklist cho law không liên quan.
 
 ## Output bắt buộc
 

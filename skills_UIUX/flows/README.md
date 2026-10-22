@@ -17,6 +17,12 @@ The universal behavior/evidence policy belongs to `AGENTS.md`; authority/provide
 
 ## Active flow families
 
+Skill source maintenance uses `skill-library-maintenance`; explicit read-only review
+uses `skill-library-audit`. Both reuse the existing research/implementation/QA roles
+and `skill-authoring-and-governance`. Their scoped feature does not activate for an
+ordinary website teaching skills. UI specimens still need rendered review when
+visual claims are made; source maintenance does not manufacture frontend work.
+
 Mobile browser prototypes use `mobile-web-preview` (research/design/implementation/qa) with `requested_output=browser-prototype`; website flows are reused only for their browser skills/evidence, not native implementation. Publication is separate authorized work and a prepared packet is not a live client URL. Mobile design uses `mobile-app-design` (research/design/qa) and `mobile-app-audit` (read-only research/qa). `platform_family=mobile_app` must be explicit or supported by bounded goal/target truth; `requested_output=design` preserves the design-only scope. Unannotated flows retain web semantics. Native code requests do not fall back to a web flow. See [mobile practice](../mobile-app-design/references/professional-practice.md).
 
 - `micro-ui-change` — atomic visual/component edits.

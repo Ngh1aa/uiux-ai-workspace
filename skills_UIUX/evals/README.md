@@ -53,6 +53,10 @@ python scripts/eval-harness.py smoke
 
 ## Structural validation
 
+For a skill change, use the [paired comparison protocol](CONTROLLED-COMPARISON.md)
+and `eval-harness.py compare`. A teaching specimen, synthetic smoke or a single
+same-author direction review cannot establish the effect of the skill upgrade.
+
 ```bash
 python scripts/validate-skills.py
 python scripts/validate-v2.py

@@ -1,0 +1,22 @@
+{
+  "task_id": "knowledge-upgrade-003-transfer",
+  "decisions": [
+    "Ghi NO_CURATED_DOMAIN_PROFILE và NO_CURATED_REFERENCE_ANATOMY cho aquaculture; thư viện chưa có quy trình nghiệp vụ phù hợp. Không chuyển healthcare/industrial thành sự thật ngành nuôi trồng.",
+    "Bắt đầu bằng bản đồ khoảng trống: mục tiêu kinh doanh, người sử dụng, tác vụ quyết định, đối tượng dữ liệu, actor, quyền, trạng thái, chuyển trạng thái, lỗi/recovery, nền tảng và điều kiện hiện trường. Các mục này hiện UNKNOWN; xin nguồn nghiệp vụ và mẫu record đã ẩn dữ liệu, chưa tự dựng policy hay ngưỡng cảnh báo.",
+    "ADAPT nguyên tắc chung của app-record: định danh → trạng thái → actor tiếp theo → hành động/recovery. Chỉ dùng khi xác minh tác vụ đọc record. REJECT lịch hẹn/bác sĩ của healthcare và các trạng thái industrial chưa được xác nhận. Thẻ orientation trả về chưa phù hợp mặc định với công cụ quản lý; phải xác định page role từ tác vụ.",
+    "Ví dụ quyết định tạm: giữ đơn vị đo cạnh mỗi giá trị trong record quan trắc giả định, thay vì chỉ ghi ở đầu cột. Mục tiêu là tránh mất ngữ cảnh khi reflow; đối tượng quan trắc và đơn vị thực vẫn cần xác minh. Đây là PROFESSIONAL_HYPOTHESIS, không phải phát hiện ngành."
+  ],
+  "tradeoffs": [
+    "Dùng anatomy chung giúp bắt đầu nhanh nhưng có thể bỏ sót công việc ngoài hiện trường; nhãn đơn vị lặp tăng mật độ. Chưa đủ bằng chứng để chốt layout, dashboard hay quy trình xử lý."
+  ],
+  "verification": [
+    "Kế hoạch: đối chiếu mẫu record, định nghĩa đơn vị và quy trình từ nguồn first-party; ghi nguồn/ngày/phạm vi. Khi được phép, kiểm tra reference thực theo actor → object → state → action → recovery rồi quyết định ADOPT/ADAPT/REJECT; tên profile khớp không chứng minh fit.",
+    "Sau khi có dữ liệu, tạo hai wireframe ít chi tiết dùng cùng nội dung; kiểm tra đơn vị vẫn gắn đúng giá trị khi reflow 320 CSS px/chữ lớn, không tự chuyển đổi hoặc bịa số. Tiếp theo nhờ người làm nghiệp vụ xác minh cách diễn giải và tác vụ; chưa thực hiện các bước này."
+  ],
+  "unsupported_claims": [
+    "Chưa có nghiên cứu người thật, reference đã kiểm tra, hiệu quả đo được hoặc bằng chứng profile hiện có phù hợp aquaculture."
+  ],
+  "open_questions": [
+    "Người dùng ra quyết định gì từ record, dữ liệu đến từ đâu, đơn vị và quyền thao tác nào được xác nhận?"
+  ]
+}

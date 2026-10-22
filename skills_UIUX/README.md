@@ -29,6 +29,12 @@ Nếu user/reviewer bắt được một obvious generalizable defect mà QA l�
 
 ## Canonical entrypoints
 
+For knowledge maintenance or deliberate practice, use
+[UX knowledge and practice upgrade](../docs/UX-KNOWLEDGE-PRACTICE-UPGRADE.md):
+bounded domain workflows, annotated same-data examples, exercises/retest and
+paired skill evaluations. The existing Factory owners remain authoritative;
+teaching/eval scores are not human validation or evidence of mastery.
+
 Cho substantial website redesign, bắt đầu từ:
 
 - [LATEST-3-PROMPT-REDESIGN-PIPELINE.md](LATEST-3-PROMPT-REDESIGN-PIPELINE.md)

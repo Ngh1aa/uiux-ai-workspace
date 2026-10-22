@@ -155,6 +155,16 @@ Use A36 Release Evidence Registry to produce one integrity-hashed `uiux-evidence
 
 A37 dogfoods these surfaces together against pinned CENNEXT target truth. It intentionally refuses to claim a verified deployment when trusted provider SHA metadata is absent. See `docs/A37-REAL-PROJECT-E2E-DOGFOOD.md`.
 
+## Skill-library maintenance and practice
+
+Requests to change `SKILL.md`, skill-library knowledge or its evals route through
+`skill-library-maintenance`; read-only skill review uses `skill-library-audit`.
+These reuse the same Flow OS and existing governance/evaluation owners. They do
+not require frontend work for a source-only change. Use the
+[upgrade and evidence guide](docs/UX-KNOWLEDGE-PRACTICE-UPGRADE.md) for domain
+workflow retrieval, annotated examples, learner exercises and paired model trials.
+None of these artifacts alone establishes beauty, human validation or mastery.
+
 ## Human research
 
 When a task needs real-user evidence, activate `research-evidence-pipeline` plus the existing research skills. If participant access does not exist, produce a plan/package and label the state `PLANNED_VALIDATION`, `BLOCKED_USER_EVIDENCE`, or `UNKNOWN`. Never invent sessions, quotes, counts, percentages or findings.

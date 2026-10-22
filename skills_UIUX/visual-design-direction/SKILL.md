@@ -61,7 +61,14 @@ Resources: [Decision provenance and controlled comparisons](references/decision-
 
 ### Executable knowledge and handoff
 
-- Khi scale/layout/density/media/voice chưa đủ cụ thể, dùng [page-job knowledge](data/design-knowledge.json) qua retrieval adapter với structured identity và **một page role**; không load toàn bộ catalog mặc định. Six roles có candidate composition và quantitative ranges. Domain chưa có profile phải hiện gap; mọi range là professional hypothesis.
+- For an unfamiliar domain, retrieve structured identity + one page role. The
+  bounded result includes actors, objects, candidate states, critical distinctions,
+  recovery, metric definitions/guardrails and the current task from
+  [domain workflows](data/domain-workflows.json). Replace these professional
+  hypotheses with actual project policy/states. Never preload the whole dataset or
+  borrow another industry's workflow when identity/role is unsupported.
+
+- Khi scale/layout/density/media/voice chưa đủ cụ thể, dùng [page-job knowledge](data/design-knowledge.json) qua retrieval adapter với structured identity và **một page role**; không load toàn bộ catalog mặc định. Role catalog có candidate composition và quantitative ranges; dùng danh sách hiện hành từ lookup thay vì giả định số role cố định. Domain chưa có profile phải hiện gap; mọi range là professional hypothesis.
 - External manifest và managed provider request có `design_workflow` cho active stage. `LOADED` không phải `ADOPTED`; ghi nguồn/hypothesis, actual values và rejected alternative trong `docs/uiux/design-decisions.json` cho PAGE/REDESIGN/PRODUCT có gate.
 - [Canonical checker](scripts/check-design-decisions.py) hỗ trợ `--schema`, `--phase design`, `--phase rendered`. Contract mới dùng `schema_version=2.0`; gate của ba design flows yêu cầu v2. V1 vẫn đọc được và trả `LEGACY_LAYOUT_ONLY`, không thỏa gate v2. Dùng schema theo project thật, không copy sample thành preset. Receipt là `DECISION_INTEGRITY_ONLY`; không gọi PASS là đẹp hoặc human validated.
 - Rendered phase kiểm capture digest/dimensions, desktop/mobile cho alternatives và critique fields. `inspected`/review là declaration của reviewer, không independently verified user evidence. Phải mở ảnh review theo `ui-craft-and-visual-qa`, không dùng JSON self-report thay visual judgement.

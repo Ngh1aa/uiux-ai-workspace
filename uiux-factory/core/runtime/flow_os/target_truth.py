@@ -65,6 +65,23 @@ def _compact(value: object) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
+def _readme_identity(text: str) -> str:
+    """Use the introduction, not CI examples or supported-domain catalogs as identity.
+
+    Overview/about sections may introduce a project after its title. Later task,
+    installation and architecture sections are operational context, not identity.
+    """
+    intro: list[str] = []
+    for line in text.splitlines():
+        heading = re.match(r"^\s*#{2,6}\s+(.+?)\s*#*\s*$", line)
+        if heading and heading.group(1).lower() not in {
+            "overview", "about", "introduction", "about this project", "giới thiệu",
+        }:
+            break
+        intro.append(line)
+    return "\n".join(intro)[:3000]
+
+
 def _scan_text(value: object) -> str:
     text = _compact(value).lower().replace("_", " ").replace("/", " ").replace("-", " ")
     return re.sub(r"\s+", " ", text).strip()
@@ -536,7 +553,7 @@ class TargetTruthProbe:
         readme = self._read_text("README.md", overflow="truncate")
         if readme is not None:
             sources.append("README.md")
-            fragments.append(readme[:12000])
+            fragments.append(_readme_identity(readme))
 
         combined = "\n".join(fragment for fragment in fragments if fragment).strip()
         if not combined:

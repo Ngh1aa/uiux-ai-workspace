@@ -1,6 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# New teaching specimens and their evidence are byte-hashed across platforms.
+skills_UIUX/visual-design-direction/examples/decision-lab/* text eol=lf
+# Frozen pilot responses/inputs keep their original bytes, including any original
+# line endings, because reviewer and predeclared records bind those exact bytes.
+docs/evidence/ux-knowledge-practice/pilot/** -text -diff
+
 # The specimen review records source-byte hashes; keep them portable across checkouts.
 skills_UIUX/visual-design-direction/examples/mobile-care/index.html text eol=lf
 skills_UIUX/visual-design-direction/examples/mobile-care/capture.cjs text eol=lf

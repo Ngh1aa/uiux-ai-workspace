@@ -126,6 +126,11 @@ Track pass rate/score first; then compare tokens/context, duration, retries and 
 
 Use multiple trials when variance matters. Keep the environment comparable and do not tune the grader to a preferred choreography.
 
+Use [controlled comparison](../evals/CONTROLLED-COMPARISON.md) for paired results
+through the existing harness. For requested learner practice, use the
+[decision exercises](../visual-design-direction/references/decision-practice.md);
+do not equate exercise completion with professional mastery.
+
 ## V2 resources
 
 - [Authoring standard](references/v2-authoring-standard.md)

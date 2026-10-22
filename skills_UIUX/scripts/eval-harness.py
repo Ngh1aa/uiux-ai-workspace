@@ -13,6 +13,7 @@ import json
 import math
 import statistics
 import sys
+import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -53,6 +54,9 @@ def load_results(path: Path, task_ids: set[str]) -> list[dict[str, Any]]:
         except json.JSONDecodeError as exc:
             raise ValueError(f"{path}:{line_no}: invalid JSON: {exc}") from exc
 
+        if not isinstance(row, dict):
+            raise ValueError(f"{path}:{line_no}: trial result must be an object")
+
         missing = REQUIRED_RESULT_KEYS - row.keys()
         if missing:
             raise ValueError(f"{path}:{line_no}: missing keys {sorted(missing)}")
@@ -62,7 +66,7 @@ def load_results(path: Path, task_ids: set[str]) -> list[dict[str, Any]]:
         passed = row["passed"]
         score = row["score"]
 
-        if task_id not in task_ids:
+        if not isinstance(task_id, str) or task_id not in task_ids:
             raise ValueError(f"{path}:{line_no}: unknown task_id {task_id}")
         if not isinstance(trial_id, str) or not trial_id:
             raise ValueError(f"{path}:{line_no}: trial_id must be a non-empty string")
@@ -189,6 +193,82 @@ def cmd_smoke(_: argparse.Namespace) -> int:
     return 0
 
 
+def compare_trials(baseline: list[dict[str, Any]], candidate: list[dict[str, Any]]) -> dict[str, Any]:
+    """Compare declared matched pairs; do not infer causality or human preference."""
+    def indexed(rows: list[dict[str, Any]], condition: str) -> dict[tuple[str, str], dict[str, Any]]:
+        pairs = {}
+        for row in rows:
+            pair_id = row.get("pair_id")
+            if not isinstance(pair_id, str) or not pair_id.strip():
+                raise ValueError("comparison requires a nonempty pair_id")
+            if row.get("condition") != condition:
+                raise ValueError(f"expected condition={condition}")
+            key = (row["task_id"], pair_id)
+            if key in pairs:
+                raise ValueError(f"duplicate comparison pair: {key}")
+            environment = row.get("environment", {})
+            if not isinstance(environment, dict):
+                raise ValueError("comparison environment must be an object")
+            for name in ("brief_sha256", "response_contract_sha256", "rubric_sha256"):
+                if not isinstance(environment.get(name), str) or not re.fullmatch(r"[0-9a-f]{64}", environment[name]):
+                    raise ValueError(f"comparison requires environment.{name} digest")
+            if not isinstance(environment.get("model"), str) or not environment["model"].strip():
+                raise ValueError("comparison requires environment.model")
+            if not isinstance(environment.get("settings"), dict) or not environment["settings"]:
+                raise ValueError("comparison requires environment.settings object")
+            tool_names = environment.get("tools")
+            if not isinstance(tool_names, list) or not tool_names or any(not isinstance(name, str) or not name.strip() for name in tool_names):
+                raise ValueError("comparison requires environment.tools list")
+            if not isinstance(row.get("graders"), dict) or not row["graders"]:
+                raise ValueError("comparison requires explicit grader evidence")
+            pairs[key] = row
+        return pairs
+
+    left, right = indexed(baseline, "baseline"), indexed(candidate, "candidate")
+    if not left or left.keys() != right.keys():
+        raise ValueError("comparison requires exactly the same nonempty task/pair set")
+    details = []
+    by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for key in sorted(left):
+        before, after = left[key], right[key]
+        for name in ("brief_sha256", "response_contract_sha256", "rubric_sha256", "model", "settings", "tools"):
+            if before["environment"][name] != after["environment"][name]:
+                raise ValueError(f"unmatched comparison {key}: environment.{name}")
+        detail = {"task_id": key[0], "pair_id": key[1],
+                  "baseline_score": before["score"], "candidate_score": after["score"],
+                  "score_delta": round(after["score"] - before["score"], 4),
+                  "baseline_passed": before["passed"], "candidate_passed": after["passed"]}
+        details.append(detail)
+        by_task[key[0]].append(detail)
+    def aggregate(items: list[dict[str, Any]]) -> dict[str, Any]:
+        return {"pairs": len(items),
+                "mean_score_delta": round(statistics.fmean(item["score_delta"] for item in items), 2),
+                "improved": sum(item["score_delta"] > 0 for item in items),
+                "tied": sum(item["score_delta"] == 0 for item in items),
+                "regressed": sum(item["score_delta"] < 0 for item in items),
+                "baseline_passes": sum(item["baseline_passed"] for item in items),
+                "candidate_passes": sum(item["candidate_passed"] for item in items)}
+    return {"status": "PAIRED_DESCRIPTIVE_COMPARISON", "pairs": details,
+            "tasks": {key: aggregate(items) for key, items in by_task.items()},
+            "overall": aggregate(details), "human_preference": "UNKNOWN",
+            "causal_improvement": "NOT_ESTABLISHED",
+            "note": "Declared metadata is checked for comparability, not authenticated. Report actual runner/settings gaps, sample size, grader class and artifact evidence. Scores do not establish beauty, human usability, learning mastery or population reliability."}
+
+
+def cmd_compare(args: argparse.Namespace) -> int:
+    task_ids = set(load_tasks())
+    result = compare_trials(load_results(Path(args.baseline), task_ids),
+                            load_results(Path(args.candidate), task_ids))
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+    else:
+        print(result["status"])
+        for task, summary in result["tasks"].items():
+            print(f"{task}: {summary['pairs']} pairs, mean score delta={summary['mean_score_delta']:+.2f}, regressions={summary['regressed']}")
+        print(result["note"])
+    return 0
+
+
 def cmd_routing(args: argparse.Namespace) -> int:
     """Delegate to routing-eval-report for V5.1 routing quality evaluation."""
     import importlib.util
@@ -230,6 +310,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_smoke = sub.add_parser("smoke", help="run built-in harness smoke test")
     p_smoke.set_defaults(func=cmd_smoke)
+
+    p_compare = sub.add_parser("compare", help="compare matched baseline/candidate trials without causal claims")
+    p_compare.add_argument("--baseline", required=True)
+    p_compare.add_argument("--candidate", required=True)
+    p_compare.add_argument("--json", action="store_true")
+    p_compare.set_defaults(func=cmd_compare)
 
     p_routing = sub.add_parser("routing-report", help="generate routing eval quality report (V5.1)")
     p_routing.add_argument("--results", required=True, help="Path to JSONL results with routing telemetry")

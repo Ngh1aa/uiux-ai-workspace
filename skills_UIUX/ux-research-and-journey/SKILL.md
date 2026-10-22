@@ -54,7 +54,9 @@ Persona KHÔNG phải là mô tả nhân khẩu học hư cấu. Persona phải 
 - [Tiêu chí họ dùng để đánh giá website/sản phẩm]
 
 ### Quotes (Đại diện cho mindset)
-> "[Câu nói đại diện cho cách nghĩ của persona]"
+- Chỉ đặt quote thật khi có evidence ID và consent phù hợp.
+- Nếu chưa có người thật: ghi `HYPOTHESIS — paraphrased mindset`, không dùng
+  dấu ngoặc kép hoặc trình bày câu do agent viết như lời participant.
 ```
 
 ### 2. User Journey Mapping

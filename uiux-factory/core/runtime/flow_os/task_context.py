@@ -58,6 +58,17 @@ def _contains_non_negated(text: str, terms: Iterable[str]) -> bool:
     return _contains_token(requested_text(text), terms)
 
 
+def _maintains_skill_source(text: str) -> bool:
+    """A skill used as a reference is not the object being maintained."""
+    active = URL_PATTERN.sub(" ", requested_text(text))
+    actions = r"maintain|update|upgrade|correct|revise|extend|fix|repair|audit|review|validate|improve|add|implement|nâng cấp|cập nhật|sửa|bổ sung|kiểm tra|đánh giá|rà soát"
+    subject = r"skill[ -]library|skill\.md|thư viện skill|thư viện kỹ năng"
+    for match in re.finditer(r"\b(?:" + actions + r")\b([^.;\n]{0,80}?)(?:" + subject + r")\b", active, re.IGNORECASE):
+        if not re.search(r"\b(?:using|from|with|according to|use|theo|dựa|sử dụng|tham khảo)\b", match.group(1), re.IGNORECASE):
+            return True
+    return False
+
+
 def _best_taxonomy_match(
     text: str,
     candidates: Iterable[tuple[str, Iterable[str]]],
@@ -322,6 +333,7 @@ class GoalInterpreter:
     )
 
     FEATURE_TERMS = (
+        ("skill-library-maintenance", ("skill-library", "skill library", "skill.md", "thư viện skill", "thư viện kỹ năng")),
         ("search", ("search", "site search", "tìm kiếm")),
         ("forms", ("form", "contact form", "lead form", "checkout", "đăng ký", "liên hệ", "biểu mẫu", "thanh toán")),
         ("auth", ("login", "sign in", "account", "authentication", "đăng nhập", "tài khoản", "đăng ký tài khoản")),
@@ -584,6 +596,8 @@ class GoalInterpreter:
 
         features: list[str] = []
         for feature, terms in self.FEATURE_TERMS:
+            if feature == "skill-library-maintenance" and not _maintains_skill_source(normalized):
+                continue
             if _contains_token(normalized, terms):
                 features.append(feature)
                 evidence.append(f"feature:{feature}")
