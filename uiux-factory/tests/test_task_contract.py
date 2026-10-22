@@ -245,3 +245,29 @@ def test_batch1_taxonomy_retains_explicit_plural_aliases(content: str, archetype
     contract = ManagedGoalInterpreter().interpret(f"Build an EdTech learning platform with {content}")
     assert contract.domain == "education-edtech"
     assert contract.product_archetype == archetype
+
+
+@pytest.mark.parametrize('goal', [
+    'Improve design-system foundation and skill library CI checks',
+    'Upgrade the design system foundation',
+    'Review frontend foundations and component tokens',
+    'Improve foundation tokens and runtime checks',
+    'Review the foundation for the design system',
+])
+def test_technical_foundation_is_not_a_nonprofit_identity(goal: str) -> None:
+    for interpreter in (ManagedGoalInterpreter(), FactoryGoalInterpreter()):
+        contract = interpreter.interpret(goal)
+        assert contract.website_type == 'generic'
+        assert contract.confidence < 0.95
+    manifest = _manifest(goal)
+    assert manifest['task_contract']['website_type'] == 'generic'
+    assert 'nonprofit-website' not in {skill for stage in manifest['stages'] for skill in stage['skills']}
+
+
+@pytest.mark.parametrize('goal', [
+    'Build a website for the Ford Foundation',
+    'Improve a charitable foundation website',
+    'Improve design-system foundation for a nonprofit charity website',
+])
+def test_real_foundation_organizations_retain_nonprofit_routing(goal: str) -> None:
+    assert ManagedGoalInterpreter().interpret(goal).website_type == 'nonprofit'

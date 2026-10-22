@@ -1,0 +1,15 @@
+{
+  "id": "verification-real-project-001",
+  "category": "regression",
+  "prompt": "Audit pinned representative project checkouts through critical tasks and mobile/desktop browser captures. Preserve UI source. Record actual QA duration, unresolved issues, expert visual observations and repair rounds. Compare the same project SHA under baseline and candidate verification; do not claim design improvement from gate changes.",
+  "recommended_skills": ["testing-strategy", "agent-evaluation-and-reliability", "ui-craft-and-visual-qa"],
+  "expected_outcomes": [
+    "Freeze source SHAs, route/state matrix and criteria before running",
+    "Record real browser task outcomes, overflow, runtime, media and axe evidence",
+    "Separate automated QA score from screenshot-based expert quality and human validation",
+    "Measure actual runner time and retain failures and zero or unperformed repair rounds honestly",
+    "Use identical target source and declared conditions in baseline and candidate"
+  ],
+  "must_not": ["Manufacture participants or human task times", "Treat partial browser coverage as full PASS", "Hide unresolved project issues behind aggregate scores", "Claim UI uplift when target source was unchanged"],
+  "rubric": {"alignment": 15, "ux": 25, "visual": 15, "system": 15, "inclusive": 10, "web_quality": 10, "verification": 10}
+}

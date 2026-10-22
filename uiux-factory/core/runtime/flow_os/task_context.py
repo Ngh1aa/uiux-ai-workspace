@@ -93,6 +93,20 @@ def _best_taxonomy_match(
     return best_name, best_matches
 
 
+def _website_identity_text(text: str) -> str:
+    """Technical foundations are not evidence of a foundation organization.
+
+    Remove only the technical phrase, so a separate charity/nonprofit or named
+    foundation in the same request still contributes project identity.
+    """
+    technical = r"design[ -]system|software|frontend|runtime|component|token|css|ci|technical"
+    return re.sub(
+        rf"\b(?:{technical})[ -]+foundations?\b|"
+        rf"\bfoundations?(?:\s+(?:for|of)\s+(?:the\s+)?|[ -]+)(?:{technical})s?\b",
+        " ", text,
+    )
+
+
 def _unique(values: Iterable[str]) -> list[str]:
     seen: set[str] = set()
     output: list[str] = []
@@ -511,10 +525,11 @@ class GoalInterpreter:
         if authority != "unspecified":
             evidence.append(f"authority:{authority}")
 
-        website_type, website_evidence = _best_taxonomy_match(normalized, self.WEBSITE_TYPES)
+        identity_text = _website_identity_text(normalized)
+        website_type, website_evidence = _best_taxonomy_match(identity_text, self.WEBSITE_TYPES)
         if website_type == "landing":
             non_landing = tuple(item for item in self.WEBSITE_TYPES if item[0] != "landing")
-            specific_type, specific_evidence = _best_taxonomy_match(normalized, non_landing)
+            specific_type, specific_evidence = _best_taxonomy_match(identity_text, non_landing)
             if specific_type != "generic":
                 website_type, website_evidence = specific_type, specific_evidence
         if website_type != "generic":
