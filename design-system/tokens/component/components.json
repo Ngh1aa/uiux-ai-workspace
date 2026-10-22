@@ -1,0 +1,137 @@
+{
+  "button": {
+    "height": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{size.control-sm}"
+      },
+      "md": {
+        "$value": "{size.control-md}"
+      },
+      "lg": {
+        "$value": "{size.control-lg}"
+      }
+    },
+    "padding-x": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{space.300}"
+      },
+      "md": {
+        "$value": "{space.500}"
+      },
+      "lg": {
+        "$value": "{space.600}"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{shape.control}"
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{spacing.inline-sm}"
+    }
+  },
+  "field": {
+    "height": {
+      "$type": "dimension",
+      "$value": "{size.control-lg}",
+      "$description": "Inputs are taller than buttons so 17px text and diacritics never clip."
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{shape.control}"
+    },
+    "bg": {
+      "$type": "color",
+      "$value": "{surface.raised}"
+    },
+    "border": {
+      "$type": "color",
+      "$value": "{border.control}"
+    },
+    "border-error": {
+      "$type": "color",
+      "$value": "{feedback.danger.icon}"
+    }
+  },
+  "chip": {
+    "height": {
+      "$type": "dimension",
+      "$value": "{size.control-sm}"
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{shape.pill}"
+    }
+  },
+  "card": {
+    "padding": {
+      "$type": "dimension",
+      "$value": "{spacing.inset-md}"
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{shape.card}"
+    },
+    "bg": {
+      "$type": "color",
+      "$value": "{surface.raised}"
+    },
+    "border": {
+      "$type": "color",
+      "$value": "{border.subtle}"
+    }
+  },
+  "tab-bar": {
+    "height": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "px"
+      },
+      "$description": "Icon 24 + label 12/18 + 2x8 padding; excludes the device safe-area inset, which is added at runtime."
+    },
+    "bg": {
+      "$type": "color",
+      "$value": "{surface.raised}"
+    },
+    "item-active": {
+      "$type": "color",
+      "$value": "{action.selected.indicator}"
+    },
+    "item-inactive": {
+      "$type": "color",
+      "$value": "{text.secondary}"
+    },
+    "indicator-bg": {
+      "$type": "color",
+      "$value": "{action.selected.bg}"
+    }
+  },
+  "badge": {
+    "radius": {
+      "$type": "dimension",
+      "$value": "{shape.pill}"
+    },
+    "padding-x": {
+      "$type": "dimension",
+      "$value": "{space.200}"
+    }
+  },
+  "focus-ring": {
+    "width": {
+      "$type": "dimension",
+      "$value": "{border-width.200}"
+    },
+    "offset": {
+      "$type": "dimension",
+      "$value": "{space.50}"
+    },
+    "color": {
+      "$type": "color",
+      "$value": "{border.focus}"
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "type": {
+    "$type": "typography",
+    "$description": "Typography roles. Pick by role in the hierarchy, not by size. One display per screen at most.",
+    "display": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.800}",
+        "fontWeight": "{font.weight.bold}",
+        "lineHeight": "{font.line-height.tight}",
+        "letterSpacing": "{font.tracking.tight}"
+      },
+      "$description": "Hero numbers and one-per-screen headlines (e.g. appointment time)."
+    },
+    "title-lg": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.700}",
+        "fontWeight": "{font.weight.bold}",
+        "lineHeight": "{font.line-height.tight}",
+        "letterSpacing": "{font.tracking.tight}"
+      }
+    },
+    "title-md": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.600}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{font.line-height.snug}",
+        "letterSpacing": "{font.tracking.normal}"
+      }
+    },
+    "title-sm": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.500}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{font.line-height.snug}",
+        "letterSpacing": "{font.tracking.normal}"
+      }
+    },
+    "body-lg": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.500}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{font.line-height.relaxed}",
+        "letterSpacing": "{font.tracking.normal}"
+      }
+    },
+    "body-md": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.400}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{font.line-height.relaxed}",
+        "letterSpacing": "{font.tracking.normal}"
+      },
+      "$description": "Default reading text."
+    },
+    "body-sm": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.300}",
+        "fontWeight": "{font.weight.regular}",
+        "lineHeight": "{font.line-height.normal}",
+        "letterSpacing": "{font.tracking.normal}"
+      },
+      "$description": "Secondary metadata. Never for primary content or actions."
+    },
+    "label-lg": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.400}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{font.line-height.snug}",
+        "letterSpacing": "{font.tracking.normal}"
+      },
+      "$description": "Buttons and primary controls."
+    },
+    "label-md": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.300}",
+        "fontWeight": "{font.weight.medium}",
+        "lineHeight": "{font.line-height.snug}",
+        "letterSpacing": "{font.tracking.normal}"
+      },
+      "$description": "Chips, tabs, form labels."
+    },
+    "label-sm": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.100}",
+        "fontWeight": "{font.weight.semibold}",
+        "lineHeight": "{font.line-height.normal}",
+        "letterSpacing": "{font.tracking.wide}"
+      },
+      "$description": "Overlines and tab-bar labels. 12px is the floor for any text."
+    }
+  }
+}

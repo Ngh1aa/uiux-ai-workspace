@@ -1,0 +1,299 @@
+{
+  "$comment": "Declared foreground/background pairs checked in every mode by scripts/validate.py. Ratios are WCAG 2.x relative-luminance contrast; passing them is necessary, not sufficient, for conformance.",
+  "pairs": [
+    {
+      "fg": "text.primary",
+      "bg": "surface.page",
+      "min": 4.5,
+      "why": "body text"
+    },
+    {
+      "fg": "text.secondary",
+      "bg": "surface.page",
+      "min": 4.5,
+      "why": "supporting text"
+    },
+    {
+      "fg": "text.brand",
+      "bg": "surface.page",
+      "min": 4.5,
+      "why": "links and tertiary actions"
+    },
+    {
+      "fg": "text.primary",
+      "bg": "surface.raised",
+      "min": 4.5,
+      "why": "body text"
+    },
+    {
+      "fg": "text.secondary",
+      "bg": "surface.raised",
+      "min": 4.5,
+      "why": "supporting text"
+    },
+    {
+      "fg": "text.brand",
+      "bg": "surface.raised",
+      "min": 4.5,
+      "why": "links and tertiary actions"
+    },
+    {
+      "fg": "text.primary",
+      "bg": "surface.sunken",
+      "min": 4.5,
+      "why": "body text"
+    },
+    {
+      "fg": "text.secondary",
+      "bg": "surface.sunken",
+      "min": 4.5,
+      "why": "supporting text"
+    },
+    {
+      "fg": "text.brand",
+      "bg": "surface.sunken",
+      "min": 4.5,
+      "why": "links and tertiary actions"
+    },
+    {
+      "fg": "text.tertiary",
+      "bg": "surface.raised",
+      "min": 4.5,
+      "why": "placeholder text is still text (WCAG 1.4.3)"
+    },
+    {
+      "fg": "text.tertiary",
+      "bg": "surface.page",
+      "min": 4.5,
+      "why": "timestamps and metadata"
+    },
+    {
+      "fg": "text.on-inverse",
+      "bg": "surface.inverse",
+      "min": 4.5,
+      "why": "inverse banners"
+    },
+    {
+      "fg": "text.on-brand-strong",
+      "bg": "surface.brand-strong",
+      "min": 4.5,
+      "why": "strong brand panels"
+    },
+    {
+      "fg": "text.primary",
+      "bg": "surface.brand-subtle",
+      "min": 4.5,
+      "why": "text on subtle brand panels"
+    },
+    {
+      "fg": "text.secondary",
+      "bg": "surface.brand-subtle",
+      "min": 4.5,
+      "why": "metadata on subtle brand panels"
+    },
+    {
+      "fg": "action.primary.text",
+      "bg": "action.primary.bg",
+      "min": 4.5,
+      "why": "primary button label, bg"
+    },
+    {
+      "fg": "action.danger.text",
+      "bg": "action.danger.bg",
+      "min": 4.5,
+      "why": "danger button label, bg"
+    },
+    {
+      "fg": "action.secondary.text",
+      "bg": "action.secondary.bg",
+      "min": 4.5,
+      "why": "secondary button label, bg"
+    },
+    {
+      "fg": "action.primary.text",
+      "bg": "action.primary.bg-hover",
+      "min": 4.5,
+      "why": "primary button label, bg-hover"
+    },
+    {
+      "fg": "action.danger.text",
+      "bg": "action.danger.bg-hover",
+      "min": 4.5,
+      "why": "danger button label, bg-hover"
+    },
+    {
+      "fg": "action.secondary.text",
+      "bg": "action.secondary.bg-hover",
+      "min": 4.5,
+      "why": "secondary button label, bg-hover"
+    },
+    {
+      "fg": "action.primary.text",
+      "bg": "action.primary.bg-pressed",
+      "min": 4.5,
+      "why": "primary button label, bg-pressed"
+    },
+    {
+      "fg": "action.danger.text",
+      "bg": "action.danger.bg-pressed",
+      "min": 4.5,
+      "why": "danger button label, bg-pressed"
+    },
+    {
+      "fg": "action.secondary.text",
+      "bg": "action.secondary.bg-pressed",
+      "min": 4.5,
+      "why": "secondary button label, bg-pressed"
+    },
+    {
+      "fg": "action.tertiary.text",
+      "bg": "action.tertiary.bg-hover",
+      "min": 4.5,
+      "why": "tertiary label on hover"
+    },
+    {
+      "fg": "action.tertiary.text",
+      "bg": "action.tertiary.bg-pressed",
+      "min": 4.5,
+      "why": "tertiary label pressed"
+    },
+    {
+      "fg": "action.selected.text",
+      "bg": "action.selected.bg",
+      "min": 4.5,
+      "why": "selected chip/tab label"
+    },
+    {
+      "fg": "action.selected.indicator",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "active tab icon is a UI component (WCAG 1.4.11)"
+    },
+    {
+      "fg": "action.secondary.border",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "secondary button boundary"
+    },
+    {
+      "fg": "border.control",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "input boundary (WCAG 1.4.11)"
+    },
+    {
+      "fg": "border.control",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "input boundary on page"
+    },
+    {
+      "fg": "border.focus",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "focus indicator (WCAG 1.4.11)"
+    },
+    {
+      "fg": "border.focus",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "focus indicator on cards"
+    },
+    {
+      "fg": "action.primary.bg",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "primary button shape against card"
+    },
+    {
+      "fg": "feedback.success.text",
+      "bg": "feedback.success.surface",
+      "min": 4.5,
+      "why": "success message text"
+    },
+    {
+      "fg": "feedback.success.icon",
+      "bg": "feedback.success.surface",
+      "min": 3,
+      "why": "success status icon"
+    },
+    {
+      "fg": "feedback.success.icon",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "success icon on card"
+    },
+    {
+      "fg": "feedback.warning.text",
+      "bg": "feedback.warning.surface",
+      "min": 4.5,
+      "why": "warning message text"
+    },
+    {
+      "fg": "feedback.warning.icon",
+      "bg": "feedback.warning.surface",
+      "min": 3,
+      "why": "warning status icon"
+    },
+    {
+      "fg": "feedback.warning.icon",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "warning icon on card"
+    },
+    {
+      "fg": "feedback.danger.text",
+      "bg": "feedback.danger.surface",
+      "min": 4.5,
+      "why": "danger message text"
+    },
+    {
+      "fg": "feedback.danger.icon",
+      "bg": "feedback.danger.surface",
+      "min": 3,
+      "why": "danger status icon"
+    },
+    {
+      "fg": "feedback.danger.icon",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "danger icon on card"
+    },
+    {
+      "fg": "feedback.info.text",
+      "bg": "feedback.info.surface",
+      "min": 4.5,
+      "why": "info message text"
+    },
+    {
+      "fg": "feedback.info.icon",
+      "bg": "feedback.info.surface",
+      "min": 3,
+      "why": "info status icon"
+    },
+    {
+      "fg": "feedback.info.icon",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "info icon on card"
+    },
+    {
+      "fg": "feedback.neutral.text",
+      "bg": "feedback.neutral.surface",
+      "min": 4.5,
+      "why": "neutral message text"
+    },
+    {
+      "fg": "feedback.neutral.icon",
+      "bg": "feedback.neutral.surface",
+      "min": 3,
+      "why": "neutral status icon"
+    },
+    {
+      "fg": "feedback.neutral.icon",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "neutral icon on card"
+    }
+  ]
+}

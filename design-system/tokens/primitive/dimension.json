@@ -1,0 +1,45 @@
+{
+  "space": {
+    "$type": "dimension",
+    "$description": "4px base grid. Use semantic spacing roles in components; primitives exist for the scale itself.",
+    "0": { "$value": { "value": 0, "unit": "px" } },
+    "50": { "$value": { "value": 2, "unit": "px" } },
+    "100": { "$value": { "value": 4, "unit": "px" } },
+    "200": { "$value": { "value": 8, "unit": "px" } },
+    "300": { "$value": { "value": 12, "unit": "px" } },
+    "400": { "$value": { "value": 16, "unit": "px" } },
+    "500": { "$value": { "value": 20, "unit": "px" } },
+    "600": { "$value": { "value": 24, "unit": "px" } },
+    "800": { "$value": { "value": 32, "unit": "px" } },
+    "1000": { "$value": { "value": 40, "unit": "px" } },
+    "1200": { "$value": { "value": 48, "unit": "px" } },
+    "1600": { "$value": { "value": 64, "unit": "px" } }
+  },
+  "radius": {
+    "$type": "dimension",
+    "none": { "$value": { "value": 0, "unit": "px" } },
+    "100": { "$value": { "value": 6, "unit": "px" } },
+    "200": { "$value": { "value": 10, "unit": "px" } },
+    "300": { "$value": { "value": 14, "unit": "px" } },
+    "400": { "$value": { "value": 20, "unit": "px" } },
+    "full": { "$value": { "value": 999, "unit": "px" }, "$description": "Pill shape. Use only for chips, badges and avatars, never for primary containers." }
+  },
+  "border-width": {
+    "$type": "dimension",
+    "100": { "$value": { "value": 1, "unit": "px" } },
+    "200": { "$value": { "value": 2, "unit": "px" } }
+  },
+  "size": {
+    "$type": "dimension",
+    "$description": "Fixed component sizes. 44px meets the Apple HIG hit target in points; Android recommends 48dp, so native handoff must map units explicitly.",
+    "icon-sm": { "$value": { "value": 16, "unit": "px" } },
+    "icon-md": { "$value": { "value": 20, "unit": "px" } },
+    "icon-lg": { "$value": { "value": 24, "unit": "px" } },
+    "control-sm": { "$value": { "value": 36, "unit": "px" } },
+    "control-md": { "$value": { "value": 44, "unit": "px" } },
+    "control-lg": { "$value": { "value": 52, "unit": "px" } },
+    "avatar-md": { "$value": { "value": 40, "unit": "px" } },
+    "content-max": { "$value": { "value": 1120, "unit": "px" } },
+    "reading-max": { "$value": { "value": 680, "unit": "px" } }
+  }
+}
