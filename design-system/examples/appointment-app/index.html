@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Appointment app reference</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="../../generated/tokens.css">
+<link rel="stylesheet" href="../../components/components.css">
+<style>
+/* Specimen frame only. Screens below use design-system classes exclusively. */
+.lab { max-width: var(--ds-size-content-max); margin: 0 auto; padding: var(--ds-spacing-stack-xl) var(--ds-spacing-gutter); }
+.lab__intro { max-width: var(--ds-size-reading-max); margin-bottom: var(--ds-spacing-stack-xl); }
+.lab__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-spacing-stack-lg); align-items: start; }
+.phone { display: flex; flex-direction: column; min-height: 760px; overflow: hidden; border: var(--ds-border-width-100) solid var(--ds-border-subtle); border-radius: var(--ds-shape-sheet); background: var(--ds-surface-page); box-shadow: var(--ds-elevation-floating); }
+.phone__body { flex: 1; display: flex; flex-direction: column; gap: var(--ds-spacing-stack-lg); padding: var(--ds-spacing-stack-xs) var(--ds-spacing-gutter) var(--ds-spacing-stack-lg); }
+.phone .ds-tab-bar { margin-top: auto; }
+.phone [hidden] { display: none !important; }
+.ticket__time { color: var(--ds-text-primary); }
+.ticket__meta { display: flex; align-items: center; gap: var(--ds-spacing-inline-xs); color: var(--ds-text-secondary); }
+.step { height: 4px; border-radius: var(--ds-shape-pill); background: var(--ds-surface-sunken); overflow: hidden; }
+.step > span { display: block; width: 50%; height: 100%; background: var(--ds-action-primary-bg); }
+@media (max-width: 1050px) { .lab__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .lab__grid { grid-template-columns: 1fr; } .phone { max-width: 430px; width: 100%; margin: 0 auto; } .lab { padding-inline: var(--ds-space-300); } }
+</style>
+</head>
+<body class="ds-root">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <!-- Original 24px outline icons for this design system. Stroke inherits currentColor via .ds-icon. -->
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-calendar-plus" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4M12 12.5v5M9.5 15h5"/></symbol>
+  <symbol id="ds-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.75"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-chevron-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+  <symbol id="ds-i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m9.25 9.25 5.5 5.5M14.75 9.25l-5.5 5.5"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5M12 8v.01"/></symbol>
+  <symbol id="ds-i-document" viewBox="0 0 24 24"><path d="M7 3.75h7l4 4V19a1.25 1.25 0 0 1-1.25 1.25h-9.5A1.25 1.25 0 0 1 6 19V5a1.25 1.25 0 0 1 1-1.25"/><path d="M14 3.75V8h4M9 12h6M9 15.5h6"/></symbol>
+  <symbol id="ds-i-pin" viewBox="0 0 24 24"><path d="M12 20.5s6-5.4 6-10.5a6 6 0 1 0-12 0c0 5.1 6 10.5 6 10.5Z"/><circle cx="12" cy="10" r="2.25"/></symbol>
+  <symbol id="ds-i-phone" viewBox="0 0 24 24"><rect x="7" y="3.5" width="10" height="17" rx="2.25"/><path d="M11 17.5h2"/></symbol>
+  <symbol id="ds-i-stethoscope" viewBox="0 0 24 24"><path d="M6 3.75v5a4 4 0 0 0 8 0v-5"/><path d="M10 12.75v1.75a5 5 0 0 0 10 0V13"/><circle cx="20" cy="11" r="2"/></symbol>
+  <symbol id="ds-i-eye" viewBox="0 0 24 24"><path d="M2.75 12S6.25 5.75 12 5.75 21.25 12 21.25 12 17.75 18.25 12 18.25 2.75 12 2.75 12Z"/><circle cx="12" cy="12" r="2.75"/></symbol>
+  <symbol id="ds-i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.75"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></symbol>
+  <symbol id="ds-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></symbol>
+</svg>
+<main class="lab">
+  <header class="lab__intro ds-stack ds-stack--sm">
+    <div class="ds-split">
+      <p class="ds-text-label-sm ds-text-secondary">Design system · ví dụ tham chiếu · dữ liệu giả định</p>
+      <button class="ds-button ds-button--secondary ds-button--sm" id="theme" type="button" aria-pressed="false"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg><span>Giao diện tối</span></button>
+    </div>
+    <h1 class="ds-text-title-lg">Ba nhiệm vụ, một hệ thống</h1>
+    <p class="ds-text-body-lg ds-text-secondary">Mỗi màn hình phục vụ một việc: xem lịch sắp tới, tìm và so sánh lịch hẹn, nhập thông tin. Bố cục thay đổi theo nhiệm vụ, còn token, kiểu chữ và component giữ nguyên.</p>
+  </header>
+
+  <div class="lab__grid">
+    <!-- Screen 1: overview -->
+    <article class="phone" id="overview" aria-label="Màn tổng quan">
+      <header class="ds-app-bar">
+        <div class="ds-app-bar__title ds-stack ds-stack--xs" style="--_gap: var(--ds-spacing-stack-2xs)">
+          <p class="ds-text-body-sm ds-text-secondary">Thứ Hai, 19/10/2026</p>
+          <h2 class="ds-text-title-md">Chào Minh Anh</h2>
+        </div>
+        <span class="ds-avatar" aria-hidden="true">MA</span>
+      </header>
+      <div class="phone__body">
+        <section class="ds-card ds-card--brand" aria-labelledby="next-title">
+          <div class="ds-split">
+            <h3 class="ds-text-label-md" id="next-title">Lịch hẹn tiếp theo</h3>
+            <span class="ds-badge ds-badge--success"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Đã xác nhận</span>
+          </div>
+          <div>
+            <p class="ds-text-display ds-tabular ticket__time">09:30</p>
+            <p class="ds-text-body-md ds-text-secondary">Thứ Ba, 20/10/2026</p>
+          </div>
+          <hr class="ds-card__divider">
+          <div class="ds-stack ds-stack--xs">
+            <p class="ds-text-title-sm">Khám tổng quát</p>
+            <p class="ticket__meta ds-text-body-md"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-pin"/></svg>Phòng khám An Bình</p>
+            <p class="ticket__meta ds-text-body-md"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-user"/></svg>Người khám: Nguyễn Minh Anh</p>
+          </div>
+          <button class="ds-button ds-button--primary ds-button--block primary" type="button" data-message="Phiếu CF-0001 · Đã xác nhận · Nguyễn Minh Anh · 09:30, 20/10/2026">Xem phiếu khám<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></button>
+        </section>
+
+        <section class="ds-stack ds-stack--sm" aria-labelledby="prep-title">
+          <h3 class="ds-text-title-sm" id="prep-title">Chuẩn bị cho buổi khám</h3>
+          <ul class="ds-list">
+            <li><button class="ds-list-item" type="button" data-message="Giấy tờ: mang giấy tờ tùy thân và kết quả khám trước đây nếu có. Nội dung giả định cho ví dụ.">
+              <span class="ds-list-item__leading"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-document"/></svg></span>
+              <span class="ds-list-item__body"><span class="ds-text-label-lg" style="display:block">Giấy tờ cần mang</span><span class="ds-text-body-sm ds-text-secondary">2 mục</span></span>
+              <svg class="ds-icon ds-list-item__trailing" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button></li>
+            <li><button class="ds-list-item" type="button" data-message="Địa điểm ví dụ: Phòng khám An Bình. Chưa có địa chỉ thật để mở chỉ đường.">
+              <span class="ds-list-item__leading"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-pin"/></svg></span>
+              <span class="ds-list-item__body"><span class="ds-text-label-lg" style="display:block">Đường đến phòng khám</span><span class="ds-text-body-sm ds-text-secondary">Phòng khám An Bình</span></span>
+              <svg class="ds-icon ds-list-item__trailing" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button></li>
+          </ul>
+        </section>
+        <div class="ds-toast message" role="status" hidden></div>
+      </div>
+      <nav class="ds-tab-bar" aria-label="Điều hướng chính, màn tổng quan">
+        <a class="ds-tab-bar__item" href="#overview" aria-current="page"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-home"/></svg></span>Trang chủ</a>
+        <a class="ds-tab-bar__item" href="#selection"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>Lịch hẹn</a>
+        <a class="ds-tab-bar__item" href="#task"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar-plus"/></svg></span>Đặt lịch</a>
+      </nav>
+    </article>
+
+    <!-- Screen 2: selection -->
+    <article class="phone" id="selection" aria-label="Màn lịch hẹn">
+      <header class="ds-app-bar"><h2 class="ds-app-bar__title ds-text-title-md">Lịch hẹn</h2></header>
+      <div class="phone__body">
+        <div class="ds-field">
+          <label class="ds-visually-hidden" for="search">Tìm theo chuyên khoa</label>
+          <div class="ds-field__wrap"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-field__control" id="search" type="search" placeholder="Tìm chuyên khoa" autocomplete="off"></div>
+        </div>
+        <div class="ds-cluster" role="group" aria-label="Lọc lịch hẹn">
+          <button class="ds-chip" type="button" aria-pressed="true" data-filter="upcoming">Sắp tới <span class="ds-chip__count" data-count="upcoming"></span></button>
+          <button class="ds-chip" type="button" aria-pressed="false" data-filter="done">Đã khám <span class="ds-chip__count" data-count="done"></span></button>
+          <button class="ds-chip" type="button" aria-pressed="false" data-filter="cancelled">Đã hủy <span class="ds-chip__count" data-count="cancelled"></span></button>
+        </div>
+        <div id="results" class="ds-stack ds-stack--sm" aria-live="polite"></div>
+        <div class="ds-toast message" role="status" hidden></div>
+      </div>
+      <nav class="ds-tab-bar" aria-label="Điều hướng chính, màn lịch hẹn">
+        <a class="ds-tab-bar__item" href="#overview"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-home"/></svg></span>Trang chủ</a>
+        <a class="ds-tab-bar__item" href="#selection" aria-current="page"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>Lịch hẹn</a>
+        <a class="ds-tab-bar__item" href="#task"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar-plus"/></svg></span>Đặt lịch</a>
+      </nav>
+    </article>
+
+    <!-- Screen 3: task -->
+    <article class="phone" id="task" aria-label="Màn nhập thông tin">
+      <header class="ds-app-bar">
+        <a class="ds-icon-button" href="#selection" aria-label="Quay lại lịch hẹn"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <div class="ds-app-bar__title"><p class="ds-text-body-sm ds-text-secondary" id="step-label">Bước 1 trên 2</p><h2 class="ds-text-title-md">Người đi khám</h2></div>
+      </header>
+      <div class="phone__body">
+        <div class="step" role="progressbar" aria-labelledby="step-label" aria-valuemin="1" aria-valuemax="2" aria-valuenow="1"><span></span></div>
+        <form class="ds-stack ds-stack--lg" novalidate>
+          <div class="ds-field">
+            <label class="ds-field__label" for="person">Hồ sơ</label>
+            <div class="ds-field__wrap ds-field__wrap--select"><select class="ds-field__control" id="person"><option>Nguyễn Minh Anh</option><option>Trần Thu Mai</option></select></div>
+          </div>
+          <div class="ds-field">
+            <label class="ds-field__label" for="phone">Số điện thoại</label>
+            <input class="ds-field__control" id="phone" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="phone-help phone-error">
+            <p class="ds-field__hint" id="phone-help">Chỉ dùng để liên hệ về lịch hẹn này.</p>
+            <p class="ds-field__error" id="phone-error" hidden><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-alert"/></svg><span id="error"></span></p>
+          </div>
+          <section class="ds-card ds-card--flat" aria-label="Lịch hẹn đang chọn">
+            <p class="ds-text-label-sm ds-text-secondary">Bạn đang chọn</p>
+            <p class="ds-text-title-sm">Khám tổng quát</p>
+            <p class="ticket__meta ds-text-body-md ds-tabular"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>09:30 · 20/10/2026</p>
+            <p class="ticket__meta ds-text-body-md"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-pin"/></svg>Phòng khám An Bình</p>
+          </section>
+          <button class="ds-button ds-button--primary ds-button--lg ds-button--block" type="submit" id="next">Tiếp tục</button>
+        </form>
+        <section id="confirmation" class="ds-stack ds-stack--md" hidden aria-labelledby="confirm-title">
+          <div class="ds-banner ds-banner--success" role="status"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg><div><p class="ds-text-label-lg" id="confirm-title">Thông tin hợp lệ</p><p class="ds-text-body-sm">Ví dụ dừng trước bước gửi. Chưa tạo lịch hẹn.</p></div></div>
+          <ul class="ds-list">
+            <li class="ds-list-item"><svg class="ds-icon ds-text-secondary" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-list-item__body" id="summary-person"></span></li>
+            <li class="ds-list-item"><svg class="ds-icon ds-text-secondary" aria-hidden="true"><use href="#ds-i-phone"/></svg><span class="ds-list-item__body ds-tabular" id="summary-phone"></span></li>
+          </ul>
+          <button class="ds-button ds-button--secondary ds-button--block" type="button" id="back"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg>Sửa thông tin</button>
+        </section>
+      </div>
+      <nav class="ds-tab-bar" aria-label="Điều hướng chính, màn nhập thông tin">
+        <a class="ds-tab-bar__item" href="#overview"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-home"/></svg></span>Trang chủ</a>
+        <a class="ds-tab-bar__item" href="#selection"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>Lịch hẹn</a>
+        <a class="ds-tab-bar__item" href="#task" aria-current="page"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar-plus"/></svg></span>Đặt lịch</a>
+      </nav>
+    </article>
+  </div>
+</main>
+<script>
+const appointments = [
+  { state: 'upcoming', name: 'Khám tổng quát', time: '09:30', date: '20/10/2026', status: 'Đã xác nhận', tone: 'success', icon: 'check-circle' },
+  { state: 'upcoming', name: 'Khám mắt', time: '14:00', date: '24/10/2026', status: 'Chờ xác nhận', tone: 'warning', icon: 'clock' },
+  { state: 'done', name: 'Khám tổng quát', time: '08:00', date: '02/09/2026', status: 'Đã khám', tone: 'neutral', icon: 'check-circle' }
+];
+let filter = 'upcoming';
+const results = document.querySelector('#results');
+const search = document.querySelector('#search');
+const icon = (id, cls = '') => `<svg class="ds-icon ${cls}" aria-hidden="true"><use href="#ds-i-${id}"/></svg>`;
+
+function render() {
+  const q = search.value.trim().toLocaleLowerCase('vi');
+  for (const el of document.querySelectorAll('[data-count]')) {
+    el.textContent = appointments.filter(a => a.state === el.dataset.count).length;
+  }
+  const items = appointments.filter(a => a.state === filter && a.name.toLocaleLowerCase('vi').includes(q));
+  results.replaceChildren();
+  if (!items.length) {
+    results.innerHTML = `<div class="ds-empty"><span class="ds-empty__icon">${icon('calendar', 'ds-icon--lg')}</span>
+      <h3 class="ds-text-title-sm" style="color: var(--ds-text-primary)">Chưa có lịch phù hợp</h3>
+      <p class="ds-text-body-md">Thử xem lịch sắp tới hoặc xóa từ khóa tìm kiếm.</p>
+      <button class="ds-button ds-button--secondary" type="button" id="reset">Xóa bộ lọc</button></div>`;
+    document.querySelector('#reset').onclick = () => { search.value = ''; selectFilter('upcoming'); search.focus(); };
+    return;
+  }
+  for (const a of items) {
+    const card = document.createElement('section');
+    card.className = 'ds-card appointment';
+    card.innerHTML = `<div class="ds-split"><p class="ds-text-title-md ds-tabular">${a.time}</p>
+        <span class="ds-badge ds-badge--${a.tone}">${icon(a.icon)}${a.status}</span></div>
+      <div><h3 class="ds-text-title-sm">${a.name}</h3><p class="ds-text-body-sm ds-text-secondary ds-tabular">${a.date} · Nguyễn Minh Anh</p></div>
+      <button class="ds-button ds-button--tertiary ds-button--sm" style="align-self: flex-start; margin-left: calc(-1 * var(--ds-button-padding-x-sm))" type="button"
+        data-message="${a.name} · ${a.date} · ${a.status}">Xem chi tiết${icon('chevron-right', 'ds-icon--sm')}</button>`;
+    results.append(card);
+  }
+}
+function selectFilter(value) {
+  filter = value;
+  document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === value)));
+  render();
+}
+document.querySelectorAll('[data-filter]').forEach(b => b.onclick = () => selectFilter(b.dataset.filter));
+search.oninput = render;
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-message]');
+  if (!b) return;
+  const toast = b.closest('.phone').querySelector('.message');
+  toast.textContent = b.dataset.message;
+  toast.hidden = false;
+});
+
+const form = document.querySelector('form');
+const phone = document.querySelector('#phone');
+form.onsubmit = e => {
+  e.preventDefault();
+  const errorRow = document.querySelector('#phone-error');
+  if (!/^[0-9 +()-]{9,16}$/.test(phone.value.trim())) {
+    document.querySelector('#error').textContent = 'Nhập số điện thoại từ 9 đến 16 ký tự, chỉ gồm số và các ký hiệu + ( ) -';
+    errorRow.hidden = false;
+    phone.setAttribute('aria-invalid', 'true');
+    phone.focus();
+    return;
+  }
+  errorRow.hidden = true;
+  phone.removeAttribute('aria-invalid');
+  document.querySelector('#summary-person').textContent = document.querySelector('#person').value;
+  document.querySelector('#summary-phone').textContent = phone.value.trim();
+  form.hidden = true;
+  document.querySelector('#confirmation').hidden = false;
+  document.querySelector('[role=progressbar]').setAttribute('aria-valuenow', '2');
+  document.querySelector('#step-label').textContent = 'Bước 2 trên 2';
+  document.querySelector('#back').focus();
+};
+document.querySelector('#back').onclick = () => {
+  form.hidden = false;
+  document.querySelector('#confirmation').hidden = true;
+  document.querySelector('[role=progressbar]').setAttribute('aria-valuenow', '1');
+  document.querySelector('#step-label').textContent = 'Bước 1 trên 2';
+  phone.focus();
+};
+
+const themeBtn = document.querySelector('#theme');
+function setTheme(dark) {
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  themeBtn.setAttribute('aria-pressed', String(dark));
+  themeBtn.querySelector('span').textContent = dark ? 'Giao diện sáng' : 'Giao diện tối';
+  themeBtn.querySelector('use').setAttribute('href', dark ? '#ds-i-sun' : '#ds-i-moon');
+}
+themeBtn.onclick = () => setTheme(document.documentElement.dataset.theme !== 'dark');
+setTheme(matchMedia('(prefers-color-scheme: dark)').matches);
+render();
+</script>
+</body>
+</html>

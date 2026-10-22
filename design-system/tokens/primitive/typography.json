@@ -1,0 +1,48 @@
+{
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": ["Be Vietnam Pro", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Noto Sans", "sans-serif"],
+        "$description": "Be Vietnam Pro (SIL OFL 1.1) is drawn for Vietnamese stacked diacritics. Bundled in fonts/ with a Vietnamese unicode-range subset."
+      },
+      "mono": {
+        "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"]
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": 400 },
+      "medium": { "$value": 500 },
+      "semibold": { "$value": 600 },
+      "bold": { "$value": 700 }
+    },
+    "size": {
+      "$type": "dimension",
+      "$description": "rem so user font-size preferences scale text. 1rem = 16px default.",
+      "100": { "$value": { "value": 0.75, "unit": "rem" } },
+      "200": { "$value": { "value": 0.8125, "unit": "rem" } },
+      "300": { "$value": { "value": 0.875, "unit": "rem" } },
+      "400": { "$value": { "value": 0.9375, "unit": "rem" } },
+      "500": { "$value": { "value": 1.0625, "unit": "rem" } },
+      "600": { "$value": { "value": 1.25, "unit": "rem" } },
+      "700": { "$value": { "value": 1.5, "unit": "rem" } },
+      "800": { "$value": { "value": 2, "unit": "rem" } },
+      "900": { "$value": { "value": 2.5, "unit": "rem" } }
+    },
+    "line-height": {
+      "$type": "number",
+      "$description": "Unitless. Vietnamese text stacks two diacritics above some vowels (e.g. ể, ỗ), so body text never goes below 1.5.",
+      "tight": { "$value": 1.2 },
+      "snug": { "$value": 1.35 },
+      "normal": { "$value": 1.5 },
+      "relaxed": { "$value": 1.6 }
+    },
+    "tracking": {
+      "$type": "dimension",
+      "tight": { "$value": { "value": -0.02, "unit": "rem" } },
+      "normal": { "$value": { "value": 0, "unit": "rem" } },
+      "wide": { "$value": { "value": 0.04, "unit": "rem" } }
+    }
+  }
+}
