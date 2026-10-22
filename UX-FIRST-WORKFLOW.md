@@ -80,6 +80,28 @@ Token: màu chính <hex>, font <tên>. Tạo 2 hướng khác nhau rõ rệt cho
 
 Mẹo: một prompt, một màn, một mục tiêu. Sửa bằng chỉ định cụ thể ("tăng tương phản nút Tiếp tục, giữ vị trí") thay vì "làm đẹp hơn".
 
+## Kiểm cổng UX bằng máy
+
+Checklist tick tay dễ "tự chấm điểm". Với dự án thật, ghi thêm `docs/ux/ux-structure.json` rồi chạy:
+
+```bash
+python -B skills_UIUX/ux-structure-and-flow-design/scripts/check-ux-structure.py --root <thư-mục-dự-án>
+```
+
+Bộ kiểm báo FAIL khi: top task không có flow, flow thiếu failure path, flow quá 7 bước mà không ghi lý do, ít hơn 5 scenario hoặc không scenario nào thử lỗi, finding đã "resolved" mà chưa retest, verdict mâu thuẫn với blocker còn mở, hoặc top task bị giấu trong menu.
+Xem [file mẫu](skills_UIUX/ux-structure-and-flow-design/examples/edtech-class-booking/docs/ux/ux-structure.json) để chép cấu trúc.
+
+## Bàn giao UX sang UI
+
+Đây là chỗ hay gãy nhất: UX xong nhưng visual designer không biết cái gì được đổi, cái gì không.
+
+1. Viết [design principles](skills_UIUX/templates/ux/design-principles.md): 3 đến 5 nguyên tắc, mỗi cái phải nói "không" được với một thứ.
+2. Viết [visual brief](skills_UIUX/templates/ux/visual-brief.md): phần **khoá** (primary action, thứ tự thông tin, recovery) và phần **mở** (type scale, density, signature moment).
+3. Chạy `check-ux-structure.py --export-page-ux docs/ux/ux-structure.json` để đổ bản ghi UX thẳng vào hợp đồng visual, không gõ lại.
+4. Mẫu wireframe greyscale chạy được: [wireframes.html](skills_UIUX/ux-structure-and-flow-design/examples/edtech-class-booking/wireframes.html).
+
+Không chắc việc nào thuộc skill nào: xem [bản đồ skill UX](docs/UX-SKILL-MAP.md).
+
 ## Chế độ nhanh (task nhỏ)
 
 Một màn hoặc một flow nhỏ: gộp U1 tới U5 vào một file `docs/ux/ux-structure.md`.
