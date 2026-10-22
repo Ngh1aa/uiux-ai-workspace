@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "skill-library-maintenance",
+  "description": "Maintain skill knowledge, progressive resources and evals through existing Factory owners; rendered evidence is required only for authored UI specimens.",
+  "match": {"priority": 130, "platform_families": ["web", "mobile_app"], "features": ["skill-library-maintenance"], "intents": ["build", "redesign", "rebuild", "improve", "fix", "polish"]},
+  "stages": [
+    {"id": "research", "agent": "research", "purpose": "Inspect capability owners, primary sources and reproducible workflow defects.", "required_skills": ["skill-authoring-and-governance"], "gates": [{"id": "maintenance-scope", "require": "Existing owners, knowledge gaps, source scope and regression reproduction are explicit"}]},
+    {"id": "implementation", "agent": "implementation", "purpose": "Extend existing skills and runtime owners without creating a parallel workflow.", "required_skills": ["skill-authoring-and-governance", "agent-evaluation-and-reliability"], "gates": [{"id": "capability-change", "require": "Changed knowledge and behavior have relevant source, data, negative-case and outcome verification"}]},
+    {"id": "qa", "agent": "qa", "purpose": "Verify routing, knowledge integrity and eval records; separate technical checks from design or human outcomes.", "required_skills": ["skill-authoring-and-governance"], "gates": [{"id": "maintenance-verification", "require": "Structural validators and relevant regressions pass; outcome trials and actual specimen renders are inspected where claimed; unavailable human evidence remains UNKNOWN"}]}
+  ],
+  "replanning": {"max_replans": 2, "triggers": ["GATE_FAIL", "INVALID_ASSUMPTION", "TOOL_FAILURE"], "policies": [
+    {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "Repair the demonstrated owning knowledge/runtime defect.", "target_stage": "implementation"},
+    {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "Reinspect the source and capability boundary.", "target_stage": "research"}
+  ]}
+}

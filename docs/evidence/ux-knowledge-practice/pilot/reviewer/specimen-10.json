@@ -1,0 +1,22 @@
+{
+  "task_id": "knowledge-upgrade-003-transfer",
+  "decisions": [
+    "Bắt đầu bằng bản ghi known/unknown: chỉ biết công cụ quản lý nuôi trồng thủy sản; chưa biết actor, nhiệm vụ, đối tượng dữ liệu, trạng thái, quyền, môi trường dùng và mục tiêu nghiệp vụ. Thu thập project-context từ chủ sản phẩm và tài liệu vận hành chính thức ở bước tiếp theo, chưa dựng workflow từ suy đoán.",
+    "Lookup cung cấp NO_CURATED_DOMAIN_PROFILE và NO_CURATED_REFERENCE_ANATOMY: ghi 'no verified match'. REJECT áp nguyên profile healthcare hoặc industrial. Candidate orientation cũng chưa chứng minh phù hợp với công cụ; phải xác định vai trò màn hình trước.",
+    "Có thể ADAPT nguyên tắc chung: record có danh tính, dữ liệu/trạng thái thật, thời điểm nguồn khi biết và hành động có quyền; bảo toàn input khi sửa; error/recovery rõ. Chưa chuyển actor, ngưỡng cảnh báo, đơn vị, quy trình phê duyệt hoặc chính sách ngành khác sang thủy sản.",
+    "Đề xuất kiểm một quyết định có điều kiện: nếu nhiệm vụ được xác nhận là xem rồi sửa một record, đặt hành động sửa cạnh dữ liệu liên quan và giữ ngữ cảnh khi quay lại. Đây là PROFESSIONAL_HYPOTHESIS, cần dẫn nguồn candidate, phạm vi chuyển giao, lý do và unknown trong decision log. Không chọn font, palette hoặc số spacing chỉ vì profile gần tên ngành."
+  ],
+  "tradeoffs": [
+    "Tái dùng anatomy và component có thể tiết kiệm công, nhưng semantics sai có thể dẫn hành động sai. Tạm để unknown làm chậm chốt màn hình nhưng tránh khóa kiến trúc vào quy trình chưa có thật."
+  ],
+  "verification": [
+    "Kế hoạch: lấy một tác vụ và record đã được chủ nghiệp vụ xác minh; map actor → dữ liệu → quyền → trạng thái → lỗi/recovery. Sau đó đối chiếu reference first-party phù hợp; chưa có nguồn thì không gọi pattern là đã được chứng minh.",
+    "So phương án hành động cạnh record với phương án hiện có bằng walkthrough cùng kịch bản: tìm đúng record, sửa, quay lại, kiểm dữ liệu được giữ; ghi lỗi chọn nhầm, bước và khả năng phục hồi. Prototype/QA với fixture phải ghi synthetic. Chỉ nghiên cứu người dùng về sau mới hỗ trợ kết luận usability; hiện chưa code hay chạy đánh giá."
+  ],
+  "unsupported_claims": [
+    "Không có profile thủy sản được kiểm chứng, workflow đã duyệt, số đo hiệu quả hoặc nghiên cứu người thật; không tự đặt ngưỡng sinh học và quy tắc vận hành."
+  ],
+  "open_questions": [
+    "Ai thao tác, quyết định nào quan trọng, dữ liệu đến từ đâu, có làm ngoài hiện trường/offline không, ai duyệt trạng thái và tài liệu/reference nào là canonical?"
+  ]
+}

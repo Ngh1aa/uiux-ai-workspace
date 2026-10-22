@@ -1,0 +1,22 @@
+{
+  "task_id": "knowledge-upgrade-001-standards",
+  "decisions": [
+    "Bỏ yêu cầu ép 9 nhóm còn 7. Tác vụ đang hỗ trợ nhận diện nhãn nhìn thấy; Miller không đặt trần số mục navigation. Giữ 9 làm phương án hiện tại, chỉ nhóm lại theo quan hệ nội dung nếu có bằng chứng về khó tìm.",
+    "Sửa kết luận accessibility: WCAG 2.2 SC 2.5.8 AA quy định 24×24 CSS px hoặc ngoại lệ; SC 2.5.5 AAA dùng 44×44 CSS px với ngoại lệ riêng. Hit area thực sự 28×28 đáp ứng ngưỡng kích thước 2.5.8; không thể suy ra toàn sản phẩm đạt AA.",
+    "Nguồn được cung cấp: principle-sources.md, ngày kiểm 2026-10-22, dẫn W3C Understanding 2.5.8/2.5.5 và NN/g Chunking; chưa kiểm trực tiếp nguồn. Phân biệt requirement WCAG với giả thuyết usability về target lớn hơn."
+  ],
+  "tradeoffs": [
+    "Giữ breadth tăng diện tích scan nhưng tránh thêm tầng và click. Nhóm lại có thể giảm nhiễu nhưng che lựa chọn hoặc làm nhãn kém rõ.",
+    "Target lớn hơn có thể hỗ trợ thao tác chạm nhưng chiếm chỗ; chọn theo tác vụ, thiết bị và lỗi thao tác, không áp một kích thước cho mọi control."
+  ],
+  "verification": [
+    "Dự kiến đo vùng tương tác, không chỉ icon, tại viewport công bố. Với target nhỏ hơn 24, kiểm ngoại lệ thực tế: spacing theo vòng tròn đường kính 24 CSS px, equivalent, inline, user-agent hoặc essential; không suy diễn bằng padding chung.",
+    "Dự kiến walkthrough tác vụ tìm nội dung; nếu cần thay IA, so hai phương án bằng first-click, hoàn thành, đi sai nhánh và thời gian tìm ở cùng tác vụ. Có thể tree-test với người dùng phù hợp sau này; hiện chưa có kết quả."
+  ],
+  "unsupported_claims": [
+    "Không có căn cứ rằng 7 nhóm nhanh hơn 9, mọi control dưới 44 đều vi phạm AA, hoặc người dùng đã thấy menu dễ dùng."
+  ],
+  "open_questions": [
+    "Các tác vụ và nhóm người dùng chính là gì? 28×28 là icon hay hit area? Sản phẩm cam kết phiên bản/level WCAG nào, dùng chuột hay chạm?"
+  ]
+}

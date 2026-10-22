@@ -2,6 +2,46 @@
   "schema_version": "1.0",
   "status": "CURATED_TRANSFERS_NOT_ADOPTED",
   "sources": {
+  "decision-lab-commerce": {
+    "url": "skills_UIUX/visual-design-direction/examples/decision-lab/index.html",
+    "query": "case=commerce&variant=considered",
+    "checked": "2026-10-22",
+    "observation_method": "local-authored-specimen",
+    "observed_information_anatomy": [
+      "need → real object → next action",
+      "query/filter → comparable attributes → selection",
+      "selection → editable review → truthful pending state"
+    ],
+    "pixel_geometry": "UNKNOWN",
+    "human_usability": "UNKNOWN",
+    "boundary": "Original synthetic teaching example, not an approved target or user finding. Read its case annotations and inspect the render before transfer. Do not transfer facts, palette, policy or claims."
+  },
+  "decision-lab-portfolio": {
+    "url": "skills_UIUX/visual-design-direction/examples/decision-lab/index.html",
+    "query": "case=portfolio&variant=considered",
+    "checked": "2026-10-22",
+    "observation_method": "local-authored-specimen",
+    "observed_information_anatomy": [
+      "selection → editable review → truthful pending state",
+      "problem → artifact → rationale → evidence boundary"
+    ],
+    "pixel_geometry": "UNKNOWN",
+    "human_usability": "UNKNOWN",
+    "boundary": "Original synthetic teaching example, not an approved target or user finding. Read its case annotations and inspect the render before transfer. Do not transfer facts, palette, policy or claims."
+  },
+  "decision-lab-healthcare": {
+    "url": "skills_UIUX/visual-design-direction/examples/decision-lab/index.html",
+    "query": "case=healthcare&variant=considered",
+    "checked": "2026-10-22",
+    "observation_method": "local-authored-specimen",
+    "observed_information_anatomy": [
+      "record identity → current status → owner → recovery",
+      "current task → help need → contact owner"
+    ],
+    "pixel_geometry": "UNKNOWN",
+    "human_usability": "UNKNOWN",
+    "boundary": "Original synthetic teaching example, not an approved target or user finding. Read its case annotations and inspect the render before transfer. Do not transfer facts, palette, policy or claims."
+  },
     "rockwell-modernization": {
       "url": "https://www.rockwellautomation.com/en-us/capabilities/industrial-maintenance-support/modernization.html",
       "checked": "2026-10-08",
@@ -151,6 +191,146 @@
     }
   },
   "cards": [
+  {
+    "id": "physical-product-commerce:orientation",
+    "profile_id": "physical-product-commerce",
+    "page_role": "orientation",
+    "reference_ids": [
+      "decision-lab-commerce"
+    ],
+    "buyer_task": "Find the relevant offer and a truthful next step",
+    "observed_relationship": "need → real object → next action",
+    "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+    "why": "Expose the information needed for this task; verify against actual project roles and state.",
+    "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+    "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+    "visual_object_candidates": [
+      "labelled decision record with attached status and next actor",
+      "editable review with preserved context and honest unknowns"
+    ],
+    "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+    "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+  },
+  {
+    "id": "physical-product-commerce:catalog",
+    "profile_id": "physical-product-commerce",
+    "page_role": "catalog",
+    "reference_ids": [
+      "decision-lab-commerce"
+    ],
+    "buyer_task": "Compare the same attributes across eligible choices",
+    "observed_relationship": "query/filter → comparable attributes → selection",
+    "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+    "why": "Expose the information needed for this task; verify against actual project roles and state.",
+    "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+    "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+    "visual_object_candidates": [
+      "labelled decision record with attached status and next actor",
+      "editable review with preserved context and honest unknowns"
+    ],
+    "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+    "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+  },
+  {
+    "id": "physical-product-commerce:conversion",
+    "profile_id": "physical-product-commerce",
+    "page_role": "conversion",
+    "reference_ids": [
+      "decision-lab-commerce"
+    ],
+    "buyer_task": "Review actual context before taking the next action",
+    "observed_relationship": "selection → editable review → truthful pending state",
+    "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+    "why": "Expose the information needed for this task; verify against actual project roles and state.",
+    "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+    "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+    "visual_object_candidates": [
+      "labelled decision record with attached status and next actor",
+      "editable review with preserved context and honest unknowns"
+    ],
+    "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+    "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+  },
+  {
+    "id": "career-portfolio:conversion",
+    "profile_id": "career-portfolio",
+    "page_role": "conversion",
+    "reference_ids": [
+      "decision-lab-portfolio"
+    ],
+    "buyer_task": "Review actual context before taking the next action",
+    "observed_relationship": "selection → editable review → truthful pending state",
+    "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+    "why": "Expose the information needed for this task; verify against actual project roles and state.",
+    "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+    "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+    "visual_object_candidates": [
+      "labelled decision record with attached status and next actor",
+      "editable review with preserved context and honest unknowns"
+    ],
+    "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+    "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+  },
+  {
+    "id": "career-portfolio:editorial",
+    "profile_id": "career-portfolio",
+    "page_role": "editorial",
+    "reference_ids": [
+      "decision-lab-portfolio"
+    ],
+    "buyer_task": "Understand the decision and its limits",
+    "observed_relationship": "problem → artifact → rationale → evidence boundary",
+    "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+    "why": "Expose the information needed for this task; verify against actual project roles and state.",
+    "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+    "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+    "visual_object_candidates": [
+      "labelled decision record with attached status and next actor",
+      "editable review with preserved context and honest unknowns"
+    ],
+    "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+    "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+  },
+  {
+    "id": "healthcare-patient-journey:app-record",
+    "profile_id": "healthcare-patient-journey",
+    "page_role": "app-record",
+    "reference_ids": [
+      "decision-lab-healthcare"
+    ],
+    "buyer_task": "Read actual status and who acts next",
+    "observed_relationship": "record identity → current status → owner → recovery",
+    "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+    "why": "Expose the information needed for this task; verify against actual project roles and state.",
+    "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+    "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+    "visual_object_candidates": [
+      "labelled decision record with attached status and next actor",
+      "editable review with preserved context and honest unknowns"
+    ],
+    "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+    "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+  },
+  {
+    "id": "healthcare-patient-journey:app-support",
+    "profile_id": "healthcare-patient-journey",
+    "page_role": "app-support",
+    "reference_ids": [
+      "decision-lab-healthcare"
+    ],
+    "buyer_task": "Find a verified next contact with context",
+    "observed_relationship": "current task → help need → contact owner",
+    "transfer_status": "PROFESSIONAL_HYPOTHESIS",
+    "why": "Expose the information needed for this task; verify against actual project roles and state.",
+    "typography_reason": "Keep current state and next action legible; metadata must remain readable with Vietnamese content.",
+    "density_reason": "Group one decision's facts together; preserve meaningful label/value relationships rather than multiplying cards.",
+    "visual_object_candidates": [
+      "labelled decision record with attached status and next actor",
+      "editable review with preserved context and honest unknowns"
+    ],
+    "mobile_transformation": "Reflow labels and values in reading order; retain status, action, input and recovery at narrow/enlarged-text views.",
+    "reject": "Reject fabricated completion, missing owner/recovery, and applying this authored specimen as a universal visual or domain preset."
+  },
     {
       "id": "industrial-service-operations:orientation",
       "profile_id": "industrial-service-operations",
