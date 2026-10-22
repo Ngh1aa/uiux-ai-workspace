@@ -48,6 +48,8 @@ jobs:
           npm init -y >/dev/null
           npm install --no-audit --no-fund playwright@1 axe-core@4
           npx playwright install --with-deps chromium webkit firefox
+      - name: Browser gate failure regressions
+        run: node --test design-system/tests/browser-gate.test.cjs
       - name: Browser checks in three engines
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules

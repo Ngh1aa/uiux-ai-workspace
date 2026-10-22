@@ -82,11 +82,18 @@ DTCG 2025.10 support before relying on it.
 python3 design-system/scripts/build.py              # regenerate generated/ and docs/index.html
 python3 design-system/scripts/validate.py --report  # format, layering, mode parity, contrast, CSS lint
 python3 -m pytest design-system/tests -q            # regression + negative tests
-NODE_PATH=<playwright[,axe-core]> node design-system/scripts/capture-example.cjs artifacts/ds
+NODE_PATH=<playwright-and-axe-core> node design-system/scripts/capture-example.cjs artifacts/ds
+node --test design-system/tests/browser-gate.test.cjs
 ```
 
 CI runs the first three on every push and pull request that touches `design-system/`, then runs the
 capture script in Chromium, WebKit and Firefox (`.github/workflows/design-system.yml`).
+
+The browser gate requires every requested engine and axe-core. It writes a fresh `RUNNING`
+report before checks and `PASS` or `FAIL` afterward, preserving failure diagnostics. For a
+deliberately reduced local review, pass an explicit engine list or `--allow-partial`;
+missing-engine/axe evidence is labelled `PARTIAL`. CI cannot opt out of the strict gate.
+`scripts/check-all.sh` continues all checks and exits nonzero if any check fails.
 
 ## What the checks prove, and what they do not
 
