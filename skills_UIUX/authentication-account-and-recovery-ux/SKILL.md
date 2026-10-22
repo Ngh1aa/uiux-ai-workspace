@@ -5,11 +5,11 @@ description: Design sign-in, account creation, verification, MFA and recovery fl
 
 # Authentication, Account & Recovery UX
 
-## Goal
+## Goal and scope
 
 Get the right person into the right account with the least friction the risk allows, and get a locked-out legitimate user back in without opening a door for an attacker. Authentication is judged on three axes at once: completion (people finish), security (attackers do not), and accessibility (nobody is excluded by memory, vision, motor or cognitive demands). A flow that wins one axis by sacrificing another is not done.
 
-## When not to use
+**When not to use**
 
 - General data handling, encryption, consent storage or threat modelling beyond the auth UI: use `security-and-privacy`.
 - Long multi-step onboarding or KYC forms after the account exists: use `complex-forms-and-wizards`.
@@ -17,7 +17,7 @@ Get the right person into the right account with the least friction the risk all
 - Generic loading, error and retry states: use `state-feedback-and-error-recovery`.
 - Deciding whether a signup wall or forced account creation is manipulative: use `ethical-ux-and-deceptive-patterns`.
 
-## Prerequisites
+**Prerequisites**
 
 - Risk tier of the service (what an attacker gains: content, money, admin power, personal data). This sets the assurance level and how much friction is justified.
 - Who signs in (consumers, staff, admins, shared devices, assistive technology users, people without a smartphone).
@@ -57,7 +57,7 @@ Get the right person into the right account with the least friction the risk all
 - Provide a human-assisted path for users who lost every factor, with identity proofing proportional to risk and a stated timeline.
 
 **Context preservation**
-- Return users to the exact page, cart, draft or deep link they started from after sign-in, signup, verification and recovery. Session expiry must save in-progress input (WCAG 2.2 SC 2.2.1 Timing Adjustable warns before timeout; SC 2.2.5 at AAA for re-authenticating without data loss).
+- Return users to the exact page, cart, draft or deep link they started from after sign-in, signup, verification and recovery. Session expiry must save in-progress input (WCAG 2.2 SC 2.2.1 Timing Adjustable, level A: users can turn off, adjust or extend a time limit, for example a warning with at least 20 seconds to extend, unless an exception applies; SC 2.2.5 Re-authenticating, AAA: continue without data loss after re-authenticating).
 
 ## Workflow
 
@@ -70,7 +70,7 @@ Get the right person into the right account with the least friction the risk all
 7. Provide understandable security/error feedback: what happened, what to do next, how long a lock lasts, who to contact.
 8. Walk every path with a screen reader, keyboard only, a password manager, and a user who has lost their phone.
 
-## Anti-patterns
+**Anti-patterns**
 
 - Username on page one, password on page two with no username field, so password managers cannot pair them.
 - `onpaste="return false"` on password, confirm-password or OTP fields.
@@ -78,16 +78,16 @@ Get the right person into the right account with the least friction the risk all
 - "Password must contain an uppercase, a number and a symbol" with a 12-character maximum.
 - Security questions as recovery, or as a "second factor".
 - "No account found for jane@example.com" on the reset page.
-- CAPTCHA puzzles on every sign-in with no accessible alternative (fails SC 3.3.8 unless an alternative exists).
+- CAPTCHA puzzles on every sign-in with no accessible alternative (transcription or puzzle CAPTCHAs fail SC 3.3.8 unless an alternative exists; object-recognition CAPTCHAs are an AA exception that SC 3.3.9, AAA, removes).
 - Magic link that opens in the email app's in-app browser, signs that browser in, and drops the original tab and cart.
 - MFA enrollment forced with SMS only, then no way back in when the user changes number.
 - Session timeout that discards a half-written form without warning.
 
-## Resources
+**Resources**
 
 - Need the full rule table, flow-by-flow state matrix or the worked before/after example? Read [auth decision reference](references/auth-decision-reference.md).
 
-## Output
+**Output**
 
 Deliver an auth flow specification containing:
 
@@ -115,7 +115,7 @@ Pass only if every statement is true:
 - [ ] User returns to the pre-auth context after every flow, including email-link round trips.
 - [ ] Owner is notified of recovery, factor changes and new-device sign-ins.
 
-## Baseline / sources
+**Baseline / sources**
 
 - NIST SP 800-63B Digital Identity Guidelines, Authentication and Lifecycle Management (verify current revision before quoting thresholds).
 - W3C WCAG 2.2: SC 1.3.5, 2.2.1, 3.3.1, 3.3.3, 3.3.7, 3.3.8, 3.3.9; W3C WAI understanding documents for SC 3.3.8.

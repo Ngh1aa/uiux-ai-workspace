@@ -5,11 +5,11 @@ description: Design saved views, filters, defaults and personalized experiences 
 
 # Personalization & Preference UX
 
-## Goal
+## Goal and scope
 
 Make remembered and inferred behavior feel helpful, predictable and reversible. Users should be able to tell what the product remembers, why it shows them something, and how to change or turn it off, and the product must still work well for someone it knows nothing about.
 
-## When not to use
+**When not to use**
 
 - Consent banners, data retention, security and legal data handling in general: use `security-and-privacy`.
 - AI capability boundaries, confidence and correction for generative or predictive features: use `human-ai-interaction-design`.
@@ -17,7 +17,7 @@ Make remembered and inferred behavior feel helpful, predictable and reversible. 
 - Saved views and column settings inside dense enterprise tables: use `data-tables-and-enterprise-ux`, then return here for persistence and sync rules.
 - Manipulative defaults and pre-ticked opt-ins: use `ethical-ux-and-deceptive-patterns`.
 
-## Prerequisites
+**Prerequisites**
 
 - Inventory of everything the product stores or infers about a user: settings, history, location, segments, model features.
 - The legal basis and consent state for each data use, from the privacy owner. Verify current law for each market.
@@ -62,7 +62,7 @@ Design consequence: personalization toggles are real controls wired to data proc
 7. Define non-personalized fallback, used for cold start, opt-out, errors and model outages.
 8. Set guardrail metrics: diversity, opt-out rate, "not interested" rate, complaints.
 
-## Anti-patterns
+**Anti-patterns**
 
 - Language or currency forced by IP location with no visible switch.
 - "Personalized ads" toggle that changes nothing server side.
@@ -74,12 +74,12 @@ Design consequence: personalization toggles are real controls wired to data proc
 - Onboarding topic picker whose choices never visibly affect the feed.
 - Personalized prices or eligibility with no disclosure.
 
-## Resources
+**Resources**
 
 - Need a personalization inventory template, explanation copy patterns, guardrail metrics or a worked example? Read [personalization patterns reference](references/personalization-patterns.md).
 - Before release, run [personalization gate](checklists/personalization-gate.md).
 
-## Output
+**Output**
 
 1. Personalization inventory:
 
@@ -103,7 +103,7 @@ Users can understand and change important preferences; personalization failure h
 - PASS only if sync scope is shown for account-level preferences.
 - PASS only if current law for each target market was verified by the privacy owner.
 
-## Baseline and sources
+**Baseline and sources**
 
 - Google People + AI Guidebook (explainability, user control, feedback).
 - Microsoft Guidelines for Human-AI Interaction (Amershi and colleagues, 2019).

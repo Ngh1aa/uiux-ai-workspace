@@ -21,6 +21,9 @@ accessibility tree cannot disagree.
 | Banner | `.ds-banner` | `role="status"` or `role="alert"` by urgency, `hidden` |
 | Toast | `.ds-toast` | `role="status"`, `hidden` |
 | Empty state | `.ds-empty` | `hidden` |
+| App bar | `.ds-app-bar` | none |
+| Avatar | `.ds-avatar` | `aria-hidden` when the name is shown alongside |
+| Link | `.ds-link` | none |
 
 ---
 
@@ -113,12 +116,32 @@ control). Row height at least 52px when interactive. Chevron only when the row n
 **Purpose.** Switch between 3 to 5 top-level destinations on mobile.
 
 **Rules.**
-- Every item has an icon **and** a text label. Icon-only tab bars fail recognition for most
-  users and fail WCAG 1.1.1 when the label is missing.
+- Every item has an icon **and** a visible text label. Icons alone are ambiguous for many
+  destinations (Material and Apple HIG both show labels in bottom navigation by default), and an
+  icon-only item with no accessible name fails WCAG 1.1.1 and 4.1.2.
 - Exactly one item has `aria-current="page"`. The active state uses three cues: indicator pill,
   selected text color and bold label.
 - Tab bar height excludes the device safe area; padding adds `env(safe-area-inset-bottom)`.
 - Not for actions ("Đặt lịch" is a destination screen here, not a submit button).
+
+## App bar
+
+**Purpose.** Name the current screen and hold at most one leading navigation control and two
+trailing actions. **Rules.** The title is the screen's `h1`/`h2` in the heading order; the back
+control is an `<a>` or `.ds-icon-button` with an `aria-label` naming the destination
+("Quay lại lịch hẹn"), never just "Back" when the destination is not obvious.
+
+## Avatar
+
+**Purpose.** Identify a person at a glance. **Rules.** Initials or image are decorative when
+the name is shown next to them (`aria-hidden="true"`); when the avatar stands alone it needs an
+accessible name. Initials use two letters from the given and family name as the user writes them.
+
+## Link
+
+**Purpose.** Navigate. **Rules.** `.ds-link` uses `text.brand` (4.5:1 on every surface it is
+declared for) and keeps the underline; color is not the only cue that text is a link
+(WCAG 1.4.1). Links that look like buttons must still be links when they navigate.
 
 ## Banner and toast
 

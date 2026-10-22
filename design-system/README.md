@@ -85,7 +85,8 @@ python3 -m pytest design-system/tests -q            # regression + negative test
 NODE_PATH=<playwright[,axe-core]> node design-system/scripts/capture-example.cjs artifacts/ds
 ```
 
-CI runs the first three on every pull request (`.github/workflows/design-system.yml`).
+CI runs the first three on every push and pull request that touches `design-system/`, then runs the
+capture script in Chromium, WebKit and Firefox (`.github/workflows/design-system.yml`).
 
 ## What the checks prove, and what they do not
 

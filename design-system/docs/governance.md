@@ -23,7 +23,8 @@ tied to it.
 ## Deprecation
 
 1. Mark the token with `"$deprecated": "Use {new.path}. Removal in the next major."` (DTCG
-   2025.10). `validate.py` warns on every reference to a deprecated token.
+   2025.10). `validate.py` warns on every token alias that references a deprecated token (CSS `var()` uses
+   are not checked).
 2. Keep the old path as an alias of the new one for at least one minor release.
 3. Remove only in a major release, listed under **Removed** in the changelog with the
    replacement.

@@ -23,7 +23,7 @@ Reference values (computed with the steps above):
 | 10 / 12 | 83% | about 54% to 97% |
 | 18 / 20 | 90% | about 69% to 98% |
 
-Reading: 5 of 5 users succeeding is consistent with a true rate near 50%. That is why small-sample "100%" claims fail the gate.
+Reading: 5 of 5 users succeeding is consistent with a true rate as low as about 51%. That is why small-sample "100%" claims fail the gate.
 
 ## 2. Task time
 
