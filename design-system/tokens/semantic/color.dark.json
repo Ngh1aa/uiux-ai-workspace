@@ -1,0 +1,214 @@
+{
+  "$description": "Semantic color roles, dark mode. Paths must match the other mode exactly (validate.py enforces parity).",
+  "surface": {
+    "$type": "color",
+    "page": {
+      "$value": "{color.neutral.950}"
+    },
+    "raised": {
+      "$value": "{color.neutral.900}"
+    },
+    "sunken": {
+      "$value": "{color.neutral.950}"
+    },
+    "inverse": {
+      "$value": "{color.neutral.100}"
+    },
+    "brand-subtle": {
+      "$value": "{color.jade.950}"
+    },
+    "brand-strong": {
+      "$value": "{color.jade.300}"
+    }
+  },
+  "text": {
+    "$type": "color",
+    "primary": {
+      "$value": "{color.neutral.50}"
+    },
+    "secondary": {
+      "$value": "{color.neutral.300}"
+    },
+    "tertiary": {
+      "$value": "{color.neutral.400}"
+    },
+    "disabled": {
+      "$value": "{color.neutral.600}",
+      "$description": "Exempt from contrast minimums (WCAG 1.4.3 inactive components). Never use for information the user needs."
+    },
+    "brand": {
+      "$value": "{color.jade.300}"
+    },
+    "on-brand-strong": {
+      "$value": "{color.neutral.950}"
+    },
+    "on-inverse": {
+      "$value": "{color.neutral.950}"
+    }
+  },
+  "border": {
+    "$type": "color",
+    "subtle": {
+      "$value": "{color.neutral.800}",
+      "$description": "Decorative dividers only. Not sufficient to identify a control."
+    },
+    "control": {
+      "$value": "{color.neutral.500}",
+      "$description": "Identifies interactive boundaries; must reach 3:1 against adjacent surfaces (WCAG 1.4.11)."
+    },
+    "focus": {
+      "$value": "{color.blue.400}"
+    }
+  },
+  "action": {
+    "$type": "color",
+    "primary": {
+      "bg": {
+        "$value": "{color.jade.400}"
+      },
+      "bg-hover": {
+        "$value": "{color.jade.300}"
+      },
+      "bg-pressed": {
+        "$value": "{color.jade.200}"
+      },
+      "text": {
+        "$value": "{color.neutral.950}"
+      }
+    },
+    "secondary": {
+      "bg": {
+        "$value": "{color.neutral.900}"
+      },
+      "bg-hover": {
+        "$value": "{color.neutral.800}"
+      },
+      "bg-pressed": {
+        "$value": "{color.neutral.700}"
+      },
+      "text": {
+        "$value": "{color.neutral.50}"
+      },
+      "border": {
+        "$value": "{color.neutral.500}"
+      }
+    },
+    "tertiary": {
+      "bg-hover": {
+        "$value": "{color.jade.950}"
+      },
+      "bg-pressed": {
+        "$value": "{color.jade.900}"
+      },
+      "text": {
+        "$value": "{color.jade.300}"
+      }
+    },
+    "danger": {
+      "bg": {
+        "$value": "{color.red.400}"
+      },
+      "bg-hover": {
+        "$value": "{color.red.300}"
+      },
+      "bg-pressed": {
+        "$value": "{color.red.200}"
+      },
+      "text": {
+        "$value": "{color.neutral.950}"
+      }
+    },
+    "disabled": {
+      "bg": {
+        "$value": "{color.neutral.800}"
+      },
+      "text": {
+        "$value": "{color.neutral.600}"
+      }
+    },
+    "selected": {
+      "bg": {
+        "$value": "{color.jade.900}"
+      },
+      "text": {
+        "$value": "{color.jade.100}"
+      },
+      "indicator": {
+        "$value": "{color.jade.300}"
+      }
+    }
+  },
+  "feedback": {
+    "$type": "color",
+    "success": {
+      "surface": {
+        "$value": "{color.green.950}"
+      },
+      "border": {
+        "$value": "{color.green.700}"
+      },
+      "text": {
+        "$value": "{color.green.200}"
+      },
+      "icon": {
+        "$value": "{color.green.300}"
+      }
+    },
+    "warning": {
+      "surface": {
+        "$value": "{color.amber.950}"
+      },
+      "border": {
+        "$value": "{color.amber.700}"
+      },
+      "text": {
+        "$value": "{color.amber.200}"
+      },
+      "icon": {
+        "$value": "{color.amber.300}"
+      }
+    },
+    "danger": {
+      "surface": {
+        "$value": "{color.red.950}"
+      },
+      "border": {
+        "$value": "{color.red.700}"
+      },
+      "text": {
+        "$value": "{color.red.200}"
+      },
+      "icon": {
+        "$value": "{color.red.300}"
+      }
+    },
+    "info": {
+      "surface": {
+        "$value": "{color.blue.950}"
+      },
+      "border": {
+        "$value": "{color.blue.700}"
+      },
+      "text": {
+        "$value": "{color.blue.200}"
+      },
+      "icon": {
+        "$value": "{color.blue.300}"
+      }
+    },
+    "neutral": {
+      "surface": {
+        "$value": "{color.neutral.900}"
+      },
+      "border": {
+        "$value": "{color.neutral.700}"
+      },
+      "text": {
+        "$value": "{color.neutral.200}"
+      },
+      "icon": {
+        "$value": "{color.neutral.300}"
+      }
+    }
+  }
+}

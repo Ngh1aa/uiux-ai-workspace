@@ -1,0 +1,90 @@
+{
+  "spacing": {
+    "$type": "dimension",
+    "$description": "Semantic spacing. Stack = vertical rhythm, inset = padding inside a container.",
+    "stack-2xs": {
+      "$value": "{space.100}"
+    },
+    "stack-xs": {
+      "$value": "{space.200}"
+    },
+    "stack-sm": {
+      "$value": "{space.300}"
+    },
+    "stack-md": {
+      "$value": "{space.400}"
+    },
+    "stack-lg": {
+      "$value": "{space.600}"
+    },
+    "stack-xl": {
+      "$value": "{space.800}"
+    },
+    "inline-xs": {
+      "$value": "{space.100}"
+    },
+    "inline-sm": {
+      "$value": "{space.200}"
+    },
+    "inline-md": {
+      "$value": "{space.300}"
+    },
+    "inset-sm": {
+      "$value": "{space.300}"
+    },
+    "inset-md": {
+      "$value": "{space.400}"
+    },
+    "inset-lg": {
+      "$value": "{space.500}"
+    },
+    "gutter": {
+      "$value": "{space.400}",
+      "$description": "Screen edge padding on phones."
+    },
+    "gutter-wide": {
+      "$value": "{space.800}"
+    }
+  },
+  "shape": {
+    "$type": "dimension",
+    "control": {
+      "$value": "{radius.200}"
+    },
+    "card": {
+      "$value": "{radius.300}"
+    },
+    "sheet": {
+      "$value": "{radius.400}"
+    },
+    "pill": {
+      "$value": "{radius.full}"
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "raised": {
+      "$value": "{shadow.100}"
+    },
+    "floating": {
+      "$value": "{shadow.200}"
+    },
+    "overlay": {
+      "$value": "{shadow.300}"
+    }
+  },
+  "motion": {
+    "feedback": {
+      "$type": "duration",
+      "$value": "{duration.fast}"
+    },
+    "transition": {
+      "$type": "duration",
+      "$value": "{duration.base}"
+    },
+    "ease": {
+      "$type": "cubicBezier",
+      "$value": "{easing.standard}"
+    }
+  }
+}
