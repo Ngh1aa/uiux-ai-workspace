@@ -1,0 +1,60 @@
+name: Design System
+
+on:
+  push:
+    paths:
+      - "design-system/**"
+      - ".github/workflows/design-system.yml"
+  pull_request:
+    paths:
+      - "design-system/**"
+      - ".github/workflows/design-system.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tokens-and-components:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install "pytest>=8,<9"
+      - name: Generated files are current
+        run: python design-system/scripts/build.py --check
+      - name: Validate tokens, layering, contrast and component CSS
+        run: python design-system/scripts/validate.py --report
+      - name: Regression and negative tests
+        run: python -m pytest -q design-system/tests
+
+  browser-review:
+    runs-on: ubuntu-latest
+    needs: tokens-and-components
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Install Playwright and axe-core outside the repo
+        run: |
+          mkdir -p "$RUNNER_TEMP/tools" && cd "$RUNNER_TEMP/tools"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1 axe-core@4
+          npx playwright install --with-deps chromium webkit firefox
+      - name: Browser checks in three engines
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: node design-system/scripts/capture-example.cjs "$RUNNER_TEMP/ds-review"
+      - name: Upload screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: design-system-review
+          path: ${{ runner.temp }}/ds-review

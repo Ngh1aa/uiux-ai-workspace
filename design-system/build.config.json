@@ -1,0 +1,64 @@
+{
+  "version": "0.1.0",
+  "prefix": "ds",
+  "base": [
+    "tokens/primitive/color.json",
+    "tokens/primitive/dimension.json",
+    "tokens/primitive/typography.json",
+    "tokens/primitive/motion-elevation.json",
+    "tokens/semantic/typography.json",
+    "tokens/semantic/layout.json",
+    "tokens/component/components.json"
+  ],
+  "modes": {
+    "light": [
+      "tokens/semantic/color.light.json"
+    ],
+    "dark": [
+      "tokens/semantic/color.dark.json"
+    ]
+  },
+  "default_mode": "light",
+  "layers": {
+    "primitive": [
+      "color",
+      "space",
+      "radius",
+      "border-width",
+      "size",
+      "font",
+      "duration",
+      "easing",
+      "shadow"
+    ],
+    "semantic": [
+      "surface",
+      "text",
+      "border",
+      "action",
+      "feedback",
+      "type",
+      "spacing",
+      "shape",
+      "elevation",
+      "motion"
+    ],
+    "component": [
+      "button",
+      "field",
+      "chip",
+      "card",
+      "tab-bar",
+      "badge",
+      "focus-ring"
+    ]
+  },
+  "outputs": {
+    "css": "generated/tokens.css",
+    "json": "generated/tokens.json",
+    "docs": "docs/index.html"
+  },
+  "lint_css": [
+    "components/components.css"
+  ]
+}

@@ -2,6 +2,8 @@
 
 [![UIUX Factory CI](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/uiux-factory-ci.yml/badge.svg)](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/uiux-factory-ci.yml)
 [![A20 Release Candidate](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/a20-release-candidate.yml/badge.svg)](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/a20-release-candidate.yml)
+[![Design System](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/design-system.yml/badge.svg)](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/design-system.yml)
+[![Skills Validate](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/skills-validate.yml/badge.svg)](https://github.com/Ngh1aa/uiux-ai-workspace/actions/workflows/skills-validate.yml)
 
 **UIUX Factory** is a design-engineering operating system for moving a product goal from **project truth → research/design decisions → implementation → rendered verification → repair → handoff/release** without treating model self-report as evidence.
 
@@ -18,6 +20,18 @@ It is built for AI-assisted product/UI/UX work where the agent must remain groun
 - advises external collaborators which capability/reasoning tier to select before execution while preserving manual model choice and correctness-first quality floors;
 - verifies changes through GitHub Actions, browser/a11y/performance tooling and release-candidate regression;
 - preserves intentional architecture holds instead of manufacturing PASS states.
+
+## What this is, and what it is not
+
+| Part | What it is | Where |
+|---|---|---|
+| UIUX Factory | The operating system: routing, flows, evidence gates, runtime | `uiux-factory/`, `skills_UIUX/runtime/`, `skills_UIUX/flows/` |
+| Skills | Specialist UX, product and design knowledge loaded per stage | `skills_UIUX/<skill>/SKILL.md` |
+| Design system | A working reference system: DTCG tokens, 13 components, contrast and CSS validators, living docs | [`design-system/`](design-system/README.md) |
+
+The repository as a whole is **not** a design system. The skills describe how to build and govern
+one; `design-system/` is the concrete, tested example they can point to. Product teams should
+treat it as a reference implementation to adapt, not a brand to adopt.
 
 ## Current status
 

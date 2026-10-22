@@ -1,0 +1,58 @@
+name: Skills Validate
+
+# skills_UIUX/.github/workflows/validate-skills.yml only runs in the standalone
+# Ngh1aa/skills_UIUX mirror; GitHub ignores workflow files outside the root .github/.
+# In this monorepo, uiux-factory-ci.yml covers flows and runtime but not SKILL.md
+# structure, profiles/packs/evals or the vendored design-intelligence corpus. This
+# workflow closes that gap with the same commands, run from skills_UIUX/.
+
+on:
+  push:
+    paths:
+      - "skills_UIUX/**"
+      - ".github/workflows/skills-validate.yml"
+  pull_request:
+    paths:
+      - "skills_UIUX/**"
+      - ".github/workflows/skills-validate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: skills_UIUX
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Validate SKILL.md structure
+        run: python scripts/validate-skills.py
+      - name: Validate profiles, packs, project configs, evals and resource links
+        run: python scripts/validate-v2.py
+      - name: Validate vendored design intelligence
+        run: python scripts/validate-vendor-uiux-pro-max.py
+      - name: Visual integrity runner syntax
+        run: node --check ui-craft-and-visual-qa/scripts/elementary-visual-integrity.mjs
+      - name: Smoke design-intelligence retrieval
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -B design-intelligence-retrieval/scripts/query.py "education admissions mobile" --design-system > "$RUNNER_TEMP/di.txt"
+          test -s "$RUNNER_TEMP/di.txt"
+      - name: Dry-run installers
+        run: |
+          python scripts/install-profile.py professional-core --target "$RUNNER_TEMP/profile" --dry-run
+          python scripts/install-project.py examples/projects/qtsc --dry-run
+      - name: Eval harness smoke
+        run: python scripts/eval-harness.py smoke
