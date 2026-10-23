@@ -113,15 +113,15 @@ Như **L**, cộng thêm:
 | Android | [Android spec sheet](skills_UIUX/android-app-design/references/android-spec-sheet.md) · [`android-app-design`](skills_UIUX/android-app-design/SKILL.md) | Edge-to-edge, predictive back, window size classes |
 | Cả hai | [Mobile patterns playbook](skills_UIUX/mobile-app-design/references/mobile-patterns-playbook.md) | Chung ý nghĩa, khác "chrome": không ép iOS và Android giống hệt nhau |
 | Web marketing | [`responsive-and-device-strategy`](skills_UIUX/responsive-and-device-strategy/SKILL.md) | Mobile không phải desktop thu nhỏ |
-| Web app / dashboard | [Web app patterns](skills_UIUX/ui-craft-and-visual-qa/references/web-app-patterns.md) · [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md) · [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Mật độ cao nhưng quét được; bàn phím là công dân hạng nhất |
+| Web app / dashboard (flow `web-app-dashboard`) | [Web app patterns](skills_UIUX/ui-craft-and-visual-qa/references/web-app-patterns.md) · [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md) · [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Mật độ cao nhưng quét được; bàn phím là công dân hạng nhất |
 | Demo trên trình duyệt cho app | [`mobile-web-preview`](skills_UIUX/mobile-web-preview/SKILL.md) | Bằng chứng trình duyệt không chứng minh app native |
 
 ## 4. Track đặc thù
 
 | Track | Khi nào | Bắt đầu từ |
 |---|---|---|
-| **Chỉ review / audit** | Cần đánh giá, chưa sửa | Flow `audit-review` / `mobile-app-audit` + [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
-| **Design system** | Thêm token, component, hoặc dựng hệ thống mới | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) · [`design-system-governance-and-adoption`](skills_UIUX/design-system-governance-and-adoption/SKILL.md) |
+| **Chỉ review / audit** | Cần đánh giá, chưa sửa (review design system thì router tự chọn `design-system-audit`) | Flow `audit-review` / `mobile-app-audit` + [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
+| **Design system** | Thêm token, component, hoặc dựng hệ thống mới. Flow `design-system-work`; chỉ review thì `design-system-audit` | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) · [`design-system-governance-and-adoption`](skills_UIUX/design-system-governance-and-adoption/SKILL.md) |
 | **Nghiên cứu người dùng** | Cần bằng chứng thật | [`research-evidence-pipeline`](skills_UIUX/research-evidence-pipeline/SKILL.md) · [`user-research-planning-and-recruitment`](skills_UIUX/user-research-planning-and-recruitment/SKILL.md) |
 | **Portfolio** | Làm lại portfolio / định vị nghề | Flow `portfolio-career-system` |
 | **AI trong sản phẩm** | Tính năng có AI tạo nội dung/quyết định | [`human-ai-interaction-design`](skills_UIUX/human-ai-interaction-design/SKILL.md) |

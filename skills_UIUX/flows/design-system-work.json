@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "design-system-work",
+  "description": "Create, extend or refactor a design system (tokens, components, contracts, docs, platform mapping) where the system itself is the work object; pages that only consume the system stay in page and redesign flows.",
+  "match": {
+    "priority": 128,
+    "platform_families": ["web", "mobile_app"],
+    "features": ["design-system"],
+    "intents": ["build", "redesign", "rebuild", "improve", "fix", "polish"],
+    "change_surfaces": ["FOCUSED", "PAGE", "REDESIGN", "PRODUCT"]
+  },
+  "stages": [
+    {
+      "id": "research",
+      "agent": "research",
+      "purpose": "Inventory the current tokens, components, consumers, platforms and inconsistencies before proposing any new foundation.",
+      "required_skills": ["project-context", "adaptive-skill-routing-and-context-budget", "design-system-and-components", "reference-extraction-and-design-audit"],
+      "conditional_skills": [
+        {"when": {"platform_family": "mobile_app"}, "skills": ["mobile-design-system-and-handoff"]},
+        {"when": {"target_platforms": ["ios"]}, "skills": ["ios-app-design"]},
+        {"when": {"target_platforms": ["android"]}, "skills": ["android-app-design"]},
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["design-system-governance-and-adoption"]}
+      ],
+      "gates": [
+        {"id": "system-inventory", "require": "existing token sources, component owners, consuming products/screens, supported platforms and themes, and known inconsistencies are explicit; absent sources are recorded as UNKNOWN rather than invented"},
+        {"id": "change-impact", "require": "every changed token path, class name or component API lists its consumers and whether the change is additive, deprecating or breaking"}
+      ]
+    },
+    {
+      "id": "design",
+      "agent": "implementation",
+      "purpose": "Define the token architecture and component contracts: primitive to semantic to component layering, roles per mode, states, accessibility semantics and platform mapping.",
+      "required_skills": ["design-system-and-components", "visual-design-direction", "accessibility", "design-critique-and-rationale"],
+      "conditional_skills": [
+        {"when": {"platform_family": "mobile_app"}, "skills": ["mobile-design-system-and-handoff"]},
+        {"when": {"features": ["motion"]}, "skills": ["motion-and-microinteractions"]},
+        {"when": {"features": ["i18n"]}, "skills": ["localization-and-i18n"]},
+        {"when": {"features": ["forms"]}, "skills": ["interaction-patterns-and-form-ux"]}
+      ],
+      "gates": [
+        {"id": "token-architecture", "require": "components consume semantic roles only; every role is defined in every supported mode; colour, type, spacing, shape, elevation and motion scales are numeric and traceable to a source or a labelled starting default"},
+        {"id": "component-contracts", "require": "each new or changed component records purpose, anatomy, variants, full state coverage, accessibility semantics, content limits, misuse and platform mapping before implementation"}
+      ]
+    },
+    {
+      "id": "implementation",
+      "agent": "implementation",
+      "purpose": "Implement tokens, generated outputs, components, docs specimens and a reference example; keep changes additive or provide a deprecation path.",
+      "required_skills": ["component-driven-development", "frontend-implementation", "design-system-governance-and-adoption"],
+      "conditional_skills": [
+        {"when": {"platform_family": "mobile_app"}, "skills": ["mobile-design-system-and-handoff"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["testing-strategy", "code-review-and-release"]}
+      ],
+      "gates": [
+        {"id": "system-implementation", "require": "generated outputs are rebuilt from source, validators cover format, layering, mode parity, contrast pairs and literal-free component styles, and a changelog entry states the version impact"}
+      ]
+    },
+    {
+      "id": "qa",
+      "agent": "qa",
+      "purpose": "Verify the system as rendered: every component state in light and dark, contrast, focus, reduced motion, cross-browser behaviour and consumer regressions.",
+      "required_skills": ["ui-craft-and-visual-qa", "accessibility", "visual-regression-and-design-drift", "design-critique-and-rationale"],
+      "conditional_skills": [
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["accessibility-conformance-evaluation"]},
+        {"when": {"mode": ["production-candidate", "production"]}, "skills": ["web-quality-and-performance", "code-review-and-release"]}
+      ],
+      "gates": [
+        {"id": "system-rendered-check", "require": "specimens of every changed component and state are inspected in each supported theme at representative widths; the quality-bar rubric has no hard fail", "evidence_types": ["browser_render"]},
+        {"id": "consumer-regression", "require": "at least one consuming screen or reference example is re-rendered after the change and shows no unintended regression"},
+        {"id": "truthful-completion", "require": "automated checks, rendered review, assistive-technology testing and adoption evidence are reported separately; anything not run stays NOT_RUN or UNKNOWN"}
+      ]
+    }
+  ],
+  "replanning": {
+    "max_replans": 3,
+    "triggers": ["GATE_FAIL", "BLOCKED", "NEW_RISK", "INVALID_ASSUMPTION", "TOOL_FAILURE", "CONTEXT_DRIFT"],
+    "policies": [
+      {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "A rendered state, contrast pair or consumer regressed; repair the owning token or component rather than patching the consumer.", "target_stage": "implementation", "add_skills": ["web-ui-code-review"]},
+      {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "The inventory or consumer map was wrong; re-establish system truth before changing foundations.", "target_stage": "research", "add_skills": ["reference-extraction-and-design-audit"]},
+      {"when": {"signal": "NEW_RISK", "risk": ["production", "high"]}, "reason": "A breaking change reached production consumers; add governance and release specialists.", "target_stage": "implementation", "add_skills": ["design-system-governance-and-adoption", "code-review-and-release"]},
+      {"when": {"signal": "TOOL_FAILURE"}, "reason": "Diagnose the failing build or validator instead of retrying blindly.", "add_skills": ["agent-evaluation-and-reliability"]},
+      {"when": {"signal": "BLOCKED"}, "reason": "Ownership or adoption is blocked; reframe the decision with stakeholders.", "target_stage": "research", "add_skills": ["product-decision-and-stakeholder-framing"]}
+    ]
+  }
+}
