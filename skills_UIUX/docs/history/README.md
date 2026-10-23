@@ -36,6 +36,16 @@ Git history remains the archive. The cleanup baseline before removal is:
 
 Backward-compatible profiles/config schemas remain supported. Removing old architecture prose does not remove those runtime/profile contracts.
 
+## Moved release notes
+
+- `V5-RELEASE-NOTES.md` — moved here in 10/2026; it describes a past release, not current guidance.
+
+## Why the canonical prompts keep version numbers
+
+The five files listed under "Current canonical redesign prompt set" stay in the `skills_UIUX/` root:
+they are the current versions, `SkillGovernanceSnapshot` hashes them by path, and agents load them by
+name. The version number in a filename identifies the revision; it does not mean the file is old.
+
 ## Removed non-canonical standalone documents
 
 - `Website-Research-Generation-Architect-Skill.md` — legacy standalone monolith overlapping the current routed skill graph and not a packaged `<skill>/SKILL.md` capability.

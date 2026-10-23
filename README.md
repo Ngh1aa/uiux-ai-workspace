@@ -213,7 +213,6 @@ uiux-factory/qa/                      browser/a11y/performance/media evidence
 docs/                                 operating/evidence documentation
 docs/history/                         superseded planning/history only
 upstream/anthropics/                  pinned reference repositories
-MetaGPT/                              vendored framework source
 ```
 
 Reference/vendor source is not runtime authority unless intentionally adapted.
@@ -270,6 +269,7 @@ From `uiux-factory/`:
 
 ```bash
 python -m pip install -r requirements-metagpt-core.txt
+python -m pip install -r requirements-metagpt.txt   # MetaGPT, pinned upstream commit; only for the managed Team pipeline
 python -m pip install -r requirements-dev.txt
 python -m pytest -q tests
 ```
@@ -322,7 +322,20 @@ They are useful for audit/history, but must not be used as current architecture/
 
 ## Licensing
 
-This public repository currently has **no declared software license**. Do not assume reuse/redistribution rights from repository visibility alone. A license should be selected explicitly by the repository owner before presenting the project as generally reusable open source.
+Unless a file or folder says otherwise:
+
+| What | License |
+|---|---|
+| Code, skills and prompts (`SKILL.md`, flows, runtime JSON), design tokens, CSS components, the icon sprite, scripts, tests, and code samples inside documentation | [Apache License 2.0](LICENSE) |
+| Documentation in `docs/`, `design-system/docs/`, `uiux-factory/docs/`, and review screenshots in `design-system/examples/*/review/` | [CC BY 4.0](LICENSE-DOCS) |
+| Fonts in `design-system/fonts/` and `skills_UIUX/vendor/ui-ux-pro-max/skills/ui-styling/canvas-fonts/` | SIL Open Font License 1.1 (license file next to each font) |
+| `skills_UIUX/vendor/` and every Git submodule | Their original licenses, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
+
+Suggested attribution: *"uiux-ai-workspace" by Ngh1aa, Apache-2.0 / CC BY 4.0, https://github.com/Ngh1aa/uiux-ai-workspace*. Keep the [NOTICE](NOTICE) file in redistributions. Third-party names, logos and trademarks shown in examples are not licensed by this repository.
+
+Contributions are accepted under the same terms (see [CONTRIBUTING.md](CONTRIBUTING.md)). Never copy or adapt files from Anthropic's source-available skills (`docx`, `pdf`, `pptx`, `xlsx`, `doc-coauthoring`) or from `claude-code` into this repository; their terms forbid redistribution and derivative works.
+
+This is a practical summary, not legal advice. The research behind the choice compared MIT, Apache-2.0, MPL-2.0, GPL-3.0, AGPL-3.0 and CC BY 4.0 against comparable design systems and every third-party component in the tree.
 
 ## Mobile design capability
 
