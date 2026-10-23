@@ -58,6 +58,12 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules
         run: node design-system/scripts/capture-money-app.cjs "$RUNNER_TEMP/ds-review/money-app"
+      - name: Surface browser gate failures as annotations
+        if: failure()
+        run: |
+          for f in "$RUNNER_TEMP/ds-review/browser-report.json" "$RUNNER_TEMP/ds-review/money-app/browser-report.json"; do
+            [ -f "$f" ] && node -e 'const r=require(process.argv[1]); if (r.status!=="PASS") console.log("::error title=Browser gate " + r.status + "::" + String(r.error||"no error recorded").slice(0,1800).replace(/\n/g," "))' "$f"
+          done
       - name: Upload screenshots and report
         if: always()
         uses: actions/upload-artifact@v7

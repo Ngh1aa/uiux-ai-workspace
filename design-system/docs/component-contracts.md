@@ -172,8 +172,9 @@ not colour alone. The content below updates without moving the control.
 
 **Purpose.** Turn a setting on or off with immediate effect.
 
-**Anatomy.** Native `<input type="checkbox" role="switch">` inside `.ds-switch`, with a visible
-text label in the same `<label>`.
+**Anatomy.** Native `<input type="checkbox" role="switch">` followed by
+`<span class="ds-switch__thumb" aria-hidden="true">` inside `.ds-switch`, with a visible text label in
+the same `<label>`. The thumb is a real element because Firefox does not draw pseudo-elements on inputs.
 
 **Rules.** No Save button: the change applies at once and is confirmed by the thumb position and
 the setting's effect. If the change can fail (network), revert the switch and explain inline.
