@@ -19,6 +19,10 @@
     },
     "brand-strong": {
       "$value": "{color.jade.800}"
+    },
+    "scrim": {
+      "$value": "{color.neutral.950}",
+      "$description": "Dims content behind sheets and dialogs. Dark in both modes; apply with opacity."
     }
   },
   "text": {

@@ -161,6 +161,7 @@ Nếu project có rendered prototype sớm, ưu tiên render 2–3 representativ
 
 ## Progressive resources
 
+- [Craft standards with numeric defaults](../ui-craft-and-visual-qa/references/craft-standards.md) — use before writing `KHÔNG CÓ` for missing type/spacing/colour/motion values
 - [Visual craft reference](references/visual-craft-reference.md)
 - [Visual direction gate](checklists/visual-gate.md)
 - [Direction example](examples/direction-example.md)
