@@ -1,0 +1,11 @@
+uiux-ai-workspace
+Copyright 2026 Ngh1aa and contributors
+
+This product includes software and documentation developed by the uiux-ai-workspace
+contributors (https://github.com/Ngh1aa/uiux-ai-workspace).
+
+Code, skills, prompts, design tokens, CSS components and the icon sprite are licensed under the
+Apache License 2.0 (LICENSE). Documentation in docs/, design-system/docs/, uiux-factory/docs/ and
+review screenshots in design-system/examples/*/review/ are licensed under CC BY 4.0
+(LICENSE-DOCS). Fonts and third-party components keep their own licenses; see
+THIRD_PARTY_NOTICES.md.
