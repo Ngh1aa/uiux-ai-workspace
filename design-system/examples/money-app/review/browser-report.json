@@ -1,0 +1,72 @@
+{
+  "status": "PARTIAL",
+  "strict": false,
+  "requested_engines": [
+    "chromium"
+  ],
+  "expected_runs": 6,
+  "pages": [
+    "examples/money-app/index.html"
+  ],
+  "axe": "NOT_RUN",
+  "engines_skipped": [],
+  "runs": [
+    {
+      "page": "money-app",
+      "engine": "chromium",
+      "width": 320,
+      "scheme": "light",
+      "task_recovery": "PASS",
+      "enlarged_text": "PASS",
+      "console": "PASS",
+      "overflow": "PASS"
+    },
+    {
+      "page": "money-app",
+      "engine": "chromium",
+      "width": 320,
+      "scheme": "dark",
+      "enlarged_text": "PASS",
+      "console": "PASS",
+      "overflow": "PASS"
+    },
+    {
+      "page": "money-app",
+      "engine": "chromium",
+      "width": 390,
+      "scheme": "light",
+      "task_recovery": "PASS",
+      "enlarged_text": "PASS",
+      "console": "PASS",
+      "overflow": "PASS"
+    },
+    {
+      "page": "money-app",
+      "engine": "chromium",
+      "width": 390,
+      "scheme": "dark",
+      "enlarged_text": "PASS",
+      "console": "PASS",
+      "overflow": "PASS"
+    },
+    {
+      "page": "money-app",
+      "engine": "chromium",
+      "width": 1280,
+      "scheme": "light",
+      "task_recovery": "PASS",
+      "enlarged_text": "PASS",
+      "console": "PASS",
+      "overflow": "PASS"
+    },
+    {
+      "page": "money-app",
+      "engine": "chromium",
+      "width": 1280,
+      "scheme": "dark",
+      "enlarged_text": "PASS",
+      "console": "PASS",
+      "overflow": "PASS"
+    }
+  ]
+}

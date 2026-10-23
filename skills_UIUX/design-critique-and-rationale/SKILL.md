@@ -56,6 +56,12 @@ Example: "On Review, 'Confirm' and 'Change slot' look the same weight, which mat
 
 Required for consequential decisions (navigation model, primary action, data model visible to users, irreversible patterns). Use the template; include "how we will know we were wrong".
 
+## Scoring rendered work
+
+Use the [quality bar rubric](references/quality-bar-rubric.md): ten hard fails, ten scored
+dimensions with anchors, thresholds per task size and a three-round critique for large work.
+Scores are expert heuristics, never user evidence.
+
 ## Quality gate
 
 - Feedback is specific, located and actionable.

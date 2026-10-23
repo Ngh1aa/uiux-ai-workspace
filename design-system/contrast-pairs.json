@@ -294,6 +294,42 @@
       "bg": "surface.raised",
       "min": 3,
       "why": "neutral icon on card"
+    },
+    {
+      "fg": "action.primary.bg",
+      "bg": "surface.sunken",
+      "min": 3,
+      "why": "progress fill and switch track against sunken track"
+    },
+    {
+      "fg": "feedback.warning.icon",
+      "bg": "surface.sunken",
+      "min": 3,
+      "why": "warning progress fill"
+    },
+    {
+      "fg": "feedback.danger.icon",
+      "bg": "surface.sunken",
+      "min": 3,
+      "why": "danger progress fill"
+    },
+    {
+      "fg": "border.control",
+      "bg": "surface.sunken",
+      "min": 3,
+      "why": "switch off track border and thumb"
+    },
+    {
+      "fg": "feedback.success.text",
+      "bg": "surface.raised",
+      "min": 4.5,
+      "why": "incoming amounts in lists"
+    },
+    {
+      "fg": "feedback.danger.text",
+      "bg": "surface.raised",
+      "min": 4.5,
+      "why": "over-budget amounts in lists"
     }
   ]
 }

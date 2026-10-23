@@ -15,6 +15,11 @@ Read target brand, components, deployment target and current Apple HIG before ch
 - Design VoiceOver names, roles, values, reading order, grouped content and change announcements. Screenshot inspection cannot validate VoiceOver behavior.
 - Request permissions in context; specify denied/revoked states and useful fallback paths.
 
+## Spec sheet
+Concrete metrics — Dynamic Type ramp, bar heights, safe areas, sheet detents, control sizes, haptics,
+Liquid Glass layering and gestures — are in the [iOS spec sheet](references/ios-spec-sheet.md).
+Cross-platform patterns are in the [mobile patterns playbook](../mobile-app-design/references/mobile-patterns-playbook.md).
+
 ## Version and asset boundaries
 Select APIs/design resources for the declared OS range; keep availability and fallback notes in handoff. Review current materials such as Liquid Glass only when appropriate to scope, brand and SDK. Do not promise identical appearance across OS versions.
 
