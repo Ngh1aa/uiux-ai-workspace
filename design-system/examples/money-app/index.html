@@ -283,7 +283,7 @@
             <p class="ds-text-body-md">Thử từ khóa ngắn hơn hoặc xem tất cả loại giao dịch.</p>
             <button class="ds-button ds-button--secondary" type="button" id="tx-reset">Xóa tìm kiếm</button>
           </div>
-          <div class="ds-stack ds-stack--sm" id="tx-loading" aria-busy="true" aria-label="Đang tải giao dịch cũ hơn">
+          <div class="ds-stack ds-stack--sm" id="tx-loading" role="status" aria-busy="true" aria-label="Đang tải giao dịch cũ hơn">
             <p class="ds-text-label-md ds-text-secondary" aria-hidden="true">Đang tải tháng 9…</p>
             <ul class="mx-rows" aria-hidden="true">
               <li class="mx-row"><span class="ds-skeleton" style="width: 40px; height: 40px; border-radius: var(--ds-shape-control)"></span><span class="ds-stack ds-stack--xs"><span class="ds-skeleton" style="width: 62%"></span><span class="ds-skeleton" style="width: 38%"></span></span><span class="ds-skeleton" style="width: 72px"></span></li>
@@ -337,7 +337,7 @@
               <label class="ds-field__label" for="note">Lời nhắn <span class="ds-text-secondary">(không bắt buộc)</span></label>
               <input class="ds-field__control" id="note" maxlength="60" placeholder="Ví dụ: Tiền ăn trưa thứ Sáu">
             </div>
-            <label class="ds-split"><span class="ds-text-label-lg">Lưu vào danh bạ người nhận</span><span class="ds-switch"><input type="checkbox" role="switch" id="save-contact" checked></span></label>
+            <label class="ds-split"><span class="ds-text-label-lg">Lưu vào danh bạ người nhận</span><span class="ds-switch"><input type="checkbox" role="switch" id="save-contact" checked><span class="ds-switch__thumb" aria-hidden="true"></span></span></label>
             <p class="mx-fee ds-text-body-sm"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Miễn phí · tiền đến trong vài giây</p>
             <button class="ds-button ds-button--primary ds-button--lg ds-button--block" type="submit" id="send">Chuyển 500.000 ₫</button>
             <div class="ds-banner ds-banner--success" role="status" id="sent" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg><div><p class="ds-text-label-lg">Đã kiểm tra xong</p><p class="ds-text-body-sm">Ví dụ dừng trước bước xác thực. Không có tiền nào được chuyển.</p></div></div>
