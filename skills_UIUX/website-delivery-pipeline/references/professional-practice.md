@@ -4,7 +4,7 @@ This guide turns the existing pipeline into work an agent and reviewer can inspe
 
 ## Start with the current project
 
-Read `START-HERE.md → AGENTS.md → docs/CONTRACT-OWNERSHIP.md`, then generate the canonical external task manifest. The resolved Flow owns stage order and permissions. Do not create a second plan engine from this guide.
+Read `START-HERE.md` and `TASTE.md`, then follow the chosen flow stage by stage. The flow owns stage order. Do not create a second plan from this guide.
 
 - **Existing product:** inspect source AND rendered routes/states, identify reusable tokens/components, preserve content and behavior explicitly, and record current uncommitted work before editing.
 - **New website:** confirm it is actually new; a `build` task can target an existing site. Inventory brand, content, audience, business constraints and available assets. Mark missing inputs as assumptions or UNKNOWN. No fictional legacy audit.

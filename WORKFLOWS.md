@@ -126,8 +126,8 @@ Như **L**, cộng thêm:
 | **Portfolio** | Làm lại portfolio / định vị nghề | Flow `portfolio-career-system` |
 | **AI trong sản phẩm** | Tính năng có AI tạo nội dung/quyết định | [`human-ai-interaction-design`](skills_UIUX/human-ai-interaction-design/SKILL.md) |
 
-Ai cần định tuyến tự động (agent ngoài, CI) vẫn dùng `prepare-external-task.py` như trong
-[START-HERE.md](START-HERE.md); trang này là phiên bản đọc được bằng mắt của cùng logic.
+Mỗi flow là một file trong [`skills_UIUX/flows/`](skills_UIUX/flows/README.md): mở file, đi lần lượt
+từng chặng, đọc đúng skill được liệt kê.
 
 ## 5. Định nghĩa "xong" chung cho mọi cỡ
 

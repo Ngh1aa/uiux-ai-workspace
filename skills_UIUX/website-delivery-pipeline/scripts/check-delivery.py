@@ -6,9 +6,9 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / 'uiux-factory'))
-from core.runtime.flow_os.safe_read import SafeReader
-from core.skills.website_delivery import check_delivery, delivery_template
+sys.path.insert(0, str(ROOT / 'skills_UIUX'))
+from designlib.safe_read import SafeReader
+from designlib.website_delivery import check_delivery, delivery_template
 
 
 def main():

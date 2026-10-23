@@ -60,8 +60,8 @@ def main() -> int:
         print('Factory context: --website-type TYPE --project-domain DOMAIN --product-archetype TYPE --page-role ROLE (with --design-system). Numeric choices remain hypotheses, not adopted brand tokens.', flush=True)
     knowledge = None
     if context_requested and not any(flag in arguments for flag in ('--help', '-h')):
-        sys.path.insert(0, str(ROOT.parent / 'uiux-factory'))
-        from core.skills.design_knowledge import retrieve_design_knowledge
+        sys.path.insert(0, str(ROOT))
+        from designlib.design_knowledge import retrieve_design_knowledge
         try:
             knowledge = retrieve_design_knowledge(ROOT, {'website_type': factory_args.website_type, 'domain': factory_args.project_domain, 'product_archetype': factory_args.product_archetype}, factory_args.page_role)
         except ValueError as error:

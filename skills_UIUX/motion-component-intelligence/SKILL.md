@@ -47,10 +47,10 @@ Skip khi:
 
 ## Retrieval helper
 
-From `uiux-factory/`:
+Chạy từ thư mục `skills_UIUX/` (cần `git submodule update --init skills_UIUX/upstream/motion-primitives-website`):
 
 ```python
-from core.orchestration.motion_component_intelligence import MotionPrimitiveCatalog
+from designlib.motion_catalog import MotionPrimitiveCatalog
 
 catalog = MotionPrimitiveCatalog()
 results = catalog.search("editorial image reveal scroll", limit=3)

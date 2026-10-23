@@ -39,9 +39,9 @@ Nếu muốn kiểm tác động của prompt/knowledge tới model, dùng facto
 
 ## Runtime path
 
-Canonical data: `../data/design-knowledge.json`; shared lookup: `uiux-factory/core/skills/design_knowledge.py`. Structured identity selects subject knowledge; page role selects decision anatomy and numeric candidates. Không chọn style trước buyer question. Không freeze một family/font/palette trong data này.
+Canonical data: `../data/design-knowledge.json`; shared lookup: `skills_UIUX/designlib/design_knowledge.py`. Structured identity selects subject knowledge; page role selects decision anatomy and numeric candidates. Không chọn style trước buyer question. Không freeze một family/font/palette trong data này.
 
-Canonical decision checker: `../scripts/check-design-decisions.py`, schema/model owner `uiux-factory/core/skills/design_decisions.py`. External packet exports active-stage workflow; managed provider loads the bounded foundation/profile/index and can retrieve one role through a read-only tool. Shared context budget includes loaded knowledge. No eager research-stage dataset, no authority escalation.
+Canonical decision checker: `../scripts/check-design-decisions.py`, schema/model owner `skills_UIUX/designlib/design_decisions.py`. Chỉ nạp phần knowledge cần cho màn đang làm. No eager research-stage dataset, no authority escalation.
 
 For a PAGE/REDESIGN/PRODUCT comparison, document regions, their contents/relationships and mobile grouping. Topology fingerprints ignore alternative names, anchor prose and ordering of unchanged regions. This specifically rejects an A/B that only reverses architecture and service-fit sections. It does not score beauty and cannot independently prove a declared topology matches pixels. Review the actual captures.
 

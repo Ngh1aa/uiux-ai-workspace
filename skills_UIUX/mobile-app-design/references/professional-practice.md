@@ -20,33 +20,13 @@ Deliver design contract, token/component mapping, annotated task prototype, plat
 
 This release of the mobile capability is design/prototype planning and review. Native implementation requests fail closed because no native implementation runner is installed. A later implementation task must choose a compatible adapter and produce native evidence. Existing authority/approval controls still apply to writing target files, Figma mutation, paid services and release.
 
-## Using the canonical ingress
-For a design package whose local artifacts may be written within the granted scope:
+## Giao việc thiết kế app
+Khi nhờ Claude thiết kế app, nêu rõ ba điều: nền tảng (iOS, Android hay cả hai), đầu ra (chỉ thiết kế và handoff, hay prototype chạy trên trình duyệt) và app mới hay app đang có. Claude dùng flow [`mobile-app-design`](../../flows/mobile-app-design.json) cho thiết kế, `mobile-app-audit` khi chỉ soát. Thiếu thông tin nền tảng thì ghi là chưa biết, không tự đoán.
 
-```bash
-python -B skills_UIUX/scripts/prepare-external-task.py \
-  --repository owner/app --target-root /path/to/app \
-  --task "Thiết kế UI UX app mobile iOS Android; chỉ thiết kế và handoff" \
-  --platform-family mobile_app --requested-output design \
-  --target-platform ios --target-platform android \
-  --authority branch_write --output external-task-manifest.json
-```
-
-Use `--authority read_only` for research/review of an existing app. The manifest remains `READY_FOR_EXTERNAL_COLLABORATOR`, not a design/native QA pass. Structured `.uiux-profile.json` may identify `platform_family`, `target_platforms` and `implementation_stack`; it cannot choose the user's requested output, grant authority or waive evidence. Unknown stack/OS remain declared gaps.
-
-The shared manager uses the same interpreter, target truth, planner and work cards. It does not need a separate mobile OS/runtime-policy file. A responsive website remains on the existing web flows. For mixed web/app work, route separate existing work segments rather than treating one platform's evidence as proof of the other.
+Một trang web responsive vẫn đi theo flow web. Việc vừa web vừa app thì tách thành hai phần, bằng chứng của nền tảng này không thay cho nền tảng kia.
 
 ## Interactive browser demo for clients
 
-Use `--platform-family mobile_app --requested-output browser-prototype` when the output is a coded mobile prototype opened by link. The [browser preview skill](../../mobile-web-preview/SKILL.md) owns renderer/state reuse, phone/desktop presentation, static-host export, browser QA and client handoff. Native output remains a separate unsupported implementation request. Target metadata cannot select this output or authorize publication; pass the requested output and current caller grant explicitly.
+Use flow `mobile-web-preview` when the output is a coded mobile prototype opened by link. The [browser preview skill](../../mobile-web-preview/SKILL.md) owns renderer/state reuse, phone/desktop presentation, static-host export, browser QA and client handoff. Native output remains a separate unsupported implementation request.
 
-```bash
-python -B skills_UIUX/scripts/prepare-external-task.py \
-  --repository owner/app --target-root /path/to/app \
-  --task "Thiết kế mobile app iOS Android và tạo prototype chạy trên trình duyệt cho khách bấm thử" \
-  --platform-family mobile_app --requested-output browser-prototype \
-  --target-platform ios --target-platform android \
-  --authority branch_write --output external-task-manifest.json
-```
-
-This prepares the routed task packet, not the app itself. Execute its active stages with the authorized collaborator. `branch_write` prepares source/hosting assets; actual publication and a verified client URL require the existing release authorization and deployment-truth checks.
+Publishing the prototype to a public link is a separate step; check the live URL in a real browser before sending it to a client.

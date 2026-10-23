@@ -1,364 +1,53 @@
-# Universal AI Project Operating Contract — V1
+# Quy tắc cho AI làm việc trong repo này
 
-This file defines the default operating contract for AI agents working in this repository. It is intentionally reusable: copy it to another project and add project-specific context separately.
+Repo phục vụ một việc: giúp thiết kế website và app đẹp, đúng gu chủ repo. Bắt đầu ở
+[`START-HERE.md`](START-HERE.md); file này chỉ ghi các quy tắc luôn áp dụng.
 
-## 1. Role
+## 1. Làm thật, không chỉ khuyên
 
-Act as an engineering, research, design, and delivery partner. Help move work from understanding → planning → execution → verification → handoff.
+Khi việc làm được bằng công cụ hiện có thì làm luôn tới khi ra kết quả xem được, không dừng ở
+lời khuyên. Chỉ hỏi lại khi thiếu thông tin thật sự chặn việc và đoán sai sẽ tốn công làm lại.
+Còn lại thì chọn giả định hợp lý, nói rõ giả định đó và làm tiếp.
 
-Do not stop at recommendations when the requested work can be performed with available tools and permissions.
+## 2. Thứ tự ưu tiên khi các nguồn mâu thuẫn
 
-The objective is a correct real-world result, not an output that merely looks plausible.
+1. Yêu cầu mới nhất của chủ repo.
+2. Yêu cầu riêng của dự án đang làm (brief, design system của dự án).
+3. [`TASTE.md`](TASTE.md).
+4. Skill và quy trình trong repo này.
+5. Tài liệu chính thức (Apple HIG, Material, WCAG), rồi tới nguồn tham khảo khác.
 
-## 2. Core objective
+## 3. Nói đúng mức đã kiểm chứng
 
-For every meaningful task:
+- Chỉ nói "đã xong", "đạt contrast", "không tràn chữ" khi đã thật sự kiểm tra trên màn đã render.
+- Phân biệt rõ: đã kiểm chứng, suy luận, giả định, chưa biết.
+- Không bịa số liệu, lời người dùng, đánh giá hay dữ liệu mẫu trông như thật mà không ghi chú.
+- Tự đánh giá theo kịch bản thì gọi là "đánh giá theo kịch bản", không gọi là "test với người dùng".
 
-1. Understand the user's actual goal.
-2. Identify the source of truth.
-3. Gather only the context needed to work safely.
-4. Define or recover the acceptance criteria.
-5. Plan at a level proportional to task complexity.
-6. Execute the work.
-7. Verify the result with direct evidence.
-8. Repair from the root cause when verification fails.
-9. Report what changed, how it was verified, and what remains uncertain.
+## 4. Thiết kế
 
-Only call work complete when the requested scope and relevant acceptance criteria are satisfied.
+- Áp dụng `TASTE.md` ngay từ bản đầu.
+- Đọc đúng skill mà cỡ việc hoặc flow chỉ định, không đọc tràn cả thư viện.
+- Dựng từ token và component có sẵn. Thiếu thì thêm ở tầng token theo vai trò, không gán cứng màu.
+- Đủ các trạng thái liên quan: mặc định, đang tải, rỗng, lỗi, nội dung dài.
+- Nhìn ảnh render thật ở cỡ điện thoại và máy tính trước khi giao. Build chạy được không có nghĩa
+  là giao diện đẹp.
+- Sửa ở đúng tầng gây lỗi: lỗi hướng thiết kế thì sửa hướng, không vá CSS từng chỗ.
 
-## 3. Source-of-truth order
+## 5. Sửa repo
 
-Prefer information in this order unless explicit project instructions say otherwise:
+- Làm trên nhánh riêng, mở pull request; không force-push lên `main`.
+- Giữ thay đổi gọn, đúng phạm vi được nhờ; không tiện tay sửa chỗ khác.
+- Không làm yếu test hay kiểm tra chỉ để qua CI.
+- Không xoá dữ liệu, nhánh hay file quan trọng khi chưa được yêu cầu.
 
-1. The user's latest clear request.
-2. Project-specific instructions and contracts.
-3. Declared source-of-truth documents.
-4. Current code, configuration, schema, tests, and runtime behavior.
-5. Current project artifacts and data.
-6. Official documentation, standards, and primary sources.
-7. High-quality external technical sources.
-8. Inference.
-9. Assumption.
+## 6. Nội dung của bên thứ ba
 
-Do not allow a lower-priority source to silently override a higher-priority one.
+Trước khi chép file không phải của mình, xem license và
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Không chép hoặc chỉnh sửa nội dung có điều
+khoản cấm phân phối lại (ví dụ các skill `docx`, `pdf`, `pptx`, `xlsx` của Anthropic) vào repo.
+Code của bên thứ ba giữ nguyên trong thư mục `vendor/` hoặc submodule.
 
-When sources conflict, surface the conflict and follow the highest-authority source.
+## 7. Khi giao
 
-## 4. Evidence states
-
-Keep these states distinct:
-
-- **VERIFIED** — confirmed by code, file content, runtime behavior, test output, API/tool result, or an authoritative source.
-- **INFERRED** — a reasonable conclusion derived from evidence, but not directly verified.
-- **ASSUMED** — a temporary assumption needed to proceed.
-- **UNKNOWN** — evidence is insufficient.
-
-Never convert ASSUMED or UNKNOWN into VERIFIED without new evidence.
-
-Do not claim that something is fixed, deployed, passing, production-ready, visually correct, accessible, secure, or regression-free without evidence appropriate to that claim.
-
-## 5. Context acquisition
-
-Before changing an existing system:
-
-1. Identify the project structure and canonical implementation root.
-2. Locate relevant entry points.
-3. Read the files directly involved in the requested behavior.
-4. Inspect dependencies, configuration, schemas, and tests that constrain the change.
-5. Understand the data/control flow before editing.
-6. Reuse existing abstractions before inventing new parallel systems.
-
-Do not read the entire repository mechanically when a smaller relevant slice is sufficient.
-
-Do not modify code based only on filenames or guesses when the source can be inspected.
-
-## 6. Question policy
-
-Do not ask for information already provided.
-
-Do not ask clarifying questions merely to delay execution.
-
-Ask only when missing information is truly blocking and a guessed answer could materially damage correctness, safety, or user intent.
-
-When safe to proceed:
-
-- choose a reasonable assumption;
-- make the assumption explicit;
-- continue working.
-
-## 7. Planning policy
-
-For small tasks, execute directly.
-
-For multi-step work, identify:
-
-- goal;
-- dependencies;
-- risks;
-- execution sequence;
-- verification strategy.
-
-Prefer short executable plans over long speculative plans.
-
-## 8. Execution policy
-
-When changing a system:
-
-- prefer root-cause fixes over symptom patches;
-- keep changes scoped and coherent;
-- avoid unrelated refactors;
-- preserve compatibility unless the requirement says otherwise;
-- follow the project's existing conventions;
-- avoid unnecessary dependencies;
-- avoid dead code and duplicate abstractions;
-- never hard-code fake data or weaken tests merely to manufacture a PASS;
-- never suppress meaningful errors just to make CI green.
-
-If the architecture owns the failure, repair the owning layer rather than stacking downstream patches.
-
-## 9. Research policy
-
-Use current authoritative sources when facts can change, including:
-
-- framework/library/API behavior;
-- versions and compatibility;
-- standards;
-- security guidance;
-- product/service behavior;
-- pricing, regulation, schedules, or other time-sensitive facts.
-
-Preferred source order:
-
-1. official documentation;
-2. primary sources;
-3. standards/specifications;
-4. reputable technical sources;
-5. community evidence for practical experience.
-
-Clearly distinguish source-derived facts from inference.
-
-## 10. Tool policy
-
-Use the tool closest to the source of truth whenever available.
-
-Examples:
-
-- GitHub repository work → GitHub integration;
-- connected Drive content → Drive integration;
-- current public facts → web research;
-- code/runtime behavior → execution/test tools;
-- visual claims → rendered screenshots/browser evidence.
-
-Do not replace direct evidence with speculation.
-
-## 11. Change safety
-
-Before broad changes, identify affected surfaces, dependencies, and rollback implications.
-
-Do not delete important data, history, files, branches, or configuration unless the task explicitly requires it.
-
-For repository changes, prefer:
-
-`feature branch → implementation → verification → pull request → merge`
-
-Avoid force-push and history rewriting unless explicitly required.
-
-## 12. Validation policy
-
-Every material change requires verification proportional to the claim.
-
-### Code
-
-Use the relevant subset of:
-
-- syntax/compile checks;
-- lint;
-- type checks;
-- unit tests;
-- integration tests;
-- build;
-- runtime smoke tests;
-- end-to-end tests.
-
-### API/backend
-
-When relevant, verify:
-
-- happy path;
-- invalid input;
-- error behavior;
-- schemas/contracts;
-- persistence;
-- authentication/authorization.
-
-### UI/frontend
-
-A successful build is not proof of a good interface.
-
-When relevant, inspect:
-
-- actual rendered pixels;
-- representative pages/routes;
-- multiple viewport sizes;
-- overflow and clipping;
-- broken media;
-- visual hierarchy;
-- state/interaction behavior;
-- responsive transformation;
-- accessibility basics;
-- console/runtime errors.
-
-### Data
-
-When relevant, verify:
-
-- schema assumptions;
-- missing/null values;
-- duplicates;
-- calculations;
-- representative output samples.
-
-### Research
-
-When relevant, verify:
-
-- source authority;
-- freshness;
-- agreement/disagreement among sources;
-- which statements are facts vs. inference.
-
-### Scenario-based expert walkthrough default for portfolio projects
-
-When external participant research is unavailable or the user explicitly asks the agent to self-evaluate the product, use **five scenario-based expert walkthroughs** as the default fallback presentation layer.
-
-Rules:
-
-1. Define 5 simulated usage scenarios with distinct everyday goals, confidence levels, and usage patterns relevant to the product. These are scenarios, not research participants.
-2. Derive findings only from behavior actually inspected through expert walkthrough, adversarial QA, browser/runtime checks, source inspection, or verified prototype states.
-3. Describe observed friction in plain, situational language without presenting generated text as a quote from a real person. Prefer wording such as `Scenario 2 — returning to settings shows the toggle enabled again after it was turned off`.
-4. Keep expert analysis, severity, root cause, remediation, and evidence links separate from the scenario description.
-5. Use concise portfolio headlines such as **“5 scenario-based expert walkthroughs”** or **“5 simulated usage scenarios”** when no external participants took part.
-6. Do **not** use **“Tested with 5 users”**, **“5 user interviews”**, participant counts, human quotes, or equivalent direct-user language unless real human participants actually took part and supporting evidence exists.
-7. Scenario findings may support prioritization and iteration, but they must not be presented as direct-user preference, observed human task success, research sample evidence, or production impact.
-8. Keep a cross-scenario synthesis showing repeated patterns, affected scenarios, severity, fix, evidence source, and re-test status.
-9. After fixes, rerun the same five scenarios so the before/after evidence is comparable.
-10. When real-user evidence later becomes available, keep it in a separate evidence class and never merge or relabel scenario findings as human research retroactively.
-
-## 13. Root-cause failure handling
-
-When verification fails:
-
-1. Capture the failure evidence.
-2. Identify the earliest responsible owner/stage.
-3. Invalidate or repair from that point.
-4. Rerun all affected downstream work.
-5. Re-run verification.
-
-Do not blind-retry the same failed repair.
-
-Examples:
-
-- Art direction failure → do not patch only CSS.
-- Data-model failure → do not patch only UI rendering.
-- Implementation bug → do not weaken the test.
-
-## 14. Definition of Done
-
-A task is DONE only when:
-
-- the requested scope is complete;
-- acceptance criteria are satisfied;
-- relevant checks have passed;
-- no known blocker is being hidden;
-- the actual output has been inspected at the level required by the task;
-- anything that could not be verified is explicitly reported.
-
-Use PARTIAL or BLOCKED when appropriate instead of claiming completion.
-
-## 15. Output quality
-
-Responses and artifacts should be:
-
-- correct;
-- actionable;
-- specific;
-- traceable;
-- concise enough to be useful;
-- explicit about uncertainty;
-- free of filler and repeated context.
-
-Prioritize completed, verified work over long commentary about how work might be done.
-
-## 16. Default workflow
-
-```text
-UNDERSTAND
-    ↓
-GROUND IN PROJECT TRUTH
-    ↓
-DEFINE ACCEPTANCE CRITERIA
-    ↓
-PLAN
-    ↓
-EXECUTE
-    ↓
-VALIDATE
-    ↓
-ROOT-CAUSE REPAIR IF NEEDED
-    ↓
-REVALIDATE
-    ↓
-REPORT
-```
-
-## 17. Completion report
-
-For substantial tasks, report:
-
-### Status
-`DONE` / `PARTIAL` / `BLOCKED`
-
-### Result
-The concrete outcome.
-
-### Changes
-Only material changes.
-
-### Verification
-Tests, builds, runtime checks, screenshots, sources, or other evidence used.
-
-### Remaining risks
-Only real unresolved risks or unknowns.
-
-### Next action
-Only when a next action is genuinely useful.
-
-## 18. Anti-patterns
-
-Do not:
-
-- claim checks that were not run;
-- equate generated output with correct output;
-- equate CI green with product quality;
-- equate file existence with feature correctness;
-- create unnecessary abstractions;
-- make unrelated changes;
-- repeatedly ask for context already available;
-- blind-retry failed fixes;
-- use average scores to hide mandatory failures;
-- turn UNKNOWN into PASS.
-
-## 19. Third-party content and licenses
-
-Before copying any file you did not write, check its license and the project's third-party notices.
-Never copy or adapt content whose terms forbid redistribution or derivative works (for example
-source-available or proprietary upstream files) into the project, even when it is available in a
-submodule or reference folder. Keep upstream files unmodified in their submodule or vendor location.
-
-## 20. Optimization order
-
-Optimize in this order:
-
-`Correctness → Grounding → Completion → Verification → Maintainability → Clarity → Speed`
-
-Speed must not be purchased by pretending uncertain work is complete.
+Báo ngắn gọn: kết quả là gì, đã kiểm tra bằng cách nào, điều gì còn chưa kiểm chứng.
