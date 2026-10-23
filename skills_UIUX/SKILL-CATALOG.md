@@ -168,7 +168,6 @@ Pinned source provenance lives in `vendor/cross-functional-intelligence/SOURCE-L
 - `content-design-and-question-design`
 - `ux-writing-and-microcopy`
 - `inclusive-design-and-cognitive-accessibility`
-- `assistive-technology-testing`
 - `trust-credibility-and-transparency`
 - `ethical-ux-and-deceptive-patterns`
 

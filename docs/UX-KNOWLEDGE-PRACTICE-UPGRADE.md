@@ -124,7 +124,7 @@ Final local verification:
   the affected routing, target-truth, retrieval, provider, design/comparison and
   receipt suites. The broad run began before those final guards; do not present
   both runs as one fresh full-tree execution or add their counts together.
-- Owned structure: **116 skills**, **117 eval tasks**, **11 flows**; V5 structure,
+- Owned structure: **116 skills**, **117 eval tasks**, **11 flows** (at that release; 10/2026 adds three flows and merges one skill, see `docs/REVIEW-2026-10.md`); V5 structure,
   Flow OS, runtime foundation and eval-harness smoke passed. Existing long
   prompt/profile warnings remain advisory. Five edited packages also passed the
   authoring quick validator; the two existing `globs` packages use repo validation.

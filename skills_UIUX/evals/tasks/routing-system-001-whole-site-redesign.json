@@ -26,7 +26,7 @@
       "experimentation-interpretation",
       "production-monitoring-and-maintenance",
       "card-sorting-and-tree-testing",
-      "assistive-technology-testing"
+      "accessibility-conformance-evaluation"
     ],
     "activation_budget": {
       "soft_max": 15

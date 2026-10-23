@@ -9,7 +9,6 @@
       "accessibility"
     ],
     "allowed_skills": [
-      "assistive-technology-testing",
       "inclusive-design-and-cognitive-accessibility",
       "data-tables-and-enterprise-ux",
       "complex-forms-and-wizards",
@@ -31,7 +30,6 @@
     "project-context",
     "accessibility-conformance-evaluation",
     "accessibility",
-    "assistive-technology-testing",
     "inclusive-design-and-cognitive-accessibility",
     "data-tables-and-enterprise-ux",
     "complex-forms-and-wizards",

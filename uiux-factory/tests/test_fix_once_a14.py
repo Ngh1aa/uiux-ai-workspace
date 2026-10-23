@@ -46,7 +46,8 @@ def test_a14_nova_dashboard_task_stays_page_bounded_without_full_redesign() -> N
         "Improve trust and data clarity in the dashboard only while preserving the existing product strategy."
     )
     assert surface == "PAGE"
-    assert flow_id == "page-ui-work"
+    # A bounded dashboard task uses the dedicated product-UI flow, never the full redesign lane.
+    assert flow_id == "web-app-dashboard"
 
 
 def test_a14_true_whole_site_redesign_still_routes_to_professional_flow() -> None:

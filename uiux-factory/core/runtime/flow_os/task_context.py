@@ -69,6 +69,50 @@ def _maintains_skill_source(text: str) -> bool:
     return False
 
 
+DESIGN_SYSTEM_SUBJECT = (
+    r"design[ -]systems?|design[ -]tokens?|token system|component library|ui kit|"
+    r"hệ thống thiết kế|thư viện component|bộ component"
+)
+
+
+def _maintains_design_system(text: str) -> bool:
+    """A design system is the work object, not merely the reference being applied."""
+    active = URL_PATTERN.sub(" ", requested_text(text))
+    actions = (
+        r"build|create|set up|setup|establish|define|design|redesign|maintain|update|upgrade|"
+        r"refactor|extend|fix|repair|improve|add|implement|migrate|consolidate|document|audit|review|validate|evaluate|"
+        r"tạo|xây dựng|dựng|thiết lập|thiết kế|nâng cấp|cập nhật|sửa|bổ sung|mở rộng|chuẩn hóa|chuẩn hoá|gộp|kiểm tra|đánh giá|rà soát"
+    )
+    reference = (
+        r"\b(?:using|use|from|with|according to|based on|keep|keeping|preserve|retain|existing|current|"
+        r"theo|dựa|sử dụng|tham khảo|giữ|hiện có|hiện tại)\b"
+    )
+    for match in re.finditer(
+        r"\b(?:" + actions + r")\b([^.;\n]{0,60}?)\b(?:" + DESIGN_SYSTEM_SUBJECT + r")\b",
+        active, re.IGNORECASE,
+    ):
+        if not re.search(reference, match.group(1), re.IGNORECASE):
+            return True
+    return False
+
+
+APP_DASHBOARD_TERMS = (
+    "dashboard", "admin panel", "admin console", "operations console", "fraud console",
+    "back office", "back-office", "internal tool", "bảng điều khiển", "trang quản trị",
+)
+
+
+def _app_dashboard_is_subject(text: str) -> bool:
+    """The dashboard is the work object, not one feature listed in a wider product build."""
+    active = URL_PATTERN.sub(" ", requested_text(text))
+    terms = "|".join(re.escape(term) for term in APP_DASHBOARD_TERMS)
+    for match in re.finditer(r"\b(?:" + terms + r")\b", active, re.IGNORECASE):
+        before = active[max(0, match.start() - 40):match.start()]
+        if not re.search(r"\b(?:with|including|plus|and a|and an|có|kèm|gồm|bao gồm)\b[^.;,\n]*$", before, re.IGNORECASE):
+            return True
+    return False
+
+
 def _best_taxonomy_match(
     text: str,
     candidates: Iterable[tuple[str, Iterable[str]]],
@@ -348,10 +392,12 @@ class GoalInterpreter:
 
     FEATURE_TERMS = (
         ("skill-library-maintenance", ("skill-library", "skill library", "skill.md", "thư viện skill", "thư viện kỹ năng")),
+        ("design-system", ("design system", "design-system", "design systems", "design token", "design tokens", "token system", "component library", "ui kit", "hệ thống thiết kế", "thư viện component", "bộ component")),
         ("search", ("search", "site search", "tìm kiếm")),
         ("forms", ("form", "contact form", "lead form", "checkout", "đăng ký", "liên hệ", "biểu mẫu", "thanh toán")),
         ("auth", ("login", "sign in", "account", "authentication", "đăng nhập", "tài khoản", "đăng ký tài khoản")),
         ("dashboard", ("dashboard", "admin panel", "analytics", "operations console", "fraud console", "admin console", "bảng điều khiển", "trang quản trị")),
+        ("app-dashboard", APP_DASHBOARD_TERMS),
         ("data-tables", ("data table", "case queue", "review queue", "transaction table", "transaction list", "case list")),
         ("motion", ("animation", "motion", "microinteraction", "hiệu ứng", "chuyển động")),
         ("i18n", ("multilingual", "multi-language", "bilingual", "đa ngôn ngữ", "song ngữ", "tiếng anh", "english version")),
@@ -612,6 +658,10 @@ class GoalInterpreter:
         features: list[str] = []
         for feature, terms in self.FEATURE_TERMS:
             if feature == "skill-library-maintenance" and not _maintains_skill_source(normalized):
+                continue
+            if feature == "design-system" and not _maintains_design_system(normalized):
+                continue
+            if feature == "app-dashboard" and not _app_dashboard_is_subject(normalized):
                 continue
             if _contains_token(normalized, terms):
                 features.append(feature)
