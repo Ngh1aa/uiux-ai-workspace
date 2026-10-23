@@ -18,6 +18,12 @@ Identify the top task, domain, existing screens/components, target platforms, mi
 
 Use [professional practice](references/professional-practice.md) for the complete flow and [source registry](data/sources.json) when selecting guidance. Use [design contract](templates/mobile-design-contract.md) as a starting structure; merge with existing project artifacts rather than creating duplicate specs. Stage cards live in [lifecycle.json](data/lifecycle.json) and are transported by the shared delivery packet owner.
 
+## Pattern defaults
+Use the [mobile patterns playbook](references/mobile-patterns-playbook.md) for structure, onboarding,
+auth, permissions, lists, search, forms, feedback, empty states, notifications, settings and
+platform divergence. Platform metrics: [iOS](../ios-app-design/references/ios-spec-sheet.md),
+[Android](../android-app-design/references/android-spec-sheet.md).
+
 ## Stage routing
 - UX before visual styling: use [mobile UX-first practice](../visual-design-direction/references/mobile-ux-first.md). Walk through representative tasks and recovery before selecting composition, typography or imagery.
 - Visual direction and reference gaps: `visual-design-direction` + `design-reference-research-and-benchmark`; use app-specific page roles when website overview/conversion roles do not fit.

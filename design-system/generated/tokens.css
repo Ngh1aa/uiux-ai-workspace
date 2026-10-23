@@ -241,6 +241,7 @@
   --ds-surface-inverse: var(--ds-color-neutral-950);
   --ds-surface-brand-subtle: var(--ds-color-jade-50);
   --ds-surface-brand-strong: var(--ds-color-jade-800);
+  --ds-surface-scrim: var(--ds-color-neutral-950);
   --ds-text-primary: var(--ds-color-neutral-950);
   --ds-text-secondary: var(--ds-color-neutral-700);
   --ds-text-tertiary: var(--ds-color-neutral-600);
@@ -303,6 +304,7 @@
     --ds-surface-inverse: var(--ds-color-neutral-100);
     --ds-surface-brand-subtle: var(--ds-color-jade-950);
     --ds-surface-brand-strong: var(--ds-color-jade-300);
+    --ds-surface-scrim: var(--ds-color-neutral-950);
     --ds-text-primary: var(--ds-color-neutral-50);
     --ds-text-secondary: var(--ds-color-neutral-300);
     --ds-text-tertiary: var(--ds-color-neutral-400);
@@ -365,6 +367,7 @@
   --ds-surface-inverse: var(--ds-color-neutral-100);
   --ds-surface-brand-subtle: var(--ds-color-jade-950);
   --ds-surface-brand-strong: var(--ds-color-jade-300);
+  --ds-surface-scrim: var(--ds-color-neutral-950);
   --ds-text-primary: var(--ds-color-neutral-50);
   --ds-text-secondary: var(--ds-color-neutral-300);
   --ds-text-tertiary: var(--ds-color-neutral-400);

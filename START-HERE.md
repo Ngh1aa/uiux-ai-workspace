@@ -2,6 +2,10 @@
 
 This is the shortest safe entrypoint for humans and external AI collaborators.
 
+## Fastest path for design work
+
+Pick the workflow by task size in [`WORKFLOWS.md`](WORKFLOWS.md). It names the skills to load and the quality threshold; the routing below produces the same result automatically.
+
 ## If the user gives a goal + target repository
 
 Do **not** read the whole workspace.

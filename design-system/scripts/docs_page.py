@@ -111,6 +111,32 @@ COMPONENTS = """
     <a class="ds-tab-bar__item" href="#c-list"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-user"/></svg></span>Hồ sơ</a>
   </nav>
 </section>
+<section class="ds-stack" aria-labelledby="c-app"><h3 class="ds-text-title-sm" id="c-app">App controls (v0.2): segmented, switch, progress, skeleton, sheet</h3>
+  <div class="demo-cols">
+    <div class="ds-stack ds-stack--md">
+      <div class="ds-segmented" role="group" aria-label="Ví dụ chọn khoảng thời gian">
+        <button class="ds-segmented__item" type="button" aria-pressed="false">Tuần</button>
+        <button class="ds-segmented__item" type="button" aria-pressed="true">Tháng</button>
+        <button class="ds-segmented__item" type="button" aria-pressed="false">Năm</button>
+      </div>
+      <label class="ds-split"><span class="ds-text-label-lg">Thông báo giao dịch</span><span class="ds-switch"><input type="checkbox" role="switch" checked></span></label>
+      <label class="ds-split"><span class="ds-text-label-lg">Đăng nhập bằng sinh trắc học</span><span class="ds-switch"><input type="checkbox" role="switch"></span></label>
+      <label class="ds-split"><span class="ds-text-label-lg ds-text-secondary">Đồng bộ ngân hàng (không khả dụng)</span><span class="ds-switch"><input type="checkbox" role="switch" disabled></span></label>
+    </div>
+    <div class="ds-stack ds-stack--md">
+      <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Ăn uống</span><span class="ds-text-label-md ds-tabular">62%</span></div><div class="ds-progress" role="progressbar" aria-label="Ăn uống" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><span class="ds-progress__bar" style="--value: 62%"></span></div></div>
+      <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Mua sắm</span><span class="ds-text-label-md ds-tabular">88% · sắp hết</span></div><div class="ds-progress ds-progress--warning" role="progressbar" aria-label="Mua sắm" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"><span class="ds-progress__bar" style="--value: 88%"></span></div></div>
+      <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Giải trí</span><span class="ds-text-label-md ds-tabular">112% · vượt</span></div><div class="ds-progress ds-progress--danger" role="progressbar" aria-label="Giải trí" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-valuetext="112%, vượt ngân sách"><span class="ds-progress__bar" style="--value: 100%"></span></div></div>
+      <div class="ds-list-item" aria-busy="true" aria-label="Đang tải"><span class="ds-skeleton ds-skeleton--circle" style="width: 40px; height: 40px" aria-hidden="true"></span><span class="ds-list-item__body ds-stack ds-stack--xs" aria-hidden="true"><span class="ds-skeleton" style="width: 60%"></span><span class="ds-skeleton" style="width: 35%"></span></span></div>
+    </div>
+    <div class="ds-sheet" role="dialog" aria-labelledby="sheet-demo-title" style="box-shadow: var(--ds-elevation-floating); border: var(--ds-border-width-100) solid var(--ds-border-subtle)">
+      <span class="ds-sheet__grabber" aria-hidden="true"></span>
+      <div class="ds-sheet__header"><h4 class="ds-text-title-sm" id="sheet-demo-title">Lọc giao dịch</h4><button class="ds-icon-button" type="button" aria-label="Đóng"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-x-circle"/></svg></button></div>
+      <div class="ds-cluster"><button class="ds-chip" type="button" aria-pressed="true">Chi tiêu</button><button class="ds-chip" type="button" aria-pressed="false">Thu nhập</button></div>
+      <button class="ds-button ds-button--primary ds-button--block" type="button">Xem 24 giao dịch</button>
+    </div>
+  </div>
+</section>
 """
 
 
