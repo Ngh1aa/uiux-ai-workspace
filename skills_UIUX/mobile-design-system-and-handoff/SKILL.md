@@ -13,6 +13,10 @@ Use the existing `design-system-and-components` owner for common foundations. Wh
 ## Component contract
 For each changed component record purpose, anatomy, variants, content limits, states, accessibility semantics, interactions and platform mapping. Cover selected, pressed, disabled, loading and error when applicable; hover is conditional on pointer support.
 
+## Token mapping
+Map semantic tokens to SwiftUI, Compose and CSS with the
+[design-system platform mapping](../../design-system/docs/platform-mapping.md).
+
 ## Stack-specific handoff
 - SwiftUI: map to native controls, semantic text/colors, state ownership and availability/fallback notes; consult Apple APIs plus the pinned community reference.
 - Compose: map to MaterialTheme roles, composables, hoisted state, semantics and window/insets behavior.

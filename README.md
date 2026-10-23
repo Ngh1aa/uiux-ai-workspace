@@ -27,7 +27,7 @@ It is built for AI-assisted product/UI/UX work where the agent must remain groun
 |---|---|---|
 | UIUX Factory | The operating system: routing, flows, evidence gates, runtime | `uiux-factory/`, `skills_UIUX/runtime/`, `skills_UIUX/flows/` |
 | Skills | Specialist UX, product and design knowledge loaded per stage | `skills_UIUX/<skill>/SKILL.md` |
-| Design system | A working reference system: DTCG tokens, 13 components, contrast and CSS validators, living docs | [`design-system/`](design-system/README.md) |
+| Design system | A working reference system: DTCG tokens, 19 components, contrast and CSS validators, living docs, SwiftUI/Compose mapping | [`design-system/`](design-system/README.md) |
 
 The repository as a whole is **not** a design system. The skills describe how to build and govern
 one; `design-system/` is the concrete, tested example they can point to. Product teams should
@@ -79,6 +79,8 @@ uiux-factory/core/runtime/flow_os/
 The managed CLI uses that same canonical Flow OS and is **not a second Flow OS**.
 
 ## Start here
+
+**Not sure which process fits the task?** [`WORKFLOWS.md`](WORKFLOWS.md) picks a workflow by task size (XS → XL) and platform, lists only the skills to load, and sets the quality bar. The [quality bar rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) and [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md) give agents concrete numeric defaults for UI work; the [latest review](docs/REVIEW-2026-10.md) explains why.
 
 For a human or external AI collaborator, read **`START-HERE.md` first**. Do not preload the entire repository.
 

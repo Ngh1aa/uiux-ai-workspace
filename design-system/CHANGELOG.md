@@ -3,7 +3,19 @@
 Semantic versioning on the public surface (token paths, class names, state attributes, contracts).
 See [docs/governance.md](docs/governance.md).
 
-## Unreleased
+## 0.2.0 (2026-10-23)
+
+### Added
+- App components: segmented control, switch, progress (default, warning, danger), skeleton,
+  bottom sheet with scrim, section header. Contracts in `docs/component-contracts.md`, specimens in
+  the generated docs page.
+- Semantic token `surface.scrim` (dark in both modes) for dimming content behind sheets.
+- 12 icons: eye-off, wallet, card, send, receive, plus, chart, bell, target, coffee, bag, bus.
+- 7 contrast pairs for the new components and for signed amounts on raised surfaces
+  (110 checks across both modes).
+- `docs/platform-mapping.md`: how roles, type, shape and motion map to SwiftUI and Jetpack Compose.
+- `examples/money-app/`: personal-finance reference with three task-led screens, a sheet,
+  progress, skeleton and segmented filtering, reviewed in light and dark.
 
 ### Fixed
 - Browser review requires all declared engines and axe-core; CI requires all three engines.

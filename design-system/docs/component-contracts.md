@@ -156,3 +156,65 @@ region. Never put the only copy of important information or an undo-only path in
 
 **Purpose.** Explain why nothing is shown and offer the next step. Always: what is empty, why
 (filter, no data yet, error), and one recovery action ("Xóa bộ lọc").
+
+## Segmented control (v0.2)
+
+**Purpose.** Switch between 2–5 views of the same content (Tuần / Tháng / Năm, Tất cả / Chi / Thu).
+
+**Anatomy.** Sunken track, equal-width items, the selected item is a raised surface.
+
+**Rules.** Items are buttons with `aria-pressed`, grouped with `role="group"` and an accessible
+name. Use it for views, never for navigation between destinations (use the tab bar) and never for
+more than five options (use chips or a select). Selection changes surface, weight and elevation,
+not colour alone. The content below updates without moving the control.
+
+## Switch (v0.2)
+
+**Purpose.** Turn a setting on or off with immediate effect.
+
+**Anatomy.** Native `<input type="checkbox" role="switch">` followed by
+`<span class="ds-switch__thumb" aria-hidden="true">` inside `.ds-switch`, with a visible text label in
+the same `<label>`. The thumb is a real element because Firefox does not draw pseudo-elements on inputs.
+
+**Rules.** No Save button: the change applies at once and is confirmed by the thumb position and
+the setting's effect. If the change can fail (network), revert the switch and explain inline.
+Off track has a 3:1 border; on track uses `action.primary.bg` with a contrasting thumb. Disabled
+switches keep their label readable and, when possible, say why. Target area is the whole row.
+
+## Progress (v0.2)
+
+**Purpose.** Show how much of a known total is used or complete (budget spent, upload, steps).
+
+**Rules.** `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`; add
+`aria-valuetext` when the visible value says more than a number ("112%, vượt ngân sách").
+Always show the value as text next to the bar. Tones: default, `--warning` (approaching a limit),
+`--danger` (over a limit). Never rely on tone alone; the text says "sắp hết" or "vượt".
+
+## Skeleton (v0.2)
+
+**Purpose.** Placeholder that matches the final layout while content loads (> ~300 ms).
+
+**Rules.** Shapes mirror the real content (avatar circle, two text lines of realistic widths).
+Skeleton elements are `aria-hidden`; the container sets `aria-busy="true"` and an accessible
+loading label. Pulse animation stops under reduced motion. Do not show skeletons for loads under
+~100 ms, and replace them in place without layout shift.
+
+## Sheet and scrim (v0.2)
+
+**Purpose.** A focused sub-task over the current screen (transfer money, filters, quick create).
+
+**Anatomy.** Grabber, header with title and close button, content, one primary action at the
+bottom. `.ds-scrim` dims the page behind it with `surface.scrim` (dark in both modes).
+
+**Rules.** `role="dialog"` with `aria-labelledby`, focus moves into the sheet and returns to the
+trigger on close; Esc, close button and (on touch) drag-down dismiss. If the user has entered
+data, confirm before discarding. One primary action; secondary actions as tertiary buttons.
+Native apps use the platform sheet (`.presentationDetents` on iOS, `ModalBottomSheet` on Android)
+with these tokens rather than this markup.
+
+## Section header (v0.2)
+
+**Purpose.** Title a group of content on a screen, with an optional trailing link ("Xem tất cả").
+
+**Rules.** Title uses a heading element at the right level; the trailing action is a link or
+tertiary button with a specific label, not a bare chevron.

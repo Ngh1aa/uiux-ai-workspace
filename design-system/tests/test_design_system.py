@@ -184,3 +184,85 @@ def test_recorded_browser_report_has_no_axe_violations():
     for run_ in report["runs"]:
         assert run_["axe"]["violations"] == [], run_
         assert run_["overflow"] == "PASS" and run_["console"] == "PASS"
+
+
+# ---------- v0.2: money-app reference and app components ----------
+
+MONEY = DS / "examples/money-app/index.html"
+
+
+def _defined_classes():
+    css = (DS / "components/components.css").read_text(encoding="utf-8")
+    return set(re.findall(r"\.(ds-[a-z0-9_-]+)", css))
+
+
+def test_money_app_uses_only_defined_ds_classes_and_icons():
+    html = MONEY.read_text(encoding="utf-8")
+    sprite = (DS / "components/icons.svg").read_text(encoding="utf-8")
+    used = set()
+    for attr in re.findall(r'class="([^"]+)"', html):
+        used |= set(re.findall(r"\b(ds-[a-z0-9_-]+)", attr))
+    undefined = {c for c in used if c not in _defined_classes() and not c.startswith("ds-i-") and not c.endswith("--")}
+    assert not undefined, f"money-app uses undefined classes: {sorted(undefined)}"
+    icon_ids = set(re.findall(r'<symbol id="(ds-i-[a-z0-9-]+)"', sprite))
+    used_icons = set(re.findall(r'href="#(ds-i-[a-z0-9-]+)"', html)) | {f"ds-i-{m}" for m in re.findall(r"icon: '([a-z0-9-]+)'", html)}
+    assert used_icons <= icon_ids, sorted(used_icons - icon_ids)
+    assert sprite.strip() in html, "inline sprite in money-app drifted from components/icons.svg"
+
+
+def test_money_app_styles_use_tokens_not_colour_literals():
+    html = MONEY.read_text(encoding="utf-8")
+    styles = " ".join(re.findall(r"<style>(.*?)</style>", html, flags=re.S))
+    styles += " ".join(re.findall(r'style="([^"]+)"', html))
+    styles = re.sub(r"/\*.*?\*/", "", styles, flags=re.S)
+    literal = re.compile(r"#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklch|oklab|lab|lch|color)\(", re.I)
+    assert not literal.search(styles), literal.search(styles).group(0)
+    generated = (DS / "generated/tokens.css").read_text(encoding="utf-8")
+    defined = set(re.findall(r"(--ds-[a-z0-9-]+):", generated))
+    used = set(re.findall(r"var\((--ds-[a-z0-9-]+)", styles))
+    assert used <= defined, sorted(used - defined)
+    assert not any(v.startswith("--ds-color-") for v in used), "example must use semantic roles"
+
+
+def test_money_app_tab_bars_and_dialog_semantics():
+    html = MONEY.read_text(encoding="utf-8")
+    navs = re.findall(r'<nav class="ds-tab-bar".*?</nav>', html, flags=re.S)
+    assert len(navs) == 2
+    for nav in navs:
+        assert nav.count('aria-current="page"') == 1
+        for item in re.findall(r'<a class="ds-tab-bar__item"[^>]*>(.*?)</a>', nav, flags=re.S):
+            assert "ds-tab-bar__icon" in item and re.sub(r"<[^>]+>", "", item).strip()
+    assert 'role="dialog"' in html and 'aria-labelledby="sheet-title"' in html
+    for bar in re.findall(r'<div class="ds-progress[^"]*"[^>]*>', html):
+        assert 'role="progressbar"' in bar and "aria-valuenow" in bar and "aria-label" in bar
+    for sw in re.findall(r'<span class="ds-switch"><input[^>]*>', html):
+        assert 'role="switch"' in sw
+
+
+def test_money_app_recorded_review_is_honestly_labelled():
+    report = json.loads((DS / "examples/money-app/review/browser-report.json").read_text(encoding="utf-8"))
+    assert report["status"] in {"PASS", "PARTIAL"}
+    if report["axe"] != "RUN" or report["engines_skipped"] or len(report["runs"]) != report["expected_runs"]:
+        assert report["status"] == "PARTIAL", "incomplete review must not be labelled PASS"
+    assert any(run.get("task_recovery") == "PASS" for run in report["runs"])
+    for run_ in report["runs"]:
+        assert run_["overflow"] == "PASS" and run_["console"] == "PASS" and run_["enlarged_text"] == "PASS"
+
+
+def test_v02_components_have_contracts_and_reduced_motion():
+    contracts = (DS / "docs/component-contracts.md").read_text(encoding="utf-8")
+    for name in ("Segmented control", "Switch", "Progress", "Skeleton", "Sheet and scrim", "Section header"):
+        assert f"## {name}" in contracts, name
+    css = (DS / "components/components.css").read_text(encoding="utf-8")
+    for cls in ("ds-segmented", "ds-switch", "ds-progress", "ds-skeleton", "ds-sheet", "ds-scrim", "ds-section-header"):
+        assert f".{cls}" in css, cls
+    reduced = css.split("prefers-reduced-motion")[1]
+    assert ".ds-skeleton { animation: none; }" in reduced
+
+
+def test_scrim_stays_dark_in_both_modes():
+    light = dslib.resolve(dslib.mode_tokens("light"))
+    dark = dslib.resolve(dslib.mode_tokens("dark"))
+    for res in (light, dark):
+        hexv = dslib.color_hex(res["surface.scrim"][1])
+        assert dslib.contrast(hexv, "#ffffff") > 12, hexv

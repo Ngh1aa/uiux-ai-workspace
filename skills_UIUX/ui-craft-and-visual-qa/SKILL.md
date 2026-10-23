@@ -25,6 +25,14 @@ Nếu không thể render/capture/inspect implementation:
 - không gọi UI `finished`, `polished`, `visually verified` hoặc `production-grade`;
 - không dùng static assertions/CSS grep thay cho nhìn giao diện thật.
 
+## Expert defaults
+
+When the target has no design system for a decision, start from the numeric defaults in
+[craft standards](references/craft-standards.md) (spacing, type, colour, elevation, motion, states,
+polish pass) and, for product software, [web app patterns](references/web-app-patterns.md).
+Project tokens and brand rules override them. Score rendered work with the
+[quality bar rubric](../design-critique-and-rationale/references/quality-bar-rubric.md).
+
 ## Mandatory elementary visual sanity gate
 
 Trước khi chấm craft/aesthetic sâu hơn, chạy [Elementary Visual Sanity Gate](checklists/elementary-visual-sanity-gate.md) khi task là substantial visual work, multi-page/whole-site, production-candidate/release, hoặc remediation của một lỗi obvious mà QA trước đã bỏ lọt.

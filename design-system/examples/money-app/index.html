@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Money app reference</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="../../generated/tokens.css">
+<link rel="stylesheet" href="../../components/components.css">
+<style>
+/* Specimen frame and screen layout only. Every colour, type style, radius, shadow and motion value
+   comes from design-system tokens; components come from components.css. No colour literals. */
+.mx-lab { max-width: calc(1218px + 2 * var(--ds-spacing-gutter)); margin: 0 auto; padding: var(--ds-spacing-stack-xl) var(--ds-spacing-gutter); }
+.mx-intro { max-width: var(--ds-size-reading-max); margin-bottom: var(--ds-spacing-stack-xl); }
+.mx-grid { display: grid; grid-template-columns: repeat(3, 390px); gap: var(--ds-spacing-stack-lg); justify-content: start; align-items: start; }
+
+/* Device frame: a phone-sized canvas with status bar, scrollable screen and home indicator. */
+.mx-phone { position: relative; display: flex; flex-direction: column; width: 390px; height: 844px; overflow: hidden;
+  border: var(--ds-border-width-100) solid var(--ds-border-subtle); border-radius: calc(var(--ds-shape-sheet) * 2);
+  background: var(--ds-surface-page); box-shadow: var(--ds-elevation-floating); }
+.mx-status { display: flex; align-items: center; justify-content: space-between; flex: none; height: 50px; padding: var(--ds-space-300) var(--ds-space-800) 0; color: var(--ds-text-primary); }
+.mx-status__time { font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.mx-status__icons { display: flex; align-items: center; gap: var(--ds-space-100); }
+.mx-signal { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+.mx-signal i { display: block; width: 3px; border-radius: 1px; background: currentColor; }
+.mx-signal i:nth-child(1) { height: 4px; } .mx-signal i:nth-child(2) { height: 6px; } .mx-signal i:nth-child(3) { height: 9px; } .mx-signal i:nth-child(4) { height: 12px; }
+.mx-battery { position: relative; width: 25px; height: 12px; border: var(--ds-border-width-100) solid currentColor; border-radius: 4px; opacity: 0.9; }
+.mx-battery::before { content: ""; position: absolute; inset: 2px; right: 6px; border-radius: 2px; background: currentColor; }
+.mx-battery::after { content: ""; position: absolute; top: 3px; right: -4px; width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; }
+.mx-screen { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.mx-body { display: flex; flex-direction: column; gap: var(--ds-spacing-stack-lg); padding: var(--ds-space-100) var(--ds-spacing-gutter) var(--ds-spacing-stack-lg); }
+.mx-phone .ds-tab-bar { flex: none; padding-bottom: var(--ds-space-600); }
+.mx-home-indicator { position: absolute; bottom: var(--ds-space-200); left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: var(--ds-shape-pill); background: var(--ds-text-primary); opacity: 0.85; pointer-events: none; }
+
+/* Screen header */
+.mx-header { display: flex; align-items: center; gap: var(--ds-spacing-inline-md); padding: var(--ds-space-200) var(--ds-spacing-gutter) var(--ds-space-300); }
+.mx-header__text { flex: 1; min-width: 0; }
+.mx-bell { position: relative; }
+.mx-bell__dot { position: absolute; top: 10px; right: 11px; width: 8px; height: 8px; border-radius: var(--ds-shape-pill); background: var(--ds-feedback-danger-icon); box-shadow: 0 0 0 2px var(--ds-surface-page); }
+.mx-large-title { padding: var(--ds-space-100) var(--ds-spacing-gutter) var(--ds-space-200); }
+
+/* Balance hero: the one brand-strong surface on the screen. */
+.mx-balance { position: relative; display: flex; flex-direction: column; gap: var(--ds-spacing-stack-md); padding: var(--ds-spacing-inset-lg); overflow: hidden;
+  border-radius: var(--ds-shape-sheet); background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
+.mx-balance::after { content: ""; position: absolute; right: -64px; top: -72px; width: 220px; height: 220px; border-radius: var(--ds-shape-pill);
+  border: 28px solid var(--ds-text-on-brand-strong); opacity: 0.06; pointer-events: none; }
+.mx-balance__label { display: flex; align-items: center; justify-content: space-between; }
+.mx-balance__label .ds-icon-button { color: inherit; margin: calc(var(--ds-space-300) * -1) calc(var(--ds-space-300) * -1) calc(var(--ds-space-300) * -1) 0; }
+.mx-balance__label .ds-icon-button:hover { background: transparent; opacity: 0.8; }
+.mx-amount { display: flex; align-items: baseline; gap: var(--ds-space-100); margin: 0; font-variant-numeric: tabular-nums; }
+.mx-amount__value { font: var(--ds-font-weight-bold) var(--ds-font-size-900)/1.05 var(--ds-font-family-sans); letter-spacing: -0.02em; }
+.mx-amount__unit { font: var(--ds-font-weight-semibold) var(--ds-font-size-600)/1 var(--ds-font-family-sans); opacity: 0.85; }
+.mx-balance__meta { display: flex; align-items: center; gap: var(--ds-space-100); margin: 0; font: var(--ds-font-weight-medium) var(--ds-font-size-300)/1.4 var(--ds-font-family-sans); }
+.mx-accounts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-space-200); padding-top: var(--ds-space-400); }
+.mx-accounts > div { display: flex; flex-direction: column; gap: 2px; }
+.mx-accounts p { margin: 0; }
+.mx-muted { opacity: 0.82; font-size: var(--ds-font-size-200); }
+.mx-accounts .mx-figure { font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.mx-divider-soft { position: relative; }
+.mx-divider-soft::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: var(--ds-border-width-100); background: currentColor; opacity: 0.18; }
+
+/* Quick actions */
+.mx-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--ds-space-200); margin: 0; padding: 0; list-style: none; }
+.mx-action { display: flex; flex-direction: column; align-items: center; gap: var(--ds-space-200); width: 100%; padding: 0; border: 0; background: transparent; color: var(--ds-text-primary); cursor: pointer;
+  font: var(--ds-font-weight-medium) var(--ds-font-size-200)/1.3 var(--ds-font-family-sans); text-align: center; }
+.mx-action__icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: var(--ds-shape-sheet); background: var(--ds-surface-raised);
+  border: var(--ds-border-width-100) solid var(--ds-border-subtle); color: var(--ds-text-brand); box-shadow: var(--ds-elevation-raised);
+  transition: transform var(--ds-duration-fast) var(--ds-easing-standard), background-color var(--ds-duration-fast) var(--ds-easing-standard); }
+.mx-action:hover .mx-action__icon { background: var(--ds-surface-brand-subtle); }
+.mx-action:active .mx-action__icon { transform: scale(0.96); }
+.mx-action--primary .mx-action__icon { background: var(--ds-action-primary-bg); border-color: transparent; color: var(--ds-action-primary-text); }
+.mx-action--primary:hover .mx-action__icon { background: var(--ds-action-primary-bg-hover); }
+
+/* Rows */
+.mx-rows { margin: 0; padding: 0; list-style: none; border-radius: var(--ds-shape-card); background: var(--ds-surface-raised); border: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+.mx-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: var(--ds-spacing-inline-md); min-height: 64px; padding: var(--ds-space-300) var(--ds-spacing-inset-md); }
+.mx-row + .mx-row { border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+.mx-row__title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mx-row__amount { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mx-tile { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--ds-shape-control); background: var(--ds-surface-sunken); color: var(--ds-text-secondary); }
+.mx-tile--brand { background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+.mx-in { color: var(--ds-feedback-success-text); }
+.mx-over { color: var(--ds-feedback-danger-text); }
+
+/* Budgets */
+.mx-budget { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: var(--ds-space-100) var(--ds-spacing-inline-md); align-items: center; padding: var(--ds-space-400) var(--ds-spacing-inset-md); }
+.mx-budget + .mx-budget { border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+.mx-budget .ds-progress { grid-column: 2; }
+.mx-budget__top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 var(--ds-space-200); }
+.mx-budget__top > *, .mx-budget__note > * { white-space: nowrap; }
+.mx-budget__note { grid-column: 2; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--ds-space-200); margin: 0; }
+
+/* Transactions screen */
+#transactions .ds-segmented { box-shadow: inset 0 0 0 var(--ds-border-width-100) var(--ds-border-subtle); }
+.mx-summary { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-space-300); }
+.mx-stat { display: flex; flex-direction: column; gap: var(--ds-space-100); padding: var(--ds-space-300) var(--ds-spacing-inset-md); border-radius: var(--ds-shape-card); background: var(--ds-surface-raised); border: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+.mx-stat p { margin: 0; }
+.mx-stat__value { font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mx-day { display: flex; flex-direction: column; gap: var(--ds-space-200); }
+.mx-day[hidden] { display: none; }
+.mx-day__head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 var(--ds-space-100); }
+.mx-row[hidden] { display: none; }
+
+/* Transfer sheet screen */
+.mx-behind { position: relative; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.mx-behind__content { padding: var(--ds-space-100) var(--ds-spacing-gutter); filter: saturate(0.9); }
+.mx-sheet-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+.mx-sheet-wrap .ds-sheet { max-height: 92%; overflow-y: auto; padding-bottom: var(--ds-space-1000); }
+.mx-amount-field { display: flex; align-items: baseline; gap: var(--ds-space-100); padding: var(--ds-space-300) var(--ds-spacing-inset-md); border-radius: var(--ds-field-radius);
+  border: var(--ds-border-width-100) solid var(--ds-field-border); background: var(--ds-field-bg); }
+.mx-amount-field:focus-within { outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring-color); border-color: var(--ds-focus-ring-color); }
+.mx-amount-field[data-invalid="true"] { border-color: var(--ds-field-border-error); border-width: var(--ds-border-width-200); }
+.mx-amount-field input { flex: 1; min-width: 0; padding: 0; border: 0; background: transparent; color: var(--ds-text-primary); outline: none;
+  font: var(--ds-font-weight-bold) var(--ds-font-size-800)/1.2 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.mx-amount-field span { font: var(--ds-font-weight-semibold) var(--ds-font-size-600)/1 var(--ds-font-family-sans); color: var(--ds-text-secondary); }
+.mx-recipient { display: flex; align-items: center; gap: var(--ds-spacing-inline-md); padding: var(--ds-space-300) var(--ds-spacing-inset-md); border-radius: var(--ds-shape-card); background: var(--ds-surface-sunken); }
+.mx-recipient > div { flex: 1; min-width: 0; }
+.mx-recipient p { margin: 0; }
+.mx-fee { display: flex; align-items: center; gap: var(--ds-space-200); margin: 0; color: var(--ds-text-secondary); }
+.mx-fee .ds-icon { color: var(--ds-feedback-success-icon); }
+.mx-toast-slot { position: absolute; left: var(--ds-spacing-gutter); right: var(--ds-spacing-gutter); bottom: 96px; }
+
+@media (max-width: 1250px) { .mx-grid { grid-template-columns: repeat(2, 390px); } }
+@media (max-width: 860px) { .mx-grid { grid-template-columns: minmax(0, 390px); } }
+@media (max-width: 440px) {
+  .mx-lab { padding-inline: 0; }
+  .mx-intro { padding-inline: var(--ds-spacing-gutter); }
+  .mx-grid { grid-template-columns: minmax(0, 1fr); gap: var(--ds-spacing-stack-xl); }
+  .mx-phone { width: 100%; border-radius: 0; border-inline: 0; box-shadow: none; }
+}
+@media (max-width: 350px) {
+  .mx-amount__value { font-size: var(--ds-font-size-800); }
+  .mx-action { font-size: var(--ds-font-size-100); }
+}
+</style>
+</head>
+<body class="ds-root">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <!-- Original 24px outline icons for this design system. Stroke inherits currentColor via .ds-icon. -->
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-calendar-plus" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4M12 12.5v5M9.5 15h5"/></symbol>
+  <symbol id="ds-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.75"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-chevron-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+  <symbol id="ds-i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m9.25 9.25 5.5 5.5M14.75 9.25l-5.5 5.5"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5M12 8v.01"/></symbol>
+  <symbol id="ds-i-document" viewBox="0 0 24 24"><path d="M7 3.75h7l4 4V19a1.25 1.25 0 0 1-1.25 1.25h-9.5A1.25 1.25 0 0 1 6 19V5a1.25 1.25 0 0 1 1-1.25"/><path d="M14 3.75V8h4M9 12h6M9 15.5h6"/></symbol>
+  <symbol id="ds-i-pin" viewBox="0 0 24 24"><path d="M12 20.5s6-5.4 6-10.5a6 6 0 1 0-12 0c0 5.1 6 10.5 6 10.5Z"/><circle cx="12" cy="10" r="2.25"/></symbol>
+  <symbol id="ds-i-phone" viewBox="0 0 24 24"><rect x="7" y="3.5" width="10" height="17" rx="2.25"/><path d="M11 17.5h2"/></symbol>
+  <symbol id="ds-i-stethoscope" viewBox="0 0 24 24"><path d="M6 3.75v5a4 4 0 0 0 8 0v-5"/><path d="M10 12.75v1.75a5 5 0 0 0 10 0V13"/><circle cx="20" cy="11" r="2"/></symbol>
+  <symbol id="ds-i-eye" viewBox="0 0 24 24"><path d="M2.75 12S6.25 5.75 12 5.75 21.25 12 21.25 12 17.75 18.25 12 18.25 2.75 12 2.75 12Z"/><circle cx="12" cy="12" r="2.75"/></symbol>
+  <symbol id="ds-i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.75"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></symbol>
+  <symbol id="ds-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></symbol>
+  <symbol id="ds-i-eye-off" viewBox="0 0 24 24"><path d="M10.2 6a9.6 9.6 0 0 1 1.8-.25c5.75 0 9.25 6.25 9.25 6.25a17 17 0 0 1-2.6 3.3M6.4 7.6A16.6 16.6 0 0 0 2.75 12S6.25 18.25 12 18.25a8.8 8.8 0 0 0 4.6-1.3"/><path d="M10 10.1a2.75 2.75 0 0 0 3.9 3.9M4 4l16 16"/></symbol>
+  <symbol id="ds-i-wallet" viewBox="0 0 24 24"><path d="M18 7.5V6a1.5 1.5 0 0 0-1.5-1.5H6A2.5 2.5 0 0 0 3.5 7v10A2.5 2.5 0 0 0 6 19.5h12a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 18 7.5H6A2.5 2.5 0 0 1 3.5 5"/><path d="M15.5 13.5h.01"/></symbol>
+  <symbol id="ds-i-card" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M3.5 10h17M7 15h3"/></symbol>
+  <symbol id="ds-i-send" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+  <symbol id="ds-i-receive" viewBox="0 0 24 24"><path d="M17 7 7 17M15 17H7V9"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><rect x="5.5" y="11" width="3" height="6" rx="1"/><rect x="10.5" y="6" width="3" height="11" rx="1"/><rect x="15.5" y="9" width="3" height="8" rx="1"/></symbol>
+  <symbol id="ds-i-bell" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="ds-i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="ds-i-coffee" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v3M12 3.5v3"/></symbol>
+  <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
+  <symbol id="ds-i-bus" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="13.5" rx="2.5"/><path d="M5 11h14M8 20v-2.5M16 20v-2.5M8.5 14.5h.01M15.5 14.5h.01"/></symbol>
+</svg>
+<main class="mx-lab">
+  <header class="mx-intro ds-stack ds-stack--sm">
+    <div class="ds-split">
+      <p class="ds-text-label-sm ds-text-secondary">Design system v0.2 · ví dụ tham chiếu · dữ liệu giả định</p>
+      <button class="ds-button ds-button--secondary ds-button--sm" id="theme" type="button" aria-pressed="false"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg><span>Giao diện tối</span></button>
+    </div>
+    <h1 class="ds-text-title-lg">Ví Xanh — tiền bạc rõ ràng trong ba chạm</h1>
+    <p class="ds-text-body-lg ds-text-secondary">Ba màn hình cho ba câu hỏi: tôi còn bao nhiêu, tôi đã tiêu vào đâu, và chuyển tiền có an toàn không. Một bề mặt thương hiệu cho mỗi màn, số liệu căn cột, trạng thái luôn có chữ đi kèm màu.</p>
+  </header>
+
+  <div class="mx-grid">
+    <!-- Screen 1: overview -->
+    <article class="mx-phone" id="overview" aria-label="Màn tổng quan">
+      <div class="mx-status" aria-hidden="true"><span class="mx-status__time">9:41</span><span class="mx-status__icons"><span class="mx-signal"><i></i><i></i><i></i><i></i></span><span class="mx-battery"></span></span></div>
+      <div class="mx-screen">
+        <header class="mx-header">
+          <span class="ds-avatar" aria-hidden="true">LA</span>
+          <div class="mx-header__text">
+            <p class="ds-text-body-sm ds-text-secondary">Chào buổi sáng</p>
+            <h2 class="ds-text-title-sm">Lan Anh</h2>
+          </div>
+          <button class="ds-icon-button mx-bell" type="button" aria-label="Thông báo, 2 mục mới"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="mx-bell__dot" aria-hidden="true"></span></button>
+        </header>
+        <div class="mx-body">
+          <section class="mx-balance" aria-labelledby="balance-label">
+            <div class="mx-balance__label">
+              <h3 class="ds-text-label-md" id="balance-label">Tổng số dư</h3>
+              <button class="ds-icon-button" type="button" id="toggle-balance" aria-pressed="false" aria-label="Ẩn số dư"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-eye"/></svg></button>
+            </div>
+            <div class="ds-stack ds-stack--xs">
+              <p class="mx-amount" id="balance"><span class="mx-amount__value" data-hide>48.250.000</span><span class="mx-amount__unit">₫</span></p>
+              <p class="mx-balance__meta"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-send"/></svg><span><span data-hide>+2.150.000 ₫</span> so với cuối tháng 9</span></p>
+            </div>
+            <div class="mx-accounts mx-divider-soft">
+              <div><p class="mx-muted">Ví chính</p><p class="mx-figure" data-hide>31.200.000 ₫</p></div>
+              <div><p class="mx-muted">Tiết kiệm · 5,2%/năm</p><p class="mx-figure" data-hide>17.050.000 ₫</p></div>
+            </div>
+          </section>
+
+          <nav aria-label="Thao tác nhanh">
+            <ul class="mx-actions">
+              <li><button class="mx-action mx-action--primary" type="button" data-open-sheet><span class="mx-action__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-send"/></svg></span>Chuyển tiền</button></li>
+              <li><button class="mx-action" type="button" data-message="Mã nhận tiền đã sẵn sàng. Ví dụ không tạo mã thật."><span class="mx-action__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-receive"/></svg></span>Nhận tiền</button></li>
+              <li><button class="mx-action" type="button" data-message="Nạp tiền từ ngân hàng liên kết. Ví dụ không thực hiện giao dịch."><span class="mx-action__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-plus"/></svg></span>Nạp tiền</button></li>
+              <li><button class="mx-action" type="button" data-message="Thanh toán hóa đơn: điện, nước, internet. Ví dụ không có hóa đơn thật."><span class="mx-action__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-card"/></svg></span>Hóa đơn</button></li>
+            </ul>
+          </nav>
+
+          <section class="ds-stack ds-stack--sm" aria-labelledby="budget-title">
+            <div class="ds-section-header"><h3 class="ds-text-title-sm" id="budget-title">Ngân sách tháng 10</h3><a class="ds-link ds-text-label-md" href="#transactions">Chi tiết</a></div>
+            <ul class="mx-rows">
+              <li class="mx-budget">
+                <span class="mx-tile mx-tile--brand"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-coffee"/></svg></span>
+                <div class="mx-budget__top"><span class="ds-text-label-lg">Ăn uống</span><span class="ds-text-label-md ds-tabular">3.720.000 / 6.000.000 ₫</span></div>
+                <div class="ds-progress" role="progressbar" aria-label="Ăn uống" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-valuetext="62%, còn 2.280.000 ₫"><span class="ds-progress__bar" style="--value: 62%"></span></div>
+                <p class="mx-budget__note ds-text-body-sm ds-text-secondary"><span>Còn 2.280.000 ₫</span><span>8 ngày nữa</span></p>
+              </li>
+              <li class="mx-budget">
+                <span class="mx-tile mx-tile--brand"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bag"/></svg></span>
+                <div class="mx-budget__top"><span class="ds-text-label-lg">Mua sắm</span><span class="ds-text-label-md ds-tabular">2.640.000 / 3.000.000 ₫</span></div>
+                <div class="ds-progress ds-progress--warning" role="progressbar" aria-label="Mua sắm" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100" aria-valuetext="88%, sắp chạm giới hạn"><span class="ds-progress__bar" style="--value: 88%"></span></div>
+                <p class="mx-budget__note ds-text-body-sm ds-text-secondary"><span>Sắp chạm giới hạn</span><span>Còn 360.000 ₫</span></p>
+              </li>
+            </ul>
+          </section>
+
+          <section class="ds-stack ds-stack--sm" aria-labelledby="recent-title">
+            <div class="ds-section-header"><h3 class="ds-text-title-sm" id="recent-title">Giao dịch gần đây</h3><a class="ds-link ds-text-label-md" href="#transactions">Xem tất cả</a></div>
+            <ul class="mx-rows">
+              <li class="mx-row"><span class="mx-tile"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-coffee"/></svg></span><span><span class="mx-row__title ds-text-label-lg">Cà phê Sương Mai</span><span class="ds-text-body-sm ds-text-secondary">Ăn uống · 08:12</span></span><span class="mx-row__amount ds-text-label-lg">−65.000 ₫</span></li>
+              <li class="mx-row"><span class="mx-tile mx-tile--brand"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-receive"/></svg></span><span><span class="mx-row__title ds-text-label-lg">Lương tháng 10</span><span class="ds-text-body-sm ds-text-secondary">Thu nhập · Hôm qua</span></span><span class="mx-row__amount ds-text-label-lg mx-in">+18.500.000 ₫</span></li>
+            </ul>
+          </section>
+        </div>
+      </div>
+      <div class="mx-toast-slot"><div class="ds-toast message" role="status" hidden></div></div>
+      <nav class="ds-tab-bar" style="--_items: 4" aria-label="Điều hướng chính, màn tổng quan">
+        <a class="ds-tab-bar__item" href="#overview" aria-current="page"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-home"/></svg></span>Tổng quan</a>
+        <a class="ds-tab-bar__item" href="#transactions"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-chart"/></svg></span>Giao dịch</a>
+        <a class="ds-tab-bar__item" href="#overview"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-target"/></svg></span>Mục tiêu</a>
+        <a class="ds-tab-bar__item" href="#overview"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-user"/></svg></span>Tài khoản</a>
+      </nav>
+      <span class="mx-home-indicator" aria-hidden="true"></span>
+    </article>
+
+    <!-- Screen 2: transactions -->
+    <article class="mx-phone" id="transactions" aria-label="Màn giao dịch">
+      <div class="mx-status" aria-hidden="true"><span class="mx-status__time">9:41</span><span class="mx-status__icons"><span class="mx-signal"><i></i><i></i><i></i><i></i></span><span class="mx-battery"></span></span></div>
+      <div class="mx-screen">
+        <header class="mx-large-title"><h2 class="ds-text-display">Giao dịch</h2></header>
+        <div class="mx-body">
+          <div class="ds-stack ds-stack--sm">
+            <div class="ds-field">
+              <label class="ds-visually-hidden" for="tx-search">Tìm giao dịch</label>
+              <div class="ds-field__wrap"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-field__control" id="tx-search" type="search" placeholder="Tìm theo tên hoặc danh mục" autocomplete="off"></div>
+            </div>
+            <div class="ds-segmented" role="group" aria-label="Loại giao dịch">
+              <button class="ds-segmented__item" type="button" aria-pressed="true" data-kind="all">Tất cả</button>
+              <button class="ds-segmented__item" type="button" aria-pressed="false" data-kind="out">Chi tiêu</button>
+              <button class="ds-segmented__item" type="button" aria-pressed="false" data-kind="in">Thu nhập</button>
+            </div>
+          </div>
+          <div class="mx-summary" aria-label="Tổng tháng 10">
+            <div class="mx-stat"><p class="ds-text-body-sm ds-text-secondary">Đã chi tháng 10</p><p class="mx-stat__value">8.430.000 ₫</p></div>
+            <div class="mx-stat"><p class="ds-text-body-sm ds-text-secondary">Đã nhận tháng 10</p><p class="mx-stat__value mx-in">+18.500.000 ₫</p></div>
+          </div>
+          <div id="tx-list" class="ds-stack ds-stack--lg" aria-live="polite"></div>
+          <div class="ds-empty" id="tx-empty" hidden>
+            <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-search"/></svg></span>
+            <h3 class="ds-text-title-sm" style="color: var(--ds-text-primary)">Không tìm thấy giao dịch</h3>
+            <p class="ds-text-body-md">Thử từ khóa ngắn hơn hoặc xem tất cả loại giao dịch.</p>
+            <button class="ds-button ds-button--secondary" type="button" id="tx-reset">Xóa tìm kiếm</button>
+          </div>
+          <div class="ds-stack ds-stack--sm" id="tx-loading" role="status" aria-busy="true" aria-label="Đang tải giao dịch cũ hơn">
+            <p class="ds-text-label-md ds-text-secondary" aria-hidden="true">Đang tải tháng 9…</p>
+            <ul class="mx-rows" aria-hidden="true">
+              <li class="mx-row"><span class="ds-skeleton" style="width: 40px; height: 40px; border-radius: var(--ds-shape-control)"></span><span class="ds-stack ds-stack--xs"><span class="ds-skeleton" style="width: 62%"></span><span class="ds-skeleton" style="width: 38%"></span></span><span class="ds-skeleton" style="width: 72px"></span></li>
+              <li class="mx-row"><span class="ds-skeleton" style="width: 40px; height: 40px; border-radius: var(--ds-shape-control)"></span><span class="ds-stack ds-stack--xs"><span class="ds-skeleton" style="width: 48%"></span><span class="ds-skeleton" style="width: 30%"></span></span><span class="ds-skeleton" style="width: 64px"></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <nav class="ds-tab-bar" style="--_items: 4" aria-label="Điều hướng chính, màn giao dịch">
+        <a class="ds-tab-bar__item" href="#overview"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-home"/></svg></span>Tổng quan</a>
+        <a class="ds-tab-bar__item" href="#transactions" aria-current="page"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-chart"/></svg></span>Giao dịch</a>
+        <a class="ds-tab-bar__item" href="#transactions"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-target"/></svg></span>Mục tiêu</a>
+        <a class="ds-tab-bar__item" href="#transactions"><span class="ds-tab-bar__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-user"/></svg></span>Tài khoản</a>
+      </nav>
+      <span class="mx-home-indicator" aria-hidden="true"></span>
+    </article>
+
+    <!-- Screen 3: transfer sheet -->
+    <article class="mx-phone" id="transfer" aria-label="Màn chuyển tiền">
+      <div class="mx-status" aria-hidden="true"><span class="mx-status__time">9:41</span><span class="mx-status__icons"><span class="mx-signal"><i></i><i></i><i></i><i></i></span><span class="mx-battery"></span></span></div>
+      <div class="mx-behind">
+        <div class="mx-behind__content ds-stack ds-stack--md" aria-hidden="true" inert>
+          <div class="mx-header" style="padding-inline: 0"><span class="ds-avatar">LA</span><div class="mx-header__text"><p class="ds-text-body-sm ds-text-secondary">Chào buổi sáng</p><p class="ds-text-title-sm">Lan Anh</p></div></div>
+          <div class="mx-balance"><p class="ds-text-label-md">Tổng số dư</p><p class="mx-amount"><span class="mx-amount__value">48.250.000</span><span class="mx-amount__unit">₫</span></p></div>
+        </div>
+        <div class="mx-sheet-wrap">
+          <div class="ds-scrim" aria-hidden="true"></div>
+          <form class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" id="sheet" novalidate>
+            <span class="ds-sheet__grabber" aria-hidden="true"></span>
+            <div class="ds-sheet__header">
+              <h2 class="ds-text-title-md" id="sheet-title">Chuyển tiền</h2>
+              <button class="ds-button ds-button--tertiary ds-button--sm" type="button" id="sheet-cancel">Hủy</button>
+            </div>
+            <div class="mx-recipient">
+              <span class="ds-avatar" aria-hidden="true">MT</span>
+              <div><p class="ds-text-label-lg">Nguyễn Minh Trí</p><p class="ds-text-body-sm ds-text-secondary ds-tabular">Vietcombank · •••• 4821</p></div>
+              <button class="ds-button ds-button--tertiary ds-button--sm" type="button" data-message="Danh sách người nhận gần đây. Ví dụ chỉ có một người nhận.">Đổi</button>
+            </div>
+            <div class="ds-field">
+              <label class="ds-field__label" for="amount">Số tiền</label>
+              <div class="mx-amount-field" id="amount-wrap"><input id="amount" inputmode="numeric" autocomplete="off" value="500.000" aria-describedby="amount-hint amount-error"><span aria-hidden="true">₫</span></div>
+              <p class="ds-field__hint" id="amount-hint">Số dư khả dụng: <span class="ds-tabular">31.200.000 ₫</span></p>
+              <p class="ds-field__error" id="amount-error" hidden><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-alert"/></svg><span id="amount-error-text"></span></p>
+            </div>
+            <div class="ds-cluster" role="group" aria-label="Số tiền gợi ý">
+              <button class="ds-chip" type="button" aria-pressed="false" data-amount="200000">200.000</button>
+              <button class="ds-chip" type="button" aria-pressed="true" data-amount="500000">500.000</button>
+              <button class="ds-chip" type="button" aria-pressed="false" data-amount="1000000">1.000.000</button>
+            </div>
+            <div class="ds-field">
+              <label class="ds-field__label" for="note">Lời nhắn <span class="ds-text-secondary">(không bắt buộc)</span></label>
+              <input class="ds-field__control" id="note" maxlength="60" placeholder="Ví dụ: Tiền ăn trưa thứ Sáu">
+            </div>
+            <label class="ds-split"><span class="ds-text-label-lg">Lưu vào danh bạ người nhận</span><span class="ds-switch"><input type="checkbox" role="switch" id="save-contact" checked><span class="ds-switch__thumb" aria-hidden="true"></span></span></label>
+            <p class="mx-fee ds-text-body-sm"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Miễn phí · tiền đến trong vài giây</p>
+            <button class="ds-button ds-button--primary ds-button--lg ds-button--block" type="submit" id="send">Chuyển 500.000 ₫</button>
+            <div class="ds-banner ds-banner--success" role="status" id="sent" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg><div><p class="ds-text-label-lg">Đã kiểm tra xong</p><p class="ds-text-body-sm">Ví dụ dừng trước bước xác thực. Không có tiền nào được chuyển.</p></div></div>
+          </form>
+        </div>
+      </div>
+      <span class="mx-home-indicator" aria-hidden="true"></span>
+    </article>
+  </div>
+</main>
+<script>
+const fmt = n => n.toLocaleString('vi-VN');
+const icon = (id, cls = '') => `<svg class="ds-icon ${cls}" aria-hidden="true"><use href="#ds-i-${id}"/></svg>`;
+
+// Theme
+const themeBtn = document.querySelector('#theme');
+function setTheme(dark) {
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  themeBtn.setAttribute('aria-pressed', String(dark));
+  themeBtn.querySelector('span').textContent = dark ? 'Giao diện sáng' : 'Giao diện tối';
+  themeBtn.querySelector('use').setAttribute('href', dark ? '#ds-i-sun' : '#ds-i-moon');
+}
+themeBtn.onclick = () => setTheme(document.documentElement.dataset.theme !== 'dark');
+setTheme(matchMedia('(prefers-color-scheme: dark)').matches);
+
+// Feedback toast on the overview
+const toast = document.querySelector('#overview .message');
+let toastTimer;
+function say(text) {
+  toast.textContent = text; toast.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
+}
+for (const el of document.querySelectorAll('#overview [data-message]')) el.addEventListener('click', () => say(el.dataset.message));
+for (const el of document.querySelectorAll('[data-open-sheet]')) el.addEventListener('click', () => {
+  document.querySelector('#transfer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.querySelector('#amount').focus({ preventScroll: true });
+});
+
+// Hide balance
+const hideBtn = document.querySelector('#toggle-balance');
+hideBtn.addEventListener('click', () => {
+  const hidden = hideBtn.getAttribute('aria-pressed') !== 'true';
+  hideBtn.setAttribute('aria-pressed', String(hidden));
+  hideBtn.setAttribute('aria-label', hidden ? 'Hiện số dư' : 'Ẩn số dư');
+  hideBtn.querySelector('use').setAttribute('href', hidden ? '#ds-i-eye-off' : '#ds-i-eye');
+  for (const el of document.querySelectorAll('#overview [data-hide]')) {
+    el.dataset.value ??= el.textContent;
+    el.textContent = hidden ? '••••••' : el.dataset.value;
+  }
+});
+
+// Transactions
+const tx = [
+  { day: 'Hôm nay, 23/10', name: 'Cà phê Sương Mai', cat: 'Ăn uống', time: '08:12', amount: -65000, icon: 'coffee' },
+  { day: 'Hôm nay, 23/10', name: 'Xe buýt tuyến 05', cat: 'Di chuyển', time: '07:40', amount: -7000, icon: 'bus' },
+  { day: 'Hôm qua, 22/10', name: 'Lương tháng 10', cat: 'Thu nhập', time: '17:05', amount: 18500000, icon: 'receive' },
+  { day: 'Hôm qua, 22/10', name: 'Siêu thị Hòa Bình', cat: 'Mua sắm', time: '19:30', amount: -842000, icon: 'bag' },
+  { day: 'Thứ Ba, 21/10', name: 'Chuyển cho Minh Trí', cat: 'Chuyển tiền', time: '12:15', amount: -500000, icon: 'send' },
+  { day: 'Thứ Ba, 21/10', name: 'Cơm trưa văn phòng', cat: 'Ăn uống', time: '11:50', amount: -55000, icon: 'coffee' },
+];
+let kind = 'all';
+const list = document.querySelector('#tx-list');
+const empty = document.querySelector('#tx-empty');
+const search = document.querySelector('#tx-search');
+const signed = n => (n > 0 ? '+' : '−') + fmt(Math.abs(n)) + ' ₫';
+function renderTx() {
+  const q = search.value.trim().toLocaleLowerCase('vi');
+  const items = tx.filter(t => (kind === 'all' || (kind === 'in') === (t.amount > 0)) &&
+    (t.name + ' ' + t.cat).toLocaleLowerCase('vi').includes(q));
+  const days = [...new Set(items.map(t => t.day))];
+  list.innerHTML = days.map(day => {
+    const rows = items.filter(t => t.day === day);
+    const total = rows.reduce((s, t) => s + t.amount, 0);
+    return `<section class="mx-day" aria-label="${day}">
+      <div class="mx-day__head"><h3 class="ds-text-label-md ds-text-secondary">${day}</h3><span class="ds-text-label-md ds-text-secondary ds-tabular">${signed(total)}</span></div>
+      <ul class="mx-rows">${rows.map(t => `<li class="mx-row">
+        <span class="mx-tile${t.amount > 0 ? ' mx-tile--brand' : ''}">${icon(t.icon)}</span>
+        <span><span class="mx-row__title ds-text-label-lg">${t.name}</span><span class="ds-text-body-sm ds-text-secondary">${t.cat} · ${t.time}</span></span>
+        <span class="mx-row__amount ds-text-label-lg${t.amount > 0 ? ' mx-in' : ''}">${signed(t.amount)}</span></li>`).join('')}</ul></section>`;
+  }).join('');
+  empty.hidden = items.length > 0;
+  document.querySelector('#tx-loading').hidden = items.length === 0;
+}
+for (const b of document.querySelectorAll('[data-kind]')) b.addEventListener('click', () => {
+  kind = b.dataset.kind;
+  for (const o of document.querySelectorAll('[data-kind]')) o.setAttribute('aria-pressed', String(o === b));
+  renderTx();
+});
+search.addEventListener('input', renderTx);
+document.querySelector('#tx-reset').addEventListener('click', () => { search.value = ''; kind = 'all';
+  for (const o of document.querySelectorAll('[data-kind]')) o.setAttribute('aria-pressed', String(o.dataset.kind === 'all'));
+  renderTx(); search.focus(); });
+renderTx();
+
+// Transfer sheet
+const available = 31200000;
+const amountInput = document.querySelector('#amount');
+const amountWrap = document.querySelector('#amount-wrap');
+const amountError = document.querySelector('#amount-error');
+const sendBtn = document.querySelector('#send');
+const sent = document.querySelector('#sent');
+const parse = v => Number(String(v).replace(/[^\d]/g, '')) || 0;
+function syncAmount({ validate = false } = {}) {
+  const n = parse(amountInput.value);
+  amountInput.value = n ? fmt(n) : '';
+  sendBtn.textContent = n ? `Chuyển ${fmt(n)} ₫` : 'Nhập số tiền';
+  for (const c of document.querySelectorAll('[data-amount]')) c.setAttribute('aria-pressed', String(Number(c.dataset.amount) === n));
+  let msg = '';
+  if (validate || amountWrap.dataset.invalid === 'true') {
+    if (!n) msg = 'Nhập số tiền muốn chuyển.';
+    else if (n < 10000) msg = 'Số tiền tối thiểu là 10.000 ₫.';
+    else if (n > available) msg = `Vượt số dư khả dụng ${fmt(available)} ₫. Nạp thêm hoặc giảm số tiền.`;
+  }
+  amountWrap.dataset.invalid = String(Boolean(msg));
+  amountInput.setAttribute('aria-invalid', String(Boolean(msg)));
+  amountError.hidden = !msg;
+  document.querySelector('#amount-error-text').textContent = msg;
+  return !msg;
+}
+amountInput.addEventListener('input', () => { sent.hidden = true; syncAmount(); });
+for (const c of document.querySelectorAll('[data-amount]')) c.addEventListener('click', () => {
+  amountInput.value = c.dataset.amount; sent.hidden = true; syncAmount();
+});
+document.querySelector('#sheet').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!syncAmount({ validate: true })) { amountInput.focus(); return; }
+  sent.hidden = false;
+});
+document.querySelector('#sheet-cancel').addEventListener('click', () => {
+  amountInput.value = '500000'; document.querySelector('#note').value = ''; sent.hidden = true;
+  amountWrap.dataset.invalid = 'false'; syncAmount();
+});
+syncAmount();
+</script>
+</body>
+</html>
