@@ -187,7 +187,9 @@ def test_sentry_specialists_use_canonical_composer_on_broader_surfaces(surface: 
     ).to_context()
     context["change_surface"] = surface
     plan = _planner().plan(context)
-    assert plan.id == ("page-ui-work" if surface == "PAGE" else "professional-website-redesign")
+    # A dashboard that is itself the work object routes to the product-UI flow on any broad surface;
+    # specialist composition must still apply there.
+    assert plan.id == "web-app-dashboard"
     for stage in plan.stages:
         assert len(stage.skills) == len(set(stage.skills))
         assert set(stage.mandatory_skills).isdisjoint(stage.jit_skills)
