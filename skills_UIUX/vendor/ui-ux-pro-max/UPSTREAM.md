@@ -15,3 +15,14 @@
 ## Update rule
 
 Do not float on upstream `main`. Review a new immutable commit, inspect license/provenance/data/search changes, update this lock, run target validators + vendor smoke, and record migration impact before promotion.
+
+## License notes (10/2026)
+
+- The package is MIT (© 2024 Next Level Builder); keep its `LICENSE` with any redistribution.
+- `skills/ui-styling/LICENSE.txt` is the full Apache-2.0 text with a blank copyright line and
+  appears derived from Anthropic's canvas-design skill, while its `SKILL.md` says MIT. This
+  repository treats `ui-styling` as Apache-2.0, the stricter reading of the two permissive terms.
+  The vendored files are left unmodified.
+- `skills/ui-styling/canvas-fonts/` holds 29 OFL-1.1 font families. `InstrumentSerif-OFL.txt` was
+  missing upstream and was added from https://github.com/Instrument/instrument-serif to satisfy the
+  OFL notice requirement.
