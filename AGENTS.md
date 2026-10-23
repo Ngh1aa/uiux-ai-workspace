@@ -348,7 +348,14 @@ Do not:
 - use average scores to hide mandatory failures;
 - turn UNKNOWN into PASS.
 
-## 19. Optimization order
+## 19. Third-party content and licenses
+
+Before copying any file you did not write, check its license and the project's third-party notices.
+Never copy or adapt content whose terms forbid redistribution or derivative works (for example
+source-available or proprietary upstream files) into the project, even when it is available in a
+submodule or reference folder. Keep upstream files unmodified in their submodule or vendor location.
+
+## 20. Optimization order
 
 Optimize in this order:
 
