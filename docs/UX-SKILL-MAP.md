@@ -1,6 +1,6 @@
 # UX skill map: one owner per decision
 
-The library has 117 skills. Many UX skills look alike by name. This map says which skill
+The library has 116 skills (`assistive-technology-testing` was merged into `accessibility-conformance-evaluation` in 10/2026). Many UX skills look alike by name. This map says which skill
 **owns** each UX decision, so humans and agents load one skill instead of five.
 It does not delete or merge skills; it routes between them.
 
@@ -47,6 +47,12 @@ It does not delete or merge skills; it routes between them.
 | Layout order | `journey-driven-content-and-layout` | Content/marketing page sections | `ux-structure-and-flow-design` | App screens and task flows |
 | States | `state-feedback-and-error-recovery` | Any platform | `mobile-navigation-and-state-ux` | Native-only concerns (back, permissions, interruptions) |
 | Brand | `brand-recognition-validation` | Research protocol: do people recognise it | `brand-recognition-and-consistency-qa` | QA: do all screens look like one brand |
+| Accessibility | `accessibility` | Building and reviewing accessible UI day to day | `accessibility-conformance-evaluation` | Formal WCAG evaluation, release gates, statements, and manual assistive-technology testing (merged owner) |
+| UI quality | `ui-craft-and-visual-qa` | Judging rendered craft and running the polish pass | `ui-improvement` | Orchestrating a fix of an existing UI end to end; `prototype-visual-experience-qa` for demo-ready HTML prototypes |
+| Motion | `motion-and-microinteractions` | Deciding what should move and why | `motion-component-intelligence` | Retrieving and adapting patterns from the pinned Motion Primitives corpus |
+| References | `reference-analysis-and-design-to-code` | Turning a screenshot or Figma reference into original code | `reference-extraction-and-design-audit` | Extracting a token/component inventory from a site or the current project |
+| Design system | `design-system-and-components` | Token and component decisions (flow `design-system-work`) | `design-system-governance-and-adoption` | Versioning, deprecation, contribution and adoption |
+| Dashboards | `data-visualization-and-dashboard-ux` | Which charts and KPIs, in what order (flow `web-app-dashboard`) | `data-tables-and-enterprise-ux` | Dense tables, bulk actions, filters and saved views |
 
 ## Minimum sets
 

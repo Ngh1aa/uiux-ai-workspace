@@ -3,7 +3,8 @@
   "description": "Shared specialist skill composition for page and full-product flows. Rules are additive, evidence-driven, and scoped by flow plus Task Contract context.",
   "flows": [
     "page-ui-work",
-    "professional-website-redesign"
+    "professional-website-redesign",
+    "web-app-dashboard"
   ],
   "rules": [
     {

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "design-system-audit",
+  "description": "Read-only review of a design system: inventory, consistency, accessibility and adoption findings without changing tokens or components.",
+  "match": {
+    "priority": 128,
+    "platform_families": ["web", "mobile_app"],
+    "features": ["design-system"],
+    "intents": ["audit", "review", "research", "validate", "qa"]
+  },
+  "stages": [
+    {
+      "id": "research",
+      "agent": "research",
+      "purpose": "Extract the current token and component inventory with sources, consumers and inconsistencies.",
+      "required_skills": ["project-context", "design-system-and-components", "reference-extraction-and-design-audit", "design-system-governance-and-adoption"],
+      "conditional_skills": [
+        {"when": {"platform_family": "mobile_app"}, "skills": ["mobile-design-system-and-handoff"]}
+      ],
+      "gates": [
+        {"id": "audit-inventory", "require": "token sources, component list, themes, platforms and consumers are recorded with file or capture references; missing evidence stays UNKNOWN"}
+      ]
+    },
+    {
+      "id": "qa",
+      "agent": "qa",
+      "purpose": "Evaluate rendered components and states against the quality-bar rubric, contrast and accessibility requirements, and report prioritised findings.",
+      "required_skills": ["ui-craft-and-visual-qa", "accessibility", "visual-regression-and-design-drift", "design-critique-and-rationale"],
+      "conditional_skills": [
+        {"when": {"validation_lane": ["evidence-led", "production-learning"]}, "skills": ["accessibility-conformance-evaluation"]}
+      ],
+      "gates": [
+        {"id": "audit-findings", "require": "findings name the token or component, the affected states and consumers, severity, evidence and a recommended owner-level fix"},
+        {"id": "truthful-completion", "require": "the audit states which components, themes and platforms were inspected and does not claim conformance or adoption it did not measure"}
+      ]
+    }
+  ],
+  "replanning": {
+    "max_replans": 2,
+    "triggers": ["GATE_FAIL", "INVALID_ASSUMPTION", "TOOL_FAILURE"],
+    "policies": [
+      {"when": {"signal": "GATE_FAIL", "current_stage": "qa"}, "reason": "Findings lack evidence; return to the inventory.", "target_stage": "research"},
+      {"when": {"signal": "INVALID_ASSUMPTION"}, "reason": "Reinspect token sources and consumers.", "target_stage": "research"}
+    ]
+  }
+}

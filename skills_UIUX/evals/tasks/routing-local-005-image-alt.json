@@ -13,7 +13,6 @@
     ],
     "forbidden_without_trigger": [
       "accessibility-conformance-evaluation",
-      "assistive-technology-testing",
       "asset-media-and-art-direction",
       "inclusive-design-and-cognitive-accessibility"
     ],

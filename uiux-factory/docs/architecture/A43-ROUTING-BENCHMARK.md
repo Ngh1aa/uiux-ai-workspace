@@ -62,7 +62,7 @@ The Brain benchmark does not implement its own classifier, resolver or skill rou
 
 ## 3. Corpus coverage
 
-`routing-v1.json` contains 32 representative cases and covers all canonical change surfaces:
+`routing-v1.json` (version 1.1.0) contains 39 representative cases and covers all canonical change surfaces:
 
 ```text
 MICRO
@@ -126,7 +126,7 @@ The loader rejects:
 - corpora with fewer than 20 cases;
 - corpora that do not cover all five canonical change surfaces.
 
-The current corpus intentionally exceeds the minimum with 32 cases.
+The current corpus intentionally exceeds the minimum with 39 cases. Version 1.1.0 added design-system work/audit, product dashboards and their negative cases (design system as a reference, a marketing site that mentions analytics).
 
 ## 6. Read-only guarantee
 

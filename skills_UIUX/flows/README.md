@@ -29,6 +29,8 @@ Mobile browser prototypes use `mobile-web-preview` (research/design/implementati
 - `existing-ui-improvement` — focused fixes/improvements to existing UI surfaces.
 - `page-ui-work` — page/route-sized work.
 - `professional-website-redesign` — broad professional website/product build/rebuild/redesign.
+- `design-system-work` — create, extend or refactor a design system when the system itself is the work object (feature `design-system`); `design-system-audit` is its read-only twin. Applying an existing design system to a page does not trigger it.
+- `web-app-dashboard` — dashboards, admin consoles, back-office and internal tools when the dashboard is the work object (feature `app-dashboard`); a product build that merely includes a dashboard keeps the broader flow, and MICRO/FOCUSED edits keep their small lanes.
 - `portfolio-career-system` — broad portfolio/career-positioning work where recruiter narrative, case evidence, CV/identity/link hygiene, AI workflow proof and source claims must be evaluated together.
 
 `portfolio-career-system` has higher specificity/priority for portfolio + PRODUCT/REDESIGN surfaces. A narrow portfolio request such as “fix the hero” remains focused and does not invoke the full career system.
