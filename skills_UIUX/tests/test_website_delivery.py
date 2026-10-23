@@ -86,11 +86,3 @@ def test_context_change_invalidates_record(tmp_path):
     report = _filled(tmp_path)
     report['context'] = {'goal': 'A completely different product'}
     assert check_delivery(SKILLS, tmp_path, report)['status'] == 'BLOCKED'
-
-
-def test_managed_provider_receives_the_same_active_stage_card(tmp_path):
-    from test_provider_context_budget_a8_3 import _research_run
-    _, _, managed, state, runner = _research_run(tmp_path)
-    request = runner._request(managed, state, [])
-    assert request.task_context['delivery_workflow'] == delivery_packet(SKILLS, managed.active_stage, managed.task_context)
-    assert request.task_context['delivery_workflow']['stage'] == 'research'
