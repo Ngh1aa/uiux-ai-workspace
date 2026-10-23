@@ -19,7 +19,7 @@ On a phone, show the usable app viewport; on desktop, a centered phone-sized pre
 
 ## Browser QA and delivery
 
-Reuse existing target tests and `uiux-factory/qa` browser/state/focus tooling. Verify primary tasks and relevant recovery, direct state URLs, reload/Back, small phones, desktop frame, assets and console/network errors. Serve the built output under the intended project subpath, not just `/`; GitHub Pages does not supply arbitrary SPA route rewrites or a backend.
+Reuse existing target tests and browser tooling (Playwright, axe) for state/focus checks. Verify primary tasks and relevant recovery, direct state URLs, reload/Back, small phones, desktop frame, assets and console/network errors. Serve the built output under the intended project subpath, not just `/`; GitHub Pages does not supply arbitrary SPA route rewrites or a backend.
 
 Turn explicit UX thresholds into a criterion/evidence matrix. Separate implemented behavior, automated checks, inspected images, native/assistive-technology checks and real participant outcomes. A route count or green build cannot substitute any missing category. Retain exact failures and retest results. Check browser automation capabilities before claiming offline reload or native permission coverage; an unsupported runner is NOT_RUN, not a successful product check. Measure load/interaction under declared network, CPU and cache conditions; local transition timing is not field INP. Inspect rendered states even when automated accessibility reports no violations.
 

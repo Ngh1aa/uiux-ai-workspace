@@ -6,8 +6,8 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / 'uiux-factory'))
-from core.skills.design_decisions import DesignDecisions, check_design_file
+sys.path.insert(0, str(ROOT / 'skills_UIUX'))
+from designlib.design_decisions import DesignDecisions, check_design_file
 
 
 def main():

@@ -18,8 +18,6 @@ jobs:
         run: node --check ui-craft-and-visual-qa/scripts/elementary-visual-integrity.mjs
       - name: Validate V5 profiles, packs, project configs, evals and resources
         run: python scripts/validate-v2.py
-      - name: Validate agent runtime foundation
-        run: python -B scripts/validate-runtime-foundation.py
       - name: Validate vendored design intelligence
         run: python scripts/validate-vendor-uiux-pro-max.py
       - name: Smoke source design-intelligence retrieval

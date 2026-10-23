@@ -1,0 +1,79 @@
+name: Checks
+
+# Hai job này mang đúng tên mà ruleset "Protect main" yêu cầu (foundation, release-candidate),
+# nên chạy ở mọi push và pull request, không lọc theo đường dẫn.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    name: foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: skills_UIUX
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Install test dependencies
+        run: python -m pip install "pytest>=8,<9" "pydantic>=2.5.3,<3"
+      - name: Validate SKILL.md structure
+        run: python scripts/validate-skills.py
+      - name: Validate flows, profiles, packs, project configs, evals and resource links
+        run: python scripts/validate-v2.py
+      - name: Validate vendored design intelligence
+        run: python scripts/validate-vendor-uiux-pro-max.py
+      - name: Visual integrity runner syntax
+        run: node --check ui-craft-and-visual-qa/scripts/elementary-visual-integrity.mjs
+      - name: Smoke design-intelligence retrieval
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -B design-intelligence-retrieval/scripts/query.py "education admissions mobile" --design-system > "$RUNNER_TEMP/di.txt"
+          test -s "$RUNNER_TEMP/di.txt"
+      - name: Dry-run installers
+        run: |
+          python scripts/install-profile.py professional-core --target "$RUNNER_TEMP/profile" --dry-run
+          python scripts/install-project.py examples/projects/qtsc --dry-run
+      - name: Eval harness smoke
+        run: python scripts/eval-harness.py smoke
+      - name: Design checker tests
+        run: python -m pytest -q tests
+      - name: Internal Markdown links resolve
+        working-directory: .
+        run: python scripts/check-links.py
+
+  release-candidate:
+    name: release-candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install "pytest>=8,<9"
+      - name: Design system generated files are current
+        run: python design-system/scripts/build.py --check
+      - name: Validate tokens, layering, contrast and component CSS
+        run: python design-system/scripts/validate.py --report
+      - name: Design system regression and negative tests
+        run: python -m pytest -q design-system/tests

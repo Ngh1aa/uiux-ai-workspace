@@ -18,11 +18,11 @@ KNOWLEDGE
 
 MEMORY
 = what happened in a particular project/run
-= owners: core/brain_os/memory_contracts.py + core/memory/
+= owners: ghi chú của từng dự án (ví dụ bài học sau mỗi lần thiết kế)
 
 EVIDENCE
 = current observed/provenance-bearing truth used by runtime evaluation/gates
-= owners: core/runtime/flow_os/evidence.py + core/provenance/ + uiux-factory/qa/
+= owners: kiểm tra trực tiếp trên màn đã render (screenshot, a11y)
 ```
 
 Retrieved knowledge remains advisory. It never becomes trusted current-run evidence merely because it is curated, retrieved or high-confidence.
@@ -101,12 +101,7 @@ release_effect = none
 
 ## Retrieval
 
-Canonical implementation:
-
-```text
-uiux-factory/core/brain_os/knowledge_retrieval.py
-uiux-factory/core/brain_os/adapters/knowledge_context.py
-```
+Bộ truy xuất tự động trước đây nằm trong `uiux-factory/` (đã gỡ). Claude đọc trực tiếp `index.json` và các file trong `records/` khi cần.
 
 Retrieval is metadata-first, deterministic, post-flow-selection, provenance-bearing, context-bounded and vector-free. Domain and stage constraints are hard filters when both query and record declare them. Every delivered hit preserves source/content provenance and explicit truncation state.
 
@@ -148,13 +143,7 @@ The GenAI/NIST candidate remains `HOLD_FRESHNESS_REVIEW`; EV promotion does not 
 
 A50.4 through A50.10B contain topology-bound evaluations from the pre-EV-promotion three-record world. Their scripts, packets, ledgers and tests remain in the repository as audit evidence, but active CI does not reinterpret those historical decisions against the new four-record topology.
 
-Post-promotion canonical truth is owned by:
-
-```text
-uiux-factory/benchmarks/knowledge-canonical-state-v2.json
-uiux-factory/core/benchmarks/knowledge_ev_canonical_apply.py
-uiux-factory/scripts/validate_knowledge_ev_canonical_apply.py
-```
+Post-promotion canonical truth is recorded in `index.json` and `records/`.
 
 ## No vector database
 

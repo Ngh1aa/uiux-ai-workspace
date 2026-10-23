@@ -117,25 +117,9 @@ original_design     → spec/quality-rubric gate
 
 Machine pixel metrics are browser-output heuristics. They do not replace semantic review or human visual veto.
 
-## Four-profile benchmark
+## Benchmark và verifier
 
-Run from `uiux-factory/`:
-
-```bash
-python scripts/run_prompt_os_v1_benchmark.py
-```
-
-The benchmark verifies all four profiles and prevents regressions such as `reference exists => clone` or negated wording such as `nothing to preserve` being misclassified.
-
-## Release verifier
-
-Run from `uiux-factory/`:
-
-```bash
-python scripts/verify_prompt_os_v1.py
-```
-
-The verifier checks the stable v1 capability manifest, required source/docs/contracts, profile set, pipeline ordering, canonical outputs and four-profile benchmark.
+Công cụ chạy benchmark/verifier của Prompt OS nằm trong `uiux-factory/` đã được gỡ khỏi `main`; bản gốc còn ở nhánh `archive/v1-truoc-khi-gon`.
 
 ## v1 limitations
 
