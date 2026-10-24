@@ -14,6 +14,8 @@
  *   --format png|jpeg     định dạng ảnh chụp (mặc định png; jpeg nhẹ hơn để lưu vào repo)
  *   --name <tên>          tên gốc của file ảnh (mặc định theo tên file trang)
  *   --json <file>         ghi kết quả dạng JSON
+ *   --screen <selector>   khi trang không có data-screen: soát mỗi phần tử khớp selector như một màn
+ *                         (ví dụ --screen .screen cho file artboard của canvas thiết kế)
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
  * data-screen thì cả trang là một màn.
@@ -32,6 +34,15 @@
  *   - dòng cuối của một đoạn chỉ còn một chữ
  *   - chữ cách mép màn dưới 12 px trên màn hẹp (≤ 600 px)
  *
+ * Ngoại lệ có chủ đích: gắn data-taste-skip="target radius …" (hoặc "all") lên phần tử, kèm lý do
+ * trong ghi chú giao. Script bỏ qua đúng các quy tắc đó trong phần tử ấy và con của nó.
+ *
+ * Script hiểu một số mẫu hợp lệ để không báo nhầm:
+ *   - vùng chạm mở rộng bằng ::before/::after định vị tuyệt đối được tính vào vùng chạm
+ *   - chữ nằm trong khung cuộn ngang (overflow-x: auto/scroll) không bị coi là bị cắt hay sát mép
+ *   - khung cuộn ngang tràn sát mép màn có chủ đích (lề âm) không bị coi là tràn ngang
+ *   - ô nhập (input, textarea, role="textbox", role="combobox") không tính vào kiểm tra bo góc card
+ *
  * Đây là tín hiệu tự động, không thay việc nhìn ảnh chụp và không phải bằng chứng đạt WCAG.
  * Cần Playwright: đặt NODE_PATH tới thư mục node_modules có playwright, hoặc cài playwright.
  */
@@ -47,7 +58,7 @@ const TYPES = {
 };
 
 function parseArgs(argv) {
-  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '', format: 'png', name: '' };
+  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '', format: 'png', name: '', screen: '' };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     const next = () => {
@@ -63,6 +74,7 @@ function parseArgs(argv) {
     else if (arg === '--json') opts.json = path.resolve(next());
     else if (arg === '--format') opts.format = next();
     else if (arg === '--name') opts.name = next();
+    else if (arg === '--screen') opts.screen = next();
     else if (arg === '-h' || arg === '--help') opts.help = true;
     else if (arg.startsWith('--')) throw new Error(`không hiểu tuỳ chọn ${arg}`);
     else opts.pages.push(arg);
@@ -90,7 +102,7 @@ function serve(root) {
 }
 
 /* Runs inside the page. Returns one entry per screen. */
-function auditInPage() {
+function auditInPage(screenSelector) {
   const canvas = document.createElement('canvas');
   canvas.width = 1;
   canvas.height = 1;
@@ -209,11 +221,42 @@ function auditInPage() {
   const INTERACTIVE = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [role="tab"], [role="switch"], [role="checkbox"], [role="radio"], [role="link"]';
   const CONTROL = 'button, input, select, textarea, a.ds-button, [role="button"], [role="switch"], [role="tab"]';
 
-  const roots = [...document.querySelectorAll('[data-screen]')].filter(visible);
-  const screens = roots.length ? roots : [document.body];
+  const skipped = (el, rule) => {
+    const host = el.closest('[data-taste-skip]');
+    if (!host) return false;
+    const list = host.getAttribute('data-taste-skip').split(/[\s,]+/);
+    return list.includes(rule) || list.includes('all');
+  };
+  // Khung cuộn ngang thật (overflow-x auto/scroll): nội dung bên trong vẫn với tới được bằng cách cuộn.
+  const hScroller = (n) => ['auto', 'scroll'].includes(getComputedStyle(n).overflowX);
+  const inHScroller = (el, stop) => {
+    for (let n = el.parentElement; n && n !== stop; n = n.parentElement) if (hScroller(n) && n.scrollWidth > n.clientWidth + 1) return true;
+    return false;
+  };
+  // Vùng chạm gồm cả ::before/::after định vị tuyệt đối dùng để nới vùng bấm.
+  const hitRect = (el) => {
+    const r = el.getBoundingClientRect();
+    let { left, top, right, bottom } = r;
+    if (getComputedStyle(el).position !== 'static') {
+      for (const pseudo of ['::before', '::after']) {
+        const ps = getComputedStyle(el, pseudo);
+        if (!ps.content || ps.content === 'none' || ps.content === 'normal' || ps.position !== 'absolute' || ps.display === 'none' || ps.pointerEvents === 'none') continue;
+        const px = (v) => (v && v.endsWith('px') ? parseFloat(v) : null);
+        const [pl, pt, pr, pb] = [px(ps.left), px(ps.top), px(ps.right), px(ps.bottom)];
+        if (pl !== null && pr !== null) { left = Math.min(left, r.left + pl); right = Math.max(right, r.right - pr); }
+        if (pt !== null && pb !== null) { top = Math.min(top, r.top + pt); bottom = Math.max(bottom, r.bottom - pb); }
+      }
+    }
+    return { width: right - left, height: bottom - top, extended: right - left > r.width + 0.5 || bottom - top > r.height + 0.5 };
+  };
 
-  return screens.map((root) => {
-    const name = root === document.body ? (document.title || 'Trang') : root.getAttribute('data-screen');
+  const roots = [...document.querySelectorAll('[data-screen]')].filter(visible);
+  const picked = !roots.length && screenSelector ? [...document.querySelectorAll(screenSelector)].filter(visible) : [];
+  const screens = roots.length ? roots : picked.length ? picked : [document.body];
+
+  return screens.map((root, index) => {
+    const name = root.hasAttribute('data-screen') ? root.getAttribute('data-screen')
+      : `${document.title || 'Trang'}${picked.length > 1 ? ` #${index + 1}` : ''}`;
     const errors = [];
     const warnings = [];
     const all = [root, ...root.querySelectorAll('*')].filter(visible);
@@ -246,13 +289,13 @@ function auditInPage() {
           const large = size >= 24 || (size >= 18.66 && Number(st.fontWeight) >= 700);
           const need = large ? 3 : 4.5;
           const got = ratio(shown, bg);
-          if (got + 0.005 < need) {
+          if (got + 0.005 < need && !skipped(el, 'contrast')) {
             errors.push({ rule: 'contrast', message: `Tương phản ${got.toFixed(2)}:1 < ${need}:1 ở ${describe(el)} (${hex(shown)} trên ${hex(bg)})` });
           }
         }
         // 3. Nhãn ngắn bị gãy dòng
         const full = (el.textContent || '').replace(/\s+/g, ' ').trim();
-        if (full.length <= 24 && text.length >= 2 && lineCount(el) > 1) {
+        if (full.length <= 24 && text.length >= 2 && lineCount(el) > 1 && !skipped(el, 'wrap')) {
           errors.push({ rule: 'wrap', message: `Nhãn ngắn bị gãy dòng: ${describe(el)}` });
         }
         // Dòng cuối chỉ còn một chữ
@@ -267,8 +310,9 @@ function auditInPage() {
         // Chữ bị khung cha (overflow hidden/clip) cắt mất mà không có dấu …
         if (st.textOverflow !== 'ellipsis') {
           const box = el.getBoundingClientRect();
-          for (let n = el.parentElement; n && n !== root.parentElement; n = n.parentElement) {
+          for (let n = el.parentElement; n && n !== root.parentElement && !skipped(el, 'clipped'); n = n.parentElement) {
             const ns = getComputedStyle(n);
+            if (['auto', 'scroll'].includes(ns.overflowX)) break;
             if (!['hidden', 'clip'].includes(ns.overflowX)) continue;
             const nr = n.getBoundingClientRect();
             if (nr.width <= 1) break;
@@ -280,7 +324,8 @@ function auditInPage() {
         // Chữ sát mép màn
         const tr = el.getBoundingClientRect();
         const edge = Math.min(tr.left - rootRect.left, rootRect.right - tr.right);
-        if (rootRect.width <= 600 && edge < 12 && !el.closest('nav, [role="tablist"]') && getComputedStyle(el).position !== 'fixed') {
+        if (rootRect.width <= 600 && edge < 12 && !el.closest('nav, [role="tablist"]') && getComputedStyle(el).position !== 'fixed'
+          && !inHScroller(el, root) && !skipped(el, 'edge')) {
           warnings.push({ rule: 'edge', message: `Chữ cách mép màn ${Math.max(0, Math.round(edge))}px (nên ≥ 16px): ${describe(el)}` });
         }
         // Chữ bị cắt bằng dấu …
@@ -293,16 +338,27 @@ function auditInPage() {
       const clips = ['visible', 'clip'].includes(st.overflowX);
       if (clips && el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0 && el.textContent.trim()) {
         const inner = [...el.children].some((c) => c.scrollWidth > c.clientWidth + 1 && getComputedStyle(c).overflowX === st.overflowX);
-        if (!inner) errors.push({ rule: 'overflow', message: `Nội dung tràn ngang ${el.scrollWidth - el.clientWidth}px: ${describe(el)}` });
+        // Khung cuộn ngang cố ý tràn sát mép màn (lề âm) mà vẫn nằm trong màn thì không tính là tràn.
+        const er = el.getBoundingClientRect();
+        const sticking = [...el.children].filter((c) => {
+          const cr = c.getBoundingClientRect();
+          return cr.width > 0 && (cr.right > er.right + 1 || cr.left < er.left - 1);
+        });
+        const bleed = sticking.length > 0 && sticking.every((c) => {
+          const cr = c.getBoundingClientRect();
+          return hScroller(c) && cr.left >= rootRect.left - 1 && cr.right <= rootRect.right + 1;
+        });
+        if (!inner && !bleed && !skipped(el, 'overflow')) errors.push({ rule: 'overflow', message: `Nội dung tràn ngang ${el.scrollWidth - el.clientWidth}px: ${describe(el)}` });
       }
 
       // Vùng chạm
       if (el.matches(INTERACTIVE)) {
         const host = el.matches('input, select, textarea') && el.closest('label');
-        const r = (host || el).getBoundingClientRect();
+        const r = hitRect(host || el);
         const inlineLink = el.tagName === 'A' && el.closest('p, li') && st.display === 'inline';
-        if (!inlineLink && (r.width < 43.5 || r.height < 43.5)) {
-          warnings.push({ rule: 'target', message: `Vùng chạm ${Math.round(r.width)}×${Math.round(r.height)}px < 44×44: ${describe(el)}` });
+        if (!inlineLink && (r.width < 43.5 || r.height < 43.5) && !skipped(el, 'target')) {
+          const note = r.extended ? ' (đã tính vùng mở rộng ::before/::after)' : '';
+          warnings.push({ rule: 'target', message: `Vùng chạm ${Math.round(r.width)}×${Math.round(r.height)}px < 44×44${note}: ${describe(el)}` });
         }
       }
     }
@@ -323,14 +379,15 @@ function auditInPage() {
     const cards = [];
     for (const el of all) {
       if (el === root || el.matches(CONTROL) || el.closest('nav, [role="tablist"], [role="navigation"], [role="dialog"]')) continue;
+      const field = el.matches('[role="textbox"], [role="combobox"], [role="searchbox"], [contenteditable=""], [contenteditable="true"]');
       const r = el.getBoundingClientRect();
       if (r.width < rootRect.width * 0.6 || r.height < 56) continue;
       const fullBleed = r.width >= rootRect.width - 2;
       const { st, own, hasBg, hasEdge, hasShadow } = surfaceOf(el);
-      if (own[3] >= 0.9 && ratio(own, rootBg) >= 3 && !highlights.some((h) => h.contains(el))) highlights.push(el);
+      if (own[3] >= 0.9 && ratio(own, rootBg) >= 3 && !highlights.some((h) => h.contains(el)) && !skipped(el, 'highlight')) highlights.push(el);
       if ((hasBg || hasEdge || hasShadow) && !(own[3] >= 0.999 && ratio(own, backdrop(el.parentElement) || rootBg) < 1.02 && !hasEdge && !hasShadow)) {
         const radius = parseFloat(st.borderTopLeftRadius) || 0;
-        if (!fullBleed && radius < Math.min(r.width, r.height) / 2 - 1) cards.push({ el, radius: Math.round(radius) });
+        if (!fullBleed && !field && !skipped(el, 'radius') && radius < Math.min(r.width, r.height) / 2 - 1) cards.push({ el, radius: Math.round(radius) });
       }
     }
     if (highlights.length > 1) {
@@ -411,7 +468,7 @@ async function main() {
           tab.on('pageerror', (err) => consoleErrors.push(String(err.message || err)));
           await tab.goto(url, { waitUntil: 'networkidle' });
           await tab.evaluate(() => document.fonts && document.fonts.ready);
-          const screens = await tab.evaluate(auditInPage);
+          const screens = await tab.evaluate(auditInPage, opts.screen);
           if (opts.screenshot) {
             fs.mkdirSync(opts.screenshot, { recursive: true });
             const stem = opts.name || path.basename(page).replace(/\.[a-z]+$/i, '').replace(/[^\w-]+/g, '-');

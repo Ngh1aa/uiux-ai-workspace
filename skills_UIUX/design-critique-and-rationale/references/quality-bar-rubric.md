@@ -70,7 +70,8 @@ Averages never hide a failure: one dimension below its floor fails the gate.
    what would you tap first, what feels off? Compare the answers with the intended purpose.
 
 With a human reviewer available, round 3 should be done by a person outside the work and recorded
-as `expert-review`; otherwise label it `agent-heuristic`.
+as `expert-review`; otherwise label it `agent-heuristic`. The author never runs round 3: hand it to a
+fresh reviewer with the [cold review brief](cold-review-prompt.md).
 
 ## Score record template
 
