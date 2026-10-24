@@ -12,7 +12,9 @@ theo dự án.
 - Mọi card cùng một bán kính (`--ds-card-radius`). Khối lồng bên trong dùng bán kính nhỏ hơn.
 - Một nút chính (nền đậm) cho mỗi vùng. Hành động phụ dùng nút nhạt (`.app-tonal`) hoặc link.
 - Màu nhấn chỉ cho thương hiệu và cho cảnh báo thật (quá hạn, lỗi). Không tô màu để trang trí.
-- Nhãn ngắn không xuống dòng. Hết chỗ thì rút chữ, không thu nhỏ dưới 12px.
+- Nhãn ngắn không xuống dòng. Hết chỗ thì rút chữ, không thu nhỏ dưới 12px. Thang chữ của dự án
+  có cỡ nhỏ hơn (ví dụ 11px) thì chỉ dùng cho chú thích phụ không bấm được, và vẫn phải đạt
+  tương phản 4.5:1.
 
 ## 1. Trang chủ
 

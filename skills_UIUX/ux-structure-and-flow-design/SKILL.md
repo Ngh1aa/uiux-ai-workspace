@@ -148,6 +148,7 @@ visual-design-direction v2 contract so the visual stage reuses, not retypes, the
 - Need a machine-checked example or a greyscale wireframe pattern? See [example record](examples/edtech-class-booking/docs/ux/ux-structure.json) and [wireframes](examples/edtech-class-booking/wireframes.html).
 - Unsure which UX skill owns a decision? Read [UX skill map](../../docs/UX-SKILL-MAP.md).
 - Need flow notation, step budgets, navigation trade-offs or wireframe rules? Read [practice](references/ux-structure-practice.md).
+- No spec for this role or area, or one product with several roles? Read [missing spec and roles](references/missing-spec-and-roles.md).
 - Before handing to visual design, run [UX Readiness gate](checklists/ux-readiness-gate.md).
 - Need a worked example? Read [edtech booking example](examples/edtech-class-booking.md).
 - Forms with branches or save/resume → `complex-forms-and-wizards`.
