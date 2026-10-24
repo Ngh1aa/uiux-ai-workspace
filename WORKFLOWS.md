@@ -1,7 +1,13 @@
 # Chọn workflow theo cỡ việc
 
 Trang này trả lời một câu: **"Việc này lớn cỡ nào, và tôi cần làm những bước gì?"**
-Dành cho designer, PM, kỹ sư và AI agent. Không cần hiểu Flow OS hay Task Contract để dùng.
+Dành cho designer, PM, kỹ sư và AI agent.
+
+**Đây là nguồn định tuyến duy nhất.** Danh sách skill của mỗi cỡ dưới đây là đủ; nếu một skill
+gợi ý đọc thêm skill khác thì chỉ đọc khi việc thật sự cần.
+
+Mọi cỡ việc trên dự án khách hàng đều bắt đầu từ brand brief
+([`BRAND-BRIEF.template.md`](BRAND-BRIEF.template.md)); việc nhỏ thì đọc lại brief đã có.
 
 > Quy tắc vàng: chọn cỡ **nhỏ nhất** đủ an toàn. Việc nhỏ chạy quy trình lớn là lãng phí;
 > việc lớn chạy quy trình nhỏ là nợ thiết kế.
@@ -15,13 +21,13 @@ Dành cho designer, PM, kỹ sư và AI agent. Không cần hiểu Flow OS hay T
 | Sản phẩm mới, hoặc chưa có design system? | **XL** |
 | Chỉ sửa một component, một trạng thái, một đoạn chữ? | **XS** hoặc **S** |
 
-| Cỡ | Ví dụ | Thời gian điển hình | Flow trong runtime |
-|---|---|---|---|
-| **XS** Micro | Đổi màu nút, sửa khoảng cách, sửa chữ | < 1 giờ | `micro-ui-change` |
-| **S** Component | Thêm trạng thái lỗi cho form, làm lại card, thêm empty state | nửa ngày | `existing-ui-improvement` |
-| **M** Màn hình / tính năng | Luồng đặt lịch 3 màn hình, trang pricing, màn hình cài đặt | 1–3 ngày | `page-ui-work` · `mobile-app-design` |
-| **L** Khu vực sản phẩm | Redesign onboarding + home, làm lại website 8 trang | 1–3 tuần | `professional-website-redesign` · `mobile-app-design` |
-| **XL** Sản phẩm mới | App mới từ con số 0, dựng design system | 3+ tuần | `professional-website-redesign` / `mobile-app-design` + track Design System |
+| Cỡ | Ví dụ | Thời gian điển hình |
+|---|---|---|
+| **XS** Micro | Đổi màu nút, sửa khoảng cách, sửa chữ | < 1 giờ |
+| **S** Component | Thêm trạng thái lỗi cho form, làm lại card, thêm empty state | nửa ngày |
+| **M** Màn hình / tính năng | Luồng đặt lịch 3 màn hình, landing page, trang pricing, màn hình cài đặt | 1–3 ngày |
+| **L** Khu vực sản phẩm | Redesign onboarding + home, làm lại website 8 trang | 1–3 tuần |
+| **XL** Sản phẩm mới | App mới từ con số 0, dựng design system | 3+ tuần |
 
 Không chắc? Chọn cỡ lớn hơn một bậc cho phần **nghiên cứu và cấu trúc**, giữ cỡ nhỏ cho phần **visual**.
 
@@ -68,7 +74,10 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
   [`visual-design-direction`](skills_UIUX/visual-design-direction/SKILL.md) ·
   [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md) ·
   [`design-critique-and-rationale`](skills_UIUX/design-critique-and-rationale/SKILL.md)
+- Tham chiếu bắt buộc: [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md)
+  (khoảng cách, thang chữ, lưới, vùng chạm, dark mode), đọc trước bước 5.
 - Mobile thêm: [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) + spec sheet nền tảng (mục 3).
+- Web thêm: dòng nền tảng tương ứng ở mục 3.
 - Template: [`templates/ux/`](skills_UIUX/templates/ux/README.md) (problem statement, task flow, wireframe spec).
 - Giao: flow, bảng màn hình × trạng thái, mockup đã render ở 2 cỡ, bảng rubric, ghi chú handoff.
 - Ngưỡng: trung bình ≥ 3.5, không chiều nào < 3, không hard-fail.
@@ -100,7 +109,7 @@ Như **L**, cộng thêm:
 3. **Track Design System** (mục 4) chạy song song từ tuần đầu.
 4. **Kế hoạch kiểm chứng** với người dùng thật; khi chưa có người thật thì ghi `PLANNED_VALIDATION`.
 
-- Skill thêm: [`product-discovery`](skills_UIUX/product-discovery/SKILL.md) ·
+- Skill thêm: [`audience-intent-and-top-tasks`](skills_UIUX/audience-intent-and-top-tasks/SKILL.md) ·
   [`experience-principles-and-signature-moments`](skills_UIUX/experience-principles-and-signature-moments/SKILL.md) ·
   [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md)
 - Ngưỡng: như L, cộng design system qua `validate.py` (contrast, parity sáng/tối).
@@ -113,27 +122,28 @@ Như **L**, cộng thêm:
 | Android | [Android spec sheet](skills_UIUX/android-app-design/references/android-spec-sheet.md) · [`android-app-design`](skills_UIUX/android-app-design/SKILL.md) | Edge-to-edge, predictive back, window size classes |
 | Cả hai | [Mobile patterns playbook](skills_UIUX/mobile-app-design/references/mobile-patterns-playbook.md) | Chung ý nghĩa, khác "chrome": không ép iOS và Android giống hệt nhau |
 | Web marketing | [`responsive-and-device-strategy`](skills_UIUX/responsive-and-device-strategy/SKILL.md) | Mobile không phải desktop thu nhỏ |
-| Web app / dashboard (flow `web-app-dashboard`) | [Web app patterns](skills_UIUX/ui-craft-and-visual-qa/references/web-app-patterns.md) · [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md) · [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Mật độ cao nhưng quét được; bàn phím là công dân hạng nhất |
+| Web app / dashboard | [Web app patterns](skills_UIUX/ui-craft-and-visual-qa/references/web-app-patterns.md) · [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md) · [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Mật độ cao nhưng quét được; bàn phím là công dân hạng nhất |
 | Demo trên trình duyệt cho app | [`mobile-web-preview`](skills_UIUX/mobile-web-preview/SKILL.md) | Bằng chứng trình duyệt không chứng minh app native |
 
 ## 4. Track đặc thù
 
 | Track | Khi nào | Bắt đầu từ |
 |---|---|---|
-| **Chỉ review / audit** | Cần đánh giá, chưa sửa (review design system thì router tự chọn `design-system-audit`) | Flow `audit-review` / `mobile-app-audit` + [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
-| **Design system** | Thêm token, component, hoặc dựng hệ thống mới. Flow `design-system-work`; chỉ review thì `design-system-audit` | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) · [`design-system-governance-and-adoption`](skills_UIUX/design-system-governance-and-adoption/SKILL.md) |
-| **Nghiên cứu người dùng** | Cần bằng chứng thật | [`research-evidence-pipeline`](skills_UIUX/research-evidence-pipeline/SKILL.md) · [`user-research-planning-and-recruitment`](skills_UIUX/user-research-planning-and-recruitment/SKILL.md) |
-| **Portfolio** | Làm lại portfolio / định vị nghề | Flow `portfolio-career-system` |
+| **Chỉ review / audit** | Cần đánh giá, chưa sửa | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
+| **Design system** | Thêm token, component, hoặc dựng hệ thống mới | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) |
+| **Portfolio** | Làm lại portfolio / định vị nghề | Như cỡ M, cộng [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) |
 | **AI trong sản phẩm** | Tính năng có AI tạo nội dung/quyết định | [`human-ai-interaction-design`](skills_UIUX/human-ai-interaction-design/SKILL.md) |
 
-Mỗi flow là một file trong [`skills_UIUX/flows/`](skills_UIUX/flows/README.md): mở file, đi lần lượt
-từng chặng, đọc đúng skill được liệt kê.
 
 ## 5. Định nghĩa "xong" chung cho mọi cỡ
 
-- Màn mới bắt đầu từ [starter kit](design-system/starter/README.md) và theo
-  [mẫu theo loại màn](design-system/starter/PATTERNS.md).
-- [`taste-check.cjs`](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#soát-theo-gu-taste-checkcjs) không còn lỗi.
+- Dự án khách hàng có brand brief; `brand.css` của dự án qua
+  `python3 design-system/scripts/check-brand.py` không còn lỗi.
+- Màn mới mượn cấu trúc từ [starter kit](design-system/starter/README.md) và theo
+  [mẫu theo loại màn](design-system/starter/PATTERNS.md), nhưng mang thương hiệu và dấu ấn của dự án.
+- [`taste-check.cjs`](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#soát-theo-gu-taste-checkcjs)
+  không còn lỗi ở cả 390 px và 1280 px (website thêm 768 và 1440). Không chạy được thì làm theo
+  mục "Khi không chạy được taste-check" trong [`START-HERE.md`](START-HERE.md) và ghi rõ.
 - Đã **nhìn ảnh render thật**, không chỉ đọc code.
 - Đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
 - Contrast và vùng chạm đạt chuẩn trong [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md).

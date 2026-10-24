@@ -1,4 +1,0 @@
-V5 eval harness smoke passed
-v5-agent-reliability: 2/3 pass (66.7%), mean=82.0, est pass@3=96.3%, est pass^3=29.6%
-OVERALL: 2/3 pass (66.7%), mean=82.0
-pass@k/pass^k values are estimates from observed trial success rates, not population guarantees

@@ -11,8 +11,8 @@ Users who know roughly what they want get to it in one query or one refinement, 
 
 **When not to use**
 
-- Navigation structure, labels and menus (findability by browsing): use [information-architecture](../information-architecture/SKILL.md); validate with [card-sorting-and-tree-testing](../card-sorting-and-tree-testing/SKILL.md).
-- Ranking in external search engines and content for organic traffic: use [seo-strategy](../seo-strategy/SKILL.md) or [search-demand-and-content-briefing](../search-demand-and-content-briefing/SKILL.md).
+- Navigation structure, labels and menus (findability by browsing): use [information-architecture](../information-architecture/SKILL.md); validate with card-sorting-and-tree-testing.
+- Ranking in external search engines and content for organic traffic: use seo-strategy or search-demand-and-content-briefing.
 - Filtering and sorting inside a single admin table: use [data-tables-and-enterprise-ux](../data-tables-and-enterprise-ux/SKILL.md).
 - Product listing pages and merchandising specifics: compose with [ecommerce-website](../ecommerce-website/SKILL.md).
 - Conversational or AI answer search: compose with [human-ai-interaction-design](../human-ai-interaction-design/SKILL.md).
@@ -58,7 +58,7 @@ Users who know roughly what they want get to it in one query or one refinement, 
 - Log every zero-result query; review regularly and fix via synonyms, content gaps or best bets.
 
 **7. Instrumentation**
-- Track queries, zero-result rate, refinement rate, click-through position, exits from results and time to first click. Define targets in [outcome-metrics-and-instrumentation](../outcome-metrics-and-instrumentation/SKILL.md).
+- Track queries, zero-result rate, refinement rate, click-through position, exits from results and time to first click. Define targets in outcome-metrics-and-instrumentation.
 - Respect privacy: do not log personal data typed into search beyond policy.
 
 ## Workflow

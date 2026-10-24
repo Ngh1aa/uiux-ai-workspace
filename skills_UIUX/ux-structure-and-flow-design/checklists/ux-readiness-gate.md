@@ -51,7 +51,6 @@ Hypotheses to validate: <list or none>
 Next validation step: <e.g. 5 moderated sessions on flows 1 and 3, or UNKNOWN>
 ```
 
-If `docs/ux/ux-structure.json` exists, run `check-ux-structure.py --root <project>`; its errors override a hand-ticked checklist.
 
 `NOT_READY` blocks visual direction. `READY` does not mean the design is usable;
 it means the structure is complete enough to design on and test.
