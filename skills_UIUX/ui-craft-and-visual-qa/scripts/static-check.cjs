@@ -12,6 +12,7 @@
  *   - viewport chặn phóng to (user-scalable=no, maximum-scale=1)
  *   - ảnh thiếu alt; nút hoặc liên kết không có chữ và không có aria-label
  *   - aria-label của nút/liên kết không chứa chữ đang hiện trên nút (WCAG 2.5.3)
+ *   - div/span/p có aria-label mà không có role (ARIA cấm, trình đọc màn hình bỏ qua)
  *   - chữ giữ chỗ kiểu "Lorem ipsum", "John Doe", "Acme"
  * CẢNH BÁO:
  *   - mã màu viết cứng ngoài phần khai báo token (--tên: giá trị)
@@ -74,6 +75,11 @@ function check(file) {
   }
   for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
     if (!/\balt=/i.test(m[0])) err('alt', `ảnh thiếu alt: ${m[0].slice(0, 80)}`);
+  }
+  for (const m of html.matchAll(/<(div|span|p)\b([^>]*)>/gi)) {
+    if (/\saria-label(ledby)?=/i.test(m[2]) && !/\srole=/i.test(m[2])) {
+      err('aria-prohibited', `<${m[1]}> có aria-label nhưng không có role: thêm role (group, region, status...) hoặc bỏ aria-label`);
+    }
   }
   let deadLinks = 0;
   for (const m of html.matchAll(/<(button|a)\b([^>]*)>([\s\S]*?)<\/\1>/gi)) {
