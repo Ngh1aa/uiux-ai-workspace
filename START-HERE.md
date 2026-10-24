@@ -25,13 +25,21 @@ cỡ việc hoặc flow liệt kê. Thư mục `references/` trong skill chỉ m
 
 Danh sách đầy đủ: [`skills_UIUX/SKILL-CATALOG.md`](skills_UIUX/SKILL-CATALOG.md).
 
-## 4. Dựng giao diện từ design system, rồi tự soát
+## 4. Dựng từ starter kit, rồi tự soát
 
-- Token, component và font có sẵn trong [`design-system/`](design-system/README.md). Dự án có
-  bộ nhận diện riêng thì theo dự án, nhưng vẫn giữ cấu trúc token theo vai trò.
-- Trước khi giao, soát theo [rubric chất lượng](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md):
+- Bắt đầu từ [starter kit](design-system/starter/README.md): chọn loại màn trong
+  [`PATTERNS.md`](design-system/starter/PATTERNS.md), chép màn mẫu tương ứng trong `mobile.html`
+  hoặc `web.html`, đổi thương hiệu trong `brand.css`. Dự án có bộ nhận diện riêng thì theo dự án,
+  nhưng vẫn giữ cấu trúc token theo vai trò.
+- Chạy script soát theo gu trên trang đã dựng và sửa hết lỗi:
+
+  ```sh
+  node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs <trang.html> --screenshot qa/
+  ```
+
+- Soát tiếp theo [rubric chất lượng](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md):
   kiểm các lỗi bắt buộc (hard fail) trước, rồi chấm từng chiều.
-- Luôn nhìn ảnh render thật ở cỡ điện thoại và cỡ máy tính. Đọc code không thay cho nhìn màn.
+- Luôn mở ảnh chụp ra nhìn ở cỡ điện thoại và cỡ máy tính. Script và đọc code không thay cho nhìn màn.
 
 ## Khi giao kết quả
 
@@ -47,5 +55,6 @@ Danh sách đầy đủ: [`skills_UIUX/SKILL-CATALOG.md`](skills_UIUX/SKILL-CATA
 | `WORKFLOWS.md` | Quy trình theo cỡ việc |
 | `skills_UIUX/` | 116 skill UI/UX, flow, prompt, kiến thức, bộ kiểm tra `designlib/` |
 | `design-system/` | Token DTCG, 19 component CSS, font, ví dụ app |
+| `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `docs/` | Ghi chép nâng cấp và bằng chứng các lần thử |
 | `AGENTS.md` | Quy tắc làm việc chung cho AI |

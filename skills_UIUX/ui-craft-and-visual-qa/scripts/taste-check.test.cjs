@@ -1,0 +1,99 @@
+// Test cho taste-check.cjs: một màn đạt và mỗi lỗi một màn cố tình sai.
+//   NODE_PATH=<thư mục có playwright> node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs
+'use strict';
+const assert = require('node:assert/strict');
+const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const test = require('node:test');
+
+const SCRIPT = path.join(__dirname, 'taste-check.cjs');
+const BASE = `
+  body { margin: 0; font: 16px/24px system-ui, sans-serif; color: #17181c; background: #f4f5f9; }
+  [data-screen] { width: 390px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+  .card { background: #fff; border-radius: 24px; padding: 16px; min-height: 64px; }
+  .hero { background: #253a7e; color: #fff; border-radius: 24px; padding: 20px; min-height: 120px; }
+  button { min-width: 44px; min-height: 44px; border: 0; border-radius: 16px; background: #253a7e; color: #fff; font: inherit; }
+`;
+
+function run(body, extraCss = '') {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'taste-'));
+  fs.writeFileSync(path.join(dir, 'page.html'), `<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>t</title><style>${BASE}${extraCss}</style></head><body>${body}</body></html>`);
+  const out = path.join(dir, 'out.json');
+  const res = spawnSync(process.execPath, [SCRIPT, path.join(dir, 'page.html'), '--root', dir, '--theme', 'light', '--json', out], { encoding: 'utf8' });
+  assert.ok(fs.existsSync(out), `không có kết quả JSON:\n${res.stdout}\n${res.stderr}`);
+  const data = JSON.parse(fs.readFileSync(out, 'utf8'));
+  const screens = data.results.flatMap((r) => r.screens);
+  return {
+    code: res.status,
+    rules: (name, kind) => screens.filter((s) => s.name === name).flatMap((s) => s[kind]).map((i) => i.rule),
+  };
+}
+
+const GOOD = `
+  <section data-screen="Tốt">
+    <div class="hero"><p>Việc cần xử lý</p><p style="font-size:40px;line-height:44px;margin:0">35</p></div>
+    <div class="card"><p style="margin:0">Học phí chưa thu</p><p style="margin:0;color:#5f6370">Hạn 15/10</p></div>
+    <div class="card"><button type="button">Xử lý</button></div>
+  </section>`;
+
+test('màn đúng gu thì không có lỗi nào', () => {
+  const r = run(GOOD);
+  assert.deepEqual(r.rules('Tốt', 'errors'), []);
+  assert.deepEqual(r.rules('Tốt', 'warnings'), []);
+  assert.equal(r.code, 0);
+});
+
+test('bắt dấu " · " nối cụm từ', () => {
+  const r = run('<section data-screen="Dấu"><div class="card">17A0105 · Toán · Khối 5</div></section>');
+  assert.ok(r.rules('Dấu', 'errors').includes('dot'));
+  assert.equal(r.code, 1);
+});
+
+test('bắt chữ thiếu tương phản', () => {
+  const r = run('<section data-screen="Mờ"><div class="card"><span style="color:#b8bcc6">Hạn 15/10</span></div></section>');
+  assert.ok(r.rules('Mờ', 'errors').includes('contrast'));
+});
+
+test('bắt nhãn ngắn bị gãy dòng', () => {
+  const r = run('<section data-screen="Gãy"><div class="card"><button type="button" style="width:60px">Điều chỉnh lớp</button></div></section>');
+  assert.ok(r.rules('Gãy', 'errors').includes('wrap'));
+});
+
+test('bắt nội dung tràn ngang', () => {
+  const r = run('<section data-screen="Tràn"><div class="card" style="white-space:nowrap">Một dòng chữ rất dài không được phép xuống dòng nên sẽ tràn khỏi card</div></section>');
+  assert.ok(r.rules('Tràn', 'errors').includes('overflow'));
+});
+
+test('bắt hơn một card nổi bật trong một màn', () => {
+  const r = run('<section data-screen="Hai hero"><div class="hero">A</div><div class="hero">B</div></section>');
+  assert.ok(r.rules('Hai hero', 'errors').includes('highlight'));
+});
+
+test('thanh điều hướng nền đậm không bị tính là card nổi bật', () => {
+  const r = run('<section data-screen="Có nav"><div class="hero">A</div><nav class="hero" aria-label="Chính">B</nav></section>');
+  assert.ok(!r.rules('Có nav', 'errors').includes('highlight'));
+});
+
+test('cảnh báo bán kính bo góc không đồng nhất', () => {
+  const r = run('<section data-screen="Bo góc"><div class="card">A</div><div class="card" style="border-radius:8px">B</div></section>');
+  assert.ok(r.rules('Bo góc', 'warnings').includes('radius'));
+});
+
+test('cảnh báo quá nhiều nhóm màu', () => {
+  const colors = ['#c0392b', '#1f8a4c', '#253a7e', '#b8860b', '#8e44ad'];
+  const body = colors.map((c) => `<div class="card"><span style="color:${c};font-weight:700;font-size:24px">Mục</span></div>`).join('');
+  const r = run(`<section data-screen="Rối màu">${body}</section>`);
+  assert.ok(r.rules('Rối màu', 'warnings').includes('colors'));
+});
+
+test('cảnh báo vùng chạm nhỏ', () => {
+  const r = run('<section data-screen="Nhỏ"><div class="card"><button type="button" style="min-width:0;min-height:0;width:28px;height:28px;padding:0">+</button></div></section>');
+  assert.ok(r.rules('Nhỏ', 'warnings').includes('target'));
+});
+
+test('cảnh báo dòng cuối chỉ còn một chữ', () => {
+  const r = run('<section data-screen="Mồ côi"><div class="card"><p style="width:30ch;margin:0;font-family:monospace">aaaa bbbb cccc dddd eeee ffff gg</p></div></section>');
+  assert.ok(r.rules('Mồ côi', 'warnings').includes('widow'));
+});

@@ -29,8 +29,15 @@ tra được bằng mắt.
 
 ## Trước khi giao
 
-- [ ] Đọc lại từng màn theo các mục ở trên.
+Chạy script soát, nó kiểm tự động phần lớn danh sách dưới đây trên trang đã render:
+
+```sh
+node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs <trang.html> --screenshot qa/
+```
+
+- [ ] Script không còn lỗi; từng cảnh báo đã xem và sửa hoặc có lý do giữ.
 - [ ] Không còn dấu " · " nối cụm từ trong nội dung.
-- [ ] Không còn chữ gãy dòng ngoài ý muốn.
+- [ ] Không còn chữ gãy dòng ngoài ý muốn, không còn dòng cuối chỉ có một chữ.
 - [ ] Mỗi màn có tối đa một card nổi bật.
 - [ ] Bán kính bo góc thống nhất giữa các card.
+- [ ] Đã mở ảnh chụp ra nhìn từng màn, cả sáng và tối nếu có.
