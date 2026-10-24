@@ -68,3 +68,10 @@ test('font riêng và gradient ấm không bị cảnh báo', () => {
   assert.ok(!r.warnings.includes('generic-font'));
   assert.ok(!r.warnings.includes('purple-gradient'));
 });
+
+test('bắt aria-label không chứa chữ đang hiện', () => {
+  const bad = run('<button type="button" aria-label="Thứ Hai sáng">Đã chọn</button>');
+  assert.ok(bad.errors.includes('name-mismatch'));
+  const ok = run('<button type="button" aria-label="Huỷ lịch khám 09:30">Huỷ lịch</button><button type="button" aria-label="Đóng"><svg aria-hidden="true"></svg></button>');
+  assert.ok(!ok.errors.includes('name-mismatch'));
+});

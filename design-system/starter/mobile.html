@@ -225,7 +225,7 @@
           </div>
           <div class="ds-field">
             <span class="ds-field__label" id="f-teacher">Giáo viên</span>
-            <button class="app-select" type="button" aria-labelledby="f-teacher f-teacher-v"><span class="app-select__lead"><span class="ds-avatar" aria-hidden="true">TA</span><span><span class="app-line ds-text-label-lg" id="f-teacher-v">Cô Thu Anh</span><span class="app-meta">Còn 9 ca trống mỗi tuần</span></span></span><svg class="ds-icon ds-text-secondary" aria-hidden="true"><use href="#app-i-chevron-down"/></svg></button>
+            <button class="app-select" type="button" aria-describedby="f-teacher"><span class="app-select__lead"><span class="ds-avatar" aria-hidden="true">TA</span><span><span class="app-line ds-text-label-lg" id="f-teacher-v">Cô Thu Anh</span><span class="app-meta">Còn 9 ca trống mỗi tuần</span></span></span><svg class="ds-icon ds-text-secondary" aria-hidden="true"><use href="#app-i-chevron-down"/></svg></button>
           </div>
           <section class="ds-card ds-stack ds-stack--sm" aria-labelledby="f-schedule">
             <h2 class="app-panel__title" id="f-schedule">Lịch học</h2>
@@ -235,21 +235,21 @@
               <span class="app-choice-grid__head"><strong>Chiều</strong><span class="ds-text-secondary">14:00</span></span>
               <span class="app-choice-grid__head"><strong>Tối</strong><span class="ds-text-secondary">18:30</span></span>
               <span class="app-choice-grid__day">T2</span>
-              <button class="app-choice" type="button" aria-pressed="true" aria-label="Thứ Hai sáng"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn</button>
-              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Hai chiều"></button>
-              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Hai tối"></button>
+              <button class="app-choice" type="button" aria-pressed="true"><span class="ds-visually-hidden">Thứ Hai sáng</span><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn</button>
+              <button class="app-choice" type="button" aria-pressed="false"><span class="ds-visually-hidden">Thứ Hai chiều</span></button>
+              <button class="app-choice" type="button" aria-pressed="false"><span class="ds-visually-hidden">Thứ Hai tối</span></button>
               <span class="app-choice-grid__day">T3</span>
-              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Ba sáng"></button>
+              <button class="app-choice" type="button" aria-pressed="false"><span class="ds-visually-hidden">Thứ Ba sáng</span></button>
               <span class="app-choice" aria-disabled="true" role="img" aria-label="Thứ Ba chiều, giáo viên bận">GV bận</span>
               <span class="app-choice" aria-disabled="true" role="img" aria-label="Thứ Ba tối, đang học Văn">Học Văn</span>
               <span class="app-choice-grid__day">T4</span>
-              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Tư sáng"></button>
-              <button class="app-choice" type="button" aria-pressed="true" aria-label="Thứ Tư chiều"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn</button>
-              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Tư tối"></button>
+              <button class="app-choice" type="button" aria-pressed="false"><span class="ds-visually-hidden">Thứ Tư sáng</span></button>
+              <button class="app-choice" type="button" aria-pressed="true"><span class="ds-visually-hidden">Thứ Tư chiều</span><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn</button>
+              <button class="app-choice" type="button" aria-pressed="false"><span class="ds-visually-hidden">Thứ Tư tối</span></button>
               <span class="app-choice-grid__day">T5</span>
               <span class="app-choice" aria-disabled="true" role="img" aria-label="Thứ Năm sáng, giáo viên bận">GV bận</span>
-              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Năm chiều"></button>
-              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Năm tối"></button>
+              <button class="app-choice" type="button" aria-pressed="false"><span class="ds-visually-hidden">Thứ Năm chiều</span></button>
+              <button class="app-choice" type="button" aria-pressed="false"><span class="ds-visually-hidden">Thứ Năm tối</span></button>
             </div>
             <div class="app-summary"><span class="ds-text-label-md">2 buổi mỗi tuần</span><span style="flex:1"></span><span class="app-summary__chip">T2 08:00</span><span class="app-summary__chip">T4 14:00</span></div>
           </section>
@@ -403,7 +403,8 @@ document.addEventListener('click', (event) => {
   if (choice) {
     const on = choice.getAttribute('aria-pressed') !== 'true';
     choice.setAttribute('aria-pressed', String(on));
-    choice.innerHTML = on ? '<svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn' : '';
+    const slotName = choice.querySelector('.ds-visually-hidden').outerHTML;
+    choice.innerHTML = slotName + (on ? '<svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn' : '');
   }
   const slot = event.target.closest('button.app-slot');
   if (slot) {
