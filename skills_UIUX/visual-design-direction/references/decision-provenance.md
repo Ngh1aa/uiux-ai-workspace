@@ -39,20 +39,10 @@ Nếu muốn kiểm tác động của prompt/knowledge tới model, dùng facto
 
 ## Runtime path
 
-Canonical data: `../data/design-knowledge.json`; shared lookup: `skills_UIUX/designlib/design_knowledge.py`. Structured identity selects subject knowledge; page role selects decision anatomy and numeric candidates. Không chọn style trước buyer question. Không freeze một family/font/palette trong data này.
+Canonical data: `../data/design-knowledge.json` (đọc trực tiếp, chỉ phần cần cho màn đang làm). Structured identity selects subject knowledge; page role selects decision anatomy and numeric candidates. Không chọn style trước buyer question. Không freeze một family/font/palette trong data này.
 
-Canonical decision checker: `../scripts/check-design-decisions.py`, schema/model owner `skills_UIUX/designlib/design_decisions.py`. Chỉ nạp phần knowledge cần cho màn đang làm. No eager research-stage dataset, no authority escalation.
 
 For a PAGE/REDESIGN/PRODUCT comparison, document regions, their contents/relationships and mobile grouping. Topology fingerprints ignore alternative names, anchor prose and ordering of unchanged regions. This specifically rejects an A/B that only reverses architecture and service-fit sections. It does not score beauty and cannot independently prove a declared topology matches pixels. Review the actual captures.
 
 Scope comparison to representative page roles. A rollout page may set `comparison_required=false` and `inherited_from` to a representative route in the same contract; it still has numeric values, decision traces and inspected desktop/mobile captures of its selected composition. The contract cannot disable every comparison unless an explicit user composition-preservation constraint applies. User-source attribution and inspection remain reviewer declarations; the checker cannot independently authenticate them.
 
-Useful commands from Factory root:
-
-```bash
-python -B skills_UIUX/visual-design-direction/scripts/check-design-decisions.py --schema
-python -B skills_UIUX/visual-design-direction/scripts/check-design-decisions.py --root <target-root> --phase design
-python -B skills_UIUX/visual-design-direction/scripts/check-design-decisions.py --root <target-root> --phase rendered
-python -B skills_UIUX/visual-design-direction/scripts/evaluate-design-comparison.py --root <target-root> --route / --seed 27
-python -B skills_UIUX/visual-design-direction/scripts/evaluate-design-comparison.py --root <target-root> --plan docs/uiux/comparison-plan.json --observations docs/uiux/comparison-observations.json
-```

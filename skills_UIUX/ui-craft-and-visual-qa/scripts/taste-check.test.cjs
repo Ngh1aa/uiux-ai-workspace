@@ -21,7 +21,7 @@ function run(body, extraCss = '') {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'taste-'));
   fs.writeFileSync(path.join(dir, 'page.html'), `<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>t</title><style>${BASE}${extraCss}</style></head><body>${body}</body></html>`);
   const out = path.join(dir, 'out.json');
-  const res = spawnSync(process.execPath, [SCRIPT, path.join(dir, 'page.html'), '--root', dir, '--theme', 'light', '--json', out], { encoding: 'utf8' });
+  const res = spawnSync(process.execPath, [SCRIPT, path.join(dir, 'page.html'), '--root', dir, '--width', '390', '--theme', 'light', '--json', out], { encoding: 'utf8' });
   assert.ok(fs.existsSync(out), `không có kết quả JSON:\n${res.stdout}\n${res.stderr}`);
   const data = JSON.parse(fs.readFileSync(out, 'utf8'));
   const screens = data.results.flatMap((r) => r.screens);

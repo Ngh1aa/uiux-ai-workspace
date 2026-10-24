@@ -15,7 +15,7 @@ At any moment, anyone looking at a piece of work can answer four questions: what
 - Inline field errors, toasts and generic error recovery copy: use [state-feedback-and-error-recovery](../state-feedback-and-error-recovery/SKILL.md).
 - Motion of spinners and progress indicators: use [motion-and-microinteractions](../motion-and-microinteractions/SKILL.md).
 - AI agent tasks with model uncertainty and human oversight: use [human-ai-interaction-design](../human-ai-interaction-design/SKILL.md).
-- End-to-end service mapping across channels and staff: use [service-blueprinting](../service-blueprinting/SKILL.md).
+- End-to-end service mapping across channels and staff: use service-blueprinting.
 
 ## Decisions
 

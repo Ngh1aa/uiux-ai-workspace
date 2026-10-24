@@ -7,8 +7,8 @@ and [AGENTS.md](AGENTS.md) for the operating and evidence contract.
 
 Contributions are accepted under the same terms as the project (inbound = outbound):
 
-- code, skills, prompts, flows, design tokens, CSS components and icons: [Apache-2.0](LICENSE);
-- documentation in `docs/`, `design-system/docs/` and review screenshots:
+- code, skills, design tokens, CSS components and icons: [Apache-2.0](LICENSE);
+- documentation in `design-system/docs/` and review screenshots:
   [CC BY 4.0](LICENSE-DOCS).
 
 Sign off every commit to certify the [Developer Certificate of Origin](https://developercertificate.org/):
@@ -26,8 +26,7 @@ right to submit it under these licenses.
 - **Never copy or adapt** files from Anthropic's source-available skills (`docx`, `pdf`, `pptx`,
   `xlsx`), from `doc-coauthoring` (no license) into this repository. Their terms forbid redistribution and derivative works. This applies to AI agents
   working in the repository as much as to people.
-- Keep upstream code inside its submodule or vendor folder, unmodified, and put local adaptations
-  outside it.
+- Do not vendor third-party code or skill libraries into `main`; link to them instead.
 - Bundled fonts must keep their OFL license file next to the font files.
 - Do not commit screenshots or text you do not have the right to share (third-party brand assets,
   paywalled articles, private user data).
@@ -36,10 +35,9 @@ right to submit it under these licenses.
 
 ```sh
 python skills_UIUX/scripts/validate-skills.py
-python skills_UIUX/scripts/validate-v2.py
-python -m pytest -q skills_UIUX/tests
 python scripts/check-links.py
 python design-system/scripts/validate.py
+python design-system/scripts/check-brand.py design-system/starter/brand.css
 ```
 
 `main` is protected: a pull request needs the `foundation` and `release-candidate` checks to pass.

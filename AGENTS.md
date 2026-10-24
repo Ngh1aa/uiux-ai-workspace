@@ -46,7 +46,7 @@ Còn lại thì chọn giả định hợp lý, nói rõ giả định đó và 
 Trước khi chép file không phải của mình, xem license và
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Không chép hoặc chỉnh sửa nội dung có điều
 khoản cấm phân phối lại (ví dụ các skill `docx`, `pdf`, `pptx`, `xlsx` của Anthropic) vào repo.
-Code của bên thứ ba giữ nguyên trong thư mục `vendor/` hoặc submodule.
+Không đưa code hay thư viện skill của bên thứ ba vào `main`; dẫn link thay vì chép.
 
 ## 7. Khi giao
 
