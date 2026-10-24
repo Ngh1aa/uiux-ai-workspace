@@ -14,8 +14,8 @@ Biến cấu hình riêng của từng repository thành lớp context đứng g
 
 ## Workflow
 
-1. Tìm `.uiux-profile.json` tại repository root.
-2. Nếu file không tồn tại, tiếp tục với các skill đã cài và **không tự bịa project constraints**. Với website work, fallback delivery policy là `adaptive-prompt-os-v4` từ `DEFAULT-WEBSITE-DELIVERY-POLICY.md` trừ khi user/project truth nói khác.
+1. Trường hợp thường gặp khi thiết kế qua chat: không có `.uiux-profile.json`. Khi đó nguồn sự thật của dự án là brand brief (`BRAND-BRIEF.md` của dự án, theo [`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)) và yêu cầu của chủ repo; đi theo [`START-HERE.md`](../../START-HERE.md), không dựng Prompt OS hay delivery policy. Không tự bịa project constraints. Các bước 2–6 dưới đây chỉ áp dụng khi dự án thật sự có `.uiux-profile.json`.
+2. Tìm `.uiux-profile.json` tại repository root.
 3. Đọc `delivery_policy`, `project`, `source_of_truth` và `constraints` nếu có.
 4. Nếu `delivery_policy` không được khai báo trong profile schema v2, dùng `adaptive-prompt-os-v4` làm default cho website work; không tự ghi đè một policy project đã khai báo rõ.
 5. Đọc các file trong `source_of_truth` theo đúng thứ tự khai báo khi chúng liên quan task hiện tại.

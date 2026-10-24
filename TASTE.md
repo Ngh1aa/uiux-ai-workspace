@@ -15,9 +15,11 @@ tra được bằng mắt.
 
 ## Card và bố cục
 
-- Card bo góc tròn, **đồng nhất** bán kính trên toàn bộ sản phẩm.
+- Card bo góc tròn, **đồng nhất** bán kính trên toàn bộ sản phẩm. Độ bo theo tính cách thương hiệu
+  (ghi trong brand brief), không mặc định 24px.
 - Font, cỡ chữ và bố cục chọn theo chức năng của từng màn, không rập một khuôn cho mọi màn.
-- Card nổi bật (nền navy, chữ trắng) dùng để làm điểm nhấn cho thông tin quan trọng nhất.
+- Card nổi bật (nền màu thương hiệu đậm, chữ trắng) dùng để làm điểm nhấn cho thông tin quan trọng nhất.
+  Màu nền lấy từ brand brief của dự án, không mặc định navy.
   Tối đa một card như vậy mỗi màn; màn nào đã ổn thì giữ nguyên, không bắt buộc màn nào cũng có.
 
 ## Chữ trên màn
@@ -35,10 +37,14 @@ Chạy script soát, nó kiểm tự động phần lớn danh sách dưới đ�
 node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs <trang.html> --screenshot qa/
 ```
 
+Mặc định soát ở 390 px và 1280 px, sáng và tối. Không chạy được thì theo mục "Khi không chạy
+được taste-check" trong [`START-HERE.md`](START-HERE.md).
+
 - [ ] Script không còn lỗi; từng cảnh báo đã xem và sửa hoặc có lý do giữ.
 - [ ] Không còn dấu " · " nối cụm từ trong nội dung.
 - [ ] Không còn chữ gãy dòng ngoài ý muốn, không còn dòng cuối chỉ có một chữ.
 - [ ] Mỗi màn có tối đa một card nổi bật.
 - [ ] Bán kính bo góc thống nhất giữa các card.
-- [ ] Đã mở ảnh chụp ra nhìn từng màn, cả sáng và tối nếu có.
+- [ ] Đã mở ảnh chụp ra nhìn từng màn ở cỡ điện thoại và máy tính, cả sáng và tối nếu có.
+- [ ] Màu, font, bo góc đến từ brand brief của khách, không phải giá trị mặc định của starter kit.
 - [ ] Che tên sản phẩm vẫn nhận ra ngành (xem `design-system/starter/SIGNATURE.md`).

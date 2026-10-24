@@ -1,12 +1,16 @@
 # Flows: lộ trình skill theo loại việc
 
+> **Không dùng khi thiết kế qua chat.** Nguồn định tuyến duy nhất là
+> [`WORKFLOWS.md`](../../WORKFLOWS.md), bắt đầu từ [`START-HERE.md`](../../START-HERE.md). Các file
+> dưới đây là di sản của bộ chạy tự động cũ, giữ lại cho các script kiểm tra của thư viện. Chỉ mở
+> khi chủ repo yêu cầu đích danh một flow.
+
 Mỗi file `flows/*.json` là một lộ trình làm việc: chia việc thành các chặng (thường là
 `research` → `design` → `qa`), mỗi chặng ghi rõ skill phải đọc và điều kiện để qua chặng.
 
-Không có chương trình nào chạy các file này. Claude đọc trực tiếp:
+Khi chủ repo yêu cầu đích danh một flow, đọc như sau:
 
-1. Chọn cỡ việc và flow theo [`WORKFLOWS.md`](../../WORKFLOWS.md).
-2. Mở file flow tương ứng, đi **lần lượt từng chặng**, không nhảy cóc.
+1. Mở file flow tương ứng, đi **lần lượt từng chặng**, không nhảy cóc.
 3. Ở mỗi chặng, chỉ đọc `SKILL.md` của:
    - mọi skill trong `required_skills`;
    - skill trong `conditional_skills` khi điều kiện `when` khớp với việc đang làm
