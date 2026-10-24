@@ -74,8 +74,8 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
   [`visual-design-direction`](skills_UIUX/visual-design-direction/SKILL.md) ·
   [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md) ·
   [`design-critique-and-rationale`](skills_UIUX/design-critique-and-rationale/SKILL.md)
-- Tham chiếu bắt buộc: [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md)
-  (khoảng cách, thang chữ, lưới, vùng chạm, dark mode), đọc trước bước 5.
+- Bắt buộc: [`CRAFT.md`](CRAFT.md) và khối kế hoạch thị giác của nó trước bước 5. Cần chi tiết hơn
+  thì mở [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md).
 - Mobile thêm: [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) + spec sheet nền tảng (mục 3).
 - Web thêm: dòng nền tảng tương ứng ở mục 3, và một playbook đúng ngành của khách trong
   [`industry-playbooks`](skills_UIUX/industry-playbooks/SKILL.md) (không có thì bỏ qua).
@@ -147,6 +147,7 @@ Như **L**, cộng thêm:
   mục "Khi không chạy được taste-check" trong [`START-HERE.md`](START-HERE.md) và ghi rõ.
 - Đã **nhìn ảnh render thật**, không chỉ đọc code.
 - Đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
-- Contrast và vùng chạm đạt chuẩn trong [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md).
+- Contrast và vùng chạm đạt chuẩn trong [`CRAFT.md`](CRAFT.md); không chạm mặc định nào trong danh sách
+  cấm mà không có lý do từ brief.
 - Rubric đạt ngưỡng của cỡ việc, không hard-fail.
 - Ghi rõ điều gì **chưa** kiểm chứng (người dùng thật, thiết bị thật, trình đọc màn hình).

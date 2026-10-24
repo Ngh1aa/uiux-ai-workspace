@@ -67,14 +67,14 @@ jobs:
       - name: Design system regression and negative tests
         run: python -m pytest -q design-system/tests
       - name: Starter brand layer passes the brand check
-        run: python design-system/scripts/check-brand.py design-system/starter/brand.css
+        run: python design-system/scripts/check-brand.py design-system/starter/brand.css design-system/examples/gom-moc/brand.css
       - name: Starter kit icons are current
-        run: python design-system/starter/inline-icons.py --check design-system/starter/mobile.html design-system/starter/web.html design-system/starter/web-states.html
+        run: python design-system/starter/inline-icons.py --check design-system/starter/mobile.html design-system/starter/web.html design-system/starter/web-states.html design-system/starter/landing.html design-system/examples/gom-moc/landing.html design-system/examples/gom-moc/app.html
       - name: Install Playwright Chromium outside the repo
         run: |
           mkdir -p "$RUNNER_TEMP/tools" && cd "$RUNNER_TEMP/tools"
           npm init -y >/dev/null
-          npm install --no-audit --no-fund playwright@1
+          npm install --no-audit --no-fund playwright@1 axe-core@4
           npx playwright install --with-deps chromium
       - name: Taste checker tests
         env:
@@ -86,7 +86,21 @@ jobs:
         run: >-
           node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs
           design-system/starter/mobile.html design-system/starter/web.html design-system/starter/web-states.html
-          --width 390 --width 1024 --width 1280 --screenshot "$RUNNER_TEMP/starter-shots"
+          design-system/starter/landing.html
+          --width 390 --width 768 --width 1024 --width 1280 --width 1440 --screenshot "$RUNNER_TEMP/starter-shots"
+      - name: Starter web pages reflow at 320 px
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: >-
+          node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs
+          design-system/starter/web.html design-system/starter/web-states.html design-system/starter/landing.html
+          --width 1280 --theme light --reflow
+      - name: Trial example (gom-moc) passes the taste check
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: >-
+          node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs
+          design-system/examples/gom-moc/landing.html design-system/examples/gom-moc/app.html
       - name: Upload starter kit screenshots
         if: always()
         uses: actions/upload-artifact@v7

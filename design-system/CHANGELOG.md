@@ -3,6 +3,19 @@
 Semantic versioning on the public surface (token paths, class names, state attributes, contracts).
 See [docs/governance.md](docs/governance.md).
 
+## 0.3.0 (2026-10-24)
+
+### Added
+- Web components: checkbox and radio (`.ds-check`, `.ds-fieldset`), tabs, dialog (native
+  `<dialog>`), menu, tooltip, table. Contracts in `docs/component-contracts.md`, specimens in the
+  generated docs page, regression test `test_v03_web_components_have_contracts_and_docs`.
+- Icons `ds-i-check`, `ds-i-chevron-down`, `ds-i-x`.
+- Starter `landing.html`: section skeleton for landing pages (structure only, bracketed copy).
+- `scripts/check-brand.py`: checks a project's `brand.css` over the system in both modes.
+
+### Changed
+- Starter `brand.css` values are placeholders; four contrast pairs fixed.
+
 ## 0.2.0 (2026-10-23)
 
 ### Added

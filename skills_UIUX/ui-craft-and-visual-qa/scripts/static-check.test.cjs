@@ -54,3 +54,17 @@ test('cảnh báo màu viết cứng nhưng bỏ qua khai báo token', () => {
   const bad = run('<style>p{color:#123456}</style><p>A</p>');
   assert.ok(bad.warnings.includes('hex'));
 });
+
+test('cảnh báo mặc định kiểu AI generic', () => {
+  const r = run(`<style>body{font-family:Inter,sans-serif}.hero{background:linear-gradient(135deg,#6d28d9,#2563eb)}
+    .e{text-transform:uppercase}.f{text-transform:uppercase}.g{text-transform:uppercase}</style>
+    <p class="e">A</p><a href="/a">Xem →</a><a href="/b">Đọc →</a><a href="/c">Mua →</a><p>John Doe</p>`);
+  for (const rule of ['generic-font', 'purple-gradient', 'eyebrow', 'arrow']) assert.ok(r.warnings.includes(rule), rule);
+  assert.ok(r.errors.includes('placeholder'));
+});
+
+test('font riêng và gradient ấm không bị cảnh báo', () => {
+  const r = run('<style>body{font-family:"Fraunces",serif}.h{background:linear-gradient(#f4a261,#e76f51)}</style><p>A</p>');
+  assert.ok(!r.warnings.includes('generic-font'));
+  assert.ok(!r.warnings.includes('purple-gradient'));
+});

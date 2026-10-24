@@ -32,4 +32,7 @@
   <symbol id="ds-i-coffee" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v3M12 3.5v3"/></symbol>
   <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
   <symbol id="ds-i-bus" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="13.5" rx="2.5"/><path d="M5 11h14M8 20v-2.5M16 20v-2.5M8.5 14.5h.01M15.5 14.5h.01"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
 </svg>

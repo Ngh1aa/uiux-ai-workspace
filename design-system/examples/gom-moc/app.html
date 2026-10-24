@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lò Gốm Mộc: màn app giữ chỗ</title>
+<meta name="theme-color" content="#2c5a4e">
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="../../generated/tokens.css">
+<link rel="stylesheet" href="../../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="../../starter/app.css">
+<style>
+  .gm-title { margin: 0; font: 600 30px/1.15 var(--app-font-display); letter-spacing: -0.01em; }
+  .gm-hero-title { margin: 0; font: 600 26px/1.2 var(--app-font-display); }
+  .gm-tag { display: inline-flex; align-items: center; gap: var(--ds-space-100); padding: var(--ds-space-100) var(--ds-space-300); border: var(--ds-border-width-100) dashed var(--ds-border-control); border-radius: var(--ds-radius-100); background: var(--ds-surface-raised); white-space: nowrap; font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/var(--ds-type-label-md-line-height) var(--ds-font-family-sans); font-variant-numeric: tabular-nums; color: var(--ds-text-primary); }
+  .gm-tag--low { border-color: var(--ds-feedback-danger-border); color: var(--ds-feedback-danger-text); background: var(--ds-feedback-danger-surface); }
+  .gm-tag--on-brand { border-color: color-mix(in srgb, var(--ds-text-on-brand-strong) 60%, transparent); background: transparent; color: var(--ds-text-on-brand-strong); }
+  .gm-day { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none; width: 52px; }
+  .gm-day__n { font: 600 24px/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .gm-day__w { color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); white-space: nowrap; }
+  .gm-stepper { display: flex; align-items: center; gap: var(--ds-space-300); }
+  .gm-stepper output { min-width: 32px; text-align: center; font: var(--ds-font-weight-bold) var(--ds-font-size-600)/1 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+  .gm-ticket { display: flex; flex-direction: column; gap: var(--ds-space-300); padding: var(--ds-spacing-inset-lg); border: var(--ds-border-width-200) dashed var(--ds-border-control); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+  .gm-ticket__code { margin: 0; font: var(--ds-font-weight-bold) 28px/1 var(--ds-font-family-mono); letter-spacing: 0.08em; }
+  .gm-done { display: grid; place-items: center; width: 64px; height: 64px; border-radius: var(--ds-shape-pill); background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+</style>
+</head>
+<body class="ds-root app">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="ds-i-calendar-plus" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4M12 12.5v5M9.5 15h5"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5M12 8v.01"/></symbol>
+  <symbol id="ds-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></symbol>
+  <symbol id="ds-i-pin" viewBox="0 0 24 24"><path d="M12 20.5s6-5.4 6-10.5a6 6 0 1 0-12 0c0 5.1 6 10.5 6 10.5Z"/><circle cx="12" cy="10" r="2.25"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+<!-- icons:end -->
+<main class="app-gallery">
+  <header class="app-gallery__intro ds-stack ds-stack--sm">
+    <h1 class="ds-text-title-lg">Lò Gốm Mộc: giữ chỗ trên điện thoại</h1>
+    <p class="ds-text-body-md ds-text-secondary">Ba màn của luồng giữ chỗ: chọn buổi, chọn số người, nhận phiếu. Khách hàng và dữ liệu là giả định.</p>
+    <div class="ds-cluster">
+      <button class="ds-button ds-button--sm" type="button" data-theme-toggle><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg>Đổi sáng tối</button>
+    </div>
+  </header>
+
+  <section class="app-gallery__item" aria-label="Màn chọn buổi">
+    <p class="app-gallery__caption">1. Chọn buổi</p>
+    <div class="app-phone" data-screen="Chọn buổi">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><h1 class="gm-title">Lịch lớp</h1></div>
+          <section class="app-hero" aria-labelledby="next-title">
+            <span class="gm-tag gm-tag--on-brand" style="align-self:flex-start">Thứ Bảy 2/11, còn 2 chỗ</span>
+            <h2 class="gm-hero-title" id="next-title">Bát ăn cơm đầu tiên</h2>
+            <p class="ds-text-body-md app-hero__muted" style="margin:0">14:00 đến 17:00, cho người mới bắt đầu</p>
+            <a class="ds-button ds-button--secondary ds-button--block" href="#chi-tiet">Giữ chỗ buổi này</a>
+          </section>
+          <div class="ds-section-header"><h2 class="ds-text-title-sm">Các buổi khác</h2></div>
+          <ul class="ds-list">
+            <li><a class="ds-list-item" href="#chi-tiet"><span class="gm-day"><span class="gm-day__n">03</span><span class="gm-day__w">CN</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Cốc có quai</span><span class="app-meta">09:00, đã học một buổi</span></span><span class="gm-tag">Còn 5</span></a></li>
+            <li><a class="ds-list-item" href="#chi-tiet"><span class="gm-day"><span class="gm-day__n">09</span><span class="gm-day__w">Thứ 7</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Bát ăn cơm đầu tiên</span><span class="app-meta">14:00, người mới</span></span><span class="gm-tag">Đã kín</span></a></li>
+            <li><a class="ds-list-item" href="#chi-tiet"><span class="gm-day"><span class="gm-day__n">10</span><span class="gm-day__w">CN</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Đĩa men rạn</span><span class="app-meta">09:00, đã học hai buổi</span></span><span class="gm-tag">Còn 6</span></a></li>
+          </ul>
+          <p class="app-note"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-info"/></svg>Buổi đã kín: chạm để nhận tin khi có người huỷ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="app-gallery__item" aria-label="Màn chọn số người">
+    <p class="app-gallery__caption">2. Chọn số người</p>
+    <div class="app-phone" data-screen="Chọn số người" id="chi-tiet">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Thứ Bảy 2/11</h1>
+      </header>
+      <div class="app-screen">
+        <form class="app-body app-body--footer" onsubmit="return false">
+          <div class="app-panel">
+            <div class="app-panel__section">
+              <h2 class="gm-hero-title">Bát ăn cơm đầu tiên</h2>
+              <div class="app-kv"><span class="app-kv__label">Giờ</span><span class="app-kv__value">14:00 đến 17:00</span></div>
+              <div class="app-kv"><span class="app-kv__label">Nơi học</span><span class="app-kv__value">Xưởng Mộc, Bát Tràng</span></div>
+              <div class="app-kv"><span class="app-kv__label">Còn trống</span><span class="app-kv__value"><span class="gm-tag gm-tag--low">2 chỗ</span></span></div>
+            </div>
+          </div>
+          <div class="ds-card ds-card--flat">
+            <div class="ds-split">
+              <span id="people-label" class="ds-text-label-lg">Số người</span>
+              <div class="gm-stepper" role="group" aria-labelledby="people-label">
+                <button class="app-round" type="button" aria-label="Bớt một người" data-step="-1"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-minus"/></svg></button>
+                <output aria-live="polite" data-people>2</output>
+                <button class="app-round" type="button" aria-label="Thêm một người" data-step="1" aria-disabled="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+              </div>
+            </div>
+            <p class="ds-field__hint" data-people-hint>Buổi này chỉ còn 2 chỗ.</p>
+          </div>
+          <fieldset class="ds-fieldset ds-card ds-card--flat">
+            <legend>Bạn đã từng làm gốm chưa?</legend>
+            <label class="ds-check ds-check--radio"><input type="radio" name="exp" checked><span class="ds-check__box" aria-hidden="true"></span><span>Chưa, đây là lần đầu</span></label>
+            <label class="ds-check ds-check--radio"><input type="radio" name="exp"><span class="ds-check__box" aria-hidden="true"></span><span>Đã học một vài buổi</span></label>
+          </fieldset>
+          <label class="ds-check"><input type="checkbox" checked><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Gửi bát về nhà sau khi nung, miễn phí nội&nbsp;thành</span></label>
+        </form>
+      </div>
+      <div class="app-footer"><a class="ds-button ds-button--primary ds-button--block" href="#phieu" data-pay>Giữ 2 chỗ, 900.000 ₫</a><p class="app-footer__note">Đổi buổi miễn phí nếu báo trước 24 giờ</p></div>
+    </div>
+  </section>
+
+  <section class="app-gallery__item" aria-label="Màn phiếu giữ chỗ">
+    <p class="app-gallery__caption">3. Phiếu giữ chỗ</p>
+    <div class="app-phone" data-screen="Phiếu giữ chỗ" id="phieu">
+      <div class="app-status"><span class="app-status__time">9:42</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="ds-stack ds-stack--sm" style="align-items:flex-start; padding-top: var(--ds-space-600)">
+            <span class="gm-done"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-check"/></svg></span>
+            <h1 class="gm-title">Đã giữ 2 chỗ</h1>
+            <p class="ds-text-body-md ds-text-secondary" style="margin:0">Phiếu đã gửi qua tin nhắn tới 0912 000 000.</p>
+          </div>
+          <div class="gm-ticket">
+            <span class="ds-text-body-sm ds-text-secondary">Mã phiếu, đọc khi đến xưởng</span>
+            <p class="gm-ticket__code">MOC-0211</p>
+            <div class="app-kv"><span class="app-kv__label">Buổi</span><span class="app-kv__value">Thứ Bảy 2/11, 14:00</span></div>
+            <div class="app-kv"><span class="app-kv__label">Số người</span><span class="app-kv__value">2</span></div>
+            <div class="app-kv"><span class="app-kv__label">Đã trả</span><span class="app-kv__value ds-tabular">900.000 ₫</span></div>
+          </div>
+          <section class="ds-card ds-card--flat" aria-labelledby="next-steps">
+            <h2 class="ds-text-title-sm" id="next-steps">Tiếp theo</h2>
+            <ol class="app-timeline">
+              <li><time>2/11</time><span>Đến xưởng trước 10 phút, mặc đồ có thể dính đất</span></li>
+              <li><time>16/11</time><span>Bát ra lò, xưởng nhắn ảnh cho bạn</span></li>
+              <li><time>18/11</time><span>Bát được gửi về nhà</span></li>
+            </ol>
+          </section>
+          <div class="ds-cluster">
+            <button class="ds-button ds-button--secondary" type="button"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar-plus"/></svg>Thêm vào lịch</button>
+            <a class="ds-button ds-button--tertiary" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-pin"/></svg>Chỉ đường</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+// Chỉ để bấm thử: tăng giảm số người, cập nhật nút trả tiền, đổi sáng tối.
+const SEATS = 2;
+const PRICE = 450000;
+document.addEventListener('click', (event) => {
+  const step = event.target.closest('[data-step]');
+  if (step) {
+    if (step.getAttribute('aria-disabled') === 'true') return;
+    const phone = step.closest('.app-phone');
+    const out = phone.querySelector('[data-people]');
+    const n = Math.min(SEATS, Math.max(1, Number(out.textContent) + Number(step.dataset.step)));
+    out.textContent = String(n);
+    phone.querySelector('[data-step="-1"]').setAttribute('aria-disabled', String(n <= 1));
+    phone.querySelector('[data-step="1"]').setAttribute('aria-disabled', String(n >= SEATS));
+    phone.querySelector('[data-pay]').textContent = `Giữ ${n} chỗ, ${(n * PRICE).toLocaleString('vi-VN')} ₫`;
+  }
+  if (event.target.closest('[data-theme-toggle]')) {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+  }
+});
+</script>
+</body>
+</html>

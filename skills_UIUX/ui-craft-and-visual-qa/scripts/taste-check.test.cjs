@@ -123,3 +123,36 @@ test('hai sắc gần nhau của cùng một màu tính là một nhóm', () => 
   const r = run(`<section data-screen="Cùng sắc">${body}</section>`);
   assert.ok(!r.rules('Cùng sắc', 'warnings').includes('colors'));
 });
+
+function runArgs(body, args) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'taste-'));
+  fs.writeFileSync(path.join(dir, 'page.html'), `<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>t</title><style>${BASE}</style></head><body>${body}</body></html>`);
+  const out = path.join(dir, 'out.json');
+  spawnSync(process.execPath, [SCRIPT, path.join(dir, 'page.html'), '--root', dir, '--theme', 'light', '--json', out, ...args], { encoding: 'utf8' });
+  return JSON.parse(fs.readFileSync(out, 'utf8'));
+}
+
+test('bắt ảnh tải lỗi', () => {
+  const data = runArgs('<section data-screen="Ảnh"><div class="card"><img src="khong-co.png" alt="Ảnh thiếu" width="40" height="40"></div></section>', ['--width', '390', '--no-axe']);
+  const rules = data.results.flatMap((r) => r.screens).flatMap((s) => s.errors).map((e) => e.rule);
+  assert.ok(rules.includes('request'), JSON.stringify(rules));
+});
+
+test('--reflow bắt tràn ngang ở 320 px mà 390 px không có', () => {
+  const body = '<main><div style="width:360px;height:20px;background:#eee"></div><p>Nội dung</p></main>';
+  const data = runArgs(body, ['--width', '390', '--reflow', '--no-axe']);
+  const normal = data.results.filter((r) => !r.reflow).flatMap((r) => r.screens).flatMap((s) => s.errors).map((e) => e.rule);
+  const reflow = data.results.filter((r) => r.reflow).flatMap((r) => r.screens).flatMap((s) => s.errors).map((e) => e.rule);
+  assert.ok(!normal.includes('overflow'), JSON.stringify(normal));
+  assert.ok(reflow.includes('reflow'), JSON.stringify(reflow));
+});
+
+test('ghi rõ axe có chạy hay không', () => {
+  const data = runArgs('<main><p>A</p></main>', ['--width', '390']);
+  assert.ok(['RUN', 'NOT_RUN'].includes(data.axe), data.axe);
+  if (data.axe === 'RUN') {
+    const bad = runArgs('<main><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="10" height="10"></main>', ['--width', '390']);
+    const rules = bad.results.flatMap((r) => r.screens).flatMap((s) => [...s.errors, ...s.warnings]).map((e) => e.rule);
+    assert.ok(rules.includes('axe'), JSON.stringify(rules));
+  }
+});

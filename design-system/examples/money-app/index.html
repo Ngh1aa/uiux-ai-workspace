@@ -169,11 +169,14 @@
   <symbol id="ds-i-coffee" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v3M12 3.5v3"/></symbol>
   <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
   <symbol id="ds-i-bus" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="13.5" rx="2.5"/><path d="M5 11h14M8 20v-2.5M16 20v-2.5M8.5 14.5h.01M15.5 14.5h.01"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
 </svg>
 <main class="mx-lab">
   <header class="mx-intro ds-stack ds-stack--sm">
     <div class="ds-split">
-      <p class="ds-text-label-sm ds-text-secondary">Design system v0.2 · ví dụ tham chiếu · dữ liệu giả định</p>
+      <p class="ds-text-label-sm ds-text-secondary">Ví dụ tham chiếu của design system, dữ liệu giả định</p>
       <button class="ds-button ds-button--secondary ds-button--sm" id="theme" type="button" aria-pressed="false"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg><span>Giao diện tối</span></button>
     </div>
     <h1 class="ds-text-title-lg">Ví Xanh — tiền bạc rõ ràng trong ba chạm</h1>
@@ -205,7 +208,7 @@
             </div>
             <div class="mx-accounts mx-divider-soft">
               <div><p class="mx-muted">Ví chính</p><p class="mx-figure" data-hide>31.200.000 ₫</p></div>
-              <div><p class="mx-muted">Tiết kiệm · 5,2%/năm</p><p class="mx-figure" data-hide>17.050.000 ₫</p></div>
+              <div><p class="mx-muted">Tiết kiệm lãi 5,2%/năm</p><p class="mx-figure" data-hide>17.050.000 ₫</p></div>
             </div>
           </section>
 
@@ -239,8 +242,8 @@
           <section class="ds-stack ds-stack--sm" aria-labelledby="recent-title">
             <div class="ds-section-header"><h3 class="ds-text-title-sm" id="recent-title">Giao dịch gần đây</h3><a class="ds-link ds-text-label-md" href="#transactions">Xem tất cả</a></div>
             <ul class="mx-rows">
-              <li class="mx-row"><span class="mx-tile"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-coffee"/></svg></span><span><span class="mx-row__title ds-text-label-lg">Cà phê Sương Mai</span><span class="ds-text-body-sm ds-text-secondary">Ăn uống · 08:12</span></span><span class="mx-row__amount ds-text-label-lg">−65.000 ₫</span></li>
-              <li class="mx-row"><span class="mx-tile mx-tile--brand"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-receive"/></svg></span><span><span class="mx-row__title ds-text-label-lg">Lương tháng 10</span><span class="ds-text-body-sm ds-text-secondary">Thu nhập · Hôm qua</span></span><span class="mx-row__amount ds-text-label-lg mx-in">+18.500.000 ₫</span></li>
+              <li class="mx-row"><span class="mx-tile"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-coffee"/></svg></span><span><span class="mx-row__title ds-text-label-lg">Cà phê Sương Mai</span><span class="ds-text-body-sm ds-text-secondary">Ăn uống, 08:12</span></span><span class="mx-row__amount ds-text-label-lg">−65.000 ₫</span></li>
+              <li class="mx-row"><span class="mx-tile mx-tile--brand"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-receive"/></svg></span><span><span class="mx-row__title ds-text-label-lg">Lương tháng 10</span><span class="ds-text-body-sm ds-text-secondary">Thu nhập, hôm qua</span></span><span class="mx-row__amount ds-text-label-lg mx-in">+18.500.000 ₫</span></li>
             </ul>
           </section>
         </div>
@@ -319,7 +322,7 @@
             </div>
             <div class="mx-recipient">
               <span class="ds-avatar" aria-hidden="true">MT</span>
-              <div><p class="ds-text-label-lg">Nguyễn Minh Trí</p><p class="ds-text-body-sm ds-text-secondary ds-tabular">Vietcombank · •••• 4821</p></div>
+              <div><p class="ds-text-label-lg">Nguyễn Minh Trí</p><p class="ds-text-body-sm ds-text-secondary ds-tabular">Vietcombank, thẻ cuối 4821</p></div>
               <button class="ds-button ds-button--tertiary ds-button--sm" type="button" data-message="Danh sách người nhận gần đây. Ví dụ chỉ có một người nhận.">Đổi</button>
             </div>
             <div class="ds-field">
@@ -338,7 +341,7 @@
               <input class="ds-field__control" id="note" maxlength="60" placeholder="Ví dụ: Tiền ăn trưa thứ Sáu">
             </div>
             <label class="ds-split"><span class="ds-text-label-lg">Lưu vào danh bạ người nhận</span><span class="ds-switch"><input type="checkbox" role="switch" id="save-contact" checked><span class="ds-switch__thumb" aria-hidden="true"></span></span></label>
-            <p class="mx-fee ds-text-body-sm"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Miễn phí · tiền đến trong vài giây</p>
+            <p class="mx-fee ds-text-body-sm"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Miễn phí, tiền đến trong vài giây</p>
             <button class="ds-button ds-button--primary ds-button--lg ds-button--block" type="submit" id="send">Chuyển 500.000 ₫</button>
             <div class="ds-banner ds-banner--success" role="status" id="sent" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg><div><p class="ds-text-label-lg">Đã kiểm tra xong</p><p class="ds-text-body-sm">Ví dụ dừng trước bước xác thực. Không có tiền nào được chuyển.</p></div></div>
           </form>
@@ -415,7 +418,7 @@ function renderTx() {
       <div class="mx-day__head"><h3 class="ds-text-label-md ds-text-secondary">${day}</h3><span class="ds-text-label-md ds-text-secondary ds-tabular">${signed(total)}</span></div>
       <ul class="mx-rows">${rows.map(t => `<li class="mx-row">
         <span class="mx-tile${t.amount > 0 ? ' mx-tile--brand' : ''}">${icon(t.icon)}</span>
-        <span><span class="mx-row__title ds-text-label-lg">${t.name}</span><span class="ds-text-body-sm ds-text-secondary">${t.cat} · ${t.time}</span></span>
+        <span><span class="mx-row__title ds-text-label-lg">${t.name}</span><span class="ds-text-body-sm ds-text-secondary">${t.cat}, ${t.time}</span></span>
         <span class="mx-row__amount ds-text-label-lg${t.amount > 0 ? ' mx-in' : ''}">${signed(t.amount)}</span></li>`).join('')}</ul></section>`;
   }).join('');
   empty.hidden = items.length > 0;
