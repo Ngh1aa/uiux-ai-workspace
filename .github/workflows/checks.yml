@@ -57,6 +57,9 @@ jobs:
       - name: Internal Markdown links resolve
         working-directory: .
         run: python scripts/check-links.py
+      - name: Benchmark report matches recorded runs
+        working-directory: .
+        run: python benchmarks/report.py --check
 
   release-candidate:
     name: release-candidate
@@ -99,7 +102,7 @@ jobs:
         run: >-
           node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs
           design-system/starter/mobile.html design-system/starter/web.html
-          --width 390 --width 1280 --screenshot "$RUNNER_TEMP/starter-shots"
+          --width 390 --width 1024 --width 1280 --screenshot "$RUNNER_TEMP/starter-shots"
       - name: Upload starter kit screenshots
         if: always()
         uses: actions/upload-artifact@v7

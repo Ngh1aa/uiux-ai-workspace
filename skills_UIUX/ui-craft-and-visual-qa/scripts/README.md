@@ -6,9 +6,9 @@ Soát trang đã render theo [`TASTE.md`](../../../TASTE.md) trong Chromium, c�
 Mỗi phần tử có `data-screen="Tên màn"` được soát như một màn riêng.
 
 - **Lỗi:** dấu " · " nối cụm từ, chữ dưới ngưỡng tương phản AA, nhãn ngắn bị gãy dòng, nội dung
-  tràn ngang, hơn một card nổi bật trong một màn.
+  tràn ngang hoặc bị khung cha cắt mất, hơn một card nổi bật trong một màn.
 - **Cảnh báo:** card có nhiều bán kính bo góc, hơn 3 nhóm màu, vùng chạm dưới 44×44 px, chữ bị cắt
-  bằng "…", dòng cuối chỉ còn một chữ.
+  bằng "…", dòng cuối chỉ còn một chữ, chữ sát mép màn hẹp.
 
 ```bash
 node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs design-system/starter/mobile.html \

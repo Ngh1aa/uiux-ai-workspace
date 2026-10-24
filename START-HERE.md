@@ -56,5 +56,6 @@ Danh sách đầy đủ: [`skills_UIUX/SKILL-CATALOG.md`](skills_UIUX/SKILL-CATA
 | `skills_UIUX/` | 116 skill UI/UX, flow, prompt, kiến thức, bộ kiểm tra `designlib/` |
 | `design-system/` | Token DTCG, 19 component CSS, font, ví dụ app |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
+| `benchmarks/` | Bộ 3 đề chuẩn để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |
 | `docs/` | Ghi chép nâng cấp và bằng chứng các lần thử |
 | `AGENTS.md` | Quy tắc làm việc chung cho AI |

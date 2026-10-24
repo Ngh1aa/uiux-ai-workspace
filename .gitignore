@@ -27,3 +27,7 @@ temp/
 *.pth
 *.ckpt
 *.safetensors
+
+# Bộ đề chuẩn: chỉ lưu ảnh sáng ở 390px và 1280px để repo nhẹ; ảnh khác chạy lại run.cjs là có
+benchmarks/runs/*/shots/*-dark.jpg
+benchmarks/runs/*/shots/*-1024-*.jpg

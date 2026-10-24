@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Len Nhỏ, tổng quan kho</title>
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="../../../../design-system/starter/brand.css">
+<link rel="stylesheet" href="../../../../design-system/starter/app.css">
+<style>
+/* Thương hiệu shop len: màu mận thay cho navy. Đỏ chỉ dùng cho việc cần làm ngay. */
+:root { --brand-900: #2a1127; --brand-800: #3d1f39; --brand-700: #552c4f; --brand-600: #6a3a63; --brand-100: #ecdde8; --brand-50: #f6eef4; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --brand-strong-dark: #5b3155; --brand-tint-dark: #dcb8d2; --ds-action-primary-text: #2a1127; --ds-surface-brand-subtle: #2a1a28; --ds-action-selected-bg: #3a2336; --ds-action-selected-text: #f3e2ee; --ds-action-primary-bg-hover: #e6c9de; --ds-action-primary-bg-pressed: #eed8e8; }
+}
+:root[data-theme="dark"] { --brand-strong-dark: #5b3155; --brand-tint-dark: #dcb8d2; --ds-action-primary-text: #2a1127; --ds-surface-brand-subtle: #2a1a28; --ds-action-selected-bg: #3a2336; --ds-action-selected-text: #f3e2ee; }
+
+.fresh { display: inline-flex; align-items: center; gap: var(--ds-space-100); color: var(--ds-text-secondary); white-space: nowrap; }
+.web-hero .app-hero__value { font-size: 48px; line-height: 52px; }
+.web-hero .app-hero__stat { align-items: flex-start; padding: 0 var(--ds-space-500); border-left: var(--ds-border-width-100) solid color-mix(in srgb, var(--ds-text-on-brand-strong) 22%, transparent); }
+.web-hero .app-hero__stat strong { font: var(--ds-font-weight-bold) 28px/36px var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.stock-name { display: flex; flex-direction: column; }
+.stock-days { display: flex; align-items: center; gap: var(--ds-space-300); }
+.stock-bar { flex: none; width: 72px; height: 8px; border-radius: var(--ds-shape-pill); background: var(--ds-surface-sunken); overflow: hidden; }
+.stock-bar span { display: block; height: 100%; border-radius: inherit; background: var(--ds-text-tertiary); }
+.urgent .stock-bar span { background: var(--ds-feedback-danger-icon); }
+.urgent td:first-child { box-shadow: inset 3px 0 0 var(--ds-feedback-danger-icon); }
+.chart { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--ds-space-300); align-items: end; height: 200px; padding: var(--ds-space-200) 0 0; border-bottom: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+.chart__col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: var(--ds-space-100); height: 100%; }
+.chart__value { font: var(--ds-font-weight-semibold) var(--ds-type-label-sm-font-size)/1 var(--ds-font-family-sans); color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chart__bar { width: 100%; max-width: 48px; border-radius: 6px 6px 0 0; background: var(--ds-action-primary-bg); opacity: 0.55; }
+.chart__col--max .chart__bar { opacity: 1; }
+.chart__col--max .chart__value { color: var(--ds-text-primary); }
+.chart__days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--ds-space-300); padding-top: var(--ds-space-200); text-align: center; color: var(--ds-text-secondary); font-size: var(--ds-type-label-md-font-size); }
+.panel-pad { padding: var(--ds-spacing-inset-md); }
+@media (min-width: 1201px) { .web-grid { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); } }
+.stock-days { white-space: nowrap; }
+.stock-days .ds-badge { display: none; }
+.stock-bar { width: 48px; }
+.ds-section-header { flex-wrap: wrap; }
+.web-stack { display: flex; flex-direction: column; gap: var(--ds-spacing-stack-sm); }
+@media (max-width: 1200px) {
+  .web-hero { row-gap: var(--ds-space-500); }
+  .web-hero .app-hero__stat { padding: 0 var(--ds-space-300); }
+  .web-hero .app-hero__stat:nth-child(2) { border-left: 0; padding-left: 0; }
+  .web-hero .app-hero__stat strong { font-size: 22px; line-height: 28px; }
+  .chart { gap: var(--ds-space-150, 6px); }
+  .chart__days { gap: 6px; }
+  .chart__value { font-size: 11px; }
+}
+@media (max-width: 600px) {
+  .web-hero { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .web-hero > :first-child { margin-bottom: var(--ds-space-300); }
+  .web-hero .app-hero__stat, .web-hero .app-hero__stat:nth-child(2) { flex-direction: row; align-items: baseline; justify-content: space-between; padding: var(--ds-space-300) 0; border-left: 0; border-top: var(--ds-border-width-100) solid color-mix(in srgb, var(--ds-text-on-brand-strong) 22%, transparent); }
+  .web-hero .app-hero__stat strong { font-size: 18px; line-height: 24px; }
+  .stock-bar { display: none; }
+  .stock-days .ds-badge { display: inline-flex; }
+  .web-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .web-table, .web-table tbody { display: block; }
+  .web-table tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ds-space-200) var(--ds-spacing-inline-md); padding: var(--ds-space-300) var(--ds-spacing-inset-md); }
+  .web-table tr + tr { border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+  .web-table td { display: block; padding: 0; border: 0; }
+  .web-table td.num { align-self: start; }
+  .web-table td:last-child { grid-column: 1 / -1; }
+  .web-table td:last-child::before { content: "Đủ bán "; color: var(--ds-text-secondary); }
+  .web-table td:last-child .stock-days { display: inline-flex; }
+  .urgent td:first-child { box-shadow: none; }
+  .web-table tr.urgent { box-shadow: inset 3px 0 0 var(--ds-feedback-danger-icon); }
+}
+</style>
+</head>
+<body class="ds-root app web">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="app-i-task" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16.5" rx="2"/><path d="M9 4V3h6v1M8.5 12.5l2.5 2.5 4.5-4.5"/></symbol>
+  <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
+  <symbol id="ds-i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><rect x="5.5" y="11" width="3" height="6" rx="1"/><rect x="10.5" y="6" width="3" height="11" rx="1"/><rect x="15.5" y="9" width="3" height="8" rx="1"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-send" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+</svg>
+<!-- icons:end -->
+<div class="web-mobile-bar">
+  <span class="web-brand"><span class="web-brand__mark" aria-hidden="true"><svg class="ds-icon ds-icon--sm"><use href="#ds-i-bag"/></svg></span>Len Nhỏ</span>
+  <button class="app-round" type="button" aria-label="Mở menu"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-menu"/></svg></button>
+</div>
+<div class="web-shell">
+  <aside class="web-side">
+    <span class="web-brand"><span class="web-brand__mark" aria-hidden="true"><svg class="ds-icon ds-icon--sm"><use href="#ds-i-bag"/></svg></span>Len Nhỏ</span>
+    <nav aria-label="Điều hướng chính">
+      <ul class="web-nav">
+        <li><a href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Hôm nay</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-send"/></svg>Đơn hàng</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg>Kho</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chart"/></svg>Doanh thu</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="web-main">
+    <div class="web-top">
+      <div>
+        <p class="ds-text-body-sm ds-text-secondary" style="margin:0">Thứ Sáu, 24/10</p>
+        <h1 class="ds-text-title-lg">Hôm nay</h1>
+      </div>
+      <span class="fresh ds-text-body-sm"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>Cập nhật 7:45</span>
+    </div>
+
+    <section class="app-hero web-hero" aria-labelledby="todo-value">
+      <div>
+        <p class="ds-text-body-sm app-hero__muted" style="margin:0">Đơn chờ gửi</p>
+        <p class="app-hero__value" id="todo-value">14</p>
+        <p class="ds-text-body-md" style="margin:var(--ds-space-200) 0 0">3 đơn đã quá hạn gửi</p>
+      </div>
+      <div class="app-hero__stat"><span class="ds-text-body-sm">Quá hạn gửi</span><strong>3 đơn</strong></div>
+      <div class="app-hero__stat"><span class="ds-text-body-sm">Hết trong 2 ngày</span><strong>1 mặt hàng</strong></div>
+      <div class="app-hero__stat"><span class="ds-text-body-sm">Doanh thu 7 ngày</span><strong>18,55 tr ₫</strong></div>
+    </section>
+
+    <div class="web-grid">
+      <section class="web-stack" aria-labelledby="stock-title">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="stock-title">Sắp hết hàng</h2><span class="ds-text-body-sm ds-text-secondary">Ít ngày nhất trước</span></div>
+        <div class="app-panel">
+          <table class="web-table">
+            <thead><tr><th scope="col">Sản phẩm</th><th scope="col" class="num">Còn</th><th scope="col" class="num hide-sm">Mỗi ngày</th><th scope="col">Đủ bán</th></tr></thead>
+            <tbody>
+              <tr class="urgent"><td><span class="stock-name"><span class="ds-text-label-lg">Len cotton màu kem</span><span class="app-meta app-mono">LC-012</span></span></td><td class="num">6 cuộn</td><td class="num hide-sm">3</td><td><span class="stock-days"><span class="stock-bar" aria-hidden="true"><span style="width:29%"></span></span><span class="app-meta app-meta--urgent" style="margin:0">2 ngày</span><span class="ds-badge ds-badge--danger">Nhập ngay</span></span></td></tr>
+              <tr><td><span class="stock-name"><span class="ds-text-label-lg">Kim móc 3,5 mm</span><span class="app-meta app-mono">KM-035</span></span></td><td class="num">4 cây</td><td class="num hide-sm">1</td><td><span class="stock-days"><span class="stock-bar" aria-hidden="true"><span style="width:57%"></span></span>4 ngày</span></td></tr>
+              <tr><td><span class="stock-name"><span class="ds-text-label-lg">Len lông cừu màu rêu</span><span class="app-meta app-mono">LW-207</span></span></td><td class="num">9 cuộn</td><td class="num hide-sm">2</td><td><span class="stock-days"><span class="stock-bar" aria-hidden="true"><span style="width:57%"></span></span>4 ngày</span></td></tr>
+              <tr><td><span class="stock-name"><span class="ds-text-label-lg">Len cotton màu hồng đất</span><span class="app-meta app-mono">LC-031</span></span></td><td class="num">15 cuộn</td><td class="num hide-sm">2</td><td><span class="stock-days"><span class="stock-bar" aria-hidden="true"><span style="width:100%"></span></span>7 ngày</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="web-stack" aria-labelledby="late-title">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="late-title">Đơn quá hạn gửi</h2><a class="ds-link ds-text-label-md" href="#">Cả 14 đơn</a></div>
+        <ul class="ds-list">
+          <li class="ds-list-item"><div class="ds-list-item__body"><span class="app-line ds-text-label-lg">#2041 chị Hà</span><span class="app-meta">Đà Nẵng<span class="app-meta__gap"></span><span class="app-meta--urgent">Quá 2 ngày</span></span></div><a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Gửi</a></li>
+          <li class="ds-list-item"><div class="ds-list-item__body"><span class="app-line ds-text-label-lg">#2045 anh Tuấn</span><span class="app-meta">Hà Nội<span class="app-meta__gap"></span><span class="app-meta--urgent">Quá 1 ngày</span></span></div><a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Gửi</a></li>
+          <li class="ds-list-item"><div class="ds-list-item__body"><span class="app-line ds-text-label-lg">#2047 chị Mai</span><span class="app-meta">Cần Thơ<span class="app-meta__gap"></span><span class="app-meta--urgent">Quá 1 ngày</span></span></div><a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Gửi</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="web-stack" aria-labelledby="sales-title">
+      <div class="ds-section-header"><h2 class="ds-text-title-sm" id="sales-title">Doanh thu 7 ngày</h2><span class="ds-text-body-sm ds-text-secondary">Nghìn đồng, 17/10 tới 23/10</span></div>
+      <div class="app-panel panel-pad">
+        <p class="ds-text-body-md" style="margin:0 0 var(--ds-space-300)">Tổng <strong class="ds-tabular">18.550</strong> nghìn đồng. Cao nhất Chủ nhật với <strong class="ds-tabular">4.120</strong>.</p>
+        <div class="chart" aria-hidden="true">
+          <div class="chart__col"><span class="chart__value">2.150</span><span class="chart__bar" style="height:52%"></span></div>
+          <div class="chart__col"><span class="chart__value">3.480</span><span class="chart__bar" style="height:84%"></span></div>
+          <div class="chart__col chart__col--max"><span class="chart__value">4.120</span><span class="chart__bar" style="height:100%"></span></div>
+          <div class="chart__col"><span class="chart__value">1.890</span><span class="chart__bar" style="height:46%"></span></div>
+          <div class="chart__col"><span class="chart__value">2.260</span><span class="chart__bar" style="height:55%"></span></div>
+          <div class="chart__col"><span class="chart__value">2.010</span><span class="chart__bar" style="height:49%"></span></div>
+          <div class="chart__col"><span class="chart__value">2.640</span><span class="chart__bar" style="height:64%"></span></div>
+        </div>
+        <div class="chart__days" aria-hidden="true"><span>T6</span><span>T7</span><span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span></div>
+        <table class="ds-visually-hidden">
+          <caption>Doanh thu 7 ngày, nghìn đồng</caption>
+          <tr><th scope="col">Ngày</th><th scope="col">Doanh thu</th></tr>
+          <tr><td>Thứ Sáu</td><td>2.150</td></tr><tr><td>Thứ Bảy</td><td>3.480</td></tr><tr><td>Chủ nhật</td><td>4.120</td></tr><tr><td>Thứ Hai</td><td>1.890</td></tr><tr><td>Thứ Ba</td><td>2.260</td></tr><tr><td>Thứ Tư</td><td>2.010</td></tr><tr><td>Thứ Năm</td><td>2.640</td></tr>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
