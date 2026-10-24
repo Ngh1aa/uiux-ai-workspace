@@ -97,3 +97,23 @@ test('cảnh báo dòng cuối chỉ còn một chữ', () => {
   const r = run('<section data-screen="Mồ côi"><div class="card"><p style="width:30ch;margin:0;font-family:monospace">aaaa bbbb cccc dddd eeee ffff gg</p></div></section>');
   assert.ok(r.rules('Mồ côi', 'warnings').includes('widow'));
 });
+
+test('khối chỉ có đường kẻ trên không bị tính là card', () => {
+  const r = run('<section data-screen="Kẻ trên"><div class="card">A</div><div style="border-top:1px solid #ccc;width:300px;min-height:80px">B</div></section>');
+  assert.ok(!r.rules('Kẻ trên', 'warnings').includes('radius'));
+});
+
+test('cảnh báo chữ sát mép màn hẹp', () => {
+  const r = run('<section data-screen="Sát mép" style="padding:20px 0"><p style="margin:0">Ba lớp cho người mới</p></section>');
+  assert.ok(r.rules('Sát mép', 'warnings').includes('edge'));
+});
+
+test('bỏ qua phần chỉ dành cho trình đọc màn hình', () => {
+  const r = run('<section data-screen="Ẩn"><div class="card"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Một dòng chữ rất dài chỉ để trình đọc màn hình đọc · không hiện</span>A</div></section>');
+  assert.deepEqual(r.rules('Ẩn', 'errors'), []);
+});
+
+test('bắt chữ bị khung cha cắt mất', () => {
+  const r = run('<section data-screen="Bị cắt"><div class="card" style="overflow:hidden;width:200px"><span style="display:inline-block;white-space:nowrap;margin-left:150px">2 ngày còn lại</span></div></section>');
+  assert.ok(r.rules('Bị cắt', 'errors').includes('clipped'));
+});

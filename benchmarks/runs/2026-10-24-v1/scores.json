@@ -1,0 +1,40 @@
+{
+  "run": "2026-10-24-v1",
+  "repo_commit": "cc0276e",
+  "reviewer": "agent-heuristic",
+  "summary": "Mốc gốc. Landing và dashboard đạt mức điểm M nhưng dashboard có hard fail thiếu trạng thái dữ liệu; app chưa đạt ngưỡng L vì tương tác mỏng và nhìn vẫn là starter kit đổi màu. Người chấm cũng là người làm, nên điểm có thể cao hơn thực tế.",
+  "briefs": {
+    "01-landing": {
+      "size": "M",
+      "hard_fails": [],
+      "scores": { "1": 4, "2": 4, "3": 4, "4": 3, "5": 4, "6": 4, "7": 3, "8": 4, "9": 4, "10": 3 },
+      "notes": [
+        "4 Chữ: một họ chữ Be Vietnam Pro cho cả tiêu đề và thân; đúng thang nhưng thiếu cá tính cho một xưởng làm tay.",
+        "7 Tương tác: nút đặt chỗ chỉ là gọi điện, chưa chọn được lớp và ca ngay trên trang.",
+        "10 Dấu ấn: hình chiếc cốc vẽ tay đơn giản; bố cục hero, 3 card, 3 bước, FAQ, khối CTA còn giống khuôn landing phổ biến.",
+        "3 Bố cục: đường kẻ giữa các section dài hơn mép nội dung một khoảng bằng lề."
+      ]
+    },
+    "02-app": {
+      "size": "L",
+      "hard_fails": [],
+      "scores": { "1": 4, "2": 4, "3": 4, "4": 4, "5": 4, "6": 4, "7": 3, "8": 4, "9": 4, "10": 3 },
+      "notes": [
+        "7 Tương tác: khung giờ ở Trang chủ và Danh sách chưa bấm thẳng vào đặt được; ở màn Đặt sân tổng tiền nằm dưới nếp gấp, sau nút cố định.",
+        "10 Dấu ấn: vẫn là starter kit đổi sang màu xanh; chưa có chi tiết riêng cho thể thao (sân, lưới, nhịp trận).",
+        "3 Bố cục: hàng chip lọc quận cuộn ngang nhưng chip cuối bị cắt ở mép, chưa có dấu hiệu cuộn rõ.",
+        "Màn lỗi đặt ở Sân Kỳ Hoà vì theo dữ liệu đề, 19:00 ở Sân Phú Nhuận đã có người đặt từ trước."
+      ]
+    },
+    "03-dashboard": {
+      "size": "M",
+      "hard_fails": ["HF-5: dashboard dữ liệu chưa thể hiện trạng thái đang tải, dữ liệu cũ hoặc lỗi cho từng khối"],
+      "scores": { "1": 4, "2": 4, "3": 4, "4": 4, "5": 4, "6": 4, "7": 3, "8": 4, "9": 4, "10": 3 },
+      "notes": [
+        "7 Tương tác: có nút Gửi và giờ cập nhật, nhưng không có trạng thái từng khối như skill dashboard yêu cầu.",
+        "10 Dấu ấn: gọn và dễ đọc nhưng chưa có gì riêng của một shop len.",
+        "Bảng sắp hết hàng chuyển thành danh sách trên điện thoại, không cuộn ngang."
+      ]
+    }
+  }
+}

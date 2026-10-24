@@ -11,6 +11,8 @@
  *   --height <px>         chiều cao khung nhìn (mặc định 844)
  *   --theme light|dark|both   chế độ màu (mặc định both)
  *   --screenshot <thư mục>    lưu ảnh chụp toàn trang
+ *   --format png|jpeg     định dạng ảnh chụp (mặc định png; jpeg nhẹ hơn để lưu vào repo)
+ *   --name <tên>          tên gốc của file ảnh (mặc định theo tên file trang)
  *   --json <file>         ghi kết quả dạng JSON
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
@@ -20,7 +22,7 @@
  *   - dấu " · " hoặc " • " nối cụm từ
  *   - chữ dưới ngưỡng tương phản WCAG AA (4.5:1, chữ lớn 3:1)
  *   - nhãn ngắn (≤ 24 ký tự) bị gãy dòng
- *   - nội dung tràn ngang
+ *   - nội dung tràn ngang, hoặc chữ bị khung cha cắt mất
  *   - hơn một card nổi bật (khối nền đậm, rộng) trong một màn
  * CẢNH BÁO:
  *   - card ngang hàng có bán kính bo góc khác nhau
@@ -28,6 +30,7 @@
  *   - vùng chạm nhỏ hơn 44 × 44 px
  *   - chữ bị cắt bằng dấu "…"
  *   - dòng cuối của một đoạn chỉ còn một chữ
+ *   - chữ cách mép màn dưới 12 px trên màn hẹp (≤ 600 px)
  *
  * Đây là tín hiệu tự động, không thay việc nhìn ảnh chụp và không phải bằng chứng đạt WCAG.
  * Cần Playwright: đặt NODE_PATH tới thư mục node_modules có playwright, hoặc cài playwright.
@@ -44,7 +47,7 @@ const TYPES = {
 };
 
 function parseArgs(argv) {
-  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '' };
+  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '', format: 'png', name: '' };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     const next = () => {
@@ -58,12 +61,15 @@ function parseArgs(argv) {
     else if (arg === '--theme') opts.theme = next();
     else if (arg === '--screenshot') opts.screenshot = path.resolve(next());
     else if (arg === '--json') opts.json = path.resolve(next());
+    else if (arg === '--format') opts.format = next();
+    else if (arg === '--name') opts.name = next();
     else if (arg === '-h' || arg === '--help') opts.help = true;
     else if (arg.startsWith('--')) throw new Error(`không hiểu tuỳ chọn ${arg}`);
     else opts.pages.push(arg);
   }
   if (!opts.widths.length) opts.widths = [390];
   if (opts.widths.some((w) => !Number.isFinite(w) || w < 200)) throw new Error('--width phải là số ≥ 200');
+  if (!['png', 'jpeg'].includes(opts.format)) throw new Error('--format phải là png hoặc jpeg');
   if (!['light', 'dark', 'both'].includes(opts.theme)) throw new Error('--theme phải là light, dark hoặc both');
   return opts;
 }
@@ -137,7 +143,14 @@ function auditInPage() {
     const st = getComputedStyle(el);
     if (st.display === 'none' || st.visibility === 'hidden' || st.visibility === 'collapse') return false;
     const r = el.getBoundingClientRect();
-    return r.width > 0 && r.height > 0;
+    if (!(r.width > 0 && r.height > 0)) return false;
+    // Phần chỉ dành cho trình đọc màn hình (khung 1px, cắt bỏ phần thừa) không được soát bằng mắt.
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
+      const ns = getComputedStyle(n);
+      const nr = n.getBoundingClientRect();
+      if ((ns.overflow === 'hidden' || ns.clip !== 'auto' || ns.clipPath !== 'none') && (nr.width <= 1 || nr.height <= 1)) return false;
+    }
+    return true;
   };
   const opacityChain = (el) => {
     let o = 1;
@@ -251,6 +264,25 @@ function auditInPage() {
             warnings.push({ rule: 'widow', message: `Dòng cuối chỉ còn một chữ: ${describe(el)}` });
           }
         }
+        // Chữ bị khung cha (overflow hidden/clip) cắt mất mà không có dấu …
+        if (st.textOverflow !== 'ellipsis') {
+          const box = el.getBoundingClientRect();
+          for (let n = el.parentElement; n && n !== root.parentElement; n = n.parentElement) {
+            const ns = getComputedStyle(n);
+            if (!['hidden', 'clip'].includes(ns.overflowX)) continue;
+            const nr = n.getBoundingClientRect();
+            if (nr.width <= 1) break;
+            const cut = Math.max(box.right - nr.right, nr.left - box.left);
+            if (cut > 1) errors.push({ rule: 'clipped', message: `Chữ bị cắt mất ${Math.round(cut)}px bởi khung ${describe(n).split(' ')[0]}: ${describe(el)}` });
+            break;
+          }
+        }
+        // Chữ sát mép màn
+        const tr = el.getBoundingClientRect();
+        const edge = Math.min(tr.left - rootRect.left, rootRect.right - tr.right);
+        if (rootRect.width <= 600 && edge < 12 && !el.closest('nav, [role="tablist"]') && getComputedStyle(el).position !== 'fixed') {
+          warnings.push({ rule: 'edge', message: `Chữ cách mép màn ${Math.max(0, Math.round(edge))}px (nên ≥ 16px): ${describe(el)}` });
+        }
         // Chữ bị cắt bằng dấu …
         if (st.textOverflow === 'ellipsis' && el.scrollWidth > el.clientWidth + 1) {
           warnings.push({ rule: 'ellipsis', message: `Chữ bị cắt bằng "…": ${describe(el)}` });
@@ -283,7 +315,7 @@ function auditInPage() {
       const st = getComputedStyle(el);
       const own = toRgba(st.backgroundColor);
       const hasBg = own[3] > 0.05 || (st.backgroundImage && st.backgroundImage !== 'none');
-      const hasEdge = parseFloat(st.borderTopWidth) > 0 && toRgba(st.borderTopColor)[3] > 0.05;
+      const hasEdge = ['Top', 'Right', 'Bottom', 'Left'].every((side) => parseFloat(st[`border${side}Width`]) > 0) && toRgba(st.borderTopColor)[3] > 0.05;
       const hasShadow = st.boxShadow && st.boxShadow !== 'none';
       return { st, own, hasBg, hasEdge, hasShadow };
     };
@@ -381,8 +413,11 @@ async function main() {
           const screens = await tab.evaluate(auditInPage);
           if (opts.screenshot) {
             fs.mkdirSync(opts.screenshot, { recursive: true });
-            const stem = path.basename(page).replace(/\.[a-z]+$/i, '').replace(/[^\w-]+/g, '-');
-            await tab.screenshot({ path: path.join(opts.screenshot, `${stem}-${width}-${theme}.png`), fullPage: true });
+            const stem = opts.name || path.basename(page).replace(/\.[a-z]+$/i, '').replace(/[^\w-]+/g, '-');
+            const ext = opts.format === 'jpeg' ? 'jpg' : 'png';
+            const shot = { path: path.join(opts.screenshot, `${stem}-${width}-${theme}.${ext}`), fullPage: true, type: opts.format };
+            if (opts.format === 'jpeg') shot.quality = 78;
+            await tab.screenshot(shot);
           }
           for (const message of consoleErrors) screens.push({ name: 'Lỗi JavaScript', errors: [{ rule: 'script', message }], warnings: [] });
           results.push({ page, width, theme, screens });

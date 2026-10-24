@@ -16,6 +16,7 @@ Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thi�
 | [`WORKFLOWS.md`](WORKFLOWS.md) | Quy trình theo cỡ việc, từ sửa nhỏ tới sản phẩm mới |
 | [`skills_UIUX/`](skills_UIUX/README.md) | 116 skill UI/UX, flow theo loại việc, prompt, kiến thức, bộ kiểm tra `designlib/` |
 | [`design-system/`](design-system/README.md) | Design system mẫu có test: token DTCG, 19 component, font tiếng Việt, ví dụ app |
+| [`benchmarks/`](benchmarks/README.md) | Bộ 3 đề chuẩn và [kết quả các lần chạy](benchmarks/REPORT.md) |
 | [`docs/`](docs/) | Ghi chép các lần nâng cấp và bằng chứng thử nghiệm |
 
 ## Kiểm tra tự động
@@ -23,7 +24,7 @@ Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thi�
 Mỗi pull request chạy hai nhóm kiểm tra trong [`checks.yml`](.github/workflows/checks.yml):
 
 - `foundation`: cấu trúc skill, tên skill trong flow, profile/pack/eval, dữ liệu vendor, test bộ
-  kiểm tra thiết kế và link nội bộ trong mọi file Markdown.
+  kiểm tra thiết kế, link nội bộ trong mọi file Markdown và bảng kết quả bộ đề chuẩn.
 - `release-candidate`: token, độ tương phản, CSS và test của design system.
 
 Khi `design-system/` thay đổi, [`design-system.yml`](.github/workflows/design-system.yml) chụp và
