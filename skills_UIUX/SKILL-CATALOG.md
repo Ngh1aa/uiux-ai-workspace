@@ -1,208 +1,99 @@
-# Skill Catalog — V5
+# Danh mục skill
 
-## Mobile app design
+Danh mục để tra cứu, **không phải** để chọn quy trình. Chọn skill theo cỡ việc trong
+[`WORKFLOWS.md`](../WORKFLOWS.md), bắt đầu từ [`START-HERE.md`](../START-HERE.md). Mỗi skill là một
+thư mục có `SKILL.md`.
 
-Native iOS/Android design and read-only review use the same Flow OS and platform-specific work cards. The current mobile lane produces design/prototype/handoff artifacts; native implementation/runtime/store verification remains separate and unsupported requests fail closed.
+## Thương hiệu và hướng thị giác
 
-| Skill | Decision owner |
+| Skill | Dùng khi |
 |---|---|
-| `mobile-app-design` | Mobile lifecycle, source registry and stage work cards |
-| `mobile-web-preview` | Interactive browser app prototype, static-host QA and client-link handoff |
-| `ios-app-design` | Apple platform navigation, controls, typography and accessibility |
-| `android-app-design` | Material/adaptive design, insets, system Back and accessibility |
-| `mobile-navigation-and-state-ux` | Screen/state inventory, transitions, interruptions and recovery |
-| `mobile-design-system-and-handoff` | Shared semantic tokens, platform variants and implementation mapping |
-| `mobile-prototype-and-qa` | Prototype/design review, native QA plan and claim boundaries |
+| `brand-guidelines` | Tiếp nhận và áp dụng thương hiệu khách (mức A–D); đi cùng `BRAND-BRIEF.template.md` |
+| `brand-distinctiveness-and-visual-signature` | Biến nhận diện thành dấu hiệu lặp lại được trên các màn |
+| `brand-recognition-and-consistency-qa` | Soát nhận diện nhất quán giữa các trang và cỡ màn |
+| `visual-design-direction` | Chốt ngữ pháp bố cục, chữ, màu, hình khối cho dự án |
+| `visual-taste-calibration` | Soát độ riêng, độ hợp ngành, chống "nhìn như template" |
+| `real-world-artifact-and-domain-metaphor-design` | Tìm vật gốc của ngành để làm dấu ấn (xem `SIGNATURE.md`) |
+| `experience-principles-and-signature-moments` | Nguyên tắc trải nghiệm và khoảnh khắc đáng nhớ |
+| `design-reference-research-and-benchmark` | Tìm và chấm tham khảo theo ngành, rút nguyên tắc, không chép |
+| `reference-extraction-and-design-audit` | Rút hệ thị giác từ một trang tham khảo hoặc dự án cũ |
+| `reference-analysis-and-design-to-code` | Dựng lại theo Figma, ảnh chụp hoặc trang mẫu |
+| `asset-media-and-art-direction` | Ảnh, minh hoạ, icon, video |
+| `motion-and-microinteractions` | Chuyển động có mục đích |
 
-See [mobile practice](mobile-app-design/references/professional-practice.md), [sources](mobile-app-design/data/sources.json), [design flow](flows/mobile-app-design.json) and [audit flow](flows/mobile-app-audit.json). Responsive websites remain on web flows.
+## Cấu trúc UX và nội dung
 
-## Shared and website pipeline
-
-| Skill | Vai trò |
+| Skill | Dùng khi |
 |---|---|
-| `website-delivery-pipeline` | Orchestrator lifecycle + adaptive pack/specialist routing |
-| `project-context` | Project config, constraints and source-of-truth |
-| `product-discovery` | Problem, audience, JTBD, constraints, KPI, scope |
-| `product-decision-and-stakeholder-framing` | Translate stakeholder/solution asks into underlying problems, stress-test evidence/impact, and clarify the authorized product call |
-| `product-strategy-and-prioritization` | Reality-grounded positioning, evidence-weighted prioritization and appetite/scope decisions after discovery |
-| `website-audit-and-redesign` | Audit live/legacy site before redesign |
-| `brand-guidelines` | Brand foundation, color, type, voice |
-| `ux-research-and-journey` | Journey, task analysis and flows |
-| `ux-structure-and-flow-design` | UX structure layer: task model, user/task flows with failure paths, screen/state inventory, navigation model, wireframe spec, walkthrough and UX Readiness verdict before visual direction |
-| `information-architecture` | Inventory, taxonomy, labels, hierarchy, navigation/findability, page roles and URL migration |
-| `ux-laws-and-heuristics` | Heuristic review |
-| `design-reference-research-and-benchmark` | Search, score and synthesize real/curated design references by domain, audience, business goal and implementation fit |
-| `reference-extraction-and-design-audit` | Extract source-attributed visual-system evidence from selected references or the current codebase without making it canonical |
-| `design-intelligence-retrieval` | Retrieve a small verified subset from the pinned UI UX Pro Max design-intelligence corpus, then synthesize ADOPT/ADAPT/REJECT against project truth |
-| `real-world-artifact-and-domain-metaphor-design` | Translate real domain objects/documents/spaces/rituals into useful digital structure/signatures without literal skeuomorphism |
-| `visual-design-direction` | Layout, hierarchy and visual grammar |
-| `visual-taste-calibration` | Anti-template / subject-matter-fit calibration after a visual direction exists |
-| `ui-improvement` | Existing UI remediation orchestrator: diagnose → preserve → route specialists → implement → verify |
-| `conversion-and-content` | Marketing-page argument, message match, value proposition, proof, objections, CTA hierarchy and CRO hypotheses |
-| `content-design-and-question-design` | Interface content structure and question design for forms/transactional journeys |
-| `ux-writing-and-microcopy` | State-level UI copy, labels, CTA, errors, empty/loading/success/recovery, terminology and localization-safe microcopy |
-| `design-system-and-components` | Tokens, components, variants, states |
-| `interaction-patterns-and-form-ux` | Common forms/search/filter/dialog patterns |
-| `motion-and-microinteractions` | Purposeful motion |
-| `asset-media-and-art-direction` | Image/video/icon direction |
-| `system-reality-and-production-readiness` | Distinguish real/mock/static/simulated/partial behavior, data contracts and production gaps |
-| `responsive-and-device-strategy` | Responsive/device behavior |
-| `accessibility` | WCAG, semantic, keyboard/focus baseline |
-| `localization-and-i18n` | Multilingual UX architecture |
-| `frontend-architecture-and-refactoring` | Structure, reuse, safe refactor |
-| `frontend-implementation` | Semantic implementation |
-| `component-driven-development` | Isolated component states/stories/tests |
-| `reference-analysis-and-design-to-code` | Reference/Figma/screenshot to system/code |
-| `web-ui-code-review` | Code-level web UI review with conditional React/Next performance specialization and local-owner routing |
-| `ai-agent-coding-guardrails` | Context-aware, dependency-aware safe AI coding/change discipline with vertical slices/checkpoints and evidence verification |
-| `search-demand-and-content-briefing` | Current search/query demand, question/intent maps, evidence-backed page/content briefs and search-performance signals |
-| `seo-strategy` | Technical/on-page SEO implementation: indexability, canonicals, metadata, schema, linking, redirects, sitemap/robots |
-| `web-quality-and-performance` | CWV, lab/field evidence and project performance budgets |
-| `security-and-privacy` | Risk-based security/privacy baseline and verification |
-| `analytics-and-experimentation` | Outcome/counter-metrics, event/funnel instrumentation and pre-run experiment design |
-| `experimentation-interpretation` | Post-result experiment interpretation: uncertainty/effect size, multiplicity, sequential methods, segments, CUPED/ratio/network concerns and ship/kill/iterate decisions |
-| `testing-strategy` | Risk-driven functional/state/browser/visual/accessibility/performance verification |
-| `ui-craft-and-visual-qa` | Visual craft and responsive QA |
-| `code-review-and-release` | Two-stage review, release/rollback and post-deploy gate |
-| `production-monitoring-and-maintenance` | Post-release technical health |
-| `content-governance-and-cms` | Content schema/ownership/CMS |
-| `skill-authoring-and-governance` | Maintain this library |
+| `ux-structure-and-flow-design` | Việc chính, luồng, kiểm kê màn × trạng thái, wireframe trước khi tô màu |
+| `audience-intent-and-top-tasks` | Ai vào, vì sao, cần làm gì |
+| `entry-context-and-visit-intent` | Người dùng đến từ đâu (tìm kiếm, quảng cáo, QR...) |
+| `journey-driven-content-and-layout` | Sắp nội dung theo thứ tự câu hỏi của người dùng |
+| `information-architecture` | Điều hướng, nhãn, sơ đồ trang |
+| `site-search-and-findability` | Ô tìm kiếm, kết quả, bộ lọc |
+| `conversion-and-content` | Lập luận trang marketing, bằng chứng, CTA |
+| `content-design-and-question-design` | Cấu trúc nội dung và câu hỏi trong form |
+| `ux-writing-and-microcopy` | Nhãn nút, lỗi, trạng thái rỗng, thông báo |
+| `trust-credibility-and-transparency` | Bằng chứng uy tín, minh bạch |
+| `ethical-ux-and-deceptive-patterns` | Soát mẫu thiết kế lừa người dùng |
+| `localization-and-i18n` | Website nhiều ngôn ngữ |
 
-## Reference intelligence
+## Thành phần, trạng thái, tương tác
 
-`design-reference-research-and-benchmark` sits between UX/content decisions and `visual-design-direction` for substantial new design/redesign work. It uses a mixed source model: real industry sites for product/UX truth, curated/award sources for visual craft, case-study/shot platforms for system/component ideas and mood platforms for art direction. Awards/gallery popularity are not evidence of usability/conversion success.
+| Skill | Dùng khi |
+|---|---|
+| `design-system-and-components` | Token, component, biến thể, trạng thái |
+| `interaction-patterns-and-form-ux` | Form, tìm kiếm, lọc, tab, dialog |
+| `complex-forms-and-wizards` | Form nhiều bước, có điều kiện |
+| `complex-workflow-and-progress-ux` | Quy trình dài, nhiều chặng, có tiến độ |
+| `state-feedback-and-error-recovery` | Đủ trạng thái: tải, rỗng, lỗi, khôi phục |
+| `authentication-account-and-recovery-ux` | Đăng nhập, đăng ký, khôi phục tài khoản |
+| `data-tables-and-enterprise-ux` | Bảng dữ liệu dày |
+| `data-visualization-and-dashboard-ux` | Dashboard, biểu đồ |
+| `human-ai-interaction-design` | Tính năng có AI |
+| `accessibility` | WCAG 2.2 AA, bàn phím, focus, trình đọc màn hình |
+| `inclusive-design-and-cognitive-accessibility` | Giảm tải nhận thức, tình huống đặc biệt |
 
-When a selected reference or the current project needs deeper system-level evidence, route `reference-extraction-and-design-audit`. Extraction documents color/type/spacing/radius/elevation/layout/component/responsive/theme evidence with source + certainty; it never licenses cloning or makes frequent observed values canonical.
+## Mobile app
 
-## External design intelligence
+| Skill | Dùng khi |
+|---|---|
+| `mobile-app-design` | Điểm vào cho mọi việc thiết kế app iOS/Android |
+| `ios-app-design` | Quy ước Apple: safe area, Dynamic Type, điều hướng |
+| `android-app-design` | Material 3, edge-to-edge, predictive back |
+| `mobile-navigation-and-state-ux` | Kiểm kê màn, trạng thái, gián đoạn, quyền |
+| `mobile-design-system-and-handoff` | Token và component theo nền tảng, bàn giao |
+| `mobile-prototype-and-qa` | Soát prototype app |
+| `mobile-web-preview` | Prototype app chạy trên trình duyệt để khách bấm thử |
 
-`design-intelligence-retrieval` exposes the complete pinned UI UX Pro Max corpus without making it global prompt context. Route only for an active knowledge gap; use the smallest mode (`--design-system`, one explicit `--domain`, or detected `--stack`), verify the match, retry once when appropriate, then synthesize `ADOPT / ADAPT / REJECT` against project truth. Upstream-generated MASTER/page files remain candidate artifacts.
+## Web, dựng và soát
 
-## External UI/UX specialist adapters
+| Skill | Dùng khi |
+|---|---|
+| `responsive-and-device-strategy` | Breakpoint, bố cục theo cỡ màn |
+| `frontend-implementation` | Dựng HTML/CSS đúng ngữ nghĩa |
+| `prototype-visual-experience-qa` | Soát prototype HTML/CSS/JS |
+| `web-quality-and-performance` | Tốc độ tải, Core Web Vitals |
+| `ui-craft-and-visual-qa` | Soát và đánh bóng craft; có `taste-check.cjs`, `static-check.cjs` |
+| `media-crop-and-layout-integrity` | Ảnh bị cắt sai, vỡ tỉ lệ |
+| `visual-redesign-delta-gate` | Redesign mà nhìn vẫn như cũ |
+| `visual-regression-and-design-drift` | Giữ chất lượng qua nhiều lần sửa |
+| `design-critique-and-rationale` | Phê bình theo rubric, lý do thiết kế |
+| `ux-laws-and-heuristics` | Đánh giá theo heuristic |
+| `ui-improvement` | Sửa giao diện đang có |
+| `website-audit-and-redesign` | Audit website cũ trước khi làm lại |
 
-Source locks live in `vendor/external-uiux/SOURCE-LOCKS.md`.
+## Playbook theo ngành
 
-- `visual-taste-calibration` → coherent direction still feels generic/interchangeable/AI-templated.
-- `web-ui-code-review` → source-level UI/pre-merge review; React/Next reference only after stack/version detection.
-- `reference-extraction-and-design-audit` → selected reference/current-system extraction.
-- `ux-writing-and-microcopy` → string/state copy affects comprehension/action/trust/recovery/localization.
+`landing-page`, `saas-website`, `corporate-website`, `ecommerce-website`, `education-website`,
+`government-and-public-sector-website`, `hospitality-website`, `news-and-media-website`,
+`nonprofit-website`, `portfolio-website`, `portfolio-career-positioning`,
+`real-estate-and-building-website`, `startup-and-incubator-website`.
 
-## Cross-functional intelligence for UI/UX
+## Đã gỡ khỏi `main`
 
-Pinned source provenance lives in `vendor/cross-functional-intelligence/SOURCE-LOCKS.md`. These skills complement UI/UX decision quality; they are not another lifecycle orchestrator.
-
-### Product decision
-
-`product-decision-and-stakeholder-framing` is informed by Mind the Product's `make-the-call`. Route when an ask is already phrased as a solution (“make hero bigger”, “add chatbot”, “build integration”) and the underlying problem/evidence/priority is unclear. It translates asks to solution-independent problems, stress-tests evidence/blind spots/impact and keeps the final business call with the authorized owner.
-
-### Product strategy / prioritization
-
-`product-strategy-and-prioritization` is informed by ProductSkills positioning/prioritization/scope patterns. Route only after the problem/outcome is understood enough to rank or scope. Quantitative models are decision aids: unknown Reach/Impact/Effort stays UNKNOWN. Mandatory accessibility/security/legal/project-truth requirements cannot lose to a score.
-
-### Growth / CRO / marketing copy
-
-`conversion-and-content` incorporates targeted CRO and marketing-copy patterns from the pinned `ai-vita/skills` snapshot. Route for page argument, traffic/message match, proof, objections and CTA hierarchy. Best practices remain hypotheses until project research/analytics/experiments support a conversion claim.
-
-### Experimentation
-
-`analytics-and-experimentation` owns outcome metrics, counter-metrics, tracking/funnels and pre-run experiment design. `experimentation-interpretation` owns completed results and is informed by Rampstack's statistical interpretation guidance. Do not load both merely because “A/B test” is mentioned; choose based on lifecycle stage.
-
-### Search demand / SEO
-
-`search-demand-and-content-briefing` owns live/current demand evidence, natural-language question maps and content briefs. `seo-strategy` owns technical/on-page implementation. If no actual current source returns a metric, use `NO_DATA`/`UNKNOWN` instead of remembered or fabricated volume.
-
-### Engineering complement
-
-`ai-agent-coding-guardrails` incorporates context hierarchy/trust, dependency-aware planning, vertical slices and checkpoints informed by Addy Osmani's agent-skills, while retaining `skills_UIUX` implementation/release ownership.
-
-## Real-world artifact intelligence
-
-`real-world-artifact-and-domain-metaphor-design` studies physical products, printed/operational documents, spatial systems, tools and offline rituals in the domain and maps them through form/structural/information/behavioral/ritual transfer layers with an L0–L4 fidelity ladder. Default to the lowest useful fidelity.
-
-## Production reality & delivery
-
-`system-reality-and-production-readiness` exists because rendered UI can imply behavior that is not actually integrated. Use it for forms/search/auth/checkout/CMS/API/analytics and prototype-to-production work. `production-delivery` groups reality checks with coding guardrails, security/privacy, performance, verification, release/rollback and monitoring.
-
-## V5 measurement-reliability specialists
-- `evidence-provenance-and-research-ops`
-- `journey-outcome-and-service-health`
-- `brand-recognition-validation`
-- `accessibility-conformance-evaluation`
-- `visual-regression-and-design-drift`
-- `adaptive-skill-routing-and-context-budget`
-- `agent-evaluation-and-reliability`
-- `continuous-learning-and-improvement`
-
-## V4 experience-strategy specialists
-- `audience-intent-and-top-tasks`
-- `entry-context-and-visit-intent`
-- `journey-driven-content-and-layout`
-- `brand-distinctiveness-and-visual-signature`
-- `service-experience-to-digital-journey`
-- `experience-principles-and-signature-moments`
-- `omnichannel-experience-continuity`
-- `brand-recognition-and-consistency-qa`
-
-## V3 specialist skills
-
-### Research & validation
-- `user-research-planning-and-recruitment`
-- `moderated-usability-testing`
-- `research-synthesis-and-insight-management`
-- `ux-benchmarking-and-metrics`
-- `card-sorting-and-tree-testing`
-- `service-blueprinting`
-- `prototype-strategy-and-concept-testing`
-
-### Advanced interaction & enterprise
-- `site-search-and-findability`
-- `complex-forms-and-wizards`
-- `state-feedback-and-error-recovery`
-- `complex-workflow-and-progress-ux`
-- `data-tables-and-enterprise-ux`
-- `data-visualization-and-dashboard-ux`
-- `authentication-account-and-recovery-ux`
-- `personalization-and-preference-ux`
-
-### Inclusive, content & trust
-- `content-design-and-question-design`
-- `ux-writing-and-microcopy`
-- `inclusive-design-and-cognitive-accessibility`
-- `trust-credibility-and-transparency`
-- `ethical-ux-and-deceptive-patterns`
-
-### DesignOps & AI
-- `design-critique-and-rationale`
-- `design-system-governance-and-adoption`
-- `human-ai-interaction-design`
-
-## Capability packs
-- `ux-foundation` (UX-first core; see `../docs/UX-FIRST-WORKFLOW.md` and `templates/ux/`)
-- `measurement-reliability` (V5)
-- `production-delivery` (V5 production hardening)
-- `product-growth-intelligence` (cross-functional product/growth/search/experimentation)
-- `experience-strategy` (V4)
-- `research-validation`
-- `advanced-interaction`
-- `inclusive-trust`
-- `designops-governance`
-- `human-ai`
-
-## Domain playbooks
-`corporate-website`, `education-website`, `ecommerce-website`, `real-estate-and-building-website`, `hospitality-website`, `portfolio-website`, `news-and-media-website`, `saas-website`, `landing-page`, `government-and-public-sector-website`, `nonprofit-website`, `startup-and-incubator-website`.
-
-## Selection rules
-
-Keep base profiles small and route the smallest graph justified by the decision:
-
-- Local UI remediation → `ui-improvement` + relevant specialists only.
-- Substantial redesign → reference benchmark; deep extraction/design DB only for actual gaps.
-- Ambiguous stakeholder solution ask → `product-decision-and-stakeholder-framing` before treating the request as a design requirement.
-- Rank opportunities / define positioning / cut scope → `product-strategy-and-prioritization` after discovery evidence exists.
-- Marketing-page conversion/message problem → `conversion-and-content`; add analytics/experiment skill only if measurement/testing is active.
-- Pre-run experiment → `analytics-and-experimentation`; completed result → `experimentation-interpretation`.
-- Current search demand/content brief → `search-demand-and-content-briefing`; technical search implementation → `seo-strategy`.
-- Code task needing multi-file plan/context/dependency discipline → `ai-agent-coding-guardrails`; tiny fixes remain lightweight.
-- Production candidate/release → `production-delivery` when integrations/security/performance/browser/rollback/production truth are material.
-
-Do not activate product/growth/search/engineering specialists merely because they are installed. Cross-functional knowledge should improve a concrete UI/UX decision, not expand every task into product management, marketing and engineering at once.
+Các skill nghiên cứu người dùng, chiến lược sản phẩm, đo lường sau ra mắt, SEO, vận hành,
+kiểm thử code, quản trị thư viện và bộ chạy tự động cũ (flows, profiles, prompts, vendor) đã được
+gỡ vì không dùng khi thiết kế qua chat. Bản đầy đủ ở nhánh `archive/truoc-khi-gon-lan-2`. Nếu một
+skill còn nhắc tên một skill đã gỡ (ví dụ "dùng `seo-strategy` cho việc đó"), hiểu đó là việc
+nằm ngoài phạm vi repo, không đi tìm skill đó.

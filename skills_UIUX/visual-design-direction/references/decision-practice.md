@@ -69,5 +69,5 @@ The lab's original cases and comments are authored teaching material. Domain wor
 candidates come from `data/domain-workflows.json`; primary standard sources live in
 `ux-laws-and-heuristics/references/principle-sources.md`. Read one relevant source,
 not every skill. For model/skill outcome trials use the existing eval harness and
-[controlled comparison protocol](../../evals/CONTROLLED-COMPARISON.md). A teaching
+controlled comparison protocol. A teaching
 pair changes multiple axes and cannot isolate the effect of a font, layout or skill.

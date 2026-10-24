@@ -3,9 +3,8 @@
 Trang này trả lời một câu: **"Việc này lớn cỡ nào, và tôi cần làm những bước gì?"**
 Dành cho designer, PM, kỹ sư và AI agent.
 
-**Đây là nguồn định tuyến duy nhất.** Danh sách skill của mỗi cỡ dưới đây là đủ. Các file flow
-JSON trong `skills_UIUX/flows/` là di sản của bộ chạy tự động cũ: không mở chúng để chọn skill,
-và nếu chúng liệt kê khác trang này thì theo trang này.
+**Đây là nguồn định tuyến duy nhất.** Danh sách skill của mỗi cỡ dưới đây là đủ; nếu một skill
+gợi ý đọc thêm skill khác thì chỉ đọc khi việc thật sự cần.
 
 Mọi cỡ việc trên dự án khách hàng đều bắt đầu từ brand brief
 ([`BRAND-BRIEF.template.md`](BRAND-BRIEF.template.md)); việc nhỏ thì đọc lại brief đã có.
@@ -110,7 +109,7 @@ Như **L**, cộng thêm:
 3. **Track Design System** (mục 4) chạy song song từ tuần đầu.
 4. **Kế hoạch kiểm chứng** với người dùng thật; khi chưa có người thật thì ghi `PLANNED_VALIDATION`.
 
-- Skill thêm: [`product-discovery`](skills_UIUX/product-discovery/SKILL.md) ·
+- Skill thêm: [`audience-intent-and-top-tasks`](skills_UIUX/audience-intent-and-top-tasks/SKILL.md) ·
   [`experience-principles-and-signature-moments`](skills_UIUX/experience-principles-and-signature-moments/SKILL.md) ·
   [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md)
 - Ngưỡng: như L, cộng design system qua `validate.py` (contrast, parity sáng/tối).
@@ -131,8 +130,7 @@ Như **L**, cộng thêm:
 | Track | Khi nào | Bắt đầu từ |
 |---|---|---|
 | **Chỉ review / audit** | Cần đánh giá, chưa sửa | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
-| **Design system** | Thêm token, component, hoặc dựng hệ thống mới | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) · [`design-system-governance-and-adoption`](skills_UIUX/design-system-governance-and-adoption/SKILL.md) |
-| **Nghiên cứu người dùng** | Cần bằng chứng thật | [`research-evidence-pipeline`](skills_UIUX/research-evidence-pipeline/SKILL.md) · [`user-research-planning-and-recruitment`](skills_UIUX/user-research-planning-and-recruitment/SKILL.md) |
+| **Design system** | Thêm token, component, hoặc dựng hệ thống mới | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) |
 | **Portfolio** | Làm lại portfolio / định vị nghề | Như cỡ M, cộng [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) |
 | **AI trong sản phẩm** | Tính năng có AI tạo nội dung/quyết định | [`human-ai-interaction-design`](skills_UIUX/human-ai-interaction-design/SKILL.md) |
 

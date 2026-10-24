@@ -21,7 +21,7 @@ Deliver design contract, token/component mapping, annotated task prototype, plat
 This release of the mobile capability is design/prototype planning and review. Native implementation requests fail closed because no native implementation runner is installed. A later implementation task must choose a compatible adapter and produce native evidence. Existing authority/approval controls still apply to writing target files, Figma mutation, paid services and release.
 
 ## Giao việc thiết kế app
-Khi nhờ Claude thiết kế app, nêu rõ ba điều: nền tảng (iOS, Android hay cả hai), đầu ra (chỉ thiết kế và handoff, hay prototype chạy trên trình duyệt) và app mới hay app đang có. Claude dùng flow [`mobile-app-design`](../../flows/mobile-app-design.json) cho thiết kế, `mobile-app-audit` khi chỉ soát. Thiếu thông tin nền tảng thì ghi là chưa biết, không tự đoán.
+Khi nhờ Claude thiết kế app, nêu rõ ba điều: nền tảng (iOS, Android hay cả hai), đầu ra (chỉ thiết kế và handoff, hay prototype chạy trên trình duyệt) và app mới hay app đang có. Claude dùng flow `mobile-app-design` cho thiết kế, `mobile-app-audit` khi chỉ soát. Thiếu thông tin nền tảng thì ghi là chưa biết, không tự đoán.
 
 Một trang web responsive vẫn đi theo flow web. Việc vừa web vừa app thì tách thành hai phần, bằng chứng của nền tảng này không thay cho nền tảng kia.
 

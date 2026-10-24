@@ -39,8 +39,7 @@ Link [design principles](design-principles.md). Name the 1 or 2 that matter most
 
 - Produce **2 materially different directions** on the same representative screen with the same content and state.
 - Carry the chosen direction to 2 other screen types before full rollout.
-- Record decisions in the v2 design decision contract; seed `pages[].ux` with
-  `check-ux-structure.py --export-page-ux`.
+- Record decisions (source, actual values, rejected option and why) in the delivery notes.
 
 ## 6. Short prompt (Claude Design)
 

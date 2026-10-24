@@ -4,9 +4,8 @@ Repo này là bộ não thiết kế cá nhân: khi được nhờ thiết kế 
 chọn đúng quy trình, đọc đúng skill và tự soát chất lượng trước khi giao.
 
 **Đây là đường đi duy nhất.** File này và [`WORKFLOWS.md`](WORKFLOWS.md) quyết định đọc gì và làm gì.
-Không đọc cả repo. Không mở các file flow JSON, `skills_UIUX/prompts/` hay
-`skills_UIUX/README.md` để chọn quy trình: đó là di sản của bộ chạy tự động cũ, không dùng khi
-thiết kế qua chat. Nếu chúng nói khác file này thì theo file này.
+Không đọc cả repo. Nếu một skill nói khác hai file này về quy trình hay thứ tự đọc thì theo
+hai file này.
 
 ## 0. Tiếp nhận thương hiệu khách hàng
 
@@ -94,9 +93,8 @@ mới chỉ soát tĩnh.
 | `BRAND-BRIEF.template.md` | Bước 0: tiếp nhận thương hiệu khách hàng |
 | `TASTE.md` | Gu thiết kế và các lỗi không được lặp lại |
 | `WORKFLOWS.md` | Quy trình và danh sách skill theo cỡ việc (nguồn định tuyến duy nhất) |
-| `skills_UIUX/` | Thư viện skill UI/UX và script soát chất lượng |
+| `skills_UIUX/` | 67 skill UI/UX và script soát chất lượng |
 | `design-system/` | Token DTCG, 19 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `benchmarks/` | Bộ 3 đề chuẩn để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |
-| `docs/` | Ghi chép nâng cấp và bằng chứng các lần thử |
 | `AGENTS.md` | Quy tắc làm việc chung cho AI |
