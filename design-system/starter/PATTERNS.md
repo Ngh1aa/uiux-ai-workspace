@@ -75,6 +75,32 @@ Câu hỏi: *Vì sao không có gì, và giờ làm gì?*
 - Giữ nguyên những gì người dùng đã nhập hoặc chọn.
 - Nút "Thử lại" là hành động chính; nếu hệ thống tự thử lại thì ghi rõ dưới nút.
 
+## 8. Chọn nhanh và thanh thanh toán
+
+Câu hỏi: *Tôi chọn được ngay không, và hết bao nhiêu?*
+
+- Lựa chọn hay dùng (khung giờ, buổi, gói) bấm được **ngay trong danh sách** (`.app-slot`), không
+  bắt mở trang chi tiết mới chọn được.
+- Lựa chọn đang chọn có nền đậm; thẻ chứa nó có viền (`.app-pick[aria-current]`). Chỉ một lựa chọn
+  đang chọn trong cả nhóm.
+- Lựa chọn không chọn được có hoạ tiết, gạch ngang và một dòng lý do ("CN 9:00 đã hết chỗ").
+- Thanh dưới đáy (`.app-checkout`) **luôn** hiện lựa chọn hiện tại và tổng tiền, cập nhật ngay khi
+  đổi. Chưa chọn gì thì ghi "Chưa chọn …", tổng 0 và khoá nút.
+- Nhãn nút nói đúng việc ("Đăng ký học thử"), không ghi chung chung "Tiếp tục".
+
+## Web: trạng thái từng khối
+
+Mẫu chạy được: [`web-states.html`](web-states.html).
+
+- Mỗi khối dữ liệu tự có trạng thái riêng. Một khối lỗi không làm trống cả trang.
+- **Đang tải:** khung xương đúng hình dòng thật, giữ nguyên tiêu đề khối, ghi "Đang tải".
+- **Dữ liệu cũ:** vẫn hiện số liệu, dải vàng ở đầu khối nói cũ bao lâu và nút "Tải lại", nhãn
+  "Dữ liệu cũ" cạnh tiêu đề. Không lặng lẽ hiện số cũ.
+- **Lỗi:** dòng đỏ nói khối nào không tải được, một câu nói các khối khác vẫn dùng được, nút
+  "Thử lại".
+- **Rỗng vì đã xong:** báo tích cực ("Không còn yêu cầu chờ duyệt"), không bắt làm gì.
+- Giờ cập nhật chung của trang đặt ở góc trên.
+
 ## Web: trang quản trị
 
 - Thanh bên trái cho điều hướng, trang chính rộng tối đa khoảng 1180px.

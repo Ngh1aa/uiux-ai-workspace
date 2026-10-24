@@ -6,8 +6,10 @@ nền xám lạnh, card trắng phẳng bo 24px, một card navy nổi bật m�
 
 | File | Là gì |
 |---|---|
-| [`mobile.html`](mobile.html) | 7 màn app mẫu: trang chủ, danh sách, chi tiết, biểu mẫu, rỗng, đang tải, lỗi |
+| [`mobile.html`](mobile.html) | 8 màn app mẫu: trang chủ, danh sách, chi tiết, biểu mẫu, rỗng, đang tải, lỗi, chọn nhanh |
 | [`web.html`](web.html) | Trang quản trị mẫu, co giãn từ máy tính xuống điện thoại |
+| [`web-states.html`](web-states.html) | Trạng thái từng khối của trang web: đang tải, dữ liệu cũ, lỗi, rỗng |
+| [`SIGNATURE.md`](SIGNATURE.md) | Cách tạo dấu ấn riêng cho từng dự án, để màn không chỉ là starter kit đổi màu |
 | [`PATTERNS.md`](PATTERNS.md) | Quy tắc bố cục cho từng loại màn |
 | [`brand.css`](brand.css) | Lớp thương hiệu: màu, nền, bo góc. Đổi thương hiệu thì sửa file này |
 | [`app.css`](app.css) | Khối bố cục app mà design system chưa có. Không chứa mã màu |
@@ -18,7 +20,8 @@ nền xám lạnh, card trắng phẳng bo 24px, một card navy nổi bật m�
 
 1. Chép `mobile.html` hoặc `web.html` sang dự án, giữ thứ tự nạp CSS:
    `fonts.css` → `tokens.css` → `components.css` → `brand.css` → `app.css`.
-2. Sửa `brand.css` theo thương hiệu của dự án, cả khối sáng lẫn khối tối.
+2. Sửa `brand.css` theo thương hiệu của dự án, cả khối sáng lẫn khối tối, rồi tạo dấu ấn riêng
+   theo [`SIGNATURE.md`](SIGNATURE.md): đổi ít nhất 3 thứ ngoài màu.
 3. Với mỗi màn cần làm, chọn loại màn trong [`PATTERNS.md`](PATTERNS.md), chép khối `.app-phone`
    tương ứng, rồi thay nội dung. Giữ cấu trúc, đừng thêm card nổi bật thứ hai.
 4. Thêm hoặc bớt icon xong thì chạy:

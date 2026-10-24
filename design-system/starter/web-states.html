@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Starter kit web: trạng thái</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../generated/tokens.css">
+<link rel="stylesheet" href="../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="ds-root app web">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="app-i-refresh" viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.05-4.95M19 4.5V8h-3.5"/></symbol>
+  <symbol id="app-i-task" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16.5" rx="2"/><path d="M9 4V3h6v1M8.5 12.5l2.5 2.5 4.5-4.5"/></symbol>
+  <symbol id="app-i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><rect x="5.5" y="11" width="3" height="6" rx="1"/><rect x="10.5" y="6" width="3" height="11" rx="1"/><rect x="15.5" y="9" width="3" height="8" rx="1"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+</svg>
+<!-- icons:end -->
+<div class="web-mobile-bar">
+  <span class="web-brand"><span class="web-brand__mark" aria-hidden="true"><svg class="ds-icon ds-icon--sm"><use href="#app-i-task"/></svg></span>Giáo vụ</span>
+  <button class="app-round" type="button" aria-label="Mở menu"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-menu"/></svg></button>
+</div>
+<div class="web-shell">
+  <aside class="web-side">
+    <span class="web-brand"><span class="web-brand__mark" aria-hidden="true"><svg class="ds-icon ds-icon--sm"><use href="#app-i-task"/></svg></span>Giáo vụ</span>
+    <nav aria-label="Điều hướng chính">
+      <ul class="web-nav">
+        <li><a href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Tổng quan</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg>Học sinh</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch dạy</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg>Duyệt</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chart"/></svg>Báo cáo</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="web-main">
+    <div class="web-top">
+      <div>
+        <p class="ds-text-body-sm ds-text-secondary" style="margin:0">Mẫu trạng thái từng khối</p>
+        <h1 class="ds-text-title-lg">Tổng quan</h1>
+      </div>
+      <span class="app-panel__fresh"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>Cập nhật 7:45</span>
+    </div>
+
+    <div class="web-grid">
+      <!-- Dữ liệu cũ: vẫn hiện số liệu, nói rõ cũ bao lâu, cho tải lại -->
+      <section class="ds-stack ds-stack--sm" aria-labelledby="st-stale">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="st-stale">Cần xử lý</h2><span class="ds-badge ds-badge--warning">Dữ liệu cũ</span></div>
+        <div class="app-panel">
+          <div class="ds-banner ds-banner--warning" role="status"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg><div><p class="ds-text-label-md">Số liệu từ 2 giờ trước</p><p class="ds-text-body-sm">Chưa tải được bản mới. Số dưới đây có thể đã đổi.</p></div><button class="ds-button ds-button--sm app-banner-action" type="button">Tải lại</button></div>
+          <ul class="ds-list">
+            <li class="ds-list-item"><span class="app-count app-count--brand">2</span><div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Sửa điểm danh</span><span class="app-meta">Hạn 0h hôm nay</span></div><a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Xử lý</a></li>
+            <li class="ds-list-item"><span class="app-count app-count--brand">12</span><div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Báo cáo chờ duyệt</span><span class="app-meta">2 báo cáo dưới 6 giờ</span></div><a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Duyệt</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Đang tải: khung xương đúng hình, giữ nguyên tiêu đề khối -->
+      <section class="ds-stack ds-stack--sm" aria-labelledby="st-loading">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="st-loading">Lịch hôm nay</h2><span class="app-panel__fresh">Đang tải</span></div>
+        <div class="app-panel" aria-busy="true" aria-label="Đang tải lịch hôm nay">
+          <ul class="app-skeleton-rows" aria-hidden="true">
+            <li><span class="ds-skeleton" style="width:48px"></span><span class="ds-skeleton" style="width:40%"></span><span class="ds-skeleton" style="width:36px;margin-left:auto"></span></li>
+            <li><span class="ds-skeleton" style="width:48px"></span><span class="ds-skeleton" style="width:32%"></span><span class="ds-skeleton" style="width:36px;margin-left:auto"></span></li>
+            <li><span class="ds-skeleton" style="width:48px"></span><span class="ds-skeleton" style="width:46%"></span><span class="ds-skeleton" style="width:36px;margin-left:auto"></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Lỗi: chỉ khối này lỗi, các khối khác vẫn dùng được -->
+      <section class="ds-stack ds-stack--sm" aria-labelledby="st-error">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="st-error">Báo cáo tuần</h2></div>
+        <div class="app-panel">
+          <div class="app-panel__error" role="alert">
+            <p class="app-panel__error-title"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-alert"/></svg>Chưa tải được báo cáo tuần</p>
+            <p>Máy chủ báo cáo không phản hồi. Các khối khác vẫn dùng bình thường.</p>
+            <button class="ds-button ds-button--sm" type="button"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-refresh"/></svg>Thử lại</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rỗng vì đã xong: báo tích cực, không bắt làm gì -->
+      <section class="ds-stack ds-stack--sm" aria-labelledby="st-empty">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="st-empty">Yêu cầu nghỉ học</h2></div>
+        <div class="app-panel">
+          <div class="ds-empty">
+            <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-check-circle"/></svg></span>
+            <p class="ds-text-label-lg" style="margin:0;color:var(--ds-text-primary)">Không còn yêu cầu chờ duyệt</p>
+            <p class="ds-text-body-sm" style="margin:0">Yêu cầu mới sẽ hiện ở đây.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>

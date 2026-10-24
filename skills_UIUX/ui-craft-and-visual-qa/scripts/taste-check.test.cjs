@@ -117,3 +117,9 @@ test('bắt chữ bị khung cha cắt mất', () => {
   const r = run('<section data-screen="Bị cắt"><div class="card" style="overflow:hidden;width:200px"><span style="display:inline-block;white-space:nowrap;margin-left:150px">2 ngày còn lại</span></div></section>');
   assert.ok(r.rules('Bị cắt', 'errors').includes('clipped'));
 });
+
+test('hai sắc gần nhau của cùng một màu tính là một nhóm', () => {
+  const body = ['#2d4592', '#263459', '#c0392b', '#1f8a4c'].map((c) => `<div class="card"><span style="color:${c};font-weight:700;font-size:24px">Mục</span></div>`).join('');
+  const r = run(`<section data-screen="Cùng sắc">${body}</section>`);
+  assert.ok(!r.rules('Cùng sắc', 'warnings').includes('colors'));
+});

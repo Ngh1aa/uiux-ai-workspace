@@ -41,3 +41,4 @@ node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs <trang.html> --s
 - [ ] Mỗi màn có tối đa một card nổi bật.
 - [ ] Bán kính bo góc thống nhất giữa các card.
 - [ ] Đã mở ảnh chụp ra nhìn từng màn, cả sáng và tối nếu có.
+- [ ] Che tên sản phẩm vẫn nhận ra ngành (xem `design-system/starter/SIGNATURE.md`).

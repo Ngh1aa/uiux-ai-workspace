@@ -36,7 +36,7 @@
 <main class="app-gallery">
   <header class="app-gallery__intro ds-stack ds-stack--sm">
     <h1 class="ds-text-title-lg">Starter kit app</h1>
-    <p class="ds-text-body-md ds-text-secondary">Bảy màn mẫu theo từng loại màn. Chép nguyên khối <code>.app-phone</code> của loại màn cần làm, đổi nội dung, giữ cấu trúc. Dữ liệu là giả.</p>
+    <p class="ds-text-body-md ds-text-secondary">Tám màn mẫu theo từng loại màn. Chép nguyên khối <code>.app-phone</code> của loại màn cần làm, đổi nội dung, giữ cấu trúc. Dữ liệu là giả.</p>
     <div class="ds-cluster">
       <button class="ds-button ds-button--sm" type="button" data-theme-toggle><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg>Đổi sáng tối</button>
     </div>
@@ -349,6 +349,48 @@
       <div class="app-footer"><button class="ds-button ds-button--primary ds-button--block" type="button"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-refresh"/></svg>Thử lại</button><p class="app-footer__note">Tự động gửi lại khi có mạng</p></div>
     </div>
   </section>
+  <!-- 8. Chọn nhanh: chọn ngay trong danh sách, lựa chọn và tổng tiền luôn thấy ở đáy -->
+  <section class="app-gallery__item" aria-label="Màn mẫu chọn nhanh">
+    <p class="app-gallery__caption">8. Chọn nhanh</p>
+    <div class="app-phone" data-screen="Chọn nhanh">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Đăng ký học thử</h1>
+      </header>
+      <div class="app-screen">
+        <div class="app-body app-body--checkout" data-pick-group>
+          <p class="ds-text-body-md ds-text-secondary" style="margin:0">Chọn một buổi học thử cho Nguyễn Văn A, lớp 7.</p>
+          <section class="app-pick" aria-labelledby="pick-toan" aria-current="true">
+            <div class="app-pick__head"><div><h2 class="ds-text-label-lg" id="pick-toan" style="margin:0">Toán lớp 7</h2><p class="app-meta" style="margin:2px 0 0">Cô Thu Anh<span class="app-meta__gap"></span>90 phút</p></div><p class="app-pick__price" style="margin:0"><strong>200.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">một buổi</span></p></div>
+            <ul class="app-slots" aria-label="Buổi Toán lớp 7">
+              <li><button class="app-slot" type="button" aria-pressed="true" data-what="Toán lớp 7, Thứ Bảy 9:00" data-total="200.000 ₫">T7 9:00</button></li>
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Toán lớp 7, Thứ Bảy 14:00" data-total="200.000 ₫">T7 14:00</button></li>
+              <li><span class="app-slot" aria-disabled="true" role="img" aria-label="Chủ nhật 9:00, hết chỗ">CN 9:00</span></li>
+            </ul>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0">CN 9:00 đã hết chỗ</p>
+          </section>
+          <section class="app-pick" aria-labelledby="pick-van">
+            <div class="app-pick__head"><div><h2 class="ds-text-label-lg" id="pick-van" style="margin:0">Văn lớp 7</h2><p class="app-meta" style="margin:2px 0 0">Cô Diệu Linh<span class="app-meta__gap"></span>90 phút</p></div><p class="app-pick__price" style="margin:0"><strong>180.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">một buổi</span></p></div>
+            <ul class="app-slots" aria-label="Buổi Văn lớp 7">
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Văn lớp 7, Thứ Bảy 9:00" data-total="180.000 ₫">T7 9:00</button></li>
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Văn lớp 7, Chủ nhật 14:00" data-total="180.000 ₫">CN 14:00</button></li>
+            </ul>
+          </section>
+          <section class="app-pick" aria-labelledby="pick-anh">
+            <div class="app-pick__head"><div><h2 class="ds-text-label-lg" id="pick-anh" style="margin:0">Anh lớp 7</h2><p class="app-meta" style="margin:2px 0 0">Thầy Minh<span class="app-meta__gap"></span>90 phút</p></div><p class="app-pick__price" style="margin:0"><strong>220.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">một buổi</span></p></div>
+            <ul class="app-slots" aria-label="Buổi Anh lớp 7">
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Anh lớp 7, Chủ nhật 9:00" data-total="220.000 ₫">CN 9:00</button></li>
+            </ul>
+          </section>
+        </div>
+      </div>
+      <div class="app-footer app-checkout" aria-live="polite" data-checkout>
+        <div class="app-checkout__row"><span class="app-checkout__what" data-checkout-what><strong>Toán lớp 7, Thứ Bảy 9:00</strong></span><strong class="app-checkout__total" data-checkout-total>200.000 ₫</strong></div>
+        <button class="ds-button ds-button--primary ds-button--block" type="button" data-checkout-go>Đăng ký học thử</button>
+      </div>
+    </div>
+  </section>
 </main>
 <script>
 // Chỉ để bấm thử: nút chọn một trong nhóm, ô lịch bật tắt, đổi sáng tối.
@@ -362,6 +404,18 @@ document.addEventListener('click', (event) => {
     const on = choice.getAttribute('aria-pressed') !== 'true';
     choice.setAttribute('aria-pressed', String(on));
     choice.innerHTML = on ? '<svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn' : '';
+  }
+  const slot = event.target.closest('button.app-slot');
+  if (slot) {
+    const group = slot.closest('[data-pick-group]');
+    const phone = slot.closest('.app-phone');
+    const on = slot.getAttribute('aria-pressed') !== 'true';
+    group.querySelectorAll('button.app-slot').forEach((b) => b.setAttribute('aria-pressed', String(b === slot && on)));
+    group.querySelectorAll('.app-pick').forEach((card) => card.toggleAttribute('aria-current', card.contains(slot) && on));
+    const go = phone.querySelector('[data-checkout-go]');
+    phone.querySelector('[data-checkout-what]').innerHTML = on ? '<strong>' + slot.dataset.what + '</strong>' : 'Chưa chọn buổi nào';
+    phone.querySelector('[data-checkout-total]').textContent = on ? slot.dataset.total : '0 ₫';
+    if (on) go.removeAttribute('aria-disabled'); else go.setAttribute('aria-disabled', 'true');
   }
   if (event.target.closest('[data-theme-toggle]')) {
     const root = document.documentElement;

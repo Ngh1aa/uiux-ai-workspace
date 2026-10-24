@@ -64,6 +64,11 @@
 
   /* Vùng chạm tối thiểu 44 px trên điện thoại */
   --ds-size-control-sm: 44px;
+
+  /* Dấu ấn riêng (xem SIGNATURE.md): chữ tiêu đề và hoạ tiết card nổi bật.
+     Để trống thì dùng mặc định: chữ thân và một vòng tròn mờ. */
+  /* --app-font-display: "Be Vietnam Pro", system-ui, sans-serif; */
+  /* --app-hero-motif: ...; --app-hero-motif-size: 176px; --app-hero-motif-radius: 999px; */
 }
 
 @media (prefers-color-scheme: dark) {

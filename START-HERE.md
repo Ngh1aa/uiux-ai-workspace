@@ -31,6 +31,8 @@ Danh sách đầy đủ: [`skills_UIUX/SKILL-CATALOG.md`](skills_UIUX/SKILL-CATA
   [`PATTERNS.md`](design-system/starter/PATTERNS.md), chép màn mẫu tương ứng trong `mobile.html`
   hoặc `web.html`, đổi thương hiệu trong `brand.css`. Dự án có bộ nhận diện riêng thì theo dự án,
   nhưng vẫn giữ cấu trúc token theo vai trò.
+- Tạo dấu ấn riêng theo [`SIGNATURE.md`](design-system/starter/SIGNATURE.md): tìm vật gốc của
+  ngành, đổi ít nhất 3 thứ ngoài màu. Không giao một bản starter kit chỉ đổi màu.
 - Chạy script soát theo gu trên trang đã dựng và sửa hết lỗi:
 
   ```sh
