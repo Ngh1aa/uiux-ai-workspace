@@ -24,6 +24,12 @@ accessibility tree cannot disagree.
 | App bar | `.ds-app-bar` | none |
 | Avatar | `.ds-avatar` | `aria-hidden` when the name is shown alongside |
 | Link | `.ds-link` | none |
+| Checkbox, radio | `.ds-check`, `.ds-check--radio` | native `checked`, `disabled`, `aria-invalid` |
+| Tabs | `.ds-tabs` | `aria-selected` on one `role="tab"`, `hidden` on inactive panels |
+| Dialog | `.ds-dialog` | native `<dialog open>` via `showModal()`, `aria-labelledby` |
+| Menu | `.ds-menu` | trigger `aria-expanded`, `aria-haspopup="menu"`; menu `hidden` |
+| Tooltip | `.ds-tooltip` | `role="tooltip"`, trigger `aria-describedby` |
+| Table | `.ds-table` | wrap: `tabindex="0"`, `role="region"`, `aria-label`; `<caption>` and `<th scope>` required |
 
 ---
 
@@ -218,3 +224,79 @@ with these tokens rather than this markup.
 
 **Rules.** Title uses a heading element at the right level; the trailing action is a link or
 tertiary button with a specific label, not a bare chevron.
+
+## Checkbox and radio (v0.3)
+
+**Purpose.** Checkbox: pick any number of independent options, or accept one statement. Radio:
+pick exactly one of 2–6 visible options.
+
+**Anatomy.** `<label class="ds-check">` holding the native input, a `.ds-check__box` sibling
+(`aria-hidden`; the checkbox holds a `ds-i-check` icon) and the text label. Radio adds
+`.ds-check--radio`. Group related options in `.ds-fieldset` with a `<legend>`.
+
+**Rules.** The whole label is the target (≥ 44 px tall). The native input stays in the
+accessibility tree, so keyboard and screen readers need no ARIA. Error on a group: set
+`aria-invalid` on the inputs and put the message after the fieldset. More than six radio options
+or a long list: use a select. A setting that applies immediately is a switch, not a checkbox.
+
+## Tabs (v0.3)
+
+**Purpose.** Switch between panels that share one page and one context (Sắp tới / Đã khám).
+
+**Anatomy.** `role="tablist"` with `role="tab"` buttons, an indicator under the selected tab, and
+`role="tabpanel"` regions linked with `aria-controls` / `aria-labelledby`.
+
+**Rules.** Exactly one tab has `aria-selected="true"`; others have `tabindex="-1"` and arrow keys
+move between tabs (Home/End jump). Inactive panels are `hidden`. Labels are short nouns, no icons
+required. Not for site navigation (links with `aria-current`) and not for filters (chips). The
+tab list scrolls horizontally on narrow screens rather than wrapping.
+
+## Dialog (v0.3)
+
+**Purpose.** Interrupt to confirm a consequential action or collect a short input on desktop and
+web. On phones prefer the sheet.
+
+**Anatomy.** Native `<dialog class="ds-dialog">` opened with `showModal()`; header with title and
+close icon button, body text, actions row with the primary action last. `.ds-dialog--static`
+only renders a dialog in documentation.
+
+**Rules.** `aria-labelledby` points at the title. The browser provides the focus trap, Esc and
+inert background; return focus to the trigger on close. Destructive confirmations name the
+object and the consequence in the title and use a danger button whose label repeats the verb
+("Huỷ lịch"), never "OK". Do not stack dialogs.
+
+## Menu (v0.3)
+
+**Purpose.** A short list of actions on one object (Đổi giờ, Huỷ lịch) behind a trigger button.
+
+**Anatomy.** `.ds-menu-anchor` wraps the trigger (`aria-haspopup="menu"`, `aria-expanded`,
+`aria-controls`) and `ul.ds-menu[role="menu"]` with `role="menuitem"` buttons; dividers use
+`role="separator"`. `.ds-menu--end` aligns to the trigger's right edge.
+
+**Rules.** Opening moves focus to the first item; arrow keys move, Esc closes and returns focus;
+choosing an item closes the menu. Destructive items use `--danger` and come last after a divider.
+Choosing a value from a list is a select, not a menu.
+
+## Tooltip (v0.3)
+
+**Purpose.** A short supplementary label for an icon button or a term, for pointer and keyboard
+users.
+
+**Rules.** One sentence at most. Shown on hover and focus, linked with `aria-describedby`. Never
+the only place for information someone needs to finish a task: touch screens have no hover. Icon
+buttons still need their own `aria-label`; the tooltip adds to it.
+
+## Table (v0.3)
+
+**Purpose.** Compare records across the same attributes.
+
+**Anatomy.** `.ds-table-wrap` (scrolls horizontally on narrow screens) around `table.ds-table`
+with a `<caption>`, `<th scope="col">` headers and optional `<th scope="row">`. The wrap carries
+`tabindex="0"`, `role="region"` and an `aria-label` so keyboard users can scroll it (axe
+`scrollable-region-focusable`).
+
+**Rules.** Numbers and money right-aligned in tabular figures (`.ds-table__num`); dates in one
+format. Header text is secondary colour, not uppercase. Row hover is a hint, not the only cue for
+interactive rows: put a real link or button in the row. Large data sets, sorting, filtering and
+bulk actions follow `data-tables-and-enterprise-ux`.
+

@@ -26,7 +26,7 @@ Còn lại thì chọn giả định hợp lý, nói rõ giả định đó và 
 
 ## 4. Thiết kế
 
-- Áp dụng `TASTE.md` ngay từ bản đầu.
+- Áp dụng `TASTE.md` ngay từ bản đầu; từ cỡ S, lên kế hoạch thị giác theo `CRAFT.md` trước khi dựng.
 - Đọc đúng skill mà cỡ việc hoặc flow chỉ định, không đọc tràn cả thư viện.
 - Dựng từ token và component có sẵn. Thiếu thì thêm ở tầng token theo vai trò, không gán cứng màu.
 - Đủ các trạng thái liên quan: mặc định, đang tải, rỗng, lỗi, nội dung dài.

@@ -305,6 +305,112 @@ a.ds-list-item:hover, button.ds-list-item:hover { background: var(--ds-action-se
 /* ---------- Section header (v0.2) ---------- */
 .ds-section-header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ds-spacing-inline-md); }
 
+/* ---------- Checkbox and radio (v0.3) ----------
+ * Native input kept in the accessibility tree; the visible box is a sibling span so every
+ * browser renders it (Firefox draws no pseudo-elements on inputs). Label is always clickable text.
+ */
+.ds-check { position: relative; display: inline-flex; align-items: flex-start; gap: var(--ds-spacing-inline-sm); min-height: var(--ds-size-control-sm); padding-block: var(--ds-space-50); cursor: pointer; }
+.ds-check input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+.ds-check__box {
+  display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; margin-top: 1px;
+  border: var(--ds-border-width-200) solid var(--ds-border-control); border-radius: var(--ds-radius-100);
+  background: var(--ds-surface-raised); color: var(--ds-action-primary-text);
+  transition: background-color var(--ds-motion-feedback) var(--ds-motion-ease), border-color var(--ds-motion-feedback) var(--ds-motion-ease);
+}
+.ds-check__box .ds-icon { width: 16px; height: 16px; stroke-width: 2.5; opacity: 0; }
+.ds-check--radio .ds-check__box { border-radius: var(--ds-shape-pill); }
+.ds-check--radio .ds-check__box::after { content: ""; width: 10px; height: 10px; border-radius: var(--ds-shape-pill); background: var(--ds-action-primary-text); opacity: 0; }
+.ds-check input:checked + .ds-check__box { background: var(--ds-action-primary-bg); border-color: var(--ds-action-primary-bg); }
+.ds-check input:checked + .ds-check__box .ds-icon, .ds-check--radio input:checked + .ds-check__box::after { opacity: 1; }
+.ds-check input:focus-visible + .ds-check__box { outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring-color); outline-offset: var(--ds-focus-ring-offset); }
+.ds-check input[aria-invalid="true"] + .ds-check__box { border-color: var(--ds-field-border-error); }
+.ds-check input:disabled + .ds-check__box { border-color: var(--ds-action-disabled-bg); background: var(--ds-action-disabled-bg); }
+.ds-check:has(input:disabled) { cursor: not-allowed; color: var(--ds-action-disabled-text); }
+/* Reset bằng :where() (độ ưu tiên 0) để ghép được với .ds-card mà không mất padding của card. */
+:where(.ds-fieldset) { margin: 0; padding: 0; border: 0; }
+.ds-fieldset { display: flex; flex-direction: column; gap: var(--ds-spacing-stack-2xs); min-width: 0; }
+/* float: legend thành phần tử thường, nằm trong vùng nội dung thay vì trên viền */
+.ds-fieldset > legend { float: left; width: 100%; margin-bottom: var(--ds-spacing-stack-xs); padding: 0; font: var(--ds-type-label-md-font-weight) var(--ds-type-label-md-font-size)/var(--ds-type-label-md-line-height) var(--ds-type-label-md-font-family); }
+
+/* ---------- Tabs (v0.3) ----------
+ * Switch between panels of one page. role="tablist" / "tab" / "tabpanel"; arrow keys move focus.
+ * Not page navigation (use links with aria-current) and not a filter (use chips).
+ */
+.ds-tabs { display: flex; gap: var(--ds-spacing-inline-md); border-bottom: var(--ds-border-width-100) solid var(--ds-border-subtle); overflow-x: auto; scrollbar-width: none; }
+.ds-tabs__tab {
+  position: relative; flex: none; min-height: var(--ds-size-control-md); padding: 0 var(--ds-space-50); border: 0; background: transparent;
+  color: var(--ds-text-secondary); cursor: pointer; white-space: nowrap;
+  font: var(--ds-font-weight-medium) var(--ds-type-label-lg-font-size)/var(--ds-type-label-lg-line-height) var(--ds-type-label-lg-font-family);
+}
+.ds-tabs__tab:hover { color: var(--ds-text-primary); }
+.ds-tabs__tab[aria-selected="true"] { color: var(--ds-text-primary); font-weight: var(--ds-font-weight-semibold); }
+.ds-tabs__tab[aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: calc(-1 * var(--ds-border-width-100)); height: 3px; border-radius: var(--ds-shape-pill); background: var(--ds-action-selected-indicator); }
+.ds-tabs__panel { padding-top: var(--ds-spacing-stack-md); }
+.ds-tabs__panel[hidden] { display: none; }
+
+/* ---------- Dialog (v0.3) ----------
+ * Native <dialog> opened with showModal(): focus trap, Esc and inert background come from the
+ * browser. Title in .ds-dialog__title, referenced by aria-labelledby. One primary action, last.
+ */
+.ds-dialog {
+  width: min(100% - 2 * var(--ds-spacing-gutter), 480px); max-height: min(100% - 2 * var(--ds-spacing-gutter), 720px); padding: 0;
+  border: 0; border-radius: var(--ds-shape-sheet); background: var(--ds-surface-raised); color: var(--ds-text-primary); box-shadow: var(--ds-elevation-overlay);
+}
+.ds-dialog::backdrop { background: var(--ds-surface-scrim); opacity: 0.5; }
+.ds-dialog__body { display: flex; flex-direction: column; gap: var(--ds-spacing-stack-md); padding: var(--ds-spacing-inset-lg); }
+.ds-dialog__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ds-spacing-inline-md); }
+.ds-dialog__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--ds-spacing-inline-sm); }
+.ds-dialog--static { position: relative; display: block; margin: 0; }
+
+/* ---------- Menu (v0.3) ----------
+ * Action list attached to a trigger button (aria-haspopup="menu", aria-expanded). Items are
+ * role="menuitem"; Esc closes and returns focus to the trigger. For choosing a value use a select.
+ */
+.ds-menu-anchor { position: relative; display: inline-block; }
+.ds-menu {
+  position: absolute; top: calc(100% + var(--ds-space-50)); left: 0; z-index: 10; min-width: 200px; margin: 0; padding: var(--ds-space-50);
+  list-style: none; border: var(--ds-border-width-100) solid var(--ds-border-subtle); border-radius: var(--ds-shape-control);
+  background: var(--ds-surface-raised); box-shadow: var(--ds-elevation-overlay);
+}
+.ds-menu[hidden] { display: none; }
+.ds-menu--end { left: auto; right: 0; }
+.ds-menu__item {
+  display: flex; align-items: center; gap: var(--ds-spacing-inline-sm); width: 100%; min-height: var(--ds-size-control-md); padding: 0 var(--ds-spacing-inset-sm);
+  border: 0; border-radius: calc(var(--ds-shape-control) - var(--ds-space-50)); background: transparent; color: var(--ds-text-primary);
+  text-align: left; text-decoration: none; cursor: pointer; font: inherit;
+}
+.ds-menu__item:hover, .ds-menu__item:focus-visible { background: var(--ds-action-secondary-bg-hover); }
+.ds-menu__item--danger { color: var(--ds-feedback-danger-text); }
+.ds-menu__divider { height: var(--ds-border-width-100); margin: var(--ds-space-50) 0; background: var(--ds-border-subtle); }
+
+/* ---------- Tooltip (v0.3) ----------
+ * Short supplementary label for pointer and keyboard users; shown on hover and focus-within.
+ * Never the only place for essential information (touch has no hover).
+ */
+.ds-tooltip-anchor { position: relative; display: inline-flex; }
+.ds-tooltip {
+  position: absolute; bottom: calc(100% + var(--ds-space-100)); left: 50%; z-index: 10; transform: translateX(-50%);
+  width: max-content; max-width: 240px; padding: var(--ds-space-50) var(--ds-spacing-inset-sm); border-radius: var(--ds-radius-100);
+  background: var(--ds-surface-inverse); color: var(--ds-text-on-inverse); pointer-events: none;
+  font: var(--ds-type-body-sm-font-weight) var(--ds-type-body-sm-font-size)/var(--ds-type-body-sm-line-height) var(--ds-type-body-sm-font-family);
+  display: none; /* ẩn thật sự: không chiếm chỗ, không làm trang tràn ngang trên màn hẹp */
+}
+.ds-tooltip-anchor:hover .ds-tooltip, .ds-tooltip-anchor:focus-within .ds-tooltip { display: block; }
+
+/* ---------- Table (v0.3) ----------
+ * Data table with a real <table>, <th scope>, caption. Numbers right-aligned in tabular figures.
+ * Wrap in .ds-table-wrap so narrow screens scroll the table, not the page.
+ */
+.ds-table-wrap:focus-visible { outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring-color); outline-offset: var(--ds-focus-ring-offset); }
+.ds-table-wrap { overflow-x: auto; border: var(--ds-border-width-100) solid var(--ds-border-subtle); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+.ds-table { width: 100%; border-collapse: collapse; font-size: var(--ds-type-body-md-font-size); line-height: var(--ds-type-body-md-line-height); }
+.ds-table caption { padding: var(--ds-spacing-inset-sm) var(--ds-spacing-inset-md); text-align: left; font: var(--ds-type-title-sm-font-weight) var(--ds-type-title-sm-font-size)/var(--ds-type-title-sm-line-height) var(--ds-type-title-sm-font-family); }
+.ds-table th, .ds-table td { padding: var(--ds-spacing-inset-sm) var(--ds-spacing-inset-md); text-align: left; vertical-align: top; }
+.ds-table thead th { border-bottom: var(--ds-border-width-100) solid var(--ds-border-subtle); color: var(--ds-text-secondary); white-space: nowrap; font: var(--ds-type-label-md-font-weight) var(--ds-type-label-md-font-size)/var(--ds-type-label-md-line-height) var(--ds-type-label-md-font-family); }
+.ds-table tbody tr + tr td, .ds-table tbody tr + tr th { border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+.ds-table tbody tr:hover { background: var(--ds-action-secondary-bg-hover); }
+.ds-table .ds-table__num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
 /* ---------- Motion preference ---------- */
 @media (prefers-reduced-motion: reduce) {
   .ds-root *, .ds-root *::before, .ds-root *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }

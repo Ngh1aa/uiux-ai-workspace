@@ -5,7 +5,7 @@ reference. Tokens follow the [Design Tokens Format Module 2025.10](https://www.d
 (the first stable DTCG spec), components are plain CSS with no framework dependency, and every
 rule that can be checked by a machine is checked in CI.
 
-Status: **v0.2.0**, pre-1.0. The token paths and class names may still change; see
+Status: **v0.3.0**, pre-1.0. The token paths and class names may still change; see
 [governance](docs/governance.md) for how.
 
 ## What is in it
@@ -22,7 +22,7 @@ design-system/
 │   ├── tokens.css              CSS custom properties, light default, dark via media query or data-theme
 │   └── tokens.json             fully resolved values per mode (native handoff, Figma plugins)
 ├── components/
-│   ├── components.css          19 components, tokens only, no color literals
+│   ├── components.css          25 components, tokens only, no color literals
 │   └── icons.svg               original 24px outline icon sprite
 ├── fonts/                      Be Vietnam Pro (SIL OFL 1.1), Latin + Vietnamese subsets
 ├── docs/
@@ -31,7 +31,8 @@ design-system/
 │   └── governance.md           versioning, deprecation, contribution, definition of done
 ├── examples/appointment-app/   three task-led mobile screens built only from the system
 ├── examples/money-app/         v0.2 finance reference: sheet, progress, skeleton, segmented filter
-├── starter/                    starter kit: navy brand layer, app layout blocks, 8 mobile + 2 web screen templates
+├── examples/gom-moc/           trial run of the client process: brief, brand.css, landing page, app screens
+├── starter/                    starter kit: placeholder brand layer, 8 mobile + 2 web screens, landing section skeleton
 ├── contrast-pairs.json         55 declared foreground/background pairs, checked in both modes
 ├── scripts/                    build.py, validate.py, capture-example.cjs (Python stdlib, Node for browser checks)
 └── tests/                      pytest regression and negative tests

@@ -15,6 +15,9 @@
  *   --format png|jpeg     định dạng ảnh chụp (mặc định png; jpeg nhẹ hơn để lưu vào repo)
  *   --name <tên>          tên gốc của file ảnh (mặc định theo tên file trang)
  *   --json <file>         ghi kết quả dạng JSON
+ *   --reflow              soát thêm ở 320 px (tương đương phóng to 400% trên 1280 px, WCAG 1.4.10):
+ *                         chỉ bắt tràn ngang. Dùng cho website, không dùng cho trang có khung điện thoại cố định
+ *   --no-axe              bỏ axe-core dù có cài
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
  * data-screen thì cả trang là một màn.
@@ -25,6 +28,9 @@
  *   - nhãn ngắn (≤ 24 ký tự) bị gãy dòng
  *   - nội dung tràn ngang, hoặc chữ bị khung cha cắt mất
  *   - hơn một card nổi bật (khối nền đậm, rộng) trong một màn
+ *   - ảnh, font, CSS, script tải lỗi (mã HTTP ≥ 400 hoặc không tải được)
+ *   - axe-core (nếu có cài): vi phạm WCAG mức serious hoặc critical
+ *   - --reflow: tràn ngang ở 320 px
  * CẢNH BÁO:
  *   - card ngang hàng có bán kính bo góc khác nhau
  *   - hơn 3 nhóm màu sắc trong một màn
@@ -32,6 +38,10 @@
  *   - chữ bị cắt bằng dấu "…"
  *   - dòng cuối của một đoạn chỉ còn một chữ
  *   - chữ cách mép màn dưới 12 px trên màn hẹp (≤ 600 px)
+ *   - axe-core: vi phạm mức moderate hoặc minor
+ *
+ * axe-core là tuỳ chọn: cài cùng chỗ với Playwright (npm install axe-core@4). Không có thì kết
+ * quả ghi "axe: chưa chạy"; khi giao phải nói rõ phần khả năng tiếp cận chưa được soát tự động.
  *
  * Đây là tín hiệu tự động, không thay việc nhìn ảnh chụp và không phải bằng chứng đạt WCAG.
  * Cần Playwright. Script tự tìm: NODE_PATH, node_modules gần đó, rồi thư mục npm toàn cục.
@@ -49,7 +59,7 @@ const TYPES = {
 };
 
 function parseArgs(argv) {
-  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '', format: 'png', name: '' };
+  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '', format: 'png', name: '', reflow: false, axe: true };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     const next = () => {
@@ -59,6 +69,8 @@ function parseArgs(argv) {
     };
     if (arg === '--root') opts.root = path.resolve(next());
     else if (arg === '--width') opts.widths.push(Number(next()));
+    else if (arg === '--reflow') opts.reflow = true;
+    else if (arg === '--no-axe') opts.axe = false;
     else if (arg === '--height') opts.height = Number(next());
     else if (arg === '--theme') opts.theme = next();
     else if (arg === '--screenshot') opts.screenshot = path.resolve(next());
@@ -263,7 +275,19 @@ function auditInPage() {
           const last = lines[lines.length - 1];
           const words = text.split(' ');
           if (lines.length > 1 && last && (last.right - last.left) < (lines[0].right - lines[0].left) * 0.2 && words[words.length - 1].length <= 8) {
-            warnings.push({ rule: 'widow', message: `Dòng cuối chỉ còn một chữ: ${describe(el)}` });
+            // Chỉ là "một chữ" khi dòng cuối không rộng hơn chữ cuối cùng (tiếng Việt: một âm tiết).
+            let lastWordWidth = Infinity;
+            const node = [...el.childNodes].reverse().find((n) => n.nodeType === 3 && n.textContent.trim());
+            if (node) {
+              const raw = node.textContent.replace(/\s+$/, '');
+              const start = Math.max(raw.search(/\S+$/), 0);
+              const range = document.createRange();
+              range.setStart(node, start); range.setEnd(node, raw.length);
+              lastWordWidth = range.getBoundingClientRect().width;
+            }
+            if ((last.right - last.left) <= lastWordWidth + 2) {
+              warnings.push({ rule: 'widow', message: `Dòng cuối chỉ còn một chữ: ${describe(el)}` });
+            }
           }
         }
         // Chữ bị khung cha (overflow hidden/clip) cắt mất mà không có dấu …
@@ -378,6 +402,39 @@ function auditInPage() {
   });
 }
 
+function searchRoots() {
+  const roots = [];
+  try {
+    const { execSync } = require('node:child_process');
+    const globalRoot = execSync('npm root -g', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    if (globalRoot) roots.push(globalRoot);
+  } catch { /* không có npm */ }
+  return roots;
+}
+
+function loadAxeSource() {
+  const names = ['axe-core/axe.min.js', ...searchRoots().map((r) => path.join(r, 'axe-core', 'axe.min.js'))];
+  for (const name of names) {
+    try { return fs.readFileSync(require.resolve(name), 'utf8'); } catch { /* thử tiếp */ }
+  }
+  return '';
+}
+
+async function runAxe(tab, source) {
+  await tab.addScriptTag({ content: source });
+  const result = await tab.evaluate(async () => window.axe.run(document, {
+    runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] },
+    rules: { 'color-contrast': { enabled: false } },
+  }));
+  const errors = []; const warnings = [];
+  for (const v of result.violations) {
+    const where = v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(', ');
+    const item = { rule: 'axe', message: `${v.id}: ${v.help} (${v.nodes.length} chỗ: ${where})` };
+    (['serious', 'critical'].includes(v.impact) ? errors : warnings).push(item);
+  }
+  return { name: 'axe-core', errors, warnings };
+}
+
 function loadPlaywright() {
   const tries = ['playwright', 'playwright-core'];
   try {
@@ -415,6 +472,7 @@ async function main() {
     ].join('\n'));
     return 2;
   }
+  const axeSource = opts.axe ? loadAxeSource() : '';
   const server = await serve(opts.root);
   const base = `http://127.0.0.1:${server.address().port}`;
   const themes = opts.theme === 'both' ? ['light', 'dark'] : [opts.theme];
@@ -429,16 +487,25 @@ async function main() {
         if (!fs.existsSync(file)) throw new Error(`không có file ${page}`);
         url = `${base}/${path.relative(opts.root, file).split(path.sep).map(encodeURIComponent).join('/')}`;
       }
-      for (const width of opts.widths) {
-        for (const theme of themes) {
+      const passes = [];
+      for (const width of opts.widths) for (const theme of themes) passes.push({ width, theme, reflow: false });
+      if (opts.reflow) passes.push({ width: 320, theme: 'light', reflow: true });
+      for (const { width, theme, reflow } of passes) {
+        {
           const context = await browser.newContext({ viewport: { width, height: opts.height }, colorScheme: theme, reducedMotion: 'reduce' });
           const tab = await context.newPage();
           const consoleErrors = [];
           tab.on('pageerror', (err) => consoleErrors.push(String(err.message || err)));
+          const failedRequests = [];
+          tab.on('requestfailed', (req) => { if (!/^data:/.test(req.url())) failedRequests.push(`${req.url()} (${req.failure() ? req.failure().errorText : 'lỗi'})`); });
+          tab.on('response', (res) => { if (res.status() >= 400) failedRequests.push(`${res.url()} (HTTP ${res.status()})`); });
           await tab.goto(url, { waitUntil: 'networkidle' });
           await tab.evaluate(() => document.fonts && document.fonts.ready);
-          const screens = await tab.evaluate(auditInPage);
-          if (opts.screenshot) {
+          let screens = await tab.evaluate(auditInPage);
+          if (reflow) {
+            screens = screens.map((sc) => ({ name: `${sc.name} (reflow 320 px)`, errors: sc.errors.filter((e) => e.rule === 'overflow').map((e) => ({ ...e, rule: 'reflow' })), warnings: [] }));
+          }
+          if (opts.screenshot && !reflow) {
             fs.mkdirSync(opts.screenshot, { recursive: true });
             const stem = opts.name || path.basename(page).replace(/\.[a-z]+$/i, '').replace(/[^\w-]+/g, '-');
             const ext = opts.format === 'jpeg' ? 'jpg' : 'png';
@@ -447,7 +514,9 @@ async function main() {
             await tab.screenshot(shot);
           }
           for (const message of consoleErrors) screens.push({ name: 'Lỗi JavaScript', errors: [{ rule: 'script', message }], warnings: [] });
-          results.push({ page, width, theme, screens });
+          if (failedRequests.length) screens.push({ name: 'Tài nguyên tải lỗi', errors: [...new Set(failedRequests)].map((message) => ({ rule: 'request', message })), warnings: [] });
+          if (axeSource && !reflow) screens.push(await runAxe(tab, axeSource));
+          results.push({ page, width, theme, reflow, screens });
           await context.close();
         }
       }
@@ -461,18 +530,23 @@ async function main() {
   let warningCount = 0;
   const label = { light: 'sáng', dark: 'tối' };
   for (const run of results) {
-    process.stdout.write(`\n${run.page}  ${run.width}px  ${label[run.theme]}\n`);
+    process.stdout.write(`\n${run.page}  ${run.width}px  ${run.reflow ? 'reflow' : label[run.theme]}\n`);
     for (const screen of run.screens) {
       errorCount += screen.errors.length;
       warningCount += screen.warnings.length;
       const status = screen.errors.length ? 'LỖI' : screen.warnings.length ? 'CẢNH BÁO' : 'ĐẠT';
       process.stdout.write(`  ${status.padEnd(8)} ${screen.name}\n`);
-      for (const item of screen.errors) process.stdout.write(`           lỗi       ${item.message}\n`);
+      for (const item of screen.errors) {
+        process.stdout.write(`           lỗi       ${item.message}\n`);
+        // Trên GitHub Actions: hiện lỗi thành chú thích trên pull request
+        if (process.env.GITHUB_ACTIONS) process.stdout.write(`::error title=taste-check ${run.page} ${run.width}px::${screen.name}: ${item.message.replace(/[\r\n]+/g, ' ')}\n`);
+      }
       for (const item of screen.warnings) process.stdout.write(`           cảnh báo  ${item.message}\n`);
     }
   }
-  process.stdout.write(`\nTổng: ${errorCount} lỗi, ${warningCount} cảnh báo. Vẫn phải nhìn ảnh chụp trước khi giao.\n`);
-  if (opts.json) fs.writeFileSync(opts.json, `${JSON.stringify({ errorCount, warningCount, results }, null, 2)}\n`);
+  const axeStatus = !opts.axe ? 'tắt (--no-axe)' : axeSource ? 'đã chạy' : 'chưa chạy (không có axe-core; npm install axe-core@4 cùng chỗ với Playwright)';
+  process.stdout.write(`\naxe: ${axeStatus}\nTổng: ${errorCount} lỗi, ${warningCount} cảnh báo. Vẫn phải nhìn ảnh chụp trước khi giao.\n`);
+  if (opts.json) fs.writeFileSync(opts.json, `${JSON.stringify({ errorCount, warningCount, axe: !opts.axe ? 'OFF' : axeSource ? 'RUN' : 'NOT_RUN', results }, null, 2)}\n`);
   return errorCount ? 1 : 0;
 }
 
