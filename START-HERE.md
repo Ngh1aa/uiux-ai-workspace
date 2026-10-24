@@ -93,7 +93,7 @@ mới chỉ soát tĩnh.
 | `BRAND-BRIEF.template.md` | Bước 0: tiếp nhận thương hiệu khách hàng |
 | `TASTE.md` | Gu thiết kế và các lỗi không được lặp lại |
 | `WORKFLOWS.md` | Quy trình và danh sách skill theo cỡ việc (nguồn định tuyến duy nhất) |
-| `skills_UIUX/` | 67 skill UI/UX và script soát chất lượng |
+| `skills_UIUX/` | 42 skill UI/UX và script soát chất lượng |
 | `design-system/` | Token DTCG, 19 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `benchmarks/` | Bộ 3 đề chuẩn để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |

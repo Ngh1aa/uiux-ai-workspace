@@ -10,13 +10,11 @@ thư mục có `SKILL.md`.
 |---|---|
 | `brand-guidelines` | Tiếp nhận và áp dụng thương hiệu khách (mức A–D); đi cùng `BRAND-BRIEF.template.md` |
 | `brand-distinctiveness-and-visual-signature` | Biến nhận diện thành dấu hiệu lặp lại được trên các màn |
-| `brand-recognition-and-consistency-qa` | Soát nhận diện nhất quán giữa các trang và cỡ màn |
 | `visual-design-direction` | Chốt ngữ pháp bố cục, chữ, màu, hình khối cho dự án |
 | `visual-taste-calibration` | Soát độ riêng, độ hợp ngành, chống "nhìn như template" |
 | `real-world-artifact-and-domain-metaphor-design` | Tìm vật gốc của ngành để làm dấu ấn (xem `SIGNATURE.md`) |
 | `experience-principles-and-signature-moments` | Nguyên tắc trải nghiệm và khoảnh khắc đáng nhớ |
 | `design-reference-research-and-benchmark` | Tìm và chấm tham khảo theo ngành, rút nguyên tắc, không chép |
-| `reference-extraction-and-design-audit` | Rút hệ thị giác từ một trang tham khảo hoặc dự án cũ |
 | `reference-analysis-and-design-to-code` | Dựng lại theo Figma, ảnh chụp hoặc trang mẫu |
 | `asset-media-and-art-direction` | Ảnh, minh hoạ, icon, video |
 | `motion-and-microinteractions` | Chuyển động có mục đích |
@@ -27,8 +25,6 @@ thư mục có `SKILL.md`.
 |---|---|
 | `ux-structure-and-flow-design` | Việc chính, luồng, kiểm kê màn × trạng thái, wireframe trước khi tô màu |
 | `audience-intent-and-top-tasks` | Ai vào, vì sao, cần làm gì |
-| `entry-context-and-visit-intent` | Người dùng đến từ đâu (tìm kiếm, quảng cáo, QR...) |
-| `journey-driven-content-and-layout` | Sắp nội dung theo thứ tự câu hỏi của người dùng |
 | `information-architecture` | Điều hướng, nhãn, sơ đồ trang |
 | `site-search-and-findability` | Ô tìm kiếm, kết quả, bộ lọc |
 | `conversion-and-content` | Lập luận trang marketing, bằng chứng, CTA |
@@ -44,27 +40,20 @@ thư mục có `SKILL.md`.
 |---|---|
 | `design-system-and-components` | Token, component, biến thể, trạng thái |
 | `interaction-patterns-and-form-ux` | Form, tìm kiếm, lọc, tab, dialog |
-| `complex-forms-and-wizards` | Form nhiều bước, có điều kiện |
-| `complex-workflow-and-progress-ux` | Quy trình dài, nhiều chặng, có tiến độ |
 | `state-feedback-and-error-recovery` | Đủ trạng thái: tải, rỗng, lỗi, khôi phục |
 | `authentication-account-and-recovery-ux` | Đăng nhập, đăng ký, khôi phục tài khoản |
 | `data-tables-and-enterprise-ux` | Bảng dữ liệu dày |
 | `data-visualization-and-dashboard-ux` | Dashboard, biểu đồ |
 | `human-ai-interaction-design` | Tính năng có AI |
 | `accessibility` | WCAG 2.2 AA, bàn phím, focus, trình đọc màn hình |
-| `inclusive-design-and-cognitive-accessibility` | Giảm tải nhận thức, tình huống đặc biệt |
 
 ## Mobile app
 
 | Skill | Dùng khi |
 |---|---|
-| `mobile-app-design` | Điểm vào cho mọi việc thiết kế app iOS/Android |
+| `mobile-app-design` | Điểm vào cho mọi việc thiết kế app iOS/Android; gồm điều hướng và trạng thái, token và bàn giao, soát prototype, demo trên trình duyệt |
 | `ios-app-design` | Quy ước Apple: safe area, Dynamic Type, điều hướng |
 | `android-app-design` | Material 3, edge-to-edge, predictive back |
-| `mobile-navigation-and-state-ux` | Kiểm kê màn, trạng thái, gián đoạn, quyền |
-| `mobile-design-system-and-handoff` | Token và component theo nền tảng, bàn giao |
-| `mobile-prototype-and-qa` | Soát prototype app |
-| `mobile-web-preview` | Prototype app chạy trên trình duyệt để khách bấm thử |
 
 ## Web, dựng và soát
 
@@ -76,8 +65,6 @@ thư mục có `SKILL.md`.
 | `web-quality-and-performance` | Tốc độ tải, Core Web Vitals |
 | `ui-craft-and-visual-qa` | Soát và đánh bóng craft; có `taste-check.cjs`, `static-check.cjs` |
 | `media-crop-and-layout-integrity` | Ảnh bị cắt sai, vỡ tỉ lệ |
-| `visual-redesign-delta-gate` | Redesign mà nhìn vẫn như cũ |
-| `visual-regression-and-design-drift` | Giữ chất lượng qua nhiều lần sửa |
 | `design-critique-and-rationale` | Phê bình theo rubric, lý do thiết kế |
 | `ux-laws-and-heuristics` | Đánh giá theo heuristic |
 | `ui-improvement` | Sửa giao diện đang có |
@@ -85,10 +72,24 @@ thư mục có `SKILL.md`.
 
 ## Playbook theo ngành
 
-`landing-page`, `saas-website`, `corporate-website`, `ecommerce-website`, `education-website`,
-`government-and-public-sector-website`, `hospitality-website`, `news-and-media-website`,
-`nonprofit-website`, `portfolio-website`, `portfolio-career-positioning`,
-`real-estate-and-building-website`, `startup-and-incubator-website`.
+| Skill | Dùng khi |
+|---|---|
+| `industry-playbooks` | Đã biết ngành của khách: 13 playbook (landing page, SaaS, doanh nghiệp, TMĐT, giáo dục, nhà nước, khách sạn, báo chí, phi lợi nhuận, portfolio, định vị portfolio cá nhân, bất động sản, startup) |
+
+## Skill đã gộp
+
+Các skill dưới đây không còn là skill riêng; nội dung nằm trong mục **Hướng dẫn con** của skill chủ.
+
+| Skill chủ | Hướng dẫn con |
+|---|---|
+| `mobile-app-design` | mobile-navigation-and-state-ux, mobile-design-system-and-handoff, mobile-prototype-and-qa, mobile-web-preview |
+| `ui-craft-and-visual-qa` | visual-redesign-delta-gate, visual-regression-and-design-drift |
+| `interaction-patterns-and-form-ux` | complex-forms-and-wizards, complex-workflow-and-progress-ux |
+| `audience-intent-and-top-tasks` | entry-context-and-visit-intent, journey-driven-content-and-layout |
+| `brand-distinctiveness-and-visual-signature` | brand-recognition-and-consistency-qa |
+| `design-reference-research-and-benchmark` | reference-extraction-and-design-audit |
+| `accessibility` | inclusive-design-and-cognitive-accessibility |
+| `industry-playbooks` | 13 playbook ngành |
 
 ## Đã gỡ khỏi `main`
 

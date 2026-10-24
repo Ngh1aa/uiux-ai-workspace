@@ -7,7 +7,7 @@ việc trong [`WORKFLOWS.md`](../WORKFLOWS.md). Chỉ đọc những skill đư�
 
 | Có gì | Ở đâu |
 |---|---|
-| 67 skill, mỗi skill một thư mục có `SKILL.md` | xem [`SKILL-CATALOG.md`](SKILL-CATALOG.md) |
+| 42 skill, mỗi skill một thư mục có `SKILL.md` | xem [`SKILL-CATALOG.md`](SKILL-CATALOG.md) |
 | Script soát trang đã dựng | [`ui-craft-and-visual-qa/scripts/`](ui-craft-and-visual-qa/scripts/README.md) |
 | Template tài liệu UX (khung vấn đề, luồng, wireframe, visual brief) | [`templates/ux/`](templates/ux/README.md) |
 | Kiểm tra cấu trúc `SKILL.md` | `python3 skills_UIUX/scripts/validate-skills.py` |

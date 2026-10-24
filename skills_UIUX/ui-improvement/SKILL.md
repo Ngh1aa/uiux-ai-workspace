@@ -163,7 +163,7 @@ Start with the smallest useful graph.
 - complex form/search/dialog/state behavior → `interaction-patterns-and-form-ux` and narrow specialists;
 - meaningful motion requirement → `motion-and-microinteractions`;
 - semantic/keyboard/focus risk → `accessibility`;
-- repeated cross-page drift or snapshot risk → `visual-regression-and-design-drift`.
+- repeated cross-page drift or snapshot risk → [`visual-regression-and-design-drift`](../ui-craft-and-visual-qa/references/visual-regression-and-design-drift.md).
 
 When `design-reference-research-and-benchmark` is active, preserve the existing brand/content/behavior contract and use references to extract transferable principles—not as permission to overwrite the site with a new trend.
 
