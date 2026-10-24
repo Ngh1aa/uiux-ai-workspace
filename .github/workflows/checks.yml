@@ -85,7 +85,7 @@ jobs:
       - name: Design system regression and negative tests
         run: python -m pytest -q design-system/tests
       - name: Starter kit icons are current
-        run: python design-system/starter/inline-icons.py --check design-system/starter/mobile.html design-system/starter/web.html
+        run: python design-system/starter/inline-icons.py --check design-system/starter/mobile.html design-system/starter/web.html design-system/starter/web-states.html
       - name: Install Playwright Chromium outside the repo
         run: |
           mkdir -p "$RUNNER_TEMP/tools" && cd "$RUNNER_TEMP/tools"
@@ -101,7 +101,7 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules
         run: >-
           node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs
-          design-system/starter/mobile.html design-system/starter/web.html
+          design-system/starter/mobile.html design-system/starter/web.html design-system/starter/web-states.html
           --width 390 --width 1024 --width 1280 --screenshot "$RUNNER_TEMP/starter-shots"
       - name: Upload starter kit screenshots
         if: always()

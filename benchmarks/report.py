@@ -64,7 +64,7 @@ def row(run: str, brief: str, entry: dict, check: dict) -> str:
     need_avg, need_min = THRESHOLDS[entry["size"]]
     hard = entry.get("hard_fails", [])
     ok = not hard and avg >= need_avg and low >= need_min and check.get("status") == "PASS"
-    weakest = ", ".join(DIMENSIONS[k] for k, v in entry["scores"].items() if v == low)
+    weakest = "mọi chiều" if len(set(values)) == 1 else ", ".join(DIMENSIONS[k] for k, v in entry["scores"].items() if v == low)
     return (
         f"| {run} | {brief} | {entry['size']} | {check.get('errors', '?')} | {check.get('warnings', '?')} | "
         f"{len(hard)} | {avg:.1f} | {low} ({weakest}) | {'Đạt' if ok else 'Chưa đạt'} |"

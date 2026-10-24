@@ -350,8 +350,9 @@ function auditInPage() {
       if (c[3] < 0.3) return;
       const [h, s, l] = hsl(c);
       if (s < 0.25 || l < 0.12 || l > 0.92) return;
-      const bucket = Math.round(h / 30) % 12;
-      if (!hues.has(bucket)) hues.set(bucket, `${hex(c)} ở ${describe(el)}`);
+      // Gom các màu có sắc độ cách nhau dưới 20° vào cùng một nhóm.
+      const near = [...hues.keys()].find((k) => Math.min(Math.abs(k - h), 360 - Math.abs(k - h)) < 20);
+      if (near === undefined) hues.set(h, `${hex(c)} ở ${describe(el)}`);
     };
     for (const el of all) {
       const st = getComputedStyle(el);
