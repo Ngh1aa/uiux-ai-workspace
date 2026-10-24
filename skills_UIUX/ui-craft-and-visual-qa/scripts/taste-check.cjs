@@ -7,7 +7,8 @@
  *
  * Tuỳ chọn:
  *   --root <thư mục>      thư mục gốc để phục vụ file cục bộ qua HTTP (mặc định: thư mục hiện tại)
- *   --width <px>          bề rộng khung nhìn (mặc định 390); dùng nhiều lần: --width 390 --width 1280
+ *   --width <px>          bề rộng khung nhìn (mặc định 390 và 1280: điện thoại và máy tính);
+ *                         ghi --width là thay mặc định, dùng nhiều lần: --width 390 --width 768 --width 1440
  *   --height <px>         chiều cao khung nhìn (mặc định 844)
  *   --theme light|dark|both   chế độ màu (mặc định both)
  *   --screenshot <thư mục>    lưu ảnh chụp toàn trang
@@ -33,7 +34,8 @@
  *   - chữ cách mép màn dưới 12 px trên màn hẹp (≤ 600 px)
  *
  * Đây là tín hiệu tự động, không thay việc nhìn ảnh chụp và không phải bằng chứng đạt WCAG.
- * Cần Playwright: đặt NODE_PATH tới thư mục node_modules có playwright, hoặc cài playwright.
+ * Cần Playwright. Script tự tìm: NODE_PATH, node_modules gần đó, rồi thư mục npm toàn cục.
+ * Không có thì xem mục "Khi không chạy được taste-check" trong START-HERE.md.
  */
 'use strict';
 const fs = require('node:fs');
@@ -67,7 +69,7 @@ function parseArgs(argv) {
     else if (arg.startsWith('--')) throw new Error(`không hiểu tuỳ chọn ${arg}`);
     else opts.pages.push(arg);
   }
-  if (!opts.widths.length) opts.widths = [390];
+  if (!opts.widths.length) opts.widths = [390, 1280];
   if (opts.widths.some((w) => !Number.isFinite(w) || w < 200)) throw new Error('--width phải là số ≥ 200');
   if (!['png', 'jpeg'].includes(opts.format)) throw new Error('--format phải là png hoặc jpeg');
   if (!['light', 'dark', 'both'].includes(opts.theme)) throw new Error('--theme phải là light, dark hoặc both');
@@ -376,17 +378,41 @@ function auditInPage() {
   });
 }
 
+function loadPlaywright() {
+  const tries = ['playwright', 'playwright-core'];
+  try {
+    const { execSync } = require('node:child_process');
+    const globalRoot = execSync('npm root -g', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    if (globalRoot) tries.push(path.join(globalRoot, 'playwright'), path.join(globalRoot, 'playwright-core'));
+  } catch { /* không có npm */ }
+  for (const name of tries) {
+    try {
+      const mod = require(name);
+      if (mod && mod.chromium) return mod;
+    } catch { /* thử tiếp */ }
+  }
+  return null;
+}
+
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   if (opts.help || !opts.pages.length) {
     process.stdout.write(fs.readFileSync(__filename, 'utf8').split('*/')[0].replace(/^#!.*\n\/\*\*?/, '').replace(/^ \* ?/gm, ''));
     return opts.help ? 0 : 2;
   }
-  let playwright;
-  try {
-    playwright = require('playwright');
-  } catch {
-    process.stderr.write('Không tìm thấy playwright. Cài: npm install --no-save playwright, hoặc đặt NODE_PATH.\n');
+  const playwright = loadPlaywright();
+  if (!playwright) {
+    process.stderr.write([
+      'Không tìm thấy Playwright, nên chưa soát được trang đã render.',
+      'Thử lần lượt:',
+      '  1. Cài ngoài repo: npm install --prefix /tmp/pw playwright@1 && npx --prefix /tmp/pw playwright install chromium,',
+      '     rồi chạy lại với NODE_PATH=/tmp/pw/node_modules',
+      '  2. Không cài được (mạng chặn): mở trang bằng trình duyệt có sẵn, chụp 390 px và 1280 px, sáng và tối,',
+      '     rồi soát bằng mắt theo checklist trong TASTE.md',
+      '  3. Luôn chạy được: node skills_UIUX/ui-craft-and-visual-qa/scripts/static-check.cjs <trang.html>',
+      'Khi giao, ghi rõ đã dùng cách nào và phần nào chưa soát được.',
+      '',
+    ].join('\n'));
     return 2;
   }
   const server = await serve(opts.root);

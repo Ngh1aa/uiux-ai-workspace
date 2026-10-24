@@ -1,0 +1,132 @@
+#!/usr/bin/env node
+/**
+ * Soát tĩnh một trang HTML khi không chạy được taste-check (không có Playwright, mạng chặn).
+ * Chỉ dùng Node, không cần cài gì. Đọc mã nguồn trang và các file CSS cục bộ nó nạp.
+ *
+ * Dùng:
+ *   node static-check.cjs <trang.html> [...] [--json <file>]
+ *
+ * LỖI (thoát với mã 1):
+ *   - dấu " · " hoặc " • " nối cụm từ trong chữ hiển thị
+ *   - thiếu <html lang>, thẻ viewport hoặc <title>
+ *   - viewport chặn phóng to (user-scalable=no, maximum-scale=1)
+ *   - ảnh thiếu alt; nút hoặc liên kết không có chữ và không có aria-label
+ *   - chữ giữ chỗ kiểu "Lorem ipsum"
+ * CẢNH BÁO:
+ *   - mã màu viết cứng ngoài phần khai báo token (--tên: giá trị)
+ *   - transition: all; outline: none mà không có :focus-visible
+ *   - cỡ chữ dưới 12px; emoji dùng như icon
+ *   - liên kết href="#"
+ *
+ * Không thay được việc render và nhìn ảnh: không đo được tương phản thật, tràn chữ, gãy dòng.
+ * Khi giao, ghi rõ trang chỉ mới được soát tĩnh.
+ */
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+
+const DOT = /\S\s[·•]\s\S/;
+const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
+
+function visibleText(html) {
+  return html
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<(script|style|svg|template)\b[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]+>/g, '\n')
+    .replace(/&nbsp;/g, ' ')
+    .split('\n').map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
+}
+
+function localCss(html, file) {
+  const parts = [];
+  for (const m of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) parts.push(m[1]);
+  for (const m of html.matchAll(/<link\b[^>]*rel=["']?stylesheet[^>]*>/gi)) {
+    const href = (m[0].match(/href=["']([^"']+)["']/i) || [])[1];
+    if (!href || /^(https?:)?\/\//.test(href)) continue;
+    const target = path.resolve(path.dirname(file), href.split(/[?#]/)[0]);
+    if (fs.existsSync(target)) parts.push(fs.readFileSync(target, 'utf8'));
+  }
+  for (const m of html.matchAll(/\sstyle=["']([^"']*)["']/gi)) parts.push(m[1]);
+  return parts.join('\n').replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
+function check(file) {
+  const html = fs.readFileSync(file, 'utf8');
+  const errors = [];
+  const warnings = [];
+  const err = (rule, message) => errors.push({ rule, message });
+  const warn = (rule, message) => warnings.push({ rule, message });
+
+  if (!/<html\b[^>]*\blang=["']?[a-z]/i.test(html)) err('lang', 'thiếu <html lang="..."> (tiếng Việt: lang="vi")');
+  const viewport = (html.match(/<meta\b[^>]*name=["']?viewport[^>]*>/i) || [])[0];
+  if (!viewport) err('viewport', 'thiếu <meta name="viewport" content="width=device-width, initial-scale=1">');
+  else if (/user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?\b/i.test(viewport)) err('zoom', 'viewport đang chặn người dùng phóng to');
+  if (!/<title>[^<]*\S[^<]*<\/title>/i.test(html)) err('title', 'thiếu <title>');
+
+  for (const line of visibleText(html)) {
+    if (DOT.test(line)) err('dot', `nối cụm từ bằng dấu chấm giữa: "${line.slice(0, 80)}"`);
+    if (/lorem ipsum/i.test(line)) err('placeholder', `chữ giữ chỗ: "${line.slice(0, 60)}"`);
+    if (EMOJI.test(line) && line.length <= 3) warn('emoji', `emoji dùng như icon: "${line}" (dùng icon SVG)`);
+  }
+  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
+    if (!/\balt=/i.test(m[0])) err('alt', `ảnh thiếu alt: ${m[0].slice(0, 80)}`);
+  }
+  let deadLinks = 0;
+  for (const m of html.matchAll(/<(button|a)\b([^>]*)>([\s\S]*?)<\/\1>/gi)) {
+    const text = m[3].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
+    if (!text && !/aria-label(ledby)?=/i.test(m[2]) && !/<title>|aria-label=|<img\b[^>]*alt=["'][^"']+/i.test(m[3])) {
+      err('name', `<${m[1]}> không có chữ và không có aria-label`);
+    }
+    if (m[1].toLowerCase() === 'a' && /href=["']#["']/i.test(m[2])) deadLinks += 1;
+  }
+  if (deadLinks) warn('href', `${deadLinks} liên kết href="#" (ổn trong mockup; trang giao cho dev cần đích thật)`);
+
+  const css = localCss(html, file);
+  const hardcoded = new Set();
+  for (const decl of css.split(/[;{}]/)) {
+    const d = decl.trim();
+    if (!d || d.startsWith('--') || d.startsWith('@')) continue;
+    for (const c of d.match(/#[0-9a-f]{3,8}\b|\brgba?\([^)]*\)/gi) || []) hardcoded.add(c.toLowerCase());
+    const size = d.match(/^font-size\s*:\s*(\d+(?:\.\d+)?)px/i);
+    if (size && Number(size[1]) < 12) warn('small', `cỡ chữ ${size[1]}px dưới 12px`);
+  }
+  if (hardcoded.size) warn('hex', `${hardcoded.size} màu viết cứng ngoài token: ${[...hardcoded].slice(0, 6).join(', ')}`);
+  if (/transition\s*:\s*all\b/i.test(css)) warn('transition', 'transition: all (liệt kê thuộc tính cụ thể)');
+  if (/outline\s*:\s*(none|0)\b/i.test(css) && !/:focus-visible/.test(css)) warn('focus', 'bỏ outline mà không có kiểu :focus-visible thay thế');
+
+  const dedupe = (list) => [...new Map(list.map((i) => [i.rule + i.message, i])).values()];
+  return { page: file, errors: dedupe(errors), warnings: dedupe(warnings) };
+}
+
+function main(argv) {
+  const pages = [];
+  let json = '';
+  for (let i = 0; i < argv.length; i += 1) {
+    if (argv[i] === '--json') json = argv[++i] || '';
+    else if (argv[i] === '-h' || argv[i] === '--help') pages.length = 0, (argv.length = 0);
+    else pages.push(argv[i]);
+  }
+  if (!pages.length) {
+    process.stdout.write(fs.readFileSync(__filename, 'utf8').split('*/')[0].replace(/^#!.*\n\/\*\*?/, '').replace(/^ \* ?/gm, ''));
+    return 2;
+  }
+  let errorCount = 0;
+  const results = [];
+  for (const page of pages) {
+    if (!fs.existsSync(page)) {
+      process.stderr.write(`static-check: không có file ${page}\n`);
+      return 2;
+    }
+    const r = check(page);
+    results.push(r);
+    errorCount += r.errors.length;
+    process.stdout.write(`\n${page}: ${r.errors.length ? 'LỖI' : r.warnings.length ? 'CẢNH BÁO' : 'ĐẠT'}\n`);
+    for (const i of r.errors) process.stdout.write(`  lỗi       ${i.message}\n`);
+    for (const i of r.warnings) process.stdout.write(`  cảnh báo  ${i.message}\n`);
+  }
+  process.stdout.write(`\nTổng: ${errorCount} lỗi. Soát tĩnh không thay việc render và nhìn ảnh chụp.\n`);
+  if (json) fs.writeFileSync(json, `${JSON.stringify({ errorCount, results }, null, 2)}\n`);
+  return errorCount ? 1 : 0;
+}
+
+process.exitCode = main(process.argv.slice(2));

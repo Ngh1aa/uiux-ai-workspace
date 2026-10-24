@@ -1,6 +1,9 @@
 # skills_UIUX V5.4 — Evidence, Reference Intelligence & Production Reliability Agent OS
 
-> Khi thiết kế, bắt đầu từ [`START-HERE.md`](../START-HERE.md). File này mô tả chi tiết thư viện skill.
+> **Khi thiết kế, bắt đầu từ [`START-HERE.md`](../START-HERE.md) và chọn skill theo
+> [`WORKFLOWS.md`](../WORKFLOWS.md). Không dùng file này để chọn quy trình.** Phần dưới mô tả lịch
+> sử thư viện; các prompt, pipeline và "entrypoint" nhắc tới ở đây thuộc bộ chạy tự động cũ, không
+> áp dụng khi thiết kế qua chat.
 
 Bộ skill cho AI coding agent xây dựng/nâng cấp website theo pipeline chuyên nghiệp từ project truth → research → audience/journey/IA → reference intelligence → design intelligence → Design Contract → implementation → rendered QA → release/production verification.
 
@@ -37,7 +40,7 @@ bounded domain workflows, annotated same-data examples, exercises/retest and
 paired skill evaluations;
 teaching/eval scores are not human validation or evidence of mastery.
 
-Cho substantial website redesign, bắt đầu từ:
+Chỉ dùng khi chủ repo yêu cầu đích danh pipeline prompt cũ (không phải đường thiết kế qua chat):
 
 - [LATEST-3-PROMPT-REDESIGN-PIPELINE.md](prompts/LATEST-3-PROMPT-REDESIGN-PIPELINE.md)
 - [MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md](prompts/MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md)

@@ -1,8 +1,10 @@
 # Starter kit
 
 Bộ khung để bắt đầu thiết kế app hoặc trang web theo đúng gu trong [`TASTE.md`](../../TASTE.md),
-dựng trên token và component của design system này. Phong cách lấy từ dự án app giáo vụ:
-nền xám lạnh, card trắng phẳng bo 24px, một card navy nổi bật mỗi màn, thanh tab nổi.
+dựng trên token và component của design system này. Cấu trúc màn (bố cục, trạng thái, thứ bậc)
+là phần dùng lại được. Bề mặt hiện tại (nền xám lạnh, card trắng bo 24px, card navy nổi bật, lấy từ
+một dự án app giáo vụ) chỉ là **chỗ giữ chỗ**: dự án khách hàng thay bằng thương hiệu trong brand
+brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 
 | File | Là gì |
 |---|---|
@@ -11,7 +13,7 @@ nền xám lạnh, card trắng phẳng bo 24px, một card navy nổi bật m�
 | [`web-states.html`](web-states.html) | Trạng thái từng khối của trang web: đang tải, dữ liệu cũ, lỗi, rỗng |
 | [`SIGNATURE.md`](SIGNATURE.md) | Cách tạo dấu ấn riêng cho từng dự án, để màn không chỉ là starter kit đổi màu |
 | [`PATTERNS.md`](PATTERNS.md) | Quy tắc bố cục cho từng loại màn |
-| [`brand.css`](brand.css) | Lớp thương hiệu: màu, nền, bo góc. Đổi thương hiệu thì sửa file này |
+| [`brand.css`](brand.css) | Lớp thương hiệu: màu, nền, bo góc. Giá trị hiện tại là chỗ giữ chỗ; dự án chép ra rồi điền theo brand brief |
 | [`app.css`](app.css) | Khối bố cục app mà design system chưa có. Không chứa mã màu |
 | [`icons-app.svg`](icons-app.svg) | Icon bổ sung, cùng kiểu với `components/icons.svg` |
 | [`inline-icons.py`](inline-icons.py) | Nhúng đúng những icon trang đang dùng vào trang |
@@ -20,8 +22,9 @@ nền xám lạnh, card trắng phẳng bo 24px, một card navy nổi bật m�
 
 1. Chép `mobile.html` hoặc `web.html` sang dự án, giữ thứ tự nạp CSS:
    `fonts.css` → `tokens.css` → `components.css` → `brand.css` → `app.css`.
-2. Sửa `brand.css` theo thương hiệu của dự án, cả khối sáng lẫn khối tối, rồi tạo dấu ấn riêng
-   theo [`SIGNATURE.md`](SIGNATURE.md): đổi ít nhất 3 thứ ngoài màu.
+2. Chép `brand.css` vào dự án và điền theo brand brief, cả khối sáng lẫn hai khối tối (giống hệt
+   nhau), rồi soát bằng `python3 design-system/scripts/check-brand.py <dự-án>/brand.css`. Sau đó
+   tạo dấu ấn riêng theo [`SIGNATURE.md`](SIGNATURE.md): đổi ít nhất 3 thứ ngoài màu.
 3. Với mỗi màn cần làm, chọn loại màn trong [`PATTERNS.md`](PATTERNS.md), chép khối `.app-phone`
    tương ứng, rồi thay nội dung. Giữ cấu trúc, đừng thêm card nổi bật thứ hai.
 4. Thêm hoặc bớt icon xong thì chạy:
