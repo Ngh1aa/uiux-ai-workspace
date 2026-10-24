@@ -131,6 +131,9 @@ từng chặng, đọc đúng skill được liệt kê.
 
 ## 5. Định nghĩa "xong" chung cho mọi cỡ
 
+- Màn mới bắt đầu từ [starter kit](design-system/starter/README.md) và theo
+  [mẫu theo loại màn](design-system/starter/PATTERNS.md).
+- [`taste-check.cjs`](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#soát-theo-gu-taste-checkcjs) không còn lỗi.
 - Đã **nhìn ảnh render thật**, không chỉ đọc code.
 - Đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
 - Contrast và vùng chạm đạt chuẩn trong [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md).

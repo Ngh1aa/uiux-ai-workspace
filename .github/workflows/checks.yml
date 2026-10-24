@@ -61,7 +61,7 @@ jobs:
   release-candidate:
     name: release-candidate
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -69,6 +69,10 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
       - name: Install test runner
         run: python -m pip install "pytest>=8,<9"
       - name: Design system generated files are current
@@ -77,3 +81,29 @@ jobs:
         run: python design-system/scripts/validate.py --report
       - name: Design system regression and negative tests
         run: python -m pytest -q design-system/tests
+      - name: Starter kit icons are current
+        run: python design-system/starter/inline-icons.py --check design-system/starter/mobile.html design-system/starter/web.html
+      - name: Install Playwright Chromium outside the repo
+        run: |
+          mkdir -p "$RUNNER_TEMP/tools" && cd "$RUNNER_TEMP/tools"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1
+          npx playwright install --with-deps chromium
+      - name: Taste checker tests
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs
+      - name: Starter kit passes the taste check
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: >-
+          node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs
+          design-system/starter/mobile.html design-system/starter/web.html
+          --width 390 --width 1280 --screenshot "$RUNNER_TEMP/starter-shots"
+      - name: Upload starter kit screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: starter-kit-screenshots
+          path: ${{ runner.temp }}/starter-shots
+          if-no-files-found: ignore

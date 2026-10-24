@@ -1,4 +1,28 @@
-# Elementary visual integrity runner
+# Scripts
+
+## Soát theo gu (`taste-check.cjs`)
+
+Soát trang đã render theo [`TASTE.md`](../../../TASTE.md) trong Chromium, cả chế độ sáng và tối.
+Mỗi phần tử có `data-screen="Tên màn"` được soát như một màn riêng.
+
+- **Lỗi:** dấu " · " nối cụm từ, chữ dưới ngưỡng tương phản AA, nhãn ngắn bị gãy dòng, nội dung
+  tràn ngang, hơn một card nổi bật trong một màn.
+- **Cảnh báo:** card có nhiều bán kính bo góc, hơn 3 nhóm màu, vùng chạm dưới 44×44 px, chữ bị cắt
+  bằng "…", dòng cuối chỉ còn một chữ.
+
+```bash
+node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs design-system/starter/mobile.html \
+  --width 390 --width 1280 --screenshot qa/
+```
+
+Tuỳ chọn: `--root` (thư mục phục vụ file, mặc định thư mục hiện tại), `--width` (lặp được),
+`--height`, `--theme light|dark|both`, `--screenshot <thư mục>`, `--json <file>`. Thoát với mã 1
+khi có lỗi. Cần Playwright (`npm install --no-save playwright` hoặc đặt `NODE_PATH`).
+Test: `node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs`.
+
+Script là tín hiệu tự động, không thay việc mở ảnh chụp ra nhìn.
+
+## Elementary visual integrity runner
 
 `elementary-visual-integrity.mjs` is a reusable Playwright regression guard for the failure class covered by `../checklists/elementary-visual-sanity-gate.md`.
 

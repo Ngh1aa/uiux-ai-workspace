@@ -48,6 +48,8 @@ Các failure sau là **hard blockers** dù build/CI/screenshot generation xanh:
 
 Deep review có thể dùng representative routes, nhưng **shared-owner elementary sanity không được chỉ sample**. Nếu header/footer/nav/button token/theme/shared surface bị đổi, phải smoke/check mọi route/template mà owner đó render.
 
+Với trang HTML tĩnh hoặc prototype, chạy [`scripts/taste-check.cjs`](scripts/README.md#soát-theo-gu-taste-checkcjs) trước khi review bằng mắt: nó bắt tương phản, tràn chữ, gãy dòng, dấu " · ", số card nổi bật, bo góc và vùng chạm theo `TASTE.md`. Hết lỗi rồi vẫn phải mở ảnh chụp ra nhìn.
+
 ## Review order
 
 Không bắt đầu bằng shadow/radius. Review từ macro đến micro:
