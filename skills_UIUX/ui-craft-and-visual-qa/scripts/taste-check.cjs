@@ -536,7 +536,11 @@ async function main() {
       warningCount += screen.warnings.length;
       const status = screen.errors.length ? 'LỖI' : screen.warnings.length ? 'CẢNH BÁO' : 'ĐẠT';
       process.stdout.write(`  ${status.padEnd(8)} ${screen.name}\n`);
-      for (const item of screen.errors) process.stdout.write(`           lỗi       ${item.message}\n`);
+      for (const item of screen.errors) {
+        process.stdout.write(`           lỗi       ${item.message}\n`);
+        // Trên GitHub Actions: hiện lỗi thành chú thích trên pull request
+        if (process.env.GITHUB_ACTIONS) process.stdout.write(`::error title=taste-check ${run.page} ${run.width}px::${screen.name}: ${item.message.replace(/[\r\n]+/g, ' ')}\n`);
+      }
       for (const item of screen.warnings) process.stdout.write(`           cảnh báo  ${item.message}\n`);
     }
   }

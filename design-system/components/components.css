@@ -391,11 +391,11 @@ a.ds-list-item:hover, button.ds-list-item:hover { background: var(--ds-action-se
 .ds-tooltip {
   position: absolute; bottom: calc(100% + var(--ds-space-100)); left: 50%; z-index: 10; transform: translateX(-50%);
   width: max-content; max-width: 240px; padding: var(--ds-space-50) var(--ds-spacing-inset-sm); border-radius: var(--ds-radius-100);
-  background: var(--ds-surface-inverse); color: var(--ds-text-on-inverse); pointer-events: none; opacity: 0; visibility: hidden;
+  background: var(--ds-surface-inverse); color: var(--ds-text-on-inverse); pointer-events: none;
   font: var(--ds-type-body-sm-font-weight) var(--ds-type-body-sm-font-size)/var(--ds-type-body-sm-line-height) var(--ds-type-body-sm-font-family);
-  transition: opacity var(--ds-motion-feedback) var(--ds-motion-ease);
+  display: none; /* ẩn thật sự: không chiếm chỗ, không làm trang tràn ngang trên màn hẹp */
 }
-.ds-tooltip-anchor:hover .ds-tooltip, .ds-tooltip-anchor:focus-within .ds-tooltip { opacity: 1; visibility: visible; }
+.ds-tooltip-anchor:hover .ds-tooltip, .ds-tooltip-anchor:focus-within .ds-tooltip { display: block; }
 
 /* ---------- Table (v0.3) ----------
  * Data table with a real <table>, <th scope>, caption. Numbers right-aligned in tabular figures.
@@ -414,5 +414,4 @@ a.ds-list-item:hover, button.ds-list-item:hover { background: var(--ds-action-se
 @media (prefers-reduced-motion: reduce) {
   .ds-root *, .ds-root *::before, .ds-root *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
   .ds-skeleton { animation: none; }
-  .ds-tooltip { transition: none; }
 }
