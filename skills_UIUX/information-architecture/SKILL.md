@@ -20,7 +20,7 @@ Core objective:
 
 Prefer, in order:
 1. current user instruction;
-2. project `.uiux-profile.json` and source-of-truth docs;
+2. project brand brief (`BRAND-BRIEF.md`) and source-of-truth docs;
 3. observed research, analytics, search logs, support data;
 4. domain playbooks and known content constraints;
 5. generic IA patterns.
@@ -30,10 +30,8 @@ Do not present assumptions as research findings.
 ## Prerequisites
 
 Usually pair with:
-- `product-discovery` for goals, audience and scope;
-- `ux-research-and-journey` for tasks and journeys;
+- `ux-structure-and-flow-design` for goals, tasks and flows;
 - `website-audit-and-redesign` when restructuring an existing site;
-- `card-sorting-and-tree-testing` when findability risk is material;
 - `site-search-and-findability` for large/search-heavy systems.
 
 ## Required workflow
@@ -134,7 +132,7 @@ For redesign/migration create:
 | Old URL | New URL | Action | Redirect | Canonical | Reason |
 |---|---|---|---|---|---|
 
-Protect high-value existing URLs, inbound links and indexed content. Coordinate with `seo-strategy` before changing live routes.
+Protect high-value existing URLs, inbound links and indexed content. Flag SEO impact to the client's developer before changing live routes.
 
 ### 8. Design findability and recovery
 

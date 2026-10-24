@@ -1,3 +1,0 @@
-Agent runtime foundation validation
-Runtime foundation passed: goal-driven adaptive Flow OS + public managed CLI + managed lifecycle/replanning + human approval gates + enforced role defaults/handoffs + isolated branch writes + context/permissions/trace/checkpoint + adapter/discovery syntax
-NOTE: provider target commands are validated and executed through the required Docker/Podman container sandbox with network disabled and fail-closed behavior when the engine/image is unavailable; provider APIs and external integrations still require environment-specific end-to-end verification before production claims

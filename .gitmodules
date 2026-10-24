@@ -1,8 +1,0 @@
-[submodule "skills_UIUX/upstream/anthropic-skills"]
-	path = skills_UIUX/upstream/anthropic-skills
-	url = https://github.com/anthropics/skills.git
-
-[submodule "skills_UIUX/upstream/motion-primitives-website"]
-	path = skills_UIUX/upstream/motion-primitives-website
-	url = https://github.com/itsjwill/motion-primitives-website.git
-

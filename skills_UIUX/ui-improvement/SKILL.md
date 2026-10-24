@@ -31,8 +31,8 @@ Use this skill for requests such as:
 
 Do **not** use this as the main orchestrator when the task is primarily:
 
-- whole-site discovery/IA/service redesign → use `website-delivery-pipeline` / `website-audit-and-redesign`;
-- user explicitly asks to research the old site + brand + comparable websites and then redesign/rebuild the whole website → use `website-delivery-pipeline` with `design-reference-research-and-benchmark` + `visual-design-direction` + relevant domain playbook;
+- whole-site discovery/IA/service redesign → follow size L in `WORKFLOWS.md` with `website-audit-and-redesign`;
+- user explicitly asks to research the old site + brand + comparable websites and then redesign/rebuild the whole website → follow size L in `WORKFLOWS.md` with `design-reference-research-and-benchmark` + `visual-design-direction` + relevant domain playbook;
 - implementing a fully approved spec with no UI diagnosis needed → use `frontend-implementation`;
 - audit-only with no requested changes → use `ui-craft-and-visual-qa` or the relevant audit skill;
 - exact screenshot/Figma reproduction → use `reference-analysis-and-design-to-code` with implementation skills.
@@ -49,7 +49,7 @@ If **two or more** of these are true, this skill must not lead the task:
 - existing UI is described as generic/template-like at system level;
 - success requires customers/stakeholders to visibly recognize a redesign.
 
-In that case, hand control to `website-delivery-pipeline` before editing code. `ui-improvement` may return later for targeted remediation after the new design contract exists.
+In that case, switch to size L in `WORKFLOWS.md` before editing code. `ui-improvement` may return later for targeted remediation after the new design contract exists.
 
 Do not choose the preserve-style path merely because code already exists.
 
@@ -57,7 +57,7 @@ Do not choose the preserve-style path merely because code already exists.
 
 Before changing UI:
 
-1. Read applicable project instructions and `.uiux-profile.json` if present.
+1. Read applicable project instructions and the project brand brief (`BRAND-BRIEF.md`) if present.
 2. Read relevant `source_of_truth`, brand/design docs and existing constraints.
 3. Identify project mode: production, production-candidate, interactive-prototype, visual-prototype or proof-of-concept.
 4. Inventory the affected routes, templates, shared components, tokens, assets and existing implementation owners.
@@ -149,7 +149,6 @@ Start with the smallest useful graph.
 
 ### Default graph
 
-- `project-context`
 - `ui-craft-and-visual-qa`
 - `frontend-implementation`
 - `responsive-and-device-strategy`
@@ -164,7 +163,6 @@ Start with the smallest useful graph.
 - complex form/search/dialog/state behavior → `interaction-patterns-and-form-ux` and narrow specialists;
 - meaningful motion requirement → `motion-and-microinteractions`;
 - semantic/keyboard/focus risk → `accessibility`;
-- architecture duplication blocks a clean fix → `frontend-architecture-and-refactoring`;
 - repeated cross-page drift or snapshot risk → `visual-regression-and-design-drift`.
 
 When `design-reference-research-and-benchmark` is active, preserve the existing brand/content/behavior contract and use references to extract transferable principles—not as permission to overwrite the site with a new trend.
