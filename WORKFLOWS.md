@@ -77,7 +77,8 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
 - Tham chiếu bắt buộc: [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md)
   (khoảng cách, thang chữ, lưới, vùng chạm, dark mode), đọc trước bước 5.
 - Mobile thêm: [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) + spec sheet nền tảng (mục 3).
-- Web thêm: dòng nền tảng tương ứng ở mục 3.
+- Web thêm: dòng nền tảng tương ứng ở mục 3, và một playbook đúng ngành của khách trong
+  [`industry-playbooks`](skills_UIUX/industry-playbooks/SKILL.md) (không có thì bỏ qua).
 - Template: [`templates/ux/`](skills_UIUX/templates/ux/README.md) (problem statement, task flow, wireframe spec).
 - Giao: flow, bảng màn hình × trạng thái, mockup đã render ở 2 cỡ, bảng rubric, ghi chú handoff.
 - Ngưỡng: trung bình ≥ 3.5, không chiều nào < 3, không hard-fail.
@@ -123,7 +124,7 @@ Như **L**, cộng thêm:
 | Cả hai | [Mobile patterns playbook](skills_UIUX/mobile-app-design/references/mobile-patterns-playbook.md) | Chung ý nghĩa, khác "chrome": không ép iOS và Android giống hệt nhau |
 | Web marketing | [`responsive-and-device-strategy`](skills_UIUX/responsive-and-device-strategy/SKILL.md) | Mobile không phải desktop thu nhỏ |
 | Web app / dashboard | [Web app patterns](skills_UIUX/ui-craft-and-visual-qa/references/web-app-patterns.md) · [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md) · [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Mật độ cao nhưng quét được; bàn phím là công dân hạng nhất |
-| Demo trên trình duyệt cho app | [`mobile-web-preview`](skills_UIUX/mobile-web-preview/SKILL.md) | Bằng chứng trình duyệt không chứng minh app native |
+| Demo trên trình duyệt cho app | [`mobile-web-preview`](skills_UIUX/mobile-app-design/references/mobile-web-preview/README.md) | Bằng chứng trình duyệt không chứng minh app native |
 
 ## 4. Track đặc thù
 

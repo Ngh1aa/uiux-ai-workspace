@@ -27,6 +27,6 @@ Một trang web responsive vẫn đi theo flow web. Việc vừa web vừa app t
 
 ## Interactive browser demo for clients
 
-Use flow `mobile-web-preview` when the output is a coded mobile prototype opened by link. The [browser preview skill](../../mobile-web-preview/SKILL.md) owns renderer/state reuse, phone/desktop presentation, static-host export, browser QA and client handoff. Native output remains a separate unsupported implementation request.
+Use flow [`mobile-web-preview`](mobile-web-preview/README.md) when the output is a coded mobile prototype opened by link. The [browser preview skill](mobile-web-preview/README.md) owns renderer/state reuse, phone/desktop presentation, static-host export, browser QA and client handoff. Native output remains a separate unsupported implementation request.
 
 Publishing the prototype to a public link is a separate step; check the live URL in a real browser before sending it to a client.

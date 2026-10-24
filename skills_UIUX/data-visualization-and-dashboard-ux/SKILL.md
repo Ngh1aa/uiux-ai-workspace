@@ -14,7 +14,7 @@ Every chart on the screen earns its place by answering a named question that lea
 - Row-level records the user scans, sorts, selects or edits: use [data-tables-and-enterprise-ux](../data-tables-and-enterprise-ux/SKILL.md). A dashboard can link into a table, but the table is a different design problem.
 - Defining which metrics matter and how they are instrumented: use outcome-metrics-and-instrumentation first, then come back here to display them.
 - Interpreting A/B results or statistical significance: use experimentation-interpretation.
-- Status of a running job or multi-step process: use [complex-workflow-and-progress-ux](../complex-workflow-and-progress-ux/SKILL.md).
+- Status of a running job or multi-step process: use [complex-workflow-and-progress-ux](../interaction-patterns-and-form-ux/references/complex-workflow-and-progress-ux/README.md).
 - Generic loading, empty and error patterns beyond charts: use [state-feedback-and-error-recovery](../state-feedback-and-error-recovery/SKILL.md).
 
 ## Decisions
