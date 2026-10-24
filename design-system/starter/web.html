@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Starter kit web</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../generated/tokens.css">
+<link rel="stylesheet" href="../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="ds-root app web">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="app-i-task" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16.5" rx="2"/><path d="M9 4V3h6v1M8.5 12.5l2.5 2.5 4.5-4.5"/></symbol>
+  <symbol id="app-i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><rect x="5.5" y="11" width="3" height="6" rx="1"/><rect x="10.5" y="6" width="3" height="11" rx="1"/><rect x="15.5" y="9" width="3" height="8" rx="1"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+<!-- icons:end -->
+<div class="web-mobile-bar">
+  <span class="web-brand"><span class="web-brand__mark" aria-hidden="true"><svg class="ds-icon ds-icon--sm"><use href="#app-i-task"/></svg></span>Giáo vụ</span>
+  <button class="app-round" type="button" aria-label="Mở menu"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-menu"/></svg></button>
+</div>
+<div class="web-shell">
+  <aside class="web-side">
+    <span class="web-brand"><span class="web-brand__mark" aria-hidden="true"><svg class="ds-icon ds-icon--sm"><use href="#app-i-task"/></svg></span>Giáo vụ</span>
+    <nav aria-label="Điều hướng chính">
+      <ul class="web-nav">
+        <li><a href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Tổng quan</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg>Học sinh</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch dạy</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg>Duyệt</a></li>
+        <li><a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chart"/></svg>Báo cáo</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="web-main">
+    <div class="web-top">
+      <div>
+        <p class="ds-text-body-sm ds-text-secondary" style="margin:0">Thứ Ba, 13/10</p>
+        <h1 class="ds-text-title-lg">Tổng quan</h1>
+      </div>
+      <a class="ds-button ds-button--primary" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg>Thêm học sinh</a>
+    </div>
+
+    <!-- Card nổi bật duy nhất của trang: con số cần hành động -->
+    <section class="app-hero web-hero" aria-labelledby="web-kpi">
+      <div>
+        <p class="ds-text-body-sm app-hero__muted" style="margin:0">Việc cần xử lý</p>
+        <p class="app-hero__value" id="web-kpi">35</p>
+        <div class="app-hero__row" style="margin-top:var(--ds-space-300)">
+          <span class="app-hero__track" role="progressbar" aria-valuemin="0" aria-valuemax="44" aria-valuenow="9" aria-label="Đã xong 9 trên 44 việc"><span class="app-hero__bar" style="width:20%"></span></span>
+          <span class="ds-text-body-sm app-hero__muted">9/44 xong</span>
+        </div>
+      </div>
+      <div class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Ca hôm nay</span><strong class="ds-text-title-md ds-tabular">19</strong></div>
+      <div class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Học sinh</span><strong class="ds-text-title-md ds-tabular">102</strong></div>
+      <div class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Chờ xếp lớp</span><strong class="ds-text-title-md ds-tabular">3</strong></div>
+    </section>
+
+    <div class="web-grid">
+      <section class="ds-stack ds-stack--sm" aria-labelledby="web-today">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="web-today">Lịch hôm nay</h2><a class="ds-link ds-text-label-md" href="#">Xem cả tuần</a></div>
+        <div class="app-panel">
+        <table class="web-table">
+          <thead><tr><th scope="col">Giờ</th><th scope="col">Lớp</th><th scope="col" class="hide-sm">Giáo viên</th><th scope="col" class="num">Sĩ số</th></tr></thead>
+          <tbody>
+            <tr><td class="ds-tabular">08:00</td><td>Toán lớp 7</td><td class="hide-sm">Cô Thu Anh</td><td class="num">6/6</td></tr>
+            <tr><td class="ds-tabular">09:30</td><td>Văn lớp 5</td><td class="hide-sm">Cô Diệu Linh</td><td class="num">5/6</td></tr>
+            <tr><td class="ds-tabular">14:00</td><td>Anh lớp 8</td><td class="hide-sm">Thầy Minh</td><td class="num">8/8</td></tr>
+            <tr><td class="ds-tabular">18:30</td><td>Toán lớp 9</td><td class="hide-sm">Cô Thu Anh</td><td class="num">4/5</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <section class="ds-stack ds-stack--sm" aria-labelledby="web-todo">
+        <div class="ds-section-header"><h2 class="ds-text-title-sm" id="web-todo">Cần xử lý</h2><span class="ds-text-body-sm ds-text-secondary">Theo hạn</span></div>
+        <ul class="ds-list">
+          <li class="ds-list-item">
+            <span class="app-count app-count--brand">2</span>
+            <div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Sửa điểm danh</span><span class="app-meta app-meta--urgent"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>Hạn 0h hôm nay</span></div>
+            <a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Xử lý</a>
+          </li>
+          <li class="ds-list-item">
+            <span class="app-count app-count--brand">12</span>
+            <div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Báo cáo chờ duyệt</span><span class="app-meta app-meta--urgent"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>2 báo cáo dưới 6 giờ</span></div>
+            <a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Duyệt</a>
+          </li>
+          <li class="ds-list-item">
+            <span class="app-count">18</span>
+            <div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Học phí chưa thu</span><span class="app-meta">Hạn 15/10</span></div>
+            <a class="ds-button ds-button--sm app-tonal app-row-action" href="#">Xem</a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -31,6 +31,7 @@ design-system/
 │   └── governance.md           versioning, deprecation, contribution, definition of done
 ├── examples/appointment-app/   three task-led mobile screens built only from the system
 ├── examples/money-app/         v0.2 finance reference: sheet, progress, skeleton, segmented filter
+├── starter/                    starter kit: navy brand layer, app layout blocks, 8 mobile + 2 web screen templates
 ├── contrast-pairs.json         55 declared foreground/background pairs, checked in both modes
 ├── scripts/                    build.py, validate.py, capture-example.cjs (Python stdlib, Node for browser checks)
 └── tests/                      pytest regression and negative tests

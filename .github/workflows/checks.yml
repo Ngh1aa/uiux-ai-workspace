@@ -1,0 +1,112 @@
+name: Checks
+
+# Hai job này mang đúng tên mà ruleset "Protect main" yêu cầu (foundation, release-candidate),
+# nên chạy ở mọi push và pull request, không lọc theo đường dẫn.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    name: foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: skills_UIUX
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Install test dependencies
+        run: python -m pip install "pytest>=8,<9" "pydantic>=2.5.3,<3"
+      - name: Validate SKILL.md structure
+        run: python scripts/validate-skills.py
+      - name: Validate flows, profiles, packs, project configs, evals and resource links
+        run: python scripts/validate-v2.py
+      - name: Validate vendored design intelligence
+        run: python scripts/validate-vendor-uiux-pro-max.py
+      - name: Visual integrity runner syntax
+        run: node --check ui-craft-and-visual-qa/scripts/elementary-visual-integrity.mjs
+      - name: Smoke design-intelligence retrieval
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -B design-intelligence-retrieval/scripts/query.py "education admissions mobile" --design-system > "$RUNNER_TEMP/di.txt"
+          test -s "$RUNNER_TEMP/di.txt"
+      - name: Dry-run installers
+        run: |
+          python scripts/install-profile.py professional-core --target "$RUNNER_TEMP/profile" --dry-run
+          python scripts/install-project.py examples/projects/qtsc --dry-run
+      - name: Eval harness smoke
+        run: python scripts/eval-harness.py smoke
+      - name: Design checker tests
+        run: python -m pytest -q tests
+      - name: Internal Markdown links resolve
+        working-directory: .
+        run: python scripts/check-links.py
+      - name: Benchmark report matches recorded runs
+        working-directory: .
+        run: python benchmarks/report.py --check
+
+  release-candidate:
+    name: release-candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Install test runner
+        run: python -m pip install "pytest>=8,<9"
+      - name: Design system generated files are current
+        run: python design-system/scripts/build.py --check
+      - name: Validate tokens, layering, contrast and component CSS
+        run: python design-system/scripts/validate.py --report
+      - name: Design system regression and negative tests
+        run: python -m pytest -q design-system/tests
+      - name: Starter kit icons are current
+        run: python design-system/starter/inline-icons.py --check design-system/starter/mobile.html design-system/starter/web.html design-system/starter/web-states.html
+      - name: Install Playwright Chromium outside the repo
+        run: |
+          mkdir -p "$RUNNER_TEMP/tools" && cd "$RUNNER_TEMP/tools"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1
+          npx playwright install --with-deps chromium
+      - name: Taste checker tests
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs
+      - name: Starter kit passes the taste check
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: >-
+          node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs
+          design-system/starter/mobile.html design-system/starter/web.html design-system/starter/web-states.html
+          --width 390 --width 1024 --width 1280 --screenshot "$RUNNER_TEMP/starter-shots"
+      - name: Upload starter kit screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: starter-kit-screenshots
+          path: ${{ runner.temp }}/starter-shots
+          if-no-files-found: ignore

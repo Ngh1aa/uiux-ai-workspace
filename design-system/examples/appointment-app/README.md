@@ -2,7 +2,7 @@
 
 Three task-led mobile screens built **only** from design-system tokens and components. It is the
 successor to `skills_UIUX/visual-design-direction/examples/mobile-care/`, which is kept unchanged
-because its review hashes are locked by `uiux-factory/tests/test_mobile_visual_quality.py`.
+as the earlier reference.
 
 Data, clinic and people are synthetic. Nothing is submitted.
 

@@ -24,6 +24,6 @@ Order of use for a new product: problem statement → assumption map → proto-p
 JTBD/top tasks → user flows → IA → wireframe spec → heuristic evaluation →
 UX readiness gate → design principles + visual brief → (visual design) → usability test plan → design rationale → scorecard.
 
-The full sequence and gates live in [UX-FIRST-WORKFLOW.md](../../../UX-FIRST-WORKFLOW.md).
+The full sequence and gates live in [UX-FIRST-WORKFLOW.md](../../../docs/UX-FIRST-WORKFLOW.md).
 
 Machine-checkable record: `docs/ux/ux-structure.json`, checked by `skills_UIUX/ux-structure-and-flow-design/scripts/check-ux-structure.py`. The markdown templates stay the human-readable layer.

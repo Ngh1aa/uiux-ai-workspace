@@ -6,8 +6,8 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / 'uiux-factory'))
-from core.skills.ux_structure import UXStructure, check_ux_structure_file, export_page_ux  # noqa: E402
+sys.path.insert(0, str(ROOT / 'skills_UIUX'))
+from designlib.ux_structure import UXStructure, check_ux_structure_file, export_page_ux  # noqa: E402
 
 
 def main() -> int:

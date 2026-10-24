@@ -24,17 +24,7 @@ The benchmark intentionally omits deep screenshots so missing-evidence behavior 
 
 ## Run locally
 
-From `uiux-factory/`:
-
-```bash
-python scripts/run_prompt_os_v1_benchmark.py
-```
-
-The command writes:
-
-```text
-benchmark-results/prompt-os-v1-profile-benchmark.json
-```
+Công cụ chạy benchmark/verifier của Prompt OS nằm trong `uiux-factory/` đã được gỡ khỏi `main`; bản gốc còn ở nhánh `archive/v1-truoc-khi-gon`.
 
 and exits non-zero when any profile contract regresses.
 

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đất Nung, lớp gốm cuối tuần</title>
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<style>
+/* Hướng thiết kế: xưởng gốm làm tay. Nền giấy kem, chữ nâu đất, một màu đất nung làm điểm nhấn.
+   Một khối nổi bật duy nhất là khối đặt chỗ. Bo góc card 20px thống nhất. */
+:root {
+  --clay: #a8492a; --clay-deep: #7f3519; --clay-soft: #f3e2d6;
+  --ds-surface-page: #f7f2eb; --ds-surface-raised: #fffcf8; --ds-surface-sunken: #ede5da;
+  --ds-surface-brand-strong: #3b2a22; --ds-text-on-brand-strong: #fbf4ec;
+  --ds-text-primary: #2b211c; --ds-text-secondary: #66574d; --ds-text-brand: var(--clay-deep);
+  --ds-border-subtle: #e4d9cc; --ds-border-focus: var(--clay-deep);
+  --ds-action-primary-bg: var(--clay); --ds-action-primary-bg-hover: var(--clay-deep); --ds-action-primary-bg-pressed: #6a2b13; --ds-action-primary-text: #fffaf5;
+  --ds-action-secondary-bg: #fffcf8; --ds-action-secondary-bg-hover: #f1e8dd; --ds-action-secondary-text: #2b211c; --ds-action-secondary-border: #c9b8a6;
+  --radius: 20px; --gutter: clamp(20px, 5vw, 64px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --clay: #e0906a; --clay-deep: #eba584; --clay-soft: #3a2a22;
+    --ds-surface-page: #1b1613; --ds-surface-raised: #251e1a; --ds-surface-sunken: #2f2621;
+    --ds-surface-brand-strong: #3b2a22; --ds-text-on-brand-strong: #fbf4ec;
+    --ds-text-primary: #f3ebe2; --ds-text-secondary: #c7b8aa; --ds-text-brand: var(--clay-deep);
+    --ds-border-subtle: #3a302a; --ds-border-focus: var(--clay-deep);
+    --ds-action-primary-bg: var(--clay); --ds-action-primary-bg-hover: var(--clay-deep); --ds-action-primary-bg-pressed: #f2bba1; --ds-action-primary-text: #1b1613;
+    --ds-action-secondary-bg: #251e1a; --ds-action-secondary-bg-hover: #2f2621; --ds-action-secondary-text: #f3ebe2; --ds-action-secondary-border: #5a4c42;
+  }
+}
+body { margin: 0; background: var(--ds-surface-page); color: var(--ds-text-primary); }
+.wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); box-sizing: border-box; }
+p, h1, h2, h3 { margin: 0; text-wrap: balance; }
+.nowrap { white-space: nowrap; }
+
+.top { display: flex; align-items: center; justify-content: space-between; min-height: 72px; }
+.mark { display: flex; align-items: center; gap: 10px; min-height: 44px; font: 700 20px/1 var(--ds-font-family-sans); letter-spacing: -0.01em; color: var(--ds-text-primary); text-decoration: none; }
+.mark__dot { width: 14px; height: 14px; border-radius: 50%; background: var(--clay); }
+.top__phone { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; min-width: 44px; color: var(--ds-text-secondary); text-decoration: none; font-weight: 600; white-space: nowrap; }
+
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 48px; align-items: center; padding-block: 40px 72px; }
+.eyebrow { color: var(--ds-text-brand); font: 600 15px/22px var(--ds-font-family-sans); letter-spacing: 0.02em; }
+.hero h1 { margin-top: 16px; font: 700 clamp(36px, 5.4vw, 60px)/1.08 var(--ds-font-family-sans); letter-spacing: -0.025em; }
+.hero__lead { margin-top: 20px; max-width: 30em; color: var(--ds-text-secondary); font-size: 18px; line-height: 28px; }
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 32px; }
+.cta { min-height: 56px; padding: 0 28px; border-radius: 999px; font-size: 17px; }
+.textlink { display: inline-flex; align-items: center; min-height: 44px; color: var(--ds-text-primary); font-weight: 600; text-underline-offset: 0.25em; }
+.art { position: relative; aspect-ratio: 1 / 1; border-radius: var(--radius); background: var(--clay-soft); overflow: hidden; }
+.art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.section { padding-block: 72px; }
+.section + .section { border-top: 1px solid var(--ds-border-subtle); }
+.section__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 32px; }
+.section h2 { font: 700 clamp(28px, 3.4vw, 36px)/1.15 var(--ds-font-family-sans); letter-spacing: -0.02em; }
+.section__note { color: var(--ds-text-secondary); max-width: 26em; }
+
+.classes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.class { display: flex; flex-direction: column; gap: 20px; padding: 24px; border-radius: var(--radius); background: var(--ds-surface-raised); }
+.class h3 { font: 700 21px/28px var(--ds-font-family-sans); }
+.class__price { font: 700 30px/36px var(--ds-font-family-sans); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.class__facts { display: flex; gap: 20px; margin: 0; padding: 0; list-style: none; color: var(--ds-text-secondary); white-space: nowrap; }
+.class__facts li { display: flex; align-items: center; gap: 6px; }
+.included { margin-top: 20px; color: var(--ds-text-secondary); }
+
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.steps li { display: flex; flex-direction: column; gap: 10px; }
+.steps li::before { counter-increment: step; content: "0" counter(step); color: var(--ds-text-brand); font: 700 15px/1 var(--ds-font-family-sans); letter-spacing: 0.08em; }
+.steps h3 { font: 700 21px/28px var(--ds-font-family-sans); }
+.steps p { color: var(--ds-text-secondary); }
+
+.faq { display: flex; flex-direction: column; gap: 12px; max-width: 760px; }
+.faq details { border-radius: var(--radius); background: var(--ds-surface-raised); }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; padding: 0 24px; cursor: pointer; list-style: none; font-weight: 600; font-size: 17px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; flex: none; color: var(--ds-text-brand); font: 400 26px/1 var(--ds-font-family-sans); }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { padding: 0 24px 24px; color: var(--ds-text-secondary); max-width: 36em; }
+
+.book { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center; margin: 16px 0 72px; padding: 40px; border-radius: var(--radius); background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
+.book h2 { font: 700 clamp(28px, 3.4vw, 36px)/1.15 var(--ds-font-family-sans); letter-spacing: -0.02em; }
+.book__muted { color: color-mix(in srgb, var(--ds-text-on-brand-strong) 80%, transparent); }
+.slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; padding: 0; list-style: none; }
+.slots li { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 999px; background: color-mix(in srgb, var(--ds-text-on-brand-strong) 12%, transparent); font-weight: 600; white-space: nowrap; }
+.book .cta { background: var(--ds-text-on-brand-strong); color: #3b2a22; border-color: transparent; }
+.book .cta:hover { background: #f1e3d6; }
+.book :focus-visible { outline-color: var(--ds-text-on-brand-strong); }
+
+.foot { display: flex; padding-inline: var(--gutter) !important; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; padding: 32px 0 48px; border-top: 1px solid var(--ds-border-subtle); color: var(--ds-text-secondary); }
+.foot a { color: inherit; font-weight: 600; text-underline-offset: 0.25em; display: inline-flex; align-items: center; min-height: 44px; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 16px 56px; }
+  .art { aspect-ratio: 4 / 3; }
+  .classes, .steps { grid-template-columns: minmax(0, 1fr); }
+  .steps { gap: 28px; }
+  .section { padding-block: 48px; }
+  .book { grid-template-columns: minmax(0, 1fr); padding: 28px 24px; margin: 8px 0 48px; }
+  .book .cta { width: 100%; }
+}
+@media (max-width: 430px) {
+  .top__phone span { display: none; }
+  .hero__actions .cta { width: 100%; }
+}
+</style>
+</head>
+<body class="ds-root">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-phone" viewBox="0 0 24 24"><rect x="7" y="3.5" width="10" height="17" rx="2.25"/><path d="M11 17.5h2"/></symbol>
+</svg>
+<!-- icons:end -->
+<header class="wrap top">
+  <a class="mark" href="#"><span class="mark__dot" aria-hidden="true"></span>Đất Nung</a>
+  <a class="top__phone" href="tel:0912345678" aria-label="Gọi 0912 345 678"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-phone"/></svg><span>0912 345 678</span></a>
+</header>
+
+<main>
+  <section class="wrap hero" aria-labelledby="hero-title">
+    <div>
+      <p class="eyebrow">Lớp gốm cuối tuần ở Hàng Chiếu</p>
+      <h1 id="hero-title">Ba tiếng, một khối đất, một chiếc cốc của riêng bạn.</h1>
+      <p class="hero__lead">Lớp cho người chưa từng làm gốm, mỗi bàn có người hướng dẫn. Thứ Bảy và Chủ nhật, ca 9:00 và 14:00.</p>
+      <div class="hero__actions">
+        <a class="ds-button ds-button--primary cta" href="#dat-cho">Đặt chỗ</a>
+        <a class="textlink" href="#cac-lop">Xem ba lớp và giá</a>
+      </div>
+    </div>
+    <div class="art" role="img" aria-label="Hình vẽ một chiếc cốc gốm đặt trên bàn xoay">
+      <svg viewBox="0 0 400 400" aria-hidden="true">
+        <circle cx="318" cy="84" r="46" fill="var(--clay)" opacity="0.18"/>
+        <ellipse cx="200" cy="318" rx="150" ry="34" fill="var(--ds-surface-brand-strong)" opacity="0.92"/>
+        <ellipse cx="200" cy="306" rx="150" ry="34" fill="var(--ds-surface-sunken)"/>
+        <ellipse cx="200" cy="306" rx="96" ry="20" fill="none" stroke="var(--ds-text-secondary)" stroke-opacity="0.35" stroke-width="2"/>
+        <path d="M128 150 C128 140 272 140 272 150 L262 284 C260 302 140 302 138 284 Z" fill="var(--clay)"/>
+        <path d="M272 176 C318 176 320 248 266 244" fill="none" stroke="var(--clay)" stroke-width="16" stroke-linecap="round"/>
+        <ellipse cx="200" cy="150" rx="72" ry="13" fill="var(--clay-deep)"/>
+        <path d="M150 190 C180 200 220 200 250 190" fill="none" stroke="var(--ds-surface-raised)" stroke-opacity="0.45" stroke-width="5" stroke-linecap="round"/>
+        <path d="M146 226 C178 236 222 236 254 226" fill="none" stroke="var(--ds-surface-raised)" stroke-opacity="0.3" stroke-width="5" stroke-linecap="round"/>
+        <path d="M86 108 q10 -18 20 0 t20 0" fill="none" stroke="var(--clay)" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="wrap section" style="border-top:1px solid var(--ds-border-subtle)" id="cac-lop" aria-labelledby="classes-title">
+    <div class="section__head">
+      <h2 id="classes-title">Ba lớp cho người mới</h2>
+      <p class="section__note">Chọn một lớp, đặt một ca. Không cần mang gì theo.</p>
+    </div>
+    <div class="classes">
+      <article class="class">
+        <h3>Bàn xoay cơ bản</h3>
+        <p class="class__price">450.000 ₫</p>
+        <ul class="class__facts"><li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>3 giờ</li><li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-users"/></svg>8 người</li></ul>
+      </article>
+      <article class="class">
+        <h3>Nặn tay</h3>
+        <p class="class__price">350.000 ₫</p>
+        <ul class="class__facts"><li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>2,5 giờ</li><li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-users"/></svg>10 người</li></ul>
+      </article>
+      <article class="class">
+        <h3>Tráng men</h3>
+        <p class="class__price">300.000 ₫</p>
+        <ul class="class__facts"><li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>2 giờ</li><li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-users"/></svg>8 người</li></ul>
+      </article>
+    </div>
+    <p class="included">Giá đã gồm đất, men, nung và trà. Sản phẩm nung xong nhận sau 2 tuần.</p>
+  </section>
+
+  <section class="wrap section" aria-labelledby="steps-title">
+    <div class="section__head"><h2 id="steps-title">Một buổi học</h2></div>
+    <ol class="steps">
+      <li><h3>Làm quen với đất</h3><p>Nhào đất, cảm độ ẩm, tập giữ tay cho vững.</p></li>
+      <li><h3>Tạo hình</h3><p>Kéo thành cốc trên bàn xoay hoặc nặn bằng tay, có người kèm từng bước.</p></li>
+      <li><h3>Chọn men</h3><p>Chọn màu men cho sản phẩm. Xưởng nung và báo bạn đến lấy.</p></li>
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="faq-title">
+    <div class="section__head"><h2 id="faq-title">Câu hỏi thường gặp</h2></div>
+    <div class="faq">
+      <details open><summary>Chưa từng làm gốm có học được không?</summary><p>Được. Lớp dành cho người mới, mỗi bàn có người hướng dẫn.</p></details>
+      <details><summary>Có được mang con nhỏ theo không?</summary><p>Trẻ từ 8 tuổi tham gia lớp Nặn tay cùng bố mẹ.</p></details>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="book" id="dat-cho" aria-labelledby="book-title">
+      <div>
+        <h2 id="book-title">Đặt chỗ cuối tuần này</h2>
+        <p class="book__muted" style="margin-top:10px">Mỗi ca tối đa 8 đến 10 người. Gọi hoặc nhắn để giữ chỗ.</p>
+        <ul class="slots" aria-label="Các ca trong tuần">
+          <li>Thứ Bảy 9:00</li><li>Thứ Bảy 14:00</li><li>Chủ nhật 9:00</li><li>Chủ nhật 14:00</li>
+        </ul>
+      </div>
+      <a class="ds-button cta" href="tel:0912345678">Đặt chỗ qua 0912 345 678</a>
+    </section>
+  </div>
+</main>
+
+<footer class="wrap foot">
+  <p><strong style="color:var(--ds-text-primary)">Đất Nung</strong><br>24 Hàng Chiếu, Hoàn Kiếm, Hà Nội</p>
+  <a href="tel:0912345678">0912 345 678</a>
+</footer>
+</body>
+</html>
