@@ -71,3 +71,11 @@ Tùy task, output một hoặc nhiều:
 ## Never claim
 
 Không nói “WCAG compliant/100% accessible” chỉ dựa vào Lighthouse/axe. Nêu rõ **đã kiểm gì**, **chưa kiểm gì** và evidence.
+
+## Hướng dẫn con
+
+Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướng dẫn con khi việc đang làm khớp cột bên phải.
+
+| Hướng dẫn | Mở khi |
+|---|---|
+| [`inclusive-design-and-cognitive-accessibility`](references/inclusive-design-and-cognitive-accessibility.md) | Extend accessibility beyond minimum conformance to reduce cognitive, learning, memory, attention and situational barriers. Use for broad-audience, education, government, health, nonprofit or high-stakes services. |

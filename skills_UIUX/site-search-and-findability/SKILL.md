@@ -14,7 +14,7 @@ Users who know roughly what they want get to it in one query or one refinement, 
 - Navigation structure, labels and menus (findability by browsing): use [information-architecture](../information-architecture/SKILL.md); validate with card-sorting-and-tree-testing.
 - Ranking in external search engines and content for organic traffic: use seo-strategy or search-demand-and-content-briefing.
 - Filtering and sorting inside a single admin table: use [data-tables-and-enterprise-ux](../data-tables-and-enterprise-ux/SKILL.md).
-- Product listing pages and merchandising specifics: compose with [ecommerce-website](../ecommerce-website/SKILL.md).
+- Product listing pages and merchandising specifics: compose with [ecommerce-website](../industry-playbooks/references/ecommerce-website.md).
 - Conversational or AI answer search: compose with [human-ai-interaction-design](../human-ai-interaction-design/SKILL.md).
 
 ## Decisions

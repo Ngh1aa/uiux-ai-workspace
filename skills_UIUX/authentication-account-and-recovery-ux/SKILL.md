@@ -12,7 +12,7 @@ Get the right person into the right account with the least friction the risk all
 **When not to use**
 
 - General data handling, encryption, consent storage or threat modelling beyond the auth UI: use `security-and-privacy`.
-- Long multi-step onboarding or KYC forms after the account exists: use `complex-forms-and-wizards`.
+- Long multi-step onboarding or KYC forms after the account exists: use [`complex-forms-and-wizards`](../interaction-patterns-and-form-ux/references/complex-forms-and-wizards.md).
 - Field-level validation and input patterns not specific to credentials: use `interaction-patterns-and-form-ux`.
 - Generic loading, error and retry states: use `state-feedback-and-error-recovery`.
 - Deciding whether a signup wall or forced account creation is manipulative: use `ethical-ux-and-deceptive-patterns`.

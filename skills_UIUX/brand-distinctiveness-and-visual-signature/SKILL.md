@@ -53,3 +53,11 @@ Distinctive branding must not make controls unfamiliar or harm task usability. K
 - Trend-first glass/gradient/card aesthetics with weak brand linkage.
 - Inventing a decorative motif that contradicts source-of-truth brand assets.
 - Making every section visually unique, destroying memory through inconsistency.
+
+## Hướng dẫn con
+
+Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướng dẫn con khi việc đang làm khớp cột bên phải.
+
+| Hướng dẫn | Mở khi |
+|---|---|
+| [`brand-recognition-and-consistency-qa`](references/brand-recognition-and-consistency-qa.md) | Performs cross-page visual identity QA to verify that screens, sections and responsive states remain recognizably part of one brand/service without sacrificing usability. Use before release, after large redesigns or… |

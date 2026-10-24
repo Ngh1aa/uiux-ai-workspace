@@ -261,3 +261,11 @@ PASS chỉ khi:
 ## Completion rule
 
 Không nói reference “tốt nhất” hay “UX tốt” chỉ vì award. Không chuyển sang code trực tiếp từ benchmark. Benchmark phải đi qua `visual-design-direction`/Design Contract trước substantial implementation.
+
+## Hướng dẫn con
+
+Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướng dẫn con khi việc đang làm khớp cột bên phải.
+
+| Hướng dẫn | Mở khi |
+|---|---|
+| [`reference-extraction-and-design-audit`](references/reference-extraction-and-design-audit/README.md) | Extracts source-attributed visual-system evidence from a reference website or an existing project's styles, then audits tokens, components, responsive behavior and inconsistencies. Use when reference research needs… |
