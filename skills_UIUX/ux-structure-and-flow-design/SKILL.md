@@ -143,7 +143,7 @@ visual-design-direction v2 contract so the visual stage reuses, not retypes, the
 - Need flow notation, step budgets, navigation trade-offs or wireframe rules? Read [practice](references/ux-structure-practice.md).
 - Before handing to visual design, run [UX Readiness gate](checklists/ux-readiness-gate.md).
 - Need a worked example? Read [edtech booking example](examples/edtech-class-booking.md).
-- Forms with branches or save/resume → `complex-forms-and-wizards`.
+- Forms with branches or save/resume → [`complex-forms-and-wizards`](../interaction-patterns-and-form-ux/references/complex-forms-and-wizards.md).
 - Feedback and failure states → `state-feedback-and-error-recovery`.
 - Copy that changes comprehension → `ux-writing-and-microcopy`.
 - AI features (generation, suggestions, agents) → `human-ai-interaction-design`.

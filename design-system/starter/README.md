@@ -46,5 +46,5 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 - Đây là bản mẫu HTML/CSS để thiết kế và làm prototype, không phải code app native.
 - Landing page và website giới thiệu cần hướng nghệ thuật riêng cho từng dự án, nên không có
   khuôn sẵn ở đây. Dùng skill [`visual-design-direction`](../../skills_UIUX/visual-design-direction/SKILL.md)
-  và [`landing-page`](../../skills_UIUX/landing-page/SKILL.md).
+  và [`landing-page`](../../skills_UIUX/industry-playbooks/references/landing-page.md).
 - Mọi tên người, mã số và con số trong màn mẫu là dữ liệu giả.

@@ -330,3 +330,12 @@ Ghi issue severity P0/P1/P2 và phân biệt:
 - [ ] Large raster/media không bị obvious upscaling blur ở target viewport.
 - [ ] Overlay/pseudo labels không overlap/clip ở mobile/intermediate widths khi in-scope.
 - [ ] UI phản ánh brand/domain thay vì generic template.
+
+## Hướng dẫn con
+
+Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướng dẫn con khi việc đang làm khớp cột bên phải.
+
+| Hướng dẫn | Mở khi |
+|---|---|
+| [`visual-redesign-delta-gate`](references/visual-redesign-delta-gate.md) | Hard gate cho substantial redesign để chặn failure mode "code thay nhiều nhưng website nhìn vẫn như cũ". Bắt buộc so before/after cùng viewport, kiểm silhouette/composition/page-role diversity và FAIL nếu thay đổi… |
+| [`visual-regression-and-design-drift`](references/visual-regression-and-design-drift.md) | Protects UI quality across repeated human/AI changes using baseline screenshots, representative viewports/states, intentional-change review, token/component drift detection and regression triage. Use for mature… |

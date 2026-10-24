@@ -75,3 +75,12 @@ Before major homepage/IA work, the team should be able to answer:
 - Prioritizing internal departments over user intent.
 - Treating all visitors as homepage-first.
 - Inventing research findings to justify a preferred design.
+
+## Hướng dẫn con
+
+Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướng dẫn con khi việc đang làm khớp cột bên phải.
+
+| Hướng dẫn | Mở khi |
+|---|---|
+| [`entry-context-and-visit-intent`](references/entry-context-and-visit-intent.md) | Designs website experiences around how users actually arrive—search, ads, social, referrals, QR codes, email, direct links or returning visits—and the intent, knowledge and expectations they bring. Use when planning… |
+| [`journey-driven-content-and-layout`](references/journey-driven-content-and-layout.md) | Reorders page content and layout around the sequence of questions, evidence, decisions and actions users experience rather than around an organization's content inventory. Use for homepage, landing-page, service,… |
