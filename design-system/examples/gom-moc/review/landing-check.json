@@ -1,0 +1,46 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "NOT_RUN",
+  "results": [
+    {
+      "page": "design-system/examples/gom-moc/landing.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lò Gốm Mộc: lớp làm gốm cuối tuần ở Bát Tràng",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "design-system/examples/gom-moc/landing.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lò Gốm Mộc: lớp làm gốm cuối tuần ở Bát Tràng",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "design-system/examples/gom-moc/landing.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "Lò Gốm Mộc: lớp làm gốm cuối tuần ở Bát Tràng (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

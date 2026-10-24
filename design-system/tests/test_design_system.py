@@ -266,3 +266,21 @@ def test_scrim_stays_dark_in_both_modes():
     for res in (light, dark):
         hexv = dslib.color_hex(res["surface.scrim"][1])
         assert dslib.contrast(hexv, "#ffffff") > 12, hexv
+
+
+def test_v03_web_components_have_contracts_and_docs():
+    contracts = (DS / "docs/component-contracts.md").read_text(encoding="utf-8")
+    for name in ("Checkbox and radio", "Tabs", "Dialog", "Menu", "Tooltip", "Table"):
+        assert f"## {name} (v0.3)" in contracts, name
+    css = (DS / "components/components.css").read_text(encoding="utf-8")
+    for cls in ("ds-check", "ds-check__box", "ds-tabs__tab", "ds-dialog", "ds-menu__item", "ds-tooltip", "ds-table"):
+        assert f".{cls}" in css, cls
+    docs = (DS / "docs/index.html").read_text(encoding="utf-8")
+    for cls in ("ds-check--radio", "ds-tabs", "ds-dialog", "ds-menu", "ds-tooltip", "ds-table"):
+        assert cls in docs, cls
+    # a scrollable table must be reachable by keyboard (axe scrollable-region-focusable)
+    for wrap in re.findall(r'<div class="ds-table-wrap"[^>]*>', docs):
+        assert 'tabindex="0"' in wrap and 'aria-label=' in wrap, wrap
+    icons = (DS / "components/icons.svg").read_text(encoding="utf-8")
+    for icon in ("ds-i-check", "ds-i-chevron-down", "ds-i-x"):
+        assert f'id="{icon}"' in icons, icon

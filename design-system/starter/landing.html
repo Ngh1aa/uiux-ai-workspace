@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Starter kit landing: khung section</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../generated/tokens.css">
+<link rel="stylesheet" href="../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="ds-root lp">
+<!--
+  KHUNG SECTION CHO LANDING PAGE, KHÔNG PHẢI GIAO DIỆN MẪU.
+  Giữ: thứ tự section, việc của từng section, cấu trúc HTML và trạng thái.
+  Thay hết: chữ trong [ngoặc], màu, font, bo góc, hoạ tiết, ảnh, theo brand brief và kế hoạch
+  thị giác trong CRAFT.md. Bỏ section nào không có nội dung thật, không lấp chỗ trống.
+-->
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="ds-i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+</svg>
+<!-- icons:end -->
+
+<a class="lp-skip" href="#lp-main">Bỏ qua điều hướng</a>
+
+<!-- 1. Header: logo, 3–5 liên kết, một nút chính. Trên điện thoại gom liên kết vào menu. -->
+<header class="lp-header">
+  <a class="lp-logo" href="#lp-main">[Tên thương hiệu]</a>
+  <nav class="lp-nav" aria-label="Điều hướng chính">
+    <a href="#lp-how">Cách hoạt động</a>
+    <a href="#lp-pricing">Bảng giá</a>
+    <a href="#lp-faq">Câu hỏi</a>
+  </nav>
+  <a class="ds-button ds-button--primary lp-header__cta" href="#lp-cta">[Hành động chính]</a>
+  <button class="app-round lp-menu" type="button" aria-label="Mở menu"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-menu"/></svg></button>
+</header>
+
+<main id="lp-main">
+
+  <!-- 2. Hero: một lời hứa rõ, một câu cho ai và được gì, một nút chính, một bằng chứng ngắn.
+       Bố cục lệch (chữ một bên, hình thật một bên), không căn giữa mặc định. -->
+  <section class="lp-hero" aria-labelledby="lp-hero-title">
+    <div class="lp-hero__copy">
+      <h1 class="lp-hero__title" id="lp-hero-title">[Lời hứa chính, 6–10 chữ]</h1>
+      <p class="lp-lead">[Cho ai, giải quyết việc gì, khác ở đâu. Một câu, tối đa hai&nbsp;dòng.]</p>
+      <div class="ds-cluster">
+        <a class="ds-button ds-button--primary ds-button--lg" href="#lp-cta">[Hành động chính]</a>
+        <a class="ds-button ds-button--tertiary ds-button--lg" href="#lp-how">[Hành động phụ]</a>
+      </div>
+      <p class="lp-proof-line">[Một bằng chứng ngắn có nguồn: số khách, năm hoạt động, chứng nhận]</p>
+    </div>
+    <figure class="lp-media lp-media--hero">
+      <figcaption>Ảnh: [sản phẩm thật hoặc khoảnh khắc khách dùng sản phẩm, tỉ lệ 4:5]</figcaption>
+    </figure>
+  </section>
+
+  <!-- 3. Dải bằng chứng: logo khách hoặc báo chí. Chỉ dùng khi được phép, không bịa. -->
+  <section class="lp-band" aria-label="Khách hàng tiêu biểu">
+    <p class="lp-band__label">[Được tin dùng bởi]</p>
+    <ul class="lp-logos">
+      <li>[Logo 1]</li><li>[Logo 2]</li><li>[Logo 3]</li><li>[Logo 4]</li>
+    </ul>
+  </section>
+
+  <!-- 4. Vấn đề và cách giải: nói bằng lời của khách, không liệt kê tính năng. -->
+  <section class="lp-section lp-split" aria-labelledby="lp-why-title">
+    <h2 class="lp-h2" id="lp-why-title">[Nỗi đau khách đang gặp, bằng lời của họ]</h2>
+    <div class="lp-prose">
+      <p>[Hai đến ba câu mô tả tình huống hiện tại và cái giá của nó.]</p>
+      <p>[Một câu chuyển sang cách sản phẩm thay đổi tình huống đó.]</p>
+    </div>
+  </section>
+
+  <!-- 5. Lợi ích: hàng xen kẽ chữ và hình, mỗi hàng một lợi ích có bằng chứng.
+       Không dùng ba card icon giống hệt nhau. -->
+  <section class="lp-section" aria-labelledby="lp-benefits-title">
+    <h2 class="lp-h2" id="lp-benefits-title">[Khách được gì]</h2>
+    <div class="lp-rows">
+      <article class="lp-row">
+        <div class="lp-row__copy">
+          <h3 class="ds-text-title-md">[Lợi ích 1: kết quả cụ thể]</h3>
+          <p class="lp-body">[Cách sản phẩm tạo ra kết quả đó, một chi tiết đo được.]</p>
+        </div>
+        <figure class="lp-media"><figcaption>Ảnh: [màn hình hoặc cảnh minh hoạ lợi ích 1]</figcaption></figure>
+      </article>
+      <article class="lp-row lp-row--flip">
+        <div class="lp-row__copy">
+          <h3 class="ds-text-title-md">[Lợi ích 2]</h3>
+          <p class="lp-body">[Cách tạo ra kết quả, một chi tiết đo được.]</p>
+        </div>
+        <figure class="lp-media"><figcaption>Ảnh: [minh hoạ lợi ích 2]</figcaption></figure>
+      </article>
+    </div>
+  </section>
+
+  <!-- 6. Cách hoạt động: 3–4 bước có số, động từ đầu câu. -->
+  <section class="lp-section" id="lp-how" aria-labelledby="lp-how-title">
+    <h2 class="lp-h2" id="lp-how-title">Cách hoạt động</h2>
+    <ol class="lp-steps">
+      <li><span class="lp-steps__n" aria-hidden="true">1</span><div><h3 class="ds-text-title-sm">[Bước 1: động từ]</h3><p class="lp-body">[Khách làm gì, mất bao lâu.]</p></div></li>
+      <li><span class="lp-steps__n" aria-hidden="true">2</span><div><h3 class="ds-text-title-sm">[Bước 2]</h3><p class="lp-body">[Điều gì xảy ra.]</p></div></li>
+      <li><span class="lp-steps__n" aria-hidden="true">3</span><div><h3 class="ds-text-title-sm">[Bước 3]</h3><p class="lp-body">[Khách nhận được gì.]</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 7. Bảng giá: 2–3 gói, một gói được khuyên dùng, giá và điều kiện rõ, không phí ẩn. -->
+  <section class="lp-section" id="lp-pricing" aria-labelledby="lp-pricing-title">
+    <h2 class="lp-h2" id="lp-pricing-title">Bảng giá</h2>
+    <div class="lp-plans">
+      <article class="lp-plan">
+        <h3 class="ds-text-title-sm">[Gói cơ bản]</h3>
+        <p class="lp-plan__price"><span class="ds-tabular">[000.000 ₫]</span><span class="lp-plan__unit">[/tháng]</span></p>
+        <p class="lp-body">[Hợp với ai]</p>
+        <ul class="lp-checks">
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>[Quyền lợi 1]</li>
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>[Quyền lợi 2]</li>
+        </ul>
+        <a class="ds-button ds-button--secondary ds-button--block" href="#lp-cta">[Chọn gói cơ bản]</a>
+      </article>
+      <article class="lp-plan lp-plan--featured" aria-label="[Gói khuyên dùng]">
+        <p class="lp-plan__flag">Khuyên dùng</p>
+        <h3 class="ds-text-title-sm">[Gói khuyên dùng]</h3>
+        <p class="lp-plan__price"><span class="ds-tabular">[000.000 ₫]</span><span class="lp-plan__unit">[/tháng]</span></p>
+        <p class="lp-body">[Hợp với ai]</p>
+        <ul class="lp-checks">
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>[Mọi thứ của gói cơ bản]</li>
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>[Quyền lợi thêm]</li>
+        </ul>
+        <a class="ds-button ds-button--primary ds-button--block" href="#lp-cta">[Chọn gói này]</a>
+      </article>
+    </div>
+    <p class="lp-note">[Điều kiện: đã gồm thuế chưa, huỷ thế nào, dùng thử bao&nbsp;lâu]</p>
+  </section>
+
+  <!-- 8. Lời khách: tên thật, vai trò, ảnh khi được phép. Mẫu thì ghi rõ là minh hoạ. -->
+  <section class="lp-section" aria-labelledby="lp-quotes-title">
+    <h2 class="lp-h2" id="lp-quotes-title">[Khách nói gì]</h2>
+    <figure class="lp-quote">
+      <blockquote><p>[Một câu trích có kết quả cụ thể, lấy từ khách thật]</p></blockquote>
+      <figcaption><strong>[Tên khách]</strong><span>[Vai trò, nơi làm việc]</span></figcaption>
+    </figure>
+    <p class="lp-note">Lời trích ở đây là chỗ giữ chỗ. Chỉ thay bằng lời khách thật đã đồng ý.</p>
+  </section>
+
+  <!-- 9. Câu hỏi thường gặp: 4–6 câu gỡ đúng lo ngại trước khi mua. -->
+  <section class="lp-section lp-split" id="lp-faq" aria-labelledby="lp-faq-title">
+    <h2 class="lp-h2" id="lp-faq-title">Câu hỏi thường gặp</h2>
+    <div class="lp-faq">
+      <details open><summary>[Lo ngại lớn nhất về giá hoặc rủi ro]</summary><p>[Trả lời thẳng trong 1–3 câu.]</p></details>
+      <details><summary>[Lo ngại về thời gian hoặc công sức]</summary><p>[Trả lời.]</p></details>
+      <details><summary>[Lo ngại về hỗ trợ sau mua]</summary><p>[Trả lời.]</p></details>
+    </div>
+  </section>
+
+  <!-- 10. Lời mời cuối: nhắc lại lời hứa và đúng một hành động. -->
+  <section class="lp-section lp-cta" id="lp-cta" aria-labelledby="lp-cta-title">
+    <h2 class="lp-h2" id="lp-cta-title">[Nhắc lại lời hứa bằng một câu]</h2>
+    <a class="ds-button ds-button--primary ds-button--lg" href="#lp-main">[Hành động chính]<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></a>
+  </section>
+</main>
+
+<!-- 11. Footer: liên hệ, địa chỉ, pháp lý, mạng xã hội. Không nhồi lại cả menu. -->
+<footer class="lp-footer">
+  <p class="lp-logo">[Tên thương hiệu]</p>
+  <address>[Địa chỉ, số điện thoại, email]</address>
+  <p class="lp-note">[Mã số doanh nghiệp, chính sách bảo mật, điều khoản]</p>
+</footer>
+</body>
+</html>

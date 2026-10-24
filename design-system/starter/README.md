@@ -10,6 +10,7 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 |---|---|
 | [`mobile.html`](mobile.html) | 8 màn app mẫu: trang chủ, danh sách, chi tiết, biểu mẫu, rỗng, đang tải, lỗi, chọn nhanh |
 | [`web.html`](web.html) | Trang quản trị mẫu, co giãn từ máy tính xuống điện thoại |
+| [`landing.html`](landing.html) | Khung section cho landing page: header, hero, bằng chứng, vấn đề, lợi ích, cách hoạt động, bảng giá, lời khách, câu hỏi, lời mời cuối, footer |
 | [`web-states.html`](web-states.html) | Trạng thái từng khối của trang web: đang tải, dữ liệu cũ, lỗi, rỗng |
 | [`SIGNATURE.md`](SIGNATURE.md) | Cách tạo dấu ấn riêng cho từng dự án, để màn không chỉ là starter kit đổi màu |
 | [`PATTERNS.md`](PATTERNS.md) | Quy tắc bố cục cho từng loại màn |
@@ -44,7 +45,9 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 ## Giới hạn
 
 - Đây là bản mẫu HTML/CSS để thiết kế và làm prototype, không phải code app native.
-- Landing page và website giới thiệu cần hướng nghệ thuật riêng cho từng dự án, nên không có
-  khuôn sẵn ở đây. Dùng skill [`visual-design-direction`](../../skills_UIUX/visual-design-direction/SKILL.md)
-  và [`landing-page`](../../skills_UIUX/industry-playbooks/references/landing-page.md).
+- Landing page và website giới thiệu cần hướng nghệ thuật riêng cho từng dự án. [`landing.html`](landing.html)
+  chỉ là **khung section** (thứ tự, việc của từng section, cấu trúc HTML), cố ý để trơn với chữ
+  trong [ngoặc]. Hướng thị giác lấy từ [`visual-design-direction`](../../skills_UIUX/visual-design-direction/SKILL.md),
+  [`landing-page`](../../skills_UIUX/industry-playbooks/references/landing-page.md) và kế hoạch
+  thị giác trong [`CRAFT.md`](../../CRAFT.md).
 - Mọi tên người, mã số và con số trong màn mẫu là dữ liệu giả.

@@ -5,6 +5,8 @@ Claude điền từ những gì chủ repo hoặc khách đưa: file, link, ản
 `CHƯA CÓ` kèm giả định, không bịa. Chép file này thành `BRAND-BRIEF.md` trong thư mục dự án, hoặc
 dán phần đã điền vào đầu cuộc trò chuyện.
 
+Ví dụ đã điền: [`design-system/examples/gom-moc/BRAND-BRIEF.md`](design-system/examples/gom-moc/BRAND-BRIEF.md).
+
 Chi tiết cách xử lý từng mức bằng chứng: skill [`brand-guidelines`](skills_UIUX/brand-guidelines/SKILL.md)
 (chỉ cần mục 1, 4, 6, 7).
 
@@ -56,7 +58,8 @@ Nội dung tiếng Việt thì font phải có bộ chữ tiếng Việt. Đã k
   Lexend, IBM Plex Sans, Inter, Fraunces, Playfair Display, Lora, Literata, Merriweather.
 - **Không có tiếng Việt:** DM Sans, Outfit, Instrument Sans. Không dùng cho nội dung tiếng Việt.
 - Font khác: kiểm subset `vietnamese` trên Google Fonts hoặc Fontsource, rồi gõ thử
-  "Ước mơ Đường phố Hữu Nghị Ỹ Ở" ở cỡ tiêu đề và cỡ thân để xem dấu có bị cắt không.
+  "Ước mơ Đường phố Hữu Nghị Ỹ Ở 450.000 ₫" ở cỡ tiêu đề và cỡ thân: dấu có bị cắt không, ký tự
+  ₫ có cùng nét không (nhiều font thiếu ₫, trình duyệt lấy font khác thay vào).
 
 Không mặc định Be Vietnam Pro hay Inter cho mọi khách: chọn font hợp tính cách thương hiệu.
 

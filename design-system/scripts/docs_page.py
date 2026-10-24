@@ -99,7 +99,7 @@ COMPONENTS = """
 </section>
 <section class="ds-stack" aria-labelledby="c-list"><h3 class="ds-text-title-sm" id="c-list">Card, list, tab bar</h3>
   <div class="demo-cols">
-    <section class="ds-card" aria-label="Ví dụ thẻ"><div class="ds-split"><p class="ds-text-title-md ds-tabular">09:30</p><span class="ds-badge ds-badge--success"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Đã xác nhận</span></div><p class="ds-text-title-sm">Khám tổng quát</p><p class="ds-text-body-sm ds-text-secondary">20/10/2026 · Phòng khám An Bình</p></section>
+    <section class="ds-card" aria-label="Ví dụ thẻ"><div class="ds-split"><p class="ds-text-title-md ds-tabular">09:30</p><span class="ds-badge ds-badge--success"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Đã xác nhận</span></div><p class="ds-text-title-sm">Khám tổng quát</p><p class="ds-text-body-sm ds-text-secondary">20/10/2026, Phòng khám An Bình</p></section>
     <ul class="ds-list">
       <li><button class="ds-list-item" type="button"><span class="ds-list-item__leading"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-document"/></svg></span><span class="ds-list-item__body"><span class="ds-text-label-lg" style="display:block">Giấy tờ cần mang</span><span class="ds-text-body-sm ds-text-secondary">2 mục</span></span><svg class="ds-icon ds-list-item__trailing" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button></li>
       <li class="ds-list-item"><span class="ds-avatar" aria-hidden="true">TM</span><span class="ds-list-item__body"><span class="ds-text-label-lg" style="display:block">Trần Thu Mai</span><span class="ds-text-body-sm ds-text-secondary">Người thân</span></span></li>
@@ -125,8 +125,8 @@ COMPONENTS = """
     </div>
     <div class="ds-stack ds-stack--md">
       <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Ăn uống</span><span class="ds-text-label-md ds-tabular">62%</span></div><div class="ds-progress" role="progressbar" aria-label="Ăn uống" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><span class="ds-progress__bar" style="--value: 62%"></span></div></div>
-      <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Mua sắm</span><span class="ds-text-label-md ds-tabular">88% · sắp hết</span></div><div class="ds-progress ds-progress--warning" role="progressbar" aria-label="Mua sắm" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"><span class="ds-progress__bar" style="--value: 88%"></span></div></div>
-      <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Giải trí</span><span class="ds-text-label-md ds-tabular">112% · vượt</span></div><div class="ds-progress ds-progress--danger" role="progressbar" aria-label="Giải trí" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-valuetext="112%, vượt ngân sách"><span class="ds-progress__bar" style="--value: 100%"></span></div></div>
+      <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Mua sắm</span><span class="ds-text-label-md ds-tabular">88%, sắp hết</span></div><div class="ds-progress ds-progress--warning" role="progressbar" aria-label="Mua sắm" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"><span class="ds-progress__bar" style="--value: 88%"></span></div></div>
+      <div class="ds-stack ds-stack--xs"><div class="ds-split"><span class="ds-text-label-md">Giải trí</span><span class="ds-text-label-md ds-tabular">112%, vượt</span></div><div class="ds-progress ds-progress--danger" role="progressbar" aria-label="Giải trí" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-valuetext="112%, vượt ngân sách"><span class="ds-progress__bar" style="--value: 100%"></span></div></div>
       <div class="ds-list-item" role="status" aria-busy="true" aria-label="Đang tải"><span class="ds-skeleton ds-skeleton--circle" style="width: 40px; height: 40px" aria-hidden="true"></span><span class="ds-list-item__body ds-stack ds-stack--xs" aria-hidden="true"><span class="ds-skeleton" style="width: 60%"></span><span class="ds-skeleton" style="width: 35%"></span></span></div>
     </div>
     <div class="ds-sheet" role="dialog" aria-labelledby="sheet-demo-title" style="box-shadow: var(--ds-elevation-floating); border: var(--ds-border-width-100) solid var(--ds-border-subtle)">
@@ -135,6 +135,58 @@ COMPONENTS = """
       <div class="ds-cluster"><button class="ds-chip" type="button" aria-pressed="true">Chi tiêu</button><button class="ds-chip" type="button" aria-pressed="false">Thu nhập</button></div>
       <button class="ds-button ds-button--primary ds-button--block" type="button">Xem 24 giao dịch</button>
     </div>
+  </div>
+</section>
+<section class="ds-stack" aria-labelledby="c-web"><h3 class="ds-text-title-sm" id="c-web">Web controls (v0.3): checkbox, radio, tabs, menu, tooltip, dialog, table</h3>
+  <div class="demo-cols">
+    <div class="ds-stack ds-stack--md">
+      <fieldset class="ds-fieldset"><legend>Nhắc lịch qua</legend>
+        <label class="ds-check"><input type="checkbox" checked><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Tin nhắn</span></label>
+        <label class="ds-check"><input type="checkbox"><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Email</span></label>
+        <label class="ds-check"><input type="checkbox" disabled><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Zalo (chưa kết nối)</span></label>
+      </fieldset>
+      <fieldset class="ds-fieldset"><legend>Hình thức khám</legend>
+        <label class="ds-check ds-check--radio"><input type="radio" name="demo-mode" checked><span class="ds-check__box" aria-hidden="true"></span><span>Tại phòng khám</span></label>
+        <label class="ds-check ds-check--radio"><input type="radio" name="demo-mode"><span class="ds-check__box" aria-hidden="true"></span><span>Gọi video</span></label>
+      </fieldset>
+    </div>
+    <div class="ds-stack ds-stack--md">
+      <div class="ds-tabs" role="tablist" aria-label="Ví dụ tab">
+        <button class="ds-tabs__tab" role="tab" type="button" aria-selected="true" aria-controls="demo-tab-1" id="demo-tab-a">Sắp tới</button>
+        <button class="ds-tabs__tab" role="tab" type="button" aria-selected="false" aria-controls="demo-tab-2" id="demo-tab-b" tabindex="-1">Đã khám</button>
+      </div>
+      <div class="ds-tabs__panel" role="tabpanel" id="demo-tab-1" aria-labelledby="demo-tab-a"><p class="ds-text-body-md">2 lịch hẹn trong tuần này.</p></div>
+      <div class="ds-tabs__panel" role="tabpanel" id="demo-tab-2" aria-labelledby="demo-tab-b" hidden><p class="ds-text-body-md">Chưa có lần khám nào.</p></div>
+      <div class="ds-cluster">
+        <div class="ds-menu-anchor">
+          <button class="ds-button ds-button--secondary" type="button" aria-haspopup="menu" aria-expanded="true" aria-controls="demo-menu">Thao tác<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+          <ul class="ds-menu" role="menu" id="demo-menu" style="position: static; margin-top: var(--ds-space-100)">
+            <li role="none"><button class="ds-menu__item" role="menuitem" type="button">Đổi giờ</button></li>
+            <li role="none"><button class="ds-menu__item" role="menuitem" type="button">Thêm người đi cùng</button></li>
+            <li role="separator" class="ds-menu__divider"></li>
+            <li role="none"><button class="ds-menu__item ds-menu__item--danger" role="menuitem" type="button">Huỷ lịch</button></li>
+          </ul>
+        </div>
+        <span class="ds-tooltip-anchor"><button class="ds-icon-button" type="button" aria-label="Thông tin" aria-describedby="demo-tip"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-info"/></svg></button><span class="ds-tooltip" role="tooltip" id="demo-tip">Lịch huỷ trước 2 giờ được hoàn phí</span></span>
+      </div>
+    </div>
+    <div class="ds-dialog ds-dialog--static" role="dialog" aria-labelledby="demo-dialog-title">
+      <div class="ds-dialog__body">
+        <div class="ds-dialog__header"><h4 class="ds-text-title-sm" id="demo-dialog-title">Huỷ lịch khám 09:30?</h4><button class="ds-icon-button" type="button" aria-label="Đóng"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-x"/></svg></button></div>
+        <p class="ds-text-body-md ds-text-secondary">Bạn có thể đặt lại sau. Phí đặt lịch được hoàn trong 3 ngày làm việc.</p>
+        <div class="ds-dialog__actions"><button class="ds-button ds-button--secondary" type="button">Giữ lịch</button><button class="ds-button ds-button--danger" type="button">Huỷ lịch</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="ds-table-wrap" tabindex="0" role="region" aria-label="Lịch sử thanh toán, cuộn ngang được">
+    <table class="ds-table">
+      <caption>Lịch sử thanh toán</caption>
+      <thead><tr><th scope="col">Ngày</th><th scope="col">Dịch vụ</th><th scope="col" class="ds-table__num">Số tiền</th></tr></thead>
+      <tbody>
+        <tr><td class="ds-tabular">12/10/2026</td><td>Khám tổng quát</td><td class="ds-table__num">350.000 ₫</td></tr>
+        <tr><td class="ds-tabular">28/09/2026</td><td>Xét nghiệm máu</td><td class="ds-table__num">1.240.000 ₫</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 """
@@ -172,7 +224,7 @@ code {{ font-family: var(--ds-font-family-mono); font-size: var(--ds-font-size-2
 {sprite}
 <main class="doc ds-stack ds-stack--lg">
   <header class="ds-stack ds-stack--sm">
-    <div class="ds-split"><p class="ds-text-label-sm ds-text-secondary">Design system · v{html.escape(version)} · {n_tokens} tokens per mode</p>
+    <div class="ds-split"><p class="ds-text-label-sm ds-text-secondary">Design system v{html.escape(version)}, {n_tokens} tokens per mode</p>
       <button class="ds-button ds-button--secondary ds-button--sm" id="theme" type="button" aria-pressed="false"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg><span>Giao diện tối</span></button></div>
     <h1 class="ds-text-title-lg">Tokens, components and the rules behind them</h1>
     <p class="ds-text-body-lg ds-text-secondary">Generated from the DTCG token source. Every contrast ratio below is computed at build time, so this page cannot drift from the code.</p>

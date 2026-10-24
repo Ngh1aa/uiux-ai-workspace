@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lò Gốm Mộc: lớp làm gốm cuối tuần ở Bát Tràng</title>
+<meta name="theme-color" content="#2c5a4e">
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="../../generated/tokens.css">
+<link rel="stylesheet" href="../../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="../../starter/app.css">
+<style>
+  /* Dấu ấn riêng của Lò Gốm Mộc, chỉ dùng token. */
+  .gm-rings { position: relative; overflow: hidden; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
+  .gm-rings::before { content: ""; position: absolute; inset: -20%; background: repeating-radial-gradient(circle at 62% 44%, transparent 0 17px, color-mix(in srgb, var(--ds-text-on-brand-strong) 12%, transparent) 17px 18px); pointer-events: none; }
+  .gm-rings > * { position: relative; }
+  .gm-rings figcaption { color: color-mix(in srgb, var(--ds-text-on-brand-strong) 82%, transparent); }
+  .gm-bowl { position: absolute; left: 50%; top: 44%; width: 46%; aspect-ratio: 2 / 1; transform: translate(-40%, -10%); border-radius: 0 0 999px 999px; background: color-mix(in srgb, var(--ds-text-on-brand-strong) 16%, transparent); }
+  .gm-next { display: inline-flex; align-items: center; gap: var(--ds-space-300); }
+  .gm-tag { display: inline-flex; align-items: center; gap: var(--ds-space-100); padding: var(--ds-space-100) var(--ds-space-300); border: var(--ds-border-width-100) dashed var(--ds-border-control); border-radius: var(--ds-radius-100); background: var(--ds-surface-raised); white-space: nowrap; font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/var(--ds-type-label-md-line-height) var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+  .gm-tag--low { border-color: var(--ds-feedback-danger-border); color: var(--ds-feedback-danger-text); background: var(--ds-feedback-danger-surface); }
+  .gm-sessions { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+  .gm-session { display: grid; grid-template-columns: 112px minmax(0, 1fr) 112px 104px 176px; justify-items: start; gap: var(--ds-spacing-inline-md) var(--ds-spacing-stack-lg); align-items: center; padding: var(--ds-space-400) 0; border-bottom: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+  .gm-session__date { display: flex; flex-direction: column; }
+  .gm-session__day { font: var(--ds-font-weight-bold) 32px/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .gm-session__dow { color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); }
+  .gm-session__what { display: flex; flex-direction: column; gap: 2px; }
+  .gm-session__meta { color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); }
+  .gm-session__price { justify-self: end; font-weight: var(--ds-font-weight-semibold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .gm-full { color: var(--ds-text-secondary); }
+  .gm-steps .lp-steps__n { font-family: var(--app-font-display); }
+  .gm-signoff { font: italic var(--ds-font-weight-medium) var(--ds-font-size-500)/1.4 var(--app-font-display); color: var(--ds-text-secondary); margin: 0; }
+  /* Bản Lora đang dùng không có ký tự ₫: giá dùng font thân. */
+  .lp-plan__price { font-family: var(--ds-font-family-sans); letter-spacing: -0.01em; }
+  .lp-hero__title, .lp-h2 { font-weight: 600; letter-spacing: -0.015em; }
+  @media (max-width: 720px) {
+    .gm-session { grid-template-columns: 72px minmax(0, 1fr); }
+    .gm-session__side { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-300); }
+    .gm-bowl { width: 56%; }
+  }
+  @media (min-width: 721px) { .gm-session__side { display: contents; } .gm-session__side .ds-button { justify-self: end; } }
+</style>
+</head>
+<body class="ds-root lp">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="ds-i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+</svg>
+<!-- icons:end -->
+<a class="lp-skip" href="#lp-main">Bỏ qua điều hướng</a>
+
+<header class="lp-header">
+  <a class="lp-logo" href="#lp-main">Lò Gốm Mộc</a>
+  <nav class="lp-nav" aria-label="Điều hướng chính">
+    <a href="#lich">Lịch lớp</a>
+    <a href="#buoi-hoc">Một buổi học</a>
+    <a href="#hoc-phi">Học phí</a>
+    <a href="#hoi-dap">Hỏi đáp</a>
+  </nav>
+  <a class="ds-button ds-button--primary lp-header__cta" href="#lich">Giữ chỗ</a>
+  <button class="app-round lp-menu" type="button" aria-label="Mở menu"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-menu"/></svg></button>
+</header>
+
+<main id="lp-main">
+  <section class="lp-hero" aria-labelledby="hero-title">
+    <div class="lp-hero__copy">
+      <h1 class="lp-hero__title" id="hero-title">Một buổi chiều, một chiếc bát của riêng bạn</h1>
+      <p class="lp-lead">Lớp làm gốm cuối tuần cho người chưa từng chạm đất sét. Tối đa 8 người, ba tiếng trên bàn xoay ở Bát Tràng, mang bát về sau khi&nbsp;nung.</p>
+      <div class="ds-cluster">
+        <a class="ds-button ds-button--primary ds-button--lg" href="#lich">Xem lịch và giữ chỗ</a>
+        <a class="ds-button ds-button--tertiary ds-button--lg" href="#buoi-hoc">Một buổi gồm gì</a>
+      </div>
+      <p class="gm-next"><span class="lp-proof-line">Buổi gần nhất</span><span class="gm-tag gm-tag--low">Thứ Bảy 2/11, còn 2 chỗ</span></p>
+    </div>
+    <figure class="lp-media lp-media--hero gm-rings">
+      <span class="gm-bowl" aria-hidden="true"></span>
+      <figcaption>Ảnh: [đôi tay vuốt miệng bát trên bàn xoay, nhìn từ trên xuống, ánh sáng cửa sổ]</figcaption>
+    </figure>
+  </section>
+
+  <section class="lp-section" id="lich" aria-labelledby="lich-title">
+    <h2 class="lp-h2" id="lich-title">Lịch lớp tháng 11</h2>
+    <ul class="gm-sessions">
+      <li class="gm-session">
+        <p class="gm-session__date ds-text-body-md" style="margin:0"><span class="gm-session__day">02</span><span class="gm-session__dow">Thứ Bảy</span></p>
+        <div class="gm-session__what"><h3 class="ds-text-title-sm">Bát ăn cơm đầu tiên</h3><span class="gm-session__meta">14:00 đến 17:00, người mới bắt đầu</span></div>
+        <div class="gm-session__side"><span class="gm-tag gm-tag--low">Còn 2 chỗ</span><span class="gm-session__price">450.000 ₫</span><a class="ds-button ds-button--primary" href="app.html">Giữ chỗ</a></div>
+      </li>
+      <li class="gm-session">
+        <p class="gm-session__date ds-text-body-md" style="margin:0"><span class="gm-session__day">03</span><span class="gm-session__dow">Chủ Nhật</span></p>
+        <div class="gm-session__what"><h3 class="ds-text-title-sm">Cốc có quai</h3><span class="gm-session__meta">09:00 đến 12:00, đã học một buổi</span></div>
+        <div class="gm-session__side"><span class="gm-tag">Còn 5 chỗ</span><span class="gm-session__price">520.000 ₫</span><a class="ds-button ds-button--secondary" href="app.html">Giữ chỗ</a></div>
+      </li>
+      <li class="gm-session">
+        <p class="gm-session__date ds-text-body-md" style="margin:0"><span class="gm-session__day">09</span><span class="gm-session__dow">Thứ Bảy</span></p>
+        <div class="gm-session__what"><h3 class="ds-text-title-sm">Bát ăn cơm đầu tiên</h3><span class="gm-session__meta">14:00 đến 17:00, người mới bắt đầu</span></div>
+        <div class="gm-session__side"><span class="gm-tag gm-full">Đã kín</span><span class="gm-session__price">450.000 ₫</span><a class="ds-button ds-button--tertiary" href="app.html">Báo khi có chỗ</a></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="lp-section lp-split" aria-labelledby="vi-sao-title">
+    <h2 class="lp-h2" id="vi-sao-title">Cả tuần nhìn màn hình, cuối tuần cần một thứ chạm được</h2>
+    <div class="lp-prose">
+      <p>Đất sét không cho bạn vội. Nó lệch khi bạn mất tập trung và tròn lại khi bạn thở chậm.</p>
+      <p>Thầy Mộc đứng cạnh từng bàn xoay. Bạn không cần khéo tay, chỉ cần ba tiếng không nhìn điện&nbsp;thoại.</p>
+    </div>
+  </section>
+
+  <section class="lp-section" id="buoi-hoc" aria-labelledby="buoi-hoc-title">
+    <h2 class="lp-h2" id="buoi-hoc-title">Một buổi học</h2>
+    <ol class="lp-steps gm-steps">
+      <li><span class="lp-steps__n" aria-hidden="true">1</span><div><h3 class="ds-text-title-sm">Nhào đất</h3><p class="lp-body">Hai mươi phút đánh khí ra khỏi đất. Phần dễ nhất, cũng là phần nhiều người thích nhất.</p></div></li>
+      <li><span class="lp-steps__n" aria-hidden="true">2</span><div><h3 class="ds-text-title-sm">Vuốt trên bàn xoay</h3><p class="lp-body">Định tâm, mở lòng, kéo thành. Hỏng thì làm lại, đất không mất.</p></div></li>
+      <li><span class="lp-steps__n" aria-hidden="true">3</span><div><h3 class="ds-text-title-sm">Chọn men, chờ lò</h3><p class="lp-body">Bạn chọn một trong sáu màu men. Bát nung xong sau 14 ngày, gửi về tận nhà.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="lp-section" id="hoc-phi" aria-labelledby="hoc-phi-title">
+    <h2 class="lp-h2" id="hoc-phi-title">Học phí</h2>
+    <div class="lp-plans">
+      <article class="lp-plan">
+        <h3 class="ds-text-title-sm">Một buổi</h3>
+        <p class="lp-plan__price"><span class="ds-tabular">450.000 ₫</span></p>
+        <p class="lp-body">Cho người muốn thử một lần.</p>
+        <ul class="lp-checks">
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>Đất, dụng cụ, tạp dề</li>
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>Nung và men một sản phẩm</li>
+        </ul>
+        <a class="ds-button ds-button--secondary ds-button--block" href="#lich">Chọn buổi</a>
+      </article>
+      <article class="lp-plan lp-plan--featured" aria-label="Gói bốn buổi, khuyên dùng">
+        <p class="lp-plan__flag">Khuyên dùng</p>
+        <h3 class="ds-text-title-sm">Bốn buổi</h3>
+        <p class="lp-plan__price"><span class="ds-tabular">1.600.000 ₫</span></p>
+        <p class="lp-body">Đủ để làm một bộ bát đĩa cho gia đình.</p>
+        <ul class="lp-checks">
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>Mọi thứ của gói một buổi</li>
+          <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-check"/></svg>Nung bốn sản phẩm, đổi buổi miễn phí</li>
+        </ul>
+        <a class="ds-button ds-button--primary ds-button--block" href="#lich">Mua gói bốn buổi</a>
+      </article>
+    </div>
+    <p class="lp-note">Đã gồm thuế. Đổi buổi miễn phí nếu báo trước 24 giờ.</p>
+  </section>
+
+  <section class="lp-section" aria-labelledby="loi-khach-title">
+    <h2 class="lp-h2" id="loi-khach-title">Người đã ngồi bàn xoay</h2>
+    <figure class="lp-quote">
+      <blockquote><p>Cái bát méo nhất nhà tôi, nhưng là cái duy nhất cả nhà tranh nhau dùng.</p></blockquote>
+      <figcaption><strong>Chị Thu Hà</strong><span>Kế toán, học gói bốn buổi</span></figcaption>
+    </figure>
+    <p class="lp-note">Lời trích minh hoạ, cần thay bằng lời khách thật đã đồng ý.</p>
+  </section>
+
+  <section class="lp-section lp-split" id="hoi-dap" aria-labelledby="hoi-dap-title">
+    <h2 class="lp-h2" id="hoi-dap-title">Hỏi đáp</h2>
+    <div class="lp-faq">
+      <details open><summary>Tôi chưa từng làm gốm, có theo kịp không?</summary><p>Có. Lớp cuối tuần dành cho người mới, mỗi bàn xoay có hướng dẫn riêng.</p></details>
+      <details><summary>Bao lâu thì nhận được sản phẩm?</summary><p>Khoảng 14 ngày sau buổi học. Xưởng gửi về nội thành Hà Nội miễn phí.</p></details>
+      <details><summary>Có lớp cho trẻ em không?</summary><p>Trẻ từ 10 tuổi học cùng bố mẹ trong buổi sáng Chủ Nhật.</p></details>
+      <details><summary>Đi đến xưởng thế nào?</summary><p>Xe buýt 47A từ Long Biên dừng cách xưởng 200 m. Có chỗ gửi xe máy.</p></details>
+    </div>
+  </section>
+
+  <section class="lp-section lp-cta" aria-labelledby="cta-title">
+    <h2 class="lp-h2" id="cta-title">Chiều thứ Bảy này, bàn xoay vẫn còn hai chỗ</h2>
+    <a class="ds-button ds-button--primary ds-button--lg" href="app.html">Giữ chỗ<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></a>
+  </section>
+</main>
+
+<footer class="lp-footer">
+  <p class="lp-logo">Lò Gốm Mộc</p>
+  <address>Xóm 3, Bát Tràng, Gia Lâm, Hà Nội. 0912 000 000</address>
+  <p class="gm-signoff">Chậm thôi, đất sẽ đợi.</p>
+  <p class="lp-note">Khách hàng, giá, lịch và lời trích trong trang là giả định để minh hoạ.</p>
+</footer>
+</body>
+</html>
