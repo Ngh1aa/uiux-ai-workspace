@@ -60,7 +60,8 @@ Required for consequential decisions (navigation model, primary action, data mod
 
 Use the [quality bar rubric](references/quality-bar-rubric.md): ten hard fails, ten scored
 dimensions with anchors, thresholds per task size and a three-round critique for large work.
-Scores are expert heuristics, never user evidence.
+Scores are expert heuristics, never user evidence. For round 3 (cold review), hand the renders to a
+reviewer who has not seen the work, using the [cold review brief](references/cold-review-prompt.md).
 
 ## Quality gate
 

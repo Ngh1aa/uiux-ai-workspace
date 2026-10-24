@@ -38,6 +38,21 @@ nền xám lạnh, card trắng phẳng bo 24px, một card navy nổi bật m�
 
    Sửa hết lỗi, xem lại từng cảnh báo, rồi **mở ảnh chụp ra nhìn**.
 
+## Dự án đã có design system
+
+Starter kit dùng cho dự án mới. Dự án đã có bộ token, component và màn đã được duyệt thì **giữ
+design system của dự án** (xem thứ tự ưu tiên trong [`AGENTS.md`](../../AGENTS.md)):
+
+1. Không chép `mobile.html` hay `web.html` đè lên dự án. Chỉ dùng [`PATTERNS.md`](PATTERNS.md) làm
+   quy tắc bố cục cho từng loại màn, dựng bằng class và token sẵn có của dự án.
+2. Đối chiếu token của dự án với vai trò trong `brand.css` (nền, card, chữ phụ, màu nhấn, cảnh báo,
+   bán kính). Vai trò nào dự án chưa có thì thêm vào design system của dự án, không nạp `brand.css`.
+3. Thành phần mới (bảng, biểu đồ, bước) thêm vào design system của dự án và ghi lại trên trang tài
+   liệu của nó, để các màn sau dùng chung.
+4. Dấu ấn riêng: xem mục "Dự án đã có nhận diện" trong [`SIGNATURE.md`](SIGNATURE.md).
+5. Vẫn chạy `taste-check` trên màn đã dựng. Trang không có `data-screen` (ví dụ file artboard của
+   canvas thiết kế) thì chỉ định khung màn bằng `--screen <selector>`.
+
 ## Giới hạn
 
 - Đây là bản mẫu HTML/CSS để thiết kế và làm prototype, không phải code app native.

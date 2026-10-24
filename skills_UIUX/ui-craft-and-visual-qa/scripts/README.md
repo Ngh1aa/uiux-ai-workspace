@@ -16,8 +16,21 @@ node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs design-system/st
 ```
 
 Tuỳ chọn: `--root` (thư mục phục vụ file, mặc định thư mục hiện tại), `--width` (lặp được),
-`--height`, `--theme light|dark|both`, `--screenshot <thư mục>`, `--json <file>`. Thoát với mã 1
-khi có lỗi. Cần Playwright (`npm install --no-save playwright` hoặc đặt `NODE_PATH`).
+`--height`, `--theme light|dark|both`, `--screenshot <thư mục>`, `--json <file>`,
+`--screen <selector>` (trang không có `data-screen`, ví dụ artboard của canvas thiết kế: soát mỗi
+phần tử khớp selector như một màn). Thoát với mã 1 khi có lỗi.
+
+Các mẫu hợp lệ script không báo nhầm:
+
+- Vùng chạm nới bằng `::before`/`::after` định vị tuyệt đối được tính vào vùng chạm. Vẫn nên ưu tiên
+  cho phần tử cao đủ 44px khi bố cục cho phép.
+- Chữ trong khung cuộn ngang (`overflow-x: auto/scroll`, ví dụ hàng chip) không bị coi là bị cắt
+  hay sát mép, và khung cuộn tràn sát mép màn bằng lề âm không bị coi là tràn ngang.
+- Ô nhập (`input`, `textarea`, `role="textbox"`, `role="combobox"`) không tính vào kiểm tra bo góc card.
+
+Ngoại lệ có chủ đích khác: gắn `data-taste-skip="radius target"` (tên quy tắc, cách nhau bằng dấu
+cách, hoặc `all`) lên phần tử và ghi lý do trong ghi chú giao. Tên quy tắc: `contrast`, `wrap`,
+`clipped`, `edge`, `overflow`, `target`, `highlight`, `radius`. Cần Playwright (`npm install --no-save playwright` hoặc đặt `NODE_PATH`).
 Test: `node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs`.
 
 Script là tín hiệu tự động, không thay việc mở ảnh chụp ra nhìn.

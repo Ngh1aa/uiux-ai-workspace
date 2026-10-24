@@ -65,6 +65,15 @@ Vòng bàn xoay cho xưởng gốm:
 Che tên sản phẩm và chuyển ảnh chụp sang đen trắng. Vẫn nhận ra đây là ngành gì không? Nếu ảnh
 có thể hoán đổi với một dự án khác mà không ai thấy lạ, dấu ấn chưa đủ: quay lại bước 2.
 
+## Dự án đã có nhận diện
+
+Khi giao diện của dự án đã được chủ dự án duyệt, không tự đổi hình khối, font hay card nổi bật để
+"có dấu ấn". Thay vào đó:
+
+1. Làm bước 3 (che tên) trên màn hiện có. Nhận ra ngành rồi thì giữ nguyên, ghi vật gốc đang dùng.
+2. Chưa nhận ra thì đề xuất 1–2 cần gạt ít xâm lấn nhất (cách thể hiện số liệu, một tương tác đặc
+   trưng), kèm ảnh trước/sau, và chờ chủ dự án đồng ý mới áp cho toàn bộ sản phẩm.
+
 ## Giới hạn
 
 - Dấu ấn không được phá [`TASTE.md`](../../TASTE.md): vẫn tối đa một card nổi bật mỗi màn, không

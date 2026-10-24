@@ -56,7 +56,8 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
 
 ### M — Màn hình / tính năng
 
-1. **Khung vấn đề** (1 trang): người dùng là ai, việc chính, kết quả đo được.
+1. **Khung vấn đề** (1 trang): người dùng là ai, việc chính, kết quả đo được. Thiếu spec, hoặc sản
+   phẩm có nhiều vai trò: theo [khi thiếu spec](skills_UIUX/ux-structure-and-flow-design/references/missing-spec-and-roles.md).
 2. **Luồng**: happy path + ít nhất 2 nhánh lỗi/khôi phục.
 3. **Kiểm kê màn hình × trạng thái** trước khi vẽ.
 4. **Wireframe** và walkthrough 5 kịch bản. Sửa lỗi UX trước khi tô màu.
@@ -82,6 +83,8 @@ Như **M**, cộng thêm:
 3. **Visual direction**: 4–7 thuộc tính thị giác có biểu hiện cụ thể, ma trận vai trò trang/màn hình.
 4. **Thử trên 3 màn hình khác bản chất** trước khi nhân rộng.
 5. **Critique 3 vòng** (xem rubric): tự review → review chéo theo vai trò → review "người lạ" chỉ nhìn ảnh.
+   Vòng 3 giao cho người hoặc agent chưa thấy quá trình làm, dùng
+   [mẫu giao việc](skills_UIUX/design-critique-and-rationale/references/cold-review-prompt.md).
 6. Kiểm nhất quán xuyên màn hình (ảnh đặt cạnh nhau).
 
 - Skill thêm: [`website-audit-and-redesign`](skills_UIUX/website-audit-and-redesign/SKILL.md) hoặc
