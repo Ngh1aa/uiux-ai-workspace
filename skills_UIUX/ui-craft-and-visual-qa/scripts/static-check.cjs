@@ -11,6 +11,7 @@
  *   - thiếu <html lang>, thẻ viewport hoặc <title>
  *   - viewport chặn phóng to (user-scalable=no, maximum-scale=1)
  *   - ảnh thiếu alt; nút hoặc liên kết không có chữ và không có aria-label
+ *   - aria-label của nút/liên kết không chứa chữ đang hiện trên nút (WCAG 2.5.3)
  *   - chữ giữ chỗ kiểu "Lorem ipsum", "John Doe", "Acme"
  * CẢNH BÁO:
  *   - mã màu viết cứng ngoài phần khai báo token (--tên: giá trị)
@@ -79,6 +80,11 @@ function check(file) {
     const text = m[3].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
     if (!text && !/aria-label(ledby)?=/i.test(m[2]) && !/<title>|aria-label=|<img\b[^>]*alt=["'][^"']+/i.test(m[3])) {
       err('name', `<${m[1]}> không có chữ và không có aria-label`);
+    }
+    const label = (m[2].match(/aria-label=["']([^"']*)["']/i) || [])[1];
+    const shown = m[3].replace(/<([a-z]+)\b[^>]*aria-hidden=["']true["'][^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+    if (label && shown && !label.toLowerCase().includes(shown.toLowerCase())) {
+      err('name-mismatch', `<${m[1]}> hiện "${shown.slice(0, 40)}" nhưng aria-label là "${label.slice(0, 40)}" (WCAG 2.5.3: tên phải chứa chữ đang hiện)`);
     }
     if (m[1].toLowerCase() === 'a' && /href=["']#["']/i.test(m[2])) deadLinks += 1;
   }

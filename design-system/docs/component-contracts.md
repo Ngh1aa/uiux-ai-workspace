@@ -29,7 +29,7 @@ accessibility tree cannot disagree.
 | Dialog | `.ds-dialog` | native `<dialog open>` via `showModal()`, `aria-labelledby` |
 | Menu | `.ds-menu` | trigger `aria-expanded`, `aria-haspopup="menu"`; menu `hidden` |
 | Tooltip | `.ds-tooltip` | `role="tooltip"`, trigger `aria-describedby` |
-| Table | `.ds-table` | none; `<caption>` and `<th scope>` required |
+| Table | `.ds-table` | wrap: `tabindex="0"`, `role="region"`, `aria-label`; `<caption>` and `<th scope>` required |
 
 ---
 
@@ -291,7 +291,9 @@ buttons still need their own `aria-label`; the tooltip adds to it.
 **Purpose.** Compare records across the same attributes.
 
 **Anatomy.** `.ds-table-wrap` (scrolls horizontally on narrow screens) around `table.ds-table`
-with a `<caption>`, `<th scope="col">` headers and optional `<th scope="row">`.
+with a `<caption>`, `<th scope="col">` headers and optional `<th scope="row">`. The wrap carries
+`tabindex="0"`, `role="region"` and an `aria-label` so keyboard users can scroll it (axe
+`scrollable-region-focusable`).
 
 **Rules.** Numbers and money right-aligned in tabular figures (`.ds-table__num`); dates in one
 format. Header text is secondary colour, not uppercase. Row hover is a hint, not the only cue for

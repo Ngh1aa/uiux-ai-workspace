@@ -278,6 +278,9 @@ def test_v03_web_components_have_contracts_and_docs():
     docs = (DS / "docs/index.html").read_text(encoding="utf-8")
     for cls in ("ds-check--radio", "ds-tabs", "ds-dialog", "ds-menu", "ds-tooltip", "ds-table"):
         assert cls in docs, cls
+    # a scrollable table must be reachable by keyboard (axe scrollable-region-focusable)
+    for wrap in re.findall(r'<div class="ds-table-wrap"[^>]*>', docs):
+        assert 'tabindex="0"' in wrap and 'aria-label=' in wrap, wrap
     icons = (DS / "components/icons.svg").read_text(encoding="utf-8")
     for icon in ("ds-i-check", "ds-i-chevron-down", "ds-i-x"):
         assert f'id="{icon}"' in icons, icon

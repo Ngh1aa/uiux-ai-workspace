@@ -401,6 +401,7 @@ a.ds-list-item:hover, button.ds-list-item:hover { background: var(--ds-action-se
  * Data table with a real <table>, <th scope>, caption. Numbers right-aligned in tabular figures.
  * Wrap in .ds-table-wrap so narrow screens scroll the table, not the page.
  */
+.ds-table-wrap:focus-visible { outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring-color); outline-offset: var(--ds-focus-ring-offset); }
 .ds-table-wrap { overflow-x: auto; border: var(--ds-border-width-100) solid var(--ds-border-subtle); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
 .ds-table { width: 100%; border-collapse: collapse; font-size: var(--ds-type-body-md-font-size); line-height: var(--ds-type-body-md-line-height); }
 .ds-table caption { padding: var(--ds-spacing-inset-sm) var(--ds-spacing-inset-md); text-align: left; font: var(--ds-type-title-sm-font-weight) var(--ds-type-title-sm-font-size)/var(--ds-type-title-sm-line-height) var(--ds-type-title-sm-font-family); }
