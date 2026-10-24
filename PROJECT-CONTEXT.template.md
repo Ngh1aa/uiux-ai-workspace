@@ -103,7 +103,7 @@ For production-learning work, connect measurement to the user problem before imp
 
 ## Source of truth
 
-- **Primary source of truth:** [Example: `src/`, `uiux-factory/`, `docs/spec.md`]
+- **Primary source of truth:** [Example: `src/`, `docs/spec.md`]
 - **Architecture docs:** [FILES]
 - **Requirements/spec:** [FILES]
 - **Design source:** [FILES / FIGMA / DESIGN SYSTEM]

@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Starter kit app</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../generated/tokens.css">
+<link rel="stylesheet" href="../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="ds-root app">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-chat" viewBox="0 0 24 24"><path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-9l-4.5 3.5v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z"/></symbol>
+  <symbol id="app-i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="app-i-chevron-down" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+  <symbol id="app-i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></symbol>
+  <symbol id="app-i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="app-i-refresh" viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.05-4.95M19 4.5V8h-3.5"/></symbol>
+  <symbol id="app-i-swap" viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></symbol>
+  <symbol id="app-i-task" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16.5" rx="2"/><path d="M9 4V3h6v1M8.5 12.5l2.5 2.5 4.5-4.5"/></symbol>
+  <symbol id="app-i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+</svg>
+<!-- icons:end -->
+<main class="app-gallery">
+  <header class="app-gallery__intro ds-stack ds-stack--sm">
+    <h1 class="ds-text-title-lg">Starter kit app</h1>
+    <p class="ds-text-body-md ds-text-secondary">Tám màn mẫu theo từng loại màn. Chép nguyên khối <code>.app-phone</code> của loại màn cần làm, đổi nội dung, giữ cấu trúc. Dữ liệu là giả.</p>
+    <div class="ds-cluster">
+      <button class="ds-button ds-button--sm" type="button" data-theme-toggle><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg>Đổi sáng tối</button>
+    </div>
+  </header>
+
+  <!-- 1. Trang chủ: một câu hỏi chính "hôm nay cần xử lý gì?" -->
+  <section class="app-gallery__item" aria-label="Màn mẫu trang chủ">
+    <p class="app-gallery__caption">1. Trang chủ</p>
+    <div class="app-phone" data-screen="Trang chủ">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <section class="app-hero" aria-labelledby="home-hello">
+            <div class="app-hero__row">
+              <span class="app-hero__avatar" aria-hidden="true">LA</span>
+              <div>
+                <p class="ds-text-body-sm app-hero__muted" style="margin:0">Thứ Ba, 13/10</p>
+                <h1 class="ds-text-title-md" id="home-hello">Chào cô Lan</h1>
+              </div>
+            </div>
+            <div>
+              <p class="ds-text-body-sm app-hero__muted" style="margin:0">Việc cần xử lý</p>
+              <p class="app-hero__value">35</p>
+            </div>
+            <div class="app-hero__row">
+              <span class="app-hero__track" role="progressbar" aria-valuemin="0" aria-valuemax="44" aria-valuenow="9" aria-label="Đã xong 9 trên 44 việc"><span class="app-hero__bar" style="width:20%"></span></span>
+              <span class="ds-text-body-sm app-hero__muted">9/44 xong</span>
+            </div>
+            <div class="app-hero__strip">
+              <span class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Sáng</span><strong class="ds-text-title-sm">6 ca</strong></span>
+              <span class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Chiều</span><strong class="ds-text-title-sm">8 ca</strong></span>
+              <span class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Tối</span><strong class="ds-text-title-sm">5 ca</strong></span>
+            </div>
+          </section>
+
+          <nav class="app-quick" aria-label="Thao tác nhanh">
+            <a class="app-quick__item" href="#"><span class="app-quick__icon"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-swap"/></svg></span>Điều chỉnh lớp</a>
+            <a class="app-quick__item" href="#"><span class="app-quick__icon"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-edit"/></svg></span>Sửa điểm danh</a>
+            <a class="app-quick__item" href="#"><span class="app-quick__icon"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg></span>Giao việc</a>
+          </nav>
+
+          <div class="ds-section-header" style="margin-top:var(--ds-space-200)"><h2 class="ds-text-title-sm">Cần xử lý</h2><span class="ds-text-body-sm ds-text-secondary">Theo hạn</span></div>
+          <span class="app-group-label"><span class="app-dot app-dot--urgent" aria-hidden="true"></span>Hạn hôm nay<span class="app-group-label__count">2</span></span>
+          <ul class="ds-list">
+            <li class="ds-list-item">
+              <span class="app-count app-count--brand">2</span>
+              <div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Sửa điểm danh</span><span class="app-meta app-meta--urgent"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>Hạn 0h hôm nay</span></div>
+              <a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Xử lý</a>
+            </li>
+            <li class="ds-list-item">
+              <span class="app-count app-count--brand">12</span>
+              <div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Báo cáo chờ duyệt</span><span class="app-meta app-meta--urgent"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>2 báo cáo dưới 6 giờ</span></div>
+              <a class="ds-button ds-button--primary ds-button--sm app-row-action" href="#">Duyệt</a>
+            </li>
+          </ul>
+          <span class="app-group-label"><span class="app-dot" aria-hidden="true"></span>Đang chờ<span class="app-group-label__count">2</span></span>
+          <ul class="ds-list">
+            <li class="ds-list-item">
+              <span class="app-count">18</span>
+              <div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Học phí chưa thu</span><span class="app-meta">Hạn 15/10</span></div>
+              <a class="ds-button ds-button--sm app-tonal app-row-action" href="#">Xem</a>
+            </li>
+            <li class="ds-list-item">
+              <span class="app-count">3</span>
+              <div class="ds-list-item__body"><span class="app-line ds-text-label-lg">Chờ xếp lớp</span><span class="app-meta">Từ 10/10</span></div>
+              <a class="ds-button ds-button--sm app-tonal app-row-action" href="#">Xếp lớp</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Tổng quan</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg>Học sinh</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg>Duyệt</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg>Liên lạc</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 2. Danh sách: tìm nhanh một người trong nhiều người -->
+  <section class="app-gallery__item" aria-label="Màn mẫu danh sách">
+    <p class="app-gallery__caption">2. Danh sách</p>
+    <div class="app-phone" data-screen="Danh sách">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><h1 class="ds-text-title-lg">Học sinh</h1><a class="app-round" href="#" aria-label="Thêm học sinh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></a></div>
+          <div class="ds-field">
+            <label class="ds-visually-hidden" for="list-search">Tìm học sinh</label>
+            <div class="ds-field__wrap"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-field__control" id="list-search" type="search" placeholder="Tên hoặc mã học sinh"></div>
+          </div>
+          <div class="ds-segmented" role="group" aria-label="Lọc theo trạng thái">
+            <button class="ds-segmented__item" type="button" aria-pressed="true">Tất cả</button>
+            <button class="ds-segmented__item" type="button" aria-pressed="false">Đang học</button>
+            <button class="ds-segmented__item" type="button" aria-pressed="false">Chờ xếp</button>
+          </div>
+          <div class="ds-section-header" style="margin-top:var(--ds-space-200)"><h2 class="ds-text-title-sm">Khối 5</h2><span class="ds-text-body-sm ds-text-secondary">3 học sinh</span></div>
+          <ul class="ds-list">
+            <li><a class="ds-list-item" href="#"><span class="ds-avatar" aria-hidden="true">LC</span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Lê Văn C</span><span class="app-meta"><span class="app-mono">16A0004</span><span class="app-meta__gap"></span>Toán, Văn</span></span><span class="ds-badge ds-badge--neutral">Đang học</span></a></li>
+            <li><a class="ds-list-item" href="#"><span class="ds-avatar" aria-hidden="true">NA</span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Nguyễn Văn A</span><span class="app-meta"><span class="app-mono">17A0105</span><span class="app-meta__gap"></span>Toán</span></span><span class="ds-badge ds-badge--warning">Chờ xếp</span></a></li>
+            <li><a class="ds-list-item" href="#"><span class="ds-avatar" aria-hidden="true">TB</span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Trần Thị B</span><span class="app-meta"><span class="app-mono">15A0102</span><span class="app-meta__gap"></span>Anh</span></span><span class="ds-badge ds-badge--neutral">Đang học</span></a></li>
+          </ul>
+          <div class="ds-section-header" style="margin-top:var(--ds-space-200)"><h2 class="ds-text-title-sm">Khối 6</h2><span class="ds-text-body-sm ds-text-secondary">2 học sinh</span></div>
+          <ul class="ds-list">
+            <li><a class="ds-list-item" href="#"><span class="ds-avatar" aria-hidden="true">PD</span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Phạm Thị D</span><span class="app-meta"><span class="app-mono">14A0060</span><span class="app-meta__gap"></span>Văn</span></span><span class="ds-badge ds-badge--neutral">Đang học</span></a></li>
+            <li><a class="ds-list-item" href="#"><span class="ds-avatar" aria-hidden="true">HE</span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Hoàng Văn E</span><span class="app-meta"><span class="app-mono">12A0150</span><span class="app-meta__gap"></span>Toán, Anh</span></span><span class="ds-badge ds-badge--neutral">Đang học</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Tổng quan</a>
+        <a class="app-tabbar__item" href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg>Học sinh</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg>Duyệt</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg>Liên lạc</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 3. Chi tiết: thông tin một đối tượng, hành động chính cố định ở đáy -->
+  <section class="app-gallery__item" aria-label="Màn mẫu chi tiết">
+    <p class="app-gallery__caption">3. Chi tiết</p>
+    <div class="app-phone" data-screen="Chi tiết">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Hồ sơ học sinh</h1>
+        <a class="app-round" href="#" aria-label="Nhắn phụ huynh"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg></a>
+      </header>
+      <div class="app-screen">
+        <div class="app-body app-body--footer">
+          <section class="app-hero" aria-label="Thẻ học sinh">
+            <div class="app-hero__row">
+              <span class="app-hero__avatar" aria-hidden="true">LC</span>
+              <div class="ds-stack ds-stack--xs">
+                <p class="ds-text-title-md" style="margin:0">Lê Văn C</p>
+                <p class="app-hero__code" style="margin:0"><span class="ds-visually-hidden">Mã học sinh </span>16A0004</p>
+                <p class="ds-text-body-sm app-hero__muted" style="margin:0">Khối 5</p>
+              </div>
+            </div>
+          </section>
+          <section class="app-panel" aria-label="Hồ sơ">
+            <label class="app-setting"><span class="ds-text-label-lg">Đang học</span><span class="ds-switch"><input type="checkbox" role="switch" checked><span class="ds-switch__thumb" aria-hidden="true"></span></span></label>
+            <div class="app-panel__section">
+              <h2 class="app-panel__title">Sơ yếu lý lịch</h2>
+              <div class="app-kv"><span class="app-kv__label">Trường</span><span class="app-kv__value">TH Trần Nhật Duật</span></div>
+              <div class="app-kv"><span class="app-kv__label">Ngày nhận</span><span class="app-kv__value ds-tabular">18/08/2026</span></div>
+              <p class="app-note" style="margin:0"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-lock"/></svg>SĐT và địa chỉ chỉ quản lý xem được</p>
+            </div>
+            <div class="app-panel__section">
+              <h2 class="app-panel__title">Môn đang học</h2>
+              <div class="app-kv"><span class="ds-text-label-lg">Toán</span><span class="app-kv__value">Cô Thu Anh</span></div>
+              <div class="app-kv"><span class="ds-text-label-lg">Văn</span><span class="app-kv__value">Cô Diệu Linh</span></div>
+            </div>
+            <div class="app-panel__section">
+              <h2 class="app-panel__title">Lịch sử</h2>
+              <ol class="app-timeline">
+                <li><time datetime="2026-09-01">01/09</time><span>Tạo lớp Văn với Cô Diệu Linh</span></li>
+                <li><time datetime="2026-08-25">25/08</time><span>Tạo lớp Toán với Cô Thu Anh</span></li>
+                <li><time datetime="2026-08-20">20/08</time><span>Test đầu vào Toán đạt M3</span></li>
+              </ol>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="app-footer"><a class="ds-button ds-button--primary ds-button--block" href="#">Tạo lớp</a></div>
+    </div>
+  </section>
+
+  <!-- 4. Biểu mẫu: từng bước rõ, lỗi nói cách sửa ngay tại chỗ -->
+  <section class="app-gallery__item" aria-label="Màn mẫu biểu mẫu">
+    <p class="app-gallery__caption">4. Biểu mẫu</p>
+    <div class="app-phone" data-screen="Biểu mẫu">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Tạo lớp</h1>
+      </header>
+      <div class="app-screen">
+        <form class="app-body app-body--footer" onsubmit="return false">
+          <div class="ds-list" style="border-radius:var(--ds-card-radius)">
+            <div class="ds-list-item"><span class="ds-avatar" aria-hidden="true">LC</span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Lê Văn C</span><span class="app-meta"><span class="app-mono">16A0004</span><span class="app-meta__gap"></span>Khối 5</span></span><a class="ds-button ds-button--sm app-tonal app-row-action" href="#">Đổi</a></div>
+          </div>
+          <div class="ds-field">
+            <span class="ds-field__label" id="f-subject">Môn</span>
+            <button class="app-select" type="button" aria-labelledby="f-subject f-subject-v"><span class="ds-text-label-lg" id="f-subject-v">Toán</span><svg class="ds-icon ds-text-secondary" aria-hidden="true"><use href="#app-i-chevron-down"/></svg></button>
+          </div>
+          <div class="ds-field">
+            <span class="ds-field__label" id="f-teacher">Giáo viên</span>
+            <button class="app-select" type="button" aria-labelledby="f-teacher f-teacher-v"><span class="app-select__lead"><span class="ds-avatar" aria-hidden="true">TA</span><span><span class="app-line ds-text-label-lg" id="f-teacher-v">Cô Thu Anh</span><span class="app-meta">Còn 9 ca trống mỗi tuần</span></span></span><svg class="ds-icon ds-text-secondary" aria-hidden="true"><use href="#app-i-chevron-down"/></svg></button>
+          </div>
+          <section class="ds-card ds-stack ds-stack--sm" aria-labelledby="f-schedule">
+            <h2 class="app-panel__title" id="f-schedule">Lịch học</h2>
+            <div class="app-choice-grid" role="group" aria-labelledby="f-schedule">
+              <span></span>
+              <span class="app-choice-grid__head"><strong>Sáng</strong><span class="ds-text-secondary">08:00</span></span>
+              <span class="app-choice-grid__head"><strong>Chiều</strong><span class="ds-text-secondary">14:00</span></span>
+              <span class="app-choice-grid__head"><strong>Tối</strong><span class="ds-text-secondary">18:30</span></span>
+              <span class="app-choice-grid__day">T2</span>
+              <button class="app-choice" type="button" aria-pressed="true" aria-label="Thứ Hai sáng"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn</button>
+              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Hai chiều"></button>
+              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Hai tối"></button>
+              <span class="app-choice-grid__day">T3</span>
+              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Ba sáng"></button>
+              <span class="app-choice" aria-disabled="true" role="img" aria-label="Thứ Ba chiều, giáo viên bận">GV bận</span>
+              <span class="app-choice" aria-disabled="true" role="img" aria-label="Thứ Ba tối, đang học Văn">Học Văn</span>
+              <span class="app-choice-grid__day">T4</span>
+              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Tư sáng"></button>
+              <button class="app-choice" type="button" aria-pressed="true" aria-label="Thứ Tư chiều"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn</button>
+              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Tư tối"></button>
+              <span class="app-choice-grid__day">T5</span>
+              <span class="app-choice" aria-disabled="true" role="img" aria-label="Thứ Năm sáng, giáo viên bận">GV bận</span>
+              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Năm chiều"></button>
+              <button class="app-choice" type="button" aria-pressed="false" aria-label="Thứ Năm tối"></button>
+            </div>
+            <div class="app-summary"><span class="ds-text-label-md">2 buổi mỗi tuần</span><span style="flex:1"></span><span class="app-summary__chip">T2 08:00</span><span class="app-summary__chip">T4 14:00</span></div>
+          </section>
+          <div class="ds-field">
+            <span class="ds-field__label" id="f-start">Bắt đầu</span>
+            <button class="app-select" type="button" aria-labelledby="f-start f-start-v" aria-invalid="true" aria-describedby="f-start-err"><span class="ds-text-label-lg" id="f-start-v">Thứ Hai, 12/10/2026</span><svg class="ds-icon ds-text-secondary" aria-hidden="true"><use href="#ds-i-calendar"/></svg></button>
+            <p class="ds-field__error" id="f-start-err"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-alert"/></svg><span>Chọn ngày từ 19/10 trở đi</span></p>
+          </div>
+        </form>
+      </div>
+      <div class="app-footer"><button class="ds-button ds-button--primary ds-button--block" type="button">Tạo lớp</button></div>
+    </div>
+  </section>
+
+  <!-- 5. Rỗng: nói vì sao trống và bước tiếp theo -->
+  <section class="app-gallery__item" aria-label="Màn mẫu trạng thái rỗng">
+    <p class="app-gallery__caption">5. Rỗng</p>
+    <div class="app-phone" data-screen="Rỗng">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><h1 class="ds-text-title-lg">Duyệt</h1></div>
+          <div class="ds-segmented" role="group" aria-label="Lọc báo cáo">
+            <button class="ds-segmented__item" type="button" aria-pressed="true">Chờ bạn 0</button>
+            <button class="ds-segmented__item" type="button" aria-pressed="false">Làm lại 0</button>
+            <button class="ds-segmented__item" type="button" aria-pressed="false">Xong 53</button>
+          </div>
+          <div class="app-state-card">
+            <div class="ds-empty">
+              <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-check-circle"/></svg></span>
+              <h2 class="ds-text-title-sm" style="color:var(--ds-text-primary)">Không còn báo cáo chờ bạn</h2>
+              <p class="ds-text-body-md" style="margin:0">Báo cáo mới sẽ hiện ở đây khi có giáo viên gửi lên.</p>
+              <a class="ds-button ds-button--sm app-tonal" href="#">Xem báo cáo đã xong</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Tổng quan</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg>Học sinh</a>
+        <a class="app-tabbar__item" href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg>Duyệt</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg>Liên lạc</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 6. Đang tải: khung xương đúng hình nội dung thật -->
+  <section class="app-gallery__item" aria-label="Màn mẫu đang tải">
+    <p class="app-gallery__caption">6. Đang tải</p>
+    <div class="app-phone" data-screen="Đang tải">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><h1 class="ds-text-title-lg">Học sinh</h1></div>
+          <div class="ds-field">
+            <label class="ds-visually-hidden" for="load-search">Tìm học sinh</label>
+            <div class="ds-field__wrap"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-field__control" id="load-search" type="search" placeholder="Tên hoặc mã học sinh"></div>
+          </div>
+          <ul class="ds-list" aria-busy="true" aria-label="Đang tải danh sách học sinh">
+            <li class="ds-list-item" aria-hidden="true"><span class="ds-skeleton ds-skeleton--circle" style="width:40px;height:40px"></span><span class="ds-list-item__body ds-stack ds-stack--xs"><span class="ds-skeleton" style="width:58%"></span><span class="ds-skeleton" style="width:36%"></span></span><span class="ds-skeleton" style="width:64px;height:24px;border-radius:var(--ds-shape-pill)"></span></li>
+            <li class="ds-list-item" aria-hidden="true"><span class="ds-skeleton ds-skeleton--circle" style="width:40px;height:40px"></span><span class="ds-list-item__body ds-stack ds-stack--xs"><span class="ds-skeleton" style="width:46%"></span><span class="ds-skeleton" style="width:30%"></span></span><span class="ds-skeleton" style="width:64px;height:24px;border-radius:var(--ds-shape-pill)"></span></li>
+            <li class="ds-list-item" aria-hidden="true"><span class="ds-skeleton ds-skeleton--circle" style="width:40px;height:40px"></span><span class="ds-list-item__body ds-stack ds-stack--xs"><span class="ds-skeleton" style="width:64%"></span><span class="ds-skeleton" style="width:40%"></span></span><span class="ds-skeleton" style="width:64px;height:24px;border-radius:var(--ds-shape-pill)"></span></li>
+            <li class="ds-list-item" aria-hidden="true"><span class="ds-skeleton ds-skeleton--circle" style="width:40px;height:40px"></span><span class="ds-list-item__body ds-stack ds-stack--xs"><span class="ds-skeleton" style="width:52%"></span><span class="ds-skeleton" style="width:28%"></span></span><span class="ds-skeleton" style="width:64px;height:24px;border-radius:var(--ds-shape-pill)"></span></li>
+          </ul>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Tổng quan</a>
+        <a class="app-tabbar__item" href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg>Học sinh</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg>Duyệt</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg>Liên lạc</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 7. Lỗi: giữ dữ liệu người dùng, nói rõ chuyện gì xảy ra và cách thử lại -->
+  <section class="app-gallery__item" aria-label="Màn mẫu lỗi">
+    <p class="app-gallery__caption">7. Lỗi</p>
+    <div class="app-phone" data-screen="Lỗi">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Điểm danh lớp 7</h1>
+      </header>
+      <div class="app-screen">
+        <div class="app-body app-body--footer">
+          <div class="ds-banner ds-banner--danger" role="alert"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-alert"/></svg><div><p class="ds-text-label-lg">Chưa lưu được điểm danh</p><p class="ds-text-body-sm">Mất kết nối mạng. Lựa chọn của bạn vẫn được giữ trên máy.</p></div></div>
+          <div class="ds-section-header"><h2 class="ds-text-title-sm">Sĩ số</h2><span class="ds-text-label-md ds-tabular">3/4 có mặt</span></div>
+          <div class="ds-list">
+            <div class="app-attendance"><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Nguyễn Văn A</span><span class="app-meta app-mono">17A0105</span></span><div class="ds-segmented" role="group" aria-label="Nguyễn Văn A"><button class="ds-segmented__item" type="button" aria-pressed="true">Có</button><button class="ds-segmented__item" type="button" aria-pressed="false">Vắng</button></div></div>
+            <div class="app-attendance"><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Trần Thị B</span><span class="app-meta app-mono">15A0102</span></span><div class="ds-segmented" role="group" aria-label="Trần Thị B"><button class="ds-segmented__item" type="button" aria-pressed="true">Có</button><button class="ds-segmented__item" type="button" aria-pressed="false">Vắng</button></div></div>
+            <div class="app-attendance"><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Lê Văn C</span><span class="app-meta">Nghỉ ốm, đã báo</span></span><div class="ds-segmented" role="group" aria-label="Lê Văn C"><button class="ds-segmented__item" type="button" aria-pressed="false">Có</button><button class="ds-segmented__item" type="button" aria-pressed="true">Vắng</button></div></div>
+            <div class="app-attendance"><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Phạm Thị D</span><span class="app-meta app-mono">14A0060</span></span><div class="ds-segmented" role="group" aria-label="Phạm Thị D"><button class="ds-segmented__item" type="button" aria-pressed="true">Có</button><button class="ds-segmented__item" type="button" aria-pressed="false">Vắng</button></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-footer"><button class="ds-button ds-button--primary ds-button--block" type="button"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-refresh"/></svg>Thử lại</button><p class="app-footer__note">Tự động gửi lại khi có mạng</p></div>
+    </div>
+  </section>
+  <!-- 8. Chọn nhanh: chọn ngay trong danh sách, lựa chọn và tổng tiền luôn thấy ở đáy -->
+  <section class="app-gallery__item" aria-label="Màn mẫu chọn nhanh">
+    <p class="app-gallery__caption">8. Chọn nhanh</p>
+    <div class="app-phone" data-screen="Chọn nhanh">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Đăng ký học thử</h1>
+      </header>
+      <div class="app-screen">
+        <div class="app-body app-body--checkout" data-pick-group>
+          <p class="ds-text-body-md ds-text-secondary" style="margin:0">Chọn một buổi học thử cho Nguyễn Văn A, lớp 7.</p>
+          <section class="app-pick" aria-labelledby="pick-toan" aria-current="true">
+            <div class="app-pick__head"><div><h2 class="ds-text-label-lg" id="pick-toan" style="margin:0">Toán lớp 7</h2><p class="app-meta" style="margin:2px 0 0">Cô Thu Anh<span class="app-meta__gap"></span>90 phút</p></div><p class="app-pick__price" style="margin:0"><strong>200.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">một buổi</span></p></div>
+            <ul class="app-slots" aria-label="Buổi Toán lớp 7">
+              <li><button class="app-slot" type="button" aria-pressed="true" data-what="Toán lớp 7, Thứ Bảy 9:00" data-total="200.000 ₫">T7 9:00</button></li>
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Toán lớp 7, Thứ Bảy 14:00" data-total="200.000 ₫">T7 14:00</button></li>
+              <li><span class="app-slot" aria-disabled="true" role="img" aria-label="Chủ nhật 9:00, hết chỗ">CN 9:00</span></li>
+            </ul>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0">CN 9:00 đã hết chỗ</p>
+          </section>
+          <section class="app-pick" aria-labelledby="pick-van">
+            <div class="app-pick__head"><div><h2 class="ds-text-label-lg" id="pick-van" style="margin:0">Văn lớp 7</h2><p class="app-meta" style="margin:2px 0 0">Cô Diệu Linh<span class="app-meta__gap"></span>90 phút</p></div><p class="app-pick__price" style="margin:0"><strong>180.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">một buổi</span></p></div>
+            <ul class="app-slots" aria-label="Buổi Văn lớp 7">
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Văn lớp 7, Thứ Bảy 9:00" data-total="180.000 ₫">T7 9:00</button></li>
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Văn lớp 7, Chủ nhật 14:00" data-total="180.000 ₫">CN 14:00</button></li>
+            </ul>
+          </section>
+          <section class="app-pick" aria-labelledby="pick-anh">
+            <div class="app-pick__head"><div><h2 class="ds-text-label-lg" id="pick-anh" style="margin:0">Anh lớp 7</h2><p class="app-meta" style="margin:2px 0 0">Thầy Minh<span class="app-meta__gap"></span>90 phút</p></div><p class="app-pick__price" style="margin:0"><strong>220.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">một buổi</span></p></div>
+            <ul class="app-slots" aria-label="Buổi Anh lớp 7">
+              <li><button class="app-slot" type="button" aria-pressed="false" data-what="Anh lớp 7, Chủ nhật 9:00" data-total="220.000 ₫">CN 9:00</button></li>
+            </ul>
+          </section>
+        </div>
+      </div>
+      <div class="app-footer app-checkout" aria-live="polite" data-checkout>
+        <div class="app-checkout__row"><span class="app-checkout__what" data-checkout-what><strong>Toán lớp 7, Thứ Bảy 9:00</strong></span><strong class="app-checkout__total" data-checkout-total>200.000 ₫</strong></div>
+        <button class="ds-button ds-button--primary ds-button--block" type="button" data-checkout-go>Đăng ký học thử</button>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+// Chỉ để bấm thử: nút chọn một trong nhóm, ô lịch bật tắt, đổi sáng tối.
+document.addEventListener('click', (event) => {
+  const seg = event.target.closest('.ds-segmented__item');
+  if (seg) {
+    seg.parentElement.querySelectorAll('.ds-segmented__item').forEach((b) => b.setAttribute('aria-pressed', String(b === seg)));
+  }
+  const choice = event.target.closest('button.app-choice');
+  if (choice) {
+    const on = choice.getAttribute('aria-pressed') !== 'true';
+    choice.setAttribute('aria-pressed', String(on));
+    choice.innerHTML = on ? '<svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-check"/></svg>Đã chọn' : '';
+  }
+  const slot = event.target.closest('button.app-slot');
+  if (slot) {
+    const group = slot.closest('[data-pick-group]');
+    const phone = slot.closest('.app-phone');
+    const on = slot.getAttribute('aria-pressed') !== 'true';
+    group.querySelectorAll('button.app-slot').forEach((b) => b.setAttribute('aria-pressed', String(b === slot && on)));
+    group.querySelectorAll('.app-pick').forEach((card) => card.toggleAttribute('aria-current', card.contains(slot) && on));
+    const go = phone.querySelector('[data-checkout-go]');
+    phone.querySelector('[data-checkout-what]').innerHTML = on ? '<strong>' + slot.dataset.what + '</strong>' : 'Chưa chọn buổi nào';
+    phone.querySelector('[data-checkout-total]').textContent = on ? slot.dataset.total : '0 ₫';
+    if (on) go.removeAttribute('aria-disabled'); else go.setAttribute('aria-disabled', 'true');
+  }
+  if (event.target.closest('[data-theme-toggle]')) {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "run": "2026-10-24-v2",
+  "repo_commit": "vòng cải tiến 1",
+  "reviewer": "agent-heuristic",
+  "summary": "Sau vòng cải tiến 1 (mẫu trạng thái web, hướng dẫn dấu ấn, mẫu chọn nhanh và thanh tổng tiền). Cả ba đề đạt ngưỡng; chiều tương tác và dấu ấn lên từ 3 thành 4. Sửa tiếp từ bản v1 chứ không làm lại từ đầu, và người chấm vẫn là người làm.",
+  "briefs": {
+    "01-landing": {
+      "size": "M",
+      "hard_fails": [],
+      "scores": { "1": 4, "2": 4, "3": 4, "4": 3, "5": 4, "6": 4, "7": 4, "8": 4, "9": 4, "10": 4 },
+      "notes": [
+        "7 Tương tác: chọn lớp và ca ngay trong khối đặt chỗ, tóm tắt và tổng tiền cập nhật, card lớp có nút chọn sẵn. Giữ chỗ vẫn qua điện thoại.",
+        "10 Dấu ấn: vòng xoay bàn xoay làm hoạ tiết, góc card lệch như đồ nặn tay.",
+        "4 Chữ: vẫn một họ chữ cho mọi cấp; chưa có cách đổi chữ tiêu đề mà vẫn chạy được không cần mạng."
+      ]
+    },
+    "02-app": {
+      "size": "L",
+      "hard_fails": [],
+      "scores": { "1": 4, "2": 4, "3": 4, "4": 4, "5": 4, "6": 4, "7": 4, "8": 4, "9": 4, "10": 4 },
+      "notes": [
+        "7 Tương tác: chọn khung giờ ngay trong danh sách, thanh nổi luôn hiện sân, giờ và tổng tiền; màn Đặt sân có tổng ở đáy và nút mở khi chọn khung khác.",
+        "10 Dấu ấn: vạch sân trong card nổi bật, góc cứng 12px, giờ chơi to kiểu bảng tỉ số. Khung xương vẫn là starter kit.",
+        "3 Bố cục: thanh nổi ở Tìm sân che một phần card cuối; cuộn được nhưng nên thử trên máy thật."
+      ]
+    },
+    "03-dashboard": {
+      "size": "M",
+      "hard_fails": [],
+      "scores": { "1": 4, "2": 4, "3": 4, "4": 4, "5": 4, "6": 4, "7": 4, "8": 4, "9": 4, "10": 4 },
+      "notes": [
+        "Hết hard fail HF-5: khu Trạng thái các khối có đang tải, dữ liệu cũ và lỗi cho từng khối, theo mẫu web-states.",
+        "10 Dấu ấn: hoạ tiết mũi đan trong card nổi bật, thanh tồn kho như hàng mũi len ngắn dần.",
+        "Trạng thái đang trình bày như bản thiết kế bên dưới trang, chưa có nút chuyển trạng thái trực tiếp trên từng khối."
+      ]
+    }
+  }
+}

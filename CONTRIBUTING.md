@@ -8,7 +8,7 @@ and [AGENTS.md](AGENTS.md) for the operating and evidence contract.
 Contributions are accepted under the same terms as the project (inbound = outbound):
 
 - code, skills, prompts, flows, design tokens, CSS components and icons: [Apache-2.0](LICENSE);
-- documentation in `docs/`, `design-system/docs/`, `uiux-factory/docs/` and review screenshots:
+- documentation in `docs/`, `design-system/docs/` and review screenshots:
   [CC BY 4.0](LICENSE-DOCS).
 
 Sign off every commit to certify the [Developer Certificate of Origin](https://developercertificate.org/):
@@ -24,8 +24,7 @@ right to submit it under these licenses.
 
 - Check [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before copying anything that is not your own.
 - **Never copy or adapt** files from Anthropic's source-available skills (`docx`, `pdf`, `pptx`,
-  `xlsx`), from `doc-coauthoring` (no license) or from `claude-code` (proprietary) into this
-  repository. Their terms forbid redistribution and derivative works. This applies to AI agents
+  `xlsx`), from `doc-coauthoring` (no license) into this repository. Their terms forbid redistribution and derivative works. This applies to AI agents
   working in the repository as much as to people.
 - Keep upstream code inside its submodule or vendor folder, unmodified, and put local adaptations
   outside it.
@@ -37,9 +36,10 @@ right to submit it under these licenses.
 
 ```sh
 python skills_UIUX/scripts/validate-skills.py
-python skills_UIUX/scripts/validate-flows.py
+python skills_UIUX/scripts/validate-v2.py
+python -m pytest -q skills_UIUX/tests
+python scripts/check-links.py
 python design-system/scripts/validate.py
-python -m pytest -q uiux-factory/tests   # from uiux-factory/
 ```
 
 `main` is protected: a pull request needs the `foundation` and `release-candidate` checks to pass.

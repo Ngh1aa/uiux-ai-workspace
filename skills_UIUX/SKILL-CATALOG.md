@@ -177,7 +177,7 @@ Pinned source provenance lives in `vendor/cross-functional-intelligence/SOURCE-L
 - `human-ai-interaction-design`
 
 ## Capability packs
-- `ux-foundation` (UX-first core; see `../UX-FIRST-WORKFLOW.md` and `templates/ux/`)
+- `ux-foundation` (UX-first core; see `../docs/UX-FIRST-WORKFLOW.md` and `templates/ux/`)
 - `measurement-reliability` (V5)
 - `production-delivery` (V5 production hardening)
 - `product-growth-intelligence` (cross-functional product/growth/search/experimentation)

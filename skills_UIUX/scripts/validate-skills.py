@@ -57,7 +57,7 @@ def parse_frontmatter(text: str) -> tuple[str, str, int]:
 
 
 def main() -> int:
-    # Match canonical skill discovery (validate-runtime-foundation.py): only
+    # Match canonical skill discovery: only
     # direct owned skill folders. Pinned upstream/vendor sources have separate
     # integrity validators and must not enter this namespace as active skills.
     skill_files = sorted(ROOT.glob("*/SKILL.md"))

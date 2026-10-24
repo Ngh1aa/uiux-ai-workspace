@@ -1,10 +1,12 @@
 # skills_UIUX V5.4 — Evidence, Reference Intelligence & Production Reliability Agent OS
 
+> Khi thiết kế, bắt đầu từ [`START-HERE.md`](../START-HERE.md). File này mô tả chi tiết thư viện skill.
+
 Bộ skill cho AI coding agent xây dựng/nâng cấp website theo pipeline chuyên nghiệp từ project truth → research → audience/journey/IA → reference intelligence → design intelligence → Design Contract → implementation → rendered QA → release/production verification.
 
 V5.4 là **library/agent-OS version**. Các prompt có version riêng; không suy ra library version từ prompt version.
 
-Native mobile design is available through [mobile-app-design](mobile-app-design/SKILL.md), the [mobile profile](profiles/mobile-app-design.json) and platform-specific Flow/work cards. Read [mobile practice](mobile-app-design/references/professional-practice.md) for research, screen/state design, prototype review and handoff. For an app prototype clients can open by link, use [mobile-web-preview](mobile-web-preview/SKILL.md) with `requested_output=browser-prototype`. Responsive web remains on the website pipeline; no native code runner or store-release capability is implied.
+Native mobile design is available through [mobile-app-design](mobile-app-design/SKILL.md), the [mobile profile](profiles/mobile-app-design.json) and platform-specific Flow/work cards. Read [mobile practice](mobile-app-design/references/professional-practice.md) for research, screen/state design, prototype review and handoff. For an app prototype clients can open by link, use [mobile-web-preview](mobile-web-preview/SKILL.md). Responsive web remains on the website pipeline; no native code runner or store-release capability is implied.
 
 ## V5.4 visual-sanity reliability hardening
 
@@ -30,27 +32,27 @@ Nếu user/reviewer bắt được một obvious generalizable defect mà QA l�
 ## Canonical entrypoints
 
 For knowledge maintenance or deliberate practice, use
-[UX knowledge and practice upgrade](../docs/UX-KNOWLEDGE-PRACTICE-UPGRADE.md):
+[UX knowledge and practice upgrade](../docs/history/UX-KNOWLEDGE-PRACTICE-UPGRADE.md):
 bounded domain workflows, annotated same-data examples, exercises/retest and
-paired skill evaluations. The existing Factory owners remain authoritative;
+paired skill evaluations;
 teaching/eval scores are not human validation or evidence of mastery.
 
 Cho substantial website redesign, bắt đầu từ:
 
-- [LATEST-3-PROMPT-REDESIGN-PIPELINE.md](LATEST-3-PROMPT-REDESIGN-PIPELINE.md)
-- [MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md](MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md)
-- [MASTER-PROMPT-V7.2.md](MASTER-PROMPT-V7.2.md)
-- [FINAL-UIUX-VISUAL-CONTENT-QA-REMEDIATION-V3.2.md](FINAL-UIUX-VISUAL-CONTENT-QA-REMEDIATION-V3.2.md)
+- [LATEST-3-PROMPT-REDESIGN-PIPELINE.md](prompts/LATEST-3-PROMPT-REDESIGN-PIPELINE.md)
+- [MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md](prompts/MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md)
+- [MASTER-PROMPT-V7.2.md](prompts/MASTER-PROMPT-V7.2.md)
+- [FINAL-UIUX-VISUAL-CONTENT-QA-REMEDIATION-V3.2.md](prompts/FINAL-UIUX-VISUAL-CONTENT-QA-REMEDIATION-V3.2.md)
 
 Governance/runtime entrypoints:
 
 - [website-delivery-pipeline/SKILL.md](website-delivery-pipeline/SKILL.md)
 - [adaptive-skill-routing-and-context-budget/SKILL.md](adaptive-skill-routing-and-context-budget/SKILL.md)
 - [project-context/SKILL.md](project-context/SKILL.md)
-- [PHASE-AWARE-GATING.md](PHASE-AWARE-GATING.md)
-- [PROJECT-INSTRUCTIONS-PHASE-AWARE.md](PROJECT-INSTRUCTIONS-PHASE-AWARE.md)
+- [PHASE-AWARE-GATING.md](prompts/PHASE-AWARE-GATING.md)
+- [PROJECT-INSTRUCTIONS-PHASE-AWARE.md](prompts/PROJECT-INSTRUCTIONS-PHASE-AWARE.md)
 - [SKILL-CATALOG.md](SKILL-CATALOG.md)
-- [V5-ARCHITECTURE.md](V5-ARCHITECTURE.md)
+- [V5-ARCHITECTURE.md](docs/history/V5-ARCHITECTURE.md)
 
 Superseded prompt/architecture revisions are intentionally not kept beside the canonical working files. Git history is the archive; see [docs/history/README.md](docs/history/README.md).
 
@@ -143,7 +145,7 @@ External sources are recorded in [vendor/external-uiux/SOURCE-LOCKS.md](vendor/e
 
 The vendor corpus is **not** global prompt context. Route it through [design-intelligence-retrieval/SKILL.md](design-intelligence-retrieval/SKILL.md), which selects the smallest relevant mode (`--design-system`, one explicit `--domain`, or detected `--stack`), verifies the match, retries once when needed and requires `ADOPT / ADAPT / REJECT` synthesis against project truth.
 
-Augmentation module: [DESIGN-INTELLIGENCE-AUGMENTED-REDESIGN-PROMPT.md](DESIGN-INTELLIGENCE-AUGMENTED-REDESIGN-PROMPT.md).
+Augmentation module: [DESIGN-INTELLIGENCE-AUGMENTED-REDESIGN-PROMPT.md](prompts/DESIGN-INTELLIGENCE-AUGMENTED-REDESIGN-PROMPT.md).
 
 Precedence:
 

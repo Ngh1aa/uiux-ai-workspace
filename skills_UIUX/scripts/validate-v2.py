@@ -46,6 +46,7 @@ def markdown_files_for_link_check() -> list[Path]:
         "*/checklists/*.md",
         "*/examples/*.md",
         "evals/*.md",
+        "prompts/*.md",
         "examples/projects/*.md",
     ]:
         files.update(ROOT.glob(pattern))
@@ -127,6 +128,29 @@ def main() -> int:
                 errors.append(f"{pack.relative_to(ROOT)}: unknown skills {unknown}")
         except (json.JSONDecodeError, OSError, TypeError) as exc:
             errors.append(f"{pack.relative_to(ROOT)}: {exc}")
+
+    flow_ids: set[str] = set()
+    for flow in sorted((ROOT / "flows").glob("*.json")):
+        try:
+            data = json.loads(flow.read_text(encoding="utf-8"))
+            if data.get("id") != flow.stem:
+                errors.append(f"{flow.relative_to(ROOT)}: id must match filename")
+            if data.get("id") in flow_ids:
+                errors.append(f"{flow.relative_to(ROOT)}: duplicate flow id")
+            flow_ids.add(data.get("id"))
+            stages = data.get("stages")
+            if not isinstance(stages, list) or not stages:
+                errors.append(f"{flow.relative_to(ROOT)}: stages must be a non-empty array")
+                continue
+            for stage in stages:
+                named = list(stage.get("required_skills", []))
+                for rule in stage.get("conditional_skills", []):
+                    named.extend(rule.get("skills", []))
+                unknown = sorted(set(named) - skill_names)
+                if unknown:
+                    errors.append(f"{flow.relative_to(ROOT)}: stage {stage.get('id')} names unknown skills {unknown}")
+        except (json.JSONDecodeError, OSError, TypeError, AttributeError) as exc:
+            errors.append(f"{flow.relative_to(ROOT)}: {exc}")
 
     project_configs = sorted(ROOT.glob("examples/projects/*/.uiux-profile.json"))
     for config in project_configs:

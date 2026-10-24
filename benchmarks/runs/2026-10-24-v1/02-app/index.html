@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cầu Lông Gần Nhà</title>
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="../../../../design-system/starter/brand.css">
+<link rel="stylesheet" href="../../../../design-system/starter/app.css">
+<style>
+/* Thương hiệu app thể thao: xanh sân cỏ thay cho navy của starter kit. */
+:root {
+  --brand-900: #062a1f; --brand-800: #0a3d2d; --brand-700: #0c5540; --brand-600: #0f6b4f; --brand-100: #cfe8dc; --brand-50: #e7f4ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --brand-strong-dark: #11543f; --brand-tint-dark: #7fd3b0; --ds-action-primary-text: #062a1f; --ds-surface-brand-subtle: #12291f; --ds-action-selected-bg: #173a2c; --ds-action-selected-text: #d4f2e4; --ds-action-tertiary-bg-hover: #12291f; --ds-action-tertiary-bg-pressed: #173a2c; --ds-action-primary-bg-hover: #9ddfc3; --ds-action-primary-bg-pressed: #b5e8d2; }
+}
+:root[data-theme="dark"] { --brand-strong-dark: #11543f; --brand-tint-dark: #7fd3b0; --ds-action-primary-text: #062a1f; --ds-surface-brand-subtle: #12291f; --ds-action-selected-bg: #173a2c; --ds-action-selected-text: #d4f2e4; }
+
+/* Khối riêng của đề này */
+.court { display: flex; flex-direction: column; gap: var(--ds-space-300); padding: var(--ds-spacing-inset-md); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); color: inherit; text-decoration: none; }
+.court__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ds-spacing-inline-md); }
+.court__price { flex: none; text-align: right; white-space: nowrap; }
+.court__price strong { display: block; font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1.2 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.slots { display: flex; flex-wrap: wrap; gap: var(--ds-space-200); }
+.slot { display: inline-flex; align-items: center; justify-content: center; min-width: 72px; height: 44px; padding: 0 var(--ds-space-300); border: 0; border-radius: 12px; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); white-space: nowrap; cursor: pointer; font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/1 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.slot-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-space-200); }
+.slot-grid .app-choice { flex-direction: column; gap: 2px; height: 56px; font-size: var(--ds-type-label-md-font-size); }
+.slot-grid button.app-choice[aria-pressed="false"] { background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+.slot-grid .app-choice small { font-weight: var(--ds-font-weight-medium); font-size: 11px; }
+.amenities { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-space-300) var(--ds-spacing-inline-md); margin: 0; padding: 0; list-style: none; }
+.amenities li { display: flex; align-items: center; gap: var(--ds-space-200); white-space: nowrap; }
+.amenities .ds-icon { color: var(--ds-text-brand); }
+.stepper { display: flex; align-items: center; gap: var(--ds-space-300); }
+.stepper output { min-width: 24px; text-align: center; font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.total { display: flex; align-items: baseline; justify-content: space-between; white-space: nowrap; }
+.total strong { font: var(--ds-font-weight-bold) 24px/32px var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.app-footer .ds-button[aria-disabled="true"] { background: var(--ds-action-disabled-bg); color: var(--ds-action-disabled-text); }
+.chips { display: flex; gap: var(--ds-space-200); overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--ds-spacing-inset-lg)); padding: 0 var(--ds-spacing-inset-lg); }
+.chips .ds-chip { flex: none; border-color: transparent; }
+.chips .ds-chip[aria-pressed="true"] { background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); }
+.textarea { width: 100%; min-height: 88px; box-sizing: border-box; padding: var(--ds-space-300) var(--ds-spacing-inset-md); border: var(--ds-border-width-100) solid var(--ds-field-border); border-radius: var(--ds-field-radius); background: var(--ds-field-bg); color: var(--ds-text-primary); font: inherit; resize: none; }
+</style>
+</head>
+<body class="ds-root app">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
+  <symbol id="ds-i-bell" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="ds-i-bus" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="13.5" rx="2.5"/><path d="M5 11h14M8 20v-2.5M16 20v-2.5M8.5 14.5h.01M15.5 14.5h.01"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-coffee" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v3M12 3.5v3"/></symbol>
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-phone" viewBox="0 0 24 24"><rect x="7" y="3.5" width="10" height="17" rx="2.25"/><path d="M11 17.5h2"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+  <symbol id="ds-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.75"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+</svg>
+<!-- icons:end -->
+<main class="app-gallery">
+  <header class="app-gallery__intro ds-stack ds-stack--sm">
+    <h1 class="ds-text-title-lg">Cầu Lông Gần Nhà</h1>
+    <p class="ds-text-body-md ds-text-secondary">Năm màn của luồng tìm sân, đặt sân và xem lịch. Màn 4 thể hiện lỗi khi khung giờ vừa có người đặt, màn 5 thể hiện tab rỗng.</p>
+  </header>
+
+  <!-- 1. Trang chủ -->
+  <section class="app-gallery__item" aria-label="Trang chủ">
+    <p class="app-gallery__caption">1. Trang chủ</p>
+    <div class="app-phone" data-screen="Trang chủ">
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><div><p class="ds-text-body-sm ds-text-secondary" style="margin:0">Thứ Năm, 23/10</p><h1 class="ds-text-title-lg">Chào Minh</h1></div><a class="app-round" href="#" aria-label="Thông báo"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></a></div>
+          <section class="app-hero" aria-labelledby="next-title">
+            <p class="ds-text-body-sm app-hero__muted" style="margin:0" id="next-title">Lượt đặt sắp tới</p>
+            <div>
+              <p class="ds-text-title-md" style="margin:0">Sân Phú Nhuận</p>
+              <p class="ds-text-body-md app-hero__muted" style="margin:4px 0 0">Sân số 3</p>
+            </div>
+            <div class="app-hero__strip" style="grid-template-columns:repeat(2,1fr)">
+              <span class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Thứ Sáu</span><strong class="ds-text-title-sm">24/10</strong></span>
+              <span class="app-hero__stat"><span class="ds-text-body-sm app-hero__muted">Giờ chơi</span><strong class="ds-text-title-sm ds-tabular">18:00–19:00</strong></span>
+            </div>
+          </section>
+          <div class="ds-section-header" style="margin-top:var(--ds-space-200)"><h2 class="ds-text-title-sm">Tối nay gần bạn</h2><a class="ds-link ds-text-label-md" href="#">Xem tất cả</a></div>
+          <a class="court" href="#">
+            <div class="court__top"><div><p class="ds-text-label-lg" style="margin:0">Sân Phú Nhuận</p><p class="app-meta" style="margin:2px 0 0">Phú Nhuận<span class="app-meta__gap"></span>1,2 km</p></div><p class="court__price" style="margin:0"><strong>120.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <div class="slots"><span class="slot">18:00</span><span class="slot">20:00</span><span class="slot">21:00</span></div>
+          </a>
+          <a class="court" href="#">
+            <div class="court__top"><div><p class="ds-text-label-lg" style="margin:0">Sân Kỳ Hoà</p><p class="app-meta" style="margin:2px 0 0">Quận 10<span class="app-meta__gap"></span>2,8 km</p></div><p class="court__price" style="margin:0"><strong>100.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <div class="slots"><span class="slot">19:00</span><span class="slot">21:00</span></div>
+          </a>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Trang chủ</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg>Tìm sân</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>Tôi</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 2. Danh sách sân -->
+  <section class="app-gallery__item" aria-label="Danh sách sân">
+    <p class="app-gallery__caption">2. Danh sách sân</p>
+    <div class="app-phone" data-screen="Danh sách sân">
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><h1 class="ds-text-title-lg">Tìm sân</h1></div>
+          <div class="ds-field">
+            <label class="ds-visually-hidden" for="court-search">Tìm sân</label>
+            <div class="ds-field__wrap"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-field__control" id="court-search" type="search" placeholder="Tên sân hoặc đường"></div>
+          </div>
+          <div class="chips" role="group" aria-label="Lọc theo quận">
+            <button class="ds-chip" type="button" aria-pressed="true">Tất cả</button>
+            <button class="ds-chip" type="button" aria-pressed="false">Phú Nhuận</button>
+            <button class="ds-chip" type="button" aria-pressed="false">Quận 10</button>
+            <button class="ds-chip" type="button" aria-pressed="false">Quận 1</button>
+          </div>
+          <div class="ds-section-header"><h2 class="ds-text-title-sm">Tối nay</h2><span class="ds-text-body-sm ds-text-secondary">Gần nhất trước</span></div>
+          <a class="court" href="#">
+            <div class="court__top"><div><p class="ds-text-label-lg" style="margin:0">Sân Phú Nhuận</p><p class="app-meta" style="margin:2px 0 0">Phú Nhuận<span class="app-meta__gap"></span>1,2 km</p></div><p class="court__price" style="margin:0"><strong>120.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0">Còn 3 khung trống</p>
+            <div class="slots"><span class="slot">18:00</span><span class="slot">20:00</span><span class="slot">21:00</span></div>
+          </a>
+          <a class="court" href="#">
+            <div class="court__top"><div><p class="ds-text-label-lg" style="margin:0">Sân Kỳ Hoà</p><p class="app-meta" style="margin:2px 0 0">Quận 10<span class="app-meta__gap"></span>2,8 km</p></div><p class="court__price" style="margin:0"><strong>100.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0">Còn 2 khung trống</p>
+            <div class="slots"><span class="slot">19:00</span><span class="slot">21:00</span></div>
+          </a>
+          <a class="court" href="#">
+            <div class="court__top"><div><p class="ds-text-label-lg" style="margin:0">Sân Tân Định</p><p class="app-meta" style="margin:2px 0 0">Quận 1<span class="app-meta__gap"></span>3,5 km</p></div><p class="court__price" style="margin:0"><strong>150.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0">Còn 1 khung trống</p>
+            <div class="slots"><span class="slot">20:00</span></div>
+          </a>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Trang chủ</a>
+        <a class="app-tabbar__item" href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg>Tìm sân</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>Tôi</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 3. Chi tiết sân -->
+  <section class="app-gallery__item" aria-label="Chi tiết sân">
+    <p class="app-gallery__caption">3. Chi tiết sân</p>
+    <div class="app-phone" data-screen="Chi tiết sân">
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Sân Phú Nhuận</h1>
+        <a class="app-round" href="#" aria-label="Gọi sân"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-phone"/></svg></a>
+      </header>
+      <div class="app-screen">
+        <div class="app-body app-body--footer">
+          <section class="app-panel" aria-label="Thông tin sân">
+            <div class="app-panel__section">
+              <div class="app-kv"><span class="app-kv__label">Khoảng cách</span><span class="app-kv__value">1,2 km, Phú Nhuận</span></div>
+              <div class="app-kv"><span class="app-kv__label">Giá</span><span class="app-kv__value ds-tabular">120.000 ₫ mỗi giờ</span></div>
+            </div>
+            <div class="app-panel__section">
+              <h2 class="app-panel__title">Tiện ích</h2>
+              <ul class="amenities">
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-bus"/></svg>Gửi xe</li>
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-user"/></svg>Phòng thay đồ</li>
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-bag"/></svg>Cho thuê vợt</li>
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-coffee"/></svg>Nước uống</li>
+              </ul>
+            </div>
+          </section>
+          <section class="ds-card ds-stack ds-stack--sm" aria-labelledby="today-slots">
+            <div class="ds-section-header"><h2 class="app-panel__title" id="today-slots">Hôm nay</h2><span class="ds-text-body-sm ds-text-secondary">Mỗi khung 1 giờ</span></div>
+            <div class="slot-grid" role="group" aria-labelledby="today-slots">
+              <span class="app-choice" aria-disabled="true" role="img" aria-label="17:00, đã đặt">17:00<small>Đã đặt</small></span>
+              <button class="app-choice" type="button" aria-pressed="false">18:00<small>Trống</small></button>
+              <span class="app-choice" aria-disabled="true" role="img" aria-label="19:00, đã đặt">19:00<small>Đã đặt</small></span>
+              <button class="app-choice" type="button" aria-pressed="true">20:00<small>Đang chọn</small></button>
+              <button class="app-choice" type="button" aria-pressed="false">21:00<small>Trống</small></button>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="app-footer"><a class="ds-button ds-button--primary ds-button--block" href="#">Đặt 20:00, 120.000 ₫</a></div>
+    </div>
+  </section>
+
+  <!-- 4. Đặt sân, trạng thái lỗi -->
+  <section class="app-gallery__item" aria-label="Đặt sân, khung giờ vừa có người đặt">
+    <p class="app-gallery__caption">4. Đặt sân: khung giờ vừa có người đặt</p>
+    <div class="app-phone" data-screen="Đặt sân">
+      <div class="app-status"><span class="app-status__time">17:44</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Đặt sân</h1>
+      </header>
+      <div class="app-screen">
+        <form class="app-body app-body--footer" onsubmit="return false">
+          <div class="ds-banner ds-banner--danger" role="alert"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-alert"/></svg><div><p class="ds-text-label-lg">Khung 19:00 vừa có người đặt</p><p class="ds-text-body-sm">Chọn khung khác, bạn chưa bị trừ tiền.</p></div></div>
+          <section class="app-panel" aria-label="Lượt đặt">
+            <div class="app-panel__section">
+              <div class="app-kv"><span class="app-kv__label">Sân</span><span class="app-kv__value">Sân Kỳ Hoà, Quận 10</span></div>
+              <div class="app-kv"><span class="app-kv__label">Ngày</span><span class="app-kv__value">Hôm nay, 23/10</span></div>
+            </div>
+            <div class="app-panel__section">
+              <h2 class="app-panel__title" id="other-slots">Khung còn trống</h2>
+              <div class="slots" role="group" aria-labelledby="other-slots"><button class="slot" type="button">21:00</button></div>
+              <a class="ds-link ds-text-label-md" href="#" style="display:inline-flex;align-items:center;min-height:44px">Xem sân khác còn trống tối nay</a>
+            </div>
+          </section>
+          <section class="app-panel" aria-label="Chi tiết">
+            <div class="app-panel__section">
+              <div class="app-kv" style="align-items:center"><span class="ds-text-label-lg" id="players">Số người</span><span class="stepper"><button class="app-round" type="button" aria-label="Bớt một người" style="background:var(--ds-surface-sunken)"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-minus"/></svg></button><output aria-labelledby="players">4</output><button class="app-round" type="button" aria-label="Thêm một người" style="background:var(--ds-surface-sunken)"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button></span></div>
+            </div>
+            <div class="app-panel__section">
+              <label class="ds-field__label" for="note">Ghi chú <span class="ds-text-secondary">(không bắt buộc)</span></label>
+              <textarea class="textarea" id="note" placeholder="Ví dụ: cần thuê 2 vợt"></textarea>
+            </div>
+            <div class="app-panel__section">
+              <div class="total"><span class="ds-text-label-lg">Tổng tiền</span><strong>100.000 ₫</strong></div>
+            </div>
+          </section>
+        </form>
+      </div>
+      <div class="app-footer"><button class="ds-button ds-button--primary ds-button--block" type="button" aria-disabled="true">Đặt sân</button><p class="app-footer__note">Chọn khung giờ khác để tiếp tục</p></div>
+    </div>
+  </section>
+
+  <!-- 5. Lịch của tôi, tab Đã qua rỗng -->
+  <section class="app-gallery__item" aria-label="Lịch của tôi, tab Đã qua rỗng">
+    <p class="app-gallery__caption">5. Lịch của tôi: tab Đã qua rỗng</p>
+    <div class="app-phone" data-screen="Lịch của tôi">
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><h1 class="ds-text-title-lg">Lịch của tôi</h1></div>
+          <div class="ds-segmented" role="group" aria-label="Lượt đặt">
+            <button class="ds-segmented__item" type="button" aria-pressed="false">Sắp tới 1</button>
+            <button class="ds-segmented__item" type="button" aria-pressed="true">Đã qua</button>
+          </div>
+          <div class="app-state-card">
+            <div class="ds-empty">
+              <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>
+              <h2 class="ds-text-title-sm" style="color:var(--ds-text-primary)">Chưa có trận nào đã chơi</h2>
+              <p class="ds-text-body-md" style="margin:0">Lượt đặt sẽ chuyển vào đây sau giờ chơi.</p>
+              <a class="ds-button ds-button--sm app-tonal" href="#">Tìm sân tối nay</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Trang chủ</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg>Tìm sân</a>
+        <a class="app-tabbar__item" href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch</a>
+        <a class="app-tabbar__item" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>Tôi</a>
+      </nav>
+    </div>
+  </section>
+</main>
+</body>
+</html>

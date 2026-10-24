@@ -96,12 +96,12 @@ Before compiling, read only the relevant current versions of:
 2. `PROJECT-CONTEXT.md` in the target if present, otherwise use `PROJECT-CONTEXT.template.md` as a schema only;
 3. `docs/AI-PROMPT-SYSTEM.md`;
 4. `.github/prompts/universal-task.prompt.md`;
-5. `checklist-prototype-ui-ux.md` when the target is a visual/UI prototype;
-6. `skills_UIUX/LATEST-3-PROMPT-REDESIGN-PIPELINE.md` for substantial redesigns;
-7. `skills_UIUX/MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md` when research is due now;
-8. `skills_UIUX/MASTER-PROMPT-V7.2.md` for substantial structural implementation planning;
-9. `skills_UIUX/FINAL-UIUX-VISUAL-CONTENT-QA-REMEDIATION-V3.2.md` for QA contracts;
-10. `skills_UIUX/PHASE-AWARE-GATING.md` for phase/scope ownership;
+5. `docs/checklist-prototype-ui-ux.md` when the target is a visual/UI prototype;
+6. `skills_UIUX/prompts/LATEST-3-PROMPT-REDESIGN-PIPELINE.md` for substantial redesigns;
+7. `skills_UIUX/prompts/MASTER-PRE-DESIGN-RESEARCH-PROMPT-V4.2.md` when research is due now;
+8. `skills_UIUX/prompts/MASTER-PROMPT-V7.2.md` for substantial structural implementation planning;
+9. `skills_UIUX/prompts/FINAL-UIUX-VISUAL-CONTENT-QA-REMEDIATION-V3.2.md` for QA contracts;
+10. `skills_UIUX/prompts/PHASE-AWARE-GATING.md` for phase/scope ownership;
 11. `skills_UIUX/prompt-compiler/SPEC-FIRST-EXECUTION.md` for spec freeze/consumption rules;
 12. other `skills_UIUX` files only when they materially apply.
 

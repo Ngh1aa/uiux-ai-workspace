@@ -107,7 +107,7 @@ Do not paste entire catalogs into prompt context.
 ## Resources
 - [Upstream integration contract](references/upstream-integration-contract.md)
 - Vendored source: `../vendor/ui-ux-pro-max/`
-- Augmentation prompt: `../DESIGN-INTELLIGENCE-AUGMENTED-REDESIGN-PROMPT.md`
+- Augmentation prompt: `../prompts/DESIGN-INTELLIGENCE-AUGMENTED-REDESIGN-PROMPT.md`
 
 ## Verification
 ```bash

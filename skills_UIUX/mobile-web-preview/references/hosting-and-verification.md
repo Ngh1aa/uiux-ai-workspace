@@ -20,7 +20,7 @@ The template runs only on an explicit workflow dispatch, separates build from de
 
 1. Record the intended source SHA and current browser interaction/capture evidence.
 2. Retrieve the real Pages deployment/build metadata from GitHub. Keep provider-reported deployed SHA/status separate from the intended SHA; never copy the latter into the former as proof.
-3. Reuse `uiux-factory/qa/scripts/deployment-truth.mjs` with that metadata and `--probe` to check the live URL. If no provider SHA is available, preserve UNKNOWN/PREPARED rather than inventing DEPLOYED_VERIFIED.
+3. Open the live URL in a real browser and compare it with that metadata. If no provider SHA is available, preserve UNKNOWN/PREPARED rather than inventing DEPLOYED_VERIFIED.
 4. Open the actual URL on a phone-sized viewport and desktop. Verify critical tasks, assets, route reload and project subpaths again. A 2xx landing page alone is insufficient for interaction acceptance.
 5. Complete [client handoff](../templates/client-handoff.md). Include the working URL, optional locally generated QR, platform presentation, data/reset behavior, source revision, known limitations and current observations. QR is just an alternate way to open the URL.
 

@@ -149,11 +149,4 @@ Grounding
 
 ## Verify Prompt OS v1
 
-From `uiux-factory/`:
-
-```bash
-python scripts/run_prompt_os_v1_benchmark.py
-python scripts/verify_prompt_os_v1.py
-```
-
-Both commands must PASS before a release may claim the Prompt OS v1 contract is intact.
+Công cụ chạy benchmark/verifier của Prompt OS nằm trong `uiux-factory/` đã được gỡ khỏi `main`; bản gốc còn ở nhánh `archive/v1-truoc-khi-gon`.
