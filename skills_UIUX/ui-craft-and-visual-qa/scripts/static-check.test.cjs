@@ -75,3 +75,8 @@ test('bắt aria-label không chứa chữ đang hiện', () => {
   const ok = run('<button type="button" aria-label="Huỷ lịch khám 09:30">Huỷ lịch</button><button type="button" aria-label="Đóng"><svg aria-hidden="true"></svg></button>');
   assert.ok(!ok.errors.includes('name-mismatch'));
 });
+
+test('bắt div có aria-label mà không có role', () => {
+  assert.ok(run('<div aria-label="Đang tải">A</div>').errors.includes('aria-prohibited'));
+  assert.ok(!run('<div role="status" aria-label="Đang tải">A</div>').errors.includes('aria-prohibited'));
+});
