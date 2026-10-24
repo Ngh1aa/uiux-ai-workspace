@@ -8,6 +8,9 @@ description: |
 
 # Asset, Media & Art Direction
 
+Nguồn ảnh được phép, khung giữ chỗ có ghi chú và bộ icon dự phòng (Lucide, Phosphor) theo
+[`CRAFT.md`](../../CRAFT.md) mục 4. Skill này đi sâu hơn khi ảnh là phần chính của thiết kế.
+
 ## Rule 1: Meaning before decoration
 
 Ảnh phải có job: chứng minh, giải thích, tạo context, thể hiện sản phẩm/con người/không gian hoặc tạo brand mood. Không thêm stock image chỉ để lấp khoảng trống.

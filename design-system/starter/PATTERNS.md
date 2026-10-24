@@ -1,7 +1,8 @@
 # Mẫu theo loại màn
 
 Mỗi loại màn trả lời một câu hỏi chính của người dùng. Xác định câu hỏi đó trước, rồi mới xếp
-nội dung. Màn mẫu chạy được nằm trong [`mobile.html`](mobile.html) và [`web.html`](web.html).
+nội dung. Màn mẫu chạy được nằm trong [`mobile.html`](mobile.html), [`web.html`](web.html) và
+[`landing.html`](landing.html) (khung section landing page).
 
 Áp dụng cùng [`TASTE.md`](../../TASTE.md). Nếu một quy tắc ở đây mâu thuẫn với yêu cầu của dự án,
 theo dự án.
@@ -109,3 +110,15 @@ Mẫu chạy được: [`web-states.html`](web-states.html).
 - Bảng: tiêu đề cột in hoa nhỏ, số căn phải và dùng chữ số đều (`tabular-nums`). Dưới 900px
   ẩn cột phụ, không cuộn ngang.
 - Tiêu đề khu nằm ngoài card và thẳng hàng giữa các cột.
+
+## Landing page
+
+Câu hỏi: *Cái này có đáng để tôi bấm nút không?*
+
+- Thứ tự mặc định theo [`landing.html`](landing.html): hero, bằng chứng, vấn đề, lợi ích, cách
+  hoạt động, bảng giá, lời khách, câu hỏi, lời mời cuối. Bỏ section không có nội dung thật.
+- Hero một lời hứa, một nút chính; bố cục lệch, hình thật. Không hero căn giữa với ảnh trừu tượng.
+- Lợi ích là các hàng xen kẽ có bằng chứng, không phải ba card icon giống nhau.
+- Cùng một hành động chính xuất hiện ở header, hero và lời mời cuối, cùng một nhãn.
+- Logo khách, lời trích, con số chỉ dùng khi có thật và được phép; mẫu thì ghi "minh hoạ".
+

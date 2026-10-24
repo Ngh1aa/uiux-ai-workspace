@@ -1,0 +1,152 @@
+/* Lớp thương hiệu: Lò Gốm Mộc (khách hàng giả định). Điền từ BRAND-BRIEF.md.
+ * Men ngọc đậm trên nền xám tro; tiêu đề Lora; nút bo tròn hẳn; card bo 20 px.
+ * Soát: python3 design-system/scripts/check-brand.py design-system/examples/gom-moc/brand.css
+ */
+
+:root {
+  /* Màu thương hiệu */
+  --brand-900: #163229;
+  --brand-800: #1f4239;
+  --brand-700: #255044;
+  --brand-600: #2c5a4e;
+  --brand-100: #d3e2dc;
+  --brand-50: #e3ece8;
+
+  /* Nền và chữ (xám lạnh hợp với navy) */
+  --ds-surface-page: #ecebe7;
+  --ds-surface-raised: #fbfaf7;
+  --ds-surface-sunken: #e2e0da;
+  --ds-surface-brand-subtle: var(--brand-50);
+  --ds-surface-brand-strong: var(--brand-600);
+  --ds-text-primary: #1e2421;
+  --ds-text-secondary: #545a56;
+  --ds-text-tertiary: #5c625e;
+  --ds-text-brand: var(--brand-600);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #dcdad3;
+  --ds-border-control: #767b77;
+  --ds-action-disabled-bg: #e2e0da;
+  --ds-action-disabled-text: #5c625e;
+  --ds-feedback-neutral-surface: #e6e4de;
+  --ds-feedback-neutral-border: #d2cfc7;
+  --ds-feedback-neutral-text: #3a403c;
+  --ds-feedback-neutral-icon: #545a56;
+
+  /* Hành động */
+  --ds-action-primary-bg: var(--brand-600);
+  --ds-action-primary-bg-hover: var(--brand-700);
+  --ds-action-primary-bg-pressed: var(--brand-800);
+  --ds-action-primary-text: #ffffff;
+  --ds-action-secondary-bg: #fbfaf7;
+  --ds-action-secondary-bg-hover: #efede8;
+  --ds-action-secondary-bg-pressed: #e4e1da;
+  --ds-action-secondary-text: #1e2421;
+  --ds-action-secondary-border: #7f8480;
+  --ds-action-tertiary-bg-hover: var(--brand-50);
+  --ds-action-tertiary-bg-pressed: var(--brand-100);
+  --ds-action-tertiary-text: var(--brand-600);
+  --ds-action-selected-bg: var(--brand-100);
+  --ds-action-selected-text: var(--brand-900);
+  --ds-action-selected-indicator: var(--brand-600);
+  --ds-border-focus: var(--brand-600);
+
+  /* Hình khối: một bán kính cho mọi card, nền phẳng không bóng */
+  --ds-shape-card: 20px;
+  --ds-card-radius: 20px;
+  --ds-shape-control: 999px;
+  --ds-shape-sheet: 28px;
+  --ds-card-border: transparent;
+  --ds-elevation-raised: none;
+
+  /* Vùng chạm tối thiểu 44 px trên điện thoại */
+  --ds-size-control-sm: 44px;
+
+  /* Dấu ấn riêng (xem SIGNATURE.md): chữ tiêu đề và hoạ tiết card nổi bật.
+     Để trống thì dùng mặc định: chữ thân và một vòng tròn mờ. */
+  --app-font-display: "Lora", Georgia, "Times New Roman", serif;
+  /* Vòng bàn xoay: các vòng tròn đồng tâm mờ trên card nổi bật */
+  --app-hero-motif: repeating-radial-gradient(circle, transparent 0 13px, color-mix(in srgb, var(--ds-text-on-brand-strong) 14%, transparent) 13px 14px);
+  --app-hero-motif-size: 240px;
+  --app-hero-motif-top: -80px;
+  --app-hero-motif-right: -70px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand-strong-dark: #2f6355;
+    --brand-tint-dark: #9fcbbd;
+    --ds-surface-page: #121614;
+    --ds-surface-raised: #1b201e;
+    --ds-surface-sunken: #252b28;
+    --ds-surface-brand-subtle: #1c2e28;
+    --ds-surface-brand-strong: var(--brand-strong-dark);
+    --ds-text-primary: #eff1ee;
+    --ds-text-secondary: #b1b8b3;
+    --ds-text-tertiary: #98a09a;
+    --ds-text-brand: var(--brand-tint-dark);
+    --ds-text-on-brand-strong: #ffffff;
+    --ds-border-subtle: #2c322f;
+    --ds-border-control: #89908b;
+    --ds-action-primary-bg: var(--brand-tint-dark);
+    --ds-action-primary-bg-hover: #b4d7cb;
+    --ds-action-primary-bg-pressed: #c8e2d9;
+    --ds-action-primary-text: #10241e;
+    --ds-action-secondary-bg: #1b201e;
+    --ds-action-secondary-bg-hover: #252b28;
+    --ds-action-secondary-bg-pressed: #2c322f;
+    --ds-action-secondary-text: #eff1ee;
+    --ds-action-secondary-border: #6b726d;
+    --ds-action-tertiary-bg-hover: #1c2e28;
+    --ds-action-tertiary-bg-pressed: #23443b;
+    --ds-action-tertiary-text: var(--brand-tint-dark);
+    --ds-action-selected-bg: #23443b;
+    --ds-action-selected-text: #d5ebe3;
+    --ds-action-selected-indicator: var(--brand-tint-dark);
+    --ds-border-focus: var(--brand-tint-dark);
+    --ds-action-disabled-bg: #252b28;
+    --ds-action-disabled-text: #98a09a;
+    --ds-feedback-neutral-surface: #252b28;
+    --ds-feedback-neutral-border: #3a413d;
+    --ds-feedback-neutral-text: #d8ddd9;
+    --ds-feedback-neutral-icon: #b1b8b3;
+  }
+}
+
+:root[data-theme="dark"] {
+  --brand-strong-dark: #2f6355;
+  --brand-tint-dark: #9fcbbd;
+  --ds-surface-page: #121614;
+  --ds-surface-raised: #1b201e;
+  --ds-surface-sunken: #252b28;
+  --ds-surface-brand-subtle: #1c2e28;
+  --ds-surface-brand-strong: var(--brand-strong-dark);
+  --ds-text-primary: #eff1ee;
+  --ds-text-secondary: #b1b8b3;
+  --ds-text-tertiary: #98a09a;
+  --ds-text-brand: var(--brand-tint-dark);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #2c322f;
+  --ds-border-control: #89908b;
+  --ds-action-primary-bg: var(--brand-tint-dark);
+  --ds-action-primary-bg-hover: #b4d7cb;
+  --ds-action-primary-bg-pressed: #c8e2d9;
+  --ds-action-primary-text: #10241e;
+  --ds-action-secondary-bg: #1b201e;
+  --ds-action-secondary-bg-hover: #252b28;
+  --ds-action-secondary-bg-pressed: #2c322f;
+  --ds-action-secondary-text: #eff1ee;
+  --ds-action-secondary-border: #6b726d;
+  --ds-action-tertiary-bg-hover: #1c2e28;
+  --ds-action-tertiary-bg-pressed: #23443b;
+  --ds-action-tertiary-text: var(--brand-tint-dark);
+  --ds-action-selected-bg: #23443b;
+  --ds-action-selected-text: #d5ebe3;
+  --ds-action-selected-indicator: var(--brand-tint-dark);
+  --ds-border-focus: var(--brand-tint-dark);
+  --ds-action-disabled-bg: #252b28;
+  --ds-action-disabled-text: #98a09a;
+  --ds-feedback-neutral-surface: #252b28;
+  --ds-feedback-neutral-border: #3a413d;
+  --ds-feedback-neutral-text: #d8ddd9;
+  --ds-feedback-neutral-icon: #b1b8b3;
+}

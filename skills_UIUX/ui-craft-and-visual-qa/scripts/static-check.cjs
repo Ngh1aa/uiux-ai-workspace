@@ -11,12 +11,14 @@
  *   - thiếu <html lang>, thẻ viewport hoặc <title>
  *   - viewport chặn phóng to (user-scalable=no, maximum-scale=1)
  *   - ảnh thiếu alt; nút hoặc liên kết không có chữ và không có aria-label
- *   - chữ giữ chỗ kiểu "Lorem ipsum"
+ *   - chữ giữ chỗ kiểu "Lorem ipsum", "John Doe", "Acme"
  * CẢNH BÁO:
  *   - mã màu viết cứng ngoài phần khai báo token (--tên: giá trị)
  *   - transition: all; outline: none mà không có :focus-visible
  *   - cỡ chữ dưới 12px; emoji dùng như icon
  *   - liên kết href="#"
+ *   - mặc định kiểu AI generic (CRAFT.md mục 2): font duy nhất là Inter/Roboto/Arial/Open Sans/
+ *     Lato/hệ thống; gradient tím–xanh; nhãn IN HOA lặp từ 3 chỗ; mũi tên "→" sau nhiều liên kết
  *
  * Không thay được việc render và nhìn ảnh: không đo được tương phản thật, tràn chữ, gãy dòng.
  * Khi giao, ghi rõ trang chỉ mới được soát tĩnh.
@@ -37,13 +39,14 @@ function visibleText(html) {
     .split('\n').map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean);
 }
 
-function localCss(html, file) {
+function localCss(html, file, pageOnly = false) {
   const parts = [];
   for (const m of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) parts.push(m[1]);
   for (const m of html.matchAll(/<link\b[^>]*rel=["']?stylesheet[^>]*>/gi)) {
     const href = (m[0].match(/href=["']([^"']+)["']/i) || [])[1];
     if (!href || /^(https?:)?\/\//.test(href)) continue;
     const target = path.resolve(path.dirname(file), href.split(/[?#]/)[0]);
+    if (pageOnly && /design-system[\\/](generated|components|fonts)[\\/]/.test(target)) continue;
     if (fs.existsSync(target)) parts.push(fs.readFileSync(target, 'utf8'));
   }
   for (const m of html.matchAll(/\sstyle=["']([^"']*)["']/gi)) parts.push(m[1]);
@@ -65,7 +68,7 @@ function check(file) {
 
   for (const line of visibleText(html)) {
     if (DOT.test(line)) err('dot', `nối cụm từ bằng dấu chấm giữa: "${line.slice(0, 80)}"`);
-    if (/lorem ipsum/i.test(line)) err('placeholder', `chữ giữ chỗ: "${line.slice(0, 60)}"`);
+    if (/lorem ipsum|john doe|\bacme\b/i.test(line)) err('placeholder', `chữ giữ chỗ: "${line.slice(0, 60)}"`);
     if (EMOJI.test(line) && line.length <= 3) warn('emoji', `emoji dùng như icon: "${line}" (dùng icon SVG)`);
   }
   for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
@@ -82,6 +85,7 @@ function check(file) {
   if (deadLinks) warn('href', `${deadLinks} liên kết href="#" (ổn trong mockup; trang giao cho dev cần đích thật)`);
 
   const css = localCss(html, file);
+  const pageCss = localCss(html, file, true);
   const hardcoded = new Set();
   for (const decl of css.split(/[;{}]/)) {
     const d = decl.trim();
@@ -91,6 +95,34 @@ function check(file) {
     if (size && Number(size[1]) < 12) warn('small', `cỡ chữ ${size[1]}px dưới 12px`);
   }
   if (hardcoded.size) warn('hex', `${hardcoded.size} màu viết cứng ngoài token: ${[...hardcoded].slice(0, 6).join(', ')}`);
+  // Mặc định kiểu AI generic (CRAFT.md mục 2)
+  const GENERIC = /^(inter|roboto|arial|helvetica( neue)?|open sans|lato|system-ui|-apple-system|blinkmacsystemfont|segoe ui|sans-serif)$/i;
+  const firsts = new Set();
+  for (const m of css.matchAll(/font-family\s*:\s*([^;}]+)/gi)) {
+    const first = m[1].split(',')[0].trim().replace(/^["']|["']$/g, '');
+    if (first && !first.startsWith('var(') && !/^(inherit|initial|unset)$/i.test(first)) firsts.add(first);
+  }
+  if (firsts.size && [...firsts].every((f) => GENERIC.test(f))) {
+    warn('generic-font', `font duy nhất là font mặc định (${[...firsts].join(', ')}); chọn font theo thương hiệu`);
+  }
+  const hue = (hex) => {
+    let h = hex.replace('#', '');
+    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
+    const max = Math.max(r, g, b); const min = Math.min(r, g, b); const d = max - min;
+    if (d < 0.25) return null;
+    let x = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return (x * 60 + 360) % 360;
+  };
+  for (const m of pageCss.matchAll(/(?:linear|radial|conic)-gradient\(([^;]*?)\)\s*[;}]/gi)) {
+    const hues = (m[1].match(/#[0-9a-f]{6}\b|#[0-9a-f]{3}\b/gi) || []).map(hue).filter((h) => h !== null);
+    if (hues.some((h) => h >= 250 && h <= 300)) { warn('purple-gradient', 'gradient tím–xanh: kiểm lại có đến từ brand brief không'); break; }
+  }
+  const eyebrows = (pageCss.match(/text-transform\s*:\s*uppercase/gi) || []).length
+    + (html.match(/class=["'][^"']*\bds-text-label-sm\b/g) || []).length;
+  if (eyebrows >= 3) warn('eyebrow', `${eyebrows} chỗ chữ IN HOA nhỏ; nhãn eyebrow lặp lại là dấu hiệu template`);
+  const arrows = (html.match(/→\s*<\/a>|→<\/a>/g) || []).length;
+  if (arrows >= 3) warn('arrow', `${arrows} liên kết kết thúc bằng "→"`);
   if (/transition\s*:\s*all\b/i.test(css)) warn('transition', 'transition: all (liệt kê thuộc tính cụ thể)');
   if (/outline\s*:\s*(none|0)\b/i.test(css) && !/:focus-visible/.test(css)) warn('focus', 'bỏ outline mà không có kiểu :focus-visible thay thế');
 

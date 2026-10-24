@@ -137,6 +137,58 @@ COMPONENTS = """
     </div>
   </div>
 </section>
+<section class="ds-stack" aria-labelledby="c-web"><h3 class="ds-text-title-sm" id="c-web">Web controls (v0.3): checkbox, radio, tabs, menu, tooltip, dialog, table</h3>
+  <div class="demo-cols">
+    <div class="ds-stack ds-stack--md">
+      <fieldset class="ds-fieldset"><legend>Nhắc lịch qua</legend>
+        <label class="ds-check"><input type="checkbox" checked><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Tin nhắn</span></label>
+        <label class="ds-check"><input type="checkbox"><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Email</span></label>
+        <label class="ds-check"><input type="checkbox" disabled><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Zalo (chưa kết nối)</span></label>
+      </fieldset>
+      <fieldset class="ds-fieldset"><legend>Hình thức khám</legend>
+        <label class="ds-check ds-check--radio"><input type="radio" name="demo-mode" checked><span class="ds-check__box" aria-hidden="true"></span><span>Tại phòng khám</span></label>
+        <label class="ds-check ds-check--radio"><input type="radio" name="demo-mode"><span class="ds-check__box" aria-hidden="true"></span><span>Gọi video</span></label>
+      </fieldset>
+    </div>
+    <div class="ds-stack ds-stack--md">
+      <div class="ds-tabs" role="tablist" aria-label="Ví dụ tab">
+        <button class="ds-tabs__tab" role="tab" type="button" aria-selected="true" aria-controls="demo-tab-1" id="demo-tab-a">Sắp tới</button>
+        <button class="ds-tabs__tab" role="tab" type="button" aria-selected="false" aria-controls="demo-tab-2" id="demo-tab-b" tabindex="-1">Đã khám</button>
+      </div>
+      <div class="ds-tabs__panel" role="tabpanel" id="demo-tab-1" aria-labelledby="demo-tab-a"><p class="ds-text-body-md">2 lịch hẹn trong tuần này.</p></div>
+      <div class="ds-tabs__panel" role="tabpanel" id="demo-tab-2" aria-labelledby="demo-tab-b" hidden><p class="ds-text-body-md">Chưa có lần khám nào.</p></div>
+      <div class="ds-cluster">
+        <div class="ds-menu-anchor">
+          <button class="ds-button ds-button--secondary" type="button" aria-haspopup="menu" aria-expanded="true" aria-controls="demo-menu">Thao tác<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+          <ul class="ds-menu" role="menu" id="demo-menu" style="position: static; margin-top: var(--ds-space-100)">
+            <li role="none"><button class="ds-menu__item" role="menuitem" type="button">Đổi giờ</button></li>
+            <li role="none"><button class="ds-menu__item" role="menuitem" type="button">Thêm người đi cùng</button></li>
+            <li role="separator" class="ds-menu__divider"></li>
+            <li role="none"><button class="ds-menu__item ds-menu__item--danger" role="menuitem" type="button">Huỷ lịch</button></li>
+          </ul>
+        </div>
+        <span class="ds-tooltip-anchor"><button class="ds-icon-button" type="button" aria-label="Thông tin" aria-describedby="demo-tip"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-info"/></svg></button><span class="ds-tooltip" role="tooltip" id="demo-tip">Lịch huỷ trước 2 giờ được hoàn phí</span></span>
+      </div>
+    </div>
+    <div class="ds-dialog ds-dialog--static" role="dialog" aria-labelledby="demo-dialog-title">
+      <div class="ds-dialog__body">
+        <div class="ds-dialog__header"><h4 class="ds-text-title-sm" id="demo-dialog-title">Huỷ lịch khám 09:30?</h4><button class="ds-icon-button" type="button" aria-label="Đóng"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-x"/></svg></button></div>
+        <p class="ds-text-body-md ds-text-secondary">Bạn có thể đặt lại sau. Phí đặt lịch được hoàn trong 3 ngày làm việc.</p>
+        <div class="ds-dialog__actions"><button class="ds-button ds-button--secondary" type="button">Giữ lịch</button><button class="ds-button ds-button--danger" type="button">Huỷ lịch</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="ds-table-wrap">
+    <table class="ds-table">
+      <caption>Lịch sử thanh toán</caption>
+      <thead><tr><th scope="col">Ngày</th><th scope="col">Dịch vụ</th><th scope="col" class="ds-table__num">Số tiền</th></tr></thead>
+      <tbody>
+        <tr><td class="ds-tabular">12/10/2026</td><td>Khám tổng quát</td><td class="ds-table__num">350.000 ₫</td></tr>
+        <tr><td class="ds-tabular">28/09/2026</td><td>Xét nghiệm máu</td><td class="ds-table__num">1.240.000 ₫</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 """
 
 

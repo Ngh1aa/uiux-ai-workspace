@@ -59,11 +59,14 @@
   <symbol id="ds-i-coffee" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v3M12 3.5v3"/></symbol>
   <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
   <symbol id="ds-i-bus" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="13.5" rx="2.5"/><path d="M5 11h14M8 20v-2.5M16 20v-2.5M8.5 14.5h.01M15.5 14.5h.01"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
 </svg>
 <main class="lab">
   <header class="lab__intro ds-stack ds-stack--sm">
     <div class="ds-split">
-      <p class="ds-text-label-sm ds-text-secondary">Design system · ví dụ tham chiếu · dữ liệu giả định</p>
+      <p class="ds-text-label-sm ds-text-secondary">Ví dụ tham chiếu của design system, dữ liệu giả định</p>
       <button class="ds-button ds-button--secondary ds-button--sm" id="theme" type="button" aria-pressed="false"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg><span>Giao diện tối</span></button>
     </div>
     <h1 class="ds-text-title-lg">Ba nhiệm vụ, một hệ thống</h1>
@@ -96,7 +99,7 @@
             <p class="ticket__meta ds-text-body-md"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-pin"/></svg>Phòng khám An Bình</p>
             <p class="ticket__meta ds-text-body-md"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-user"/></svg>Người khám: Nguyễn Minh Anh</p>
           </div>
-          <button class="ds-button ds-button--primary ds-button--block primary" type="button" data-message="Phiếu CF-0001 · Đã xác nhận · Nguyễn Minh Anh · 09:30, 20/10/2026">Xem phiếu khám<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></button>
+          <button class="ds-button ds-button--primary ds-button--block primary" type="button" data-message="Phiếu CF-0001 đã xác nhận cho Nguyễn Minh Anh, 09:30 ngày 20/10/2026">Xem phiếu khám<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></button>
         </section>
 
         <section class="ds-stack ds-stack--sm" aria-labelledby="prep-title">
@@ -166,7 +169,7 @@
           <section class="ds-card ds-card--flat" aria-label="Lịch hẹn đang chọn">
             <p class="ds-text-label-sm ds-text-secondary">Bạn đang chọn</p>
             <p class="ds-text-title-sm">Khám tổng quát</p>
-            <p class="ticket__meta ds-text-body-md ds-tabular"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>09:30 · 20/10/2026</p>
+            <p class="ticket__meta ds-text-body-md ds-tabular"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-clock"/></svg>09:30, 20/10/2026</p>
             <p class="ticket__meta ds-text-body-md"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-pin"/></svg>Phòng khám An Bình</p>
           </section>
           <button class="ds-button ds-button--primary ds-button--lg ds-button--block" type="submit" id="next">Tiếp tục</button>
@@ -219,9 +222,9 @@ function render() {
     card.className = 'ds-card appointment';
     card.innerHTML = `<div class="ds-split"><p class="ds-text-title-md ds-tabular">${a.time}</p>
         <span class="ds-badge ds-badge--${a.tone}">${icon(a.icon)}${a.status}</span></div>
-      <div><h3 class="ds-text-title-sm">${a.name}</h3><p class="ds-text-body-sm ds-text-secondary ds-tabular">${a.date} · Nguyễn Minh Anh</p></div>
+      <div><h3 class="ds-text-title-sm">${a.name}</h3><p class="ds-text-body-sm ds-text-secondary ds-tabular">${a.date}, Nguyễn Minh Anh</p></div>
       <button class="ds-button ds-button--tertiary ds-button--sm" style="align-self: flex-start; margin-left: calc(-1 * var(--ds-button-padding-x-sm))" type="button"
-        data-message="${a.name} · ${a.date} · ${a.status}">Xem chi tiết${icon('chevron-right', 'ds-icon--sm')}</button>`;
+        data-message="${a.name}, ${a.date}: ${a.status}">Xem chi tiết${icon('chevron-right', 'ds-icon--sm')}</button>`;
     results.append(card);
   }
 }
