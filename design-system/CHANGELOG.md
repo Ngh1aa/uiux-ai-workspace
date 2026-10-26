@@ -3,6 +3,22 @@
 Semantic versioning on the public surface (token paths, class names, state attributes, contracts).
 See [docs/governance.md](docs/governance.md).
 
+## 0.4.0 (2026-10-26)
+
+### Added
+- Pattern layer `patterns/`: 30 composed blocks in `patterns.css` (hero cards, KPI and charts,
+  media and content cards, timeline, stepper, checklist, agenda, pricing, comparison, proof band,
+  empty, block error, progress, image placeholders). Gallery `patterns/index.html`, contracts in
+  `patterns/README.md`. Linted like `components.css`; checked by `taste-check` in CI at 320–1440 px.
+- Primitive `color.violet` scale (hue 300, OKLCH-derived like the other scales).
+- Semantic groups `dataviz` (categorical 1–6, sequential 1–5, diverging, grid, axis, highlight,
+  muted) and `media` (placeholder background, pattern, ink; scrim ink), both modes.
+- Contrast pairs for every dataviz role on page and raised surfaces, and for placeholder ink.
+
+### Changed
+- `validate.py` CSS lint accepts project hook variables used with a fallback
+  (`var(--app-font-display, …)`); a hook without a fallback is still an error.
+
 ## 0.3.0 (2026-10-24)
 
 ### Added

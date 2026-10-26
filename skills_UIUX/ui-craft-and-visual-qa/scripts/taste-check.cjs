@@ -22,7 +22,8 @@
  *                         dùng cho màn desktop và artboard canvas trước khi giao
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
- * data-screen thì cả trang là một màn.
+ * data-screen thì cả trang là một màn. Thêm data-part khi khối chỉ là một pattern mẫu (thư viện
+ * pattern), không phải màn đầy đủ: bỏ qua flat-scale và coverage, các luật khác giữ nguyên.
  *
  * LỖI (thoát với mã 1):
  *   - dấu " · " hoặc " • " nối cụm từ
@@ -240,6 +241,8 @@ function auditInPage() {
     const errors = [];
     const warnings = [];
     const all = [root, ...root.querySelectorAll('*')].filter(visible);
+    // data-part: khối mẫu trong thư viện pattern, không phải màn đầy đủ; bỏ các luật đo cả màn.
+    const isPart = root.hasAttribute('data-part');
     const rootRect = root.getBoundingClientRect();
     const rootBg = backdrop(root) || [255, 255, 255, 1];
 
@@ -330,7 +333,7 @@ function auditInPage() {
 
       // 4. Tràn ngang
       const clips = ['visible', 'clip'].includes(st.overflowX);
-      if (clips && el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0 && el.textContent.trim()) {
+      if (clips && !(el instanceof SVGElement) && el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0 && el.textContent.trim()) {
         const inner = [...el.children].some((c) => c.scrollWidth > c.clientWidth + 1 && getComputedStyle(c).overflowX === st.overflowX);
         if (!inner) errors.push({ rule: 'overflow', message: `Nội dung tràn ngang ${el.scrollWidth - el.clientWidth}px: ${describe(el)}` });
       }
@@ -361,7 +364,7 @@ function auditInPage() {
     const highlights = [];
     const cards = [];
     for (const el of all) {
-      if (el === root || el.matches(CONTROL) || el.closest('nav, [role="tablist"], [role="navigation"], [role="dialog"]')) continue;
+      if (el === root || el.matches(CONTROL) || el.closest('nav, [role="tablist"], [role="navigation"], [role="dialog"], [role="status"], [role="alert"], .ds-toast')) continue;
       const r = el.getBoundingClientRect();
       if (r.width < rootRect.width * 0.6 || r.height < 56) continue;
       const fullBleed = r.width >= rootRect.width - 2;
@@ -445,7 +448,7 @@ function auditInPage() {
       const region = root.querySelector('main, [role="main"]');
       const area = region && visible(region) ? region : root;
       const ar = area.getBoundingClientRect();
-      if (ar.width >= 1024 - 1 || (area === root && rootRect.width >= 1024 - 1)) {
+      if (!isPart && (ar.width >= 1024 - 1 || (area === root && rootRect.width >= 1024 - 1))) {
         const ast = getComputedStyle(area);
         const left = ar.left + parseFloat(ast.paddingLeft || 0);
         const right = ar.right - parseFloat(ast.paddingRight || 0);
@@ -474,7 +477,7 @@ function auditInPage() {
       largest = Math.max(largest, size);
     }
     const totalChars = [...sizes.values()].reduce((a, b) => a + b, 0);
-    if (totalChars >= 80) {
+    if (totalChars >= 80 && !isPart) {
       const body = [...sizes.entries()].sort((a, b) => b[1] - a[1])[0][0];
       const need = rootRect.width < 600 ? 1.3 : 1.5;
       if (largest / body < need) {

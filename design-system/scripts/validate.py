@@ -29,6 +29,8 @@ from dslib import (ROOT, TYPES, TokenError, alias_target, color_hex, contrast,  
 HEX = re.compile(r"^#[0-9a-f]{6}$")
 COLOR_LITERAL = re.compile(r"#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklch|oklab|lab|lch|color)\(", re.I)
 VAR_USE = re.compile(r"var\((--[a-z0-9-]+)")
+# A hook variable with a fallback (var(--app-x, default)) is an extension point the project may set.
+VAR_HOOK = re.compile(r"var\((--[a-z0-9-]+)\s*,")
 
 
 def check_shape(path: str, ttype: str, v, errors: list[str]) -> None:
@@ -161,12 +163,13 @@ def main() -> int:
             code = re.sub(r"/\*.*?\*/", "", line)
             if COLOR_LITERAL.search(code):
                 errors.append(f"{rel}:{lineno}: color literal; use a semantic token")
+            hooks = set(VAR_HOOK.findall(code))
             for var in VAR_USE.findall(code):
                 if var.startswith(f"--{cfg['prefix']}-color-"):
                     errors.append(f"{rel}:{lineno}: uses primitive palette {var}; use a semantic role")
                 elif var.startswith(f"--{cfg['prefix']}-") and var not in defined:
                     errors.append(f"{rel}:{lineno}: {var} is not defined in {cfg['outputs']['css']}")
-                elif not var.startswith(f"--{cfg['prefix']}-") and var not in local_defs:
+                elif not var.startswith(f"--{cfg['prefix']}-") and var not in local_defs and var not in hooks:
                     errors.append(f"{rel}:{lineno}: {var} is neither a token nor defined locally")
 
     # 7. generated up to date

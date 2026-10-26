@@ -214,5 +214,79 @@
         "$value": "{color.neutral.300}"
       }
     }
+  },
+  "dataviz": {
+    "$type": "color",
+    "$description": "Chart marks. Categorical series in fixed order; never use them for status. Marks need 3:1 against the surface they sit on (WCAG 1.4.11).",
+    "categorical-1": {
+      "$value": "{color.jade.400}"
+    },
+    "categorical-2": {
+      "$value": "{color.blue.400}"
+    },
+    "categorical-3": {
+      "$value": "{color.amber.400}"
+    },
+    "categorical-4": {
+      "$value": "{color.violet.400}"
+    },
+    "categorical-5": {
+      "$value": "{color.red.400}"
+    },
+    "categorical-6": {
+      "$value": "{color.neutral.400}"
+    },
+    "sequential-1": {
+      "$value": "{color.jade.900}"
+    },
+    "sequential-2": {
+      "$value": "{color.jade.700}"
+    },
+    "sequential-3": {
+      "$value": "{color.jade.500}"
+    },
+    "sequential-4": {
+      "$value": "{color.jade.300}"
+    },
+    "sequential-5": {
+      "$value": "{color.jade.100}"
+    },
+    "diverging-negative": {
+      "$value": "{color.red.400}"
+    },
+    "diverging-neutral": {
+      "$value": "{color.neutral.600}"
+    },
+    "diverging-positive": {
+      "$value": "{color.blue.400}"
+    },
+    "grid": {
+      "$value": "{color.neutral.800}"
+    },
+    "axis": {
+      "$value": "{color.neutral.300}"
+    },
+    "highlight": {
+      "$value": "{color.jade.300}"
+    },
+    "muted": {
+      "$value": "{color.neutral.700}"
+    }
+  },
+  "media": {
+    "$type": "color",
+    "$description": "Image placeholders and media frames. A placeholder states what photo is needed; it is never left as an anonymous grey box.",
+    "placeholder-bg": {
+      "$value": "{color.jade.950}"
+    },
+    "placeholder-pattern": {
+      "$value": "{color.jade.900}"
+    },
+    "placeholder-ink": {
+      "$value": "{color.jade.200}"
+    },
+    "scrim-ink": {
+      "$value": "{color.neutral.0}"
+    }
   }
 }

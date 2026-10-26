@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "prefix": "ds",
   "base": [
     "tokens/primitive/color.json",
@@ -41,7 +41,9 @@
       "spacing",
       "shape",
       "elevation",
-      "motion"
+      "motion",
+      "dataviz",
+      "media"
     ],
     "component": [
       "button",
@@ -59,6 +61,7 @@
     "docs": "docs/index.html"
   },
   "lint_css": [
-    "components/components.css"
+    "components/components.css",
+    "patterns/patterns.css"
   ]
 }
