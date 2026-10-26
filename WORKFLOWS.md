@@ -150,7 +150,8 @@ Như **L**, cộng thêm:
   [mẫu theo loại màn](design-system/starter/PATTERNS.md), nhưng mang thương hiệu và dấu ấn của dự án.
 - [`taste-check.cjs`](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#soát-theo-gu-taste-checkcjs)
   không còn lỗi ở cả 390 px và 1280 px (website thêm 768 và 1440). Không chạy được thì làm theo
-  mục "Khi không chạy được taste-check" trong [`START-HERE.md`](START-HERE.md) và ghi rõ.
+  mục "Khi không chạy được taste-check" trong [`START-HERE.md`](START-HERE.md) và ghi rõ. Màn desktop
+  và artboard canvas đạt thêm `--layout strict` (không còn màn trống, nội dung dồn một bên, card mỏng).
 - Đã **nhìn ảnh render thật**, không chỉ đọc code.
 - Đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
 - Đã bấm thử tác vụ chính và nhánh quay lại/sửa; dữ liệu đầu vào, tóm tắt và xác nhận khớp nhau.

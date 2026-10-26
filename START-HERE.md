@@ -24,7 +24,8 @@ giọng điệu, tham khảo, dấu ấn riêng.
 đầu. Brief của khách thắng `TASTE.md` ở những chỗ hai bên khác nhau.
 
 Từ cỡ S trở lên, đọc thêm [`CRAFT.md`](CRAFT.md): số liệu cốt lõi, danh sách cấm các mặc định làm
-thiết kế trông như AI làm, và chính sách ảnh, icon.
+thiết kế trông như AI làm, và chính sách ảnh, icon. Màn desktop hoặc nhiều màn trên canvas thì đọc thêm
+[`foundations/layout-and-density.md`](foundations/layout-and-density.md).
 
 ## 2. Xác định cỡ việc
 
@@ -60,7 +61,9 @@ trong skill chỉ mở khi `SKILL.md` hoặc `WORKFLOWS.md` bảo cần.
   ```
 
   Website thì thêm khổ máy tính bảng, màn lớn và phép thử phóng to (tràn ngang ở 320 px):
-  `--width 390 --width 768 --width 1280 --width 1440 --reflow`.
+  `--width 390 --width 768 --width 1280 --width 1440 --reflow`. Màn app desktop và artboard canvas
+  thêm `--height 900 --layout strict` để khoảng trống thừa, nội dung dồn một bên, thang chữ phẳng và
+  card nổi bật mỏng thành lỗi (xem [`layout-and-density.md`](foundations/layout-and-density.md)).
 
   Script còn bắt ảnh, font, CSS tải lỗi, và chạy axe-core (soát khả năng tiếp cận) nếu có cài cùng
   chỗ với Playwright (`npm install axe-core@4`). Dòng `axe:` cuối kết quả cho biết axe có chạy
@@ -108,6 +111,7 @@ mới chỉ soát tĩnh.
 | `BRAND-BRIEF.template.md` | Bước 0: tiếp nhận thương hiệu khách hàng |
 | `TASTE.md` | Gu thiết kế và các lỗi không được lặp lại |
 | `CRAFT.md` | Số liệu cốt lõi, danh sách cấm, kế hoạch thị giác, ảnh và icon |
+| `foundations/` | Kiến thức nền: bố cục, lưới, mật độ (mở theo việc, không đọc hết) |
 | `WORKFLOWS.md` | Quy trình và danh sách skill theo cỡ việc (nguồn định tuyến duy nhất) |
 | `skills_UIUX/` | 40 skill UI/UX và script soát chất lượng |
 | `design-system/` | Token DTCG, 25 component CSS, font, ví dụ app, `scripts/check-brand.py` |

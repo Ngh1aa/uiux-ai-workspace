@@ -102,6 +102,17 @@ Mẫu chạy được: [`web-states.html`](web-states.html).
 - **Rỗng vì đã xong:** báo tích cực ("Không còn yêu cầu chờ duyệt"), không bắt làm gì.
 - Giờ cập nhật chung của trang đặt ở góc trên.
 
+## Web: khung app desktop
+
+Mẫu chạy được: [`desktop.html`](desktop.html). Cách chia vùng chi tiết:
+[`layout-and-density.md`](../../foundations/layout-and-density.md) mục 3.
+
+- Rail icon 72 px hoặc sidebar, topbar 64 px có breadcrumb, nội dung trên lưới 12 cột.
+- Không để một cột hẹp giữa khung rộng: form 8 + cột phụ 4, bảng 8 + chi tiết 4, cài đặt 3 + 9.
+- Các panel cùng hàng cao bằng nhau và giãn hết chiều cao còn lại; nội dung phủ phần lớn panel.
+- Card nổi bật đủ 3 tầng: nhãn, số chính, ngữ cảnh (tiến độ, so sánh), cộng dải số phụ nếu có.
+- Soát bằng `--layout strict` ở 1024, 1280 và 1440.
+
 ## Web: trang quản trị
 
 - Thanh bên trái cho điều hướng, trang chính rộng tối đa khoảng 1180px.

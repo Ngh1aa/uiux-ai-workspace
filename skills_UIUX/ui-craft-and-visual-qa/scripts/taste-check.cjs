@@ -18,6 +18,8 @@
  *   --reflow              soát thêm ở 320 px (tương đương phóng to 400% trên 1280 px, WCAG 1.4.10):
  *                         chỉ bắt tràn ngang. Dùng cho website, không dùng cho trang có khung điện thoại cố định
  *   --no-axe              bỏ axe-core dù có cài
+ *   --layout strict       coi các cảnh báo bố cục (void, coverage, flat-scale, thin-highlight) là lỗi;
+ *                         dùng cho màn desktop và artboard canvas trước khi giao
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
  * data-screen thì cả trang là một màn.
@@ -39,6 +41,11 @@
  *   - dòng cuối của một đoạn chỉ còn một chữ
  *   - chữ cách mép màn dưới 12 px trên màn hẹp (≤ 600 px)
  *   - axe-core: vi phạm mức moderate hoặc minor
+ *   - void: khoảng trống dọc lớn (màn: > 160 px hoặc 18% chiều cao; trang: > 320 px hoặc nửa khung nhìn).
+ *     Phần tử có data-whitespace được coi là khoảng trống có chủ đích
+ *   - coverage: màn rộng ≥ 1024 px mà nội dung dồn một bên, bỏ trống > 28% bề ngang bên phải
+ *   - flat-scale: chữ lớn nhất chưa gấp 1,5 lần chữ thân (màn hẹp dưới 600 px: 1,3 lần)
+ *   - thin-highlight: card nổi bật dưới 3 dòng chữ hoặc chỉ một cỡ chữ, hoặc nội dung phủ dưới nửa card
  *
  * axe-core là tuỳ chọn: cài cùng chỗ với Playwright (npm install axe-core@4). Không có thì kết
  * quả ghi "axe: chưa chạy"; khi giao phải nói rõ phần khả năng tiếp cận chưa được soát tự động.
@@ -59,7 +66,7 @@ const TYPES = {
 };
 
 function parseArgs(argv) {
-  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '', format: 'png', name: '', reflow: false, axe: true };
+  const opts = { pages: [], root: process.cwd(), widths: [], height: 844, theme: 'both', screenshot: '', json: '', format: 'png', name: '', reflow: false, axe: true, layout: 'warn' };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     const next = () => {
@@ -71,6 +78,7 @@ function parseArgs(argv) {
     else if (arg === '--width') opts.widths.push(Number(next()));
     else if (arg === '--reflow') opts.reflow = true;
     else if (arg === '--no-axe') opts.axe = false;
+    else if (arg === '--layout') opts.layout = next();
     else if (arg === '--height') opts.height = Number(next());
     else if (arg === '--theme') opts.theme = next();
     else if (arg === '--screenshot') opts.screenshot = path.resolve(next());
@@ -84,6 +92,7 @@ function parseArgs(argv) {
   if (!opts.widths.length) opts.widths = [390, 1280];
   if (opts.widths.some((w) => !Number.isFinite(w) || w < 200)) throw new Error('--width phải là số ≥ 200');
   if (!['png', 'jpeg'].includes(opts.format)) throw new Error('--format phải là png hoặc jpeg');
+  if (!['warn', 'strict'].includes(opts.layout)) throw new Error('--layout phải là warn hoặc strict');
   if (!['light', 'dark', 'both'].includes(opts.theme)) throw new Error('--theme phải là light, dark hoặc both');
   return opts;
 }
@@ -297,6 +306,8 @@ function auditInPage() {
           const box = el.getBoundingClientRect();
           for (let n = el.parentElement; n && n !== root.parentElement; n = n.parentElement) {
             const ns = getComputedStyle(n);
+            // Khung cuộn ngang (bảng rộng trên màn hẹp) cho người dùng cuộn tới phần còn lại: không phải bị cắt.
+            if (['auto', 'scroll'].includes(ns.overflowX)) break;
             if (!['hidden', 'clip'].includes(ns.overflowX)) continue;
             const nr = n.getBoundingClientRect();
             if (nr.width <= 1) break;
@@ -372,6 +383,122 @@ function auditInPage() {
     if (radii.length > 1) {
       const sample = radii.map((rad) => `${rad}px (${describe(topCards.find((c) => c.radius === rad).el)})`);
       warnings.push({ rule: 'radius', message: `Card có ${radii.length} bán kính bo góc khác nhau: ${sample.join('; ')}` });
+    }
+
+    // 8. Bố cục: khoảng trống thừa, độ phủ ngang, thang chữ phẳng, card nổi bật quá mỏng.
+    // Hộp chữ lấy theo dòng chữ thật (không theo khối), để đoạn ngắn trong cột rộng vẫn lộ khoảng trống.
+    const MEDIA = 'img, svg, video, canvas, iframe, input, select, textarea, button, progress, meter, [role="img"]';
+    const textRects = (el) => {
+      const rects = [];
+      for (const node of el.childNodes) {
+        if (node.nodeType !== 3 || !node.textContent.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        for (const rect of range.getClientRects()) if (rect.width >= 1 && rect.height >= 1) rects.push(rect);
+      }
+      return rects;
+    };
+    const massOf = (el) => {
+      if (el === root) return false;
+      if (el.hasAttribute('data-whitespace')) return true;
+      const st = getComputedStyle(el);
+      if (st.backgroundImage && st.backgroundImage !== 'none') return true;
+      const own = toRgba(st.backgroundColor);
+      if (own[3] >= 0.9 && ratio(own, rootBg) >= 1.5) return true;
+      // Khối hình không chữ (thanh tiến độ, dòng khung xương, vạch biểu đồ) là nội dung nhìn thấy được.
+      return own[3] > 0.05 && !el.children.length && !el.textContent.trim();
+    };
+    const content = [];
+    for (const el of all) {
+      if (el === root) continue;
+      const svgChild = el.closest('svg') && el.closest('svg') !== el;
+      if (svgChild) continue;
+      if (el.matches(MEDIA) || massOf(el)) content.push(el.getBoundingClientRect());
+      else if (ownText(el)) content.push(...textRects(el));
+    }
+    const rootStyle = getComputedStyle(root);
+    const inner = {
+      top: rootRect.top + parseFloat(rootStyle.paddingTop || 0),
+      bottom: rootRect.bottom - parseFloat(rootStyle.paddingBottom || 0),
+    };
+    if (content.length) {
+      // Khoảng trống dọc lớn nhất giữa các vùng có nội dung, tính cả phần đáy màn.
+      const spans = content
+        .map((r) => [Math.max(r.top, inner.top), Math.min(r.bottom, inner.bottom)])
+        .filter(([a, b]) => b > a)
+        .sort((a, b) => a[0] - b[0]);
+      let reach = spans.length ? spans[0][0] : inner.top;
+      let gap = { size: 0, at: 0 };
+      for (const [a, b] of spans) {
+        if (a - reach > gap.size) gap = { size: a - reach, at: reach };
+        reach = Math.max(reach, b);
+      }
+      if (inner.bottom - reach > gap.size) gap = { size: inner.bottom - reach, at: reach, bottom: true };
+      const isScreen = root !== document.body;
+      const limit = isScreen ? Math.max(160, rootRect.height * 0.18) : Math.max(320, window.innerHeight * 0.5);
+      if (gap.size > limit) {
+        const where = gap.bottom ? 'ở đáy màn' : `cách đầu màn ${Math.round(gap.at - rootRect.top)}px`;
+        warnings.push({ rule: 'void', message: `Khoảng trống ${Math.round(gap.size)}px ${where} (ngưỡng ${Math.round(limit)}px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace` });
+      }
+
+      // Độ phủ ngang trên màn rộng: nội dung dồn một bên, bên kia bỏ trống.
+      const region = root.querySelector('main, [role="main"]');
+      const area = region && visible(region) ? region : root;
+      const ar = area.getBoundingClientRect();
+      if (ar.width >= 1024 - 1 || (area === root && rootRect.width >= 1024 - 1)) {
+        const ast = getComputedStyle(area);
+        const left = ar.left + parseFloat(ast.paddingLeft || 0);
+        const right = ar.right - parseFloat(ast.paddingRight || 0);
+        const inside = content.filter((r) => r.right > left && r.left < right && r.width < (right - left) + 2);
+        if (inside.length) {
+          const minLeft = Math.min(...inside.map((r) => r.left));
+          const maxRight = Math.max(...inside.map((r) => r.right));
+          const width = right - left;
+          const rightGap = right - maxRight;
+          const leftGap = minLeft - left;
+          if (rightGap > width * 0.28 && rightGap > 280 && rightGap > leftGap * 2 + 120) {
+            warnings.push({ rule: 'coverage', message: `Nội dung chỉ phủ ${Math.round(((maxRight - minLeft) / width) * 100)}% bề ngang, bỏ trống ${Math.round(rightGap)}px bên phải. Dùng lưới nhiều cột hoặc thêm cột phụ` });
+          }
+        }
+      }
+    }
+
+    // Thang chữ phẳng: chữ lớn nhất không đủ khác chữ thân.
+    const sizes = new Map();
+    let largest = 0;
+    for (const el of all) {
+      const text = ownText(el);
+      if (!text) continue;
+      const size = Math.round(parseFloat(getComputedStyle(el).fontSize));
+      sizes.set(size, (sizes.get(size) || 0) + text.length);
+      largest = Math.max(largest, size);
+    }
+    const totalChars = [...sizes.values()].reduce((a, b) => a + b, 0);
+    if (totalChars >= 80) {
+      const body = [...sizes.entries()].sort((a, b) => b[1] - a[1])[0][0];
+      const need = rootRect.width < 600 ? 1.3 : 1.5;
+      if (largest / body < need) {
+        warnings.push({ rule: 'flat-scale', message: `Thang chữ phẳng: chữ lớn nhất ${largest}px chỉ gấp ${(largest / body).toFixed(2)} lần chữ thân ${body}px (nên ≥ ${String(need).replace('.', ',')}). Tạo một điểm nhìn bằng cỡ chữ` });
+      }
+    }
+
+    // Card nổi bật quá mỏng: cần ít nhất 3 dòng thông tin ở 2 cỡ chữ, và nội dung phủ phần lớn card.
+    for (const card of highlights) {
+      const texts = [card, ...card.querySelectorAll('*')].filter((el) => visible(el) && ownText(el));
+      const levels = new Set(texts.map((el) => Math.round(parseFloat(getComputedStyle(el).fontSize))));
+      const cr = card.getBoundingClientRect();
+      const cs = getComputedStyle(card);
+      const innerH = cr.height - parseFloat(cs.paddingTop || 0) - parseFloat(cs.paddingBottom || 0);
+      const parts = [...card.querySelectorAll('*')].filter((el) => visible(el) && (ownText(el) || el.matches(MEDIA)));
+      const rects = parts.flatMap((el) => (el.matches(MEDIA) ? [el.getBoundingClientRect()] : textRects(el)));
+      const top = rects.length ? Math.min(...rects.map((r) => r.top)) : cr.top;
+      const bottom = rects.length ? Math.max(...rects.map((r) => r.bottom)) : cr.top;
+      const fill = innerH > 0 ? (bottom - top) / innerH : 1;
+      if (texts.length < 3 || levels.size < 2) {
+        warnings.push({ rule: 'thin-highlight', message: `Card nổi bật chỉ có ${texts.length} dòng chữ ở ${levels.size} cỡ: ${describe(card)}. Thêm tầng ngữ cảnh (so sánh, tiến độ, hạn) theo patterns/` });
+      } else if (fill < 0.5 && cr.height > 160) {
+        warnings.push({ rule: 'thin-highlight', message: `Nội dung chỉ phủ ${Math.round(fill * 100)}% chiều cao card nổi bật: ${describe(card)}` });
+      }
     }
 
     // 7. Số nhóm màu
@@ -513,6 +640,14 @@ async function main() {
           await tab.goto(url, { waitUntil: 'networkidle' });
           await tab.evaluate(() => document.fonts && document.fonts.ready);
           let screens = await tab.evaluate(auditInPage);
+          if (opts.layout === 'strict') {
+            const LAYOUT = ['void', 'coverage', 'flat-scale', 'thin-highlight'];
+            screens = screens.map((sc) => ({
+              ...sc,
+              errors: [...sc.errors, ...sc.warnings.filter((w) => LAYOUT.includes(w.rule))],
+              warnings: sc.warnings.filter((w) => !LAYOUT.includes(w.rule)),
+            }));
+          }
           // Runtime may replace an image's src. An aborted old request is not a broken
           // final image; keep it visible as a diagnostic, and still fail unresolved images.
           for (const imageUrl of new Set(cancelledImages)) {
