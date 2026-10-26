@@ -3,6 +3,13 @@
 Semantic versioning on the public surface (token paths, class names, state attributes, contracts).
 See [docs/governance.md](docs/governance.md).
 
+## 0.4.1 (2026-10-26)
+
+### Added
+- `scripts/oklch-scale.py`: generates an 11-step scale (50–950) for any hue in OKLCH, reducing
+  chroma per step until it fits sRGB; prints hex or a DTCG colour group. Tests in
+  `tests/test_oklch_scale.py`. Guide: `foundations/color-oklch.md`.
+
 ## 0.4.0 (2026-10-26)
 
 ### Added

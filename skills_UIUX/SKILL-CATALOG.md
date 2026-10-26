@@ -23,6 +23,8 @@ thư mục có `SKILL.md`.
 
 | Skill | Dùng khi |
 |---|---|
+| `design-thinking-lite` | Chốt vấn đề bằng câu "Làm sao để", tạo 3+ hướng khác bản chất, chọn bằng tiêu chí ghi trước |
+| `research-lite` | Nghiên cứu gọn: bàn giấy, phỏng vấn ngắn, thử 5 người, khảo sát nhỏ; gắn nhãn mức bằng chứng |
 | `ux-structure-and-flow-design` | Việc chính, luồng, kiểm kê màn × trạng thái, wireframe trước khi tô màu |
 | `audience-intent-and-top-tasks` | Ai vào, vì sao, cần làm gì |
 | `information-architecture` | Điều hướng, nhãn, sơ đồ trang |
@@ -92,8 +94,9 @@ con được liên kết từ đó. Phần định tuyến dùng chung nằm tro
 
 ## Đã gỡ khỏi `main`
 
-Các skill nghiên cứu người dùng, chiến lược sản phẩm, đo lường sau ra mắt, SEO, vận hành,
+Các skill nghiên cứu người dùng đầy đủ, chiến lược sản phẩm, đo lường sau ra mắt, SEO, vận hành,
 kiểm thử code, quản trị thư viện và bộ chạy tự động cũ (flows, profiles, prompts, vendor) đã được
 gỡ vì không dùng khi thiết kế qua chat. Bản đầy đủ ở nhánh `archive/truoc-khi-gon-lan-2`. Nếu một
 skill còn nhắc tên một skill đã gỡ (ví dụ "dùng `seo-strategy` cho việc đó"), hiểu đó là việc
-nằm ngoài phạm vi repo, không đi tìm skill đó.
+nằm ngoài phạm vi repo, không đi tìm skill đó. Phần nghiên cứu cần cho thiết kế qua chat đã quay lại
+dưới dạng gọn trong `research-lite`.
