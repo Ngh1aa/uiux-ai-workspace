@@ -321,7 +321,7 @@
   --ds-dataviz-grid: var(--ds-color-neutral-200);
   --ds-dataviz-axis: var(--ds-color-neutral-700);
   --ds-dataviz-highlight: var(--ds-color-jade-800);
-  --ds-dataviz-muted: var(--ds-color-neutral-300);
+  --ds-dataviz-muted: var(--ds-color-neutral-600);
   --ds-media-placeholder-bg: var(--ds-color-jade-50);
   --ds-media-placeholder-pattern: var(--ds-color-jade-100);
   --ds-media-placeholder-ink: var(--ds-color-jade-800);
@@ -406,7 +406,7 @@
     --ds-dataviz-grid: var(--ds-color-neutral-800);
     --ds-dataviz-axis: var(--ds-color-neutral-300);
     --ds-dataviz-highlight: var(--ds-color-jade-300);
-    --ds-dataviz-muted: var(--ds-color-neutral-700);
+    --ds-dataviz-muted: var(--ds-color-neutral-500);
     --ds-media-placeholder-bg: var(--ds-color-jade-950);
     --ds-media-placeholder-pattern: var(--ds-color-jade-900);
     --ds-media-placeholder-ink: var(--ds-color-jade-200);
@@ -491,7 +491,7 @@
   --ds-dataviz-grid: var(--ds-color-neutral-800);
   --ds-dataviz-axis: var(--ds-color-neutral-300);
   --ds-dataviz-highlight: var(--ds-color-jade-300);
-  --ds-dataviz-muted: var(--ds-color-neutral-700);
+  --ds-dataviz-muted: var(--ds-color-neutral-500);
   --ds-media-placeholder-bg: var(--ds-color-jade-950);
   --ds-media-placeholder-pattern: var(--ds-color-jade-900);
   --ds-media-placeholder-ink: var(--ds-color-jade-200);
