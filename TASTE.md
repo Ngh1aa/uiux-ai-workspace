@@ -66,3 +66,14 @@ Mặc định soát ở 390 px và 1280 px, sáng và tối. Màn desktop và ar
 - [ ] Đã mở ảnh chụp ra nhìn từng màn ở cỡ điện thoại và máy tính, cả sáng và tối nếu có.
 - [ ] Màu, font, bo góc đến từ brand brief của khách, không phải giá trị mặc định của starter kit.
 - [ ] Che tên sản phẩm vẫn nhận ra ngành (xem `design-system/starter/SIGNATURE.md`).
+
+## Vòng học của gu
+
+Gu trong file này đến từ lỗi có thật, không từ danh sách chung. Mỗi lần chủ repo, khách hoặc người duyệt
+độc lập bắt được một lỗi mà `taste-check` và rubric đều bỏ qua:
+
+1. Ghi một dòng vào [`TASTE-LOG.md`](TASTE-LOG.md): ngày, dự án, ảnh hoặc màn, điều thấy, quy tắc rút ra.
+2. Lỗi lặp lại từ hai dự án trở lên thì đưa quy tắc lên file này, viết sao cho nhìn ảnh là kiểm được.
+3. Quy tắc đo được bằng DOM (khoảng trống, độ phủ, số chữ, khoảng cách) thì mở việc thêm vào
+   `taste-check.cjs`, kèm một test tái hiện lỗi. Khi checker đã bắt, ghi tên cảnh báo vào dòng log.
+4. Quy tắc không còn đúng thì xoá ở đây và ghi lý do vào log, không để quy tắc chết nằm lại.
