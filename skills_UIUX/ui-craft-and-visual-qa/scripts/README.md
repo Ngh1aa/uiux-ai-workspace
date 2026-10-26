@@ -10,6 +10,10 @@ Mỗi phần tử có `data-screen="Tên màn"` được soát như một màn r
   vi phạm axe-core mức serious/critical (khi có cài axe-core), tràn ngang ở 320 px (với `--reflow`).
 - **Cảnh báo:** card có nhiều bán kính bo góc, hơn 3 nhóm màu, vùng chạm dưới 44×44 px, chữ bị cắt
   bằng "…", dòng cuối chỉ còn một chữ, chữ sát mép màn hẹp, heading/nội dung ngắn xuống dòng cần review.
+- **Cảnh báo bố cục** (thành lỗi khi thêm `--layout strict`): `void` khoảng trống dọc lớn, `coverage`
+  nội dung dồn một bên trên màn rộng, `flat-scale` thang chữ phẳng, `thin-highlight` card nổi bật quá
+  mỏng. Ngưỡng và cách sửa: [`layout-and-density.md`](../../../foundations/layout-and-density.md).
+  Vùng trống có chủ đích đánh dấu `data-whitespace`.
 
 ```bash
 node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs design-system/starter/mobile.html --screenshot qa/
@@ -22,7 +26,8 @@ thoại cố định. axe-core chạy khi tìm thấy (`npm install axe-core@4` 
 `--no-axe` để tắt; kết quả luôn ghi axe đã chạy hay chưa.
 
 Tuỳ chọn: `--root` (thư mục phục vụ file, mặc định thư mục hiện tại), `--width` (lặp được),
-`--height`, `--theme light|dark|both`, `--screenshot <thư mục>`, `--json <file>`. Thoát với mã 1
+`--height`, `--theme light|dark|both`, `--screenshot <thư mục>`, `--json <file>`,
+`--layout warn|strict`. Thoát với mã 1
 khi có lỗi, mã 2 khi không chạy được. Cần Playwright: script tự tìm qua `NODE_PATH`, `node_modules`
 gần đó và thư mục npm toàn cục; không thấy thì in cách xử lý (xem thêm mục "Khi không chạy được
 taste-check" trong [`START-HERE.md`](../../../START-HERE.md)).

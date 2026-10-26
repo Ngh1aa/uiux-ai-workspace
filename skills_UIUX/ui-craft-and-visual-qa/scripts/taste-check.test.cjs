@@ -74,7 +74,7 @@ test('ảnh bị hủy mà vẫn là nguồn hiện tại phải báo lỗi', as
 
 const GOOD = `
   <section data-screen="Tốt">
-    <div class="hero"><p>Việc cần xử lý</p><p style="font-size:40px;line-height:44px;margin:0">35</p></div>
+    <div class="hero"><p>Việc cần xử lý</p><p style="font-size:40px;line-height:44px;margin:0">35</p><p style="margin:0">12 việc hạn hôm nay</p></div>
     <div class="card"><p style="margin:0">Học phí chưa thu</p><p style="margin:0;color:#5f6370">Hạn 15/10</p></div>
     <div class="card"><button type="button">Xử lý</button></div>
   </section>`;
@@ -212,4 +212,61 @@ test('ghi rõ axe có chạy hay không', () => {
     const rules = bad.results.flatMap((r) => r.screens).flatMap((s) => [...s.errors, ...s.warnings]).map((e) => e.rule);
     assert.ok(rules.includes('axe'), JSON.stringify(rules));
   }
+});
+
+function runWide(body, extra = []) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'taste-'));
+  const css = `${BASE} .wide { width: 1440px; height: 900px; padding: 32px; box-sizing: border-box; display: block; }
+    .wide h1 { font: 700 32px/40px system-ui; margin: 0 0 16px; } .col { width: 560px; }`;
+  fs.writeFileSync(path.join(dir, 'page.html'), `<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>t</title><style>${css}</style></head><body>${body}</body></html>`);
+  const out = path.join(dir, 'out.json');
+  const res = spawnSync(process.execPath, [SCRIPT, path.join(dir, 'page.html'), '--root', dir, '--width', '1500', '--height', '1000', '--theme', 'light', '--no-axe', '--json', out, ...extra], { encoding: 'utf8' });
+  const data = JSON.parse(fs.readFileSync(out, 'utf8'));
+  const screens = data.results.flatMap((r) => r.screens);
+  return { code: res.status, rules: (name, kind) => screens.filter((s) => s.name === name).flatMap((s) => s[kind]).map((i) => i.rule) };
+}
+
+const NARROW = `<section data-screen="Hẹp" class="wide"><main><h1>Đồng ý tham gia</h1>
+  <div class="col card"><p style="margin:0">Mỗi mục là một lựa chọn riêng, em đọc kỹ trước khi đánh dấu.</p></div>
+  <div class="col card"><button type="button">Đồng ý và tiếp tục</button></div></main></section>`;
+
+test('màn desktop một cột hẹp bị cảnh báo trống đáy và độ phủ ngang', () => {
+  const r = runWide(NARROW);
+  const w = r.rules('Hẹp', 'warnings');
+  assert.ok(w.includes('void'), JSON.stringify(w));
+  assert.ok(w.includes('coverage'), JSON.stringify(w));
+  assert.equal(r.code, 0);
+});
+
+test('--layout strict biến cảnh báo bố cục thành lỗi', () => {
+  const r = runWide(NARROW, ['--layout', 'strict']);
+  const e = r.rules('Hẹp', 'errors');
+  assert.ok(e.includes('void') && e.includes('coverage'), JSON.stringify(e));
+  assert.equal(r.code, 1);
+});
+
+test('màn desktop chia lưới đầy đủ không bị cảnh báo bố cục', () => {
+  const cell = `<div class="card" style="height:340px;box-sizing:border-box"><p style="margin:0;font:700 28px system-ui">412</p>
+    <p style="margin:0 0 12px">Tài khoản mới tuần này</p><div role="img" aria-label="Biểu đồ" style="height:220px;background:linear-gradient(#dfe5f5,#fff)"></div></div>`;
+  const body = `<section data-screen="Đủ" class="wide" style="display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:min-content;gap:24px">
+    <h1 style="grid-column:1/-1">Tổng quan</h1>${cell.repeat(6)}</section>`;
+  const r = runWide(body);
+  const w = r.rules('Đủ', 'warnings');
+  assert.ok(!w.includes('void') && !w.includes('coverage'), JSON.stringify(w));
+});
+
+test('khoảng trống có chủ đích được đánh dấu thì không bị cảnh báo', () => {
+  const r = runWide(NARROW.replace('</main>', '<div data-whitespace style="height:560px"></div></main>'));
+  assert.ok(!r.rules('Hẹp', 'warnings').includes('void'));
+});
+
+test('cảnh báo thang chữ phẳng', () => {
+  const p = '<p style="margin:0">Học phí tháng mười đã thu đủ cho cả lớp, còn ba bạn nộp sau.</p>';
+  const r = run(`<section data-screen="Phẳng"><div class="card"><p style="margin:0;font-size:18px">Học phí</p>${p}${p}</div></section>`);
+  assert.ok(r.rules('Phẳng', 'warnings').includes('flat-scale'));
+});
+
+test('cảnh báo card nổi bật chỉ có một con số', () => {
+  const r = run('<section data-screen="Mỏng"><div class="hero"><p style="font-size:40px;line-height:44px;margin:0">35</p></div></section>');
+  assert.ok(r.rules('Mỏng', 'warnings').includes('thin-highlight'));
 });

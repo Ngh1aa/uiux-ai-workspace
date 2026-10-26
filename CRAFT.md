@@ -16,6 +16,8 @@ Chữ:                   tiêu đề <font, cỡ, độ đậm>; thân <font, c�
 Màu theo vai trò:      nền <hex>, bề mặt <hex>, chữ <hex>, thương hiệu <hex>, nhấn <hex>, (tuỳ) <hex>
 Hình khối:             bo góc <px>; viền hay bóng; độ dày nét
 Bố cục màn chính:      <phác ASCII 5–10 dòng: khối nào ở đâu, thứ tự đọc>
+Lưới và mật độ:        <số cột ở 390/1280; mật độ thoáng|vừa|gọn; khối nào lấp phần còn lại của khung>
+Card nổi bật:          <3 tầng: nhãn; thông tin chính; ngữ cảnh (so sánh, tiến độ, hạn)>
 Một điểm táo bạo:      <chỗ duy nhất dồn sự chú ý: một con số lớn, một hoạ tiết, một chuyển động>
 Ba điểm khác starter:  1. <...> 2. <...> 3. <...>
 Đã đối chiếu mục 2:    <liệt kê mặc định nào gần chạm và đã đổi thế nào>
@@ -48,6 +50,9 @@ cách kiểm chứng trên màn render. Không đổi font, màu hay cấu trúc
 - Section nào cũng "tiêu đề + 3 card"; mọi khối đều là card bo tròn; card lồng card.
 - Mọi thứ căn giữa; mọi section cùng chiều cao và khoảng cách.
 - Thanh màu bên trái mỗi khối, mỗi khối một màu.
+- Màn desktop chỉ dùng một cột hẹp, nửa phải bỏ trống; mảng trống lớn ở đáy màn hoặc đáy card.
+- Card nổi bật chỉ có một con số trên nền màu; card nào cũng chỉ một tiêu đề và một dòng phụ.
+- Kéo giãn khoảng cách hoặc chiều cao khung để "lấp" màn thay vì sắp lại bố cục.
 
 **Chi tiết**
 - Emoji làm icon, bullet hay nút.
@@ -57,7 +62,8 @@ cách kiểm chứng trên màn render. Không đổi font, màu hay cấu trúc
 - "Lorem ipsum", "John Doe", "Acme Inc".
 
 `static-check.cjs` bắt được một phần danh sách này (font mặc định, gradient tím, eyebrow, emoji,
-" · "). Phần còn lại phải nhìn ảnh.
+" · "). `taste-check.cjs` bắt màn trống, nội dung dồn một bên, thang chữ phẳng và card nổi bật mỏng
+(`void`, `coverage`, `flat-scale`, `thin-highlight`). Phần còn lại phải nhìn ảnh.
 
 ## 3. Số liệu cốt lõi
 
@@ -65,6 +71,7 @@ cách kiểm chứng trên màn render. Không đổi font, màu hay cấu trúc
 |---|---|
 | Khoảng cách | Bội số của 4, nhịp 8. Trong nhóm nhỏ hơn giữa nhóm ít nhất 1,5 lần. Tối đa 4–5 giá trị khoảng cách mỗi màn |
 | Lề màn | Điện thoại 16–20, tablet 24, desktop 32–40; nội dung tối đa 1200–1280, chữ dài 640–720 |
+| Lưới và mật độ | Desktop 12 cột, gutter 24; mật độ theo loại màn trong [layout-and-density](foundations/layout-and-density.md). Khoảng trống dọc liền mạch tối đa ~160 px trong một màn app |
 | Thang chữ | App 1,125–1,2, thân 15–17. Marketing 1,25–1,333, thân 17–20. Tiêu đề lớn tracking âm 1–2,5% |
 | Line-height | Thân 1,5–1,6 (tiếng Việt ≥ 1,5), tiêu đề 1,2–1,3, display ~1,1 |
 | Font | Tối đa 2 họ, 2–3 độ đậm. Số trong bảng và giá: `tabular-nums` |

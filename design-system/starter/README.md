@@ -11,6 +11,7 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 | [`mobile.html`](mobile.html) | 8 màn app mẫu: trang chủ, danh sách, chi tiết, biểu mẫu, rỗng, đang tải, lỗi, chọn nhanh |
 | [`web.html`](web.html) | Trang quản trị mẫu, co giãn từ máy tính xuống điện thoại |
 | [`landing.html`](landing.html) | Khung section cho landing page: header, hero, bằng chứng, vấn đề, lợi ích, cách hoạt động, bảng giá, lời khách, câu hỏi, lời mời cuối, footer |
+| [`desktop.html`](desktop.html) | 6 khung app desktop 1440 × 900: tổng quan, danh sách và chi tiết, form nhiều bước, chi tiết đối tượng, cài đặt, đăng nhập chia đôi. Dùng cùng [`desktop.css`](desktop.css) |
 | [`web-states.html`](web-states.html) | Trạng thái từng khối của trang web: đang tải, dữ liệu cũ, lỗi, rỗng |
 | [`SIGNATURE.md`](SIGNATURE.md) | Cách tạo dấu ấn riêng cho từng dự án, để màn không chỉ là starter kit đổi màu |
 | [`PATTERNS.md`](PATTERNS.md) | Quy tắc bố cục cho từng loại màn |
@@ -21,8 +22,8 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 
 ## Bắt đầu một dự án
 
-1. Chép `mobile.html` hoặc `web.html` sang dự án, giữ thứ tự nạp CSS:
-   `fonts.css` → `tokens.css` → `components.css` → `brand.css` → `app.css`.
+1. Chép `mobile.html`, `web.html` hoặc `desktop.html` sang dự án, giữ thứ tự nạp CSS:
+   `fonts.css` → `tokens.css` → `components.css` → `brand.css` → `app.css` (→ `desktop.css`).
 2. Chép `brand.css` vào dự án và điền theo brand brief, cả khối sáng lẫn hai khối tối (giống hệt
    nhau), rồi soát bằng `python3 design-system/scripts/check-brand.py <dự-án>/brand.css`. Sau đó
    tạo dấu ấn riêng theo [`SIGNATURE.md`](SIGNATURE.md): đổi ít nhất 3 thứ ngoài màu.
@@ -40,6 +41,7 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
    node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs <trang.html> --screenshot qa/
    ```
 
+   Màn desktop và artboard canvas thêm `--width 1440 --height 900 --layout strict`.
    Sửa hết lỗi, xem lại từng cảnh báo, rồi **mở ảnh chụp ra nhìn**.
 
 ## Giới hạn
