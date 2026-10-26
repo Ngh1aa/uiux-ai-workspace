@@ -39,3 +39,9 @@ def test_type_roles_keep_scalable_platform_styles():
     swift = native.swift(native.load())
     for role, (ios_style, _) in native.TYPE_ROLES.items():
         assert f"relativeTo: {ios_style})" in swift
+
+
+def test_material_scheme_maps_component_container_slots():
+    # NavigationBar dùng surfaceContainer, Dialog dùng surfaceContainerHigh.
+    for slot in ("surfaceContainerLowest", "surfaceContainerLow", "surfaceContainer", "surfaceContainerHigh", "surfaceContainerHighest"):
+        assert slot in native.M3_SCHEME
