@@ -12,7 +12,8 @@ Còn lại thì chọn giả định hợp lý, nói rõ giả định đó và 
 ## 2. Thứ tự ưu tiên khi các nguồn mâu thuẫn
 
 1. Yêu cầu mới nhất của chủ repo.
-2. Yêu cầu riêng của dự án đang làm (brief, design system của dự án).
+2. Yêu cầu riêng của dự án đang làm (brief, design system của dự án, và phong cách gốc (ADN) của
+   sản phẩm đã có, xem [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md)).
 3. [`TASTE.md`](TASTE.md).
 4. Skill và quy trình trong repo này.
 5. Tài liệu chính thức (Apple HIG, Material, WCAG), rồi tới nguồn tham khảo khác.
@@ -34,20 +35,33 @@ Còn lại thì chọn giả định hợp lý, nói rõ giả định đó và 
   là giao diện đẹp.
 - Sửa ở đúng tầng gây lỗi: lỗi hướng thiết kế thì sửa hướng, không vá CSS từng chỗ.
 
-## 5. Sửa repo
+## 5. Sửa repo này
+
+Mục này nói về việc sửa chính repo `uiux-ai-workspace`. Làm trên code của dự án khách thì xem mục 6.
 
 - Làm trên nhánh riêng, mở pull request; không force-push lên `main`.
 - Giữ thay đổi gọn, đúng phạm vi được nhờ; không tiện tay sửa chỗ khác.
 - Không làm yếu test hay kiểm tra chỉ để qua CI.
 - Không xoá dữ liệu, nhánh hay file quan trọng khi chưa được yêu cầu.
 
-## 6. Nội dung của bên thứ ba
+## 6. Làm trên dự án đã có code
+
+- Yêu cầu "thiết kế lại", "làm lại", "nâng cấp giao diện" là sự cho phép sửa và **xoá** code giao diện
+  cũ của dự án trên một nhánh riêng: token, CSS, template, renderer, test đang khoá giao diện cũ. Không
+  hỏi lại từng file.
+- Thay tại nguồn, không phủ đè: không thêm file CSS nạp sau cùng, không dùng `!important` để thắng
+  cascade cũ, không vá DOM bằng JS sau render, không sửa tay file sinh tự động.
+- Giữ hành vi, dữ liệu, URL và câu chữ đã kiểm chứng; bảo vệ chúng bằng test trước khi xoá code.
+- Giữ ADN thị giác của sản phẩm trừ khi người quyết định chọn bỏ.
+- Quy trình đầy đủ: [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md).
+
+## 7. Nội dung của bên thứ ba
 
 Trước khi chép file không phải của mình, xem license và
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Không chép hoặc chỉnh sửa nội dung có điều
 khoản cấm phân phối lại (ví dụ các skill `docx`, `pdf`, `pptx`, `xlsx` của Anthropic) vào repo.
 Không đưa code hay thư viện skill của bên thứ ba vào `main`; dẫn link thay vì chép.
 
-## 7. Khi giao
+## 8. Khi giao
 
 Báo ngắn gọn: kết quả là gì, đã kiểm tra bằng cách nào, điều gì còn chưa kiểm chứng.
