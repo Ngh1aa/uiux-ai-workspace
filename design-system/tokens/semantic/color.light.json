@@ -270,7 +270,7 @@
       "$value": "{color.jade.800}"
     },
     "muted": {
-      "$value": "{color.neutral.300}"
+      "$value": "{color.neutral.600}"
     }
   },
   "media": {
