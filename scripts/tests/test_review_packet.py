@@ -69,5 +69,48 @@ class ReviewPacketTests(unittest.TestCase):
         self.assertEqual(self.verify(self.good_review()).returncode, 1)
 
 
+    def test_same_basename_in_nested_folders_is_kept(self):
+        shots = self.tmp / "nested"
+        for d in ("a", "b", "c"):
+            (shots / d / "common").mkdir(parents=True)
+            (shots / d / "common" / "home.png").write_bytes(PNG + d.encode())
+        out = self.tmp / "nested-packet"
+        result = run("make", "--shots", str(shots), "--brief", str(self.tmp / "brief.md"), "--out", str(out))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(list((out / "images").iterdir())), 3)
+        self.assertEqual(len(json.loads((out / "manifest.json").read_text())["images"]), 3)
+
+    def test_force_removes_previous_review(self):
+        (self.packet / "review.json").write_text("{}")
+        result = run("make", "--shots", str(self.tmp / "shots"), "--brief", str(self.tmp / "brief.md"), "--out", str(self.packet), "--force")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse((self.packet / "review.json").exists())
+
+    def test_force_refuses_non_packet_folder(self):
+        other = self.tmp / "other"
+        other.mkdir()
+        (other / "keep.txt").write_text("x")
+        result = run("make", "--shots", str(self.tmp / "shots"), "--brief", str(self.tmp / "brief.md"), "--out", str(other), "--force")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertTrue((other / "keep.txt").exists())
+
+    def test_xl_requires_dimension_six_at_four(self):
+        out = self.tmp / "xl"
+        run("make", "--shots", str(self.tmp / "shots"), "--brief", str(self.tmp / "brief.md"), "--size", "XL", "--out", str(out))
+        tpl = json.loads((out / "review.template.json").read_text())
+        tpl["reviewer"] = {"id": "cold-1", "kind": "agent-heuristic", "independent": True}
+        for answers in tpl["cold"].values():
+            for q in answers:
+                answers[q] = "trả lời"
+        tpl["hard_fails"] = []
+        tpl["scores"] = {str(i): 4.5 for i in range(1, 11)}
+        tpl["scores"]["6"] = 3.5
+        tpl["observations"] = [{"dimension": "6", "image": "home-390-light.png", "element": "card", "fix": "sửa"}]
+        (out / "review.json").write_text(json.dumps(tpl))
+        result = run("verify", str(out))
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertIn("CHƯA ĐẠT", result.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()
