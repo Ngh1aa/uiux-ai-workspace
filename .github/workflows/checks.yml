@@ -43,6 +43,9 @@ jobs:
       - name: Benchmark provenance and result validation tests
         working-directory: .
         run: python -m unittest discover -s benchmarks -p "test_*.py"
+      - name: Independent review packet tests
+        working-directory: .
+        run: python -m unittest discover -s scripts/tests -p "test_*.py"
 
   release-candidate:
     name: release-candidate

@@ -19,10 +19,11 @@ Copy into the target project's `docs/ux/` and fill in. Keep evidence labels hone
 | U7 Measure | [ux-scorecard.md](ux-scorecard.md) | `design-critique-and-rationale` | Before/after comparison, release review |
 | U1 to V1 | [design-principles.md](design-principles.md) | `experience-principles-and-signature-moments` | After top tasks; principles that settle arguments |
 | V1 Handoff | [visual-brief.md](visual-brief.md) | `ux-structure-and-flow-design` → `visual-design-direction` | After UX Readiness passes, before visual exploration |
+| V2 Direction | [direction-approval.md](direction-approval.md) | `visual-design-direction` | M and up: 2–3 directions on the key screen, before building the rest |
 
 Order of use for a new product: problem statement → assumption map → proto-persona →
 JTBD/top tasks → user flows → IA → wireframe spec → heuristic evaluation →
-UX readiness gate → design principles + visual brief → (visual design) → usability test plan → design rationale → scorecard.
+UX readiness gate → design principles + visual brief → direction approval → (visual design) → usability test plan → design rationale → scorecard.
 
 The steps per job size live in [`WORKFLOWS.md`](../../../WORKFLOWS.md).
 

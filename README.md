@@ -14,13 +14,14 @@ Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thi�
 | [`START-HERE.md`](START-HERE.md) | Cửa vào duy nhất: bước 0 tiếp nhận thương hiệu, rồi 4 bước Claude làm theo |
 | [`BRAND-BRIEF.template.md`](BRAND-BRIEF.template.md) | Brand brief cho từng khách hàng |
 | [`TASTE.md`](TASTE.md) | Gu thiết kế và các lỗi không được lặp lại |
+| [`TASTE-LOG.md`](TASTE-LOG.md) | Nhật ký lỗi có thật, nguồn để cập nhật gu |
 | [`CRAFT.md`](CRAFT.md) | Số liệu cốt lõi, danh sách cấm kiểu AI generic, ảnh và icon |
 | [`foundations/`](foundations/README.md) | Kiến thức nền: bố cục và mật độ, Gestalt, chữ tiếng Việt, màu OKLCH, chuyển động, ảnh, tham khảo theo loại màn |
 | [`GLOSSARY.md`](GLOSSARY.md) | Bảng thuật ngữ và quy tắc viết tiếng Việt |
 | [`WORKFLOWS.md`](WORKFLOWS.md) | Quy trình theo cỡ việc, từ sửa nhỏ tới sản phẩm mới |
 | [`skills_UIUX/`](skills_UIUX/README.md) | 42 skill UI/UX và script soát trang đã dựng |
 | [`design-system/`](design-system/README.md) | Design system có test: token DTCG, 25 component, 30 pattern, font tiếng Việt, ví dụ app, `check-brand.py`, `oklch-scale.py` |
-| [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (4 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
+| [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (5 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
 
 ## Kiểm tra tự động
 
