@@ -270,3 +270,17 @@ test('cảnh báo card nổi bật chỉ có một con số', () => {
   const r = run('<section data-screen="Mỏng"><div class="hero"><p style="font-size:40px;line-height:44px;margin:0">35</p></div></section>');
   assert.ok(r.rules('Mỏng', 'warnings').includes('thin-highlight'));
 });
+
+test('data-part bỏ luật đo cả màn nhưng vẫn bắt card nổi bật mỏng', () => {
+  const p = '<p style="margin:0">Học phí tháng mười đã thu đủ cho cả lớp, còn ba bạn nộp sau.</p>';
+  const r = run(`<section data-part data-screen="Mẫu"><div class="card"><p style="margin:0;font-size:18px">Học phí</p>${p}${p}</div></section>`
+    + '<section data-part data-screen="Mẫu mỏng"><div class="hero"><p style="font-size:40px;line-height:44px;margin:0">35</p></div></section>');
+  assert.ok(!r.rules('Mẫu', 'warnings').includes('flat-scale'));
+  assert.ok(r.rules('Mẫu mỏng', 'warnings').includes('thin-highlight'));
+});
+
+test('toast nền đậm không bị tính là card nổi bật', () => {
+  const r = run('<section data-screen="Toast"><div class="ds-toast hero" role="status"><p style="margin:0">Đã lưu nháp</p></div></section>');
+  assert.ok(!r.rules('Toast', 'warnings').includes('thin-highlight'));
+  assert.ok(!r.rules('Toast', 'errors').includes('highlight'));
+});
