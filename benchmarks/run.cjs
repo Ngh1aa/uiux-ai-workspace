@@ -11,6 +11,7 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 
 const REPO = path.resolve(__dirname, '..');
@@ -30,7 +31,20 @@ function main() {
   }
   const shots = path.join(runDir, 'shots');
   fs.rmSync(shots, { recursive: true, force: true });
-  const summary = { run: path.basename(runDir), checked_at: new Date().toISOString(), briefs: {} };
+  const git = (...args) => {
+    const result = spawnSync('git', ['-C', REPO, ...args], { encoding: 'utf8' });
+    if (result.status !== 0) throw new Error('không đọc được Git provenance của toolkit');
+    return result.stdout.trim();
+  };
+  const summary = {
+    run: path.basename(runDir), checked_at: new Date().toISOString(),
+    source: {
+      repo_commit: git('rev-parse', 'HEAD'),
+      dirty: Boolean(git('status', '--porcelain')),
+      checker_sha256: createHash('sha256').update(fs.readFileSync(CHECKER)).digest('hex'),
+    },
+    briefs: {},
+  };
   let failed = false;
   for (const brief of BRIEFS) {
     const page = path.join(runDir, brief, 'index.html');
@@ -41,6 +55,7 @@ function main() {
       continue;
     }
     const json = path.join(runDir, `.${brief}.taste.json`);
+    fs.rmSync(json, { force: true });
     const res = spawnSync(process.execPath, [
       CHECKER, page, '--root', REPO, '--width', '390', '--width', '1024', '--width', '1280', '--height', '900',
       '--screenshot', shots, '--format', 'jpeg', '--name', brief, '--json', json,
@@ -65,12 +80,14 @@ function main() {
       }
     }
     summary.briefs[brief] = {
-      status: data.errorCount ? 'FAIL' : 'PASS',
+      status: res.status === 0 && data.errorCount === 0 ? 'PASS' : 'FAIL',
+      checker_exit_code: res.status,
+      axe: data.axe,
       errors: data.errorCount,
       warnings: data.warningCount,
       issues: Object.entries(issues).map(([message, v]) => ({ level: v.level, message, where: v.where })),
     };
-    if (data.errorCount) failed = true;
+    if (res.status !== 0 || data.errorCount) failed = true;
   }
   fs.writeFileSync(path.join(runDir, 'checks.json'), `${JSON.stringify(summary, null, 2)}\n`);
   process.stdout.write(`\nĐã ghi ${path.relative(REPO, path.join(runDir, 'checks.json'))} và ảnh trong ${path.relative(REPO, shots)}/\n`);

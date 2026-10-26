@@ -1,6 +1,14 @@
 {
   "run": "2026-10-24-v1",
-  "repo_commit": "cc0276e",
+  "repo_commit": "cc0276eb89c4317a443f95cae30f66906d00fecf",
+  "protocol": {
+    "kind": "legacy-unknown",
+    "parent_run": null,
+    "author_id": "legacy-agent",
+    "reviewer_id": "legacy-agent",
+    "independent_review": false,
+    "legacy_note": "Bổ sung metadata từ ghi chú lịch sử; không có bằng chứng isolation nên không phân loại là lượt fresh độc lập. SHA cc0276e đã được đối chiếu với GitHub."
+  },
   "reviewer": "agent-heuristic",
   "summary": "Mốc gốc. Landing và dashboard đạt mức điểm M nhưng dashboard có hard fail thiếu trạng thái dữ liệu; app chưa đạt ngưỡng L vì tương tác mỏng và nhìn vẫn là starter kit đổi màu. Người chấm cũng là người làm, nên điểm có thể cao hơn thực tế.",
   "briefs": {

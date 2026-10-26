@@ -1,6 +1,14 @@
 {
   "run": "2026-10-24-v2",
-  "repo_commit": "vòng cải tiến 1",
+  "repo_commit": null,
+  "protocol": {
+    "kind": "iterative-repair",
+    "parent_run": "2026-10-24-v1",
+    "author_id": "legacy-agent",
+    "reviewer_id": "legacy-agent",
+    "independent_review": false,
+    "legacy_note": "Lần chạy lịch sử chỉ ghi 'vòng cải tiến 1', không lưu SHA đầy đủ. Giữ UNKNOWN, không suy đoán commit."
+  },
   "reviewer": "agent-heuristic",
   "summary": "Sau vòng cải tiến 1 (mẫu trạng thái web, hướng dẫn dấu ấn, mẫu chọn nhanh và thanh tổng tiền). Cả ba đề đạt ngưỡng; chiều tương tác và dấu ấn lên từ 3 thành 4. Sửa tiếp từ bản v1 chứ không làm lại từ đầu, và người chấm vẫn là người làm.",
   "briefs": {
