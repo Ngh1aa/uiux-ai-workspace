@@ -20,6 +20,7 @@ Mọi cỡ việc trên dự án khách hàng đều bắt đầu từ brand bri
 | Có đổi hơn ~5 màn hình hoặc cả một khu vực sản phẩm? | Ít nhất **L** |
 | Sản phẩm mới, hoặc chưa có design system? | **XL** |
 | Chỉ sửa một component, một trạng thái, một đoạn chữ? | **XS** hoặc **S** |
+| Sản phẩm đã có code, và được nhờ "thiết kế lại", "làm lại", "nâng cấp" giao diện? | Ít nhất **L**, cộng track **Redesign sản phẩm có code** (mục 4) |
 
 | Cỡ | Ví dụ | Thời gian điển hình |
 |---|---|---|
@@ -119,6 +120,8 @@ Như **M**, cộng thêm:
 5. **Critique 3 vòng** (xem rubric): tự review → review chéo theo vai trò → review "người lạ" chỉ nhìn ảnh.
 6. Kiểm nhất quán xuyên màn hình (ảnh đặt cạnh nhau).
 
+- Sản phẩm đã có code: [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md) là bắt buộc;
+  bước "đánh giá hiện trạng" ở trên gồm cả kiểm kê code cũ và bảng ADN của skill đó.
 - Skill thêm: [`website-audit-and-redesign`](skills_UIUX/website-audit-and-redesign/SKILL.md) hoặc
   [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) ·
   [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) ·
@@ -158,7 +161,8 @@ Như **L**, cộng thêm:
 | Track | Khi nào | Bắt đầu từ |
 |---|---|---|
 | **Chỉ review / audit** | Cần đánh giá, chưa sửa | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
-| **Cải thiện UI đang có** | Sửa và trau chuốt, giữ thương hiệu và hành vi; làm lại khi được yêu cầu | Chọn XS–L theo bảng cỡ việc, dùng [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có); cả site đổi hướng thì dùng L + `website-audit-and-redesign` |
+| **Cải thiện UI đang có** | Sửa và trau chuốt (Polish), giữ bố cục và hành vi | Chọn XS–S theo bảng cỡ việc, dùng [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có); sửa ở token và CSS component đang có, không thêm lớp đè |
+| **Redesign sản phẩm có code** | Thiết kế lại, làm mới, nâng cấp một sản phẩm đã có code chạy được | L (hoặc M nếu một khu vực nhỏ) + [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md): kiểm kê code cũ, ghi ADN, lưới test hành vi, thay tại nguồn và xoá code bị thay, soát bằng `overlay-check.py`. Website cần audit IA, SEO thì thêm `website-audit-and-redesign` |
 | **Soát prototype** | Bản HTML/CSS/JS cần demo được | Theo cỡ việc tương ứng + [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#soát-prototype); thử đường demo và ghi tác vụ mô phỏng |
 | **Design system** | Thêm token, component, hoặc dựng hệ thống mới | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) |
 | **Portfolio** | Làm lại portfolio / định vị nghề | Như cỡ M, cộng [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) |
@@ -186,3 +190,5 @@ Như **L**, cộng thêm:
 - M trở lên: hướng thị giác đã qua cổng duyệt, hoặc ghi `CHƯA DUYỆT`. L và XL có duyệt độc lập theo
   [hồ sơ ảnh](skills_UIUX/design-critique-and-rationale/references/independent-review.md).
 - Lỗi mới mà checker và rubric đều không bắt được thì ghi một dòng vào [`TASTE-LOG.md`](TASTE-LOG.md).
+- Redesign sản phẩm có code: `overlay-check.py` không còn lỗi, test hành vi xanh trước và sau, ADN được
+  giữ hoặc người quyết định đã chọn bỏ (xem [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md)).

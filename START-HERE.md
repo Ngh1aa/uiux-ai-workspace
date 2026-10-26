@@ -18,6 +18,14 @@ giọng điệu, tham khảo, dấu ấn riêng.
 - Khách đã có design system riêng thì dùng của khách; repo này chỉ còn là checklist chất lượng.
 - Việc nhỏ (cỡ XS, S) trên một dự án đã có brief thì đọc lại brief, không làm lại.
 
+### Dự án đã có code chạy được?
+
+Được nhờ "làm lại", "nâng cấp", "thiết kế lại" một sản phẩm đã có code (prototype, website, app) thì
+đọc thêm skill [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md) ngay từ đầu, cùng với cỡ
+việc ở bước 2. Yêu cầu thiết kế lại là sự cho phép sửa và xoá code giao diện cũ trên một nhánh: thay
+tại nguồn (token, CSS component, renderer, template), không đè một file CSS hay JS mới lên trên. Phong
+cách gốc của sản phẩm (ADN) được ghi ra và giữ như một phần của brief.
+
 ## 1. Đọc gu thiết kế và chuẩn tay nghề
 
 Đọc [`TASTE.md`](TASTE.md): các nguyên tắc chủ repo đã chốt qua nhiều dự án; áp dụng ngay từ bản
@@ -43,11 +51,14 @@ trong skill chỉ mở khi `SKILL.md` hoặc `WORKFLOWS.md` bảo cần.
 - **Trước khi viết code**, viết khối kế hoạch thị giác ở mục 1 của `CRAFT.md` (chữ, màu theo vai
   trò, hình khối, phác bố cục, một điểm táo bạo, ba điểm khác starter), đối chiếu với danh sách cấm
   và sửa kế hoạch nếu chạm mặc định. Việc cỡ XS bỏ qua bước này.
-- Bắt đầu từ [starter kit](design-system/starter/README.md): chọn loại màn trong
+- Dự án mới: bắt đầu từ [starter kit](design-system/starter/README.md): chọn loại màn trong
   [`PATTERNS.md`](design-system/starter/PATTERNS.md) và mượn **cấu trúc** màn mẫu trong
   `mobile.html`, `web.html`, `desktop.html` hoặc `landing.html`. Màu, font, bo góc của starter chỉ là chỗ
   giữ chỗ. Lấp từng vùng bằng khối có sẵn trong
   [thư viện pattern](design-system/patterns/README.md) thay vì tự chế card.
+  Dự án đã có code: dùng starter và pattern làm hợp đồng cấu trúc, dựng lại bằng token và class của dự
+  án theo [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md); soát thêm bằng
+  `overlay-check.py` trong skill đó.
 - Thương hiệu: chép `brand.css` vào thư mục dự án, điền theo brand brief, rồi soát:
 
   ```sh
@@ -119,7 +130,7 @@ mới chỉ soát tĩnh.
 | `foundations/` | Kiến thức nền: bố cục, Gestalt, chữ tiếng Việt, màu OKLCH, chuyển động, ảnh, tham khảo theo loại màn (mở theo việc, không đọc hết) |
 | `GLOSSARY.md` | Bảng thuật ngữ và quy tắc viết tiếng Việt trong repo |
 | `WORKFLOWS.md` | Quy trình và danh sách skill theo cỡ việc (nguồn định tuyến duy nhất) |
-| `skills_UIUX/` | 42 skill UI/UX và script soát chất lượng |
+| `skills_UIUX/` | 43 skill UI/UX và script soát chất lượng |
 | `design-system/` | Token DTCG, 25 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `design-system/patterns/` | 30 pattern ghép sẵn (card nổi bật, số liệu, nội dung, quy trình, chuyển đổi, trạng thái) |
