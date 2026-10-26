@@ -392,6 +392,18 @@
       "why": "chart mark"
     },
     {
+      "fg": "dataviz.muted",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.muted",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
       "fg": "dataviz.sequential-4",
       "bg": "surface.raised",
       "min": 3,
