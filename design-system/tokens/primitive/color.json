@@ -505,6 +505,129 @@
         }
       }
     },
+    "violet": {
+      "50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9704,
+            0.9609,
+            0.992
+          ],
+          "hex": "#f7f5fd"
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.9373,
+            0.9151,
+            0.987
+          ],
+          "hex": "#efe9fc"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8837,
+            0.8372,
+            0.9823
+          ],
+          "hex": "#e1d5fa"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.8121,
+            0.733,
+            0.9674
+          ],
+          "hex": "#cfbbf7"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.7196,
+            0.6067,
+            0.9227
+          ],
+          "hex": "#b89beb"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6257,
+            0.4733,
+            0.8702
+          ],
+          "hex": "#a079de"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.5042,
+            0.3364,
+            0.7476
+          ],
+          "hex": "#8156bf"
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.4214,
+            0.2739,
+            0.6328
+          ],
+          "hex": "#6b46a1"
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3334,
+            0.2043,
+            0.5131
+          ],
+          "hex": "#553483"
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.2465,
+            0.1407,
+            0.3906
+          ],
+          "hex": "#3f2464"
+        }
+      },
+      "950": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.1467,
+            0.0762,
+            0.243
+          ],
+          "hex": "#25133e"
+        }
+      }
+    },
     "green": {
       "50": {
         "$value": {

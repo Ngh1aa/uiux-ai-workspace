@@ -103,6 +103,7 @@ def test_hex_component_mismatch_is_caught(sandbox):
     (".x { color: rgb(0 0 0); }", "color literal"),
     (".x { color: var(--ds-color-jade-500); }", "primitive palette"),
     (".x { color: var(--ds-text-does-not-exist); }", "is not defined"),
+    (".x { width: var(--app-unknown); }", "neither a token nor defined locally"),
 ])
 def test_component_css_lint(sandbox, snippet, message):
     css = sandbox / "components/components.css"
@@ -110,6 +111,12 @@ def test_component_css_lint(sandbox, snippet, message):
     result = _validate(sandbox)
     assert result.returncode == 1
     assert message in result.stderr
+
+
+def test_hook_variable_with_fallback_passes_lint(sandbox):
+    css = sandbox / "components/components.css"
+    css.write_text(css.read_text(encoding="utf-8") + "\n.x { width: var(--app-hook, 12px); }\n", encoding="utf-8")
+    assert _validate(sandbox).returncode == 0
 
 
 def test_stale_generated_css_is_caught(sandbox):

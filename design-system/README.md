@@ -14,7 +14,7 @@ Status: **v0.3.0**, pre-1.0. The token paths and class names may still change; s
 design-system/
 ├── tokens/                     source of truth (DTCG JSON)
 │   ├── primitive/              raw scales: color (OKLCH-derived), space, radius, size, type, motion, shadow
-│   ├── semantic/               roles: surface, text, border, action, feedback, type, spacing, shape, elevation
+│   ├── semantic/               roles: surface, text, border, action, feedback, dataviz, media, type, spacing, shape, elevation
 │   │   ├── color.light.json    one file per mode, identical paths (parity is enforced)
 │   │   └── color.dark.json
 │   └── component/              per-component decisions that alias semantic roles
@@ -24,6 +24,10 @@ design-system/
 ├── components/
 │   ├── components.css          25 components, tokens only, no color literals
 │   └── icons.svg               original 24px outline icon sprite
+├── patterns/
+│   ├── patterns.css            30 composed blocks (hero, data, content, flow, conversion, states), tokens only
+│   ├── index.html              gallery of every pattern in both modes
+│   └── README.md               contract per pattern: anatomy, when to use, minimum density, misuse
 ├── fonts/                      Be Vietnam Pro (SIL OFL 1.1), Latin + Vietnamese subsets
 ├── docs/
 │   ├── index.html              generated living style guide: roles, contrast table, type scale, all states
@@ -32,8 +36,8 @@ design-system/
 ├── examples/appointment-app/   three task-led mobile screens built only from the system
 ├── examples/money-app/         v0.2 finance reference: sheet, progress, skeleton, segmented filter
 ├── examples/gom-moc/           trial run of the client process: brief, brand.css, landing page, app screens
-├── starter/                    starter kit: placeholder brand layer, 8 mobile + 2 web screens, landing section skeleton
-├── contrast-pairs.json         55 declared foreground/background pairs, checked in both modes
+├── starter/                    starter kit: placeholder brand layer, 8 mobile + 2 web screens, 6 desktop app shells, landing skeleton
+├── contrast-pairs.json         79 declared foreground/background pairs, checked in both modes
 ├── scripts/                    build.py, validate.py, capture-example.cjs (Python stdlib, Node for browser checks)
 └── tests/                      pytest regression and negative tests
 ```
@@ -60,6 +64,9 @@ the dark block overrides only the semantic layer and every component follows.
 - **Warm neutral + jade.** Neutrals carry a slight warm hue so surfaces read as paper, not
   clinical gray; jade is the single brand hue. Scales are generated in OKLCH for even perceived
   steps, then stored as sRGB per the DTCG color format.
+- **Charts get their own roles.** `dataviz.*` gives six categorical hues (each ≥ 3:1 on page and
+  card surfaces in both modes), a sequential and a diverging ramp, plus grid, axis, highlight and
+  muted. One highlight per chart; everything else muted.
 - **Status is never color-only.** Badges and banners always carry icon + text.
 - **Placeholder text meets 4.5:1.** Users still have to read it.
 - **One primary button per view region,** enforced by contract and review, not by code.
@@ -70,6 +77,8 @@ the dark block overrides only the semantic layer and every component follows.
 <link rel="stylesheet" href="design-system/fonts/fonts.css">
 <link rel="stylesheet" href="design-system/generated/tokens.css">
 <link rel="stylesheet" href="design-system/components/components.css">
+<!-- optional: composed blocks, see patterns/README.md -->
+<link rel="stylesheet" href="design-system/patterns/patterns.css">
 <body class="ds-root">
   <button class="ds-button ds-button--primary">Đặt lịch</button>
 </body>

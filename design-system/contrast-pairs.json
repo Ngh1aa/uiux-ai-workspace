@@ -330,6 +330,150 @@
       "bg": "surface.raised",
       "min": 4.5,
       "why": "over-budget amounts in lists"
+    },
+    {
+      "fg": "dataviz.categorical-1",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-2",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-3",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-4",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-5",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-6",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.axis",
+      "bg": "surface.raised",
+      "min": 4.5,
+      "why": "axis labels"
+    },
+    {
+      "fg": "dataviz.diverging-negative",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.diverging-positive",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.highlight",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.sequential-4",
+      "bg": "surface.raised",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.categorical-1",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-2",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-3",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-4",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-5",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.categorical-6",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart series mark (non-text graphic)"
+    },
+    {
+      "fg": "dataviz.axis",
+      "bg": "surface.page",
+      "min": 4.5,
+      "why": "axis labels"
+    },
+    {
+      "fg": "dataviz.diverging-negative",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.diverging-positive",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.highlight",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "dataviz.sequential-4",
+      "bg": "surface.page",
+      "min": 3,
+      "why": "chart mark"
+    },
+    {
+      "fg": "media.placeholder-ink",
+      "bg": "media.placeholder-bg",
+      "min": 4.5,
+      "why": "placeholder caption text"
+    },
+    {
+      "fg": "media.placeholder-ink",
+      "bg": "media.placeholder-pattern",
+      "min": 4.5,
+      "why": "placeholder caption over pattern stripe"
     }
   ]
 }

@@ -35,6 +35,8 @@ tra được bằng mắt.
   chính, và một tầng ngữ cảnh (so sánh với kỳ trước, tiến độ, hạn, bước tiếp theo).
 - Card thường cũng cần cấu trúc bên trong: tiêu đề, nội dung, và chỗ cho hành động hoặc trạng thái. Nội
   dung phải phủ phần lớn card; card cao mà chữ chỉ nằm ở đầu là card trống.
+- Trước khi tự chế card, xem [`design-system/patterns/`](design-system/patterns/README.md): 30 khối ghép
+  sẵn kèm mật độ tối thiểu và cách dùng sai của từng khối.
 ## Chữ trên màn
 
 - Ngắn gọn, xúc tích. Không viết câu mô tả nếu giao diện đã tự nói lên.
