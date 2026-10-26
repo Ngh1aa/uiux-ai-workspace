@@ -68,8 +68,8 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
 2. **Luồng**: luồng chính (happy path) và ít nhất 2 nhánh lỗi, khôi phục.
 3. **Kiểm kê màn hình × trạng thái** trước khi vẽ.
 4. **Khung dây** (wireframe) và đi thử 5 kịch bản. Sửa lỗi trải nghiệm trước khi tô màu.
-5. **Thị giác**: áp design system và [thư viện pattern](design-system/patterns/README.md); so 2 phương
-   án cho màn quyết định chính.
+5. **Thị giác**: áp design system và [thư viện pattern](design-system/patterns/README.md); dựng 2–3
+   hướng cho màn quyết định chính rồi qua **cổng duyệt hướng** (dưới đây) trước khi làm các màn còn lại.
 6. **Dựng và phản biện** theo rubric, sửa, dựng lại.
    Với luồng có dữ liệu, bấm thử từ chọn/nhập → xác nhận → quay lại sửa → xác nhận lại. Đối chiếu
    cùng dữ liệu trên mọi màn (số lượng, biến thể, tổng tiền, ngày giờ); kiểm tra giữ lựa chọn và
@@ -86,9 +86,24 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
 - Mobile thêm: [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) + spec sheet nền tảng (mục 3).
 - Web thêm: dòng nền tảng tương ứng ở mục 3, và một playbook đúng ngành của khách trong
   [`industry-playbooks`](skills_UIUX/industry-playbooks/SKILL.md) (không có thì bỏ qua).
-- Mẫu tài liệu: [`templates/ux/`](skills_UIUX/templates/ux/README.md) (khung vấn đề, luồng việc, đặc tả khung dây).
+- Mẫu tài liệu: [`templates/ux/`](skills_UIUX/templates/ux/README.md) (khung vấn đề, luồng việc, đặc tả khung dây,
+  [duyệt hướng](skills_UIUX/templates/ux/direction-approval.md)).
 - Giao: luồng, bảng màn hình × trạng thái, màn đã dựng ở 2 cỡ, bảng rubric, ghi chú bàn giao.
 - Ngưỡng: trung bình ≥ 3.5, không chiều nào < 3, không hard-fail.
+
+#### Cổng duyệt hướng (M, L, XL)
+
+Đổi hướng sau khi đã dựng mười màn tốn gấp nhiều lần đổi khi mới có một màn. Vì vậy:
+
+1. Dựng 2–3 hướng trên **cùng** màn quyết định chính, cùng nội dung thật, cùng khung. Các hướng phải khác
+   nhau về bản chất (thứ bậc, mật độ, giọng thị giác), không chỉ khác màu.
+2. Ghi vào [mẫu duyệt hướng](skills_UIUX/templates/ux/direction-approval.md): mỗi hướng phục vụ việc chính
+   ra sao, đánh đổi gì, rủi ro gì, và hướng được đề xuất kèm lý do.
+3. Đưa người quyết định (khách, chủ sản phẩm) xem ảnh chụp, **dừng** các màn còn lại cho tới khi có câu trả lời.
+4. Không có ai để hỏi (đề chuẩn, làm thử, khách vắng) thì đi tiếp với hướng đề xuất, ghi trạng thái
+   `CHƯA DUYỆT` trong mẫu và trong ghi chú giao. Không ghi là đã duyệt khi chưa ai chọn.
+
+Với L và XL, hướng được duyệt mới là đầu vào cho bước "Thử trên 3 màn hình khác bản chất".
 
 ### L — Khu vực sản phẩm, làm lại
 
@@ -99,6 +114,7 @@ Như **M**, cộng thêm:
 2. **Kiến trúc thông tin** và mô hình điều hướng cho toàn khu vực.
 3. **Hướng thị giác**: 4–7 thuộc tính thị giác có biểu hiện cụ thể, ma trận vai trò trang, màn hình.
    Nền tảng lý do nằm trong [`foundations/`](foundations/README.md).
+   Hướng chỉ được nhân rộng sau [cổng duyệt hướng](#cổng-duyệt-hướng-m-l-xl).
 4. **Thử trên 3 màn hình khác bản chất** trước khi nhân rộng.
 5. **Critique 3 vòng** (xem rubric): tự review → review chéo theo vai trò → review "người lạ" chỉ nhìn ảnh.
 6. Kiểm nhất quán xuyên màn hình (ảnh đặt cạnh nhau).
@@ -167,3 +183,6 @@ Như **L**, cộng thêm:
   cấm mà không có lý do từ brief.
 - Rubric đạt ngưỡng của cỡ việc, không hard-fail.
 - Ghi rõ điều gì **chưa** kiểm chứng (người dùng thật, thiết bị thật, trình đọc màn hình).
+- M trở lên: hướng thị giác đã qua cổng duyệt, hoặc ghi `CHƯA DUYỆT`. L và XL có duyệt độc lập theo
+  [hồ sơ ảnh](skills_UIUX/design-critique-and-rationale/references/independent-review.md).
+- Lỗi mới mà checker và rubric đều không bắt được thì ghi một dòng vào [`TASTE-LOG.md`](TASTE-LOG.md).
