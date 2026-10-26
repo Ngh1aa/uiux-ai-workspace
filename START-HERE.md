@@ -103,8 +103,10 @@ mới chỉ soát tĩnh.
 
 - Nói ngắn: đã làm gì, đã soát bằng cách nào, chỗ nào còn chưa kiểm chứng được (người dùng thật,
   thiết bị thật, trình đọc màn hình).
-- Sau mỗi dự án, nếu chủ repo sửa đi sửa lại một điểm, ghi điểm đó vào `TASTE.md` để lần sau
-  không lặp lại.
+- Sau mỗi dự án, lỗi mà checker và rubric đều bỏ qua thì ghi một dòng vào
+  [`TASTE-LOG.md`](TASTE-LOG.md); lỗi lặp lại từ hai dự án thì đưa lên `TASTE.md`.
+- Việc cỡ L, XL: nhờ duyệt độc lập bằng
+  [hồ sơ ảnh](skills_UIUX/design-critique-and-rationale/references/independent-review.md).
 
 ## Bản đồ repo
 
@@ -112,6 +114,7 @@ mới chỉ soát tĩnh.
 |---|---|
 | `BRAND-BRIEF.template.md` | Bước 0: tiếp nhận thương hiệu khách hàng |
 | `TASTE.md` | Gu thiết kế và các lỗi không được lặp lại |
+| `TASTE-LOG.md` | Nhật ký lỗi có thật, nguồn để cập nhật `TASTE.md` |
 | `CRAFT.md` | Số liệu cốt lõi, danh sách cấm, kế hoạch thị giác, ảnh và icon |
 | `foundations/` | Kiến thức nền: bố cục, Gestalt, chữ tiếng Việt, màu OKLCH, chuyển động, ảnh, tham khảo theo loại màn (mở theo việc, không đọc hết) |
 | `GLOSSARY.md` | Bảng thuật ngữ và quy tắc viết tiếng Việt trong repo |
@@ -120,5 +123,5 @@ mới chỉ soát tĩnh.
 | `design-system/` | Token DTCG, 25 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `design-system/patterns/` | 30 pattern ghép sẵn (card nổi bật, số liệu, nội dung, quy trình, chuyển đổi, trạng thái) |
-| `benchmarks/` | Bộ đề chuẩn (4 đề) để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |
+| `benchmarks/` | Bộ đề chuẩn (5 đề) để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |
 | `AGENTS.md` | Quy tắc làm việc chung cho AI |

@@ -8,6 +8,7 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 | [01 Landing xưởng gốm](briefs/01-landing.md) | Website một trang | M |
 | [02 App đặt sân cầu lông](briefs/02-app.md) | App 5 màn | L |
 | [03 Dashboard kho shop len](briefs/03-dashboard.md) | Trang quản trị | M |
+| [04 Web app phòng khám, ba vai trò](briefs/04-multi-role.md) | Web app desktop 4 màn | L |
 | [05 App sổ liên lạc iOS và Android](briefs/05-native.md) | App native 4 màn × 2 nền tảng | L |
 
 ## Quy tắc
@@ -38,7 +39,10 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
    ```
 
    Lệnh này soát 390px, 1024px và 1280px, cả sáng và tối, rồi ghi `checks.json` và ảnh vào `shots/`.
-3. Mở ảnh ra xem, chấm theo [rubric](../skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md)
+3. Muốn ghi `independent_review: true`, đóng gói ảnh trong `shots/` bằng
+   `python3 scripts/review-packet.py make` và để người duyệt độc lập chấm theo
+   [hướng dẫn duyệt độc lập](../skills_UIUX/design-critique-and-rationale/references/independent-review.md).
+   Mở ảnh ra xem, chấm theo [rubric](../skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md)
    và ghi `scores.json` (mẫu: [lần chạy đầu](runs/2026-10-24-v1/scores.json)). Ghi thêm `NOTES.md`:
    lỗi bắt được trong lúc làm, repo được sửa gì, việc nên làm tiếp.
    `checks.json` chỉ là soát render. Bấm thử các luồng chọn/nhập → xác nhận → quay lại sửa;
