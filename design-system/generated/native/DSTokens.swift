@@ -53,7 +53,7 @@ public enum DS {
         public static let datavizDivergingPositive = Color(dsLight: 0x2170cb, dark: 0x78aff5)
         public static let datavizGrid = Color(dsLight: 0xdfdcd7, dark: 0x4b4945)
         public static let datavizHighlight = Color(dsLight: 0x015649, dark: 0x96d7c7)
-        public static let datavizMuted = Color(dsLight: 0xcac7c2, dark: 0x605d59)
+        public static let datavizMuted = Color(dsLight: 0x73706d, dark: 0x93908c)
         public static let datavizSequential1 = Color(dsLight: 0xd4f5ed, dark: 0x023f35)
         public static let datavizSequential2 = Color(dsLight: 0x96d7c7, dark: 0x066d5e)
         public static let datavizSequential3 = Color(dsLight: 0x0aa891, dark: 0x0aa891)

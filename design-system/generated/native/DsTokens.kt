@@ -138,7 +138,7 @@ val LightDsColors = DsColors(
     datavizDivergingPositive = Color(0xFF2170CB),
     datavizGrid = Color(0xFFDFDCD7),
     datavizHighlight = Color(0xFF015649),
-    datavizMuted = Color(0xFFCAC7C2),
+    datavizMuted = Color(0xFF73706D),
     datavizSequential1 = Color(0xFFD4F5ED),
     datavizSequential2 = Color(0xFF96D7C7),
     datavizSequential3 = Color(0xFF0AA891),
@@ -221,7 +221,7 @@ val DarkDsColors = DsColors(
     datavizDivergingPositive = Color(0xFF78AFF5),
     datavizGrid = Color(0xFF4B4945),
     datavizHighlight = Color(0xFF96D7C7),
-    datavizMuted = Color(0xFF605D59),
+    datavizMuted = Color(0xFF93908C),
     datavizSequential1 = Color(0xFF023F35),
     datavizSequential2 = Color(0xFF066D5E),
     datavizSequential3 = Color(0xFF0AA891),
@@ -268,8 +268,8 @@ val DarkDsColors = DsColors(
 )
 
 fun DsColors.toMaterialScheme(dark: Boolean): ColorScheme =
-    if (dark) darkColorScheme(primary = actionPrimaryBg, onPrimary = actionPrimaryText, primaryContainer = surfaceBrandSubtle, onPrimaryContainer = textBrand, secondaryContainer = actionSecondaryBg, onSecondaryContainer = actionSecondaryText, background = surfacePage, onBackground = textPrimary, surface = surfacePage, onSurface = textPrimary, onSurfaceVariant = textSecondary, surfaceContainerLow = surfaceRaised, surfaceContainerHighest = surfaceSunken, inverseSurface = surfaceInverse, outline = borderControl, outlineVariant = borderSubtle, error = actionDangerBg, onError = actionDangerText, scrim = surfaceScrim)
-    else lightColorScheme(primary = actionPrimaryBg, onPrimary = actionPrimaryText, primaryContainer = surfaceBrandSubtle, onPrimaryContainer = textBrand, secondaryContainer = actionSecondaryBg, onSecondaryContainer = actionSecondaryText, background = surfacePage, onBackground = textPrimary, surface = surfacePage, onSurface = textPrimary, onSurfaceVariant = textSecondary, surfaceContainerLow = surfaceRaised, surfaceContainerHighest = surfaceSunken, inverseSurface = surfaceInverse, outline = borderControl, outlineVariant = borderSubtle, error = actionDangerBg, onError = actionDangerText, scrim = surfaceScrim)
+    if (dark) darkColorScheme(primary = actionPrimaryBg, onPrimary = actionPrimaryText, primaryContainer = surfaceBrandSubtle, onPrimaryContainer = textBrand, secondaryContainer = actionSecondaryBg, onSecondaryContainer = actionSecondaryText, background = surfacePage, onBackground = textPrimary, surface = surfacePage, onSurface = textPrimary, onSurfaceVariant = textSecondary, surfaceContainerLowest = surfaceRaised, surfaceContainerLow = surfaceRaised, surfaceContainer = surfaceRaised, surfaceContainerHigh = surfaceRaised, surfaceContainerHighest = surfaceSunken, inverseSurface = surfaceInverse, outline = borderControl, outlineVariant = borderSubtle, error = actionDangerBg, onError = actionDangerText, scrim = surfaceScrim)
+    else lightColorScheme(primary = actionPrimaryBg, onPrimary = actionPrimaryText, primaryContainer = surfaceBrandSubtle, onPrimaryContainer = textBrand, secondaryContainer = actionSecondaryBg, onSecondaryContainer = actionSecondaryText, background = surfacePage, onBackground = textPrimary, surface = surfacePage, onSurface = textPrimary, onSurfaceVariant = textSecondary, surfaceContainerLowest = surfaceRaised, surfaceContainerLow = surfaceRaised, surfaceContainer = surfaceRaised, surfaceContainerHigh = surfaceRaised, surfaceContainerHighest = surfaceSunken, inverseSurface = surfaceInverse, outline = borderControl, outlineVariant = borderSubtle, error = actionDangerBg, onError = actionDangerText, scrim = surfaceScrim)
 
 object DsSpace {
     val gutter = 16.dp

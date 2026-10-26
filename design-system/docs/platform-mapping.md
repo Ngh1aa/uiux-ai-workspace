@@ -42,7 +42,7 @@ compare across platforms.
 | Token role | SwiftUI | Compose (Material 3) |
 |---|---|---|
 | `surface.page` | `Color("surface/page")` → background | `colorScheme.background` / `surface` |
-| `surface.raised` | `Color("surface/raised")` | `surfaceContainerLow` |
+| `surface.raised` | `Color("surface/raised")` | `surfaceContainerLowest`, `Low`, `surfaceContainer`, `High` (thanh điều hướng, hộp thoại) |
 | `surface.sunken` | `Color("surface/sunken")` | `surfaceContainerHighest` |
 | `surface.brand-subtle` | `Color("surface/brandSubtle")` | `primaryContainer` |
 | `surface.brand-strong` | `Color("surface/brandStrong")` | `primary` |

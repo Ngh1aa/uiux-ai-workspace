@@ -17,6 +17,11 @@ const { spawnSync } = require('node:child_process');
 const REPO = path.resolve(__dirname, '..');
 const CHECKER = path.join(REPO, 'skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs');
 const BRIEFS = fs.readdirSync(path.join(__dirname, 'briefs')).filter((f) => f.endsWith('.md')).map((f) => f.replace(/\.md$/, '')).sort();
+// Đề thêm sau ghi "**Thêm vào:** YYYY-MM-DD"; lần chạy trước ngày đó không phải làm đề này (như report.py).
+const BRIEF_SINCE = Object.fromEntries(BRIEFS.map((b) => {
+  const m = fs.readFileSync(path.join(__dirname, 'briefs', `${b}.md`), 'utf8').match(/\*\*Thêm vào:\*\*\s*(\d{4}-\d{2}-\d{2})/);
+  return [b, m ? m[1] : '0000-00-00'];
+}));
 
 function main() {
   const runArg = process.argv[2];
@@ -46,7 +51,8 @@ function main() {
     briefs: {},
   };
   let failed = false;
-  for (const brief of BRIEFS) {
+  const day = path.basename(runDir).slice(0, 10);
+  for (const brief of BRIEFS.filter((b) => BRIEF_SINCE[b] <= day)) {
     const page = path.join(runDir, brief, 'index.html');
     if (!fs.existsSync(page)) {
       summary.briefs[brief] = { status: 'MISSING' };
