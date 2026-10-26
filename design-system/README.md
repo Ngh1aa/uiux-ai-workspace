@@ -38,7 +38,7 @@ design-system/
 ├── examples/gom-moc/           trial run of the client process: brief, brand.css, landing page, app screens
 ├── starter/                    starter kit: placeholder brand layer, 8 mobile + 2 web screens, 6 desktop app shells, landing skeleton
 ├── contrast-pairs.json         79 declared foreground/background pairs, checked in both modes
-├── scripts/                    build.py, validate.py, capture-example.cjs (Python stdlib, Node for browser checks)
+├── scripts/                    build.py, validate.py, oklch-scale.py, check-brand.py, capture-example.cjs (Python stdlib, Node for browser checks)
 └── tests/                      pytest regression and negative tests
 ```
 
@@ -93,6 +93,7 @@ DTCG 2025.10 support before relying on it.
 ```sh
 python3 design-system/scripts/build.py              # regenerate generated/ and docs/index.html
 python3 design-system/scripts/validate.py --report  # format, layering, mode parity, contrast, CSS lint
+python3 design-system/scripts/oklch-scale.py --hue 165 --chroma 0.14   # 11-step OKLCH scale for a new brand hue
 python3 -m pytest design-system/tests -q            # regression + negative tests
 NODE_PATH=<playwright-and-axe-core> node design-system/scripts/capture-example.cjs artifacts/ds
 node --test design-system/tests/browser-gate.test.cjs
