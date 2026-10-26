@@ -44,7 +44,9 @@ Nếu chưa có system đủ rõ, quay lại `design-system-and-components` thay
 - Tránh JS cho behavior CSS/native HTML giải quyết tốt.
 - Event/animation không được block primary task.
 - Không thêm dependency chỉ để tránh viết vài dòng platform API đơn giản.
-- Preserve existing working behavior khi task chỉ yêu cầu visual change.
+- Preserve existing working behavior khi task chỉ yêu cầu visual change. Giữ **hành vi**, không phải giữ
+  code giao diện: khi được yêu cầu redesign, sửa và xoá CSS, markup, renderer cũ tại nguồn theo
+  [`brownfield-redesign`](../brownfield-redesign/SKILL.md), có test hành vi bảo vệ.
 
 ## Progressive resources
 
@@ -72,6 +74,8 @@ Nếu chưa có system đủ rõ, quay lại `design-system-and-components` thay
 ## Anti-patterns
 
 - Rebuild toàn codebase khi không cần.
+- Ngược lại: thêm một file CSS "final layer" với `!important`, hoặc JS vá DOM sau render, thay vì sửa
+  file đang sở hữu giao diện.
 - Một component 1000 dòng chứa toàn page behavior/style/data.
 - Copy screenshot bằng absolute positioning cố định.
 - Patch hàng chục media query thay vì sửa layout model.

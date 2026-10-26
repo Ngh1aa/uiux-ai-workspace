@@ -69,6 +69,7 @@ thư mục có `SKILL.md`.
 | `design-critique-and-rationale` | Phê bình theo rubric, lý do thiết kế |
 | `ux-laws-and-heuristics` | Đánh giá theo heuristic |
 | `website-audit-and-redesign` | Audit website cũ trước khi làm lại |
+| `brownfield-redesign` | Thiết kế lại sản phẩm đã có code: kiểm kê, giữ ADN, test hành vi, thay tại nguồn thay vì đè; có `overlay-check.py` |
 
 ## Playbook theo ngành
 

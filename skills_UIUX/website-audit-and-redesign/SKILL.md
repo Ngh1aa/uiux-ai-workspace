@@ -113,7 +113,9 @@ Ngoài SEO/technical, kiểm design implementation debt:
 - responsive behavior phân tán;
 - fake dynamic states/inventory/success.
 
-Mục tiêu là biết **owner nào phải thay**, không chỉ selector nào cần patch.
+Mục tiêu là biết **owner nào phải thay**, không chỉ selector nào cần patch. Khi bắt tay sửa code, theo
+[`brownfield-redesign`](../brownfield-redesign/SKILL.md): kiểm kê, thay tại nguồn, xoá phần bị thay, soát
+bằng `overlay-check.py`.
 
 ## 8. SEO/URL preservation
 
