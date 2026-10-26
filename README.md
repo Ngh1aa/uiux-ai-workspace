@@ -20,7 +20,7 @@ Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thi�
 | [`WORKFLOWS.md`](WORKFLOWS.md) | Quy trình theo cỡ việc, từ sửa nhỏ tới sản phẩm mới |
 | [`skills_UIUX/`](skills_UIUX/README.md) | 42 skill UI/UX và script soát trang đã dựng |
 | [`design-system/`](design-system/README.md) | Design system có test: token DTCG, 25 component, 30 pattern, font tiếng Việt, ví dụ app, `check-brand.py`, `oklch-scale.py` |
-| [`benchmarks/`](benchmarks/README.md) | Bộ 3 đề chuẩn và [kết quả các lần chạy](benchmarks/REPORT.md) |
+| [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (4 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
 
 ## Kiểm tra tự động
 

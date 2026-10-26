@@ -1,6 +1,6 @@
 # Bộ đề chuẩn
 
-Ba đề cố định để biết repo có thật sự giúp ra thiết kế tốt hơn sau mỗi lần nâng cấp hay không,
+Các đề cố định để biết repo có thật sự giúp ra thiết kế tốt hơn sau mỗi lần nâng cấp hay không,
 chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPORT.md`](REPORT.md).
 
 | Đề | Loại | Cỡ |
@@ -8,9 +8,12 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 | [01 Landing xưởng gốm](briefs/01-landing.md) | Website một trang | M |
 | [02 App đặt sân cầu lông](briefs/02-app.md) | App 5 màn | L |
 | [03 Dashboard kho shop len](briefs/03-dashboard.md) | Trang quản trị | M |
+| [05 App sổ liên lạc iOS và Android](briefs/05-native.md) | App native 4 màn × 2 nền tảng | L |
 
 ## Quy tắc
 
+- **Đề thêm sau** ghi dòng `**Thêm vào:** YYYY-MM-DD`; lần chạy trước ngày đó không bắt buộc có đề
+  này, lần chạy từ ngày đó phải làm đủ.
 - **Không sửa đề.** Đề có sẵn nội dung và số liệu để mọi lần chạy so được với nhau. Muốn đổi
   đề thì tạo đề mới với số mới, giữ đề cũ.
 - Làm đề đúng như làm việc thật: theo [`START-HERE.md`](../START-HERE.md), không nhìn lần chạy trước.

@@ -61,6 +61,22 @@ class ReportTests(unittest.TestCase):
         self.scores["briefs"].pop(next(iter(report.BRIEFS)))
         self.assertTrue(self.errors())
 
+    def test_brief_added_after_a_run_is_not_required_for_it(self):
+        newest = max(report.BRIEFS)
+        original = dict(report.BRIEF_SINCE)
+        try:
+            report.BRIEF_SINCE[newest] = "2099-01-01"
+            self.run = Path("2026-10-24-v1")
+            self.scores["run"] = self.checks["run"] = "2026-10-24-v1"
+            self.scores["briefs"].pop(newest)
+            self.checks["briefs"].pop(newest)
+            self.assertEqual(self.errors(), [])
+            report.BRIEF_SINCE[newest] = "2000-01-01"
+            self.assertTrue(self.errors())
+        finally:
+            report.BRIEF_SINCE.clear()
+            report.BRIEF_SINCE.update(original)
+
     def test_fresh_run_requires_checker_provenance(self):
         self.checks.pop("source")
         self.assertTrue(self.errors())
