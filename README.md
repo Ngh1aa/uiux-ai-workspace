@@ -15,6 +15,7 @@ Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thi�
 | [`BRAND-BRIEF.template.md`](BRAND-BRIEF.template.md) | Brand brief cho từng khách hàng |
 | [`TASTE.md`](TASTE.md) | Gu thiết kế và các lỗi không được lặp lại |
 | [`CRAFT.md`](CRAFT.md) | Số liệu cốt lõi, danh sách cấm kiểu AI generic, ảnh và icon |
+| [`foundations/`](foundations/README.md) | Kiến thức nền: bố cục, lưới và mật độ |
 | [`WORKFLOWS.md`](WORKFLOWS.md) | Quy trình theo cỡ việc, từ sửa nhỏ tới sản phẩm mới |
 | [`skills_UIUX/`](skills_UIUX/README.md) | 40 skill UI/UX và script soát trang đã dựng |
 | [`design-system/`](design-system/README.md) | Design system có test: token DTCG, 25 component, font tiếng Việt, ví dụ app, `check-brand.py` |
