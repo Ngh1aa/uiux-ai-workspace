@@ -3,6 +3,17 @@
 Semantic versioning on the public surface (token paths, class names, state attributes, contracts).
 See [docs/governance.md](docs/governance.md).
 
+## 0.5.0 (2026-10-26)
+
+### Added
+- `scripts/export-native.py` and committed output `generated/native/DSTokens.swift` and
+  `generated/native/DsTokens.kt`: every semantic colour role in light and dark, spacing, shape,
+  motion and type roles mapped to Dynamic Type text styles and Material 3 typography slots, plus a
+  Material 3 `ColorScheme` mapping. `--check` runs in CI. Tests in `tests/test_export_native.py`.
+- Starter `mobile-ios.html` and `mobile-android.html`: one four-screen flow (list, detail, form,
+  destructive confirmation) in iOS and Material 3 chrome, styled by `starter/native.css`.
+- Starter icons `app-i-arrow-left`, `app-i-more`, `app-i-trash`.
+
 ## 0.4.1 (2026-10-26)
 
 ### Added

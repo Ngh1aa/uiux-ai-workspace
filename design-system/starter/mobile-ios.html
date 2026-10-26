@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Starter kit iOS</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../generated/tokens.css">
+<link rel="stylesheet" href="../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="native.css">
+</head>
+<body class="ds-root app">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-chat" viewBox="0 0 24 24"><path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-9l-4.5 3.5v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z"/></symbol>
+  <symbol id="app-i-task" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16.5" rx="2"/><path d="M9 4V3h6v1M8.5 12.5l2.5 2.5 4.5-4.5"/></symbol>
+  <symbol id="app-i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-chevron-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+  <symbol id="ds-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.75"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+</svg>
+<!-- icons:end -->
+<main class="app-gallery">
+  <header class="app-gallery__intro ds-stack ds-stack--sm">
+    <h1 class="ds-text-title-lg">Starter kit iOS</h1>
+    <p class="ds-text-body-md ds-text-secondary">Bốn màn của cùng một luồng như <a class="ds-link" href="mobile-android.html">bản Android</a>: cùng nội dung, cùng token, khác "chrome". Tiêu đề lớn, danh sách nhóm bo góc, quay lại bằng nút chữ và vuốt từ mép trái, form mở trong sheet có Huỷ và Lưu, xác nhận phá huỷ bằng alert hai nút.</p>
+    <p class="ds-text-body-sm ds-text-secondary">Đây là bản xem trên trình duyệt để duyệt hướng. App thật dùng control hệ thống (<code>NavigationStack</code>, <code>List</code> kiểu <code>.insetGrouped</code>, <code>.sheet</code>, <code>.alert</code>) và token trong <code>generated/native/DSTokens.swift</code>.</p>
+    <div class="ds-cluster">
+      <button class="ds-button ds-button--sm" type="button" data-theme-toggle><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg>Đổi sáng tối</button>
+    </div>
+  </header>
+
+  <!-- 1. Danh sách có tóm tắt -->
+  <section class="app-gallery__item" aria-label="iOS danh sách lớp">
+    <p class="app-gallery__caption">1. Danh sách, tiêu đề lớn</p>
+    <div class="app-phone nt ios" data-screen="iOS Danh sách">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen">
+        <div class="nt-scroll">
+          <div class="ios-nav"><span class="ios-nav__lead"></span><span></span><span class="ios-nav__trail"><button class="ios-link" type="button" aria-label="Thêm lớp"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button></span></div>
+          <h1 class="ios-large">Lớp học</h1>
+          <div class="ios-search" role="search"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-search"/></svg><span>Tìm lớp, học sinh</span></div>
+          <div class="ios-body">
+            <div class="ios-summary" aria-label="Tóm tắt hôm nay">
+              <div class="is-key"><strong>3</strong><span>Buổi hôm nay</span></div>
+              <div><strong>52</strong><span>Học sinh</span></div>
+              <div><strong>4</strong><span>Việc chờ</span></div>
+            </div>
+            <section class="ios-section" aria-labelledby="ios-today">
+              <h2 class="ios-section__head" id="ios-today">Hôm nay, thứ Ba 13/10</h2>
+              <ul class="ios-group ios-group--icons">
+                <li><a class="ios-row" href="#ios-detail"><span class="ios-row__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg></span><span class="ios-row__body"><span class="ios-row__title">Robot cơ bản 5A</span><span class="ios-row__sub">8:00, phòng Lab 2, 18 em</span></span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+                <li><a class="ios-row" href="#ios-detail"><span class="ios-row__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg></span><span class="ios-row__body"><span class="ios-row__title">Lập trình Scratch 4B</span><span class="ios-row__sub">14:00, phòng 204, 16 em</span></span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+                <li><a class="ios-row" href="#ios-detail"><span class="ios-row__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg></span><span class="ios-row__body"><span class="ios-row__title">Điện tử vui 3C</span><span class="ios-row__sub">17:30, phòng Lab 1, 18 em</span></span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+              </ul>
+            </section>
+            <section class="ios-section" aria-labelledby="ios-all">
+              <h2 class="ios-section__head" id="ios-all">Tất cả lớp</h2>
+              <ul class="ios-group">
+                <li><a class="ios-row" href="#ios-detail"><span class="ios-row__body"><span class="ios-row__title">Robot cơ bản 5A</span></span><span class="ios-row__value nt-num">12/16 buổi</span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+                <li><a class="ios-row" href="#ios-detail"><span class="ios-row__body"><span class="ios-row__title">Lập trình Scratch 4B</span></span><span class="ios-row__value nt-num">7/12 buổi</span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+                <li><a class="ios-row" href="#ios-detail"><span class="ios-row__body"><span class="ios-row__title">Điện tử vui 3C</span></span><span class="ios-row__value nt-num">3/10 buổi</span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+              </ul>
+            </section>
+          </div>
+        </div>
+        <nav class="ios-tabbar" aria-label="Điều hướng chính">
+          <a href="#" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg>Lớp học</a>
+          <a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch</a>
+          <a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg>Tin nhắn</a>
+          <a href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>Tôi</a>
+        </nav>
+        <span class="ios-home" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Chi tiết: quay lại bằng nút chữ, tiêu đề nhỏ giữa -->
+  <section class="app-gallery__item" aria-label="iOS chi tiết lớp" id="ios-detail">
+    <p class="app-gallery__caption">2. Chi tiết, quay lại bằng nút chữ</p>
+    <div class="app-phone nt ios" data-screen="iOS Chi tiết">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen">
+        <div class="ios-nav">
+          <span class="ios-nav__lead"><a class="ios-link" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg>Lớp học</a></span>
+          <h1 class="ios-nav__title">Robot cơ bản 5A</h1>
+          <span class="ios-nav__trail"><button class="ios-link" type="button">Sửa</button></span>
+        </div>
+        <div class="nt-scroll">
+          <div class="ios-body">
+            <div class="ios-summary" aria-label="Tiến độ lớp">
+              <div class="is-key"><strong>12/16</strong><span>Buổi đã học</span></div>
+              <div><strong>18</strong><span>Học sinh</span></div>
+              <div><strong>94%</strong><span>Chuyên cần</span></div>
+            </div>
+            <section class="ios-section" aria-labelledby="ios-next">
+              <h2 class="ios-section__head" id="ios-next">Buổi tới</h2>
+              <ul class="ios-group">
+                <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Ngày</span></span><span class="ios-row__value">Thứ Ba, 13/10</span></li>
+                <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Giờ</span></span><span class="ios-row__value nt-num">8:00 đến 9:30</span></li>
+                <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Phòng</span></span><span class="ios-row__value">Lab 2</span></li>
+                <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Nội dung</span></span><span class="ios-row__value">Cảm biến màu</span></li>
+              </ul>
+              <p class="ios-section__foot">Phụ huynh nhận nhắc lịch lúc 19:00 hôm trước.</p>
+            </section>
+            <section class="ios-section" aria-labelledby="ios-acts">
+              <h2 class="ios-section__head" id="ios-acts">Thao tác</h2>
+              <ul class="ios-group ios-group--icons">
+                <li><a class="ios-row" href="#"><span class="ios-row__icon"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-task"/></svg></span><span class="ios-row__body"><span class="ios-row__title">Điểm danh</span></span><span class="ios-row__value">Chưa</span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+                <li><a class="ios-row" href="#"><span class="ios-row__icon"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg></span><span class="ios-row__body"><span class="ios-row__title">Danh sách học sinh</span></span><span class="ios-row__value nt-num">18</span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+                <li><a class="ios-row" href="#"><span class="ios-row__icon"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg></span><span class="ios-row__body"><span class="ios-row__title">Nhắn phụ huynh</span></span><svg class="ds-icon ios-row__chev" aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+              </ul>
+            </section>
+            <section class="ios-section" aria-labelledby="ios-watch">
+              <h2 class="ios-section__head" id="ios-watch">Cần chú ý</h2>
+              <ul class="ios-group">
+                <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Minh An</span><span class="ios-row__sub">Vắng 2 buổi liền</span></span><span class="ios-row__value">Gọi phụ huynh</span></li>
+                <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Bảo Ngọc</span><span class="ios-row__sub">Chưa nộp bài buổi 11</span></span><span class="ios-row__value">Nhắc</span></li>
+              </ul>
+            </section>
+            <ul class="ios-group"><li><button class="ios-row ios-row--danger" type="button" style="width:100%;border:0;background:none;font:inherit;font-size:17px">Huỷ buổi học</button></li></ul>
+          </div>
+        </div>
+        <span class="ios-home" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Form trong sheet: Huỷ trái, Lưu phải, màn dưới lùi lại -->
+  <section class="app-gallery__item" aria-label="iOS form trong sheet">
+    <p class="app-gallery__caption">3. Form trong sheet</p>
+    <div class="app-phone nt ios" data-screen="iOS Sheet">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen">
+        <div class="ios-behind" aria-hidden="true">
+          <div class="ios-nav"><span class="ios-nav__lead"><span class="ios-link">Lớp học</span></span><p class="ios-nav__title">Robot cơ bản 5A</p><span></span></div>
+        </div>
+        <div class="ios-sheet" role="dialog" aria-modal="true" aria-labelledby="ios-sheet-title">
+          <span class="ios-grabber" aria-hidden="true"></span>
+          <div class="ios-nav">
+            <span class="ios-nav__lead"><button class="ios-link" type="button">Huỷ</button></span>
+            <h2 class="ios-nav__title" id="ios-sheet-title">Thêm buổi học</h2>
+            <span class="ios-nav__trail"><button class="ios-link ios-link--strong" type="button">Lưu</button></span>
+          </div>
+          <div class="nt-scroll">
+            <div class="ios-body" style="padding-bottom:48px">
+              <div class="ios-sheet-head"><p class="ios-sheet-head__big nt-num">Buổi 13</p><p class="nt-muted">Robot cơ bản 5A, còn 3 buổi sau buổi này</p></div>
+              <section class="ios-section" aria-label="Thông tin buổi">
+                <ul class="ios-group">
+                  <li class="ios-row"><label class="ios-row__title" for="ios-f-name">Tên</label><input class="ios-field" id="ios-f-name" value="Cảm biến khoảng cách"></li>
+                  <li class="ios-row"><label class="ios-row__title" for="ios-f-date">Ngày</label><input class="ios-field" id="ios-f-date" value="20/10/2026"></li>
+                  <li class="ios-row"><label class="ios-row__title" for="ios-f-time">Giờ</label><input class="ios-field" id="ios-f-time" value="8:00 đến 9:30"></li>
+                  <li class="ios-row"><label class="ios-row__title" for="ios-f-room">Phòng</label><input class="ios-field" id="ios-f-room" value="Lab 2"></li>
+                </ul>
+              </section>
+              <section class="ios-section" aria-labelledby="ios-f-remind">
+                <h3 class="ios-section__head" id="ios-f-remind">Nhắc lịch</h3>
+                <ul class="ios-group">
+                  <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Nhắc phụ huynh</span></span><span class="ds-switch"><input type="checkbox" role="switch" checked aria-label="Nhắc phụ huynh"><span class="ds-switch__thumb"></span></span></li>
+                  <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Gửi lúc</span></span><span class="ios-row__value nt-num">19:00 hôm trước</span></li>
+                </ul>
+                <p class="ios-section__foot">18 phụ huynh của lớp sẽ nhận tin nhắn trong app.</p>
+              </section>
+              <section class="ios-section" aria-labelledby="ios-f-note">
+                <h3 class="ios-section__head" id="ios-f-note">Ghi chú cho học sinh</h3>
+                <ul class="ios-group"><li class="ios-row"><input class="ios-field ios-field--left" aria-labelledby="ios-f-note" placeholder="Mang theo pin AA"></li></ul>
+              </section>
+              <section class="ios-section" aria-labelledby="ios-f-kit">
+                <h3 class="ios-section__head" id="ios-f-kit">Đồ dùng mang theo</h3>
+                <ul class="ios-group">
+                  <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Bộ kit Arduino</span></span><span class="ios-row__value nt-num">18 bộ</span></li>
+                  <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Cảm biến siêu âm</span></span><span class="ios-row__value nt-num">18 cái</span></li>
+                  <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Pin AA</span></span><span class="ios-row__value">Học sinh tự mang</span></li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+        <span class="ios-home" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Xác nhận phá huỷ: alert hai nút -->
+  <section class="app-gallery__item" aria-label="iOS alert xác nhận">
+    <p class="app-gallery__caption">4. Alert xác nhận phá huỷ</p>
+    <div class="app-phone nt ios" data-screen="iOS Alert">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen">
+        <div class="ios-nav" aria-hidden="true">
+          <span class="ios-nav__lead"><span class="ios-link"><svg class="ds-icon"><use href="#ds-i-chevron-left"/></svg>Lớp học</span></span>
+          <p class="ios-nav__title">Robot cơ bản 5A</p>
+          <span></span>
+        </div>
+        <div class="ios-body" aria-hidden="true">
+          <div class="ios-summary">
+            <div class="is-key"><strong>12/16</strong><span>Buổi đã học</span></div>
+            <div><strong>18</strong><span>Học sinh</span></div>
+            <div><strong>94%</strong><span>Chuyên cần</span></div>
+          </div>
+          <ul class="ios-group">
+            <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Ngày</span></span><span class="ios-row__value">Thứ Ba, 13/10</span></li>
+            <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Giờ</span></span><span class="ios-row__value">8:00 đến 9:30</span></li>
+            <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Phòng</span></span><span class="ios-row__value">Lab 2</span></li>
+            <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Nội dung</span></span><span class="ios-row__value">Cảm biến màu</span></li>
+          </ul>
+          <ul class="ios-group">
+            <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Điểm danh</span></span><span class="ios-row__value">Chưa</span></li>
+            <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Danh sách học sinh</span></span><span class="ios-row__value">18</span></li>
+            <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Nhắn phụ huynh</span></span></li>
+          </ul>
+          <ul class="ios-group"><li class="ios-row ios-row--danger">Huỷ buổi học</li></ul>
+        </div>
+        <div class="nt-scrim" aria-hidden="true"></div>
+        <div class="ios-alert" role="alertdialog" aria-modal="true" aria-labelledby="ios-al-t" aria-describedby="ios-al-m">
+          <div class="ios-alert__body">
+            <h2 class="ios-alert__title" id="ios-al-t">Huỷ buổi 13/10?</h2>
+            <p class="ios-alert__msg" id="ios-al-m">18 phụ huynh sẽ nhận thông báo huỷ. Không hoàn tác được.</p>
+          </div>
+          <div class="ios-alert__actions"><button type="button">Giữ buổi</button><button type="button" class="is-danger">Huỷ buổi</button></div>
+        </div>
+        <span class="ios-home" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+document.addEventListener('click', (event) => {
+  if (event.target.closest('[data-theme-toggle]')) {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+  }
+});
+</script>
+</body>
+</html>

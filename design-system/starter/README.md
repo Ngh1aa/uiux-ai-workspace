@@ -11,6 +11,7 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 | [`mobile.html`](mobile.html) | 8 màn app mẫu: trang chủ, danh sách, chi tiết, biểu mẫu, rỗng, đang tải, lỗi, chọn nhanh |
 | [`web.html`](web.html) | Trang quản trị mẫu, co giãn từ máy tính xuống điện thoại |
 | [`landing.html`](landing.html) | Khung section cho landing page: header, hero, bằng chứng, vấn đề, lợi ích, cách hoạt động, bảng giá, lời khách, câu hỏi, lời mời cuối, footer |
+| [`mobile-ios.html`](mobile-ios.html), [`mobile-android.html`](mobile-android.html) | Cùng một luồng 4 màn (danh sách, chi tiết, form, xác nhận phá huỷ) theo chrome iOS và Material 3. Dùng cùng [`native.css`](native.css); bảng đối chiếu trong `PATTERNS.md` |
 | [`desktop.html`](desktop.html) | 6 khung app desktop 1440 × 900: tổng quan, danh sách và chi tiết, form nhiều bước, chi tiết đối tượng, cài đặt, đăng nhập chia đôi. Dùng cùng [`desktop.css`](desktop.css) |
 | [`web-states.html`](web-states.html) | Trạng thái từng khối của trang web: đang tải, dữ liệu cũ, lỗi, rỗng |
 | [`SIGNATURE.md`](SIGNATURE.md) | Cách tạo dấu ấn riêng cho từng dự án, để màn không chỉ là starter kit đổi màu |

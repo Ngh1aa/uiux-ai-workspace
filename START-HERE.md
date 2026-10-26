@@ -120,5 +120,5 @@ mới chỉ soát tĩnh.
 | `design-system/` | Token DTCG, 25 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `design-system/patterns/` | 30 pattern ghép sẵn (card nổi bật, số liệu, nội dung, quy trình, chuyển đổi, trạng thái) |
-| `benchmarks/` | Bộ 3 đề chuẩn để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |
+| `benchmarks/` | Bộ đề chuẩn (4 đề) để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |
 | `AGENTS.md` | Quy tắc làm việc chung cho AI |

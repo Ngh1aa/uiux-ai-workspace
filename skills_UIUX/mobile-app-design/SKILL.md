@@ -37,6 +37,14 @@ platform divergence. Platform metrics: [iOS](../ios-app-design/references/ios-sp
 ## Completion boundary
 This skill produces design artifacts. For a coded browser demo, follow [mobile-web-preview](references/mobile-web-preview/README.md); its evidence remains browser-only. Building/installing a native app requires the target's actual toolchain and native checks. Design record integrity is not visual quality, user validation, runtime accessibility or store readiness. Keep missing checks NOT_RUN/UNKNOWN. Figma writes and production publication require authorization.
 
+## Điểm xuất phát có sẵn
+
+- Mẫu chrome hai nền tảng trên trình duyệt: [`mobile-ios.html`](../../design-system/starter/mobile-ios.html),
+  [`mobile-android.html`](../../design-system/starter/mobile-android.html); bảng đối chiếu iOS và Android trong
+  [`PATTERNS.md`](../../design-system/starter/PATTERNS.md#app-native-ios-và-android).
+- Token cho code native: `design-system/generated/native/` (SwiftUI và Compose), sinh bằng
+  `design-system/scripts/export-native.py`.
+
 ## Hướng dẫn con
 
 Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướng dẫn con khi việc đang làm khớp cột bên phải.
