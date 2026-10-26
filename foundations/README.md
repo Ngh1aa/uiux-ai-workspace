@@ -7,3 +7,4 @@ Chỉ mở trang cần cho việc đang làm; khối kế hoạch thị giác tr
 | Trang | Đọc khi |
 |---|---|
 | [`layout-and-density.md`](layout-and-density.md) | Chia vùng, lưới 12 cột, mật độ, khoảng trống thừa, màn desktop và canvas |
+| [`reference-gallery.md`](reference-gallery.md) | Chọn tham khảo cho từng loại màn: nhìn ai, học gì, ghép pattern nào |

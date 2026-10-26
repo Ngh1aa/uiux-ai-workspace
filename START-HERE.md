@@ -45,7 +45,9 @@ trong skill chỉ mở khi `SKILL.md` hoặc `WORKFLOWS.md` bảo cần.
   và sửa kế hoạch nếu chạm mặc định. Việc cỡ XS bỏ qua bước này.
 - Bắt đầu từ [starter kit](design-system/starter/README.md): chọn loại màn trong
   [`PATTERNS.md`](design-system/starter/PATTERNS.md) và mượn **cấu trúc** màn mẫu trong
-  `mobile.html`, `web.html` hoặc `landing.html`. Màu, font, bo góc của starter chỉ là chỗ giữ chỗ.
+  `mobile.html`, `web.html`, `desktop.html` hoặc `landing.html`. Màu, font, bo góc của starter chỉ là chỗ
+  giữ chỗ. Lấp từng vùng bằng khối có sẵn trong
+  [thư viện pattern](design-system/patterns/README.md) thay vì tự chế card.
 - Thương hiệu: chép `brand.css` vào thư mục dự án, điền theo brand brief, rồi soát:
 
   ```sh
@@ -111,10 +113,11 @@ mới chỉ soát tĩnh.
 | `BRAND-BRIEF.template.md` | Bước 0: tiếp nhận thương hiệu khách hàng |
 | `TASTE.md` | Gu thiết kế và các lỗi không được lặp lại |
 | `CRAFT.md` | Số liệu cốt lõi, danh sách cấm, kế hoạch thị giác, ảnh và icon |
-| `foundations/` | Kiến thức nền: bố cục, lưới, mật độ (mở theo việc, không đọc hết) |
+| `foundations/` | Kiến thức nền: bố cục, lưới, mật độ, tham khảo theo loại màn (mở theo việc, không đọc hết) |
 | `WORKFLOWS.md` | Quy trình và danh sách skill theo cỡ việc (nguồn định tuyến duy nhất) |
 | `skills_UIUX/` | 40 skill UI/UX và script soát chất lượng |
 | `design-system/` | Token DTCG, 25 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
+| `design-system/patterns/` | 30 pattern ghép sẵn (card nổi bật, số liệu, nội dung, quy trình, chuyển đổi, trạng thái) |
 | `benchmarks/` | Bộ 3 đề chuẩn để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |
 | `AGENTS.md` | Quy tắc làm việc chung cho AI |
