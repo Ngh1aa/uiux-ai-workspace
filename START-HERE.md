@@ -113,9 +113,10 @@ mới chỉ soát tĩnh.
 | `BRAND-BRIEF.template.md` | Bước 0: tiếp nhận thương hiệu khách hàng |
 | `TASTE.md` | Gu thiết kế và các lỗi không được lặp lại |
 | `CRAFT.md` | Số liệu cốt lõi, danh sách cấm, kế hoạch thị giác, ảnh và icon |
-| `foundations/` | Kiến thức nền: bố cục, lưới, mật độ, tham khảo theo loại màn (mở theo việc, không đọc hết) |
+| `foundations/` | Kiến thức nền: bố cục, Gestalt, chữ tiếng Việt, màu OKLCH, chuyển động, ảnh, tham khảo theo loại màn (mở theo việc, không đọc hết) |
+| `GLOSSARY.md` | Bảng thuật ngữ và quy tắc viết tiếng Việt trong repo |
 | `WORKFLOWS.md` | Quy trình và danh sách skill theo cỡ việc (nguồn định tuyến duy nhất) |
-| `skills_UIUX/` | 40 skill UI/UX và script soát chất lượng |
+| `skills_UIUX/` | 42 skill UI/UX và script soát chất lượng |
 | `design-system/` | Token DTCG, 25 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `design-system/patterns/` | 30 pattern ghép sẵn (card nổi bật, số liệu, nội dung, quy trình, chuyển đổi, trạng thái) |
