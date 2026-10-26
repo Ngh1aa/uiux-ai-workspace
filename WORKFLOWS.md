@@ -68,6 +68,10 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
 4. **Wireframe** và walkthrough 5 kịch bản. Sửa lỗi UX trước khi tô màu.
 5. **Visual**: áp design system; so 2 phương án cho màn hình quyết định chính.
 6. **Render + critique** theo rubric, sửa, render lại.
+   Với luồng có dữ liệu, bấm thử từ chọn/nhập → xác nhận → quay lại sửa → xác nhận lại. Đối chiếu
+   cùng dữ liệu trên mọi màn (số lượng, biến thể, tổng tiền, ngày giờ); kiểm tra giữ lựa chọn và
+   ít nhất một nhánh lỗi/khôi phục. Ghi kết quả riêng với soát giao diện; `taste-check` không
+   chứng minh luồng đúng.
 7. **Handoff**: spec trạng thái, token, hành vi tương tác.
 
 - Skill: [`ux-structure-and-flow-design`](skills_UIUX/ux-structure-and-flow-design/SKILL.md) ·
@@ -131,6 +135,8 @@ Như **L**, cộng thêm:
 | Track | Khi nào | Bắt đầu từ |
 |---|---|---|
 | **Chỉ review / audit** | Cần đánh giá, chưa sửa | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
+| **Cải thiện UI đang có** | Sửa/polish giữ brand và hành vi; redesign khi được yêu cầu | Chọn XS–L theo bảng cỡ việc, dùng [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có); cả site đổi hướng thì dùng L + `website-audit-and-redesign` |
+| **Soát prototype** | Bản HTML/CSS/JS cần demo được | Theo cỡ việc tương ứng + [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#soát-prototype); thử đường demo và ghi tác vụ mô phỏng |
 | **Design system** | Thêm token, component, hoặc dựng hệ thống mới | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) |
 | **Portfolio** | Làm lại portfolio / định vị nghề | Như cỡ M, cộng [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) |
 | **AI trong sản phẩm** | Tính năng có AI tạo nội dung/quyết định | [`human-ai-interaction-design`](skills_UIUX/human-ai-interaction-design/SKILL.md) |
@@ -147,6 +153,8 @@ Như **L**, cộng thêm:
   mục "Khi không chạy được taste-check" trong [`START-HERE.md`](START-HERE.md) và ghi rõ.
 - Đã **nhìn ảnh render thật**, không chỉ đọc code.
 - Đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
+- Đã bấm thử tác vụ chính và nhánh quay lại/sửa; dữ liệu đầu vào, tóm tắt và xác nhận khớp nhau.
+  Demo không có backend phải ghi rõ hành vi nào chỉ mô phỏng.
 - Contrast và vùng chạm đạt chuẩn trong [`CRAFT.md`](CRAFT.md); không chạm mặc định nào trong danh sách
   cấm mà không có lý do từ brief.
 - Rubric đạt ngưỡng của cỡ việc, không hard-fail.

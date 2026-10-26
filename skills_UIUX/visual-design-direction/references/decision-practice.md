@@ -1,8 +1,8 @@
 # Decision practice: learn, critique, repair, transfer
 
 Use for deliberate practice requested by a learner or a skill maintainer. This is
-not another delivery orchestrator: real project work keeps its resolved Factory
-Flow, authority and acceptance criteria. Completing exercises does not establish
+not another delivery orchestrator: real project work follows `START-HERE.md`,
+`WORKFLOWS.md` and the target's brief and acceptance criteria. Completing exercises does not establish
 seniority, clinical/domain expertise or human usability.
 
 ## Start with an observable baseline
@@ -17,14 +17,14 @@ Use existing skills only when their decision is active:
 
 | Practice | Owning skill | Exercise and deliverable | Review / redo condition |
 |---|---|---|---|
-| 1. Frame the job | `product-discovery` | Pick one brief. Name actor, entry context, decision, consequence of error and one assumption needing evidence. | Redo if the goal is a visual adjective or the audience is everyone. |
-| 2. Model the workflow | `ux-research-and-journey`, `state-feedback-and-error-recovery` | Map current state → next actor/action → feedback → failure/recovery. Add an interrupted/back path. | Redo if pending looks complete, input is lost or the journey ends without recovery. |
+| 1. Frame the job | `audience-intent-and-top-tasks` | Pick one brief. Name actor, entry context, decision, consequence of error and one assumption needing evidence. | Redo if the goal is a visual adjective or the audience is everyone. |
+| 2. Model the workflow | `ux-structure-and-flow-design`, `state-feedback-and-error-recovery` | Map current state → next actor/action → feedback → failure/recovery. Add an interrupted/back path. | Redo if pending looks complete, input is lost or the journey ends without recovery. |
 | 3. Organize information | `information-architecture` | Prioritize the same facts for entry, comparison and review. Justify grouping/labels without a fixed menu count. | Explain one rejected grouping; test findability when evidence warrants it. |
-| 4. Ground the domain | `design-intelligence-retrieval` | Retrieve one exact profile + role. Write ADOPT/ADAPT/REJECT for one workflow and one reference transfer. | Unknown industry must produce a research plan, not an unrelated preset. |
+| 4. Ground the domain | `industry-playbooks`, `design-reference-research-and-benchmark` | Select the matching playbook or a relevant primary reference. Write ADOPT/ADAPT/REJECT for one workflow and one reference transfer. | Unknown industry must produce a research plan, not an unrelated preset. |
 | 5. Explore direction | `visual-design-direction` | Render two meaningful representative alternatives with the same facts/state/CTA. Declare type, density and object relationships. | A color/font swap alone does not answer the structural question. Do not force novelty into a familiar form. |
 | 6. Critique craft | `ui-craft-and-visual-qa`, `visual-taste-calibration` | Open desktop and narrow/enlarged-text renders. Annotate observed hierarchy, type, spacing, comparison and states. | Each issue needs a location, consequence, owner and proposed repair. Check seven signs by purpose, not prohibition. |
-| 7. Repair and retest | Existing implementation owner + `testing-strategy` | Fix one root cause; rerun the same scenario and preserve before/after artifacts. | A passing build is not a visual review; a screenshot is not proof back retains input. |
-| 8. Transfer and calibrate | `skill-authoring-and-governance`, `agent-evaluation-and-reliability` | Repeat on a different domain with its own objects/risks. Compare decisions with a held-out rubric. | Redo if the old metaphor/policy transfers unchanged or an unmeasured result becomes a success claim. |
+| 7. Repair and retest | Existing implementation owner + `ui-craft-and-visual-qa` | Fix one root cause; rerun the same scenario and preserve before/after artifacts. | A passing build is not a visual review; a screenshot is not proof back retains input. |
+| 8. Transfer and calibrate | `visual-taste-calibration` + benchmark protocol | Repeat on a different domain with its own objects/risks. Compare decisions with a held-out rubric. | Redo if the old metaphor/policy transfers unchanged or an unmeasured result becomes a success claim. |
 
 ## Five practice briefs
 

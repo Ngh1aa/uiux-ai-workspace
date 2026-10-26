@@ -2,8 +2,8 @@
 name: ui-craft-and-visual-qa
 description: |
   Review và polish UI ở mức craft: hierarchy, spacing, alignment, density, typography,
-  imagery, states, responsive consistency và visual regression. Dùng trước khi gọi giao diện
-  hoàn tất hoặc khi UI “đúng chức năng nhưng chưa chuyên nghiệp / trông như AI template”.
+  imagery, states, responsive consistency và visual regression. Dùng để cải thiện UI hiện có,
+  soát prototype hoặc trước khi gọi giao diện hoàn tất. Chọn cỡ việc theo WORKFLOWS.md.
 ---
 
 # UI Craft & Visual QA
@@ -309,6 +309,27 @@ Ghi issue severity P0/P1/P2 và phân biệt:
 - Không sửa micro-detail P2 trong khi composition/hierarchy P1 còn sai.
 - Nếu user phải chỉ ra một lỗi obvious mà rendered evidence lẽ ra đã phát hiện, thêm lỗi đó thành regression check/checklist cho **project và owning skill/eval** thay vì chỉ vá project.
 - Nếu defect do media source không đủ chất lượng, sửa source/media strategy trước khi thêm visual effect để che lỗi.
+
+### Cải thiện giao diện hiện có
+
+- Chọn cỡ việc theo [WORKFLOWS](../../WORKFLOWS.md); skill này không có quy trình định tuyến riêng.
+  Khi cần đổi hướng toàn site hoặc IA, dùng track redesign và `website-audit-and-redesign`.
+- Đối chiếu source và render trước khi sửa. Ghi phần cần giữ: brand, ý nghĩa nội dung, hành trình,
+  URL có giá trị SEO, interaction/API đang hoạt động và token/component đúng hiện có.
+- Mỗi finding cần vị trí, evidence, tác động, nguyên nhân, owner cần sửa và cách kiểm lại;
+  tránh đổi style chỉ vì sở thích. Nếu người dùng yêu cầu redesign, không hạ thành polish CSS.
+- Ưu tiên sửa shared owner cho lỗi lặp lại. So before/after với cùng nội dung, viewport và state;
+  kiểm tra tác vụ chính, quay lại sửa và dữ liệu xác nhận theo WORKFLOWS.
+
+### Soát prototype
+
+- Ghi ai xem, điều họ cần hiểu và đường demo từ đầu đến cuối; chọn signature moment theo brief.
+  Áp dụng rubric/craft hiện có, không tạo một thang điểm hay gate riêng cho prototype.
+- Thử các trạng thái demo thực sự đi tới được; không chỉ đặt các nhãn loading/error/success lên
+  một trang rồi coi luồng đã hoạt động. Nêu rõ dữ liệu giả định và tác vụ mô phỏng.
+- Dùng nội dung dài, dấu tiếng Việt và các giá trị biên để thử bố cục. Kiểm squint/5-second theo
+  mục hiện có; tự đánh giá không phải bằng chứng người dùng hiểu hay thích thiết kế.
+- UI demo được kiểm chứng không tự chứng minh backend, thanh toán, SMS, app native hoặc production.
 
 ## Acceptance criteria
 

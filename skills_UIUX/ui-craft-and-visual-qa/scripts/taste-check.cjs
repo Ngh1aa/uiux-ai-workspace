@@ -25,7 +25,7 @@
  * LỖI (thoát với mã 1):
  *   - dấu " · " hoặc " • " nối cụm từ
  *   - chữ dưới ngưỡng tương phản WCAG AA (4.5:1, chữ lớn 3:1)
- *   - nhãn ngắn (≤ 24 ký tự) bị gãy dòng
+ *   - nhãn điều khiển ngắn (≤ 24 ký tự) bị gãy dòng; heading/nội dung xuống dòng là cảnh báo để review
  *   - nội dung tràn ngang, hoặc chữ bị khung cha cắt mất
  *   - hơn một card nổi bật (khối nền đậm, rộng) trong một màn
  *   - ảnh, font, CSS, script tải lỗi (mã HTTP ≥ 400 hoặc không tải được)
@@ -267,7 +267,9 @@ function auditInPage() {
         // 3. Nhãn ngắn bị gãy dòng
         const full = (el.textContent || '').replace(/\s+/g, ' ').trim();
         if (full.length <= 24 && text.length >= 2 && lineCount(el) > 1) {
-          errors.push({ rule: 'wrap', message: `Nhãn ngắn bị gãy dòng: ${describe(el)}` });
+          const label = el.matches(INTERACTIVE) || el.closest('label, button, [role="button"], [role="tab"]');
+          if (label) errors.push({ rule: 'wrap', message: `Nhãn điều khiển ngắn bị gãy dòng: ${describe(el)}` });
+          else warnings.push({ rule: 'wrap-review', message: `Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: ${describe(el)}` });
         }
         // Dòng cuối chỉ còn một chữ
         if (full.length > 24 && el.children.length === 0) {
@@ -352,6 +354,9 @@ function auditInPage() {
       const r = el.getBoundingClientRect();
       if (r.width < rootRect.width * 0.6 || r.height < 56) continue;
       const fullBleed = r.width >= rootRect.width - 2;
+      // A whole website may alternate section backgrounds. Those are layout regions,
+      // not competing highlight cards. Explicit data-screen canvases retain their card checks.
+      if (root === document.body && fullBleed && el.matches('header, footer, main, section, [role="banner"], [role="contentinfo"]')) continue;
       const { st, own, hasBg, hasEdge, hasShadow } = surfaceOf(el);
       if (own[3] >= 0.9 && ratio(own, rootBg) >= 3 && !highlights.some((h) => h.contains(el))) highlights.push(el);
       if ((hasBg || hasEdge || hasShadow) && !(own[3] >= 0.999 && ratio(own, backdrop(el.parentElement) || rootBg) < 1.02 && !hasEdge && !hasShadow)) {
@@ -497,11 +502,25 @@ async function main() {
           const consoleErrors = [];
           tab.on('pageerror', (err) => consoleErrors.push(String(err.message || err)));
           const failedRequests = [];
-          tab.on('requestfailed', (req) => { if (!/^data:/.test(req.url())) failedRequests.push(`${req.url()} (${req.failure() ? req.failure().errorText : 'lỗi'})`); });
+          const cancelledImages = [];
+          tab.on('requestfailed', (req) => {
+            if (/^data:/.test(req.url())) return;
+            const error = req.failure() ? req.failure().errorText : 'lỗi';
+            if (req.resourceType() === 'image' && /ERR_ABORTED|NS_BINDING_ABORTED/.test(error)) cancelledImages.push(req.url());
+            else failedRequests.push(`${req.url()} (${error})`);
+          });
           tab.on('response', (res) => { if (res.status() >= 400) failedRequests.push(`${res.url()} (HTTP ${res.status()})`); });
           await tab.goto(url, { waitUntil: 'networkidle' });
           await tab.evaluate(() => document.fonts && document.fonts.ready);
           let screens = await tab.evaluate(auditInPage);
+          // Runtime may replace an image's src. An aborted old request is not a broken
+          // final image; keep it visible as a diagnostic, and still fail unresolved images.
+          for (const imageUrl of new Set(cancelledImages)) {
+            const unresolved = await tab.evaluate((url) => [...document.images].some((img) =>
+              (img.currentSrc === url || img.src === url) && (!img.complete || img.naturalWidth === 0)), imageUrl);
+            if (unresolved) failedRequests.push(`${imageUrl} (ảnh hiện tại bị hủy tải)`);
+            else screens.push({ name: 'Ảnh đổi nguồn', errors: [], warnings: [{ rule: 'request-replaced', message: `Request ảnh cũ bị hủy; không còn ảnh lỗi dùng nguồn này: ${imageUrl}` }] });
+          }
           if (reflow) {
             screens = screens.map((sc) => ({ name: `${sc.name} (reflow 320 px)`, errors: sc.errors.filter((e) => e.rule === 'overflow').map((e) => ({ ...e, rule: 'reflow' })), warnings: [] }));
           }

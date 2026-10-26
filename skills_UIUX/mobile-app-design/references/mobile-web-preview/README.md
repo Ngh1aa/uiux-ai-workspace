@@ -4,11 +4,14 @@
 
 ## Scope and owners
 
-Use the `mobile-web-preview` Flow for `platform_family=mobile_app` and `requested_output=browser-prototype`. It produces a browser presentation of an app design. Design-only work stays on `mobile-app-design`; native application requests still need a native runner. Use the same Flow OS, authority, browser evidence and deployment-truth owners as the website pipeline.
+Use this guide when the requested output is an interactive browser presentation of an app.
+Follow `START-HERE.md` and `WORKFLOWS.md` for task sizing and checks. Design-only work stays on
+`mobile-app-design`; native application requests need the target's native toolchain and tests.
+Keep browser evidence, native evidence and publication authorization separate.
 
 ## Design and implementation
 
-Inspect the target before choosing a stack. Reuse its tokens, components, renderer, data fixtures and navigation/state model. Keep preview code in the target app project; the Factory owns this skill and Flow, not every client's demo. For Expo with web-compatible components, adapt the existing web export after checking the installed SDK. For SwiftUI/Compose or unsupported native components, implement a browser presentation from the approved design contract and label platform simulations. Do not claim it is shared native code.
+Inspect the target before choosing a stack. Reuse its tokens, components, renderer, data fixtures and navigation/state model. Keep preview code in the target app project; this repository provides guidance, not a shared runtime for every client's demo. For Expo with web-compatible components, adapt the existing web export after checking the installed SDK. For SwiftUI/Compose or unsupported native components, implement a browser presentation from the approved design contract and label platform simulations. Do not claim it is shared native code.
 
 Inventory screens, states and transitions first. One screen should render relevant states from shared data, not become many unrelated HTML copies. Make representative states addressable through the project's route/query/hash convention. Preserve browser Back, reload, dismiss, error recovery and an explicit demo reset. Use local labelled fixtures when no real backend exists; no real credential, payment or destructive action should be represented as completed by a mock interaction.
 
@@ -22,7 +25,7 @@ Turn explicit UX thresholds into a criterion/evidence matrix. Separate implement
 
 Keep failing requested performance profiles in the handoff. Isolate network/CPU variables to diagnose them, but do not replace a failed stricter profile with an easier passing one. A reviewable prototype can be delivered with open criteria; it must not be labelled QA-accepted or production-ready while applicable requested budgets fail or required evidence is missing.
 
-Use [browser handoff](templates/client-handoff.md) to record exact source SHA, build output, captures/findings, runtime limits and reset instructions. Use the [hosting guide](references/hosting-and-verification.md) only when selecting/exporting/publishing a preview. The [Pages workflow asset](assets/github-pages.yml) is an opt-in target-project starting point, not an active Factory deployment workflow.
+Use [browser handoff](templates/client-handoff.md) to record exact source SHA, build output, captures/findings, runtime limits and reset instructions. Use the [hosting guide](references/hosting-and-verification.md) only when selecting/exporting/publishing a preview. The [Pages workflow asset](assets/github-pages.yml) is an opt-in target-project starting point, not an active deployment workflow of this repository.
 
 `branch_write` can prepare code/assets; it cannot publish. Release/publication uses existing explicit authorization and the canonical release owner, not delegated QA/provider authority. Existing authorization in the session applies; do not ask again just because this skill is loaded. When publication is outside scope, hand off PREPARED assets and identify the pending URL. When a client link is requested and authorized, continue through publication and live verification. Do not call a PREPARED package a delivered live demo.
 
