@@ -314,6 +314,9 @@ Ghi issue severity P0/P1/P2 và phân biệt:
 
 - Chọn cỡ việc theo [WORKFLOWS](../../WORKFLOWS.md); skill này không có quy trình định tuyến riêng.
   Khi cần đổi hướng toàn site hoặc IA, dùng track redesign và `website-audit-and-redesign`.
+- Được nhờ thiết kế lại một sản phẩm đã có code (không chỉ polish) thì theo
+  [`brownfield-redesign`](../brownfield-redesign/SKILL.md). Polish cũng sửa ở token và CSS đang sở hữu
+  thành phần, không thêm file đè nạp sau cùng.
 - Đối chiếu source và render trước khi sửa. Ghi phần cần giữ: brand, ý nghĩa nội dung, hành trình,
   URL có giá trị SEO, interaction/API đang hoạt động và token/component đúng hiện có.
 - Mỗi finding cần vị trí, evidence, tác động, nguyên nhân, owner cần sửa và cách kiểm lại;
