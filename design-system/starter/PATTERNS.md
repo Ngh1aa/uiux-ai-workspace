@@ -102,6 +102,31 @@ Mẫu chạy được: [`web-states.html`](web-states.html).
 - **Rỗng vì đã xong:** báo tích cực ("Không còn yêu cầu chờ duyệt"), không bắt làm gì.
 - Giờ cập nhật chung của trang đặt ở góc trên.
 
+## App native: iOS và Android
+
+Mẫu chạy được: [`mobile-ios.html`](mobile-ios.html) và [`mobile-android.html`](mobile-android.html), cùng
+một luồng bốn màn, dùng [`native.css`](native.css). Token cho code native: `generated/native/`
+(xem [platform mapping](../docs/platform-mapping.md)). Nguyên tắc: **chung nghĩa, khác chrome**.
+
+| Việc | iOS | Android (Material 3) |
+|---|---|---|
+| Tiêu đề màn gốc | Tiêu đề lớn 34 pt, thu nhỏ khi cuộn | Thanh trên 64 dp, hoặc thanh lớn khi màn có tiêu đề dài |
+| Quay lại | Nút chữ "‹ Tên màn trước" bên trái, vuốt từ mép trái | Mũi tên ←, nút Back hệ thống, quay lại dự đoán |
+| Điều hướng chính | Tab bar đáy, icon trên nhãn, màu nhấn cho tab chọn | Thanh điều hướng 80 dp, viên chỉ báo 64 × 32 quanh icon tab chọn |
+| Hành động chính của màn | Nút trên thanh (＋ hoặc chữ), hoặc nút trong nội dung | Nút nổi mở rộng góc dưới phải, trên thanh điều hướng |
+| Danh sách | Danh sách nhóm bo góc 10 trên nền xám, dòng ≥ 44 pt, mũi tên › khi mở được | Dòng 56–72 dp, avatar hoặc icon đầu dòng, không mũi tên |
+| Tìm kiếm | Ô tìm dưới tiêu đề lớn | Thanh tìm kiếm bo tròn 56 dp ở đầu màn |
+| Form tạo mới | Sheet có grabber, "Huỷ" trái, "Lưu" phải đậm | Màn toàn phần, nút đóng ✕ trái, "Lưu" chữ phải |
+| Trường nhập | Dòng nhãn trái, giá trị phải trong nhóm | Trường viền, nhãn nổi trên đường viền |
+| Xác nhận phá huỷ | Alert 270 pt, hai nút ngang, nút phá huỷ đỏ | Hộp thoại bo 28, icon, nút chữ căn phải |
+| Thông báo ngắn | Banner hoặc dấu hiệu tại chỗ (iOS không có toast hệ thống) | Snackbar ở đáy, có hành động |
+| Vùng chạm | 44 × 44 pt | 48 × 48 dp |
+
+- Không làm một giao diện chung rồi đổi icon. Người dùng mỗi nền tảng đã quen chrome của mình.
+- Nội dung, thứ tự thông tin, token và chữ giống nhau giữa hai bản.
+- Soát trên trình duyệt chỉ là sàn. Trên thiết bị thật phải thử Dynamic Type lớn nhất, font scale 200%,
+  VoiceOver, TalkBack và chế độ tối.
+
 ## Web: khung app desktop
 
 Mẫu chạy được: [`desktop.html`](desktop.html). Cách chia vùng chi tiết:

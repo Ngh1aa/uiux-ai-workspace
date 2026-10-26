@@ -35,6 +35,16 @@ THRESHOLDS = {"XS": (0, 0), "S": (0, 3), "M": (3.5, 3), "L": (4.0, 3.5), "XL": (
 REVIEWERS = {"agent-heuristic", "expert-review"}
 RUN_KINDS = {"fresh": "Làm mới", "iterative-repair": "Sửa tiếp", "legacy-unknown": "Chưa rõ"}
 BRIEFS = {path.stem for path in (ROOT / "briefs").glob("*.md")}
+# Đề thêm sau ghi "**Thêm vào:** YYYY-MM-DD"; lần chạy trước ngày đó không bắt buộc có đề này.
+BRIEF_SINCE = {
+    path.stem: (m.group(1) if (m := re.search(r"\*\*Thêm vào:\*\*\s*(\d{4}-\d{2}-\d{2})", path.read_text(encoding="utf-8"))) else "0000-00-00")
+    for path in (ROOT / "briefs").glob("*.md")
+}
+
+
+def required_briefs(run_name: str) -> set[str]:
+    day = run_name[:10]
+    return {b for b in BRIEFS if BRIEF_SINCE[b] <= day}
 
 
 def load(path: Path) -> dict:
@@ -80,8 +90,10 @@ def validate(run: Path, scores: dict, checks: dict) -> list[str]:
             errors.append(f"{run.name}: source.dirty phải là boolean")
         if not isinstance(source.get("checker_sha256"), str) or not re.fullmatch(r"[0-9a-f]{64}", source["checker_sha256"]):
             errors.append(f"{run.name}: cần hash SHA256 của checker đã chạy")
-    if set(scores.get("briefs", {})) != BRIEFS or set(checks.get("briefs", {})) != BRIEFS:
-        errors.append(f"{run.name}: scores và checks phải có đủ, đúng bộ đề {sorted(BRIEFS)}")
+    need = required_briefs(run.name)
+    got_scores, got_checks = set(scores.get("briefs", {})), set(checks.get("briefs", {}))
+    if not need <= got_scores or not got_scores <= BRIEFS or got_scores != got_checks:
+        errors.append(f"{run.name}: scores và checks phải có đủ, đúng bộ đề {sorted(need)}")
     for brief, entry in scores.get("briefs", {}).items():
         where = f"{run.name}/{brief}"
         if entry.get("size") not in THRESHOLDS:

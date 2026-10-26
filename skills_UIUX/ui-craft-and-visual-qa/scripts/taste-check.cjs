@@ -364,7 +364,7 @@ function auditInPage() {
     const highlights = [];
     const cards = [];
     for (const el of all) {
-      if (el === root || el.matches(CONTROL) || el.closest('nav, [role="tablist"], [role="navigation"], [role="dialog"], [role="status"], [role="alert"], .ds-toast')) continue;
+      if (el === root || el.matches(CONTROL) || el.closest('nav, [role="tablist"], [role="navigation"], [role="dialog"], [role="alertdialog"], [role="status"], [role="alert"], .ds-toast')) continue;
       const r = el.getBoundingClientRect();
       if (r.width < rootRect.width * 0.6 || r.height < 56) continue;
       const fullBleed = r.width >= rootRect.width - 2;

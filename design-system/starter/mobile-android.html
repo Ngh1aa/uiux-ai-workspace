@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Starter kit Android</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="../generated/tokens.css">
+<link rel="stylesheet" href="../components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="native.css">
+</head>
+<body class="ds-root app">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="app-i-chat" viewBox="0 0 24 24"><path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-9l-4.5 3.5v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z"/></symbol>
+  <symbol id="app-i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></symbol>
+  <symbol id="app-i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="app-i-more" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="18.5" r="1"/></symbol>
+  <symbol id="app-i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></symbol>
+  <symbol id="app-i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.75"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+</svg>
+<!-- icons:end -->
+<main class="app-gallery">
+  <header class="app-gallery__intro ds-stack ds-stack--sm">
+    <h1 class="ds-text-title-lg">Starter kit Android</h1>
+    <p class="ds-text-body-md ds-text-secondary">Bốn màn của cùng một luồng như <a class="ds-link" href="mobile-ios.html">bản iOS</a>, theo Material 3: thanh trên có nút mũi tên quay lại, thanh điều hướng đáy có viên chỉ báo, nút nổi mở rộng cho hành động chính, form mở toàn màn với nút đóng và Lưu, xác nhận phá huỷ bằng hộp thoại bo 28.</p>
+    <p class="ds-text-body-sm ds-text-secondary">Đây là bản xem trên trình duyệt để duyệt hướng. App thật dùng Compose (<code>TopAppBar</code>, <code>NavigationBar</code>, <code>ExtendedFloatingActionButton</code>, <code>AlertDialog</code>), tràn viền, quay lại dự đoán, và token trong <code>generated/native/DsTokens.kt</code>.</p>
+    <div class="ds-cluster">
+      <button class="ds-button ds-button--sm" type="button" data-theme-toggle><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg>Đổi sáng tối</button>
+    </div>
+  </header>
+
+  <!-- 1. Danh sách: thanh tìm kiếm, card tóm tắt, danh sách 2 dòng, FAB, thanh điều hướng -->
+  <section class="app-gallery__item" aria-label="Android danh sách lớp">
+    <p class="app-gallery__caption">1. Danh sách, thanh tìm kiếm và nút nổi</p>
+    <div class="app-phone nt md" data-screen="Android Danh sách">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen">
+        <div class="nt-scroll">
+          <div class="md-search" role="search"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-menu"/></svg><span class="md-spacer">Tìm lớp, học sinh</span><span class="md-item__lead" style="width:32px;height:32px;font-size:13px" aria-hidden="true">LA</span></div>
+          <div class="md-body">
+            <section class="md-card md-card--primary" aria-labelledby="md-today">
+              <p class="nt-muted" id="md-today" style="margin:0">Hôm nay, thứ Ba 13/10</p>
+              <p class="md-big">3 buổi</p>
+              <div class="md-stats">
+                <div><strong class="nt-num">52</strong><span class="nt-muted">Học sinh</span></div>
+                <div><strong class="nt-num">4</strong><span class="nt-muted">Việc chờ</span></div>
+                <div><strong class="nt-num">94%</strong><span class="nt-muted">Đi học</span></div>
+              </div>
+            </section>
+            <div class="md-chips" role="group" aria-label="Lọc lớp">
+              <button class="md-chip" type="button" aria-pressed="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg>Đang dạy</button>
+              <button class="md-chip" type="button" aria-pressed="false">Đã xong</button>
+              <button class="md-chip" type="button" aria-pressed="false">Lớp 5</button>
+            </div>
+            <section aria-labelledby="md-list-h">
+              <h2 class="md-label" id="md-list-h">Hôm nay</h2>
+              <ul class="md-list">
+                <li><a class="md-item" href="#md-detail"><span class="md-item__lead">5A</span><span class="md-item__body"><span class="md-item__title">Robot cơ bản 5A</span><span class="md-item__sub">8:00, phòng Lab 2, 18 em</span></span><span class="md-item__trail nt-num">12/16</span></a></li>
+                <li><a class="md-item" href="#md-detail"><span class="md-item__lead">4B</span><span class="md-item__body"><span class="md-item__title">Lập trình Scratch 4B</span><span class="md-item__sub">14:00, phòng 204, 16 em</span></span><span class="md-item__trail nt-num">7/12</span></a></li>
+                <li><a class="md-item" href="#md-detail"><span class="md-item__lead">3C</span><span class="md-item__body"><span class="md-item__title">Điện tử vui 3C</span><span class="md-item__sub">17:30, phòng Lab 1, 18 em</span></span><span class="md-item__trail nt-num">3/10</span></a></li>
+              </ul>
+            </section>
+          </div>
+        </div>
+        <a class="md-fab" href="#md-form"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg>Thêm buổi</a>
+        <nav class="md-navbar" aria-label="Điều hướng chính">
+          <a href="#" aria-current="page"><span class="md-navbar__pill"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-users"/></svg></span>Lớp học</a>
+          <a href="#"><span class="md-navbar__pill"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>Lịch</a>
+          <a href="#"><span class="md-navbar__pill"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-chat"/></svg></span>Tin nhắn</a>
+          <a href="#"><span class="md-navbar__pill"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span>Tôi</a>
+        </nav>
+        <span class="md-gesture" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Chi tiết: mũi tên quay lại, tiêu đề lớn, card -->
+  <section class="app-gallery__item" aria-label="Android chi tiết lớp" id="md-detail">
+    <p class="app-gallery__caption">2. Chi tiết, mũi tên quay lại</p>
+    <div class="app-phone nt md" data-screen="Android Chi tiết">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen">
+        <div class="nt-scroll">
+          <div class="md-topbar md-topbar--large">
+            <a class="md-iconbtn" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-arrow-left"/></svg></a>
+            <span class="md-spacer"></span>
+            <button class="md-iconbtn" type="button" aria-label="Sửa lớp"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-edit"/></svg></button>
+            <button class="md-iconbtn" type="button" aria-label="Thêm tuỳ chọn"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-more"/></svg></button>
+            <h1 class="md-topbar__title">Robot cơ bản 5A</h1>
+          </div>
+          <div class="md-body">
+            <section class="md-card" aria-labelledby="md-next">
+              <h2 class="md-card__title" id="md-next">Buổi tới: Cảm biến màu</h2>
+              <p class="nt-muted" style="margin:0">Thứ Ba 13/10, 8:00 đến 9:30, Lab 2</p>
+              <div class="md-progress" style="color:var(--ds-action-primary-bg)" role="progressbar" aria-valuemin="0" aria-valuemax="16" aria-valuenow="12" aria-label="12 trên 16 buổi"><span style="width:75%"></span></div>
+              <p class="nt-muted nt-num" style="margin:0">12/16 buổi, chuyên cần 94%</p>
+              <div class="ds-cluster"><a class="md-btn" href="#">Điểm danh</a><a class="md-btn md-btn--tonal" href="#">Nhắn phụ huynh</a></div>
+            </section>
+            <section aria-labelledby="md-watch">
+              <h2 class="md-label" id="md-watch">Cần chú ý</h2>
+              <ul class="md-list">
+                <li class="md-item"><span class="md-item__lead">MA</span><span class="md-item__body"><span class="md-item__title">Minh An</span><span class="md-item__sub">Vắng 2 buổi liền</span></span><a class="md-btn md-btn--text" href="#">Gọi</a></li>
+                <li class="md-item"><span class="md-item__lead">BN</span><span class="md-item__body"><span class="md-item__title">Bảo Ngọc</span><span class="md-item__sub">Chưa nộp bài buổi 11</span></span><a class="md-btn md-btn--text" href="#">Nhắc</a></li>
+              </ul>
+            </section>
+            <section class="md-card md-card--outlined" aria-labelledby="md-kit">
+              <h2 class="md-card__title" id="md-kit">Đồ dùng buổi tới</h2>
+              <div class="md-row"><span>Bộ kit Arduino</span><span class="nt-muted nt-num">18 bộ</span></div>
+              <div class="md-row"><span>Cảm biến màu</span><span class="nt-muted nt-num">18 cái</span></div>
+            </section>
+            <a class="md-btn md-btn--text md-btn--danger" href="#md-dialog" style="align-self:flex-start"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#app-i-trash"/></svg>Huỷ buổi học</a>
+          </div>
+        </div>
+        <span class="md-gesture" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Form toàn màn: nút đóng và Lưu trên thanh -->
+  <section class="app-gallery__item" aria-label="Android form toàn màn" id="md-form">
+    <p class="app-gallery__caption">3. Form toàn màn</p>
+    <div class="app-phone nt md" data-screen="Android Form">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen" role="dialog" aria-modal="true" aria-labelledby="md-form-title">
+        <div class="md-topbar">
+          <button class="md-iconbtn" type="button" aria-label="Đóng"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-x"/></svg></button>
+          <h1 class="md-topbar__title" id="md-form-title">Thêm buổi học</h1>
+          <button class="md-btn md-btn--text" type="button">Lưu</button>
+        </div>
+        <div class="nt-scroll">
+          <div class="md-body" style="gap:var(--ds-space-600);padding-top:var(--ds-space-400)">
+            <div class="ios-sheet-head" style="padding:0"><p class="ios-sheet-head__big nt-num">Buổi 13</p><p class="nt-muted">Robot cơ bản 5A, còn 3 buổi sau buổi này</p></div>
+            <div><label class="md-field"><span class="md-field__label">Tên buổi</span><input value="Cảm biến khoảng cách"></label></div>
+            <div class="ds-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ds-space-400)">
+              <label class="md-field"><span class="md-field__label">Ngày</span><input value="20/10/2026"></label>
+              <label class="md-field"><span class="md-field__label">Giờ</span><input value="8:00"></label>
+            </div>
+            <div><label class="md-field"><span class="md-field__label">Phòng</span><input value="Lab 2"></label><p class="md-help">Lab 2 còn trống từ 7:30 đến 11:00.</p></div>
+            <div class="md-row"><span><span class="md-item__title">Nhắc phụ huynh</span><br><span class="md-item__sub">19:00 hôm trước, 18 phụ huynh</span></span><span class="ds-switch"><input type="checkbox" role="switch" checked aria-label="Nhắc phụ huynh"><span class="ds-switch__thumb"></span></span></div>
+            <div><label class="md-field" style="align-items:flex-start;padding-top:var(--ds-space-400);min-height:112px"><span class="md-field__label">Ghi chú cho học sinh</span><textarea rows="3">Mang theo pin AA.</textarea></label></div>
+            <section class="md-card md-card--outlined" aria-labelledby="md-f-kit">
+              <h2 class="md-card__title" id="md-f-kit">Đồ dùng</h2>
+              <div class="md-row"><span>Bộ kit Arduino</span><span class="nt-muted nt-num">18 bộ</span></div>
+              <div class="md-row"><span>Cảm biến siêu âm</span><span class="nt-muted nt-num">18 cái</span></div>
+            </section>
+          </div>
+        </div>
+        <span class="md-gesture" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Hộp thoại xác nhận phá huỷ -->
+  <section class="app-gallery__item" aria-label="Android hộp thoại xác nhận" id="md-dialog">
+    <p class="app-gallery__caption">4. Hộp thoại xác nhận phá huỷ</p>
+    <div class="app-phone nt md" data-screen="Android Hộp thoại">
+      <div class="app-status"><span class="app-status__time">9:41</span></div>
+      <div class="nt-screen">
+        <div aria-hidden="true">
+          <div class="md-topbar md-topbar--large">
+            <span class="md-iconbtn"><svg class="ds-icon"><use href="#app-i-arrow-left"/></svg></span>
+            <span class="md-spacer"></span>
+            <p class="md-topbar__title">Robot cơ bản 5A</p>
+          </div>
+          <div class="md-body">
+            <div class="md-card">
+              <p class="md-card__title">Buổi tới: Cảm biến màu</p>
+              <p class="nt-muted" style="margin:0">Thứ Ba 13/10, 8:00 đến 9:30, Lab 2</p>
+              <div class="md-progress" style="color:var(--ds-action-primary-bg)"><span style="width:75%"></span></div>
+              <p class="nt-muted" style="margin:0">12/16 buổi, chuyên cần 94%</p>
+            </div>
+            <ul class="md-list">
+              <li class="md-item"><span class="md-item__lead">MA</span><span class="md-item__body"><span class="md-item__title">Minh An</span><span class="md-item__sub">Vắng 2 buổi liền</span></span></li>
+              <li class="md-item"><span class="md-item__lead">BN</span><span class="md-item__body"><span class="md-item__title">Bảo Ngọc</span><span class="md-item__sub">Chưa nộp bài buổi 11</span></span></li>
+            </ul>
+            <div class="md-card md-card--outlined">
+              <p class="md-card__title">Đồ dùng buổi tới</p>
+              <div class="md-row"><span>Bộ kit Arduino</span><span class="nt-muted">18 bộ</span></div>
+              <div class="md-row"><span>Cảm biến màu</span><span class="nt-muted">18 cái</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="nt-scrim" aria-hidden="true"></div>
+        <div class="md-dialog" role="alertdialog" aria-modal="true" aria-labelledby="md-dl-t" aria-describedby="md-dl-m">
+          <span class="md-dialog__icon"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-trash"/></svg></span>
+          <h2 class="md-dialog__title" id="md-dl-t">Huỷ buổi 13/10?</h2>
+          <p class="md-dialog__msg" id="md-dl-m">18 phụ huynh sẽ nhận thông báo huỷ. Không hoàn tác được.</p>
+          <div class="md-dialog__actions"><button class="md-btn md-btn--text" type="button">Giữ buổi</button><button class="md-btn md-btn--text md-btn--danger" type="button">Huỷ buổi</button></div>
+        </div>
+        <span class="md-gesture" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+document.addEventListener('click', (event) => {
+  if (event.target.closest('[data-theme-toggle]')) {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+  }
+});
+</script>
+</body>
+</html>

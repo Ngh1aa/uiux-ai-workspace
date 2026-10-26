@@ -7,6 +7,20 @@ scripts and design-tool plugins.
 **Principle:** share *meaning* (roles, scale steps, states) across platforms; let each platform keep
 its own chrome, text-scaling system and controls. Do not force identical pixels.
 
+## 0. Generated native tokens
+
+`python3 design-system/scripts/export-native.py` writes the semantic layer of `generated/tokens.json`
+to two committed files, following the tables below:
+
+| File | Contents |
+|---|---|
+| `generated/native/DSTokens.swift` | `DS.Colors.*` (dynamic light and dark), `DS.Space`, `DS.Shape`, `DS.Motion` (durations, timing curves), `DS.Fonts` (brand face with `relativeTo:` text styles so Dynamic Type still works) |
+| `generated/native/DsTokens.kt` | `DsColors` with `LightDsColors` and `DarkDsColors`, `toMaterialScheme(dark)`, `DsSpace`, `DsShape`, `DsMotion`, `dsTypography(family)` |
+
+CI runs `export-native.py --check`, so the files never drift from the tokens. They are reference
+output: copy them into the app module (or call the script from the app build) instead of editing them.
+Browser previews of the platform chrome: `starter/mobile-ios.html` and `starter/mobile-android.html`.
+
 ## 1. Units
 
 | Source | Web | iOS | Android |
