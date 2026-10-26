@@ -51,7 +51,8 @@
 .pt-hero__code { font: var(--ds-font-weight-semibold) var(--ds-font-size-400)/1.4 var(--ds-font-family-mono); letter-spacing: 0.04em; }
 .pt-hero__medal { display: grid; place-items: center; flex: none; width: 72px; height: 72px; border-radius: var(--ds-shape-pill); box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--ds-text-on-brand-strong) 40%, transparent); background: color-mix(in srgb, var(--ds-text-on-brand-strong) 14%, transparent); }
 .pt-hero__medal .ds-icon { width: 32px; height: 32px; }
-.pt-hero .ds-button { --_bg: var(--ds-text-on-brand-strong); --_fg: var(--ds-surface-brand-strong); --_bg-hover: var(--ds-text-on-brand-strong); --_bg-pressed: var(--ds-text-on-brand-strong); --_border: transparent; align-self: flex-start; }
+.pt-hero .ds-button { align-self: flex-start; }
+.pt-hero .ds-button:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ds-text-on-brand-strong); --_fg: var(--ds-surface-brand-strong); --_bg-hover: var(--ds-text-on-brand-strong); --_bg-pressed: var(--ds-text-on-brand-strong); --_border: transparent; }
 .pt-hero :focus-visible { outline-color: var(--ds-text-on-brand-strong); }
 
 /* ---------- 6–11. Số liệu ---------- */
