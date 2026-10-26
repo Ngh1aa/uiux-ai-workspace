@@ -34,6 +34,8 @@ RUBRIC = ROOT / "skills_UIUX" / "design-critique-and-rationale" / "references" /
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 SIZES = ("XS", "S", "M", "L", "XL")
 THRESHOLDS = {"XS": (0, 0), "S": (0, 3), "M": (3.5, 3), "L": (4.0, 3.5), "XL": (4.0, 3.5)}
+# Ngưỡng riêng theo chiều (quality-bar-rubric.md): XL cần chiều 6 ≥ 4.
+DIMENSION_FLOORS = {"XL": {"6": 4}}
 DIMENSIONS = [str(i) for i in range(1, 11)]
 HARD_FAILS = {f"HF-{i}" for i in range(1, 11)}
 COLD_QUESTIONS = [
@@ -86,7 +88,8 @@ def threshold_text(size: str) -> str:
         return "không hard fail trên màn bị ảnh hưởng"
     if size == "S":
         return "không hard fail, các chiều liên quan ≥ 3"
-    return f"không hard fail, trung bình ≥ {avg}, không chiều nào < {floor}"
+    extra = "".join(f", chiều {d} ≥ {v}" for d, v in DIMENSION_FLOORS.get(size, {}).items())
+    return f"không hard fail, trung bình ≥ {avg}, không chiều nào < {floor}{extra}"
 
 
 def make(args: argparse.Namespace) -> int:
@@ -96,13 +99,23 @@ def make(args: argparse.Namespace) -> int:
         print(f"không tìm thấy ảnh trong {shots}", file=sys.stderr)
         return 1
     out = Path(args.out)
-    if out.exists() and any(out.iterdir()) and not args.force:
-        print(f"{out} đã có nội dung; thêm --force để ghi đè", file=sys.stderr)
-        return 1
+    if out.exists() and any(out.iterdir()):
+        if not args.force:
+            print(f"{out} đã có nội dung; thêm --force để ghi đè", file=sys.stderr)
+            return 1
+        if not (out / "manifest.json").exists():
+            print(f"{out} không phải hồ sơ duyệt (thiếu manifest.json); không xoá", file=sys.stderr)
+            return 1
+        # Xoá sạch hồ sơ cũ: người duyệt mới không được thấy review.json hay ảnh của lượt trước.
+        shutil.rmtree(out)
     (out / "images").mkdir(parents=True, exist_ok=True)
     manifest = {"created": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "size": args.size, "images": {}}
     for img in images:
-        name = img.name if not (out / "images" / img.name).exists() else f"{img.parent.name}-{img.name}"
+        # Tên theo đường dẫn tương đối để ảnh cùng tên ở thư mục con khác nhau không đè nhau.
+        base = "-".join(img.relative_to(shots).parts)
+        name, n = base, 2
+        while name in manifest["images"]:
+            name, n = f"{Path(base).stem}-{n}{Path(base).suffix}", n + 1
         shutil.copy2(img, out / "images" / name)
         manifest["images"][name] = sha256(out / "images" / name)
     shutil.copy2(args.brief, out / "brief.md")
@@ -177,7 +190,8 @@ def verify(args: argparse.Namespace) -> int:
     size = manifest.get("size", "M")
     avg = sum(scores.values()) / len(scores)
     need_avg, floor = THRESHOLDS[size]
-    passed = not hard and avg >= need_avg and min(scores.values()) >= floor
+    dims_ok = all(scores[d] >= v for d, v in DIMENSION_FLOORS.get(size, {}).items())
+    passed = not hard and avg >= need_avg and min(scores.values()) >= floor and dims_ok
     print(f"hồ sơ hợp lệ: {len(images)} ảnh, {len(hard)} hard fail, trung bình {avg:.2f}, thấp nhất {min(scores.values())}")
     print(f"ngưỡng cỡ {size}: {'ĐẠT' if passed else 'CHƯA ĐẠT'}  (người duyệt: {reviewer['kind']}, độc lập: {reviewer['independent']})")
     return 0
