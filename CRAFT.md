@@ -25,8 +25,9 @@ Một điểm táo bạo là đủ. Cả trang cùng gào thì không chỗ nào
 
 ## 2. Danh sách cấm: các mặc định làm thiết kế trông như AI làm
 
-Mỗi dòng là mặc định, không phải điều cấm tuyệt đối: brief của khách yêu cầu rõ thì được dùng, và
-ghi lý do. Không có lý do thì đổi.
+Mỗi dòng là tín hiệu cần xem xét, không phải điều cấm tuyệt đối. Giữ khi có lý do từ brief,
+design system hiện có, tác vụ, nền tảng hoặc khả năng tiếp cận; ghi ngắn bối cảnh, đánh đổi và
+cách kiểm chứng trên màn render. Không đổi font, màu hay cấu trúc chỉ để né checklist.
 
 **Chữ**
 - Inter, Roboto, Arial, Open Sans, Lato hay font hệ thống làm font duy nhất của trang.
@@ -74,6 +75,12 @@ ghi lý do. Không có lý do thì đổi.
 | Bo góc | Một bán kính cho mỗi loại bề mặt; bo trong = bo ngoài − padding |
 | Chuyển động | 100–150 ms hover và bật tắt, 200–250 ms mở rộng, 300–400 ms sheet và modal; tôn trọng giảm chuyển động |
 | Trạng thái | Mặc định, hover/nhấn, focus, tắt, đang tải, rỗng, lỗi, nội dung dài, chữ phóng 200% |
+
+Các con số về tỷ lệ màu, số bước spacing, thang chữ và breakpoint là điểm xuất phát cho màn
+chưa có hệ thống riêng. Dashboard mật độ cao, nội dung dài và control nền tảng có thể cần nhịp
+khác. Giữ ngưỡng tương phản, vùng chạm và khả năng phóng chữ; không thu nhỏ chữ hay giấu dữ liệu
+quan trọng để đạt tỷ lệ thẩm mỹ. Với font, kiểm tra đúng file font được dùng, dấu tiếng Việt và ₫
+trên render; tên họ font không đủ để kết luận có hoặc thiếu glyph.
 
 ## 4. Ảnh và icon
 

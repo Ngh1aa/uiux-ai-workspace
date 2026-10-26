@@ -50,7 +50,7 @@
 
   <section class="app-gallery__item" aria-label="Màn chọn buổi">
     <p class="app-gallery__caption">1. Chọn buổi</p>
-    <div class="app-phone" data-screen="Chọn buổi">
+    <div class="app-phone" data-screen="Chọn buổi" id="chon-buoi">
       <div class="app-status"><span class="app-status__time">9:41</span></div>
       <div class="app-screen">
         <div class="app-body">
@@ -78,7 +78,7 @@
     <div class="app-phone" data-screen="Chọn số người" id="chi-tiet">
       <div class="app-status"><span class="app-status__time">9:41</span></div>
       <header class="app-header">
-        <a class="app-round" href="#" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <a class="app-round" href="#chon-buoi" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
         <h1 class="app-header__title ds-text-title-md">Thứ Bảy 2/11</h1>
       </header>
       <div class="app-screen">
@@ -122,15 +122,15 @@
         <div class="app-body">
           <div class="ds-stack ds-stack--sm" style="align-items:flex-start; padding-top: var(--ds-space-600)">
             <span class="gm-done"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-check"/></svg></span>
-            <h1 class="gm-title">Đã giữ 2 chỗ</h1>
+            <h1 class="gm-title" data-confirm-title>Đã giữ 2 chỗ</h1>
             <p class="ds-text-body-md ds-text-secondary" style="margin:0">Phiếu đã gửi qua tin nhắn tới 0912 000 000.</p>
           </div>
           <div class="gm-ticket">
             <span class="ds-text-body-sm ds-text-secondary">Mã phiếu, đọc khi đến xưởng</span>
             <p class="gm-ticket__code">MOC-0211</p>
             <div class="app-kv"><span class="app-kv__label">Buổi</span><span class="app-kv__value">Thứ Bảy 2/11, 14:00</span></div>
-            <div class="app-kv"><span class="app-kv__label">Số người</span><span class="app-kv__value">2</span></div>
-            <div class="app-kv"><span class="app-kv__label">Đã trả</span><span class="app-kv__value ds-tabular">900.000 ₫</span></div>
+            <div class="app-kv"><span class="app-kv__label">Số người</span><span class="app-kv__value" data-confirm-people>2</span></div>
+            <div class="app-kv"><span class="app-kv__label">Tổng tiền</span><span class="app-kv__value ds-tabular" data-confirm-total>900.000 ₫</span></div>
           </div>
           <section class="ds-card ds-card--flat" aria-labelledby="next-steps">
             <h2 class="ds-text-title-sm" id="next-steps">Tiếp theo</h2>
@@ -141,6 +141,7 @@
             </ol>
           </section>
           <div class="ds-cluster">
+            <a class="ds-button ds-button--tertiary" href="#chi-tiet" data-edit-booking>Sửa số người</a>
             <button class="ds-button ds-button--secondary" type="button"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar-plus"/></svg>Thêm vào lịch</button>
             <a class="ds-button ds-button--tertiary" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-pin"/></svg>Chỉ đường</a>
           </div>
@@ -150,9 +151,12 @@
   </section>
 </main>
 <script>
-// Chỉ để bấm thử: tăng giảm số người, cập nhật nút trả tiền, đổi sáng tối.
+// Luồng minh hoạ: chọn số người, xác nhận và sửa lại; không gửi tin nhắn hay thu tiền.
 const SEATS = 2;
 const PRICE = 450000;
+const people = document.querySelector('[data-people]');
+const pay = document.querySelector('[data-pay]');
+const formatTotal = (count) => `${(count * PRICE).toLocaleString('vi-VN')} ₫`;
 document.addEventListener('click', (event) => {
   const step = event.target.closest('[data-step]');
   if (step) {
@@ -163,7 +167,13 @@ document.addEventListener('click', (event) => {
     out.textContent = String(n);
     phone.querySelector('[data-step="-1"]').setAttribute('aria-disabled', String(n <= 1));
     phone.querySelector('[data-step="1"]').setAttribute('aria-disabled', String(n >= SEATS));
-    phone.querySelector('[data-pay]').textContent = `Giữ ${n} chỗ, ${(n * PRICE).toLocaleString('vi-VN')} ₫`;
+    pay.textContent = `Giữ ${n} chỗ, ${formatTotal(n)}`;
+  }
+  if (event.target.closest('[data-pay]')) {
+    const count = Number(people.textContent);
+    document.querySelector('[data-confirm-title]').textContent = `Đã giữ ${count} chỗ`;
+    document.querySelector('[data-confirm-people]').textContent = String(count);
+    document.querySelector('[data-confirm-total]').textContent = formatTotal(count);
   }
   if (event.target.closest('[data-theme-toggle]')) {
     const root = document.documentElement;

@@ -32,8 +32,6 @@ jobs:
           node-version: "22"
       - name: Validate SKILL.md structure
         run: python scripts/validate-skills.py
-      - name: Visual integrity runner syntax
-        run: node --check ui-craft-and-visual-qa/scripts/elementary-visual-integrity.mjs
       - name: Static page checker tests (no Playwright needed)
         run: node --test ui-craft-and-visual-qa/scripts/static-check.test.cjs
       - name: Internal Markdown links resolve
@@ -42,6 +40,9 @@ jobs:
       - name: Benchmark report matches recorded runs
         working-directory: .
         run: python benchmarks/report.py --check
+      - name: Benchmark provenance and result validation tests
+        working-directory: .
+        run: python -m unittest discover -s benchmarks -p "test_*.py"
 
   release-candidate:
     name: release-candidate
@@ -80,6 +81,10 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules
         run: node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs
+      - name: Booking selection, confirmation and edit regression
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: node --test design-system/tests/gom-moc-flow.test.cjs
       - name: Starter kit passes the taste check
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules

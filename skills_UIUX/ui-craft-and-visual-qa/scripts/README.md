@@ -5,11 +5,11 @@
 Soát trang đã render theo [`TASTE.md`](../../../TASTE.md) trong Chromium, cả chế độ sáng và tối.
 Mỗi phần tử có `data-screen="Tên màn"` được soát như một màn riêng.
 
-- **Lỗi:** dấu " · " nối cụm từ, chữ dưới ngưỡng tương phản AA, nhãn ngắn bị gãy dòng, nội dung
+- **Lỗi:** dấu " · " nối cụm từ, chữ dưới ngưỡng tương phản AA, nhãn điều khiển ngắn bị gãy dòng, nội dung
   tràn ngang hoặc bị khung cha cắt mất, hơn một card nổi bật trong một màn, ảnh/font/CSS tải lỗi,
   vi phạm axe-core mức serious/critical (khi có cài axe-core), tràn ngang ở 320 px (với `--reflow`).
 - **Cảnh báo:** card có nhiều bán kính bo góc, hơn 3 nhóm màu, vùng chạm dưới 44×44 px, chữ bị cắt
-  bằng "…", dòng cuối chỉ còn một chữ, chữ sát mép màn hẹp.
+  bằng "…", dòng cuối chỉ còn một chữ, chữ sát mép màn hẹp, heading/nội dung ngắn xuống dòng cần review.
 
 ```bash
 node skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.cjs design-system/starter/mobile.html --screenshot qa/
@@ -29,6 +29,11 @@ taste-check" trong [`START-HERE.md`](../../../START-HERE.md)).
 Test: `node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs`.
 
 Script là tín hiệu tự động, không thay việc mở ảnh chụp ra nhìn.
+
+Trên website, section/header/footer full-bleed là vùng bố cục, không tự động tính là card nổi bật.
+Các card thật và canvas `data-screen` vẫn được kiểm tra. Khi runtime thay nguồn ảnh, request cũ
+bị hủy được ghi cảnh báo; ảnh hiện tại chưa tải được vẫn là lỗi. Mọi tín hiệu cần đối chiếu brief
+và render, không phải bằng chứng luồng dữ liệu hay khả năng sử dụng đã đạt.
 
 ## Soát tĩnh khi không có trình duyệt (`static-check.cjs`)
 
@@ -53,41 +58,10 @@ tối có giống nhau không, tên token có gõ nhầm không. Chỉ cần Pyt
 python3 design-system/scripts/check-brand.py <dự-án>/brand.css
 ```
 
-## Elementary visual integrity runner
+## Phạm vi kiểm tra
 
-`elementary-visual-integrity.mjs` is a reusable Playwright regression guard for the failure class covered by `../checklists/elementary-visual-sanity-gate.md`.
-
-It checks, across configured routes and viewports:
-
-- catastrophic computed foreground/background collapse on visible text outside variable-media contexts;
-- semantic interactive elements in default/hover/focus states;
-- large primary/feature media using `object-fit: cover` without an explicit verified crop contract;
-- route/runtime/console failures;
-- top-of-page screenshot generation for mandatory human inspection.
-
-## Example
-
-```bash
-npm install --no-save playwright
-npx playwright install chromium
-
-VISUAL_SANITY_BASE_URL=http://127.0.0.1:4173 \
-VISUAL_SANITY_ROUTES=/,/shop,/cart,/checkout \
-VISUAL_SANITY_VIEWPORTS=1363x936,1100x900 \
-VISUAL_SANITY_INIT_SCRIPT=./scripts/qa-seed-state.js \
-node .claude/skills/ui-craft-and-visual-qa/scripts/elementary-visual-integrity.mjs
-```
-
-`VISUAL_SANITY_INIT_SCRIPT` is optional, but it is required when material controls only render after deterministic data/auth/error/selection state is established. The script is injected with Playwright `browserContext.addInitScript` before page code runs.
-
-For an intentionally cropped focal asset, expose deterministic traceability on the image or nearest owning frame:
-
-```html
-<figure data-crop-verified="true" data-focal-subject="model face + full jacket">
-  <img src="hero.jpg" alt="...">
-</figure>
-```
-
-Those attributes only prove that a crop contract was explicitly declared. They do **not** prove the crop is visually correct; the generated screenshots still have to be opened and inspected at every declared target viewport/pressure point.
-
-This runner is a regression signal, not a WCAG conformance test. A broken rendered screenshot overrides a green automated result.
+`taste-check` kiểm trang ở state đã render; nó không tự đi qua mọi hover/focus, seed dữ liệu,
+auth hay nhánh lỗi. Các tình huống đó cần browser test của dự án hoặc thao tác review riêng.
+Giữ [elementary visual sanity checklist](../checklists/elementary-visual-sanity-gate.md) để soát
+matched foreground/surface, state và crop khi shared owner thay đổi. Các thuộc tính khai báo crop
+không thay cho mở ảnh thật. Không suy ra coverage mà lệnh đã chạy chưa thực hiện.

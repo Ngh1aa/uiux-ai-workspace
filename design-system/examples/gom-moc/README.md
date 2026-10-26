@@ -29,10 +29,10 @@ Ba điểm khác starter:  1. tiêu đề có chân Lora  2. hoạ tiết vòng 
                        đất nung chỉ còn cho cảnh báo; lợi ích viết thành ba bước có số, không phải 3 card icon
 ```
 
-## Kết quả soát
+## Kết quả soát ban đầu (24/10/2026)
 
 - `check-brand.py`: 0 lỗi.
-- `static-check.cjs`: 0 lỗi (app có 2 liên kết `href="#"` trong mockup).
+- `static-check.cjs`: 0 lỗi; liên kết chỉ đường trong app vẫn là placeholder.
 - `taste-check.cjs`: landing ở 390 và 1280 px, sáng và tối, cộng `--reflow` 320 px: 0 lỗi, 0 cảnh
   báo. App ở 1280 px sáng và tối: 0 lỗi, 0 cảnh báo.
 - axe-core **chưa chạy** trong phiên này (không cài được). CI chạy axe trên starter kit.
@@ -59,3 +59,22 @@ buộc.
   đề có ₫.
 - Ảnh thật của xưởng thay cho khung giữ chỗ; lời khách thật đã đồng ý.
 - Luồng "báo khi có chỗ", trạng thái lỗi thanh toán, trạng thái hết chỗ khi đang giữ.
+
+## Kiểm tra luồng trước commit (26/10/2026)
+
+Phiếu xác nhận lấy số người và tổng tiền từ lựa chọn khi bấm giữ chỗ. Có đường sửa số người;
+quay lại giữ lựa chọn form. Tổng tiền là số tiền của bản mô phỏng, không phải bằng chứng đã trả.
+
+Chạy test trình duyệt với cùng Playwright của `taste-check`:
+
+```sh
+node --test design-system/tests/gom-moc-flow.test.cjs
+```
+
+Test chạy ở 390/1280 px, sáng/tối: giới hạn số người, giảm còn một người và xác nhận đúng tiền,
+browser back giữ form, sửa lại hai người và xác nhận lại. Không thay cho kiểm tra backend, SMS
+hay thanh toán. Các buổi khác trong danh sách vẫn minh hoạ bố cục; chưa có chọn buổi động.
+
+Lượt kiểm tra 26/10 chạy lại landing và app ở cả hai cỡ và hai chế độ: `taste-check` không lỗi,
+không cảnh báo, axe-core đã chạy. Bốn test luồng đều qua. Ảnh mới và JSON được lưu trong gói
+bằng chứng trước commit của lượt này; thư mục `review/` vẫn là ảnh và kết quả lịch sử.
