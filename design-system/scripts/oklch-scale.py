@@ -71,7 +71,8 @@ def main() -> int:
 
     rows = scale(args.hue % 360, args.chroma)
     if args.json:
-        group = {
+        group = {"$type": "color"}
+        group |= {
             str(r["step"]): {"$value": {"colorSpace": "srgb", "components": list(r["rgb"]), "hex": r["hex"]}}
             for r in rows
         }

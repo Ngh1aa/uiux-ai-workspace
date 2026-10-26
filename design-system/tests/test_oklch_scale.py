@@ -33,7 +33,18 @@ def test_extreme_steps_meet_text_contrast():
 def test_json_output_is_dtcg_group():
     out = subprocess.run([sys.executable, str(SCRIPT), "--hue", "300", "--json", "violet"],
                          capture_output=True, text=True, check=True).stdout
-    group = json.loads(out)["violet"]
-    assert set(group) == {str(s) for s in oklch.STEPS}
+    tree = json.loads(out)
+    group = tree["violet"]
+    assert group["$type"] == "color"
+    assert set(group) - {"$type"} == {str(s) for s in oklch.STEPS}
     assert group["500"]["$value"]["colorSpace"] == "srgb"
     assert group["500"]["$value"]["hex"].startswith("#")
+
+
+def test_json_output_resolves_standalone():
+    sys.path.insert(0, str(SCRIPT.parent))
+    import dslib
+    out = subprocess.run([sys.executable, str(SCRIPT), "--hue", "250", "--json", "brand"],
+                         capture_output=True, text=True, check=True).stdout
+    resolved = dslib.resolve(dslib.flatten(json.loads(out), {}))
+    assert "brand.500" in resolved
