@@ -3,6 +3,8 @@
 'use strict';
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
+const { execFile } = require('node:child_process');
+const http = require('node:http');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -30,6 +32,45 @@ function run(body, extraCss = '') {
     rules: (name, kind) => screens.filter((s) => s.name === name).flatMap((s) => s[kind]).map((i) => i.rule),
   };
 }
+
+async function runImageCancellation(replace) {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="green"/></svg>';
+  const server = http.createServer((req, res) => {
+    if (req.url === '/old.svg') {
+      setTimeout(() => { res.writeHead(200, { 'content-type': 'image/svg+xml' }); res.end(svg); }, 1000);
+    } else if (req.url === '/new.svg') {
+      res.writeHead(200, { 'content-type': 'image/svg+xml' }); res.end(svg);
+    } else {
+      res.writeHead(200, { 'content-type': 'text/html' });
+      res.end(`<!doctype html><html lang="vi"><head><title>Image fixture</title></head><body><img src="/old.svg" alt="Minh hoạ" width="64" height="64"><script>setTimeout(() => { ${replace ? 'document.querySelector("img").src="/new.svg"' : 'window.stop()'} }, 50)</script></body></html>`);
+    }
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'taste-image-'));
+  const out = path.join(dir, 'out.json');
+  try {
+    const code = await new Promise(resolve => execFile(process.execPath,
+      [SCRIPT, `http://127.0.0.1:${server.address().port}`, '--width', '390', '--theme', 'light', '--json', out],
+      { encoding: 'utf8' }, error => resolve(error ? error.code : 0)));
+    return { code, data: JSON.parse(fs.readFileSync(out, 'utf8')) };
+  } finally {
+    server.closeAllConnections();
+    await new Promise(resolve => server.close(resolve));
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test('ảnh đổi nguồn tải thành công không bị báo lỗi request ảnh cũ', async () => {
+  const { code, data } = await runImageCancellation(true);
+  assert.equal(code, 0);
+  assert.ok(data.results.flatMap(r => r.screens).flatMap(s => s.warnings).some(i => i.rule === 'request-replaced'));
+});
+
+test('ảnh bị hủy mà vẫn là nguồn hiện tại phải báo lỗi', async () => {
+  const { code, data } = await runImageCancellation(false);
+  assert.equal(code, 1);
+  assert.ok(data.results.flatMap(r => r.screens).flatMap(s => s.errors).some(i => i.rule === 'request'));
+});
 
 const GOOD = `
   <section data-screen="Tốt">
@@ -61,6 +102,12 @@ test('bắt nhãn ngắn bị gãy dòng', () => {
   assert.ok(r.rules('Gãy', 'errors').includes('wrap'));
 });
 
+test('heading xuống dòng được yêu cầu review, không bị nhận nhầm nhãn điều khiển', () => {
+  const r = run('<section data-screen="Heading"><h1 style="width:8ch;font:32px/40px system-ui">Pure electric motion.</h1></section>');
+  assert.ok(!r.rules('Heading', 'errors').includes('wrap'));
+  assert.ok(r.rules('Heading', 'warnings').includes('wrap-review'));
+});
+
 test('bắt nội dung tràn ngang', () => {
   const r = run('<section data-screen="Tràn"><div class="card" style="white-space:nowrap">Một dòng chữ rất dài không được phép xuống dòng nên sẽ tràn khỏi card</div></section>');
   assert.ok(r.rules('Tràn', 'errors').includes('overflow'));
@@ -74,6 +121,16 @@ test('bắt hơn một card nổi bật trong một màn', () => {
 test('thanh điều hướng nền đậm không bị tính là card nổi bật', () => {
   const r = run('<section data-screen="Có nav"><div class="hero">A</div><nav class="hero" aria-label="Chính">B</nav></section>');
   assert.ok(!r.rules('Có nav', 'errors').includes('highlight'));
+});
+
+test('section và footer full-bleed của website không bị coi là card nổi bật', () => {
+  const r = run('<main><section class="hero">Giới thiệu</section><section class="hero">Dịch vụ</section></main><footer class="hero">Liên hệ</footer>');
+  assert.ok(!r.rules('t', 'errors').includes('highlight'));
+});
+
+test('website có hai card thật vẫn bị bắt dù các section nền được bỏ qua', () => {
+  const r = run('<main><section class="hero">Giới thiệu</section><div class="hero card-real">A</div><div class="hero card-real">B</div></main><footer class="hero">Liên hệ</footer>', '.card-real { width: 300px; box-sizing: border-box; }');
+  assert.ok(r.rules('t', 'errors').includes('highlight'));
 });
 
 test('cảnh báo bán kính bo góc không đồng nhất', () => {

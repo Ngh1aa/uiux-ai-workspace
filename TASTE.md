@@ -27,7 +27,8 @@ tra được bằng mắt.
 - Ngắn gọn, xúc tích. Không viết câu mô tả nếu giao diện đã tự nói lên.
 - **Không nối cụm từ bằng " · "** (kiểu "Text A · Text B · Text C"). Viết lại theo nghĩa:
   tách bằng khoảng trắng, xuống dòng có chủ đích, dùng từ nối, hoặc viết thành câu.
-- Không xuống dòng vô cớ. Nếu chữ bị gãy dòng, thu nhỏ cỡ chữ hoặc rút bớt ký tự.
+- Không xuống dòng vô cớ. Kiểm tra chiều rộng, wrap và bố cục trước; rút câu khi giữ nguyên nghĩa.
+  Cho phép xuống dòng tự nhiên với nội dung dài và chữ phóng lớn; không thu nhỏ chữ để che lỗi layout.
 
 ## Trước khi giao
 

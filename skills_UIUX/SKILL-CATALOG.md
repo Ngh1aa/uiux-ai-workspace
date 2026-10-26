@@ -61,13 +61,11 @@ thư mục có `SKILL.md`.
 |---|---|
 | `responsive-and-device-strategy` | Breakpoint, bố cục theo cỡ màn |
 | `frontend-implementation` | Dựng HTML/CSS đúng ngữ nghĩa |
-| `prototype-visual-experience-qa` | Soát prototype HTML/CSS/JS |
 | `web-quality-and-performance` | Tốc độ tải, Core Web Vitals |
-| `ui-craft-and-visual-qa` | Soát và đánh bóng craft; có `taste-check.cjs`, `static-check.cjs` |
+| `ui-craft-and-visual-qa` | Cải thiện UI hiện có, soát prototype và craft; có `taste-check.cjs`, `static-check.cjs` |
 | `media-crop-and-layout-integrity` | Ảnh bị cắt sai, vỡ tỉ lệ |
 | `design-critique-and-rationale` | Phê bình theo rubric, lý do thiết kế |
 | `ux-laws-and-heuristics` | Đánh giá theo heuristic |
-| `ui-improvement` | Sửa giao diện đang có |
 | `website-audit-and-redesign` | Audit website cũ trước khi làm lại |
 
 ## Playbook theo ngành
@@ -78,12 +76,13 @@ thư mục có `SKILL.md`.
 
 ## Skill đã gộp
 
-Các skill dưới đây không còn là skill riêng; nội dung nằm trong mục **Hướng dẫn con** của skill chủ.
+Các skill dưới đây không còn là skill riêng; nội dung cần giữ nằm trong skill chủ hoặc hướng dẫn
+con được liên kết từ đó. Phần định tuyến dùng chung nằm trong `WORKFLOWS.md`.
 
 | Skill chủ | Hướng dẫn con |
 |---|---|
 | `mobile-app-design` | mobile-navigation-and-state-ux, mobile-design-system-and-handoff, mobile-prototype-and-qa, mobile-web-preview |
-| `ui-craft-and-visual-qa` | visual-redesign-delta-gate, visual-regression-and-design-drift |
+| `ui-craft-and-visual-qa` | visual-redesign-delta-gate, visual-regression-and-design-drift; `ui-improvement` → [cải thiện UI](ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có), `prototype-visual-experience-qa` → [soát prototype](ui-craft-and-visual-qa/SKILL.md#soát-prototype) |
 | `interaction-patterns-and-form-ux` | complex-forms-and-wizards, complex-workflow-and-progress-ux |
 | `audience-intent-and-top-tasks` | entry-context-and-visit-intent, journey-driven-content-and-layout |
 | `brand-distinctiveness-and-visual-signature` | brand-recognition-and-consistency-qa |

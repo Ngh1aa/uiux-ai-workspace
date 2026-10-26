@@ -61,7 +61,7 @@ Automated contrast checks là regression signal hữu ích nhưng không tự t�
 - [Component contracts](references/component-contracts.md)
 - [Component quality gate](checklists/component-gate.md)
 - [Component spec example](examples/component-spec.md)
-- Cần một hệ thống hoàn chỉnh đang chạy để đối chiếu? Trong monorepo `uiux-ai-workspace`, xem `design-system/` (DTCG 2025.10 tokens, 19 components, validator tương phản và CSS lint, living docs). Thư mục này không có trong bản mirror `skills_UIUX` độc lập.
+- Cần một hệ thống hoàn chỉnh đang chạy để đối chiếu? Trong repo `uiux-ai-workspace`, xem [design-system](../../design-system/README.md) để biết phiên bản, inventory component và lệnh kiểm tra hiện tại. Thư mục này không có trong bản mirror `skills_UIUX` độc lập.
 
 ## Output
 

@@ -69,6 +69,8 @@ trong skill chỉ mở khi `SKILL.md` hoặc `WORKFLOWS.md` bảo cần.
   [rubric chất lượng](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md):
   hard fail trước, rồi chấm từng chiều.
 - Mở ảnh chụp ra nhìn từng màn. Script và đọc code không thay cho nhìn màn.
+- Bấm thử tác vụ chính, quay lại sửa và xác nhận lại; đối chiếu số lượng, tổng tiền, ngày giờ
+  giữa các màn theo `WORKFLOWS.md`. Soát giao diện không thay cho kiểm tra luồng và dữ liệu.
 - Việc cỡ M trở lên: nhờ một lượt soát độc lập trước khi giao. Nếu có thể tạo agent phụ, giao cho
   nó ảnh chụp, brief và rubric (không giao lý do thiết kế) để chấm như người lạ; nếu không, tự
   chấm lại sau khi đọc lại brief và ghi rõ là tự chấm.
@@ -107,7 +109,7 @@ mới chỉ soát tĩnh.
 | `TASTE.md` | Gu thiết kế và các lỗi không được lặp lại |
 | `CRAFT.md` | Số liệu cốt lõi, danh sách cấm, kế hoạch thị giác, ảnh và icon |
 | `WORKFLOWS.md` | Quy trình và danh sách skill theo cỡ việc (nguồn định tuyến duy nhất) |
-| `skills_UIUX/` | 42 skill UI/UX và script soát chất lượng |
+| `skills_UIUX/` | 40 skill UI/UX và script soát chất lượng |
 | `design-system/` | Token DTCG, 25 component CSS, font, ví dụ app, `scripts/check-brand.py` |
 | `design-system/starter/` | Starter kit: màn mẫu app và web, quy tắc theo loại màn |
 | `benchmarks/` | Bộ 3 đề chuẩn để đo repo có giúp thiết kế tốt hơn sau mỗi lần nâng cấp |

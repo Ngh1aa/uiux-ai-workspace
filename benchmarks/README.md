@@ -15,6 +15,15 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
   đề thì tạo đề mới với số mới, giữ đề cũ.
 - Làm đề đúng như làm việc thật: theo [`START-HERE.md`](../START-HERE.md), không nhìn lần chạy trước.
 - Ghi rõ ai chấm: `agent-heuristic` khi agent tự chấm, `expert-review` khi người ngoài chấm.
+- Ghi `protocol` trong `scores.json`: `kind` là `fresh` (làm từ đầu, không xem lời giải cũ),
+  `iterative-repair` (sửa tiếp, bắt buộc có `parent_run`) hoặc `legacy-unknown` (lịch sử thiếu
+  bằng chứng). Ghi `author_id`, `reviewer_id`, `independent_review` đúng thực tế. Tự chấm vẫn
+  hợp lệ nhưng phải ghi `false`; agent ở phiên độc lập vẫn là `agent-heuristic`.
+- `repo_commit` là SHA đầy đủ của toolkit. `run.cjs` ghi SHA, trạng thái working tree và hash
+  checker vào `checks.json`; lưu diff/manifest khi thử trước commit. Không suy đoán SHA lịch sử:
+  dùng `null` kèm `protocol.legacy_note` và hiển thị UNKNOWN.
+- Lượt sửa tiếp đo khả năng cải tiến mẫu cũ. Để so chất lượng bản đầu, chạy lượt `fresh` với
+  cùng đề, nội dung, assets, viewport và điều kiện công cụ; dùng người chấm độc lập khi có.
 
 ## Chạy một lần mới
 
@@ -29,6 +38,8 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 3. Mở ảnh ra xem, chấm theo [rubric](../skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md)
    và ghi `scores.json` (mẫu: [lần chạy đầu](runs/2026-10-24-v1/scores.json)). Ghi thêm `NOTES.md`:
    lỗi bắt được trong lúc làm, repo được sửa gì, việc nên làm tiếp.
+   `checks.json` chỉ là soát render. Bấm thử các luồng chọn/nhập → xác nhận → quay lại sửa;
+   ghi kết quả chức năng riêng, không nâng thành PASS chỉ vì ảnh hay điểm rubric tốt.
 4. Cập nhật bảng tổng hợp:
 
    ```sh
@@ -44,3 +55,11 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 - *Ngưỡng* đạt khi không có hard fail, điểm trung bình và điểm thấp nhất đạt mức của cỡ việc.
 - Điểm do agent tự chấm thường cao hơn thực tế. So **xu hướng** giữa các lần chạy, đừng coi một
   con số là kết luận.
+
+## Thử trên dự án bên ngoài
+
+Thử một repo khách hàng có sẵn là một **external-project-audit**, không phải lượt `fresh` của
+ba đề trên và không đo khả năng tạo UI mới. Giữ code khách riêng, ghi exact target SHA và toolkit
+SHA + diff/hash nếu chưa commit, liệt kê route, viewport, kịch bản, evidence, PASS/FAIL/UNKNOWN.
+Phân biệt lỗi của target, lỗi bộ soát và giới hạn môi trường. Không chép source/asset của khách
+vào repo này. Review độc lập theo `START-HERE.md`; không gọi đó là test với người dùng thật.
