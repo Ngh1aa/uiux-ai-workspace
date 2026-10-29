@@ -31,3 +31,8 @@ temp/
 # Bộ đề chuẩn: chỉ lưu ảnh sáng ở 390px và 1280px để repo nhẹ; ảnh khác chạy lại run.cjs là có
 benchmarks/runs/*/shots/*-dark.jpg
 benchmarks/runs/*/shots/*-1024-*.jpg
+
+# These frozen runs bind the full render matrix in checks.json; retain every
+# referenced image instead of requiring a later rerender to reproduce its hash.
+!benchmarks/runs/2026-10-29-*/shots/*-dark.jpg
+!benchmarks/runs/2026-10-29-*/shots/*-1024-*.jpg
