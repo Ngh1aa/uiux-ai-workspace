@@ -1,0 +1,139 @@
+{
+  "run": "2026-10-29-fresh",
+  "repo_commit": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+  "reviewer": "agent-heuristic",
+  "protocol": {
+    "kind": "fresh",
+    "parent_run": null,
+    "author_id": "/root/fresh_benchmark",
+    "reviewer_id": "independent-agent-panel",
+    "reviewer_ids": {
+      "01-landing": "blind-review-fresh-2026-10-29",
+      "02-app": "fresh-gate-review-2026-10-30",
+      "03-dashboard": "blind-review-fresh-2026-10-29",
+      "04-multi-role": "fresh-gate-review-2026-10-30",
+      "05-native": "fresh-gate-review-2026-10-30"
+    },
+    "independent_review": true,
+    "generation_note": "Agent fresh có ngữ cảnh sạch, không xem lời giải cũ. Sau tạo mới có sửa regression bởi root; đây là kết quả sau sửa, không phải điểm first-shot.",
+    "review_note": "Các packet re-review ghi rõ đã biết brief; reviewer độc lập với người làm, không xem rationale hoặc điểm tự chấm. Packet gate mới ghi đúng giới hạn first impression sau brief."
+  },
+  "briefs": {
+    "01-landing": {
+      "size": "M",
+      "scores": {
+        "1": 4.5,
+        "2": 4.5,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 3.5,
+        "8": 4,
+        "9": 4,
+        "10": 4.5
+      },
+      "hard_fails": [],
+      "review": {
+        "path": "reviews/01-landing/review.json",
+        "sha256": "0dc9344f301f99529ab1d5f88c631904533ad69872b2b24c72c5e7c3f37fa2c3"
+      },
+      "notes": [
+        "Điểm chép nguyên từ review độc lập gắn với ảnh đã kiểm. Không phải phê duyệt con người hoặc nghiên cứu người dùng."
+      ]
+    },
+    "02-app": {
+      "size": "L",
+      "scores": {
+        "1": 4.5,
+        "2": 4,
+        "3": 3.5,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4,
+        "8": 4.5,
+        "9": 4,
+        "10": 4
+      },
+      "hard_fails": [],
+      "review": {
+        "path": "reviews/02-app/review.json",
+        "sha256": "2247b0d2a09f0f542fb6a3dbb1496938dbc983f1c9d58a8c4c0d08ed34ff2293"
+      },
+      "notes": [
+        "Điểm chép nguyên từ review độc lập gắn với ảnh đã kiểm. Không phải phê duyệt con người hoặc nghiên cứu người dùng."
+      ]
+    },
+    "03-dashboard": {
+      "size": "M",
+      "scores": {
+        "1": 4.5,
+        "2": 4,
+        "3": 3.5,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4,
+        "8": 4,
+        "9": 4,
+        "10": 4
+      },
+      "hard_fails": [],
+      "review": {
+        "path": "reviews/03-dashboard/review.json",
+        "sha256": "7b0f2e2e35de879e7f74f579ca34c97f97cd3d8e1fd5709cb4c6e65bd98d902f"
+      },
+      "notes": [
+        "Điểm chép nguyên từ review độc lập gắn với ảnh đã kiểm. Không phải phê duyệt con người hoặc nghiên cứu người dùng."
+      ]
+    },
+    "04-multi-role": {
+      "size": "L",
+      "scores": {
+        "1": 4.5,
+        "2": 4.5,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4.5,
+        "7": 4,
+        "8": 4,
+        "9": 4,
+        "10": 4
+      },
+      "hard_fails": [],
+      "review": {
+        "path": "reviews/04-multi-role/review.json",
+        "sha256": "08ef9a2080f501226cff23c5ccc6c50c91c4fddb15e20350ff6f0448abe5f1c3"
+      },
+      "notes": [
+        "Điểm chép nguyên từ review độc lập gắn với ảnh đã kiểm. Không phải phê duyệt con người hoặc nghiên cứu người dùng."
+      ]
+    },
+    "05-native": {
+      "size": "L",
+      "scores": {
+        "1": 4,
+        "2": 4,
+        "3": 3.5,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 3.5,
+        "8": 3.5,
+        "9": 3.5,
+        "10": 3.5
+      },
+      "hard_fails": [],
+      "review": {
+        "path": "reviews/05-native/review.json",
+        "sha256": "a49978449cc385c9a09423b822ddc06ba0aac5551dd6545f3a2abf7fa055321f"
+      },
+      "notes": [
+        "Điểm chép nguyên từ review độc lập gắn với ảnh đã kiểm. Không phải phê duyệt con người hoặc nghiên cứu người dùng."
+      ]
+    }
+  },
+  "summary": "Agent fresh có ngữ cảnh sạch, không xem lời giải cũ. Sau tạo mới có sửa regression bởi root; đây là kết quả sau sửa, không phải điểm first-shot. SHA chỉ định baseline HEAD; code local được định danh bằng patch/manifest/hash. Native, backend, user research và human approval UNKNOWN. Điểm còn dưới ngưỡng được giữ nguyên."
+}

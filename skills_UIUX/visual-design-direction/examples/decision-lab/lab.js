@@ -6,7 +6,8 @@
   const params = new URLSearchParams(location.search);
   const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
   const caseKey = own(data.cases, params.get('case')) ? params.get('case') : 'healthcare';
-  const variant = params.get('variant') === 'fragile' ? 'fragile' : 'considered';
+  const requestedVariant = params.get('variant');
+  const variant = ['fragile', 'considered', ...(caseKey === 'teacher' ? ['schedule-first', 'task-first'] : [])].includes(requestedVariant) ? requestedVariant : 'considered';
   const brief = data.cases[caseKey];
   const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const link = (key, value) => {
@@ -16,7 +17,7 @@
   };
   document.querySelector('#cases').innerHTML = Object.entries(data.cases).map(([key,item]) =>
     `<a href="${esc(link('case',key))}" ${key===caseKey?'aria-current="page"':''}>${esc(item.title)}</a>`).join('');
-  document.querySelector('#variants').innerHTML = [['fragile','Cần sửa'],['considered','Có chủ đích']].map(([key,label]) =>
+  document.querySelector('#variants').innerHTML = [...(caseKey === 'teacher' ? [['schedule-first','Lịch trước'],['task-first','Việc trước']] : []),['fragile','Cần sửa'],['considered','Có chủ đích']].map(([key,label]) =>
     `<a href="${esc(link('variant',key))}" ${key===variant?'aria-current="page"':''}>${label}</a>`).join('');
   const preview = document.querySelector('#preview');
   let value = brief.input_value;
@@ -59,19 +60,28 @@
       query = ''; document.querySelector('#catalog-filter').value = ''; renderOptions(); document.querySelector('#catalog-filter').focus();
     });
   }
+  function teacherSections() {
+    if (!brief.agenda) return '';
+    const agenda = `<section class="teacher-section agenda"><h3>Lịch ngày 29/10/2026</h3><ol>${brief.agenda.map(item => `<li><time datetime="2026-10-29T${esc(item.time)}">${esc(item.time)}</time><div><strong>${esc(item.name)}</strong><p>${esc(item.detail)}</p></div></li>`).join('')}</ol></section>`;
+    const priorities = `<section class="teacher-section priorities"><h3>Việc đang chờ</h3><ol>${brief.priorities.map(item => `<li><strong>${esc(item.name)}</strong><p>${esc(item.detail)}</p></li>`).join('')}</ol></section>`;
+    return `<div class="teacher-board">${variant === 'task-first' ? priorities + agenda : agenda + priorities}</div>`;
+  }
   function render() {
     preview.className = variant;
     preview.innerHTML = `<h2>${esc(brief.title)}</h2><p class="task">${esc(brief.task)}</p>
       <div class="status" data-part="status"><strong>${esc(brief.status)}</strong><p>${esc(brief.owner)}</p></div>
       ${brief.options && !reviewing ? `<section class="catalog" aria-label="Chọn biến thể"><h3>So sánh biến thể</h3><label for="catalog-filter">Lọc màu hoặc kích thước</label><input id="catalog-filter" type="search" value="${esc(query)}"><div class="options" id="options"></div></section>` : ''}
+      ${teacherSections()}
+      ${brief.agenda ? '<details class="teacher-context"><summary>Đối chiếu bối cảnh lớp</summary>' : ''}
       <section class="object" data-part="facts" aria-labelledby="object-title"><h3 id="object-title">${esc(brief.object)}</h3><dl class="facts">${factMarkup()}</dl></section>
+      ${brief.agenda ? '</details>' : ''}
       ${reviewing ? reviewMarkup() : formMarkup()}
       ${brief.help ? `<details><summary>${esc(brief.help.title)}</summary><p>${esc(brief.help.details)}</p></details>` : ''}`;
     if (reviewing) {
       document.querySelector('#back').addEventListener('click', () => {
         // Deliberate, labelled defect in the teaching variant; not production logic.
         if (variant === 'fragile') value = brief.input_value;
-        reviewing = false; recovered = variant === 'considered'; render(); document.querySelector('#detail').focus();
+        reviewing = false; recovered = variant !== 'fragile'; render(); document.querySelector('#detail').focus();
       });
       document.querySelector('#review-title').focus();
       return;

@@ -24,6 +24,11 @@
   .gm-ticket { display: flex; flex-direction: column; gap: var(--ds-space-300); padding: var(--ds-spacing-inset-lg); border: var(--ds-border-width-200) dashed var(--ds-border-control); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
   .gm-ticket__code { margin: 0; font: var(--ds-font-weight-bold) 28px/1 var(--ds-font-family-mono); letter-spacing: 0.08em; }
   .gm-done { display: grid; place-items: center; width: 64px; height: 64px; border-radius: var(--ds-shape-pill); background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+  .app [hidden] { display: none; }
+  /* Footer participates in the phone's flex layout so wrapped reasons cannot cover form fields. */
+  .gm-booking .app-footer { position: static; flex: none; }
+  .gm-booking .app-body--footer { padding-bottom: var(--ds-spacing-inset-lg); }
+  .gm-session-meta { flex-direction: column; align-items: flex-start; white-space: normal; overflow: visible; text-overflow: clip; }
 </style>
 </head>
 <body class="ds-root app">
@@ -35,14 +40,13 @@
   <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
   <symbol id="ds-i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5M12 8v.01"/></symbol>
   <symbol id="ds-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></symbol>
-  <symbol id="ds-i-pin" viewBox="0 0 24 24"><path d="M12 20.5s6-5.4 6-10.5a6 6 0 1 0-12 0c0 5.1 6 10.5 6 10.5Z"/><circle cx="12" cy="10" r="2.25"/></symbol>
   <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
 <!-- icons:end -->
-<main class="app-gallery">
+<main class="app-gallery" data-flow-mode="prototype" data-role="customer">
   <header class="app-gallery__intro ds-stack ds-stack--sm">
     <h1 class="ds-text-title-lg">Lò Gốm Mộc: giữ chỗ trên điện thoại</h1>
-    <p class="ds-text-body-md ds-text-secondary">Ba màn của luồng giữ chỗ: chọn buổi, chọn số người, nhận phiếu. Khách hàng và dữ liệu là giả định.</p>
+    <p class="ds-text-body-md ds-text-secondary">Luồng minh họa cho khách học gốm: chọn buổi, kiểm tra và nhận phiếu. Không thu tiền, không gửi tin nhắn; dữ liệu và địa điểm là giả định.</p>
     <div class="ds-cluster">
       <button class="ds-button ds-button--sm" type="button" data-theme-toggle><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-moon"/></svg>Đổi sáng tối</button>
     </div>
@@ -50,24 +54,24 @@
 
   <section class="app-gallery__item" aria-label="Màn chọn buổi">
     <p class="app-gallery__caption">1. Chọn buổi</p>
-    <div class="app-phone" data-screen="Chọn buổi" id="chon-buoi">
+    <div class="app-phone" data-screen="Chọn buổi" id="chon-buoi" data-entry>
       <div class="app-status"><span class="app-status__time">9:41</span></div>
       <div class="app-screen">
         <div class="app-body">
           <div class="app-large-title"><h1 class="gm-title">Lịch lớp</h1></div>
           <section class="app-hero" aria-labelledby="next-title">
-            <span class="gm-tag gm-tag--on-brand" style="align-self:flex-start">Thứ Bảy 2/11, còn 2 chỗ</span>
+            <span class="gm-tag gm-tag--on-brand" style="align-self:flex-start">Thứ Bảy 7/11, còn 2 chỗ</span>
             <h2 class="gm-hero-title" id="next-title">Bát ăn cơm đầu tiên</h2>
             <p class="ds-text-body-md app-hero__muted" style="margin:0">14:00 đến 17:00, cho người mới bắt đầu</p>
-            <a class="ds-button ds-button--secondary ds-button--block" href="#chi-tiet">Giữ chỗ buổi này</a>
+            <a class="ds-button ds-button--secondary ds-button--block" href="#chi-tiet" data-session="bowl">Giữ chỗ buổi này</a>
           </section>
           <div class="ds-section-header"><h2 class="ds-text-title-sm">Các buổi khác</h2></div>
           <ul class="ds-list">
-            <li><a class="ds-list-item" href="#chi-tiet"><span class="gm-day"><span class="gm-day__n">03</span><span class="gm-day__w">CN</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Cốc có quai</span><span class="app-meta">09:00, đã học một buổi</span></span><span class="gm-tag">Còn 5</span></a></li>
-            <li><a class="ds-list-item" href="#chi-tiet"><span class="gm-day"><span class="gm-day__n">09</span><span class="gm-day__w">Thứ 7</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Bát ăn cơm đầu tiên</span><span class="app-meta">14:00, người mới</span></span><span class="gm-tag">Đã kín</span></a></li>
-            <li><a class="ds-list-item" href="#chi-tiet"><span class="gm-day"><span class="gm-day__n">10</span><span class="gm-day__w">CN</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Đĩa men rạn</span><span class="app-meta">09:00, đã học hai buổi</span></span><span class="gm-tag">Còn 6</span></a></li>
+            <li><a class="ds-list-item" href="#chi-tiet" data-session="cup"><span class="gm-day"><span class="gm-day__n">08</span><span class="gm-day__w">CN</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Cốc có quai</span><span class="app-meta gm-session-meta"><time datetime="2026-11-08T09:00">8/11, 09:00</time><span>Đã học một buổi</span></span></span><span class="gm-tag">Còn 5</span></a></li>
+            <li><a class="ds-list-item" href="#chi-tiet" data-session="full"><span class="gm-day"><span class="gm-day__n">14</span><span class="gm-day__w">Thứ 7</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Bát ăn cơm đầu tiên</span><span class="app-meta gm-session-meta"><time datetime="2026-11-14T14:00">14/11, 14:00</time><span>Người mới</span></span></span><span class="gm-tag">Đã kín</span></a></li>
+            <li><a class="ds-list-item" href="#chi-tiet" data-session="plate"><span class="gm-day"><span class="gm-day__n">15</span><span class="gm-day__w">CN</span></span><span class="ds-list-item__body"><span class="app-line ds-text-label-lg">Đĩa men rạn</span><span class="app-meta gm-session-meta"><time datetime="2026-11-15T09:00">15/11, 09:00</time><span>Đã học hai buổi</span></span></span><span class="gm-tag">Còn 6</span></a></li>
           </ul>
-          <p class="app-note"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-info"/></svg>Buổi đã kín: chạm để nhận tin khi có người huỷ.</p>
+          <p class="app-note"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-info"/></svg>Buổi đã kín: mở để xem trạng thái và chọn buổi khác.</p>
         </div>
       </div>
     </div>
@@ -75,32 +79,33 @@
 
   <section class="app-gallery__item" aria-label="Màn chọn số người">
     <p class="app-gallery__caption">2. Chọn số người</p>
-    <div class="app-phone" data-screen="Chọn số người" id="chi-tiet">
+    <div class="app-phone gm-booking" data-screen="Chọn số người" id="chi-tiet">
       <div class="app-status"><span class="app-status__time">9:41</span></div>
       <header class="app-header">
         <a class="app-round" href="#chon-buoi" aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
-        <h1 class="app-header__title ds-text-title-md">Thứ Bảy 2/11</h1>
+        <h1 class="app-header__title ds-text-title-md" data-session-date>Thứ Bảy 7/11</h1>
       </header>
       <div class="app-screen">
         <form class="app-body app-body--footer" onsubmit="return false">
+          <div class="ds-card ds-card--flat" data-unavailable hidden><p role="status">Buổi này đã kín. Lựa chọn hiện tại được giữ để bạn xem lại.</p><button class="ds-button ds-button--secondary" type="button" data-recover>Chọn buổi còn chỗ</button></div>
           <div class="app-panel">
             <div class="app-panel__section">
-              <h2 class="gm-hero-title">Bát ăn cơm đầu tiên</h2>
-              <div class="app-kv"><span class="app-kv__label">Giờ</span><span class="app-kv__value">14:00 đến 17:00</span></div>
+              <h2 class="gm-hero-title" data-session-title>Bát ăn cơm đầu tiên</h2>
+              <div class="app-kv"><span class="app-kv__label">Giờ</span><span class="app-kv__value" data-session-time>14:00 đến 17:00</span></div>
               <div class="app-kv"><span class="app-kv__label">Nơi học</span><span class="app-kv__value">Xưởng Mộc, Bát Tràng</span></div>
-              <div class="app-kv"><span class="app-kv__label">Còn trống</span><span class="app-kv__value"><span class="gm-tag gm-tag--low">2 chỗ</span></span></div>
+              <div class="app-kv"><span class="app-kv__label">Còn trống</span><span class="app-kv__value"><span class="gm-tag gm-tag--low" data-session-seats>2 chỗ</span></span></div>
             </div>
           </div>
           <div class="ds-card ds-card--flat">
             <div class="ds-split">
               <span id="people-label" class="ds-text-label-lg">Số người</span>
               <div class="gm-stepper" role="group" aria-labelledby="people-label">
-                <button class="app-round" type="button" aria-label="Bớt một người" data-step="-1"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-minus"/></svg></button>
+                <button class="app-round" type="button" aria-label="Bớt một người" data-step="-1" aria-describedby="people-hint"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-minus"/></svg></button>
                 <output aria-live="polite" data-people>2</output>
-                <button class="app-round" type="button" aria-label="Thêm một người" data-step="1" aria-disabled="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+                <button class="app-round" type="button" aria-label="Thêm một người" data-step="1" aria-disabled="true" aria-describedby="people-hint"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
               </div>
             </div>
-            <p class="ds-field__hint" data-people-hint>Buổi này chỉ còn 2 chỗ.</p>
+            <p class="ds-field__hint" id="people-hint" data-people-hint>Buổi này chỉ còn 2 chỗ.</p>
           </div>
           <fieldset class="ds-fieldset ds-card ds-card--flat">
             <legend>Bạn đã từng làm gốm chưa?</legend>
@@ -110,70 +115,130 @@
           <label class="ds-check"><input type="checkbox" checked><span class="ds-check__box" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></span><span>Gửi bát về nhà sau khi nung, miễn phí nội&nbsp;thành</span></label>
         </form>
       </div>
-      <div class="app-footer"><a class="ds-button ds-button--primary ds-button--block" href="#phieu" data-pay>Giữ 2 chỗ, 900.000 ₫</a><p class="app-footer__note">Đổi buổi miễn phí nếu báo trước 24 giờ</p></div>
+      <div class="app-footer"><a class="ds-button ds-button--primary ds-button--block" href="#booking-review" data-pay data-primary aria-describedby="booking-reason">Giữ 2 chỗ, 900.000 ₫</a><p class="app-footer__note" id="booking-reason" data-reason>Kiểm tra buổi và số người trước khi giữ chỗ; chưa thanh toán.</p></div>
     </div>
   </section>
 
   <section class="app-gallery__item" aria-label="Màn phiếu giữ chỗ">
     <p class="app-gallery__caption">3. Phiếu giữ chỗ</p>
-    <div class="app-phone" data-screen="Phiếu giữ chỗ" id="phieu">
+    <div class="app-phone" data-screen="Phiếu giữ chỗ" id="phieu" data-result>
       <div class="app-status"><span class="app-status__time">9:42</span></div>
       <div class="app-screen">
         <div class="app-body">
           <div class="ds-stack ds-stack--sm" style="align-items:flex-start; padding-top: var(--ds-space-600)">
             <span class="gm-done"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-check"/></svg></span>
             <h1 class="gm-title" data-confirm-title>Đã giữ 2 chỗ</h1>
-            <p class="ds-text-body-md ds-text-secondary" style="margin:0">Phiếu đã gửi qua tin nhắn tới 0912 000 000.</p>
+            <p class="ds-text-body-md ds-text-secondary" style="margin:0">Phiếu minh họa cho khách 0912 000 000. Chưa gửi tin nhắn hoặc thu tiền.</p>
           </div>
           <div class="gm-ticket">
             <span class="ds-text-body-sm ds-text-secondary">Mã phiếu, đọc khi đến xưởng</span>
-            <p class="gm-ticket__code">MOC-0211</p>
-            <div class="app-kv"><span class="app-kv__label">Buổi</span><span class="app-kv__value">Thứ Bảy 2/11, 14:00</span></div>
+            <p class="gm-ticket__code">MOC-0711</p>
+            <div class="app-kv"><span class="app-kv__label">Buổi</span><span class="app-kv__value" data-confirm-session>Thứ Bảy 7/11, 14:00</span></div>
+            <div class="app-kv"><span class="app-kv__label">Lớp</span><span class="app-kv__value" data-confirm-name>Bát ăn cơm đầu tiên</span></div>
             <div class="app-kv"><span class="app-kv__label">Số người</span><span class="app-kv__value" data-confirm-people>2</span></div>
             <div class="app-kv"><span class="app-kv__label">Tổng tiền</span><span class="app-kv__value ds-tabular" data-confirm-total>900.000 ₫</span></div>
           </div>
           <section class="ds-card ds-card--flat" aria-labelledby="next-steps">
             <h2 class="ds-text-title-sm" id="next-steps">Tiếp theo</h2>
             <ol class="app-timeline">
-              <li><time>2/11</time><span>Đến xưởng trước 10 phút, mặc đồ có thể dính đất</span></li>
-              <li><time>16/11</time><span>Bát ra lò, xưởng nhắn ảnh cho bạn</span></li>
-              <li><time>18/11</time><span>Bát được gửi về nhà</span></li>
+              <li><time>7/11</time><span>Đến xưởng trước 10 phút, mặc đồ có thể dính đất</span></li>
+              <li><time data-ready-date>21/11</time><span>Bát ra lò, xưởng nhắn ảnh cho bạn</span></li>
+              <li data-shipping-step><time data-ship-date>23/11</time><span>Bát được gửi về nhà</span></li>
             </ol>
           </section>
           <div class="ds-cluster">
             <a class="ds-button ds-button--tertiary" href="#chi-tiet" data-edit-booking>Sửa số người</a>
-            <button class="ds-button ds-button--secondary" type="button"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar-plus"/></svg>Thêm vào lịch</button>
-            <a class="ds-button ds-button--tertiary" href="#"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-pin"/></svg>Chỉ đường</a>
+            <button class="ds-button ds-button--secondary" type="button" data-calendar><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar-plus"/></svg>Thêm vào lịch</button>
+            <a class="ds-button ds-button--tertiary" href="#chon-buoi">Về lịch lớp</a>
+            <p class="ds-text-body-sm ds-text-secondary" role="status" data-calendar-status></p>
           </div>
         </div>
       </div>
     </div>
   </section>
 </main>
+<dialog id="booking-review" aria-labelledby="review-title" data-confirm style="max-width:min(90vw,420px);box-sizing:border-box;border:1px solid var(--ds-border-subtle);border-radius:var(--ds-radius-400);padding:var(--ds-space-500);background:var(--ds-surface-raised);color:var(--ds-text-primary)">
+  <h2 id="review-title" class="ds-text-title-md">Kiểm tra giữ chỗ</h2>
+  <p data-review-summary></p>
+  <p class="ds-text-body-sm">Giữ chỗ minh họa cho khách 0912 000 000; chưa thu tiền. Bạn có thể sửa sau khi xác nhận.</p>
+  <div class="ds-cluster"><button class="ds-button ds-button--secondary" type="button" data-review-back>Quay lại sửa</button><a class="ds-button ds-button--primary" href="#phieu" data-confirm-action>Xác nhận giữ chỗ</a></div>
+</dialog>
 <script>
-// Luồng minh hoạ: chọn số người, xác nhận và sửa lại; không gửi tin nhắn hay thu tiền.
-const SEATS = 2;
-const PRICE = 450000;
+// Fixture duy nhất cho danh sách, chi tiết, review, kết quả và lịch tải xuống.
+// Đây là prototype phía trình duyệt, không gửi/thu tiền hay giữ chỗ thật trên máy chủ.
+const sessions = {
+  bowl: { name: 'Bát ăn cơm đầu tiên', date: 'Thứ Bảy 7/11', time: '14:00 đến 17:00', seats: 2, price: 450000, day: '20261107', start: '140000', end: '170000', ready: '21/11', ship: '23/11' },
+  cup: { name: 'Cốc có quai', date: 'Chủ Nhật 8/11', time: '09:00 đến 12:00', seats: 5, price: 450000, day: '20261108', start: '090000', end: '120000', ready: '22/11', ship: '24/11' },
+  full: { name: 'Bát ăn cơm đầu tiên', date: 'Thứ Bảy 14/11', time: '14:00 đến 17:00', seats: 0, price: 450000, day: '20261114', start: '140000', end: '170000', ready: '28/11', ship: '30/11' },
+  plate: { name: 'Đĩa men rạn', date: 'Chủ Nhật 15/11', time: '09:00 đến 12:00', seats: 6, price: 450000, day: '20261115', start: '090000', end: '120000', ready: '29/11', ship: '1/12' },
+};
+let sessionKey = 'bowl';
+let confirmedSessionKey = 'bowl';
 const people = document.querySelector('[data-people]');
 const pay = document.querySelector('[data-pay]');
-const formatTotal = (count) => `${(count * PRICE).toLocaleString('vi-VN')} ₫`;
-document.addEventListener('click', (event) => {
+const review = document.querySelector('#booking-review');
+const formatTotal = count => `${(count * sessions[sessionKey].price).toLocaleString('vi-VN')} ₫`;
+const setText = (selector, value) => document.querySelector(selector).textContent = value;
+function updateSelection() {
+  const selected = sessions[sessionKey];
+  const count = Number(people.textContent);
+  setText('[data-session-title]', selected.name);
+  setText('[data-session-date]', selected.date);
+  setText('[data-session-time]', selected.time);
+  setText('[data-session-seats]', selected.seats ? `${selected.seats} chỗ` : 'Đã kín');
+  document.querySelector('[data-unavailable]').hidden = selected.seats > 0;
+  document.querySelector('[data-step="-1"]').setAttribute('aria-disabled', String(count <= 1 || !selected.seats));
+  document.querySelector('[data-step="1"]').setAttribute('aria-disabled', String(count >= selected.seats));
+  setText('[data-people-hint]', selected.seats ? `Chọn từ 1 đến ${selected.seats} người; buổi này còn ${selected.seats} chỗ.` : 'Buổi này đã kín. Chọn buổi còn chỗ để tiếp tục.');
+  pay.setAttribute('aria-disabled', String(!selected.seats));
+  pay.textContent = selected.seats ? `Giữ ${count} chỗ, ${formatTotal(count)}` : 'Buổi đã kín';
+  setText('#booking-reason', selected.seats ? 'Kiểm tra buổi và số người trước khi giữ chỗ; chưa thanh toán.' : 'Không thể giữ chỗ vì buổi này đã kín. Chọn buổi khác ở phía trên.');
+}
+function selectSession(key) {
+  if (!sessions[key]) return;
+  sessionKey = key;
+  people.textContent = String(Math.max(1, Math.min(Number(people.textContent), sessions[key].seats)));
+  updateSelection();
+}
+document.addEventListener('click', event => {
+  const sessionLink = event.target.closest('[data-session]');
+  if (sessionLink) selectSession(sessionLink.dataset.session);
+  if (event.target.closest('[data-recover]')) selectSession('bowl');
   const step = event.target.closest('[data-step]');
-  if (step) {
-    if (step.getAttribute('aria-disabled') === 'true') return;
-    const phone = step.closest('.app-phone');
-    const out = phone.querySelector('[data-people]');
-    const n = Math.min(SEATS, Math.max(1, Number(out.textContent) + Number(step.dataset.step)));
-    out.textContent = String(n);
-    phone.querySelector('[data-step="-1"]').setAttribute('aria-disabled', String(n <= 1));
-    phone.querySelector('[data-step="1"]').setAttribute('aria-disabled', String(n >= SEATS));
-    pay.textContent = `Giữ ${n} chỗ, ${formatTotal(n)}`;
+  if (step && step.getAttribute('aria-disabled') !== 'true') {
+    people.textContent = String(Math.max(1, Math.min(sessions[sessionKey].seats, Number(people.textContent) + Number(step.dataset.step))));
+    updateSelection();
   }
   if (event.target.closest('[data-pay]')) {
-    const count = Number(people.textContent);
-    document.querySelector('[data-confirm-title]').textContent = `Đã giữ ${count} chỗ`;
-    document.querySelector('[data-confirm-people]').textContent = String(count);
-    document.querySelector('[data-confirm-total]').textContent = formatTotal(count);
+    event.preventDefault();
+    if (!sessions[sessionKey].seats) return;
+    setText('[data-review-summary]', `${sessions[sessionKey].name}, ${sessions[sessionKey].date}, ${sessions[sessionKey].time}. ${people.textContent} người, ${formatTotal(Number(people.textContent))}.`);
+    review.showModal();
+  }
+  if (event.target.closest('[data-review-back]')) review.close();
+  if (event.target.closest('[data-confirm-action]')) {
+    const count = Number(people.textContent), selected = sessions[sessionKey];
+    confirmedSessionKey = sessionKey;
+    setText('[data-confirm-title]', `Đã giữ ${count} chỗ`);
+    setText('[data-confirm-people]', String(count));
+    setText('[data-confirm-total]', formatTotal(count));
+    setText('[data-confirm-name]', selected.name);
+    setText('[data-confirm-session]', `${selected.date}, ${selected.time}`);
+    setText('.gm-ticket__code', `MOC-${selected.day.slice(6)}${selected.day.slice(4, 6)}`);
+    setText('[data-ready-date]', selected.ready);
+    setText('[data-ship-date]', selected.ship);
+    document.querySelector('[data-shipping-step]').hidden = !document.querySelector('input[type="checkbox"]').checked;
+    review.close();
+  }
+  if (event.target.closest('[data-calendar]')) {
+    const selected = sessions[confirmedSessionKey];
+    const content = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//uiux-ai-workspace//booking-demo//VI','BEGIN:VEVENT',`UID:demo-${confirmedSessionKey}@uiux.example`,'DTSTAMP:20261029T000000Z',`DTSTART:${selected.day}T${selected.start}`,`DTEND:${selected.day}T${selected.end}`,`SUMMARY:${selected.name} (minh họa)`,'LOCATION:Xưởng Mộc - địa điểm giả định','END:VEVENT','END:VCALENDAR'].join('\r\n');
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([content], { type: 'text/calendar;charset=utf-8' }));
+    link.download = `lich-gom-${confirmedSessionKey}.ics`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    setText('[data-calendar-status]', 'Đã tạo tệp lịch minh họa .ics. Mở tệp để thêm vào lịch của bạn.');
   }
   if (event.target.closest('[data-theme-toggle]')) {
     const root = document.documentElement;
@@ -181,6 +246,7 @@ document.addEventListener('click', (event) => {
     root.dataset.theme = dark ? 'light' : 'dark';
   }
 });
+updateSelection();
 </script>
 </body>
 </html>

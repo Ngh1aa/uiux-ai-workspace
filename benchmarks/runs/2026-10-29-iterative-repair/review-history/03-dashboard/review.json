@@ -1,0 +1,110 @@
+{
+  "reviewer": {
+    "id": "blind-review-repair-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "03-dashboard-1280-dark.jpg": {
+      "Màn này để làm gì?": "Cho chủ Len Nhỏ biết hàng sắp hết, đơn gửi trễ và doanh thu để xử lý công việc hôm nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập ngay với len cotton màu kem hoặc Gửi với đơn quá hạn hai ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trên desktop các khối dễ đọc, nhưng nền hoạ tiết KPI hơi bận so với bảng dữ liệu."
+    },
+    "03-dashboard-1280-light.jpg": {
+      "Màn này để làm gì?": "Cho chủ Len Nhỏ biết hàng sắp hết, đơn gửi trễ và doanh thu để xử lý công việc hôm nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập ngay với len cotton màu kem hoặc Gửi với đơn quá hạn hai ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trên desktop các khối dễ đọc, nhưng nền hoạ tiết KPI hơi bận so với bảng dữ liệu."
+    },
+    "03-dashboard-390-dark.jpg": {
+      "Màn này để làm gì?": "Cho chủ Len Nhỏ biết hàng sắp hết, đơn gửi trễ và doanh thu để xử lý công việc hôm nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập ngay với len cotton màu kem hoặc Gửi với đơn quá hạn hai ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chú thích bảng Sắp hết hàng bị ép vào cột rất hẹp, xuống từng từ và tạo khoảng trắng lớn trước dòng sản phẩm."
+    },
+    "03-dashboard-390-light-result.png": {
+      "Màn này để làm gì?": "Cho chủ Len Nhỏ biết hàng sắp hết, đơn gửi trễ và doanh thu để xử lý công việc hôm nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập ngay với len cotton màu kem hoặc Gửi với đơn quá hạn hai ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Menu mở để lại vùng trắng gần một màn hình; KPI còn hai đơn quá hạn nhưng nhãn khu vực vẫn ghi ba đơn quá hạn, gồm cả đơn đã gửi."
+    },
+    "03-dashboard-390-light-review-order.png": {
+      "Màn này để làm gì?": "Xác nhận đánh dấu đã gửi đơn 2041 của chị Hà trước khi cập nhật trạng thái mô phỏng.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đánh dấu gửi sau khi kiểm tra số đơn, hoặc Quay lại.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Dòng mô tả trong hộp xác nhận dính Đà Nẵng với Quá 2 ngày; caption bảng phía sau vẫn xuống từng từ."
+    },
+    "03-dashboard-390-light.jpg": {
+      "Màn này để làm gì?": "Cho chủ Len Nhỏ biết hàng sắp hết, đơn gửi trễ và doanh thu để xử lý công việc hôm nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập ngay với len cotton màu kem hoặc Gửi với đơn quá hạn hai ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chú thích bảng Sắp hết hàng bị ép vào cột rất hẹp, xuống từng từ và tạo khoảng trắng lớn trước dòng sản phẩm."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 2,
+    "4": 3,
+    "5": 4,
+    "6": 3,
+    "7": 3,
+    "8": 3,
+    "9": 2,
+    "10": 3
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "03-dashboard-390-light.jpg",
+      "element": "Chú thích Sắp hết hàng; dữ liệu minh hoạ... ở đầu khối tồn kho bị bó vào một cột khoảng một từ và kéo dài thành nhiều dòng, để khoảng trắng lớn bên phải.",
+      "fix": "Cho caption chiếm toàn chiều ngang ngoài cấu trúc cột của bảng khi chuyển mobile, rồi đặt danh sách sản phẩm ngay dưới caption."
+    },
+    {
+      "dimension": "4",
+      "image": "03-dashboard-390-dark.jpg",
+      "element": "Chú thích tồn kho bị chia thành từng từ dù phần còn lại của thẻ có chiều ngang trống.",
+      "fix": "Dùng measure đọc bình thường trên mobile, bỏ width/min-content gây ép dòng, giữ line-height nhất quán với mô tả."
+    },
+    {
+      "dimension": "6",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "KPI ghi 13 đơn chờ gửi và 2 đơn quá hạn nhưng tiêu đề khối vẫn ghi 3 đơn quá hạn; đơn 2041 đã gửi vẫn đứng trong danh sách quá hạn.",
+      "fix": "Sau đánh dấu gửi, tính lại số lượng/nhãn và tách đơn đã gửi khỏi danh sách cần xử lý, hoặc chuyển nhãn thành kết quả vừa xử lý rõ ràng."
+    },
+    {
+      "dimension": "7",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "Menu đang mở chiếm một vùng trắng dài gần một màn hình và đẩy nội dung công việc xuống dưới.",
+      "fix": "Dùng drawer/overlay có giới hạn theo nội dung hoặc navigation thu gọn; khi chọn mục hãy đóng menu và đưa người dùng đến đúng vùng đích. Cần kiểm tương tác thật."
+    },
+    {
+      "dimension": "8",
+      "image": "03-dashboard-390-light-review-order.png",
+      "element": "Hộp Gửi đúng đơn nối Đà Nẵng với Quá 2 ngày thiếu khoảng cách/phân cách, làm mô tả đơn khó đọc.",
+      "fix": "Tách người nhận, thành phố và tình trạng trễ bằng dòng hoặc dấu phân cách và khoảng trắng rõ."
+    },
+    {
+      "dimension": "9",
+      "image": "03-dashboard-390-light.jpg",
+      "element": "Bố cục card mobile giữ caption bảng dưới dạng cột hẹp thay vì chuyển thành chú thích đầy chiều ngang.",
+      "fix": "Thiết kế cấu trúc mobile riêng cho bảng: caption toàn hàng, mỗi item là tên/mã, tồn và đủ bán; giữ thông tin bán mỗi ngày khi phù hợp."
+    },
+    {
+      "dimension": "10",
+      "image": "03-dashboard-1280-light.jpg",
+      "element": "Hoạ tiết đan trên dải KPI chạy sát toàn bộ chữ và số; trên mobile hoạ tiết lặp dày hơn trong khi bảng có lỗi measure lớn.",
+      "fix": "Giảm cường độ hoạ tiết dưới số liệu và ưu tiên sửa nhịp/measure mobile trước; giữ nhận diện len ở vùng không cạnh tranh đọc dữ liệu."
+    }
+  ],
+  "not_checked": [
+    "Đây là agent-heuristic độc lập trên screenshot; không phải human research, human approval hay xác nhận triển khai.",
+    "HF-1: chưa đo tỷ lệ tương phản pixel AA cho toàn bộ chữ, icon và hai theme; quan sát thị giác không đủ xác nhận 4.5:1/3:1.",
+    "HF-2: chưa đo vùng nhận chạm thực tế; viền hoặc chữ nhỏ trên screenshot không chứng minh kích thước hit area.",
+    "HF-4: chưa kiểm bàn phím, thứ tự focus, focus indicator thực tế, screen reader và focus trap/return của modal.",
+    "HF-5: chưa quan sát đủ mọi trạng thái động, loading, error, empty; không suy thiếu ảnh thành thiếu implementation.",
+    "HF-7: chưa kiểm browser back, lịch sử điều hướng, gesture quay lại và phục hồi trạng thái.",
+    "Chưa kiểm chữ phóng 200%, font scale, nội dung dài, bàn phím ảo hoặc thiết bị thật.",
+    "Chưa kiểm backend/API, lưu dữ liệu, quyền dữ liệu, mạng lỗi, thao tác thật và thông báo thành công.",
+    "HF-3: caption có lỗi measure nghiêm trọng nhưng chữ vẫn xuống dòng trong card, chưa có bằng chứng cắt/đè hoặc cuộn ngang để kết luận HF-3.",
+    "HF-6/HF-8/HF-9/HF-10: không phát hiện vi phạm nhìn thấy; các số liệu mẫu và các trạng thái demo có ghi nhãn.",
+    "Các vệt header/overlay giữa ảnh review-order có thể do ảnh full-page khi mở modal; chưa kiểm runtime để phân biệt lỗi capture và lỗi cố định vị trí.",
+    "Chưa kiểm retry, cập nhật từng khối, hành vi bảng, tooltip/chart hoặc đồng bộ dữ liệu sau refresh."
+  ]
+}

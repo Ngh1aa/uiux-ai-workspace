@@ -1,0 +1,14 @@
+[
+  {
+    "level": "info",
+    "rule": "scope",
+    "path": null,
+    "message": "Chỉ soát ['design-system/examples/gom-moc']: 12/580 file thay đổi. Không kết luận cho phần ngoài scope."
+  },
+  {
+    "level": "info",
+    "rule": "summary",
+    "path": null,
+    "message": "CSS: +0 / -0 dòng; file CSS sửa 0, thêm 0, xoá 0; !important ròng +0."
+  }
+]

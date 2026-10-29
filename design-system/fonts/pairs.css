@@ -1,0 +1,15 @@
+/* Optional editorial pair. SIL OFL 1.1 licenses and binary hashes: manifest.json. */
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("./source-serif-4/SourceSerif4-opsz-wght.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("./manrope/Manrope-wght.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}

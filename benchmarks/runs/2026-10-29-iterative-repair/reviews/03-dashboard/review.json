@@ -1,0 +1,99 @@
+{
+  "reviewer": {
+    "id": "blind-review-repair-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "03-dashboard-1280-dark.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    },
+    "03-dashboard-1280-light.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    },
+    "03-dashboard-390-dark.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    },
+    "03-dashboard-390-light-result.png": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Kết quả đánh dấu gửi, menu mở gọn và ví dụ các trạng thái panel.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Gửi đơn quá hạn còn lại hoặc chọn khu vực công việc trong menu.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] KPI/nhãn cùng còn 2 đơn quá hạn; menu không còn khoảng trắng dài. Chưa kiểm hành vi đóng menu."
+    },
+    "03-dashboard-390-light-review-order.png": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Xác nhận đánh dấu đã gửi đơn 2041 chị Hà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Đánh dấu gửi sau khi kiểm tra đúng người nhận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Mô tả đã tách Đà Nẵng với Quá 2 ngày; geometry overlay trong ảnh full-page cần runtime để phân biệt capture và UI."
+    },
+    "03-dashboard-390-light.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "ĐÃ SỬA: menu mở chỉ còn chiều cao theo các mục, không còn vùng trắng dài gần một màn hình trước dashboard.",
+      "fix": "Giữ chiều cao gọn này; kiểm đóng menu và scroll/focus khi chọn mục ở runtime."
+    },
+    {
+      "dimension": "8",
+      "image": "03-dashboard-390-light-review-order.png",
+      "element": "ĐÃ SỬA: giữa Đà Nẵng và Quá 2 ngày đã có khoảng cách, mô tả xác nhận đọc liền mạch.",
+      "fix": "Có thể dùng dấu phân cách rõ hơn khi tên/thành phố dài; không còn ghi finding dính chữ cũ."
+    },
+    {
+      "dimension": "6",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "Số 13 đơn chờ gửi, 2 đơn quá hạn ở KPI và nhãn khu vực thống nhất; đơn 2041 có trạng thái Đã gửi.",
+      "fix": "Giữ đếm theo đơn cần xử lý; có thể chuyển hàng vừa gửi sang lịch sử để tập trung tác vụ."
+    },
+    {
+      "dimension": "4",
+      "image": "03-dashboard-390-dark.jpg",
+      "element": "Caption tồn kho chiếm chiều ngang bình thường, tên/mã/tồn/đủ bán có thứ tự rõ.",
+      "fix": "Giữ cấu trúc reflow khi kiểm 200% text."
+    },
+    {
+      "dimension": "10",
+      "image": "03-dashboard-1280-light.jpg",
+      "element": "Màu len, dải hoạ tiết và nhịp bảng/chart tạo nhận diện; ví dụ trạng thái đã nằm trong disclosure.",
+      "fix": "Giữ decoration ngoài phần đọc số chính; đo tương phản trước khi xác nhận AA."
+    }
+  ],
+  "not_checked": [
+    "Re-review đã biết brief và finding vòng trước; cold trong hồ sơ này là re-read, không phải first-read/blind cold mới. Reviewer vẫn độc lập với người làm, không đọc source/rationale/điểm người làm.",
+    "Đây là agent-heuristic từ screenshot, không phải human research, human approval hoặc bằng chứng triển khai.",
+    "HF-1: chưa đo tỷ lệ tương phản AA của tất cả chữ/icon ở hai theme; quan sát ảnh không chứng minh 4.5:1/3:1.",
+    "HF-2: chưa đo hit area thật; ảnh không chứng minh vùng nhận chạm web 24px/iOS 44pt/Android 48dp.",
+    "HF-4: chưa kiểm bàn phím, focus order/indicator khi thao tác, focus trap/return và screen reader.",
+    "HF-5: trạng thái không có ảnh là UNKNOWN; không kết luận thiếu implementation từ thiếu screenshot.",
+    "HF-7: chưa kiểm Back, edge swipe, lịch sử, phục hồi state và quy ước nền tảng khi tương tác thật.",
+    "Chưa kiểm chữ phóng 200%, Dynamic Type/font scale, bàn phím ảo, nội dung dài, API/backend, lưu dữ liệu hoặc thông báo thật.",
+    "Không suy phần control nằm ngoài scroll viewport trong ảnh là không thể cuộn tới hoặc bị mất. Cần runtime để kiểm.",
+    "HF-3/HF-6/HF-8/HF-9/HF-10: không thấy vi phạm chắc chắn trong các ảnh snapshot frozen cung cấp; đây không phải xác nhận mọi trạng thái đều đạt.",
+    "Ảnh review-order có overlay/header ở giữa ảnh full-page; chưa phân biệt được lỗi capture và lỗi cố định vị trí ở runtime.",
+    "Chưa kiểm retry, loading thật, cập nhật riêng từng panel, số liệu sau refresh, chart accessibility hoặc thao tác navigation."
+  ],
+  "review_stage": "re-review"
+}

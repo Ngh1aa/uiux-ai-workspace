@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import shutil
 import sys
 from datetime import datetime, timezone
@@ -109,7 +110,7 @@ def make(args: argparse.Namespace) -> int:
         # Xoá sạch hồ sơ cũ: người duyệt mới không được thấy review.json hay ảnh của lượt trước.
         shutil.rmtree(out)
     (out / "images").mkdir(parents=True, exist_ok=True)
-    manifest = {"created": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "size": args.size, "images": {}}
+    manifest = {"version": 2, "created": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "size": args.size, "images": {}}
     for img in images:
         # Tên theo đường dẫn tương đối để ảnh cùng tên ở thư mục con khác nhau không đè nhau.
         base = "-".join(img.relative_to(shots).parts)
@@ -120,6 +121,7 @@ def make(args: argparse.Namespace) -> int:
         manifest["images"][name] = sha256(out / "images" / name)
     shutil.copy2(args.brief, out / "brief.md")
     shutil.copy2(RUBRIC, out / "rubric.md")
+    manifest["inputs"] = {name: sha256(out / name) for name in ("brief.md", "rubric.md")}
     questions = "\n".join(f"{i}. {q}" for i, q in enumerate(COLD_QUESTIONS, 1))
     (out / "REVIEWER.md").write_text(REVIEWER.format(questions=questions, size=args.size, threshold=threshold_text(args.size)), encoding="utf-8")
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -146,9 +148,17 @@ def verify(args: argparse.Namespace) -> int:
         print(f"không đọc được hồ sơ: {exc}", file=sys.stderr)
         return 1
     images = manifest.get("images", {})
+    if not images:
+        errors.append("hồ sơ không có ảnh")
+    if manifest.get("size") not in SIZES:
+        errors.append("cỡ việc trong manifest không hợp lệ")
+    if manifest.get("version") == 2:
+        for name in ("brief.md", "rubric.md"):
+            if not (packet / name).is_file() or sha256(packet / name) != manifest.get("inputs", {}).get(name):
+                errors.append(f"{name} bị đổi hoặc mất sau khi tạo hồ sơ")
     for name, digest in images.items():
         path = packet / "images" / name
-        if not path.exists() or sha256(path) != digest:
+        if not path.resolve().is_relative_to((packet / "images").resolve()) or not path.is_file() or sha256(path) != digest:
             errors.append(f"ảnh {name} bị đổi hoặc mất sau khi tạo hồ sơ")
 
     reviewer = review.get("reviewer", {})
@@ -174,7 +184,7 @@ def verify(args: argparse.Namespace) -> int:
             errors.append(f"hard fail không hợp lệ: {item}")
 
     scores = review.get("scores", {})
-    if set(scores) != set(DIMENSIONS) or any(not isinstance(v, (int, float)) or not 1 <= v <= 5 for v in scores.values()):
+    if set(scores) != set(DIMENSIONS) or any(type(v) not in (int, float) or not math.isfinite(v) or not 1 <= v <= 5 for v in scores.values()):
         errors.append("scores cần đủ 10 chiều, mỗi chiều từ 1 tới 5")
     else:
         notes = review.get("observations", [])

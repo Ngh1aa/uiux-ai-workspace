@@ -108,6 +108,17 @@ test('heading xuống dòng được yêu cầu review, không bị nhận nhầ
   assert.ok(r.rules('Heading', 'warnings').includes('wrap-review'));
 });
 
+test('tên đối tượng nhiều dòng trong rich record không bị coi là CTA ngắn', () => {
+  const r = run('<section data-screen="Hồ sơ"><button style="width:150px;white-space:normal"><strong style="display:block;width:7ch">Đặng Quốc Việt</strong><span>Nhổ răng khôn, 8:30, đang khám</span></button></section>');
+  assert.ok(!r.rules('Hồ sơ', 'errors').includes('wrap'));
+  assert.ok(r.rules('Hồ sơ', 'warnings').includes('wrap-review'));
+});
+
+test('nút ngắn bọc icon và span vẫn bắt lỗi gãy nhãn', () => {
+  const r = run('<section data-screen="Nút"><button style="width:70px"><svg width="8" height="8" aria-hidden="true"></svg><span>Điều chỉnh lớp</span></button></section>');
+  assert.ok(r.rules('Nút', 'errors').includes('wrap'));
+});
+
 test('bắt nội dung tràn ngang', () => {
   const r = run('<section data-screen="Tràn"><div class="card" style="white-space:nowrap">Một dòng chữ rất dài không được phép xuống dòng nên sẽ tràn khỏi card</div></section>');
   assert.ok(r.rules('Tràn', 'errors').includes('overflow'));

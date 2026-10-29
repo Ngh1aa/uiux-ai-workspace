@@ -1,0 +1,101 @@
+{
+  "reviewer": {
+    "id": "fresh-gate-review-2026-10-30",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "review_stage": "re-review",
+  "cold_protocol": "re-review / known brief; not a first cold review",
+  "cold": {
+    "02-app-1280-dark.jpg": {
+      "Màn này để làm gì?": "Trang chủ xem lịch sân đã đặt và tìm sân tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô tìm sân.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Liên kết xem cả ba sân nằm sát mép tab bar, cần kiểm cuộn."
+    },
+    "02-app-1280-light.jpg": {
+      "Màn này để làm gì?": "Xem lượt đặt sắp tới và tìm sân gần nhà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô tìm kiếm theo tên hoặc quận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thẻ lịch lớn làm đường tìm thêm sân nằm thấp và sát tab bar."
+    },
+    "02-app-390-dark.jpg": {
+      "Màn này để làm gì?": "Tìm sân và mở lịch sắp tới.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm sân theo tên hoặc quận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Vùng tìm sân nhỏ hơn khối lịch đã đặt, đường xem đủ sân ở cuối khung."
+    },
+    "02-app-390-light.jpg": {
+      "Màn này để làm gì?": "Xem lượt đặt và đặt giờ trống tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Thẻ Phú Nhuận hoặc ô tìm sân.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy hỏng ngang, nhưng liên kết cuối sát thanh điều hướng."
+    },
+    "02-booked.png": {
+      "Màn này để làm gì?": "Xem các lượt đặt sắp tới.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tab Đã qua khi cần lịch sử.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thẻ tiếp theo kéo dài dưới viewport; không suy ra nội dung bị mất."
+    },
+    "02-checkout-light.png": {
+      "Màn này để làm gì?": "Xác nhận sân, giờ, số người, ghi chú và tiền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xác nhận đặt sân.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nhãn Tối nay thiếu ngày cụ thể trên bước xác nhận."
+    },
+    "02-conflict19.png": {
+      "Màn này để làm gì?": "Khôi phục khi giờ 19:00 vừa bị người khác đặt.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn khung khác hoặc Đổi khung giờ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút trong lỗi sát đáy khung hiện tại; chưa biết cuộn sẽ hiển thị ra sao."
+    },
+    "02-detail-dark.png": {
+      "Màn này để làm gì?": "Xem thông tin và chọn giờ ở Phú Nhuận.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "18:00 còn trống.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lưới giờ phía dưới tiếp tục ngoài vùng thấy; không kết luận thiếu."
+    },
+    "02-empty.png": {
+      "Màn này để làm gì?": "Cho biết chưa có lịch đã qua.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm sân tối nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trạng thái rỗng rõ, không thấy lỗi bố cục chắc chắn."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4.5,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "02-app-1280-light.jpg",
+      "element": "Thẻ lượt đặt cao và liên kết Xem cả 3 sân tối nay sát tab bar",
+      "fix": "Giảm nhẹ chiều cao thẻ hoặc chỉnh nhịp cuối vùng cuộn để liên kết có khoảng thở; kiểm cuộn trước kết luận che khuất."
+    },
+    {
+      "dimension": "8",
+      "image": "02-checkout-light.png",
+      "element": "Tối nay, 18:00–19:00",
+      "fix": "Thêm ngày cụ thể trên bước xác nhận và lịch để tránh phụ thuộc mốc tương đối."
+    },
+    {
+      "dimension": "7",
+      "image": "02-conflict19.png",
+      "element": "Nút Chọn khung khác ở phần dưới khối lỗi",
+      "fix": "Kiểm khi báo lỗi có đưa đầy đủ nút chọn lại vào khung nhìn và giữ focus phù hợp; screenshot không xác nhận thất bại runtime."
+    }
+  ],
+  "not_checked": [
+    "Re-review / known brief: reviewer đã biết đề và đã xem phiên ảnh trước; đây không phải first cold review.",
+    "Keyboard, Tab/focus path, screen reader, tên và vai trò accessible, chữ phóng 200%.",
+    "Đo contrast AA đầy đủ và vùng hit target thực tế.",
+    "Runtime click/back/scroll, loading, lưu và khôi phục dữ liệu, native/AT.",
+    "Nội dung ngoài viewport không được coi là bị mất; các trạng thái không có ảnh được ghi UNKNOWN.",
+    "Danh sách sân riêng với tìm kiếm/lọc quận và đủ ba sân: UNKNOWN vì không có capture riêng.",
+    "Toàn bộ lưới giờ bên dưới, các trạng thái đang chọn, loading và mọi màn ở cả hai theme chưa có đủ ảnh."
+  ],
+  "score_scope": "Only captures included in this packet; absent views and states UNKNOWN",
+  "gate_result": "UNKNOWN",
+  "summary": "Trang chủ, chi tiết, checkout, lỗi tranh giờ, lịch đặt và lịch rỗng có cách thể hiện rõ. Nhịp dọc trang chủ còn sát tab bar. Không thấy hard fail chắc chắn trong chín ảnh."
+}

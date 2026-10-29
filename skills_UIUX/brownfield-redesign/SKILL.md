@@ -189,3 +189,5 @@ Script đo các dấu hiệu phủ đè ở bảng trên từ `git diff` (xem
 - Giữ code cũ "cho chắc" khi đã có test bảo vệ hành vi.
 - Sửa tay file sinh tự động; lần chạy generator sau sẽ xoá mất.
 - Sửa test cho khớp giao diện mới mà không phân biệt test đó kiểm hành vi hay kiểm giao diện.
+
+Trong monorepo, dùng `overlay-check.py --include <thư-mục-sản-phẩm>` (có thể lặp) để soát đúng khu vực redesign. Công cụ in số file trong/ngoài scope; mọi ngưỡng giữ nguyên. Không dùng kết quả scope để kết luận cho ví dụ mới hoặc sản phẩm khác.

@@ -1,0 +1,82 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "01-confirm.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Báo đã lưu lựa chọn lớp gốm trong bản mẫu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về trang xưởng.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nhãn chưa gửi xưởng rõ; chỉ ghi Thứ Bảy, chưa có ngày tháng cụ thể."
+    },
+    "01-landing-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Giới thiệu lớp gốm, giá và cách đặt chỗ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn lớp Nặn tay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thứ bậc rõ, minh họa và màu hợp xưởng; chưa thấy lỗi hình học mới."
+    },
+    "01-landing-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Giới thiệu lớp gốm, giá và cách đặt chỗ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn lớp Nặn tay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thứ bậc rõ, minh họa và màu hợp xưởng; chưa thấy lỗi hình học mới."
+    },
+    "01-landing-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Giúp người mới hiểu và đặt lớp gốm trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt chỗ ở hero.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trang dài do minh họa lớn nhưng nội dung dễ quét, không thấy tràn ngang."
+    },
+    "01-landing-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Giúp người mới hiểu và đặt lớp gốm trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt chỗ ở hero.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trang dài do minh họa lớn nhưng nội dung dễ quét, không thấy tràn ngang."
+    },
+    "01-review-edit.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Rà soát lựa chọn lớp, ca, số người, liên hệ và tiền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sửa lựa chọn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút sửa nằm dòng riêng; tóm tắt vẫn chưa có ngày tháng cụ thể."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4.5,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3.5,
+    "8": 4,
+    "9": 4,
+    "10": 4.5
+  },
+  "observations": [
+    {
+      "dimension": "7",
+      "image": "01-review-edit.png",
+      "element": "Review/Sửa lựa chọn và confirm",
+      "fix": "Đã có màn review và confirm với giới hạn minh họa rõ, nhưng chưa có ảnh form/lỗi nhập. Bổ sung bằng chứng lỗi và kiểm quay lại sửa có giữ lựa chọn để đánh giá phản hồi đầy đủ. Điểm chỉ dựa trạng thái nhìn thấy."
+    },
+    {
+      "dimension": "8",
+      "image": "01-confirm.png",
+      "element": "Buổi Thứ Bảy 9:00",
+      "fix": "Nếu dùng cho đặt chỗ thực, bổ sung ngày/tháng cụ thể để phân biệt các cuối tuần. Trong mẫu hiện tại chưa gây hiểu nhầm đã gửi vì disclaimer rõ."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tương phản số học; điểm màu là heuristic thị giác, không chứng nhận WCAG AA.",
+    "HF-2: vùng chạm thực, padding tương tác vô hình và quy đổi pt/dp UNKNOWN từ ảnh.",
+    "HF-4: bàn phím, focus toàn luồng, screen reader và thứ tự đọc UNKNOWN. Một ảnh có focus không xác nhận toàn luồng.",
+    "HF-6: đã soát trạng thái nhìn thấy, có nhãn chữ/số chứ không chỉ màu.",
+    "HF-7: browser/system back, dismiss, chuyển màn, giữ state và keyboard runtime UNKNOWN.",
+    "HF-8/HF-9/HF-10: đã soát ảnh, không thấy primary khác nhiệm vụ cạnh tranh, deceptive pattern hoặc bằng chứng giả không nhãn; dữ liệu minh họa có ghi rõ.",
+    "Text 200%, AT, reduced motion, native SDK/thiết bị thật, persistence và backend UNKNOWN.",
+    "Re-review đã biết brief; independent=true nghĩa độc lập với người làm. Đây là agent-heuristic, không phải human research, phê duyệt hướng hay approval.",
+    "HF-3: không thấy clipping hoặc tràn ngang trên các ảnh final 390/1280; text 200% chưa kiểm.",
+    "HF-5: chưa có ảnh form chọn lớp, lỗi, loading; không suy ra source thiếu.",
+    "FAQ câu thứ 2 đang đóng, chưa xác nhận nội dung mở và thao tác. Theme/modal/browser back và gửi xưởng thực UNKNOWN.",
+    "TASTE.md ngoài packet nên chưa đối chiếu; provenance CSS/SVG tự vẽ không thể xác minh từ ảnh."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Đánh giá lại trực tiếp tất cả ảnh final, đã biết brief từ các lượt trước; không phải first-read. Không đọc source/rationale hay điểm người làm. Điểm heuristic không xác nhận runtime, AT, native hay backend."
+}

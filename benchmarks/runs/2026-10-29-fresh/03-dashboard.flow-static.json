@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "layer": "source-static",
+  "errorCount": 0,
+  "warningCount": 4,
+  "flow_status": "UNKNOWN",
+  "results": [
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\03-dashboard\\index.html",
+      "mode": "prototype",
+      "static_status": "PASS",
+      "flow_status": "UNKNOWN",
+      "errors": [],
+      "warnings": [
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 1,
+          "message": "Nhãn “Ghi nhận nhập hàng” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 2,
+          "message": "Nhãn “Kiểm tra nhập hàng” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 2,
+          "message": "Nhãn “Lưu vào kho mẫu” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 3,
+          "message": "Nhãn “Đã bàn giao vận chuyển” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        }
+      ],
+      "unknown": [
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "“Việc hôm nay”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "“Tồn kho”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "“Đơn cần gửi”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "“Doanh thu”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "“Đổi sáng tối”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "“Ghi nhận nhập hàng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 2,
+          "message": "“Đóng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 2,
+          "message": "“Kiểm tra nhập hàng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 2,
+          "message": "“Sửa số lượng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 2,
+          "message": "“Lưu vào kho mẫu”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 3,
+          "message": "“Đóng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 3,
+          "message": "“Đã bàn giao vận chuyển”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "runtime",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "HTML nguồn không chứng minh luồng, Back, tổng tiền, đúng đối tượng/vai trò, khôi phục lỗi hoặc navigation động. Chạy Playwright của dự án."
+        }
+      ]
+    }
+  ]
+}

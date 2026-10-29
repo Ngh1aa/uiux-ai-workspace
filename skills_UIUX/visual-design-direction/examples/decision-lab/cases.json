@@ -1,60 +1,353 @@
 {
   "schema_version": "1.0",
   "evidence_class": "AUTHORED_SYNTHETIC_TEACHING_EXAMPLES",
-  "boundary": "Five authored weak/considered pairs share one data owner and renderer. Multiple visual/behavioral axes change; this is teaching material, not a controlled causal trial, approved brand direction or user study.",
+  "boundary": "Six authored teaching cases share one data owner and renderer. Five weak/considered pairs and a teacher case with two viable priority directions. Not a controlled causal trial, approved brand direction or user study.",
   "cases": {
     "healthcare": {
-      "profile_id": "healthcare-patient-journey", "roles": ["app-record", "app-support"],
-      "title": "Yêu cầu lịch hẹn", "task": "Biết yêu cầu đang ở đâu và cần làm gì tiếp theo.",
-      "object": "Chi tiết yêu cầu", "status": "Chờ phòng khám xác nhận", "owner": "Bộ phận lịch hẹn", "next": "Kiểm tra thông tin đã gửi",
-      "facts": [["Người bệnh", "Lan — dữ liệu minh họa"], ["Thời gian đề nghị", "09:00, 12/11/2026"], ["Bác sĩ", "Chưa có phân công"]],
-      "help": {"title": "Cách liên hệ về yêu cầu", "details": "Chưa có kênh liên hệ được xác minh trong dữ liệu mẫu. Quay lại chi tiết yêu cầu để giữ nguyên bối cảnh. Sản phẩm thật cần kênh liên hệ do phòng khám cung cấp; mẫu không đưa hướng dẫn y tế."},
-      "input_label": "Ghi chú cho lịch hẹn", "input_value": "Cần kiểm tra lại số liên hệ",
-      "annotations": [{"target": "status", "observation": "Yêu cầu chờ cần nổi bật trước chi tiết phụ.", "change": "Đặt trạng thái và người xử lý cạnh nhau.", "trade_off": "Giảm diện tích ảnh trang trí; không suy thành đã xác nhận."}, {"target": "facts", "observation": "Không có bác sĩ được phân công trong dữ liệu.", "change": "Hiển thị thông tin thiếu trung thực.", "trade_off": "Trạng thái trông chưa hoàn tất nhưng tránh kỳ vọng sai."}, {"target": "recovery", "observation": "Quay lại từ review có thể làm mất ghi chú.", "change": "Giữ giá trị trong cùng state owner.", "trade_off": "Chỉ giữ trong phiên; không giả vờ đã lưu trên server."}],
+      "profile_id": "healthcare-patient-journey",
+      "roles": [
+        "app-record",
+        "app-support"
+      ],
+      "title": "Yêu cầu lịch hẹn",
+      "task": "Biết yêu cầu đang ở đâu và cần làm gì tiếp theo.",
+      "object": "Chi tiết yêu cầu",
+      "status": "Chờ phòng khám xác nhận",
+      "owner": "Bộ phận lịch hẹn",
+      "next": "Kiểm tra thông tin đã gửi",
+      "facts": [
+        [
+          "Người bệnh",
+          "Lan — dữ liệu minh họa"
+        ],
+        [
+          "Thời gian đề nghị",
+          "09:00, 12/11/2026"
+        ],
+        [
+          "Bác sĩ",
+          "Chưa có phân công"
+        ]
+      ],
+      "help": {
+        "title": "Cách liên hệ về yêu cầu",
+        "details": "Chưa có kênh liên hệ được xác minh trong dữ liệu mẫu. Quay lại chi tiết yêu cầu để giữ nguyên bối cảnh. Sản phẩm thật cần kênh liên hệ do phòng khám cung cấp; mẫu không đưa hướng dẫn y tế."
+      },
+      "input_label": "Ghi chú cho lịch hẹn",
+      "input_value": "Cần kiểm tra lại số liên hệ",
+      "annotations": [
+        {
+          "target": "status",
+          "observation": "Yêu cầu chờ cần nổi bật trước chi tiết phụ.",
+          "change": "Đặt trạng thái và người xử lý cạnh nhau.",
+          "trade_off": "Giảm diện tích ảnh trang trí; không suy thành đã xác nhận."
+        },
+        {
+          "target": "facts",
+          "observation": "Không có bác sĩ được phân công trong dữ liệu.",
+          "change": "Hiển thị thông tin thiếu trung thực.",
+          "trade_off": "Trạng thái trông chưa hoàn tất nhưng tránh kỳ vọng sai."
+        },
+        {
+          "target": "recovery",
+          "observation": "Quay lại từ review có thể làm mất ghi chú.",
+          "change": "Giữ giá trị trong cùng state owner.",
+          "trade_off": "Chỉ giữ trong phiên; không giả vờ đã lưu trên server."
+        }
+      ],
       "retest": "Sửa ghi chú, xem lại, quay lại; kiểm tra giá trị và trạng thái vẫn đúng.",
       "do_not_transfer": "Danh tính, ngày, người xử lý, clinical/clinic policy và palette."
     },
     "commerce": {
-      "profile_id": "physical-product-commerce", "roles": ["orientation", "catalog", "conversion"],
-      "title": "Kiểm tra lựa chọn", "task": "Đối chiếu biến thể và chi phí trước bước tiếp theo.",
-      "object": "Lựa chọn hiện tại", "status": "Chưa tạo đơn hàng", "owner": "Bạn kiểm tra thông tin", "next": "Xem lại lựa chọn",
-      "facts": [["Sản phẩm", "Túi vải mẫu"], ["Biến thể", "Xanh đậm · cỡ M"], ["Giá minh họa", "320.000 ₫; phí giao hàng chưa xác định"]],
-      "options": [{"id": "blue-m", "label": "Xanh đậm · cỡ M"}, {"id": "green-m", "label": "Xanh lá · cỡ M"}, {"id": "blue-l", "label": "Xanh đậm · cỡ L"}],
-      "input_label": "Ghi chú lựa chọn", "input_value": "Cần đối chiếu kích thước",
-      "annotations": [{"target": "facts", "observation": "Các thuộc tính phải dễ đối chiếu ở cùng vị trí.", "change": "Dùng cặp label/value ổn định thay nhiều card ngang hàng.", "trade_off": "Ít tính quảng bá hơn; ưu tiên quyết định mua."}, {"target": "status", "observation": "Giá minh họa chưa có phí giao hàng.", "change": "Giữ phần chưa biết gần giá và hành động.", "trade_off": "Không có total giả để tạo cảm giác hoàn tất."}, {"target": "recovery", "observation": "Sửa lựa chọn không được xóa ghi chú.", "change": "Giữ input khi back từ review.", "trade_off": "Review không tạo order hoặc charge thật."}],
+      "profile_id": "physical-product-commerce",
+      "roles": [
+        "orientation",
+        "catalog",
+        "conversion"
+      ],
+      "title": "Kiểm tra lựa chọn",
+      "task": "Đối chiếu biến thể và chi phí trước bước tiếp theo.",
+      "object": "Lựa chọn hiện tại",
+      "status": "Chưa tạo đơn hàng",
+      "owner": "Bạn kiểm tra thông tin",
+      "next": "Xem lại lựa chọn",
+      "facts": [
+        [
+          "Sản phẩm",
+          "Túi vải mẫu"
+        ],
+        [
+          "Biến thể",
+          "Xanh đậm · cỡ M"
+        ],
+        [
+          "Giá minh họa",
+          "320.000 ₫; phí giao hàng chưa xác định"
+        ]
+      ],
+      "options": [
+        {
+          "id": "blue-m",
+          "label": "Xanh đậm · cỡ M"
+        },
+        {
+          "id": "green-m",
+          "label": "Xanh lá · cỡ M"
+        },
+        {
+          "id": "blue-l",
+          "label": "Xanh đậm · cỡ L"
+        }
+      ],
+      "input_label": "Ghi chú lựa chọn",
+      "input_value": "Cần đối chiếu kích thước",
+      "annotations": [
+        {
+          "target": "facts",
+          "observation": "Các thuộc tính phải dễ đối chiếu ở cùng vị trí.",
+          "change": "Dùng cặp label/value ổn định thay nhiều card ngang hàng.",
+          "trade_off": "Ít tính quảng bá hơn; ưu tiên quyết định mua."
+        },
+        {
+          "target": "status",
+          "observation": "Giá minh họa chưa có phí giao hàng.",
+          "change": "Giữ phần chưa biết gần giá và hành động.",
+          "trade_off": "Không có total giả để tạo cảm giác hoàn tất."
+        },
+        {
+          "target": "recovery",
+          "observation": "Sửa lựa chọn không được xóa ghi chú.",
+          "change": "Giữ input khi back từ review.",
+          "trade_off": "Review không tạo order hoặc charge thật."
+        }
+      ],
       "retest": "Đọc biến thể/chi phí trên mobile, đổi ghi chú rồi back từ review.",
       "do_not_transfer": "Giá, inventory, chính sách giao hàng, reservation hoặc payment status."
     },
     "portfolio": {
-      "profile_id": "career-portfolio", "roles": ["conversion", "editorial"],
-      "title": "Một quyết định thiết kế", "task": "Phân biệt đóng góp cá nhân với kết quả của nhóm.",
-      "object": "Bằng chứng và phạm vi", "status": "Prototype · chưa có nghiên cứu người dùng", "owner": "Người thiết kế trình bày", "next": "Xem lại phần đóng góp",
-      "facts": [["Bài toán", "Làm rõ trạng thái và bước tiếp theo"], ["Đóng góp", "IA, flow và prototype minh họa"], ["Kết quả", "Chưa đo tác động sản phẩm"]],
-      "help": {"title": "Thông tin liên hệ và giới hạn", "details": "Địa chỉ minh họa: designer@example.invalid. Chưa có CV hoặc người nhận thật trong mẫu. Sản phẩm thật cần đường liên hệ/CV được kiểm tra; mẫu không gửi tin hay giả lập phản hồi nhà tuyển dụng."},
-      "input_label": "Ghi chú về quyết định", "input_value": "Cần bổ sung giới hạn của phương án",
-      "annotations": [{"target": "status", "observation": "Màn đẹp không chứng minh sản phẩm đã ship.", "change": "Đặt evidence status cạnh đối tượng công việc.", "trade_off": "Bỏ claim tăng trưởng không có nguồn."}, {"target": "facts", "observation": "Process dài có thể che đóng góp thực tế.", "change": "Cho thấy bài toán, lựa chọn, đóng góp và unknown.", "trade_off": "Một case ngắn cần link evidence khi có thật."}, {"target": "recovery", "observation": "Review cần quay lại sửa được.", "change": "Giữ nội dung và đường sửa.", "trade_off": "Không mô phỏng gửi đến nhà tuyển dụng."}],
+      "profile_id": "career-portfolio",
+      "roles": [
+        "conversion",
+        "editorial"
+      ],
+      "title": "Một quyết định thiết kế",
+      "task": "Phân biệt đóng góp cá nhân với kết quả của nhóm.",
+      "object": "Bằng chứng và phạm vi",
+      "status": "Prototype · chưa có nghiên cứu người dùng",
+      "owner": "Người thiết kế trình bày",
+      "next": "Xem lại phần đóng góp",
+      "facts": [
+        [
+          "Bài toán",
+          "Làm rõ trạng thái và bước tiếp theo"
+        ],
+        [
+          "Đóng góp",
+          "IA, flow và prototype minh họa"
+        ],
+        [
+          "Kết quả",
+          "Chưa đo tác động sản phẩm"
+        ]
+      ],
+      "help": {
+        "title": "Thông tin liên hệ và giới hạn",
+        "details": "Địa chỉ minh họa: designer@example.invalid. Chưa có CV hoặc người nhận thật trong mẫu. Sản phẩm thật cần đường liên hệ/CV được kiểm tra; mẫu không gửi tin hay giả lập phản hồi nhà tuyển dụng."
+      },
+      "input_label": "Ghi chú về quyết định",
+      "input_value": "Cần bổ sung giới hạn của phương án",
+      "annotations": [
+        {
+          "target": "status",
+          "observation": "Màn đẹp không chứng minh sản phẩm đã ship.",
+          "change": "Đặt evidence status cạnh đối tượng công việc.",
+          "trade_off": "Bỏ claim tăng trưởng không có nguồn."
+        },
+        {
+          "target": "facts",
+          "observation": "Process dài có thể che đóng góp thực tế.",
+          "change": "Cho thấy bài toán, lựa chọn, đóng góp và unknown.",
+          "trade_off": "Một case ngắn cần link evidence khi có thật."
+        },
+        {
+          "target": "recovery",
+          "observation": "Review cần quay lại sửa được.",
+          "change": "Giữ nội dung và đường sửa.",
+          "trade_off": "Không mô phỏng gửi đến nhà tuyển dụng."
+        }
+      ],
       "retest": "Tìm contribution và giới hạn evidence; sửa ghi chú rồi back.",
       "do_not_transfer": "Kinh nghiệm, participant, impact, client hoặc hiring outcome."
     },
     "enterprise": {
-      "profile_id": "enterprise-software-governance", "roles": ["orientation", "evidence", "conversion"],
-      "title": "Yêu cầu quyền truy cập", "task": "Phân biệt phê duyệt với việc cấp quyền đã thực thi.",
-      "object": "Trạng thái thực thi", "status": "Đã duyệt · đang chờ cấp quyền", "owner": "Nhóm vận hành quyền", "next": "Kiểm tra phạm vi yêu cầu",
-      "facts": [["Ứng dụng", "Kho báo cáo minh họa"], ["Phạm vi", "Chỉ đọc · thời hạn cần xác minh"], ["Thực thi", "Chưa có sự kiện cấp quyền thành công"]],
-      "input_label": "Lý do yêu cầu", "input_value": "Đối chiếu báo cáo trong đợt review",
-      "annotations": [{"target": "status", "observation": "Approval không phải active access.", "change": "Tách quyết định và fulfillment, nêu owner.", "trade_off": "Cần thêm một trạng thái thay badge success chung."}, {"target": "facts", "observation": "Permission scope có hệ quả khác nhau.", "change": "Giữ resource, role và duration cạnh hành động.", "trade_off": "Dày thông tin có chủ đích; tránh cyber decoration."}, {"target": "recovery", "observation": "Retry không được ngầm tạo quyết định mới.", "change": "Giữ yêu cầu và review trước bước thực thi thật.", "trade_off": "Mẫu không có connector hay approval backend."}],
+      "profile_id": "enterprise-software-governance",
+      "roles": [
+        "orientation",
+        "evidence",
+        "conversion"
+      ],
+      "title": "Yêu cầu quyền truy cập",
+      "task": "Phân biệt phê duyệt với việc cấp quyền đã thực thi.",
+      "object": "Trạng thái thực thi",
+      "status": "Đã duyệt · đang chờ cấp quyền",
+      "owner": "Nhóm vận hành quyền",
+      "next": "Kiểm tra phạm vi yêu cầu",
+      "facts": [
+        [
+          "Ứng dụng",
+          "Kho báo cáo minh họa"
+        ],
+        [
+          "Phạm vi",
+          "Chỉ đọc · thời hạn cần xác minh"
+        ],
+        [
+          "Thực thi",
+          "Chưa có sự kiện cấp quyền thành công"
+        ]
+      ],
+      "input_label": "Lý do yêu cầu",
+      "input_value": "Đối chiếu báo cáo trong đợt review",
+      "annotations": [
+        {
+          "target": "status",
+          "observation": "Approval không phải active access.",
+          "change": "Tách quyết định và fulfillment, nêu owner.",
+          "trade_off": "Cần thêm một trạng thái thay badge success chung."
+        },
+        {
+          "target": "facts",
+          "observation": "Permission scope có hệ quả khác nhau.",
+          "change": "Giữ resource, role và duration cạnh hành động.",
+          "trade_off": "Dày thông tin có chủ đích; tránh cyber decoration."
+        },
+        {
+          "target": "recovery",
+          "observation": "Retry không được ngầm tạo quyết định mới.",
+          "change": "Giữ yêu cầu và review trước bước thực thi thật.",
+          "trade_off": "Mẫu không có connector hay approval backend."
+        }
+      ],
       "retest": "Xác định access đã active chưa, ai xử lý tiếp; sửa lý do rồi back.",
       "do_not_transfer": "Entitlement, quyền phê duyệt, connector coverage hoặc compliance."
     },
     "industrial": {
-      "profile_id": "industrial-service-operations", "roles": ["offering", "evidence", "conversion"],
-      "title": "Làm rõ phạm vi dịch vụ", "task": "Hiểu đầu vào, đầu ra và giới hạn trước khi gửi yêu cầu.",
-      "object": "Phạm vi đang trao đổi", "status": "Đang làm rõ · chưa chốt phạm vi", "owner": "Đầu mối dịch vụ", "next": "Xem lại yêu cầu phạm vi",
-      "facts": [["Đầu vào", "Danh sách giao diện cần kiểm tra"], ["Đầu ra dự kiến", "Bản ghi phạm vi và câu hỏi cần xác minh"], ["Ngoài phạm vi", "Chưa xác nhận triển khai hoặc commissioning"]],
-      "input_label": "Thông tin cần làm rõ", "input_value": "Cần xác định đầu mối giao diện",
-      "annotations": [{"target": "facts", "observation": "Headline công nghệ không thay thế scope.", "change": "Cho input/output/exclusion thành đối tượng quyết định.", "trade_off": "Ít spectacle; không vẽ schematic để lấp khoảng trống."}, {"target": "status", "observation": "Inquiry không phải accepted scope.", "change": "Hiển thị trạng thái làm rõ và người chịu trách nhiệm.", "trade_off": "Không hứa compatibility hay SLA chưa xác minh."}, {"target": "recovery", "observation": "Thông tin còn thiếu phải sửa được.", "change": "Retain input, review và back trong cùng state.", "trade_off": "Không gửi yêu cầu vận hành thật."}],
+      "profile_id": "industrial-service-operations",
+      "roles": [
+        "offering",
+        "evidence",
+        "conversion"
+      ],
+      "title": "Làm rõ phạm vi dịch vụ",
+      "task": "Hiểu đầu vào, đầu ra và giới hạn trước khi gửi yêu cầu.",
+      "object": "Phạm vi đang trao đổi",
+      "status": "Đang làm rõ · chưa chốt phạm vi",
+      "owner": "Đầu mối dịch vụ",
+      "next": "Xem lại yêu cầu phạm vi",
+      "facts": [
+        [
+          "Đầu vào",
+          "Danh sách giao diện cần kiểm tra"
+        ],
+        [
+          "Đầu ra dự kiến",
+          "Bản ghi phạm vi và câu hỏi cần xác minh"
+        ],
+        [
+          "Ngoài phạm vi",
+          "Chưa xác nhận triển khai hoặc commissioning"
+        ]
+      ],
+      "input_label": "Thông tin cần làm rõ",
+      "input_value": "Cần xác định đầu mối giao diện",
+      "annotations": [
+        {
+          "target": "facts",
+          "observation": "Headline công nghệ không thay thế scope.",
+          "change": "Cho input/output/exclusion thành đối tượng quyết định.",
+          "trade_off": "Ít spectacle; không vẽ schematic để lấp khoảng trống."
+        },
+        {
+          "target": "status",
+          "observation": "Inquiry không phải accepted scope.",
+          "change": "Hiển thị trạng thái làm rõ và người chịu trách nhiệm.",
+          "trade_off": "Không hứa compatibility hay SLA chưa xác minh."
+        },
+        {
+          "target": "recovery",
+          "observation": "Thông tin còn thiếu phải sửa được.",
+          "change": "Retain input, review và back trong cùng state.",
+          "trade_off": "Không gửi yêu cầu vận hành thật."
+        }
+      ],
       "retest": "Tìm exclusion, owner và trạng thái; thêm câu hỏi rồi back.",
       "do_not_transfer": "Scope thực, safety, thiết bị, thông số hoặc acceptance criteria."
+    },
+    "teacher": {
+      "profile_id": "teacher-day-priorities",
+      "roles": [
+        "teacher"
+      ],
+      "title": "Hôm nay của cô Hường",
+      "task": "Chuẩn bị lớp và hoàn tất việc đang chờ trong cùng ngày 29/10/2026.",
+      "object": "Bối cảnh lớp học",
+      "status": "2 việc cần hoàn tất",
+      "owner": "Giáo viên Nguyễn Thị Hường",
+      "next": "Xem lại ghi chú",
+      "facts": [
+        [
+          "Lớp đầu ngày",
+          "Lớp Lá · 08:00, 29/10/2026"
+        ],
+        [
+          "Lớp tiếp theo",
+          "Lớp Mầm · 10:00, 29/10/2026"
+        ],
+        [
+          "Đang chờ",
+          "Báo cáo Lớp Lá · trước 21:00, 29/10/2026"
+        ]
+      ],
+      "input_label": "Ghi chú chuẩn bị lớp",
+      "input_value": "Mang tranh kể chuyện cho Lớp Lá",
+      "agenda": [
+        {
+          "time": "08:00",
+          "name": "Lớp Lá",
+          "detail": "Kể chuyện · Phòng 2 · 45 phút"
+        },
+        {
+          "time": "10:00",
+          "name": "Lớp Mầm",
+          "detail": "Khám phá màu · Phòng 1 · 45 phút"
+        }
+      ],
+      "priorities": [
+        {
+          "name": "Gửi báo cáo Lớp Lá",
+          "detail": "Hạn 21:00, 29/10/2026 · Chưa gửi"
+        },
+        {
+          "name": "Chuẩn bị tranh kể chuyện",
+          "detail": "Trước 08:00, 29/10/2026 · Đang chuẩn bị"
+        }
+      ],
+      "annotations": [
+        {
+          "target": "facts",
+          "observation": "Cùng lịch, cùng việc, cùng người; hai hướng hợp lệ phục vụ hoàn cảnh khác nhau.",
+          "change": "Lịch trước cho người chuẩn bị đến lớp; Việc trước cho người hoàn tất báo cáo cuối ngày.",
+          "trade_off": "Lịch trước làm deadline phụ xuống dưới; Việc trước giảm khả năng đọc nhanh cả lịch ngày."
+        },
+        {
+          "target": "recovery",
+          "observation": "Đổi thứ tự ưu tiên không được đổi dữ liệu hay làm mất ghi chú.",
+          "change": "Giữ form/review trong cùng state owner.",
+          "trade_off": "Chỉ là prototype trình duyệt; chưa lưu dữ liệu hoặc gửi báo cáo."
+        }
+      ],
+      "retest": "So sánh hai hướng Lịch trước / Việc trước; sửa ghi chú, xem lại, quay lại và đối chiếu lớp/ngày.",
+      "do_not_transfer": "Lịch thật, danh tính, deadline, ưu tiên công việc hoặc đánh giá hiệu quả giảng dạy."
     }
   }
 }

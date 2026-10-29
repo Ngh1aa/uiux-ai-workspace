@@ -56,10 +56,10 @@ class OverlayCheckTest(unittest.TestCase):
     def tearDown(self) -> None:
         self.tmp.cleanup()
 
-    def check(self) -> tuple[int, str]:
+    def check(self, *args: str) -> tuple[int, str]:
         out = io.StringIO()
         with redirect_stdout(out):
-            code = overlay_check.main(["--repo", str(self.repo), "--base", "main"])
+            code = overlay_check.main(["--repo", str(self.repo), "--base", "main", *args])
         return code, out.getvalue()
 
     def test_overlay_branch_fails(self) -> None:
@@ -104,6 +104,19 @@ class OverlayCheckTest(unittest.TestCase):
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             code = overlay_check.main(["--repo", str(self.repo), "--base", "khong-co"])
         self.assertEqual(code, 2)
+
+    def test_scoped_product_does_not_claim_unrelated_greenfield_is_a_redesign(self):
+        write(self.repo, "new-example/brand.css", '\n'.join(f'.x{i}{{color:red!important}}' for i in range(90)))
+        write(self.repo, "app.html", PAGE.format(extra="", script="").replace('Home', 'Updated home'))
+        self.assertEqual(self.check()[0], 1)
+        code, output = self.check('--include', 'app.html')
+        self.assertEqual(code, 0, output)
+        self.assertIn('INFO    scope', output)
+        self.assertIn('ngoài scope', output)
+
+    def test_generated_asset_link_is_not_a_generated_file_marker(self):
+        self.assertFalse(overlay_check.GENERATED_RE.search('<link href="generated/tokens.css">'))
+        self.assertTrue(overlay_check.GENERATED_RE.search('<!-- generated file; do not edit -->'))
 
 
 if __name__ == "__main__":

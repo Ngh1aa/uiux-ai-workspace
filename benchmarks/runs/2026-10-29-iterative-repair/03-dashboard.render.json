@@ -1,0 +1,164 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 1024,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 1024,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\03-dashboard\\index.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "reviewer": {
+    "id": "blind-review-repair-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "02-app-1280-dark.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Trang chủ tìm sân cầu lông, lượt sắp tới và khung giờ tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Chọn giờ ở sân gần nhất hoặc Xem tất cả.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Trang chủ dễ đọc; ảnh hiện tại chỉ cho một màn nên chưa đánh giá được toàn bộ luồng 5 màn."
+    },
+    "02-app-1280-light.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Trang chủ tìm sân cầu lông, lượt sắp tới và khung giờ tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Chọn giờ ở sân gần nhất hoặc Xem tất cả.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Trang chủ dễ đọc; ảnh hiện tại chỉ cho một màn nên chưa đánh giá được toàn bộ luồng 5 màn."
+    },
+    "02-app-390-dark.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Trang chủ tìm sân cầu lông, lượt sắp tới và khung giờ tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Chọn giờ ở sân gần nhất hoặc Xem tất cả.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Trang chủ dễ đọc; ảnh hiện tại chỉ cho một màn nên chưa đánh giá được toàn bộ luồng 5 màn."
+    },
+    "02-app-390-light-result.png": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Chọn Sân Kỳ Hoà 21:00 với tổng 100.000 đ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Đặt sân này.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Sân và giờ chọn đã khớp tóm tắt; card vẫn ghi còn 2 khung trống khi 19:00 đã kín."
+    },
+    "02-app-390-light.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Trang chủ tìm sân cầu lông, lượt sắp tới và khung giờ tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Chọn giờ ở sân gần nhất hoặc Xem tất cả.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Trang chủ dễ đọc; ảnh hiện tại chỉ cho một màn nên chưa đánh giá được toàn bộ luồng 5 màn."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 3,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "6",
+      "image": "02-app-390-light-result.png",
+      "element": "ĐÃ SỬA trên ảnh frozen: viền Sân Kỳ Hoà, chip 21:00 và tóm tắt Sân Kỳ Hoà 23/10, 21:00, 100.000 đ khớp nhau.",
+      "fix": "Giữ trạng thái này xuyên suốt detail/checkout; chưa xác nhận hành vi runtime."
+    },
+    {
+      "dimension": "8",
+      "image": "02-app-390-light-result.png",
+      "element": "CÒN: card Sân Kỳ Hoà ghi Còn 2 khung trống tối nay nhưng 19:00 đã bị gạch và ghi Đã kín; chỉ 21:00 còn có thể chọn nhìn thấy.",
+      "fix": "Tính lại số khung trống theo trạng thái hiện tại, ở đây còn 1 khung; cập nhật nhãn cùng thay đổi availability."
+    },
+    {
+      "dimension": "2",
+      "image": "02-app-390-light.jpg",
+      "element": "Trang chủ giữ rõ lượt sắp tới, sân gần bạn, giá và giờ; đường sân trên hero phù hợp thương hiệu.",
+      "fix": "Giữ hierarchy này ở các màn tiếp theo."
+    }
+  ],
+  "not_checked": [
+    "Re-review đã biết brief và finding vòng trước; cold trong hồ sơ này là re-read, không phải first-read/blind cold mới. Reviewer vẫn độc lập với người làm, không đọc source/rationale/điểm người làm.",
+    "Đây là agent-heuristic từ screenshot, không phải human research, human approval hoặc bằng chứng triển khai.",
+    "HF-1: chưa đo tỷ lệ tương phản AA của tất cả chữ/icon ở hai theme; quan sát ảnh không chứng minh 4.5:1/3:1.",
+    "HF-2: chưa đo hit area thật; ảnh không chứng minh vùng nhận chạm web 24px/iOS 44pt/Android 48dp.",
+    "HF-4: chưa kiểm bàn phím, focus order/indicator khi thao tác, focus trap/return và screen reader.",
+    "HF-5: trạng thái không có ảnh là UNKNOWN; không kết luận thiếu implementation từ thiếu screenshot.",
+    "HF-7: chưa kiểm Back, edge swipe, lịch sử, phục hồi state và quy ước nền tảng khi tương tác thật.",
+    "Chưa kiểm chữ phóng 200%, Dynamic Type/font scale, bàn phím ảo, nội dung dài, API/backend, lưu dữ liệu hoặc thông báo thật.",
+    "Không suy phần control nằm ngoài scroll viewport trong ảnh là không thể cuộn tới hoặc bị mất. Cần runtime để kiểm.",
+    "HF-3/HF-6/HF-8/HF-9/HF-10: không thấy vi phạm chắc chắn trong các ảnh snapshot frozen cung cấp; đây không phải xác nhận mọi trạng thái đều đạt.",
+    "snapshot frozen chỉ có home và danh sách chọn giờ. Detail, lỗi checkout, lịch rỗng, kết quả đặt và quay lại chưa có bằng chứng mới; các finding về caption của bộ màn cũ chưa thể đóng hoàn toàn.",
+    "Chưa thấy ảnh Tân Định và các khung đã đặt 17:00–22:00 trong detail; đây là thiếu evidence, không kết luận implementationFAIL."
+  ],
+  "review_stage": "re-review"
+}

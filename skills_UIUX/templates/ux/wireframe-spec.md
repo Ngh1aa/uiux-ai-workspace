@@ -38,3 +38,9 @@
 ## Not decided here (visual stage owns)
 
 Colour, typeface, iconography style, imagery, motion. Keep the wireframe greyscale.
+
+## Kiểm luồng khi bàn giao
+
+Theo [FLOW.md](../../../FLOW.md), ghi PASS / FAIL / UNKNOWN riêng: đường vào và kết quả;
+Back và bản nháp; sửa rồi xác nhận lại; đối tượng/vai trò; số tiền/ngày/trạng thái;
+lỗi và khôi phục; kiểm hậu quả. Kèm lệnh/test/ảnh và phần chưa kiểm, không dùng ảnh thay test hành vi.

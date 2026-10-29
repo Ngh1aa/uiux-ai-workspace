@@ -32,7 +32,8 @@ Lợi ích thực tế:
    thương hiệu không phá tương phản.
 2. **Đoán trước được tương phản.** Chênh L lớn thì tương phản lớn; chọn cặp chữ và nền bằng L trước, rồi
    mới kiểm số.
-3. **Chế độ tối dễ hơn.** Đảo bậc L (700 thành 300) giữ nguyên sắc và cảm giác thương hiệu.
+3. **Chế độ tối có cùng vai trò.** Chọn lại L và C cho từng vai trò, giữ ý nghĩa và sắc thương hiệu;
+   không đảo máy móc mọi bậc (700 thành 300).
 
 Giới hạn: màn hình sRGB không hiện được mọi màu OKLCH. Màu rực ở L cao hoặc thấp bị cắt ra ngoài gam màu;
 công cụ phải giảm C cho tới khi màu nằm trong sRGB.
@@ -79,10 +80,28 @@ xám ấm ở cả hai đầu.
 
 ## 5. Chế độ tối
 
-- Nền không đen tuyền: dùng bậc 950 của xám, card sáng hơn nền một bậc (độ cao bằng độ sáng, không bằng bóng).
-- Giảm C của màu thương hiệu khi đảo sang bậc sáng, nếu không màu sẽ chói.
-- Màu trạng thái (đỏ, vàng, xanh) dùng bậc 300–400 trên nền tối.
-- Ảnh và minh hoạ có thể cần bản tối riêng hoặc giảm độ sáng nhẹ.
+- Chốt thứ bậc **page → vùng nhóm → phần nổi** trước: page trầm, phần nổi sáng hơn vừa đủ,
+  viền nhẹ để nhận cạnh. Bóng trên nền tối thường không đủ phân tầng. Nền đen OLED có thể phù hợp
+  với nền tảng/brand; kiểm viền và chữ thay vì cấm màu đen tuyệt đối.
+- Giữ màu theo vai trò: chữ chính, chữ phụ, nền nút, focus, selected và error có token riêng.
+  Không dùng opacity cho cả container vì chữ và icon cũng bị giảm tương phản.
+- Giảm C của accent sáng khi thấy chói trên render; đổi L trước khi tăng bão hoà.
+  Không làm sáng mọi card hoặc tô màu mọi trạng thái cùng lúc.
+- Trạng thái có chữ/icon ngoài màu. Kiểm riêng default, hover, focus, selected, disabled và lỗi:
+  màu trạng thái đạt tương phản không có nghĩa focus-ring hoặc viền input đã đạt.
+- Biểu đồ giữ đơn vị, trục và chú giải có ích; màu dữ liệu không đảo nghĩa giữa hai mode.
+  Kiểm đường mảnh trên nền chart, tooltip và series đang chọn, không chỉ cặp màu trong token.
+- Ảnh sản phẩm và chân dung giữ màu trung thực. Chỉ dùng bản tối riêng hoặc lớp nền khi cần;
+  không áp `filter: brightness()` cho mọi ảnh vì có thể che chi tiết quyết định.
+- Tôn trọng lựa chọn hệ thống; khi có nút đổi theme thì lưu lựa chọn của người dùng. Không chớp
+  nền sáng lúc tải. Kiểm input, select, dialog và scrollbar với `color-scheme` đúng.
+
+Ví dụ sai: đảo `#fff` thành `#000`, giữ nguyên accent rực và chỉ chạy contrast trên body.
+Ví dụ đúng: dùng cùng semantic role ở hai mode, nhìn cạnh sheet, trạng thái bảng và focus ở
+390/1280 px; đối chiếu [màn bảng dữ liệu](../design-system/examples/data-table/README.md).
+
+Kiểm máy gồm contrast token, tải font/ảnh, console và reflow. Nhìn ảnh thật để đánh giá độ chói,
+thứ bậc bề mặt; chưa kiểm thiết bị thật hoặc người dùng thì ghi `UNKNOWN`.
 
 ## 6. Bao nhiêu màu là đủ
 

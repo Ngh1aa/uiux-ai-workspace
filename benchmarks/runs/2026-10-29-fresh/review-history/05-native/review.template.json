@@ -1,0 +1,91 @@
+{
+  "reviewer": {
+    "id": "",
+    "kind": "agent-heuristic | expert-review",
+    "independent": true
+  },
+  "cold": {
+    "05-Android-alert-dark.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-Android-assignment-light.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-Android-request-light.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-iOS-alert-dark.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-iOS-assignment-light.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-iOS-request-light.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-native-1280-dark.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-native-1280-light.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-native-390-dark.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "05-native-390-light.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    }
+  },
+  "hard_fails": [
+    {
+      "code": "HF-n",
+      "image": "",
+      "observation": ""
+    }
+  ],
+  "scores": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0
+  },
+  "observations": [
+    {
+      "dimension": "1-10",
+      "image": "",
+      "element": "",
+      "fix": ""
+    }
+  ],
+  "not_checked": [
+    "bàn phím",
+    "trình đọc màn hình",
+    "chữ phóng 200%"
+  ]
+}

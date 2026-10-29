@@ -1,76 +1,18 @@
 ---
 name: motion-and-microinteractions
-description: |
-  Thiết kế và implement motion có mục đích cho hover, feedback, disclosure, navigation,
-  loading và scroll reveal. Dùng khi website cần animation/microinteraction nhưng phải giữ
-  performance, accessibility, reduced-motion và consistency trong toàn design system.
+description: Chuyển động. Dùng theo tác vụ được chọn trong WORKFLOWS.md.
 ---
 
-# Motion & Microinteractions
+# Chuyển động
 
-## Motion jobs
+Chọn cỡ/track theo [WORKFLOWS.md](../../WORKFLOWS.md), không tự mở thêm quy trình.
 
-Animation chỉ nên phục vụ ít nhất một job:
+Dùng motion cho feedback, orientation và hierarchy; giới hạn cường độ, giữ tương tác khi loading/cancel, tôn trọng reduced-motion. Kiểm timing trên render và thiết bị mục tiêu.
 
-- **Feedback**: action đã nhận.
-- **Continuity**: element đến/từ đâu.
-- **Hierarchy**: cái gì cần chú ý trước.
-- **State change**: open/close, selected, success/error.
-- **Delight**: chỉ sau khi usability/performance đã ổn.
+Sai: animation trên mọi khối. Đúng: một chuyển cảnh giúp biết tác vụ đã hoàn tất.
 
-Nếu không giải thích được job, bỏ animation.
+Ghi quyết định, bằng chứng và giới hạn trong ghi chú hiện có; dùng PASS / FAIL / UNKNOWN.
+Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, Back, dữ liệu và hậu quả.
 
-## Motion system
-
-Định nghĩa token cho duration/easing/distance thay vì mỗi component tự chọn.
-
-- Micro state: nhanh.
-- Disclosure/modal: vừa đủ để hiểu transition.
-- Page/hero storytelling: dài hơn nhưng không block task.
-
-Không dùng `transition: all` nếu có thể chỉ rõ property.
-
-## Rules
-
-- Ưu tiên transform/opacity cho animation thường xuyên.
-- Không animate layout property nặng liên tục nếu không cần.
-- Scroll animation chỉ chạy một lần mặc định.
-- Không stagger danh sách dài gây chờ đợi.
-- Hover không được là cách duy nhất để khám phá information.
-- Button press cần immediate feedback.
-- Loading dài cần skeleton/progress phù hợp, không spinner vô hạn mơ hồ.
-
-## Reduced motion
-
-`prefers-reduced-motion` là contract bắt buộc. Khi reduce:
-
-- Loại parallax, large translation, auto-scroll, decorative loops.
-- Giữ feedback state bằng instant/subtle opacity nếu cần.
-- Không làm mất content/functionality.
-
-## Motion spec
-
-Với interaction đáng kể, ghi:
-
-| Trigger | From | To | Duration token | Easing | Reduced-motion |
-|---|---|---|---|---|---|
-
-## Page transitions
-
-Không thêm chỉ vì SPA hỗ trợ. Transition không được trì hoãn navigation, reset focus sai hoặc che loading thật.
-
-## Performance gate
-
-- Test trên mobile/CPU chậm hơn desktop dev machine.
-- Không gây visible CLS.
-- Không tạo long tasks từ scroll listener.
-- Dừng animation ngoài viewport nếu loop/media nặng.
-
-## Acceptance criteria
-
-- [ ] Mỗi animation có purpose.
-- [ ] Dùng motion tokens.
-- [ ] Reduced motion hoạt động.
-- [ ] Không block primary task.
-- [ ] Không có jank/scroll-linked handler nặng rõ ràng.
-- [ ] Focus/keyboard không bị phá bởi transition.
+Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
+mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.

@@ -1,0 +1,38 @@
+{
+  "01-landing": {
+    "kind": "iterative-repair",
+    "parent": "2026-10-24-v2",
+    "path": "benchmarks/runs/2026-10-24-v2/01-landing/index.html",
+    "sha256": "7ba66b834ab2e869bf1e89b01ad5dda477a81adfe6721dda11268bd127e7c383"
+  },
+  "02-app": {
+    "kind": "iterative-repair",
+    "parent": "2026-10-24-v2",
+    "path": "benchmarks/runs/2026-10-24-v2/02-app/index.html",
+    "sha256": "c4d419da3e485758d562e72abcd0713aa16dbc2fb591b3bd26917b5fcbf931ca"
+  },
+  "03-dashboard": {
+    "kind": "iterative-repair",
+    "parent": "2026-10-24-v2",
+    "path": "benchmarks/runs/2026-10-24-v2/03-dashboard/index.html",
+    "sha256": "321f49bf83491ae5ef639e64cfd650804dbb898e147dd5c062801bbc7ef9192a"
+  },
+  "04-multi-role": {
+    "kind": "reuse-new-brief",
+    "source_run": "2026-10-29-fresh",
+    "note": "Không có mẫu04/05 lịch sử. Dùng implementation mới sau freeze; không tính đây là sửa mẫu cũ hay fresh độc lập thứ hai.",
+    "source_files": {
+      "04-multi-role/brand.css": "986a8c6a9a8574d4d11281c84876af1b73e8baf39a3d8cc643af46499cda9d5e",
+      "04-multi-role/index.html": "144c620ce638118d06993e412d8dfe417046612aeae5eae566a345e42ade1880"
+    }
+  },
+  "05-native": {
+    "kind": "reuse-new-brief",
+    "source_run": "2026-10-29-fresh",
+    "note": "Không có mẫu04/05 lịch sử. Dùng implementation mới sau freeze; không tính đây là sửa mẫu cũ hay fresh độc lập thứ hai.",
+    "source_files": {
+      "05-native/brand.css": "0afdb2fb3f0cc3088553ec308eb5e08d359f55380a38299108c17587dda91e3e",
+      "05-native/index.html": "30fbe9bddc8d8f06c8a5a96d3fd202c9d89319a8bc23883fc22957d93e859a0e"
+    }
+  }
+}

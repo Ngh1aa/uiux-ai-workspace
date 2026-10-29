@@ -1,0 +1,85 @@
+{
+  "reviewer": {
+    "id": "blind-review-repair-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "01-landing-1280-dark.jpg": {
+      "Màn này để làm gì?": "Giới thiệu lớp gốm Đất Nung, so sánh học phí và chọn lớp, ca học để gửi yêu cầu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nút Đặt chỗ trong phần mở đầu, sau đó chọn lớp và ca phù hợp.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Liên kết Chọn lớp này nhỏ hơn đáng kể so với giá và khoảng trống của từng dòng; cách đặt chỗ thật phụ thuộc gọi xưởng."
+    },
+    "01-landing-1280-light.jpg": {
+      "Màn này để làm gì?": "Giới thiệu lớp gốm Đất Nung, so sánh học phí và chọn lớp, ca học để gửi yêu cầu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nút Đặt chỗ trong phần mở đầu, sau đó chọn lớp và ca phù hợp.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Liên kết Chọn lớp này nhỏ hơn đáng kể so với giá và khoảng trống của từng dòng; cách đặt chỗ thật phụ thuộc gọi xưởng."
+    },
+    "01-landing-390-dark.jpg": {
+      "Màn này để làm gì?": "Giới thiệu lớp gốm Đất Nung, so sánh học phí và chọn lớp, ca học để gửi yêu cầu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nút Đặt chỗ trong phần mở đầu, sau đó chọn lớp và ca phù hợp.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Liên kết Chọn lớp này nhỏ hơn đáng kể so với giá và khoảng trống của từng dòng; cách đặt chỗ thật phụ thuộc gọi xưởng."
+    },
+    "01-landing-390-light-result.png": {
+      "Màn này để làm gì?": "Giới thiệu lớp gốm Đất Nung, so sánh học phí và chọn lớp, ca học để gửi yêu cầu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nút Đặt chỗ trong phần mở đầu, sau đó chọn lớp và ca phù hợp.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ảnh có tên result nhưng vẫn là biểu mẫu có tên Minh và lựa chọn Nặn tay; không thấy thông báo kết quả gửi trong phần hiển thị."
+    },
+    "01-landing-390-light-review-edited.png": {
+      "Màn này để làm gì?": "Kiểm tra tên người học, lớp Tráng men và ca Chủ nhật 14:00 trước khi gửi yêu cầu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sửa lựa chọn nếu thông tin sai, hoặc Gửi yêu cầu khi đã đúng.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Hai nút trong hộp xác nhận có cùng độ nổi bật; hộp xuất hiện sát cuối trang dài, cần xem rõ phần tóm tắt."
+    },
+    "01-landing-390-light.jpg": {
+      "Màn này để làm gì?": "Giới thiệu lớp gốm Đất Nung, so sánh học phí và chọn lớp, ca học để gửi yêu cầu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nút Đặt chỗ trong phần mở đầu, sau đó chọn lớp và ca phù hợp.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Liên kết Chọn lớp này nhỏ hơn đáng kể so với giá và khoảng trống của từng dòng; cách đặt chỗ thật phụ thuộc gọi xưởng."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3,
+    "8": 4,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "7",
+      "image": "01-landing-390-light-result.png",
+      "element": "Phần đặt chỗ cuối trang vẫn hiển thị Minh, lựa chọn Nặn tay và nút Xem yêu cầu; không thấy trạng thái sau gửi trong ảnh này.",
+      "fix": "Bổ sung một trạng thái kết quả nhìn thấy được: đã lưu yêu cầu mẫu nào, bước tiếp theo là gọi xưởng, và đường sửa lựa chọn. Cần chụp đúng trạng thái sau gửi để xác nhận; đây chưa phải kết luận thao tác không chạy."
+    },
+    {
+      "dimension": "2",
+      "image": "01-landing-390-light-review-edited.png",
+      "element": "Hai nút Sửa lựa chọn và Gửi yêu cầu trong hộp Kiểm tra yêu cầu có độ nổi bật gần nhau.",
+      "fix": "Cho Gửi yêu cầu một vai trò primary duy nhất và giữ Sửa lựa chọn là secondary, cùng vùng chạm rõ."
+    },
+    {
+      "dimension": "10",
+      "image": "01-landing-1280-light.jpg",
+      "element": "Minh hoạ cốc, màu đất nung và tiêu đề serif tạo một hướng hình ảnh nhất quán với xưởng gốm.",
+      "fix": "Giữ chi tiết nhận diện này khi sửa các trạng thái; không cần thêm decoration."
+    }
+  ],
+  "not_checked": [
+    "Đây là agent-heuristic độc lập trên screenshot; không phải human research, human approval hay xác nhận triển khai.",
+    "HF-1: chưa đo tỷ lệ tương phản pixel AA cho toàn bộ chữ, icon và hai theme; quan sát thị giác không đủ xác nhận 4.5:1/3:1.",
+    "HF-2: chưa đo vùng nhận chạm thực tế; viền hoặc chữ nhỏ trên screenshot không chứng minh kích thước hit area.",
+    "HF-4: chưa kiểm bàn phím, thứ tự focus, focus indicator thực tế, screen reader và focus trap/return của modal.",
+    "HF-5: chưa quan sát đủ mọi trạng thái động, loading, error, empty; không suy thiếu ảnh thành thiếu implementation.",
+    "HF-7: chưa kiểm browser back, lịch sử điều hướng, gesture quay lại và phục hồi trạng thái.",
+    "Chưa kiểm chữ phóng 200%, font scale, nội dung dài, bàn phím ảo hoặc thiết bị thật.",
+    "Chưa kiểm backend/API, lưu dữ liệu, quyền dữ liệu, mạng lỗi, thao tác thật và thông báo thành công.",
+    "HF-3: không thấy cắt/đè nội dung trong các ảnh cung cấp ở scale hiện tại; chưa kiểm các cỡ chữ và viewport khác.",
+    "HF-6/HF-8/HF-9/HF-10: không phát hiện vi phạm nhìn thấy trong các ảnh; nhãn dữ liệu minh hoạ đã xuất hiện.",
+    "FAQ thứ hai đang đóng; nội dung trả lời và hành vi mở/đóng chưa được screenshot kiểm chứng."
+  ]
+}
