@@ -7,6 +7,8 @@ marked **copied** are redistributed in this repository.
 | Component | Location | Inclusion | License |
 |---|---|---|---|
 | Be Vietnam Pro | `design-system/fonts/` | copied (via @fontsource 5.3.0) | SIL OFL 1.1, `OFL.txt` |
+| Source Serif 4 | `design-system/fonts/source-serif-4/` | copied from google/fonts, exact file hashes in `fonts/manifest.json` | SIL OFL 1.1, adjacent `OFL.txt` |
+| Manrope | `design-system/fonts/manrope/` | copied from google/fonts, exact file hashes in `fonts/manifest.json` | SIL OFL 1.1, adjacent `OFL.txt` |
 
 The vendored UI UX Pro Max corpus and the `anthropics/skills` and `motion-primitives-website`
 submodules were removed from `main` in October 2026. They remain, with their notices, on the

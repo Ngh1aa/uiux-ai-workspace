@@ -11,7 +11,7 @@ STARTER = DS / "starter" / "brand.css"
 
 
 def check(path: Path) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(SCRIPT), str(path)], capture_output=True, text=True)
+    return subprocess.run([sys.executable, str(SCRIPT), str(path)], capture_output=True, text=True, encoding="utf-8")
 
 
 def write(tmp_path: Path, css: str) -> Path:

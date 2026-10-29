@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "layer": "source-static",
+  "errorCount": 0,
+  "warningCount": 14,
+  "flow_status": "UNKNOWN",
+  "results": [
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\04-multi-role\\index.html",
+      "mode": "prototype",
+      "static_status": "PASS",
+      "flow_status": "UNKNOWN",
+      "errors": [],
+      "warnings": [
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 2,
+          "message": "Nhãn “10:30 Ghế 1 trống” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 5,
+          "message": "Nhãn “Chuyển sang Ghế 1 lúc 10:30” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 5,
+          "message": "Nhãn “Kiểm tra lịch hẹn” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 5,
+          "message": "Nhãn “Xác nhận lịch mẫu” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "no-entry",
+          "status": "WARN",
+          "line": 3,
+          "message": "#patient chưa có đường vào khai báo trong file này; router, deep link hoặc file khác có thể hợp lệ."
+        },
+        {
+          "rule": "no-entry",
+          "status": "WARN",
+          "line": 3,
+          "message": "#revenue chưa có đường vào khai báo trong file này; router, deep link hoặc file khác có thể hợp lệ."
+        },
+        {
+          "rule": "no-entry",
+          "status": "WARN",
+          "line": 4,
+          "message": "#permissions chưa có đường vào khai báo trong file này; router, deep link hoặc file khác có thể hợp lệ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 1,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 5,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 5,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 5,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 5,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 5,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 5,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        }
+      ],
+      "unknown": [
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "“Đổi sáng tối”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 2,
+          "message": "“Đặt lịch”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 2,
+          "message": "“10:30 Ghế 1 trống”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 5,
+          "message": "“Đóng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 5,
+          "message": "“Chuyển sang Ghế 1 lúc 10:30”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 5,
+          "message": "“Kiểm tra lịch hẹn”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 5,
+          "message": "“Sửa lịch”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 5,
+          "message": "“Xác nhận lịch mẫu”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "runtime",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "HTML nguồn không chứng minh luồng, Back, tổng tiền, đúng đối tượng/vai trò, khôi phục lỗi hoặc navigation động. Chạy Playwright của dự án."
+        }
+      ]
+    }
+  ]
+}

@@ -68,6 +68,24 @@ class ReviewPacketTests(unittest.TestCase):
         (self.packet / "images" / "home-390-light.png").write_bytes(PNG + b"x")
         self.assertEqual(self.verify(self.good_review()).returncode, 1)
 
+    def test_changed_brief_and_rubric_are_detected(self):
+        for name in ("brief.md", "rubric.md"):
+            with self.subTest(name=name):
+                file = self.packet / name
+                original = file.read_bytes()
+                file.write_bytes(original + b"changed")
+                self.assertEqual(self.verify(self.good_review()).returncode, 1)
+                file.write_bytes(original)
+
+    def test_empty_images_and_boolean_scores_rejected(self):
+        review = self.good_review()
+        review["scores"]["1"] = True
+        self.assertEqual(self.verify(review).returncode, 1)
+        manifest = json.loads((self.packet / "manifest.json").read_text())
+        manifest["images"] = {}
+        (self.packet / "manifest.json").write_text(json.dumps(manifest))
+        self.assertEqual(self.verify(self.good_review()).returncode, 1)
+
 
     def test_same_basename_in_nested_folders_is_kept(self):
         shots = self.tmp / "nested"

@@ -1,0 +1,448 @@
+{
+  "evidence_type": "actual_playwright_assertions",
+  "native_status": "UNKNOWN",
+  "briefs": {
+    "01-landing": {
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "390/light: Thiếu tên chặn submit và vẫn sửa được",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Thiếu tên chặn submit và vẫn sửa được",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Thiếu tên chặn submit và vẫn sửa được",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Thiếu tên chặn submit và vẫn sửa được",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: console resources reflow",
+          "status": "PASS"
+        }
+      ]
+    },
+    "02-app": {
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "390/light: correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: schedule states and court search recover",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: schedule states and court search recover",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: schedule states and court search recover",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: schedule states and court search recover",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: console resources reflow",
+          "status": "PASS"
+        }
+      ]
+    },
+    "03-dashboard": {
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "390/light: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: console resources reflow",
+          "status": "PASS"
+        }
+      ]
+    },
+    "04-multi-role": {
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "390/light: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Owner dữ liệu đúng, chartpartial không bịa ngày",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Owner dữ liệu đúng, chartpartial không bịa ngày",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Owner dữ liệu đúng, chartpartial không bịa ngày",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Owner dữ liệu đúng, chartpartial không bịa ngày",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: console resources reflow",
+          "status": "PASS"
+        }
+      ]
+    },
+    "05-native": {
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "390/light: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "390/dark: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/light: console resources reflow",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "1280/dark: console resources reflow",
+          "status": "PASS"
+        }
+      ],
+      "native_status": "UNKNOWN"
+    }
+  }
+}

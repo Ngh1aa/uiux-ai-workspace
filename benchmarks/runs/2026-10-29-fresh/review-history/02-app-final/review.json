@@ -1,0 +1,110 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "02-app-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem lượt đặt sắp tới và tìm sân gần nhà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Xem lịch đủ viền; liên kết Xem cả 3 sân có phần bị tab bar phủ trong ảnh desktop."
+    },
+    "02-app-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem lượt đặt sắp tới và tìm sân gần nhà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Xem lịch đủ viền; liên kết Xem cả 3 sân có phần bị tab bar phủ trong ảnh desktop."
+    },
+    "02-app-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem lịch sân và tìm sân tối nay trên mobile.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sân Phú Nhuận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút Xem lịch đủ viền, liên kết Xem cả 3 sân đọc được; gần sát thanh đáy."
+    },
+    "02-app-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem lịch sân và tìm sân tối nay trên mobile.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sân Phú Nhuận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút Xem lịch đủ viền, liên kết Xem cả 3 sân đọc được; gần sát thanh đáy."
+    },
+    "02-booked.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem lại lượt vừa đặt trong danh sách lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt Sân Kỳ Hòa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lượt mới đã là card cùng cấu trúc với lịch cũ; phần card cũ dưới viewport cần cuộn."
+    },
+    "02-checkout-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Rà soát sân, số người, ghi chú và tiền trước xác nhận.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xác nhận đặt sân sau kiểm tra.",
+      "Điều gì trông sai, rối hoặc thiếu?": "CTA hiện đủ trong viewport, không còn chỉ lộ dải màu."
+    },
+    "02-conflict19.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Báo giờ 19:00 vừa bị đặt và đổi giờ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn khung khác.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút xác nhận disabled đè lên lời giải thích lỗi và nút Chọn khung khác."
+    },
+    "02-detail-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem sân, giá, tiện ích và chọn khung giờ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "18:00 còn trống.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Các giờ cuối nằm dưới tab bar trong viewport, chưa có ảnh cuộn cuối."
+    },
+    "02-empty.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Báo chưa có lịch đã qua.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm sân tối nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Empty state dễ hiểu, có lối tiếp tục."
+    }
+  },
+  "hard_fails": [
+    {
+      "code": "HF-3",
+      "image": "02-conflict19.png",
+      "observation": "Trong render final, nút Xác nhận đặt sân disabled nổi phía trên tab bar chồng lên phần lời giải thích lỗi và nút Chọn khung khác trong khung lỗi đỏ. Nội dung và hành động phục hồi bị che tại trạng thái được chụp. Không kết luận khả năng cuộn hay che vĩnh viễn từ ảnh."
+    }
+  ],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 3,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3.5,
+    "8": 4,
+    "9": 3.5,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "02-conflict19.png",
+      "element": "CTA disabled nổi chồng khối lỗi",
+      "fix": "Bố trí vùng CTA riêng, chừa đáy cho khối lỗi và cách đổi giờ; khi có conflict ưu tiên CTA Chọn khung khác, bảo đảm khối lỗi không nằm sau nút disabled."
+    },
+    {
+      "dimension": "7",
+      "image": "02-conflict19.png",
+      "element": "Chọn khung khác trong khối lỗi",
+      "fix": "Giữ lối phục hồi hiển thị đầy đủ khi giờ vừa bị đặt; hiện disabled confirm lại che cách xử lý. Kiểm focus đến lỗi và chọn khung khác sau submit."
+    },
+    {
+      "dimension": "9",
+      "image": "02-conflict19.png",
+      "element": "Vùng hành động đáy trên mobile",
+      "fix": "Kiểm chiều cao thực và cuộn cuối khi hiện error, tránh vùng đáy che các action khác; ảnh hiện có overlap. Home desktop liên kết cuối cũng sát/phủ bởi tab bar, cần kiểm cuộn."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tương phản số học; điểm màu là heuristic thị giác, không chứng nhận WCAG AA.",
+    "HF-2: vùng chạm thực, padding tương tác vô hình và quy đổi pt/dp UNKNOWN từ ảnh.",
+    "HF-4: bàn phím, focus toàn luồng, screen reader và thứ tự đọc UNKNOWN. Một ảnh có focus không xác nhận toàn luồng.",
+    "HF-6: đã soát trạng thái nhìn thấy, có nhãn chữ/số chứ không chỉ màu.",
+    "HF-7: browser/system back, dismiss, chuyển màn, giữ state và keyboard runtime UNKNOWN.",
+    "HF-8/HF-9/HF-10: đã soát ảnh, không thấy primary khác nhiệm vụ cạnh tranh, deceptive pattern hoặc bằng chứng giả không nhãn; dữ liệu minh họa có ghi rõ.",
+    "Text 200%, AT, reduced motion, native SDK/thiết bị thật, persistence và backend UNKNOWN.",
+    "Re-review đã biết brief; independent=true nghĩa độc lập với người làm. Đây là agent-heuristic, không phải human research, phê duyệt hướng hay approval.",
+    "HF-3: đã ghi overlap ở conflict. Detail giờ cuối và card booking dưới viewport chưa chứng minh có clipping vĩnh viễn; text 200% chưa kiểm.",
+    "Checkout thường đã thấy đủ Xác nhận đặt sân; Xem lịch home đủ viền; booking mới đã dùng card cùng cấu trúc. Những finding cũ này được đóng trên ảnh final.",
+    "HF-5: có error 19:00 và empty Đã qua; loading chưa có ảnh.",
+    "Danh sách sân/lọc quận chưa có render riêng, ngoài home chưa đủ cả 2 theme; không suy ra source thiếu.",
+    "Tìm kiếm/lọc, đặt sân/thanh toán thật và persistence UNKNOWN. TASTE.md ngoài packet chưa kiểm."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Đánh giá lại trực tiếp tất cả ảnh final, đã biết brief từ các lượt trước; không phải first-read. Không đọc source/rationale hay điểm người làm. Điểm heuristic không xác nhận runtime, AT, native hay backend."
+}

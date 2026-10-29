@@ -1,0 +1,123 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "05-Android-alert-dark.png": {
+      "Màn này để làm gì?": "Xác nhận hủy đơn xin nghỉ cho học sinh.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn nếu chưa chắc muốn hủy.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nội dung nói cô sẽ thấy thay đổi trong bản mẫu có thể gây hiểu nhầm mức độ gửi thật; ngoài ra cảnh báo rõ."
+    },
+    "05-Android-assignment-light.png": {
+      "Màn này để làm gì?": "Xem bài tập và chọn ảnh để nộp.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút Nộp ảnh bài làm trông hoạt động khi chưa chọn ảnh; dòng ghi chú dưới nút bị thanh điều hướng che."
+    },
+    "05-Android-request-light.png": {
+      "Màn này để làm gì?": "Điền và gửi đơn xin nghỉ cho con.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ngày hiển thị tháng trước ngày khác cách ghi ngày ở phần giải thích; nút gửi chạm phần cuối khung."
+    },
+    "05-iOS-alert-dark.png": {
+      "Màn này để làm gì?": "Hỏi lại trước khi hủy đơn nghỉ đã có.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Cảnh báo dễ đọc; thông tin trong bản mẫu vẫn dễ khiến nghĩ cô đã nhận được đơn."
+    },
+    "05-iOS-assignment-light.png": {
+      "Màn này để làm gì?": "Xem yêu cầu bài tập và gửi ảnh bài làm cho cô.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút nộp có vẻ sẵn sàng dù chưa có ảnh; không thấy phần giải thích về khả năng gửi thật trong khung."
+    },
+    "05-iOS-request-light.png": {
+      "Màn này để làm gì?": "Mở sheet xin nghỉ cho học sinh.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ hoặc Gửi ở góc phải sau khi điền.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Sheet dài, khối gửi tới cô bị cắt ở đáy; ngày dùng định dạng 10/23/2025 khác ngôn ngữ Việt."
+    },
+    "05-native-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đối chiếu màn tổng quan phụ huynh ở iOS và Android.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Tin từ cô bị thanh đáy che một phần ở cả hai khung; chưa biết cuộn có giải quyết được không."
+    },
+    "05-native-1280-light.jpg": {
+      "Màn này để làm gì?": "Xem việc cần làm, lịch ngày mai và tin của giáo viên.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài cần nộp đầu tiên.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thứ bậc rõ nhưng tin cuối bị che ở cả hai khung; chưa thấy trạng thái đã đọc."
+    },
+    "05-native-390-dark.jpg": {
+      "Màn này để làm gì?": "Tổng quan việc học của con trong ngày.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Phần tin cô chỉ hiện đầu câu dưới thanh điều hướng, cần cuộn; chưa thấy giải thích con số 2 ngoài ngữ cảnh."
+    },
+    "05-native-390-light.jpg": {
+      "Màn này để làm gì?": "Giúp phụ huynh mở bài cần nộp, xem lịch học và xin nghỉ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Tin cô bị cắt dưới thanh đáy; phần đầu dành nhiều chỗ cho preview và chuyển nền tảng."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 3.5,
+    "7": 3,
+    "8": 3.5,
+    "9": 3.5,
+    "10": 3.5
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "05-Android-assignment-light.png",
+      "element": "Ghi chú dưới nút Nộp ảnh bài làm",
+      "fix": "Ở khung chụp dòng giải thích bị thanh điều hướng phủ; dành khoảng cuối nội dung đủ lớn và cung cấp thêm ảnh cuộn cuối để chứng minh toàn bộ ghi chú tới được."
+    },
+    {
+      "dimension": "6",
+      "image": "05-Android-request-light.png",
+      "element": "Ngày nghỉ 10/23/2025 so với dòng Hôm nay 22/10/2025",
+      "fix": "Đồng nhất cách hiển thị ngày theo tiếng Việt hoặc thêm diễn giải rõ ngày/tháng để phụ huynh không phải đổi cách đọc trong cùng form."
+    },
+    {
+      "dimension": "7",
+      "image": "05-iOS-assignment-light.png",
+      "element": "Chưa chọn ảnh và nút Nộp ảnh bài làm có màu filled",
+      "fix": "Thể hiện rõ trạng thái chưa đủ điều kiện nộp hoặc hướng dẫn chọn ảnh trước; packet cũng cần ảnh lỗi chọn ngày quá khứ theo brief. Điểm chỉ phản ánh thông tin phản hồi nhìn thấy, chưa xác nhận interaction."
+    },
+    {
+      "dimension": "8",
+      "image": "05-Android-alert-dark.png",
+      "element": "Cô sẽ thấy đơn này đã được hủy trong bản mẫu",
+      "fix": "Dùng câu rõ tác động minh họa như Đơn sẽ được đánh dấu đã hủy trong bản mẫu; chỉ nói giáo viên nhận cập nhật khi đã có khả năng gửi thật được xác nhận."
+    },
+    {
+      "dimension": "9",
+      "image": "05-iOS-request-light.png",
+      "element": "Date input và textarea trong sheet",
+      "fix": "Date field có calendar icon và textarea có resize grip mang cảm giác form web; nếu mục tiêu là mô phỏng native sát hơn, trình bày date row và ô ghi chú theo nền tảng, kèm ảnh Dynamic Type/font scale lớn."
+    },
+    {
+      "dimension": "10",
+      "image": "05-native-1280-light.jpg",
+      "element": "Nhận diện Nhà Trường và các khối nội dung",
+      "fix": "UI sạch nhưng nhận diện giáo dục tiểu học còn chung chung, chủ yếu navy/xanh và các khối bo góc. Tạo một chi tiết thương hiệu phù hợp việc xem lịch/bài học, vẫn giữ khả năng quét và khác biệt chrome hai nền tảng."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo contrast số học; không xác nhận WCAG AA chỉ từ quan sát ảnh.",
+    "HF-2: vùng chạm thực 44 pt iOS/48 dp Android UNKNOWN vì ảnh là browser preview, không có hit-region hoặc quy đổi device scale.",
+    "HF-3: ghi chú/nội dung cuối khung bị thanh đáy phủ trong ảnh assignment/home; chưa xác nhận có thể cuộn tới hay bị che vĩnh viễn. Cần ảnh cuối cuộn và kiểm runtime. Chữ phóng 200% UNKNOWN.",
+    "HF-4: bàn phím/focus, VoiceOver, TalkBack và thứ tự đọc UNKNOWN.",
+    "HF-5: packet không có ảnh trạng thái lỗi ngày quá khứ được brief yêu cầu, không có ảnh empty/loading; trạng thái implementation UNKNOWN, chưa kết luận hard fail chỉ do thiếu ảnh.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh, trạng thái bài có nhãn chữ; chưa thấy cạnh tranh primary action, deceptive pattern hoặc dữ liệu mẫu không nhãn.",
+    "HF-7: edge-swipe iOS, Android system back, sheet dismissal và browser back UNKNOWN.",
+    "Không có đủ ảnh cả 4 màn ở cả 2 theme của từng nền tảng: bài tập/form chỉ có light, alert chỉ có dark.",
+    "Native SDK/runtime, bàn phím ảo, safe area thực, Dynamic Type, font scale 200%, thiết bị thật, persistence và gửi giáo viên/backend UNKNOWN.",
+    "Điểm 7 và 9 chỉ là heuristic về biểu hiện nhìn thấy, không chứng nhận hành vi hay native conformance.",
+    "Đây là agent-heuristic thị giác độc lập; không phải human research hay approval."
+  ]
+}

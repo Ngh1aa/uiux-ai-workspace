@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "created": "2026-10-29T10:44:27Z",
+  "size": "L",
+  "images": {
+    "05-Android-alert-dark.png": "dd5dde3d93332071949828c3197116c2c70ee44d8b522a4edffe47c245ba7f32",
+    "05-Android-assignment-light.png": "846969f2ce9e7e10fb41397846ba041069c2ef49e33461faef070734dfd819df",
+    "05-Android-date-error.png": "508628827185d74f95175f19a97184bdba3722b8e6cb9cb8e319a0b87ae060a7",
+    "05-Android-draft-bottom.png": "480936bfc7cccc9689ae74eb609cc162d0fdb1cde15efb69b7f39060d772f25d",
+    "05-Android-request-light.png": "51ebeda4989904c47e727632880b6cb9a525fee6d93f0972e11c4cd8d5a8dc3a",
+    "05-iOS-alert-dark.png": "ca09ffb9c687e6a23f6c0828266f1a8cda746e0ecbf2ea4c2d719aa11ff95911",
+    "05-iOS-assignment-light.png": "e694a941cefe022d76cc5207e353188b2c79775553632c6bc98e2c15c86427aa",
+    "05-iOS-date-error.png": "aa1e61e46e291aba85942935f5c6dd0f4f9531f270017bdabbbfee16f1908535",
+    "05-iOS-draft-bottom.png": "c57956ca1a57aed384b5895ac58359d4316d7f51d1de86ebb51e5c26f3299485",
+    "05-iOS-request-light.png": "44877b425e48aa8a6ca000a16dccf77e9707af4c92c72d51964fbbc1b3856dee",
+    "05-native-1280-dark.jpg": "a636a5786f782dcb730ddea92795b173bea1eee8002886b0cc422f6fc9fe719b",
+    "05-native-1280-light.jpg": "22b8483ebbc987ff50f796326bd7379036300c7bfe3c9fefad82a3b95be9d6d5",
+    "05-native-390-dark.jpg": "80b876c1fb59cab1543dc1ef1ade9700072184f5683521461227f660719f48c2",
+    "05-native-390-light.jpg": "f5e3057e042056b754b156ca8376608e056a057417d803975024da65e8fe4d84"
+  },
+  "inputs": {
+    "brief.md": "451c0572baf949842bf3a2cdfbcee33e488aa75ace53015896dfd26f66e6b3ab",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

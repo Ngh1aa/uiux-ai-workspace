@@ -1,63 +1,19 @@
 ---
 name: brand-distinctiveness-and-visual-signature
-description: Converts brand identity into distinctive, repeatable website cues so screens remain recognizably from the same brand even when the logo, header or brand name is cropped out. Use when defining visual direction, redesigning a generic-looking site or strengthening cross-page brand memory.
+description: Dấu ấn thương hiệu. Dùng theo tác vụ được chọn trong WORKFLOWS.md.
 ---
 
-# Brand Distinctiveness & Visual Signature
+# Dấu ấn thương hiệu
 
-## Principle
-A logo is not a complete digital identity. Recognition should come from a coherent system of distinctive cues used with clarity and consistency.
+Chọn cỡ/track theo [WORKFLOWS.md](../../WORKFLOWS.md), không tự mở thêm quy trình.
 
-## Build a digital signature system
-Evaluate and intentionally define:
-- color behavior, not just color values;
-- typography behavior and editorial rhythm;
-- grid/composition rhythm;
-- recurring shapes/patterns/graphic devices;
-- image crop, lighting, subject and treatment;
-- icon/illustration language;
-- surface/border/radius/elevation logic;
-- CTA treatment;
-- motion/transition language;
-- data or information visualization language where relevant.
+Từ evidence thương hiệu chọn tín hiệu lặp theo nội dung/tác vụ, không chỉ đổi màu. Che tên và so các page role, giữ accessibility; giả định thẩm mỹ chưa là human approval.
 
-## Distinctiveness test
-For each candidate cue ask:
-1. Is it strongly associated with the brand or strategy?
-2. Is it meaningfully different from category conventions?
-3. Can it repeat across pages without becoming noise?
-4. Does it communicate something useful, not just decorate?
-5. Does it remain accessible and responsive?
+Sai: mỗi ngành cùng một hero. Đúng: đối tượng quyết định của ngành dẫn hierarchy.
 
-## Screenshot recognition review
-Sample representative screens/sections, then mentally or literally remove:
-- logo;
-- brand name;
-- global header/footer.
+Ghi quyết định, bằng chứng và giới hạn trong ghi chú hiện có; dùng PASS / FAIL / UNKNOWN.
+Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, Back, dữ liệu và hậu quả.
 
-Check whether multiple independent cues still make the experience recognizably coherent. Treat this as an internal design heuristic, not a standardized market metric.
-
-## Balance distinction and familiarity
-Distinctive branding must not make controls unfamiliar or harm task usability. Keep interaction conventions recognizable while making composition and expression ownable.
-
-## Required artifact
-`docs/visual-signature.md` containing:
-- strongest existing brand cues to preserve;
-- digital signature cues;
-- generic category patterns to avoid;
-- examples of correct/incorrect application;
-- recognition QA checklist.
-
-## Anti-patterns
-- Relying on logo + primary color only.
-- Trend-first glass/gradient/card aesthetics with weak brand linkage.
-- Inventing a decorative motif that contradicts source-of-truth brand assets.
-- Making every section visually unique, destroying memory through inconsistency.
-
-## Hướng dẫn con
-
-Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướng dẫn con khi việc đang làm khớp cột bên phải.
-
-| Hướng dẫn | Mở khi |
-|---|---|
-| [`brand-recognition-and-consistency-qa`](references/brand-recognition-and-consistency-qa.md) | Performs cross-page visual identity QA to verify that screens, sections and responsive states remain recognizably part of one brand/service without sacrificing usability. Use before release, after large redesigns or… |
+Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
+mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
+Tra đúng mẫu khi cần: [references theo tác vụ](references/brand-recognition-and-consistency-qa.md).

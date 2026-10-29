@@ -1,0 +1,136 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "05-Android-alert-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xác nhận hủy đơn xin nghỉ trong bản mẫu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Tác động chỉ trên máy và chưa gửi cô được nói rõ."
+    },
+    "05-Android-assignment-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem bài, chọn ảnh và kiểm tra ảnh bài làm.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Android thấy đủ Kiểm tra ảnh, iOS nút phần lớn dưới tab bar trong viewport."
+    },
+    "05-Android-date-error.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Báo ngày nghỉ đã qua, giữ nội dung và yêu cầu chọn lại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ để sửa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ngày đã theo tiếng Việt ở phần nhìn thấy; iOS trường ngày trên vị trí cuộn hiện tại."
+    },
+    "05-Android-draft-bottom.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem nội dung đơn nháp đã điền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sửa ngày nghỉ đã qua trước gửi.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ngày Thứ Ba 21/10 đọc rõ; Android nút Gửi gần/đè vùng home indicator, iOS phần cuối còn dưới viewport."
+    },
+    "05-Android-request-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Điền đơn xin nghỉ cho con.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đã bỏ kiểu ngày Mỹ và resize grip; nút gửi Android sát home indicator, iOS cần cuộn."
+    },
+    "05-iOS-alert-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xác nhận hủy đơn xin nghỉ trong bản mẫu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Tác động chỉ trên máy và chưa gửi cô được nói rõ."
+    },
+    "05-iOS-assignment-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem bài, chọn ảnh và kiểm tra ảnh bài làm.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Android thấy đủ Kiểm tra ảnh, iOS nút phần lớn dưới tab bar trong viewport."
+    },
+    "05-iOS-date-error.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Báo ngày nghỉ đã qua, giữ nội dung và yêu cầu chọn lại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ để sửa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ngày đã theo tiếng Việt ở phần nhìn thấy; iOS trường ngày trên vị trí cuộn hiện tại."
+    },
+    "05-iOS-draft-bottom.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem nội dung đơn nháp đã điền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sửa ngày nghỉ đã qua trước gửi.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ngày Thứ Ba 21/10 đọc rõ; Android nút Gửi gần/đè vùng home indicator, iOS phần cuối còn dưới viewport."
+    },
+    "05-iOS-request-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Điền đơn xin nghỉ cho con.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đã bỏ kiểu ngày Mỹ và resize grip; nút gửi Android sát home indicator, iOS cần cuộn."
+    },
+    "05-native-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem bài chưa nộp, lịch ngày mai và tin cô.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chrome hai nền tảng khác nhau; tin cô cuối vẫn chưa đọc đủ trong viewport."
+    },
+    "05-native-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem bài chưa nộp, lịch ngày mai và tin cô.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chrome hai nền tảng khác nhau; tin cô cuối vẫn chưa đọc đủ trong viewport."
+    },
+    "05-native-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem bài chưa nộp, lịch ngày mai và tin cô.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chrome hai nền tảng khác nhau; tin cô cuối vẫn chưa đọc đủ trong viewport."
+    },
+    "05-native-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem bài chưa nộp, lịch ngày mai và tin cô.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chrome hai nền tảng khác nhau; tin cô cuối vẫn chưa đọc đủ trong viewport."
+    }
+  },
+  "hard_fails": [
+    {
+      "code": "HF-3",
+      "image": "05-Android-request-light.png",
+      "observation": "Thanh home indicator ở đáy được vẽ chồng vào bên trong nút Gửi đơn xin nghỉ, dưới nhãn nút. Cũng thấy trong 05-Android-draft-bottom.png. Đây là overlap vùng hành động/safe area ngay trên ảnh, không phải kết luận về navigation thiết bị thật."
+    }
+  ],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4,
+    "9": 3.5,
+    "10": 3.5
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "05-Android-request-light.png",
+      "element": "Nút Gửi đơn xin nghỉ và home indicator",
+      "fix": "Chừa vùng đáy riêng cho indicator, giữ toàn bộ nút phía trên safe area. Ảnh hiện indicator nằm trong nút; kiểm lại cả draft cuối và trạng thái bàn phím mở."
+    },
+    {
+      "dimension": "9",
+      "image": "05-iOS-assignment-light.png",
+      "element": "CTA Kiểm tra ảnh dưới tab bar trong viewport",
+      "fix": "Phần lớn nút còn dưới tab bar trong ảnh. Cần ảnh cuối cuộn và kiểm native/browser runtime để xác nhận tới được CTA; không kết luận nút mất vĩnh viễn. Kiểm Dynamic Type/font scale và safe area cả hai nền tảng."
+    },
+    {
+      "dimension": "10",
+      "image": "05-native-1280-light.jpg",
+      "element": "Nhận diện Nhà Trường",
+      "fix": "Bố cục sạch, có khác biệt chrome hai nền tảng nhưng brand giáo dục tiểu học còn chung qua nền xanh và card bo. Tạo chi tiết nhận diện phục vụ lịch/bài tập mà vẫn giữ khả năng đọc nhanh."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tương phản số học; điểm màu là heuristic thị giác, không chứng nhận WCAG AA.",
+    "HF-2: vùng chạm thực, padding tương tác vô hình và quy đổi pt/dp UNKNOWN từ ảnh.",
+    "HF-4: bàn phím, focus toàn luồng, screen reader và thứ tự đọc UNKNOWN. Một ảnh có focus không xác nhận toàn luồng.",
+    "HF-6: đã soát trạng thái nhìn thấy, có nhãn chữ/số chứ không chỉ màu.",
+    "HF-7: browser/system back, dismiss, chuyển màn, giữ state và keyboard runtime UNKNOWN.",
+    "HF-8/HF-9/HF-10: đã soát ảnh, không thấy primary khác nhiệm vụ cạnh tranh, deceptive pattern hoặc bằng chứng giả không nhãn; dữ liệu minh họa có ghi rõ.",
+    "Text 200%, AT, reduced motion, native SDK/thiết bị thật, persistence và backend UNKNOWN.",
+    "Re-review đã biết brief; independent=true nghĩa độc lập với người làm. Đây là agent-heuristic, không phải human research, phê duyệt hướng hay approval.",
+    "HF-3: đã ghi home indicator chồng nút Android. Tin cô và CTAiOS dưới viewport cần kiểm cuộn cuối, chưa kết luận clipping vĩnh viễn. Text 200% chưa kiểm.",
+    "HF-5: có lỗi ngày quá khứ ở cả iOS/Android và hướng dẫn sửa/giữ dữ liệu; empty/loading chưa có ảnh.",
+    "Ngày đã theo tiếng Việt, textarea không còn resize grip, microcopy chưa gửi cô rõ: các finding cũ này được đóng sau xem ảnh final.",
+    "Draft quá khứ không có lỗi còn date-error có lỗi; không suy validation sai khi chưa biết thứ tự submit.",
+    "Các màn ngoài home chưa đủ cả hai theme; 44 pt/48 dp, VoiceOver, TalkBack, Dynamic Type, font scale 200%, native SDK và thiết bị thật UNKNOWN.",
+    "Điểm 7 dựa error/copy/alert nhìn thấy, chưa xác nhận gửi cô, kiểm ảnh, lưu nháp hay hủy đơn trong runtime."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Đánh giá lại trực tiếp tất cả ảnh final, đã biết brief từ các lượt trước; không phải first-read. Không đọc source/rationale hay điểm người làm. Điểm heuristic không xác nhận runtime, AT, native hay backend."
+}

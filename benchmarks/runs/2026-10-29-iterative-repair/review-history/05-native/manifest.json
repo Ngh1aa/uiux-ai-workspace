@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "created": "2026-10-29T09:54:14Z",
+  "size": "L",
+  "images": {
+    "05-native-1280-dark.jpg": "6c5b80f17b79f8b9a541d632b016076bac87939f159d32c19230e9e1cdfd617f",
+    "05-native-1280-light.jpg": "08777aa990446e79a341a8c371e1996fc7746d3c27f84ccd63ab1014374f8c71",
+    "05-native-390-dark.jpg": "65e715e2ed7c789feed3de0740bb613c38f6b78ae1ccee6950af8b4feef23b35",
+    "05-native-390-light-05-Android-cancel.png": "43494c02dbe3609f4be04e278b140dc5c9ea3f8810cc0f64db606d7b433072d5",
+    "05-native-390-light-05-Android-date-error.png": "cec6c1039034958f0b30cce0522f241a877d7126c632654ff35ca376948f6041",
+    "05-native-390-light-05-Android-home-result.png": "4568001c27077267031270bfc1b5f82bf1b60810fc5da4fddafd25c1b8ed1214",
+    "05-native-390-light-05-iOS-cancel.png": "985c8123aecd6573543a1d76ec73854c9bf459e3ec699abdc25c664e36c52314",
+    "05-native-390-light-05-iOS-date-error.png": "476dcbb9cbfd4e8dfc87b65a905f202f5664164dc47537def0f236427e374904",
+    "05-native-390-light-05-iOS-home-result.png": "f7e7230db14c3c6f60cd45e2f00806a6bb211032a97fa0b976177824e8029d1a",
+    "05-native-390-light.jpg": "d3b726f61fded4f12d2f1981b6f47edaf79b66a7f01735d8ff9600c0219f886f"
+  },
+  "inputs": {
+    "brief.md": "451c0572baf949842bf3a2cdfbcee33e488aa75ace53015896dfd26f66e6b3ab",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

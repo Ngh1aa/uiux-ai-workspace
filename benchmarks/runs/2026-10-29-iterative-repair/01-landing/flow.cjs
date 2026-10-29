@@ -1,0 +1,27 @@
+'use strict';
+module.exports=async(page,assert,{snap})=>{
+ const scenarios=[];
+ await page.locator('#request-form button[type=submit]').click();
+ assert.equal(await page.locator('#customer').evaluate(el=>el.validity.valid),false);
+ assert.equal(await page.locator('#booking-review').isVisible(),false);
+ scenarios.push({name:'Thiếu tên chặn submit và vẫn sửa được',status:'PASS'});
+ await page.locator('#customer').fill('Minh');
+ await page.locator('[data-value="Nặn tay"]').click();
+ await page.locator('[data-value="Chủ nhật 14:00"]').click();
+ await page.locator('#request-form button[type=submit]').click();
+ assert.match(await page.locator('#review-copy').innerText(),/Minh, Nặn tay, Chủ nhật 14:00, 350.000/);
+ await page.locator('#edit-request').click();
+ assert.equal(await page.locator('#customer').inputValue(),'Minh');
+ await page.locator('[data-value="Tráng men"]').click();
+ await page.locator('#request-form button[type=submit]').click();
+ assert.match(await page.locator('#review-copy').innerText(),/Tráng men.*300.000/);
+ await snap(page,'review-edited');
+ await page.locator('#confirm-request').click();
+ assert.match(await page.locator('#booking-result').innerText(),/Minh.*Tráng men.*Chủ nhật 14:00.*300.000.*Chưa giữ chỗ thật/);
+ scenarios.push({name:'Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá',status:'PASS'});
+ await page.locator('[data-value="Nặn tay"]').click();
+ assert.equal(await page.locator('#booking-result').isVisible(),false);
+ assert.match(await page.locator('[data-summary-total]').innerText(),/350.000/);
+ scenarios.push({name:'Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn',status:'PASS'});
+ return scenarios;
+};

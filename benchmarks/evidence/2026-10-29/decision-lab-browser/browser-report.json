@@ -1,0 +1,952 @@
+{
+  "status": "PASS",
+  "evidenceClass": "AUTHORED_SYNTHETIC_BROWSER_CHECKS",
+  "humanUsability": "UNKNOWN",
+  "aestheticQuality": "UNKNOWN",
+  "rows": [
+    {
+      "engine": "chromium",
+      "caseKey": "healthcare",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "healthcare",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "healthcare",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "commerce",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "commerce",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "commerce",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "portfolio",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "portfolio",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "portfolio",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "enterprise",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "enterprise",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "enterprise",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "industrial",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "industrial",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "industrial",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "teacher",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "teacher",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "teacher",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "healthcare",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "healthcare",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "healthcare",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "commerce",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "commerce",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "commerce",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "portfolio",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "portfolio",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "portfolio",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "enterprise",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "enterprise",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "enterprise",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "industrial",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "industrial",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "industrial",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "teacher",
+      "variant": "fragile",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "teacher",
+      "variant": "fragile",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "teacher",
+      "variant": "fragile",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "SEEDED_INPUT_LOSS_REPRODUCED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 320,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 390,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 1280,
+      "status": "PASS",
+      "recovery": "INPUT_RETAINED",
+      "console": "PASS",
+      "overflow": "PASS",
+      "enlargedText": "PASS"
+    }
+  ],
+  "captures": [
+    {
+      "file": "chromium-healthcare-fragile-390.png",
+      "caseKey": "healthcare",
+      "variant": "fragile",
+      "width": 390,
+      "sha256": "a5e50424b8f7ce4c67924bc15421a616ad2de9bedfc155a106f7b14fcd021be6",
+      "inspected": false
+    },
+    {
+      "file": "chromium-healthcare-considered-390.png",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 390,
+      "sha256": "6015db3fa6b7b4acdfe6f6ddec5239998d4f95c6820fcbee0d49a4d6f8dfa8cc",
+      "inspected": false
+    },
+    {
+      "file": "chromium-healthcare-considered-1280.png",
+      "caseKey": "healthcare",
+      "variant": "considered",
+      "width": 1280,
+      "sha256": "776777ce5bcdcba72284d4a16cdb1ade328b0b6fcb3d215e783dee2a7f402165",
+      "inspected": false
+    },
+    {
+      "file": "chromium-commerce-fragile-390.png",
+      "caseKey": "commerce",
+      "variant": "fragile",
+      "width": 390,
+      "sha256": "05b02d65805dbc4cfe2442e39608f9591539b0e295e4a2de2f296ca3f7671d72",
+      "inspected": false
+    },
+    {
+      "file": "chromium-commerce-considered-390.png",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 390,
+      "sha256": "c49de95fa24e9f2c814392733eddd82d9d1f23171675dec7b5ff9be39dd77407",
+      "inspected": false
+    },
+    {
+      "file": "chromium-commerce-considered-1280.png",
+      "caseKey": "commerce",
+      "variant": "considered",
+      "width": 1280,
+      "sha256": "d875550a6fb32e62402a75f442a78d4f7c58f3908b58dc3f7f8f942056f6b072",
+      "inspected": false
+    },
+    {
+      "file": "chromium-portfolio-fragile-390.png",
+      "caseKey": "portfolio",
+      "variant": "fragile",
+      "width": 390,
+      "sha256": "f983652a3101927ecf16b5231cfcf793a2ae250b0adf7f527c2e2e873e8d8640",
+      "inspected": false
+    },
+    {
+      "file": "chromium-portfolio-considered-390.png",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 390,
+      "sha256": "7407e6edf3c1fef8948c4cb181d6d2d00f0aeacf90bc32b77cc1ece5178a7bfc",
+      "inspected": false
+    },
+    {
+      "file": "chromium-portfolio-considered-1280.png",
+      "caseKey": "portfolio",
+      "variant": "considered",
+      "width": 1280,
+      "sha256": "3f03df978e7b26989efefc4092f7acb1d6a098b5bd54b10a77927b5e828efcf2",
+      "inspected": false
+    },
+    {
+      "file": "chromium-enterprise-fragile-390.png",
+      "caseKey": "enterprise",
+      "variant": "fragile",
+      "width": 390,
+      "sha256": "0089d8f255c0a59124b4af05739f983d5749fd1ee16462b2f04e982f8346408e",
+      "inspected": false
+    },
+    {
+      "file": "chromium-enterprise-considered-390.png",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 390,
+      "sha256": "1084c671e41809d1945045aa5eb5d5ca5f2677d0ea92f98a3a8e598b6f488e00",
+      "inspected": false
+    },
+    {
+      "file": "chromium-enterprise-considered-1280.png",
+      "caseKey": "enterprise",
+      "variant": "considered",
+      "width": 1280,
+      "sha256": "1677330cd40ce6f9a072cbff077b0e5ca271005cf99978ccf8f51de844e8416c",
+      "inspected": false
+    },
+    {
+      "file": "chromium-industrial-fragile-390.png",
+      "caseKey": "industrial",
+      "variant": "fragile",
+      "width": 390,
+      "sha256": "3f89194be780e90721cba3e530a5a6963fa1f74b670179527139d9448e32bb32",
+      "inspected": false
+    },
+    {
+      "file": "chromium-industrial-considered-390.png",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 390,
+      "sha256": "3277f874f1b9fa249e1e65dc858b6d8553d8613075e47fe2edbf3fd1f514e1bc",
+      "inspected": false
+    },
+    {
+      "file": "chromium-industrial-considered-1280.png",
+      "caseKey": "industrial",
+      "variant": "considered",
+      "width": 1280,
+      "sha256": "ea2fe351564eb7fa012b36e6456e9c4706ec4fee55c23be579b3e6e98be15049",
+      "inspected": false
+    },
+    {
+      "file": "chromium-teacher-fragile-390.png",
+      "caseKey": "teacher",
+      "variant": "fragile",
+      "width": 390,
+      "sha256": "d12fb0158835cd35b89c4938292949f037898ef662c61fbe722333884b8d1eef",
+      "inspected": false
+    },
+    {
+      "file": "chromium-teacher-considered-390.png",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 390,
+      "sha256": "0ffb7ab874ef19cabb128ccb11329584affb3046960c79130d538021999adb31",
+      "inspected": false
+    },
+    {
+      "file": "chromium-teacher-considered-1280.png",
+      "caseKey": "teacher",
+      "variant": "considered",
+      "width": 1280,
+      "sha256": "13f965217967e86b7f260022dfcae4f7dabcf81f03acd09e5a8b2055a0672463",
+      "inspected": false
+    }
+  ],
+  "sources": {
+    "index.html": "42c38ffa1564a33270946264ab961b2e25d3fd88585b949985d3775ca2025dc7",
+    "lab.css": "b44402f41ea870cff968d862c3f9f77a64b7b84703da178b40abcf90aac74885",
+    "lab.js": "9f333cae6686c3e421bf7fd50cfb91c4508b7a04e8d13484fb3ce03b83b07ea1",
+    "cases.json": "bb01fe001432cdddb390ebbe343cebecb9f7b0facd92dba57c0997eea20357fb"
+  }
+}

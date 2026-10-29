@@ -1,0 +1,96 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "02-app-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem lịch cầu lông sắp tới và tìm sân tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem lịch trong thẻ lượt đặt.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Nút Xem lịch đã đủ viền và khoảng đệm, không còn clipping trong thẻ; phần cuối danh sách chưa thấy đủ."
+    },
+    "02-app-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem lượt đặt tiếp theo, tìm và chọn sân gần nhà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sân Phú Nhuận ở danh sách.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Nút Xem lịch đã đủ viền và khoảng đệm, không còn clipping trong thẻ; phần cuối danh sách chưa thấy đủ."
+    },
+    "02-app-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Màn chính cho người chơi xem lịch và tìm sân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sân Phú Nhuận trong danh sách.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Nút Xem lịch đã đủ viền và khoảng đệm, không còn clipping trong thẻ; phần cuối danh sách chưa thấy đủ."
+    },
+    "02-app-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Giúp Minh xem buổi đã đặt và tìm sân trống tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sân Phú Nhuận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Nút Xem lịch đã đủ viền và khoảng đệm, không còn clipping trong thẻ; phần cuối danh sách chưa thấy đủ."
+    },
+    "02-booked.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Báo đặt sân thành công trong bản mẫu và xem các lịch sắp tới.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt thêm một buổi.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Lượt mới vẫn là thông báo còn lượt cũ là card; nút đặt thêm sát thanh đáy."
+    },
+    "02-checkout-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Rà soát và nhập số người, ghi chú trước đặt sân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Số người.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: CTA xác nhận vẫn chỉ lộ dải màu đầu nút phía sau tab bar; chưa chứng minh cuộn tới."
+    },
+    "02-conflict19.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Báo giờ vừa bị đặt và hướng người dùng đổi giờ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn khung khác.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Thông báo tranh chấp và đường đổi khung rõ, dữ liệu nhập còn thấy."
+    },
+    "02-detail-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem tiện ích, giá và chọn khung giờ sân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Khung 18:00 còn trống.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Giá/giờ/trạng thái rõ; hàng giờ cuối nằm dưới tab bar trong ảnh."
+    },
+    "02-empty.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Báo chưa có lịch cầu lông đã qua.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm sân tối nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Empty state rõ và có CTA để tiếp tục."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 3.5,
+    "7": 4,
+    "8": 4,
+    "9": 3.5,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "6",
+      "image": "02-booked.png",
+      "element": "Lượt Sân Kỳ Hòa mới và card Sân Phú Nhuận cũ",
+      "fix": "Cấu trúc lịch mới vẫn là thông báo success với các dòng văn bản, lịch cũ là booking card lớn. Sau thông báo, dùng cùng cấu trúc card để so sánh giờ/địa điểm/trạng thái dễ hơn."
+    },
+    {
+      "dimension": "9",
+      "image": "02-checkout-light.png",
+      "element": "CTA xác nhận phía dưới disclaimer",
+      "fix": "Ảnh vẫn chỉ lộ dải màu đầu nút sau tab bar. Cung cấp ảnh cuối cuộn để chứng minh nút tới được; nếu cuộn cuối vẫn bị phủ, thêm khoảng đáy hoặc đặt CTA trên tab bar. Không suy từ ảnh này rằng nút mất vĩnh viễn."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tỷ lệ tương phản số học; điểm màu chỉ là heuristic thị giác, không xác nhận WCAG AA.",
+    "HF-2: hit area và vùng chạm thực UNKNOWN từ ảnh.",
+    "HF-3: không kết luận nội dung ở dưới viewport là clipping vĩnh viễn khi chưa kiểm cuộn; text 200% chưa kiểm.",
+    "HF-4: keyboard path, screen reader và focus đầy đủ UNKNOWN; vài ảnh có focus không chứng minh toàn bộ luồng.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh, trạng thái có chữ; không thấy cạnh tranh primary khác nhiệm vụ, deceptive pattern hoặc bằng chứng bịa không nhãn.",
+    "HF-7: browser/system back, dismiss, giữ state và điều hướng runtime UNKNOWN.",
+    "Interaction, persistence, native runtime, thiết bị thật và backend UNKNOWN; điểm 7/9 đánh giá biểu hiện nhìn thấy, không chứng nhận hành vi.",
+    "Đây là re-review đã biết brief, không phải first-read mù. independent=true nghĩa độc lập với người làm; không phải human research hay human approval.",
+    "HF-3 cũ: nút Xem lịch ở home đã đủ viền/padding trong mọi ảnh mới, finding clipping cũ được đóng.",
+    "HF-5: ảnh có lỗi 19:00 và empty Đã qua; loading chưa có bằng chứng.",
+    "Màn danh sách sân/lọc quận chưa có render riêng; các màn ngoài home chưa có đủ hai theme. TASTE.md ngoài packet chưa kiểm."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Re-review ảnh mới; đã biết brief từ lượt trước. Không đọc source, rationale hoặc điểm của người làm. Không dùng điểm heuristic để chứng nhận runtime/accessibility/backend."
+}

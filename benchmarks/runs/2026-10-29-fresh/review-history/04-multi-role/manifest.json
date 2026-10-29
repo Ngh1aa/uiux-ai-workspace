@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "created": "2026-10-29T09:54:13Z",
+  "size": "L",
+  "images": {
+    "04-conflict.png": "58ef5a821c3243b7525f0b34c07e4dd796a1dadffaba8b46122e9b7f789c44de",
+    "04-multi-role-1280-dark.jpg": "19706794ff9febbe90fdb16eff21d647a504cbfaff22c2315ff02a5b536a78df",
+    "04-multi-role-1280-light.jpg": "70c88f0e648bd9f749494b88eaf2ec77ed6f04d21041d16749d4110dbc3525b5",
+    "04-multi-role-390-dark.jpg": "1035f8db25027db660c47ce27fc8ab07520f9a11f8a3aa535004315e3c9a91ff",
+    "04-multi-role-390-light.jpg": "a1e2314e8524cf06c776b2ac4935f38951adf7c86c8861e0307acf25b3b0a618",
+    "04-no-permission.png": "8153e69f0418382ee68533487e9654c2a86807291c273ff43f715a6c8cdf230f",
+    "04-patient-light.png": "c9d4c65d551ace2963ddb5624938888367b984061e6b97f261ad5e1e12b5e55d",
+    "04-revenue-dark.png": "1054b151a69ae431b562f1d2b75dcce35ba6538432ab87a434d0d49c8b39ccf3"
+  },
+  "inputs": {
+    "brief.md": "0f911668f6f498d73abd4aed5e86936582dd2757b3623d8007f37caef8df29db",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

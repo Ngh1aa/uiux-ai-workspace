@@ -38,28 +38,36 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
    node benchmarks/run.cjs benchmarks/runs/<ngày>-v<n>
    ```
 
-   Lệnh này soát 390px, 1024px và 1280px, cả sáng và tối, rồi ghi `checks.json` và ảnh vào `shots/`.
+   Lượt mới soát 390/1024/1280/1440px sáng/tối, reflow 320px; đề 04 thêm layout strict.
+   Runner giữ riêng render và flow. Tạo `flow.browser.cjs --json <file>` chạy Playwright thật,
+   xuất `briefs.<đề>.status` và `scenarios: [{name, status}]`; thiếu scenario là UNKNOWN.
+   Native của đề 05 vẫn UNKNOWN khi chỉ chạy browser.
 3. Muốn ghi `independent_review: true`, đóng gói ảnh trong `shots/` bằng
    `python3 scripts/review-packet.py make` và để người duyệt độc lập chấm theo
    [hướng dẫn duyệt độc lập](../skills_UIUX/design-critique-and-rationale/references/independent-review.md).
    Mở ảnh ra xem, chấm theo [rubric](../skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md)
    và ghi `scores.json` (mẫu: [lần chạy đầu](runs/2026-10-24-v1/scores.json)). Ghi thêm `NOTES.md`:
    lỗi bắt được trong lúc làm, repo được sửa gì, việc nên làm tiếp.
-   `checks.json` chỉ là soát render. Bấm thử các luồng chọn/nhập → xác nhận → quay lại sửa;
-   ghi kết quả chức năng riêng, không nâng thành PASS chỉ vì ảnh hay điểm rubric tốt.
+   `checks.json` phiên bản 2 tách render, flow tĩnh và browser; flow tĩnh không chứng minh runtime.
+   Độc lập cần từng đề có `review: {path, sha256}` trỏ review.json, reviewer/điểm khớp kết quả thật,
+   ảnh thuộc lần render đã ghi hash, brief/rubric không bị đổi. Agent độc lập vẫn là heuristic.
+   `source.repo_commit` chỉ là HEAD baseline; `provenance/local.patch`, manifest và hash sample/assets/test
+   nhận diện phần local chưa commit. Không lấy SHA baseline gán cho code mới.
 4. Cập nhật bảng tổng hợp:
 
    ```sh
    python3 benchmarks/report.py
    ```
 
-5. So ảnh trong `shots/` với lần chạy trước. Repo chỉ lưu ảnh chế độ sáng ở 390px và 1280px; các
-   ảnh khác chạy lại `run.cjs` là có.
+5. Giữ nguyên ảnh và điểm các lượt lịch sử. Runner từ chối ghi đè v1/v2; lượt local chưa review
+   có thể chạy lại với `--refresh`. Khi đã có review, tạo revision mới để giữ bằng chứng đã duyệt.
+   Ảnh state chỉ tạo từ browser scenarios được ghi riêng trong `shots/behavior/`; ảnh initial không chứng minh coverage toàn bộ màn.
 
 ## Đọc kết quả thế nào
 
 - *Lỗi soát* phải bằng 0. Đây là mức sàn, không phải bằng chứng đẹp.
-- *Ngưỡng* đạt khi không có hard fail, điểm trung bình và điểm thấp nhất đạt mức của cỡ việc.
+- *Ngưỡng* đạt khi render và luồng bắt buộc PASS, không hard fail, rubric đạt cỡ việc.
+  Luồng FAIL hoặc UNKNOWN chặn kết luận Đạt; lịch sử không có flow hiển thị UNKNOWN mà không sửa điểm cũ.
 - Điểm do agent tự chấm thường cao hơn thực tế. So **xu hướng** giữa các lần chạy, đừng coi một
   con số là kết luận.
 

@@ -1,0 +1,956 @@
+{
+  "version": 2,
+  "run": "2026-10-29-iterative-repair",
+  "checked_at": "2026-10-29T17:20:18.051Z",
+  "source": {
+    "repo_commit": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+    "dirty": true,
+    "checker_sha256": "53b124b8b726b33536a0ae0b29cf68a526dff62a4e9fec0abcd69fcd93d18384",
+    "checkers": {
+      "render": "53b124b8b726b33536a0ae0b29cf68a526dff62a4e9fec0abcd69fcd93d18384",
+      "flow": "22a6abc708c91cce5f27fddd9c80b3f1ca72d274f65714b34adafb1802d6aa34",
+      "static": "f6a2899454d87d76161514c44e41a59ebb83944c597fa31aef3b756e8b6d4e30"
+    },
+    "patch": {
+      "path": "provenance/local.patch",
+      "sha256": "bcae38bc0068d4d65e042ffd2c101e91769dd698a73552a4a3c2d3d919cf2704"
+    },
+    "manifest": {
+      "path": "provenance/manifest.json",
+      "sha256": "5f7524c544ad5fa89a554edaf5dde1435641a3a6de1fcb4ccbd9a5fa5ed995ea"
+    },
+    "browser_test_sha256": "e5d1411cd51acfb88a2a9653f73bb7d9287da336740f41b164e0317f4a8d1aa0",
+    "browser_exit_code": 0,
+    "run_files": {
+      "01-landing/flow.cjs": "afaff9db4a97df11cc0906f143739af2520831e18037cb5b5c7390e632e633b3",
+      "01-landing/index.html": "c6ad60492cf2cb9ab346d355366833cdb70e6bfaebcd1935ae4508681224ff33",
+      "02-app/flow.cjs": "aae7f7b53123ac740db789350ad78f4a17d73b27c1a3edf22653fbeb069ada3f",
+      "02-app/index.html": "322199cbddca3efd2b505693f17cf555c2622d4b9f2a78cc7dbbc73c0a7ded06",
+      "03-dashboard/flow.cjs": "9b7e191a48f8bc99553e46d691fc34a03850f7bc6fae86a4d90b51930beff054",
+      "03-dashboard/index.html": "b6d5fb58c92e8e2e27ac4eece77a77150ca0e5657e56b357eb7ac83adddf7c0a",
+      "04-multi-role/brand.css": "986a8c6a9a8574d4d11281c84876af1b73e8baf39a3d8cc643af46499cda9d5e",
+      "04-multi-role/flow.cjs": "d362071fb6d8b73f135e0da89e7f2c30302ab27cf3a1c3598f9cee9751c6a69e",
+      "04-multi-role/index.html": "144c620ce638118d06993e412d8dfe417046612aeae5eae566a345e42ade1880",
+      "05-native/brand.css": "0afdb2fb3f0cc3088553ec308eb5e08d359f55380a38299108c17587dda91e3e",
+      "05-native/flow.cjs": "80c5662f6a037f00aff16bca31db244140d7ec662cf97f78765c49fcab46cf5d",
+      "05-native/index.html": "30fbe9bddc8d8f06c8a5a96d3fd202c9d89319a8bc23883fc22957d93e859a0e",
+      "assets/common.js": "29dcfa605e6dc583afcdd408db56d2797527fbe1dcd0687885508096e375a22d",
+      "assets/directions.css": "010f52c107a895a157911af233f6ed98f6b1d15cd6f5a5ca9812052531474f59",
+      "assets/ui.css": "3d6d4e3f9b011be122584ebb94e4688a39268e098ca4a375e85f8d1ea2ea7ff6",
+      "flow.browser.cjs": "e5d1411cd51acfb88a2a9653f73bb7d9287da336740f41b164e0317f4a8d1aa0"
+    },
+    "images": {
+      "shots/01-landing-1024-dark.jpg": "046a3dbab02371249a85babb51301e66271721106fa6c082d370180718391cd2",
+      "shots/01-landing-1024-light.jpg": "c14795b01f5925bc97d6e8759da1f2c6f8826accbbd7a915733b33b0b0fecdf7",
+      "shots/01-landing-1280-dark.jpg": "7bcfe2b703c9529d2229be856b57405794d287aaf047543e6d4bf5476ab29372",
+      "shots/01-landing-1280-light.jpg": "a8b6e53f9345ab9c402708af26abc9f65b4b6649d152f2a3eb120e5c027e7e62",
+      "shots/01-landing-1440-dark.jpg": "1bad4fe3d21c795b98309636a2f2994fb20fcaeb61f8671a72ba7ed022b11977",
+      "shots/01-landing-1440-light.jpg": "96d946102c86cd8771526583342caf54a62672abbf963039c7514ce9c607010f",
+      "shots/01-landing-390-dark.jpg": "a4b72ff7df5489a80f68c6eb73673d9e32fa689a4dd26bc5c080972849f1084e",
+      "shots/01-landing-390-light.jpg": "b3d7d67b83f341fde4df9d9f4dc43a8a73d61bec6503761e6d758a845f8f6cca",
+      "shots/02-app-1024-dark.jpg": "8f65ed94303927760050ac36452c789bae8b281864277b8acd61ce6dc81c6d02",
+      "shots/02-app-1024-light.jpg": "865993b13c7fd555e92ec9f003cb00a2985b01ec45a01334b94ba83744da0b20",
+      "shots/02-app-1280-dark.jpg": "14d54b6b8e14b6c7730f7a225deda8d2e03200019df663e53ea460ed19fd24fe",
+      "shots/02-app-1280-light.jpg": "49f6079b524018b4fadba42b72db774ceedbbf1d1ee8b29589119a164dec875a",
+      "shots/02-app-1440-dark.jpg": "060cea5255b3760d8eb2b28b458935e591ee3d62d409443db277dad5859322d1",
+      "shots/02-app-1440-light.jpg": "a3007fc910781f30f91ed1702cc39c867b9eaac0cca1e1d8a64cc97590585beb",
+      "shots/02-app-390-dark.jpg": "f89e235addccfe550f0c6a4e0d67ac78e8dc8aa57bfef128e48eae420dd6fbe0",
+      "shots/02-app-390-light.jpg": "24ecb9e066f4d2ac21110297e88db1361f213a5de474be3df3f32cbb5b01f1fb",
+      "shots/03-dashboard-1024-dark.jpg": "f2ee240bc03d7bbf09a4873f296dfa5f2fee68899528bf1fc1474ebb4b67fb0e",
+      "shots/03-dashboard-1024-light.jpg": "847f2a412ed61b9d3cde2c602910698537076cf29493db7f7b7cdf0cc9144883",
+      "shots/03-dashboard-1280-dark.jpg": "9a9dbe6125b4cc6a92e969f5947cc81fbcf55c8429314ff9fa398b54d7bbb699",
+      "shots/03-dashboard-1280-light.jpg": "1ac042145043b5aa8e4074fd91a8d0652766635053daacd4d99cbfa28de761db",
+      "shots/03-dashboard-1440-dark.jpg": "1511d0d5e983a9a8e5a94ee2023fe05f20e0ea80a4596269d8e818f9222272b8",
+      "shots/03-dashboard-1440-light.jpg": "06b2696b4936e08eca1b41a8fb013bdb827bd96d44b27b03bd0bf9280bcde8b2",
+      "shots/03-dashboard-390-dark.jpg": "7149f80da56976a7d2a675d50cd87d01bbea3502ff17ded81b33ba95c6a171cd",
+      "shots/03-dashboard-390-light.jpg": "c18673223a82e4a31127bd253c7cbf4a295ec07928e47bb7f3633037e30c4f27",
+      "shots/04-multi-role-1024-dark.jpg": "5e1f774f0e9170503c38174f42723cbc606b14fe02bf481ebd5bb81a7fd7af0a",
+      "shots/04-multi-role-1024-light.jpg": "73d5de4f4403fe0e200aaed049a3f3ab042fe3440cb4019671b071fdf5312817",
+      "shots/04-multi-role-1280-dark.jpg": "da9b876b1f871f4a5931a88b053a75745c96de57ae94cd0b9b751ecacfd215f3",
+      "shots/04-multi-role-1280-light.jpg": "f6b3030ee7e1e0b58759ff88a722419f32135f8db2af07ca2bce41347a09d90b",
+      "shots/04-multi-role-1440-dark.jpg": "479151f57ea77d49223c558a78259d1505827dc274212f32e01dab2617784c27",
+      "shots/04-multi-role-1440-light.jpg": "5ffbb076cb15b8472b740c234037e854a80eb84795a31613df8c8796b3bf233e",
+      "shots/04-multi-role-390-dark.jpg": "51ea1e008dc9a9e1278d9b537e650a7bff73849e61c798962c0e358e54c6f665",
+      "shots/04-multi-role-390-light.jpg": "035c854a1fa3112427ad33f6b98ba0b79d2899d19af2e6e1539568a778664d9a",
+      "shots/05-native-1024-dark.jpg": "e9c6dbf111ccd94eeac269954b5ab30903bb08e0c8026dc7ee0bcf952c7dd6ba",
+      "shots/05-native-1024-light.jpg": "3e67043b66785e31d23dee7867cfb6814b87db2ca625c03f6bbde436ef3d5f28",
+      "shots/05-native-1280-dark.jpg": "a636a5786f782dcb730ddea92795b173bea1eee8002886b0cc422f6fc9fe719b",
+      "shots/05-native-1280-light.jpg": "22b8483ebbc987ff50f796326bd7379036300c7bfe3c9fefad82a3b95be9d6d5",
+      "shots/05-native-1440-dark.jpg": "45545bc61bb66dd9e4758207bc722d33265450ee520b8fe6ece3a5144a9c9181",
+      "shots/05-native-1440-light.jpg": "23d3afc4e73037b34c42fec5c4c421d0767545ead88d6262acad96db945efefb",
+      "shots/05-native-390-dark.jpg": "80b876c1fb59cab1543dc1ef1ade9700072184f5683521461227f660719f48c2",
+      "shots/05-native-390-light.jpg": "f5e3057e042056b754b156ca8376608e056a057417d803975024da65e8fe4d84",
+      "shots/behavior/01-landing-1280-dark-result.png": "33343c02e017cfc0e5acfd4f9532b9f56e1a1229a276d30fb399bb340f9ed15e",
+      "shots/behavior/01-landing-1280-dark-review-edited.png": "9f6eea5374edb8ad11ea2da6642cd8cd26f76eba5482264679de3735ea6e3ef1",
+      "shots/behavior/01-landing-1280-light-result.png": "46294ef4f9afb0f709f77bbff6e36a65f2917291efbe0bddadf74a04c98c224b",
+      "shots/behavior/01-landing-1280-light-review-edited.png": "4ddf989b545b1e8473fb1d706c2be6153371bb9e0a22bb6733b19268bf7f7fec",
+      "shots/behavior/01-landing-390-dark-result.png": "b1002b3c70b877f497728706f3b35e5994eb9640dc6a92385639e57861f81e14",
+      "shots/behavior/01-landing-390-dark-review-edited.png": "a4cad2cb4ede860c26dc67551816ad7312e0bfc661d803cf506234b0aec557cb",
+      "shots/behavior/01-landing-390-light-result.png": "b65f1facb0459fef3adee274ca5d66fc8bbb0ec840ffb15c2cbc152913bad30b",
+      "shots/behavior/01-landing-390-light-review-edited.png": "d29786ef73546bdb12a63037a997edeaa6d1c04aacdc652585b78fcbd54a4efe",
+      "shots/behavior/02-app-1280-dark-result.png": "57fd51d14b6df4ed8b6053260d8099f43a2e5ba0876fffa0cc9fdfb68c30a558",
+      "shots/behavior/02-app-1280-light-result.png": "b5fb120415e65ed06d8311c8499398657d69b4812289f4c4177ebc80cf5a1680",
+      "shots/behavior/02-app-390-dark-result.png": "764a727fdd3d0e7310a5f969cbed0108363e9adf81c9afbaf63d44124e1883d0",
+      "shots/behavior/02-app-390-light-result.png": "a49769063e5c3787a1e8655f844c5dae457ff57f43ef05a8cb4eeb791fe0b38d",
+      "shots/behavior/03-dashboard-1280-dark-result.png": "6d7cb9ddfb905b6ad03537c1c94c36c7fa3fc4113cae1c21ec50475b6971be13",
+      "shots/behavior/03-dashboard-1280-dark-review-order.png": "9a3f7f9d862a1c3629a17e39570df372e69ccda0f6a55c3e1175c6471ef28d0b",
+      "shots/behavior/03-dashboard-1280-light-result.png": "465977647cdd5dbedabb3f57cd1326de169926fb218623fdd996d27ee2e38c5f",
+      "shots/behavior/03-dashboard-1280-light-review-order.png": "4cdd09803ebf8fe197c4b7abf3d7e4655e24d7b4da3969ba3947405b2f67ac62",
+      "shots/behavior/03-dashboard-390-dark-result.png": "90cac252e71018df34fbc62076a884c63b024ca9b4347b9c0d478ccbfbe197f4",
+      "shots/behavior/03-dashboard-390-dark-review-order.png": "02b4bced2399a00468e1d5c5698324f5b0815571bfc037d8a4ec5d01f81b8a28",
+      "shots/behavior/03-dashboard-390-light-result.png": "c63f15c6593d4b7aaa2e33c1e1078ea4e7aed48cc439fe18859598afde251a3c",
+      "shots/behavior/03-dashboard-390-light-review-order.png": "fdccbe1b7f713cb678e676189c2c63c1e13053ebc37a3609fd40a536b850d607",
+      "shots/behavior/04-multi-role-1280-dark-04-conflict.png": "0874352d7793ff00c87deca9ce2ce87d6d4365da3c930cdb1a9f4dc713a6c6a1",
+      "shots/behavior/04-multi-role-1280-dark-04-doctor.png": "0c2c5f95b193c21ede85cefcd1b8ca1b69831711657ffc32a5a6c8857f9833c7",
+      "shots/behavior/04-multi-role-1280-dark-04-no-permission.png": "a4ec1d51d5fd8630b0a338ef6ab1148bb144bd89b1e448ec9e9b0cfc014789b7",
+      "shots/behavior/04-multi-role-1280-dark-04-owner.png": "bfce9fd9ddadc490042a40d090475d971df6cf202df697270a4c3e9447691168",
+      "shots/behavior/04-multi-role-1280-dark-result.png": "a4ec1d51d5fd8630b0a338ef6ab1148bb144bd89b1e448ec9e9b0cfc014789b7",
+      "shots/behavior/04-multi-role-1280-light-04-conflict.png": "2249da008c417b111199b564e3c79e34082d2dad9905b83e1176e56ac37214da",
+      "shots/behavior/04-multi-role-1280-light-04-doctor.png": "60d7060c742d376dad710e512cef17eeda243fbcaa5569f478f482dbfe558ff8",
+      "shots/behavior/04-multi-role-1280-light-04-no-permission.png": "6d470cb434351149f76564940a84a821eeec02099c9f249fb25527d0f7b6f43f",
+      "shots/behavior/04-multi-role-1280-light-04-owner.png": "ffe7085f140ad6c9ce8ca0f4bcb54556547b9129cb28bd633afa6c9063b96f90",
+      "shots/behavior/04-multi-role-1280-light-result.png": "6d470cb434351149f76564940a84a821eeec02099c9f249fb25527d0f7b6f43f",
+      "shots/behavior/04-multi-role-390-dark-04-conflict.png": "18dd781a34af7fbe621314f93c7150f45a3006ff3158a293650c98d930e47852",
+      "shots/behavior/04-multi-role-390-dark-04-doctor.png": "c8ef17b328d30dc18ebfcafce398014a9aeb00adf7be481ebaa48ac8e9eb5f21",
+      "shots/behavior/04-multi-role-390-dark-04-no-permission.png": "7a6265e1759e4326ee23b8dddd2b9b42ebc7a481e9f991a3da26c46fbb9e0613",
+      "shots/behavior/04-multi-role-390-dark-04-owner.png": "be27561fdf0b9f83a5c3a12854b0bf4f2dbf388858251490ea13e2c5af33e7fc",
+      "shots/behavior/04-multi-role-390-dark-result.png": "7a6265e1759e4326ee23b8dddd2b9b42ebc7a481e9f991a3da26c46fbb9e0613",
+      "shots/behavior/04-multi-role-390-light-04-conflict.png": "f1749e5ccf904b42bbe22ccbf51aeb3a42af7c48cce7e63095c8bc7a33278dc5",
+      "shots/behavior/04-multi-role-390-light-04-doctor.png": "58f538d6d584b73c74ec01bf17980e3611a6e856a192d2f77f3dadd2b28edcc8",
+      "shots/behavior/04-multi-role-390-light-04-no-permission.png": "7362fadc22c5c014e10116542ddd8980c67dd2faa845496e97d5d5beef076fc5",
+      "shots/behavior/04-multi-role-390-light-04-owner.png": "88eeb228803c0c3c97e8628de133ad2d4f2afd4d008fafcefb191a04c03e4f12",
+      "shots/behavior/04-multi-role-390-light-result.png": "7362fadc22c5c014e10116542ddd8980c67dd2faa845496e97d5d5beef076fc5",
+      "shots/behavior/05-native-1280-dark-05-Android-cancel.png": "6b70de632760edd7b914c9b83ba21f04748c24242461c2c836a34ded1f188662",
+      "shots/behavior/05-native-1280-dark-05-Android-date-error.png": "d7b1f5465cf7ab787cc0d6489c877a170818ac1f754afa105d8e33a362db4feb",
+      "shots/behavior/05-native-1280-dark-05-Android-draft-bottom.png": "887eebb8480e46d8cc185a055a9c3e34a937aaea57b2a6a87c9278cd49ca32ff",
+      "shots/behavior/05-native-1280-dark-05-Android-home-result.png": "622d16dcf7e20d3df08d6aae2b53e88ce940ba3337620b5244da60bdb4b9eb4f",
+      "shots/behavior/05-native-1280-dark-05-iOS-cancel.png": "7039f947fbda0717f7918d7788016b8afc8cd7f98740a8a67ddad9eb878308a3",
+      "shots/behavior/05-native-1280-dark-05-iOS-date-error.png": "145592454813a262ce72d668a8417b32b283a702a4c17a5e083dda0cae0663e9",
+      "shots/behavior/05-native-1280-dark-05-iOS-draft-bottom.png": "7bc77e8575c39bf8b6a6a27227adf374544f0b34b441e66a7fd77b89aa959ed2",
+      "shots/behavior/05-native-1280-dark-05-iOS-home-result.png": "44138326e2f8c0dba847bab92ce6cdf3b64d753bf7d20bfd032e5c6e7d33ec4d",
+      "shots/behavior/05-native-1280-dark-result.png": "622d16dcf7e20d3df08d6aae2b53e88ce940ba3337620b5244da60bdb4b9eb4f",
+      "shots/behavior/05-native-1280-light-05-Android-cancel.png": "10a533af5fb4e21d0236f773a3a3f7d2de1ed6c7c9368975b0c90ac856b7386b",
+      "shots/behavior/05-native-1280-light-05-Android-date-error.png": "9dd7e47f11a6195557660669acdd3e51ce0983a1743dd17211f7c0cc8534d9ee",
+      "shots/behavior/05-native-1280-light-05-Android-draft-bottom.png": "62fce28dba67a64e70495133ea37b35db4cc3739aaeddc23fe46d67065f88b9d",
+      "shots/behavior/05-native-1280-light-05-Android-home-result.png": "095b7a47710046c90833b0e96e4cac0a9a854f657c97e7cdfced3bb36359cdd2",
+      "shots/behavior/05-native-1280-light-05-iOS-cancel.png": "5b4c79c1f064cf971fb35a1e30c4a9724e5fce09917d3f427286960d4f5bc847",
+      "shots/behavior/05-native-1280-light-05-iOS-date-error.png": "b9b892d67052dffdea11e9c71c19456933a7e517f7d83e8de29a150407bcdccb",
+      "shots/behavior/05-native-1280-light-05-iOS-draft-bottom.png": "e0f37c752bf7fa3fc31a6dd5607cc2a4b2eddc82c371e1e20aac1e04ea19aaf8",
+      "shots/behavior/05-native-1280-light-05-iOS-home-result.png": "4d11b67b7e4bbecc498ef463a4880e8bbe1159928893133d25e0eb82a40a6688",
+      "shots/behavior/05-native-1280-light-result.png": "095b7a47710046c90833b0e96e4cac0a9a854f657c97e7cdfced3bb36359cdd2",
+      "shots/behavior/05-native-390-dark-05-Android-cancel.png": "290816e70522bb2331d0a3862e8aef084c1d2d057da1699886963ce6de842b8a",
+      "shots/behavior/05-native-390-dark-05-Android-date-error.png": "b0189b29c8fec34aa4cb791a17273db57ec8ab7b7c280e02d8e7e062efb4c9b3",
+      "shots/behavior/05-native-390-dark-05-Android-draft-bottom.png": "56f80cefdb02f96e43e5ce04237f0ecb428078c186bb14d6cdea3a05dc8017ec",
+      "shots/behavior/05-native-390-dark-05-Android-home-result.png": "e48b3deedf905b7a39f8a4f9c5818066d420985e62fdd98ff32b7e97d0798cae",
+      "shots/behavior/05-native-390-dark-05-iOS-cancel.png": "ca09ffb9c687e6a23f6c0828266f1a8cda746e0ecbf2ea4c2d719aa11ff95911",
+      "shots/behavior/05-native-390-dark-05-iOS-date-error.png": "c6bf47af110f216036c5dcd229bbff459397d3ed3f5e260cfd4a154d0a010c02",
+      "shots/behavior/05-native-390-dark-05-iOS-draft-bottom.png": "a02d4af81ba6aa8879ea88abfe608711f7455ed77ee103e335b1fc2d82a2913d",
+      "shots/behavior/05-native-390-dark-05-iOS-home-result.png": "998825f8c11858d5f05c5edc7bd9b3b81c00956baff156fa96b4d2bf726a9c0c",
+      "shots/behavior/05-native-390-dark-result.png": "e48b3deedf905b7a39f8a4f9c5818066d420985e62fdd98ff32b7e97d0798cae",
+      "shots/behavior/05-native-390-light-05-Android-cancel.png": "3a925a31fe94d3a91d6824b271a23935e8a5f98253bae785568a1097414d44dd",
+      "shots/behavior/05-native-390-light-05-Android-date-error.png": "508628827185d74f95175f19a97184bdba3722b8e6cb9cb8e319a0b87ae060a7",
+      "shots/behavior/05-native-390-light-05-Android-draft-bottom.png": "480936bfc7cccc9689ae74eb609cc162d0fdb1cde15efb69b7f39060d772f25d",
+      "shots/behavior/05-native-390-light-05-Android-home-result.png": "6a1ad107765386aba096269ae34db30c77e57c22e7c2952b23e150c6458eed90",
+      "shots/behavior/05-native-390-light-05-iOS-cancel.png": "556259b2786416f5e09dc966a7148def519d447c95aa0aa3c619b9869fa95cae",
+      "shots/behavior/05-native-390-light-05-iOS-date-error.png": "aa1e61e46e291aba85942935f5c6dd0f4f9531f270017bdabbbfee16f1908535",
+      "shots/behavior/05-native-390-light-05-iOS-draft-bottom.png": "c57956ca1a57aed384b5895ac58359d4316d7f51d1de86ebb51e5c26f3299485",
+      "shots/behavior/05-native-390-light-05-iOS-home-result.png": "95469a30fd7f216e2af2cc7e0cfbe37e4fc8d2c10ebe0a49dc2f65b31647f175",
+      "shots/behavior/05-native-390-light-result.png": "6a1ad107765386aba096269ae34db30c77e57c22e7c2952b23e150c6458eed90"
+    }
+  },
+  "briefs": {
+    "01-landing": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "RUN",
+      "sample": {
+        "source": {
+          "kind": "iterative-repair",
+          "parent": "2026-10-24-v2",
+          "path": "benchmarks/runs/2026-10-24-v2/01-landing/index.html",
+          "sha256": "7ba66b834ab2e869bf1e89b01ad5dda477a81adfe6721dda11268bd127e7c383"
+        },
+        "files": {
+          "01-landing/flow.cjs": "afaff9db4a97df11cc0906f143739af2520831e18037cb5b5c7390e632e633b3",
+          "01-landing/index.html": "c6ad60492cf2cb9ab346d355366833cdb70e6bfaebcd1935ae4508681224ff33"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "01-landing.render.json",
+        "sha256": "b7057e0ea8a227ee0d589b726d2b442f749664a3c77ee8a6dbdfb7dccb678fe7"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "01-landing.flow-static.json",
+          "sha256": "bd050cdad245a4ad520606642d4fa9be88dcdda31a2d26b6cd99cb98895faea9"
+        },
+        "browser": {
+          "status": "PASS",
+          "scenarios": [
+            {
+              "name": "390/light: Thiếu tên chặn submit và vẫn sửa được",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Thiếu tên chặn submit và vẫn sửa được",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Thiếu tên chặn submit và vẫn sửa được",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Thiếu tên chặn submit và vẫn sửa được",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Root chọn lớp/ca, review, sửa giữ tên và kết quả minh hoạ đúng giá",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Chọn lại huỷ kết quả cũ, tổng tiền cùng source lựa chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: console resources reflow",
+              "status": "PASS"
+            }
+          ],
+          "evidence": "flow-results.json",
+          "sha256": "b10f0008a99a82b0aa590d96bce7e85a420cafb342bef45b07040a9f87270f8a"
+        }
+      },
+      "issues": []
+    },
+    "02-app": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 2,
+      "axe": "RUN",
+      "sample": {
+        "source": {
+          "kind": "iterative-repair",
+          "parent": "2026-10-24-v2",
+          "path": "benchmarks/runs/2026-10-24-v2/02-app/index.html",
+          "sha256": "c4d419da3e485758d562e72abcd0713aa16dbc2fb591b3bd26917b5fcbf931ca"
+        },
+        "files": {
+          "02-app/flow.cjs": "aae7f7b53123ac740db789350ad78f4a17d73b27c1a3edf22653fbeb069ada3f",
+          "02-app/index.html": "322199cbddca3efd2b505693f17cf555c2622d4b9f2a78cc7dbbc73c0a7ded06"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "02-app.render.json",
+        "sha256": "4e7c2a7d2b4898621a17097e5c29c59e229f675aa4ba7703daf38d8fe95eecec"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "02-app.flow-static.json",
+          "sha256": "28a7a47f937cf75f95475cc3141f7727728bea6b4517a282c7c3def14616087d"
+        },
+        "browser": {
+          "status": "PASS",
+          "scenarios": [
+            {
+              "name": "390/light: correct object role and contextual back",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: review before action and race failure retains input",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: recover to valid time and consistent result; browser back preserves context",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: edit and reconfirm amount count note",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: schedule states and court search recover",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: correct object role and contextual back",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: review before action and race failure retains input",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: recover to valid time and consistent result; browser back preserves context",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: edit and reconfirm amount count note",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: schedule states and court search recover",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: correct object role and contextual back",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: review before action and race failure retains input",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: recover to valid time and consistent result; browser back preserves context",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: edit and reconfirm amount count note",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: schedule states and court search recover",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: correct object role and contextual back",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: review before action and race failure retains input",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: recover to valid time and consistent result; browser back preserves context",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: edit and reconfirm amount count note",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: schedule states and court search recover",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: console resources reflow",
+              "status": "PASS"
+            }
+          ],
+          "evidence": "flow-results.json",
+          "sha256": "b10f0008a99a82b0aa590d96bce7e85a420cafb342bef45b07040a9f87270f8a"
+        }
+      },
+      "issues": [
+        {
+          "rule": "void",
+          "message": "Khoảng trống 163px cách đầu màn 649px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Trang chủ",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 163px cách đầu màn 649px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Trang chủ",
+          "width": 390,
+          "theme": "dark"
+        }
+      ]
+    },
+    "03-dashboard": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "RUN",
+      "sample": {
+        "source": {
+          "kind": "iterative-repair",
+          "parent": "2026-10-24-v2",
+          "path": "benchmarks/runs/2026-10-24-v2/03-dashboard/index.html",
+          "sha256": "321f49bf83491ae5ef639e64cfd650804dbb898e147dd5c062801bbc7ef9192a"
+        },
+        "files": {
+          "03-dashboard/flow.cjs": "9b7e191a48f8bc99553e46d691fc34a03850f7bc6fae86a4d90b51930beff054",
+          "03-dashboard/index.html": "b6d5fb58c92e8e2e27ac4eece77a77150ca0e5657e56b357eb7ac83adddf7c0a"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "03-dashboard.render.json",
+        "sha256": "5537c1e1b38b1c2726d878365bbc72fb629d1f1b215ca68be06255a5d09ecc3a"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "03-dashboard.flow-static.json",
+          "sha256": "0c3f8f94b70d74ffde1511951a8473bf901c952553831ac2788ce6236cb87eca"
+        },
+        "browser": {
+          "status": "PASS",
+          "scenarios": [
+            {
+              "name": "390/light: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Đúng đơn/khách, cancel giữ state, review xác nhận cập nhật14→13 và3→2",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Lỗi panel doanh thu → thử lại, không ảnh hưởng đơn/kho",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Navigation/back giữ dữ liệu, chart có đơn vị/kỳ/tổng đúng",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: console resources reflow",
+              "status": "PASS"
+            }
+          ],
+          "evidence": "flow-results.json",
+          "sha256": "b10f0008a99a82b0aa590d96bce7e85a420cafb342bef45b07040a9f87270f8a"
+        }
+      },
+      "issues": []
+    },
+    "04-multi-role": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 18,
+      "axe": "RUN",
+      "sample": {
+        "source": {
+          "kind": "reuse-new-brief",
+          "source_run": "2026-10-29-fresh",
+          "note": "Không có mẫu04/05 lịch sử. Dùng implementation mới sau freeze; không tính đây là sửa mẫu cũ hay fresh độc lập thứ hai.",
+          "source_files": {
+            "04-multi-role/brand.css": "986a8c6a9a8574d4d11281c84876af1b73e8baf39a3d8cc643af46499cda9d5e",
+            "04-multi-role/index.html": "144c620ce638118d06993e412d8dfe417046612aeae5eae566a345e42ade1880"
+          }
+        },
+        "files": {
+          "04-multi-role/brand.css": "986a8c6a9a8574d4d11281c84876af1b73e8baf39a3d8cc643af46499cda9d5e",
+          "04-multi-role/flow.cjs": "d362071fb6d8b73f135e0da89e7f2c30302ab27cf3a1c3598f9cee9751c6a69e",
+          "04-multi-role/index.html": "144c620ce638118d06993e412d8dfe417046612aeae5eae566a345e42ade1880"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "04-multi-role.render.json",
+        "sha256": "0ebefeb2c22dcee0cf68c22683b2ead4611ca47f1644f0219261b9cf2937af43"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "04-multi-role.flow-static.json",
+          "sha256": "09aed090ac44760d1d87fb378c18574a10d4362afe5269530741e024b7d11fa0"
+        },
+        "browser": {
+          "status": "PASS",
+          "scenarios": [
+            {
+              "name": "390/light: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Owner dữ liệu đúng, chartpartial không bịa ngày",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Owner dữ liệu đúng, chartpartial không bịa ngày",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Owner dữ liệu đúng, chartpartial không bịa ngày",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Owner dữ liệu đúng, chartpartial không bịa ngày",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: console resources reflow",
+              "status": "PASS"
+            }
+          ],
+          "evidence": "flow-results.json",
+          "sha256": "b10f0008a99a82b0aa590d96bce7e85a420cafb342bef45b07040a9f87270f8a"
+        }
+      },
+      "issues": [
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.muted \"Nguyễn Thảo, lễ tân\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Lịch hôm nay\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.meta \"Ai đang đến, ghế nào còn trống?\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.badge \"1 lượt muộn 15 phút\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 1px (nên ≥ 16px): p.calendar-legend \"Trạng thái có nhãn chữ. Chọn lượt để xem\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "widow",
+          "message": "Dòng cuối chỉ còn một chữ: p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.muted \"Nguyễn Thảo, lễ tân\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Lịch hôm nay\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.meta \"Ai đang đến, ghế nào còn trống?\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.badge \"1 lượt muộn 15 phút\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 1px (nên ≥ 16px): p.calendar-legend \"Trạng thái có nhãn chữ. Chọn lượt để xem\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "widow",
+          "message": "Dòng cuối chỉ còn một chữ: p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "wrap-review",
+          "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lâm Gia Bảo, 8 tuổi\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 1024,
+          "theme": "light"
+        },
+        {
+          "rule": "wrap-review",
+          "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lâm Gia Bảo, 8 tuổi\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 1024,
+          "theme": "dark"
+        }
+      ]
+    },
+    "05-native": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "RUN",
+      "sample": {
+        "source": {
+          "kind": "reuse-new-brief",
+          "source_run": "2026-10-29-fresh",
+          "note": "Không có mẫu04/05 lịch sử. Dùng implementation mới sau freeze; không tính đây là sửa mẫu cũ hay fresh độc lập thứ hai.",
+          "source_files": {
+            "05-native/brand.css": "0afdb2fb3f0cc3088553ec308eb5e08d359f55380a38299108c17587dda91e3e",
+            "05-native/index.html": "30fbe9bddc8d8f06c8a5a96d3fd202c9d89319a8bc23883fc22957d93e859a0e"
+          }
+        },
+        "files": {
+          "05-native/brand.css": "0afdb2fb3f0cc3088553ec308eb5e08d359f55380a38299108c17587dda91e3e",
+          "05-native/flow.cjs": "80c5662f6a037f00aff16bca31db244140d7ec662cf97f78765c49fcab46cf5d",
+          "05-native/index.html": "30fbe9bddc8d8f06c8a5a96d3fd202c9d89319a8bc23883fc22957d93e859a0e"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "05-native.render.json",
+        "sha256": "8e10a7df59b749308b12ce84b3f732e99a964ede49011cc21958fa04b7e8eb6d"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "05-native.flow-static.json",
+          "sha256": "037cbe4ae126ddec96fa36f4d70583f711598ab9ce6be39e64e9613461680892"
+        },
+        "browser": {
+          "status": "PASS",
+          "scenarios": [
+            {
+              "name": "390/light: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "390/dark: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/light: console resources reflow",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "1280/dark: console resources reflow",
+              "status": "PASS"
+            }
+          ],
+          "native_status": "UNKNOWN",
+          "evidence": "flow-results.json",
+          "sha256": "b10f0008a99a82b0aa590d96bce7e85a420cafb342bef45b07040a9f87270f8a"
+        },
+        "native_status": "UNKNOWN"
+      },
+      "issues": []
+    }
+  }
+}

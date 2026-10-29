@@ -1,0 +1,105 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "02-app-1280-dark.jpg": {
+      "Màn này để làm gì?": "Xem lịch cầu lông sắp tới và tìm sân tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem lịch trong thẻ lượt đặt.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đáy nút Xem lịch bị cắt theo cạnh dưới thẻ."
+    },
+    "02-app-1280-light.jpg": {
+      "Màn này để làm gì?": "Xem lượt đặt tiếp theo, tìm và chọn sân gần nhà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sân Phú Nhuận ở danh sách.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút Xem lịch sát đáy thẻ và bị cắt cạnh dưới."
+    },
+    "02-app-390-dark.jpg": {
+      "Màn này để làm gì?": "Màn chính cho người chơi xem lịch và tìm sân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem cả 3 sân tối nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút Xem lịch bị cắt ở thẻ; chưa thấy lọc ngày khi tìm sân tối nay."
+    },
+    "02-app-390-light.jpg": {
+      "Màn này để làm gì?": "Giúp Minh xem buổi đã đặt và tìm sân trống tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sân Phú Nhuận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trạng thái xác nhận dễ đọc nhưng nút Xem lịch bị cắt đáy."
+    },
+    "02-booked.png": {
+      "Màn này để làm gì?": "Báo đặt sân thành công trong bản mẫu và xem các lịch sắp tới.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt thêm một buổi.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lượt mới chỉ là thông báo trong khi lượt cũ là card; nút đặt thêm sát thanh đáy."
+    },
+    "02-checkout-light.png": {
+      "Màn này để làm gì?": "Rà soát và nhập số người, ghi chú trước đặt sân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Số người.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không đọc được CTA xác nhận vì nút bị cắt sau thanh điều hướng ở khung ảnh."
+    },
+    "02-conflict19.png": {
+      "Màn này để làm gì?": "Báo giờ vừa bị đặt và hướng người dùng đổi giờ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn khung khác.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lý do lỗi và việc giữ dữ liệu rõ; nút đổi giờ màu nhạt nhưng vẫn trong khối lỗi."
+    },
+    "02-detail-dark.png": {
+      "Màn này để làm gì?": "Xem tiện ích, giá và chọn khung giờ sân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Khung 18:00 còn trống.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Các hàng giờ cuối bị thanh đáy che nên chưa biết có cuộn tới đủ hay không."
+    },
+    "02-empty.png": {
+      "Màn này để làm gì?": "Báo chưa có lịch cầu lông đã qua.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm sân tối nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trạng thái trống dễ hiểu; CTA tối nay có thể không liên quan việc xem lịch cũ nhưng là lối ra hợp lý."
+    }
+  },
+  "hard_fails": [
+    {
+      "code": "HF-3",
+      "image": "02-app-390-light.jpg",
+      "observation": "Nút Xem lịch bị cắt cạnh dưới bởi đáy thẻ Lượt đặt sắp tới, không còn đường viền và khoảng đệm đáy đầy đủ; cũng thấy ở ảnh 1280 và dark. Đây là clipping trong chính thẻ, không phải nội dung dưới viewport."
+    }
+  ],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 3,
+    "4": 4,
+    "5": 4,
+    "6": 3.5,
+    "7": 4,
+    "8": 4,
+    "9": 3.5,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "02-app-390-light.jpg",
+      "element": "Nút Xem lịch trong thẻ lượt đặt sắp tới",
+      "fix": "Cho thẻ đủ chiều cao nội dung và padding cuối để toàn bộ nút nằm trong thẻ ở390px và khung desktop."
+    },
+    {
+      "dimension": "6",
+      "image": "02-booked.png",
+      "element": "Lượt Sân Kỳ Hòa mới và Sân Phú Nhuận cũ",
+      "fix": "Sau thông báo thành công, trình bày lượt mới bằng cùng cấu trúc booking card như lịch cũ để giờ, địa điểm, số sân và trạng thái dễ so sánh."
+    },
+    {
+      "dimension": "9",
+      "image": "02-checkout-light.png",
+      "element": "CTA xác nhận phía dưới ghi chú Bản minh họa",
+      "fix": "Ảnh hiện chỉ thấy dải màu đầu nút sau tab bar. Đảm bảo có bottom spacing/scroll hoặc vùng CTA cố định phía trên tab bar, cung cấp ảnh cuối cuộn để xác nhận nút tới được."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tỷ lệ tương phản số học; không xác nhận AA từ ảnh.",
+    "HF-2: vùng chạm thực và hit area UNKNOWN.",
+    "HF-3: đã ghi clipping nút Xem lịch; khả năng cuộn tới các khung giờ cuối/detail và CTA checkout UNKNOWN. Text200% chưa kiểm.",
+    "HF-4: focus, bàn phím và screen reader UNKNOWN.",
+    "HF-5: ảnh có lỗi tranh chấp19:00 và empty Đã qua; loading và các state khác chưa có bằng chứng.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh; trạng thái giờ có nhãn chữ, không thấy CTA khác nhiệm vụ cạnh tranh, chi phí ẩn hay bằng chứng bịa. Các màn có nhãn dữ liệu mẫu.",
+    "HF-7: browser/system back và giữ form khi đổi giờ UNKNOWN.",
+    "Không có render riêng màn danh sách sân/lọc quận, các màn ngoài home chưa đủ cả sáng và tối. Không suy ra source thiếu.",
+    "Interaction, tìm kiếm/lọc, persistence, thanh toán và đặt sân/backend thực UNKNOWN; điểm7 chỉ đánh giá chất lượng state nhìn thấy.",
+    "TASTE.md ngoài packet nên chưa kiểm. Đây là agent-heuristic thị giác độc lập, không phải human research hoặc approval."
+  ]
+}

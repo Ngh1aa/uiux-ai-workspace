@@ -1,0 +1,127 @@
+{
+  "reviewer": {
+    "id": "blind-review-repair-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "04-multi-role-1280-dark.jpg": {
+      "Màn này để làm gì?": "Lễ tân phòng khám Răng Xinh xem lịch ba ghế, người đã đến và chỗ trống để đặt lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch hoặc ô Ghế 1 trống lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lịch desktop có thứ tự thời gian rõ; cần cuộn xa từ lịch tới phần chi tiết trên mobile."
+    },
+    "04-multi-role-1280-light.jpg": {
+      "Màn này để làm gì?": "Lễ tân phòng khám Răng Xinh xem lịch ba ghế, người đã đến và chỗ trống để đặt lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch hoặc ô Ghế 1 trống lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lịch desktop có thứ tự thời gian rõ; cần cuộn xa từ lịch tới phần chi tiết trên mobile."
+    },
+    "04-multi-role-390-dark.jpg": {
+      "Màn này để làm gì?": "Lễ tân phòng khám Răng Xinh xem lịch ba ghế, người đã đến và chỗ trống để đặt lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch hoặc ô Ghế 1 trống lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ô tìm kiếm bị bóp còn một vệt hẹp, biểu tượng vượt ra ngoài, không đọc được placeholder; phần thông tin chung chiếm nhiều đầu màn."
+    },
+    "04-multi-role-390-light-04-conflict.png": {
+      "Màn này để làm gì?": "Báo trùng lịch cho khách vãng lai và gợi ý chuyển sang Ghế 1 lúc 10:30.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chuyển sang Ghế 1 lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lỗi và hướng sửa rõ; hộp dài gần hết chiều cao điện thoại nên cần kiểm tra cuộn khi bàn phím mở."
+    },
+    "04-multi-role-390-light-04-doctor.png": {
+      "Màn này để làm gì?": "Bác sĩ xem bệnh nhân tiếp theo, dị ứng, kế hoạch khám và ghi chú.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm tra cảnh báo penicillin, đọc hồ sơ, sau đó nhập và lưu ghi chú mẫu.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Các việc lưu ghi chú và gọi bệnh nhân nằm rất xa nhau trên mobile; nhãn Bệnh nhân tiếp theo trong khi ca đang khám cần rõ hơn."
+    },
+    "04-multi-role-390-light-04-no-permission.png": {
+      "Màn này để làm gì?": "Giải thích lễ tân không có quyền xem doanh thu và mô tả quyền từng vai trò.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về lịch hôm nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông báo rõ, nhưng nút thử mở lại trang doanh thu là thao tác kiểm thử lẫn trong nội dung dành cho người dùng."
+    },
+    "04-multi-role-390-light-04-owner.png": {
+      "Màn này để làm gì?": "Chủ phòng khám xem doanh thu tháng, hôm nay và hiệu suất ghế.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem dữ liệu và giới hạn biểu đồ để hiểu phần ngày 1–27 chưa có số liệu.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Khoảng trắng đầu trang lớn trước chỉ số kinh doanh; cách ghi chưa đủ 7 ngày từ 20/10 đến 28/10 gây thắc mắc về mốc dữ liệu."
+    },
+    "04-multi-role-390-light.jpg": {
+      "Màn này để làm gì?": "Lễ tân phòng khám Răng Xinh xem lịch ba ghế, người đã đến và chỗ trống để đặt lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch hoặc ô Ghế 1 trống lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ô tìm kiếm bị bóp còn một vệt hẹp, biểu tượng vượt ra ngoài, không đọc được placeholder; phần thông tin chung chiếm nhiều đầu màn."
+    }
+  },
+  "hard_fails": [
+    {
+      "code": "HF-3",
+      "image": "04-multi-role-390-light.jpg",
+      "observation": "Hàng công cụ dưới nút Đặt lịch: ô tìm bệnh nhân bị co còn một vệt hẹp khoảng 20 px, placeholder biến mất và kính lúp nằm vượt mép phải của ô. Cùng lỗi nhìn thấy ở ảnh 390-dark. Cần cho search một hàng/full width trên mobile rồi đặt hai status ở hàng riêng."
+    }
+  ],
+  "scores": {
+    "1": 3,
+    "2": 3,
+    "3": 2,
+    "4": 4,
+    "5": 4,
+    "6": 3,
+    "7": 4,
+    "8": 4,
+    "9": 2,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "1",
+      "image": "04-multi-role-390-light-04-doctor.png",
+      "element": "Thông tin thương hiệu, giờ mở cửa, ngày và bộ đổi vai chiếm phần lớn đầu màn trước tiêu đề Bệnh nhân tiếp theo.",
+      "fix": "Thu gọn app chrome mobile để bác sĩ nhìn thấy tên bệnh nhân, dị ứng và việc tiếp theo ngay đầu viewport."
+    },
+    {
+      "dimension": "2",
+      "image": "04-multi-role-390-light-04-owner.png",
+      "element": "Khối thương hiệu và giờ mở 8:00–20:00 nằm trước tổng quan kinh doanh, khiến số liệu chính bắt đầu gần giữa viewport.",
+      "fix": "Giảm vai trò thị giác của thông tin chung, ưu tiên câu hỏi của từng vai trò trong màn đầu."
+    },
+    {
+      "dimension": "3",
+      "image": "04-multi-role-390-dark.jpg",
+      "element": "Search co hẹp trong cùng hàng với hai status và biểu tượng vượt biên ô.",
+      "fix": "Cho search flex-basis 100% hoặc grid full row trên mobile; status dùng hàng bên dưới, giữ khoảng cách và label."
+    },
+    {
+      "dimension": "6",
+      "image": "04-multi-role-390-light-04-owner.png",
+      "element": "Giá trị Chủ phòng khám trong bộ chọn vai bị cắt ở cuối, trong khi các nhãn vai khác ngắn vẫn đọc trọn.",
+      "fix": "Đảm bảo control đủ chỗ hiển thị nhãn dài nhất hoặc dùng bộ chọn toàn chiều ngang ở mobile, cùng quy tắc với các vai."
+    },
+    {
+      "dimension": "9",
+      "image": "04-multi-role-390-light.jpg",
+      "element": "Search chưa chuyển bố cục ở 390 px; lịch đã chuyển thành danh sách nhưng phần chi tiết nằm sau toàn bộ lịch dài.",
+      "fix": "Sửa search và cân nhắc mở chi tiết dạng sheet/section ngay khi chọn lịch trên mobile; kiểm tra việc trở lại danh sách và giữ vị trí."
+    },
+    {
+      "dimension": "7",
+      "image": "04-multi-role-390-light-04-conflict.png",
+      "element": "Thông báo xung đột nêu đúng ghế/giờ/người đang chiếm lịch và có nút chuyển sang 10:30.",
+      "fix": "Giữ hành động phục hồi trực tiếp và nguyên tắc không tự ghi đè lịch."
+    },
+    {
+      "dimension": "8",
+      "image": "04-multi-role-390-light-04-owner.png",
+      "element": "Biểu đồ đánh dấu ngày 1–27 chưa có số liệu và giải thích không xem phần thiếu là 0.",
+      "fix": "Giữ phân biệt dữ liệu thiếu với giá trị 0; cần bổ sung dữ liệu thật trước khi dùng biểu đồ để đọc xu hướng."
+    }
+  ],
+  "not_checked": [
+    "Đây là agent-heuristic độc lập trên screenshot; không phải human research, human approval hay xác nhận triển khai.",
+    "HF-1: chưa đo tỷ lệ tương phản pixel AA cho toàn bộ chữ, icon và hai theme; quan sát thị giác không đủ xác nhận 4.5:1/3:1.",
+    "HF-2: chưa đo vùng nhận chạm thực tế; viền hoặc chữ nhỏ trên screenshot không chứng minh kích thước hit area.",
+    "HF-4: chưa kiểm bàn phím, thứ tự focus, focus indicator thực tế, screen reader và focus trap/return của modal.",
+    "HF-5: chưa quan sát đủ mọi trạng thái động, loading, error, empty; không suy thiếu ảnh thành thiếu implementation.",
+    "HF-7: chưa kiểm browser back, lịch sử điều hướng, gesture quay lại và phục hồi trạng thái.",
+    "Chưa kiểm chữ phóng 200%, font scale, nội dung dài, bàn phím ảo hoặc thiết bị thật.",
+    "Chưa kiểm backend/API, lưu dữ liệu, quyền dữ liệu, mạng lỗi, thao tác thật và thông báo thành công.",
+    "HF-6/HF-8/HF-9/HF-10: không thấy vi phạm trong ảnh; nhãn trạng thái có chữ, dữ liệu và phân quyền được ghi rõ là mô phỏng.",
+    "Brief bắt buộc 1280/1440 desktop; packet chỉ cho ảnh 1280 của lễ tân, các vai khác chỉ có 390. Chưa kiểm desktop 1440 và doctor/owner/no-permission 1280; không suy thành thiếu implementation.",
+    "Chưa kiểm role authorization tại backend, URL trực tiếp thật, khả năng sửa hồ sơ/đặt lịch theo quyền hoặc rò dữ liệu giữa vai.",
+    "Thông tin Ghế 3 từ 20/10 chưa đủ 7 ngày là dữ liệu được brief cung cấp; chưa có chuỗi dữ liệu để xác nhận độ đầy đủ, không quy là dữ liệu bịa.",
+    "Chưa có human approval cho hướng thiết kế; review này không thay cổng duyệt hướng."
+  ]
+}

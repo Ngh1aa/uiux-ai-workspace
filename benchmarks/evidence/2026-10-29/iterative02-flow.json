@@ -1,0 +1,117 @@
+{
+  "status": "PASS",
+  "fixture_clock": "23/10",
+  "runs": [
+    {
+      "width": 390,
+      "colorScheme": "light",
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "schedule states and court search recover",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "colorScheme": "dark",
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "schedule states and court search recover",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "colorScheme": "light",
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "schedule states and court search recover",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "colorScheme": "dark",
+      "status": "PASS",
+      "scenarios": [
+        {
+          "name": "correct object role and contextual back",
+          "status": "PASS"
+        },
+        {
+          "name": "review before action and race failure retains input",
+          "status": "PASS"
+        },
+        {
+          "name": "recover to valid time and consistent result; browser back preserves context",
+          "status": "PASS"
+        },
+        {
+          "name": "edit and reconfirm amount count note",
+          "status": "PASS"
+        },
+        {
+          "name": "schedule states and court search recover",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "browser fixture only; no real booking/payment or native device"
+  ]
+}

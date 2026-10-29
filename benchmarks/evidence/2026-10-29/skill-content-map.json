@@ -1,0 +1,314 @@
+[
+  {
+    "skill": "accessibility",
+    "from": "skills_UIUX/accessibility/SKILL.md",
+    "baseline_sha256": "82113281a2db4a8b07fabf059e8fb14901418986b4712cb6cd91e2fa0a4620e4",
+    "to": "skills_UIUX/accessibility/references/practice-detail.md",
+    "reference_sha256": "54d743695630cd7762e5c4a0ffcb28b7d3ee0fd9e733ca066e9b35fd85f78019",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "android-app-design",
+    "from": "skills_UIUX/android-app-design/SKILL.md",
+    "baseline_sha256": "eff6dba2b25f60495109fd2b13bc64d21ef93cabe7877171eaa8e9626bede29e",
+    "to": "skills_UIUX/android-app-design/references/practice-detail.md",
+    "reference_sha256": "a9bbfbe25643d49edec6af428ba927af2dab60a5ce592459b06f59b5c4fd851f",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "ios-app-design",
+    "from": "skills_UIUX/ios-app-design/SKILL.md",
+    "baseline_sha256": "b3111dbb01d8251a855a8ca72878208c817252db91e2e01bd456b24498d922f2",
+    "to": "skills_UIUX/ios-app-design/references/practice-detail.md",
+    "reference_sha256": "2103e1bd87db7c90d817628474adeb650d555ae39ad421c678d1b7dbfa8778a8",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "asset-media-and-art-direction",
+    "from": "skills_UIUX/asset-media-and-art-direction/SKILL.md",
+    "baseline_sha256": "2310af256790e396dd716fa959ae1f38e0981195813657dcc38c5c5f2940193e",
+    "to": "skills_UIUX/asset-media-and-art-direction/references/practice-detail.md",
+    "reference_sha256": "a4a12da9752d4d2dec61c54579c4c71fb34b0054794b7e390a243f5746da1314",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "audience-intent-and-top-tasks",
+    "from": "skills_UIUX/audience-intent-and-top-tasks/SKILL.md",
+    "baseline_sha256": "1b535901662fbd79e23c2fe0f896a9a7248d94343882098b6ae037447950a583",
+    "to": "skills_UIUX/audience-intent-and-top-tasks/references/practice-detail.md",
+    "reference_sha256": "967c32f8c7cfa465682a940c794ecc7c7bdd37368a6fff02e04e5d5fb3c405c1",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "authentication-account-and-recovery-ux",
+    "from": "skills_UIUX/authentication-account-and-recovery-ux/SKILL.md",
+    "baseline_sha256": "e8da9c6595e77038e87dca0a64ed4c17851a3a1896ecb03cb3a82760edd01e30",
+    "to": "skills_UIUX/authentication-account-and-recovery-ux/references/practice-detail.md",
+    "reference_sha256": "a25ff5a7338c6d073115bed80fda9fbe07ff62a376e92b7d4faa41fb27a9bd01",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "brand-distinctiveness-and-visual-signature",
+    "from": "skills_UIUX/brand-distinctiveness-and-visual-signature/SKILL.md",
+    "baseline_sha256": "e441b320a2de9a3e9b0681c01ac3ec3fa1fcdafbf4b294e7872e79050c8bd280",
+    "to": "skills_UIUX/brand-distinctiveness-and-visual-signature/references/practice-detail.md",
+    "reference_sha256": "caca974ee2e49b732f4f5b60a435c5b4f477202cbee8176215808b2f914d17b4",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "brand-guidelines",
+    "from": "skills_UIUX/brand-guidelines/SKILL.md",
+    "baseline_sha256": "f41ce00d31a2aa322be8da2cd514025f1e50367f3c916f2f3a0409a21ac950ac",
+    "to": "skills_UIUX/brand-guidelines/references/practice-detail.md",
+    "reference_sha256": "ec7e9176224d1f80dbdecd1b1ccd4065658a7b9898768538719e2a813703255b",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "content-design-and-question-design",
+    "from": "skills_UIUX/content-design-and-question-design/SKILL.md",
+    "baseline_sha256": "27e8e4557c0b2de814a18a4854bd8b2946a15adc4e1f2b17134b79ae6b1b5fbd",
+    "to": "skills_UIUX/content-design-and-question-design/references/practice-detail.md",
+    "reference_sha256": "ab7c64b342d4110458c3755f098d12d0c36f6c983d7885e3812c4a0d70f663b7",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "conversion-and-content",
+    "from": "skills_UIUX/conversion-and-content/SKILL.md",
+    "baseline_sha256": "a073d28ecdec303fe969b897b3c0ec619e03463511271b92021b3278e0d9a76a",
+    "to": "skills_UIUX/conversion-and-content/references/practice-detail.md",
+    "reference_sha256": "a023b5b971ce2d9b82fe66fd8c1b49293bb537fafa62d561fdcec35550edafc7",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "data-tables-and-enterprise-ux",
+    "from": "skills_UIUX/data-tables-and-enterprise-ux/SKILL.md",
+    "baseline_sha256": "3d23fb904cde63f9b0b49102d182b850097b69229a91d3301ff515b6ca0a0cb4",
+    "to": "skills_UIUX/data-tables-and-enterprise-ux/references/practice-detail.md",
+    "reference_sha256": "c5bf2d7ab2b092d815db12fc25498e8a3d0ab2d524dbd89e24d5e7bb6dadc99a",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "data-visualization-and-dashboard-ux",
+    "from": "skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md",
+    "baseline_sha256": "ac17fcdc78e1675c0c5d1c2cf2a16ccbe8638bd2322697e02aec29b88467d11f",
+    "to": "skills_UIUX/data-visualization-and-dashboard-ux/references/practice-detail.md",
+    "reference_sha256": "a2f0cc86c4cac7473bdbbe9df05c80b005cccf6429733d18962d55be2063ff49",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "design-reference-research-and-benchmark",
+    "from": "skills_UIUX/design-reference-research-and-benchmark/SKILL.md",
+    "baseline_sha256": "adc4c6914db884eef73ae8edf8595cab4e78b1e574a518df1cc1768aed4e3bda",
+    "to": "skills_UIUX/design-reference-research-and-benchmark/references/practice-detail.md",
+    "reference_sha256": "547c376e59a9a7494f8a33887c0c34c38d40cc6df19f022f7ed0ad277474e339",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "design-system-and-components",
+    "from": "skills_UIUX/design-system-and-components/SKILL.md",
+    "baseline_sha256": "c02be15561ad7fb339d5401b8b0f8229322562c11f67010db3a3a892f223a7b3",
+    "to": "skills_UIUX/design-system-and-components/references/practice-detail.md",
+    "reference_sha256": "68e51eab5b1eb253debfe6e942e50f66fb4954963523fd017b930abfa0521156",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "ethical-ux-and-deceptive-patterns",
+    "from": "skills_UIUX/ethical-ux-and-deceptive-patterns/SKILL.md",
+    "baseline_sha256": "cbd234bc87fd0e9a151a73e7605164ea0891ad53cc6ec29254e0307d42d3fa71",
+    "to": "skills_UIUX/ethical-ux-and-deceptive-patterns/references/practice-detail.md",
+    "reference_sha256": "4a095410a5adb67f9fa9e6d84031d8ebbc5899f3248e1b0a1a3df5ddba334b47",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "experience-principles-and-signature-moments",
+    "from": "skills_UIUX/experience-principles-and-signature-moments/SKILL.md",
+    "baseline_sha256": "5115f33c948e7d3795d379899187324495a4fbda695bc11525c5c1f5ee7d505e",
+    "to": "skills_UIUX/experience-principles-and-signature-moments/references/practice-detail.md",
+    "reference_sha256": "75e8cc5eb0d714f95a9125c66d0a487446fe05799739c6bae45db36aa8cb3204",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "frontend-implementation",
+    "from": "skills_UIUX/frontend-implementation/SKILL.md",
+    "baseline_sha256": "86510655e69e09b2abb5ef834087ec470d95d134b0c684173c1e369e8d861ef0",
+    "to": "skills_UIUX/frontend-implementation/references/practice-detail.md",
+    "reference_sha256": "b776082d468c9fb4f212fcf50ad45105191a986cb240cd590fa43450de46eade",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "human-ai-interaction-design",
+    "from": "skills_UIUX/human-ai-interaction-design/SKILL.md",
+    "baseline_sha256": "09e8ca2a2a482d99823d0c556749da79dfb5e73ef81d561939156f829148b5c3",
+    "to": "skills_UIUX/human-ai-interaction-design/references/practice-detail.md",
+    "reference_sha256": "605fac08459b7ea2cf591d3c5003bbd40ed8ab3f62973c9131c1cb5ddfabed99",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "information-architecture",
+    "from": "skills_UIUX/information-architecture/SKILL.md",
+    "baseline_sha256": "23d2f378e2acd65454333c29e610e22955b1aa1d38e8bb1d37767f768369303f",
+    "to": "skills_UIUX/information-architecture/references/practice-detail.md",
+    "reference_sha256": "a63028d6535e4b49f45b1bc38a51e45c6837f8fe21056f06ce7f3b5165610521",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "interaction-patterns-and-form-ux",
+    "from": "skills_UIUX/interaction-patterns-and-form-ux/SKILL.md",
+    "baseline_sha256": "94987070a6283c12f2b89c9e82a52619fdf45301a2fbb226adc6b5037b50c5e6",
+    "to": "skills_UIUX/interaction-patterns-and-form-ux/references/practice-detail.md",
+    "reference_sha256": "86c4cd9a0cd8f9882de07b20a2809848b5ce1fb17e544f012b290fb1c042b0ed",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "localization-and-i18n",
+    "from": "skills_UIUX/localization-and-i18n/SKILL.md",
+    "baseline_sha256": "2517519993ff220a79f0cf912f36b37c3aa79597fc9501a41f637b0f5934101c",
+    "to": "skills_UIUX/localization-and-i18n/references/practice-detail.md",
+    "reference_sha256": "a2d3b06800a7ac9f4858dfd7ce367d5a624f4a8d88a079b679d6213370e16c39",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "media-crop-and-layout-integrity",
+    "from": "skills_UIUX/media-crop-and-layout-integrity/SKILL.md",
+    "baseline_sha256": "909e6fac30df3497649297040deff4e574b7c032893ab271f881fcbdd4cce3c2",
+    "to": "skills_UIUX/media-crop-and-layout-integrity/references/practice-detail.md",
+    "reference_sha256": "a1918e68c15c6dd6ff73b0e7388096ceaab32277fd1db83a74b20943711f6771",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "mobile-app-design",
+    "from": "skills_UIUX/mobile-app-design/SKILL.md",
+    "baseline_sha256": "b40cc4f452c25a9fdb3060dee85ffd5aa064da3893bb5b6bb1dfdb80dc6d6456",
+    "to": "skills_UIUX/mobile-app-design/references/practice-detail.md",
+    "reference_sha256": "99e5982d00e45c907c0392c81c3430dd963bf4efa61e83445508bd76b42dcf84",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "motion-and-microinteractions",
+    "from": "skills_UIUX/motion-and-microinteractions/SKILL.md",
+    "baseline_sha256": "c9ab024ae7c32122c60218795475ae281c16fd70f17cca1c4fa5193817ae8d19",
+    "to": "skills_UIUX/motion-and-microinteractions/references/practice-detail.md",
+    "reference_sha256": "238a445966892ad965593325f1d8541ea74de3c0127927faaeb7a3fd8b17288a",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "real-world-artifact-and-domain-metaphor-design",
+    "from": "skills_UIUX/real-world-artifact-and-domain-metaphor-design/SKILL.md",
+    "baseline_sha256": "9c5940e4c2500e263d43ecf9027af821d223178c697868ac54b4e822d72aaebd",
+    "to": "skills_UIUX/real-world-artifact-and-domain-metaphor-design/references/practice-detail.md",
+    "reference_sha256": "f40a446852528c9cb678590178a20369b709d5f4673809ceef6f18183b5c3052",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "reference-analysis-and-design-to-code",
+    "from": "skills_UIUX/reference-analysis-and-design-to-code/SKILL.md",
+    "baseline_sha256": "1c839d6bb4e7e8085a1b1908432ca1bf24be85950baaf350082efb6fec94b36d",
+    "to": "skills_UIUX/reference-analysis-and-design-to-code/references/practice-detail.md",
+    "reference_sha256": "13b2c3507fc60aa116a7912c067aaf3049a80ebedf01fa03305d94a3ddaca70e",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "responsive-and-device-strategy",
+    "from": "skills_UIUX/responsive-and-device-strategy/SKILL.md",
+    "baseline_sha256": "0c8a41b1fbb3f2a9196c6d83db4a9eb22aa96fc48ac7a1f926d9334592ea1361",
+    "to": "skills_UIUX/responsive-and-device-strategy/references/practice-detail.md",
+    "reference_sha256": "a67ab35f35d6141c9318d862a7ac2ecf3d79c8d05bc49cc0cbb36e9ca22b8e28",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "site-search-and-findability",
+    "from": "skills_UIUX/site-search-and-findability/SKILL.md",
+    "baseline_sha256": "983c8b0a208e3cef3de7a90cdb9bc9a79066743deedcc494b9c3c234dc65872e",
+    "to": "skills_UIUX/site-search-and-findability/references/practice-detail.md",
+    "reference_sha256": "5a66c2431c69b45623ddb66f7da9760d55e68de5203ccadc3b0b04593c35e093",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "state-feedback-and-error-recovery",
+    "from": "skills_UIUX/state-feedback-and-error-recovery/SKILL.md",
+    "baseline_sha256": "4da3d8280fa9d0cc75313dcfcd571466d590f12f6ca4936126a1f04b84fe5948",
+    "to": "skills_UIUX/state-feedback-and-error-recovery/references/practice-detail.md",
+    "reference_sha256": "905f80b68c2c009c1912aa546964f56470ed95a1f0474511d662588aac70ed0b",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "trust-credibility-and-transparency",
+    "from": "skills_UIUX/trust-credibility-and-transparency/SKILL.md",
+    "baseline_sha256": "c5c428163aed08ed4d38efb743eab158f12ea7a7e4f4ee005b21e5e15f181af4",
+    "to": "skills_UIUX/trust-credibility-and-transparency/references/practice-detail.md",
+    "reference_sha256": "330cf59fbf4fb84e1fbab10a75cb64701c5e048c5de07e86348bf828891cbc25",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "ux-laws-and-heuristics",
+    "from": "skills_UIUX/ux-laws-and-heuristics/SKILL.md",
+    "baseline_sha256": "b11355cdc0885b3ac47b21f33468d57bb618c82590ba901d60c7edfe5954fefd",
+    "to": "skills_UIUX/ux-laws-and-heuristics/references/practice-detail.md",
+    "reference_sha256": "e8f1c38c13859e95ff0c10b1249bf81c46d13292ea39238ad4dd1db0df45e097",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "ux-writing-and-microcopy",
+    "from": "skills_UIUX/ux-writing-and-microcopy/SKILL.md",
+    "baseline_sha256": "0bdcfe5e854c86109933016c3d0a5c696d5e4946690f8c2bb2d95b46f56fcc9d",
+    "to": "skills_UIUX/ux-writing-and-microcopy/references/practice-detail.md",
+    "reference_sha256": "03ccf25a6a31657e6bc5229c22b29bcc82f91ef4dc8f1340996c2f11720e0124",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "visual-taste-calibration",
+    "from": "skills_UIUX/visual-taste-calibration/SKILL.md",
+    "baseline_sha256": "a458b802b7d7832ee25f2f57eef6cb953ebd1d69e6465580e627af9fec672dff",
+    "to": "skills_UIUX/visual-taste-calibration/references/practice-detail.md",
+    "reference_sha256": "b6bafa960c47ef9e1e9584a03be3795b0e0f38696e4fdd1fd0478f8e5f0695a6",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "web-quality-and-performance",
+    "from": "skills_UIUX/web-quality-and-performance/SKILL.md",
+    "baseline_sha256": "3b5f249653bb1354956c0eab72e85566b0d404799d8625403facbca0483bc327",
+    "to": "skills_UIUX/web-quality-and-performance/references/practice-detail.md",
+    "reference_sha256": "0b2a4d6f7d396e8b06a681c5f460adde6c3cffd95e6dc3feefd118af6fb4115a",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "website-audit-and-redesign",
+    "from": "skills_UIUX/website-audit-and-redesign/SKILL.md",
+    "baseline_sha256": "e9b1d7a94ff6d87f41a3e1ca4cd11e0c01394d97ffefed94c99ffd6a16de2e34",
+    "to": "skills_UIUX/website-audit-and-redesign/references/practice-detail.md",
+    "reference_sha256": "1f51759c4fe82d93b562d22414d7282f858ad4ef6657e567e4c8f78ca97bcb79",
+    "capability": "Full original body retained; relative links rebased; primary Vietnamese task summary."
+  },
+  {
+    "skill": "ux-structure-and-flow-design",
+    "from": "skills_UIUX/ux-structure-and-flow-design/SKILL.md",
+    "baseline_sha256": "465dce65dd8d7b975573ecf472c3d7f04426bec5a40e39b9326b488b7db8d205",
+    "to": "skills_UIUX/ux-structure-and-flow-design/references/practice-detail.md",
+    "reference_sha256": "51a1520e9380c3098e04d8364d38ce1cf66a2c73e6c18c88c1e080e4f787ed83",
+    "capability": "Full body retained, links rebased, task-specific Vietnamese primary."
+  },
+  {
+    "skill": "visual-design-direction",
+    "from": "skills_UIUX/visual-design-direction/SKILL.md",
+    "baseline_sha256": "52b2c0da81778613d6ca464e60518832a69e060229cd5fc4ccc5adbb67fb0eb4",
+    "to": "skills_UIUX/visual-design-direction/references/practice-detail.md",
+    "reference_sha256": "a989f0b631d8aacec9452d26af37a1d7de17304e21f4b66d603cbeb39265093d",
+    "capability": "Full body retained, links rebased, task-specific Vietnamese primary."
+  },
+  {
+    "skill": "ui-craft-and-visual-qa",
+    "from": "skills_UIUX/ui-craft-and-visual-qa/SKILL.md",
+    "baseline_sha256": "3074b224190d07540b589dd57786c77f73582a9a4a5954a750eb79845aba75ec",
+    "to": "skills_UIUX/ui-craft-and-visual-qa/references/practice-detail.md",
+    "reference_sha256": "1e42c7b6a3ebc6d935aeac79ca6ff87b265818768f901207a1303a7f14909d25",
+    "capability": "Full body retained, links rebased, task-specific Vietnamese primary."
+  },
+  {
+    "skill": "design-critique-and-rationale",
+    "from": "skills_UIUX/design-critique-and-rationale/SKILL.md",
+    "baseline_sha256": "445880a250f49e63d9a6563443e9a4710eff12f37d3843113c9bcb04e1cc416e",
+    "to": "skills_UIUX/design-critique-and-rationale/references/practice-detail.md",
+    "reference_sha256": "18f57c596bb2ed0507197f30988197f19d66d83905a78933a4545b4a10e8af19",
+    "capability": "Full body retained, links rebased, task-specific Vietnamese primary."
+  }
+]
