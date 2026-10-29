@@ -1,0 +1,113 @@
+{
+  "reviewer": {
+    "id": "fresh-gate-review-2026-10-30",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "review_stage": "re-review",
+  "cold_protocol": "re-review / known brief; not a first cold review",
+  "cold": {
+    "04-multi-role-1280-dark.jpg": {
+      "Màn này để làm gì?": "Lễ tân xem lịch theo ghế, người muộn và giờ trống.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Hồ Ngọc Mai muộn 15 phút.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lịch kéo dài dưới 800 px; chưa biết người dùng cuộn thực tế."
+    },
+    "04-multi-role-1280-light.jpg": {
+      "Màn này để làm gì?": "Xem ai đang đến và chọn lịch hẹn để xử lý.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt muộn hoặc Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Bảng khá thưa theo thời gian; có thể giảm chiều cao hàng."
+    },
+    "04-multi-role-1440-dark.jpg": {
+      "Màn này để làm gì?": "Quản lý lịch buổi sáng theo ba ghế.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Thẻ người muộn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nhãn phụ trong lịch nhỏ hơn tiêu đề nhiều; cần kiểm độ đọc ở cỡ chữ lớn."
+    },
+    "04-multi-role-1440-light.jpg": {
+      "Màn này để làm gì?": "Đối chiếu lịch ghế và chi tiết lượt đang chọn.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ghế 1 trống lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy chồng lấn chắc chắn; vùng lịch cần cuộn dọc."
+    },
+    "04-multi-role-390-dark.jpg": {
+      "Màn này để làm gì?": "Xem lịch lễ tân theo danh sách trên màn nhỏ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch hoặc lượt muộn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Header và giờ mở cửa chiếm nhiều chiều cao; mobile là bổ sung ngoài brief desktop."
+    },
+    "04-multi-role-390-light-04-conflict.png": {
+      "Màn này để làm gì?": "Xử lý đặt khách vãng lai vào giờ đã có người.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chuyển sang Ghế 1 lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Phần cuối modal chưa thấy nút kiểm lại; có thể cuộn nội bộ, chưa kết luận bị mất."
+    },
+    "04-multi-role-390-light-04-doctor.png": {
+      "Màn này để làm gì?": "Bác sĩ xem hồ sơ và trạng thái khám đang diễn ra.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm dị ứng rồi cập nhật ghi chú.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Gọi bệnh nhân kế vẫn là nút dù nhãn phụ nói chưa có người kế; cần xem phản hồi runtime."
+    },
+    "04-multi-role-390-light-04-no-permission.png": {
+      "Màn này để làm gì?": "Thông báo lễ tân không có quyền xem doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về lịch hôm nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ma trận quyền trên mobile phải xuống nhiều dòng nhưng vẫn đọc được."
+    },
+    "04-multi-role-390-light-04-owner.png": {
+      "Màn này để làm gì?": "Xem doanh thu, hiệu suất và giới hạn dữ liệu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem dữ liệu và giới hạn biểu đồ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ngày 1–27 thiếu dữ liệu được ghi rõ, nên không thể đọc xu hướng tháng từ biểu đồ."
+    },
+    "04-multi-role-390-light.jpg": {
+      "Màn này để làm gì?": "Lễ tân xem lịch dạng danh sách.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt muộn hoặc Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông tin chi tiết nằm sau danh sách dài, đối chiếu phải cuộn nhiều."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4.5,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4.5,
+    "7": 4,
+    "8": 4,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "04-multi-role-1440-light.jpg",
+      "element": "Các hàng lịch có chiều cao lớn",
+      "fix": "Thử giảm nhẹ chiều cao hàng để xem nhiều ca hơn trong 900 px, giữ đủ chỗ ba dòng và vùng click."
+    },
+    {
+      "dimension": "7",
+      "image": "04-multi-role-390-light-04-conflict.png",
+      "element": "Phần cuối modal và CTA kiểm tra lịch",
+      "fix": "Kiểm có thể cuộn trọn nội dung modal, nút cuối tiếp cận bằng bàn phím, focus bị giữ trong dialog và nền không cuộn; không suy ra các lỗi này từ ảnh."
+    },
+    {
+      "dimension": "7",
+      "image": "04-multi-role-390-light-04-doctor.png",
+      "element": "Gọi bệnh nhân kế trong khi chưa có bệnh nhân kế tiếp",
+      "fix": "Kiểm phản hồi no-next rõ ràng hoặc đổi trạng thái nút theo danh sách thực, tránh thao tác không có kết quả."
+    },
+    {
+      "dimension": "9",
+      "image": "04-multi-role-390-light.jpg",
+      "element": "Header thương hiệu, giờ mở cửa và bộ đổi vai",
+      "fix": "Nếu mobile thuộc scope giao tiếp theo, thu gọn metadata để lịch và người muộn xuất hiện sớm hơn."
+    }
+  ],
+  "not_checked": [
+    "Re-review / known brief: reviewer đã biết đề và đã xem phiên ảnh trước; đây không phải first cold review.",
+    "Keyboard, Tab/focus path, screen reader, tên và vai trò accessible, chữ phóng 200%.",
+    "Đo contrast AA đầy đủ và vùng hit target thực tế.",
+    "Runtime click/back/scroll, loading, lưu và khôi phục dữ liệu, native/AT.",
+    "Nội dung ngoài viewport không được coi là bị mất; các trạng thái không có ảnh được ghi UNKNOWN.",
+    "Bác sĩ, chủ phòng khám, phân quyền và modal xung đột ở desktop 1280/1440 trong cả hai theme: UNKNOWN vì packet chỉ chụp những trạng thái này ở mobile light.",
+    "Trạng thái trước bắt đầu khám, sau lưu ghi chú, sau đổi giờ xung đột và nội dung cuối modal chưa đủ capture.",
+    "Cổng duyệt hướng bởi người dùng, layout strict và quyền backend không xác nhận từ ảnh."
+  ],
+  "score_scope": "Only captures included in this packet; absent views and states UNKNOWN",
+  "gate_result": "UNKNOWN",
+  "summary": "Khung app và điều hướng theo vai trò nhất quán. Lịch ghế rõ, dị ứng nổi bật, màn đang khám có trạng thái xác nhận, quyền và giới hạn biểu đồ được ghi minh bạch. Không thấy hard fail chắc chắn trong mười ảnh."
+}

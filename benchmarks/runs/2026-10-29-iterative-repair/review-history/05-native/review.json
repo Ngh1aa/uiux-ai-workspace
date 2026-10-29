@@ -1,0 +1,126 @@
+{
+  "reviewer": {
+    "id": "blind-review-repair-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "05-native-1280-dark.jpg": {
+      "Màn này để làm gì?": "Phụ huynh xem bài cần nộp, thời khoá biểu ngày mai, tin giáo viên và xin nghỉ cho Trần Gia Hân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa vì đến hạn sớm nhất.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông tin bài cần nộp dễ đọc; vùng giới thiệu bản xem trước chiếm thêm đầu màn, tin cô bị khuất sau thanh tab trong ảnh đầu."
+    },
+    "05-native-1280-light.jpg": {
+      "Màn này để làm gì?": "Phụ huynh xem bài cần nộp, thời khoá biểu ngày mai, tin giáo viên và xin nghỉ cho Trần Gia Hân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa vì đến hạn sớm nhất.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông tin bài cần nộp dễ đọc; vùng giới thiệu bản xem trước chiếm thêm đầu màn, tin cô bị khuất sau thanh tab trong ảnh đầu."
+    },
+    "05-native-390-dark.jpg": {
+      "Màn này để làm gì?": "Phụ huynh xem bài cần nộp, thời khoá biểu ngày mai, tin giáo viên và xin nghỉ cho Trần Gia Hân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa vì đến hạn sớm nhất.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông tin bài cần nộp dễ đọc; vùng giới thiệu bản xem trước chiếm thêm đầu màn, tin cô bị khuất sau thanh tab trong ảnh đầu."
+    },
+    "05-native-390-light-05-Android-cancel.png": {
+      "Màn này để làm gì?": "Xác nhận huỷ đơn nghỉ cả ngày thứ Hai 27/10, lý do đi khám răng.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn nếu mở nhầm, Huỷ đơn nếu đã quyết định.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Hai lựa chọn rõ và có cách thoát; phần mô tả chưa gửi thông báo nhấn mạnh đây là bản mô phỏng."
+    },
+    "05-native-390-light-05-Android-date-error.png": {
+      "Màn này để làm gì?": "Báo ngày xin nghỉ đã qua, yêu cầu chọn từ 22/10/2025 trở đi và giữ lại nội dung đã nhập.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Trở lại ô Ngày nghỉ để chọn ngày hợp lệ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lỗi ngày nằm xa ô ngày; ảnh iOS không thấy ô ngày ngay tại vị trí đang cuộn và có cả Gửi trên thanh đầu lẫn nút gửi cuối form."
+    },
+    "05-native-390-light-05-Android-home-result.png": {
+      "Màn này để làm gì?": "Hiển thị đơn nghỉ thứ Sáu 24/10 đã lưu trong dữ liệu mẫu cùng thông tin ở trang Hôm nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm tra ngày và lý do đơn nghỉ, hoặc Huỷ đơn nếu cần sửa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nội dung đơn rõ; Huỷ đơn là chữ khá nhỏ giữa card và không có hành động sửa đơn trực tiếp."
+    },
+    "05-native-390-light-05-iOS-cancel.png": {
+      "Màn này để làm gì?": "Xác nhận huỷ đơn nghỉ cả ngày thứ Hai 27/10, lý do đi khám răng.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn nếu mở nhầm, Huỷ đơn nếu đã quyết định.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Hai lựa chọn rõ và có cách thoát; phần mô tả chưa gửi thông báo nhấn mạnh đây là bản mô phỏng."
+    },
+    "05-native-390-light-05-iOS-date-error.png": {
+      "Màn này để làm gì?": "Báo ngày xin nghỉ đã qua, yêu cầu chọn từ 22/10/2025 trở đi và giữ lại nội dung đã nhập.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Trở lại ô Ngày nghỉ để chọn ngày hợp lệ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lỗi ngày nằm xa ô ngày; ảnh iOS không thấy ô ngày ngay tại vị trí đang cuộn và có cả Gửi trên thanh đầu lẫn nút gửi cuối form."
+    },
+    "05-native-390-light-05-iOS-home-result.png": {
+      "Màn này để làm gì?": "Hiển thị đơn nghỉ thứ Sáu 24/10 đã lưu trong dữ liệu mẫu cùng thông tin ở trang Hôm nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm tra ngày và lý do đơn nghỉ, hoặc Huỷ đơn nếu cần sửa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nội dung đơn rõ; Huỷ đơn là chữ khá nhỏ giữa card và không có hành động sửa đơn trực tiếp."
+    },
+    "05-native-390-light.jpg": {
+      "Màn này để làm gì?": "Phụ huynh xem bài cần nộp, thời khoá biểu ngày mai, tin giáo viên và xin nghỉ cho Trần Gia Hân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa vì đến hạn sớm nhất.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông tin bài cần nộp dễ đọc; vùng giới thiệu bản xem trước chiếm thêm đầu màn, tin cô bị khuất sau thanh tab trong ảnh đầu."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 3,
+    "7": 3,
+    "8": 3,
+    "9": 3,
+    "10": 3
+  },
+  "observations": [
+    {
+      "dimension": "6",
+      "image": "05-native-390-light-05-iOS-date-error.png",
+      "element": "Form iOS có Gửi ở thanh đầu và Gửi đơn xin nghỉ ở cuối form cho cùng thao tác; hai nhãn không đồng nhất.",
+      "fix": "Chọn một vị trí gửi chủ đạo theo sheet iOS, hoặc giải thích nếu giữ cả hai và dùng cùng tên hành động; duy trì một trạng thái submit/loading chung. Không phải HF-8 vì chỉ có một nút filled."
+    },
+    {
+      "dimension": "7",
+      "image": "05-native-390-light-05-iOS-date-error.png",
+      "element": "Thông báo ngày đã qua ở dưới ghi chú, trong khi ô ngày không nằm trong phần viewport đang hiển thị; người dùng phải tìm ngược để sửa.",
+      "fix": "Đặt lỗi ngay cạnh ô ngày và khi submit sai đưa focus/scroll về ô đó, giữ các nội dung đã nhập. Cần chụp trạng thái đã đưa người dùng đến ô lỗi."
+    },
+    {
+      "dimension": "8",
+      "image": "05-native-390-light-05-Android-date-error.png",
+      "element": "Ô ngày dùng 10/21/2025 trong khi trợ giúp và lỗi dùng 22/10/2025; copy lỗi dính chữ từ 22/10/2025.",
+      "fix": "Thống nhất định dạng ngày theo locale vi-VN hoặc dùng nhãn ngày bằng chữ; thêm khoảng trắng và làm rõ ngày tối thiểu tại trường."
+    },
+    {
+      "dimension": "9",
+      "image": "05-native-390-light-05-iOS-date-error.png",
+      "element": "Textarea ghi chú có góc kéo resize và bộ chọn buổi dùng mũi tên/select kiểu trình duyệt trong bản xem trước iOS.",
+      "fix": "Trong preview hãy thể hiện input/selection đúng chrome iOS, bỏ tay nắm resize khỏi textarea; kiểm lại sheet, date picker và vùng chạm trên iPhone thật. Đây là đánh giá hình thức, chưa kết luận HF-7."
+    },
+    {
+      "dimension": "10",
+      "image": "05-native-1280-light.jpg",
+      "element": "Hai bản có chrome phân biệt nhưng nhận diện Nhà Trường chủ yếu là bảng xanh nhạt, card và avatarH; dấu hiệu giáo dục còn ít.",
+      "fix": "Tạo một chi tiết có ích cho học đường như nhịp ngày học hoặc ký hiệu môn học nhất quán, không thêm decoration lấn thông tin bài đến hạn."
+    },
+    {
+      "dimension": "1",
+      "image": "05-native-390-light-05-Android-cancel.png",
+      "element": "Xác nhận huỷ nêu rõ ngày/buổi/lý do và có Giữ đơn lẫn Huỷ đơn.",
+      "fix": "Giữ thông tin cụ thể này; kiểm việc đóng dialog và phục hồi focus ở lượt kiểm tương tác."
+    }
+  ],
+  "not_checked": [
+    "Đây là agent-heuristic độc lập trên screenshot; không phải human research, human approval hay xác nhận triển khai.",
+    "HF-1: chưa đo tỷ lệ tương phản pixel AA cho toàn bộ chữ, icon và hai theme; quan sát thị giác không đủ xác nhận 4.5:1/3:1.",
+    "HF-2: chưa đo vùng nhận chạm thực tế; viền hoặc chữ nhỏ trên screenshot không chứng minh kích thước hit area.",
+    "HF-4: chưa kiểm bàn phím, thứ tự focus, focus indicator thực tế, screen reader và focus trap/return của modal.",
+    "HF-5: chưa quan sát đủ mọi trạng thái động, loading, error, empty; không suy thiếu ảnh thành thiếu implementation.",
+    "HF-7: chưa kiểm browser back, lịch sử điều hướng, gesture quay lại và phục hồi trạng thái.",
+    "Chưa kiểm chữ phóng 200%, font scale, nội dung dài, bàn phím ảo hoặc thiết bị thật.",
+    "Chưa kiểm backend/API, lưu dữ liệu, quyền dữ liệu, mạng lỗi, thao tác thật và thông báo thành công.",
+    "HF-3/HF-6/HF-8/HF-9/HF-10: chưa thấy vi phạm chắc chắn trong ảnh cung cấp; phần nội dung nằm ngoài viewport có thể cuộn, chưa kết luận bị cắt.",
+    "Đây là browser preview ghi nhãn minh hoạ, không chứng minh ứng dụng native, platform API, giao nhận đơn, camera/upload hay thông báo thật.",
+    "Chưa kiểm Dynamic Type iOS, Android font scale 200%, VoiceOver, TalkBack, safe areas, bàn phím, nút Back hệ thống và edge swipe.",
+    "Chưa đo touch target 44 pt/48 dp trên thiết bị; kích thước screenshot CSS không đủ xác nhận đơn vị nền tảng.",
+    "Chưa có ảnh Chi tiết bài tập của hai nền tảng, form xin nghỉ mặc định, trạng thái lỗi/dịch vụ và modal dark đầy đủ; không suy thiếu ảnh thành implementationFAIL.",
+    "Ảnh iOS date-error đang cuộn và ẩn trường ngày dưới phần chrome; chưa xác nhận geometry/drag/collapse thực tế của sheet."
+  ]
+}

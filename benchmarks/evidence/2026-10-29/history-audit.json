@@ -1,0 +1,25 @@
+{
+  "baseline": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+  "source": "benchmarks/runs/2026-10-24-v2/02-app/index.html",
+  "placeholder_anchors": 31,
+  "action": "Danh sách sân: Đặt sân này",
+  "visible_screens_before": [
+    "Trang chủ",
+    "Danh sách sân",
+    "Chi tiết sân",
+    "Đặt sân",
+    "Lịch của tôi"
+  ],
+  "visible_screens_after": [
+    "Trang chủ",
+    "Danh sách sân",
+    "Chi tiết sân",
+    "Đặt sân",
+    "Lịch của tôi"
+  ],
+  "result_elements": 0,
+  "visible_text_changed": false,
+  "observation": "Action changes no task state/result; historical sample is an artboard gallery with partial selection handlers, not proof of a complete clickable prototype.",
+  "backend": "UNKNOWN",
+  "historical_scores": "Preserved; not rerated"
+}

@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# These checkers and specimens are bound to frozen benchmark/review hashes.
+ui-craft-and-visual-qa/scripts/*.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+visual-design-direction/examples/decision-lab/* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Exact retained baseline content; its existing HTML-example spaces are not edits.
+responsive-and-device-strategy/references/practice-detail.md -whitespace

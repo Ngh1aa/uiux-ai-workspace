@@ -1,0 +1,308 @@
+{
+  "baseline": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+  "unit": "Unicode whitespace split; full file including code/frontmatter; no token estimate",
+  "scope": "Đường khởi đầu M phổ biến; reference mở theo quyết định chưa tính là đã đọc. Native/redesign lớn có đường đọc riêng, không gán mục tiêu M cho mọi tác vụ.",
+  "paths": {
+    "M-feature-existing-system": {
+      "before": {
+        "total": 13456,
+        "files": {
+          "START-HERE.md": {
+            "units": 1361,
+            "status": "READ"
+          },
+          "AGENTS.md": {
+            "units": 683,
+            "status": "READ"
+          },
+          "TASTE.md": {
+            "units": 977,
+            "status": "READ"
+          },
+          "CRAFT.md": {
+            "units": 1395,
+            "status": "READ"
+          },
+          "FLOW.md": {
+            "units": 0,
+            "status": "MISSING_AT_BASELINE"
+          },
+          "WORKFLOWS.md": {
+            "units": 2053,
+            "status": "READ"
+          },
+          "skills_UIUX/ux-structure-and-flow-design/SKILL.md": {
+            "units": 1141,
+            "status": "READ"
+          },
+          "skills_UIUX/visual-design-direction/SKILL.md": {
+            "units": 2087,
+            "status": "READ"
+          },
+          "skills_UIUX/ui-craft-and-visual-qa/SKILL.md": {
+            "units": 3301,
+            "status": "READ"
+          },
+          "skills_UIUX/design-critique-and-rationale/SKILL.md": {
+            "units": 458,
+            "status": "READ"
+          }
+        }
+      },
+      "after": {
+        "total": 7179,
+        "files": {
+          "START-HERE.md": {
+            "units": 213,
+            "status": "READ"
+          },
+          "AGENTS.md": {
+            "units": 683,
+            "status": "READ"
+          },
+          "TASTE.md": {
+            "units": 969,
+            "status": "READ"
+          },
+          "CRAFT.md": {
+            "units": 1389,
+            "status": "READ"
+          },
+          "FLOW.md": {
+            "units": 691,
+            "status": "READ"
+          },
+          "WORKFLOWS.md": {
+            "units": 2201,
+            "status": "READ"
+          },
+          "skills_UIUX/ux-structure-and-flow-design/SKILL.md": {
+            "units": 259,
+            "status": "READ"
+          },
+          "skills_UIUX/visual-design-direction/SKILL.md": {
+            "units": 263,
+            "status": "READ"
+          },
+          "skills_UIUX/ui-craft-and-visual-qa/SKILL.md": {
+            "units": 335,
+            "status": "READ"
+          },
+          "skills_UIUX/design-critique-and-rationale/SKILL.md": {
+            "units": 176,
+            "status": "READ"
+          }
+        }
+      }
+    },
+    "M-table-dashboard": {
+      "before": {
+        "total": 16442,
+        "files": {
+          "START-HERE.md": {
+            "units": 1361,
+            "status": "READ"
+          },
+          "AGENTS.md": {
+            "units": 683,
+            "status": "READ"
+          },
+          "TASTE.md": {
+            "units": 977,
+            "status": "READ"
+          },
+          "CRAFT.md": {
+            "units": 1395,
+            "status": "READ"
+          },
+          "FLOW.md": {
+            "units": 0,
+            "status": "MISSING_AT_BASELINE"
+          },
+          "WORKFLOWS.md": {
+            "units": 2053,
+            "status": "READ"
+          },
+          "skills_UIUX/ux-structure-and-flow-design/SKILL.md": {
+            "units": 1141,
+            "status": "READ"
+          },
+          "skills_UIUX/visual-design-direction/SKILL.md": {
+            "units": 2087,
+            "status": "READ"
+          },
+          "skills_UIUX/ui-craft-and-visual-qa/SKILL.md": {
+            "units": 3301,
+            "status": "READ"
+          },
+          "skills_UIUX/design-critique-and-rationale/SKILL.md": {
+            "units": 458,
+            "status": "READ"
+          },
+          "skills_UIUX/data-tables-and-enterprise-ux/SKILL.md": {
+            "units": 1539,
+            "status": "READ"
+          },
+          "skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md": {
+            "units": 1447,
+            "status": "READ"
+          }
+        }
+      },
+      "after": {
+        "total": 7528,
+        "files": {
+          "START-HERE.md": {
+            "units": 213,
+            "status": "READ"
+          },
+          "AGENTS.md": {
+            "units": 683,
+            "status": "READ"
+          },
+          "TASTE.md": {
+            "units": 969,
+            "status": "READ"
+          },
+          "CRAFT.md": {
+            "units": 1389,
+            "status": "READ"
+          },
+          "FLOW.md": {
+            "units": 691,
+            "status": "READ"
+          },
+          "WORKFLOWS.md": {
+            "units": 2201,
+            "status": "READ"
+          },
+          "skills_UIUX/ux-structure-and-flow-design/SKILL.md": {
+            "units": 259,
+            "status": "READ"
+          },
+          "skills_UIUX/visual-design-direction/SKILL.md": {
+            "units": 263,
+            "status": "READ"
+          },
+          "skills_UIUX/ui-craft-and-visual-qa/SKILL.md": {
+            "units": 335,
+            "status": "READ"
+          },
+          "skills_UIUX/design-critique-and-rationale/SKILL.md": {
+            "units": 176,
+            "status": "READ"
+          },
+          "skills_UIUX/data-tables-and-enterprise-ux/SKILL.md": {
+            "units": 178,
+            "status": "READ"
+          },
+          "skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md": {
+            "units": 171,
+            "status": "READ"
+          }
+        }
+      }
+    },
+    "M-responsive-web": {
+      "before": {
+        "total": 14759,
+        "files": {
+          "START-HERE.md": {
+            "units": 1361,
+            "status": "READ"
+          },
+          "AGENTS.md": {
+            "units": 683,
+            "status": "READ"
+          },
+          "TASTE.md": {
+            "units": 977,
+            "status": "READ"
+          },
+          "CRAFT.md": {
+            "units": 1395,
+            "status": "READ"
+          },
+          "FLOW.md": {
+            "units": 0,
+            "status": "MISSING_AT_BASELINE"
+          },
+          "WORKFLOWS.md": {
+            "units": 2053,
+            "status": "READ"
+          },
+          "skills_UIUX/ux-structure-and-flow-design/SKILL.md": {
+            "units": 1141,
+            "status": "READ"
+          },
+          "skills_UIUX/visual-design-direction/SKILL.md": {
+            "units": 2087,
+            "status": "READ"
+          },
+          "skills_UIUX/ui-craft-and-visual-qa/SKILL.md": {
+            "units": 3301,
+            "status": "READ"
+          },
+          "skills_UIUX/design-critique-and-rationale/SKILL.md": {
+            "units": 458,
+            "status": "READ"
+          },
+          "skills_UIUX/responsive-and-device-strategy/SKILL.md": {
+            "units": 1303,
+            "status": "READ"
+          }
+        }
+      },
+      "after": {
+        "total": 7326,
+        "files": {
+          "START-HERE.md": {
+            "units": 213,
+            "status": "READ"
+          },
+          "AGENTS.md": {
+            "units": 683,
+            "status": "READ"
+          },
+          "TASTE.md": {
+            "units": 969,
+            "status": "READ"
+          },
+          "CRAFT.md": {
+            "units": 1389,
+            "status": "READ"
+          },
+          "FLOW.md": {
+            "units": 691,
+            "status": "READ"
+          },
+          "WORKFLOWS.md": {
+            "units": 2201,
+            "status": "READ"
+          },
+          "skills_UIUX/ux-structure-and-flow-design/SKILL.md": {
+            "units": 259,
+            "status": "READ"
+          },
+          "skills_UIUX/visual-design-direction/SKILL.md": {
+            "units": 263,
+            "status": "READ"
+          },
+          "skills_UIUX/ui-craft-and-visual-qa/SKILL.md": {
+            "units": 335,
+            "status": "READ"
+          },
+          "skills_UIUX/design-critique-and-rationale/SKILL.md": {
+            "units": 176,
+            "status": "READ"
+          },
+          "skills_UIUX/responsive-and-device-strategy/SKILL.md": {
+            "units": 147,
+            "status": "READ"
+          }
+        }
+      }
+    }
+  },
+  "status": "PASS"
+}

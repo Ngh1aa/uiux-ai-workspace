@@ -23,3 +23,6 @@
 - Publication authority and owner:
 
 PREPARED means assets are ready for publication. It is not a working client link. Record DEPLOYED_VERIFIED only after provider SHA/status and live route checks pass through the existing deployment-truth owner, with separate critical interaction verification.
+
+Kiểm luồng theo FLOW.md tại gốc repo: root → kết quả; Back; sửa → review lại;
+dữ liệu/tổng tiền; đối tượng/vai trò; lỗi/khôi phục. Ghi PASS / FAIL / UNKNOWN và bằng chứng riêng với render.

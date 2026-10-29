@@ -53,6 +53,17 @@ nhìn vào hiểu ngay cần cung cấp gì, và bản nháp không giả vờ l
 Ảnh do AI tạo chỉ dùng khi brief cho phép, ghi rõ trong ghi chú giao, và không dùng cho người thật, sản
 phẩm thật hay bằng chứng (lời chứng thực, ảnh sự kiện).
 
+### Art direction trước khi chọn asset
+
+Ghi một câu ảnh giúp quyết định gì, rồi chốt chủ thể, góc máy, ánh sáng, nền, crop mobile/desktop,
+quyền dùng và nguồn. Ví dụ lớp gốm: tay đang sửa miệng bát, ánh sáng cửa sổ, nền xưởng thật;
+ảnh này giúp hiểu thao tác sẽ học. Một hình chiếc bình clip-art chỉ để lấp hero không đáp ứng việc đó.
+Minh hoạ phẳng vẫn hợp lệ nếu diễn đạt đúng khái niệm và khớp brand; không cấm theo kỹ thuật vẽ.
+
+Chưa có ảnh xưởng được cấp quyền: dùng P30 với dòng “Ảnh cần cung cấp: thao tác vuốt gốm, 4:3”,
+ghi asset là `MISSING` trong bàn giao. Không dùng ảnh stock để ngầm chứng minh cơ sở vật chất.
+Caption về nguồn, thời điểm, đơn vị hoặc tính minh hoạ được giữ khi giúp hiểu và tránh hiểu nhầm.
+
 ## 5. Icon
 
 - Một bộ icon cho cả sản phẩm: cùng lưới 24 px, cùng độ dày nét, cùng kiểu đầu nét. Repo dùng bộ nét 1,75 px

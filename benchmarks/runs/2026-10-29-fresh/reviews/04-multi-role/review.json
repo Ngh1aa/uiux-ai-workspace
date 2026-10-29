@@ -1,0 +1,105 @@
+{
+  "reviewer": {
+    "id": "fresh-gate-review-2026-10-30",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "review_stage": "first-review",
+  "cold_protocol": "first-impression-after-brief; brief was read before images, so this is not a valid blind cold read",
+  "cold": {
+    "04-conflict.png": {
+      "Màn này để làm gì?": "Xử lý xung đột lịch khách vãng lai vào ghế đã có người.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chuyển sang Ghế 1 lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Cả đề xuất đổi giờ và nút Kiểm tra lịch hẹn cùng hiện; nên làm rõ cần kiểm lại sau đổi."
+    },
+    "04-multi-role-1280-dark.jpg": {
+      "Màn này để làm gì?": "Lễ tân xem lịch theo ghế, người đến muộn và giờ trống.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Hồ Ngọc Mai muộn 15 phút.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lịch nhiều khoảng trắng theo hàng thời gian; cần cuộn để xem hết nhưng không phải mất dữ liệu."
+    },
+    "04-multi-role-1280-light.jpg": {
+      "Màn này để làm gì?": "Theo dõi lịch phòng khám và chi tiết lượt đang chọn.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt muộn hoặc Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Cụm chi tiết đang chọn là lượt 8:00, trong khi cảnh báo lượt muộn nổi bật ở đầu."
+    },
+    "04-multi-role-1440-dark.jpg": {
+      "Màn này để làm gì?": "Quản lý lịch buổi sáng theo ba ghế.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Thẻ Hồ Ngọc Mai để xử lý trễ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Các nhãn phụ trong ô lịch nhỏ hơn vùng tiêu đề lớn; nên kiểm khả năng đọc khi dùng liên tục."
+    },
+    "04-multi-role-1440-light.jpg": {
+      "Màn này để làm gì?": "Xem ai đang đến, ai muộn và ghế nào có lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô Ghế 1 trống lúc 10:30 để đặt khách.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy lỗi chồng lấn; mật độ ô lịch khá thưa."
+    },
+    "04-multi-role-390-dark.jpg": {
+      "Màn này để làm gì?": "Xem lịch dạng danh sách trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt muộn hoặc Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Header thương hiệu và giờ mở cửa chiếm nhiều chiều cao trước tác vụ; đây là ảnh bổ sung ngoài brief desktop."
+    },
+    "04-multi-role-390-light.jpg": {
+      "Màn này để làm gì?": "Quản lý lịch trên màn nhỏ với danh sách hẹn.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Hồ Ngọc Mai muộn 15 phút.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông tin chi tiết ở dưới danh sách dài nên cần nhiều cuộn để đối chiếu."
+    },
+    "04-no-permission.png": {
+      "Màn này để làm gì?": "Báo lễ tân không được xem doanh thu và giải thích quyền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về lịch hôm nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Tên Không gian đúng vai trò thiên về mô tả hệ thống; thông báo quyền chính vẫn dễ hiểu."
+    },
+    "04-patient-light.png": {
+      "Màn này để làm gì?": "Bác sĩ xem bệnh nhân tiếp theo, dị ứng và kế hoạch khám.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm dị ứng rồi Bắt đầu khám.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trạng thái Chưa đến nhưng Bắt đầu khám trông đang bật; cần kiểm quy tắc xác nhận đến ở runtime."
+    },
+    "04-revenue-dark.png": {
+      "Màn này để làm gì?": "Chủ phòng khám xem doanh thu, lấp ghế, hủy và dữ liệu còn thiếu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem dữ liệu và giới hạn biểu đồ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Biểu đồ chủ yếu là vùng không có dữ liệu; nhãn thiếu số liệu minh bạch nhưng không cho phép xem xu hướng tháng."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4.5,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4.5,
+    "7": 4,
+    "8": 4,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "7",
+      "image": "04-patient-light.png",
+      "element": "Badge Chưa đến và CTA Bắt đầu khám",
+      "fix": "Làm rõ bước xác nhận người bệnh đã có mặt trước khi bắt đầu; kiểm guard runtime, không suy ra guard bị thiếu chỉ từ ảnh."
+    },
+    {
+      "dimension": "3",
+      "image": "04-multi-role-1440-light.jpg",
+      "element": "Lưới lịch với các hàng khoảng 100 px",
+      "fix": "Thử giảm nhẹ chiều cao hàng nhưng giữ đủ vùng click và ba dòng trạng thái để xem nhiều lịch hơn trong 900 px."
+    },
+    {
+      "dimension": "9",
+      "image": "04-multi-role-390-light.jpg",
+      "element": "Cụm thương hiệu, giờ mở cửa và bộ đổi vai trên cùng",
+      "fix": "Nếu mobile thuộc scope tiếp theo, gom metadata header để đưa lịch và người muộn lên sớm hơn."
+    }
+  ],
+  "not_checked": [
+    "Bàn phím, thứ tự Tab và focus qua toàn bộ luồng; ảnh focus riêng lẻ không chứng minh toàn luồng.",
+    "VoiceOver, TalkBack, tên và vai trò accessible, thứ tự đọc.",
+    "Phóng chữ 200%, Dynamic Type và cỡ chữ hệ thống lớn.",
+    "Vùng hit target thực tế; kích thước hình vẽ không xác nhận vùng chạm.",
+    "Đo contrast AA bằng pixel/token đầy đủ, gồm mọi trạng thái.",
+    "Điều hướng back, cuộn tới cuối, click, loading, lưu và khôi phục dữ liệu ở runtime.",
+    "Tính đầy đủ của các màn/trạng thái/theme không có ảnh trong packet; không suy ra là source thiếu.",
+    "Cold review đúng thứ tự: brief đã được đọc trước ảnh; cold bên dưới là ấn tượng đầu sau brief và không phải đọc lạnh hợp lệ."
+  ],
+  "summary": "Lịch theo ghế, cảnh báo trễ và phân vùng chi tiết có trật tự; màn bác sĩ đưa dị ứng lên rõ, màn doanh thu ghi trung thực phần dữ liệu thiếu. Các vai trò dùng chung khung nhất quán. Không ghi hard fail chắc chắn từ tập ảnh."
+}

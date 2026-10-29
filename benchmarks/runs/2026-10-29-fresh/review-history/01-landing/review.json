@@ -1,0 +1,78 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "01-confirm.png": {
+      "Màn này để làm gì?": "Thông báo đã lưu lựa chọn lớp gốm trong bản minh họa.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về trang xưởng.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông báo nói chưa gửi tới xưởng khá rõ; phần ngày chỉ ghi Thứ Bảy nên chưa đủ cụ thể."
+    },
+    "01-landing-1280-dark.jpg": {
+      "Màn này để làm gì?": "Giới thiệu xưởng gốm và giúp chọn lớp để đặt chỗ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt chỗ ở hero hoặc Chọn lớp Nặn tay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chữ phụ và đường phân cách hơi chìm ở nền tối; chưa thấy ngày học cụ thể."
+    },
+    "01-landing-1280-light.jpg": {
+      "Màn này để làm gì?": "Giới thiệu trải nghiệm làm gốm, giá lớp và cách tham gia.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn lớp ở danh sách lớp.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Cấu trúc dễ quét; ảnh cốc minh họa chưa cho thấy không gian hay người hướng dẫn thực tế."
+    },
+    "01-landing-390-dark.jpg": {
+      "Màn này để làm gì?": "Landing xưởng gốm cho người mới, dẫn đến đặt chỗ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt chỗ ngay dưới lời giới thiệu.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trang dài và phần lớp xuống sâu sau minh họa; chữ phụ màu xám xanh hơi chìm."
+    },
+    "01-landing-390-light.jpg": {
+      "Màn này để làm gì?": "Giới thiệu lớp gốm cuối tuần và giá để chọn đặt chỗ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt chỗ ở hero.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nội dung nhìn gọn nhưng muốn so sánh lớp phải cuộn qua minh họa lớn; chưa có ngày cụ thể."
+    },
+    "01-review-edit.png": {
+      "Màn này để làm gì?": "Rà soát lớp, ca, số người và liên hệ trước xác nhận minh họa.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Sửa lựa chọn nếu ca học chưa đúng.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút sửa nhỏ hơn nút xác nhận và bị chia dòng riêng; tóm tắt thiếu ngày tháng cụ thể."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4.5,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3.5,
+    "8": 4,
+    "9": 4,
+    "10": 4.5
+  },
+  "observations": [
+    {
+      "dimension": "7",
+      "image": "01-review-edit.png",
+      "element": "Nút Sửa lựa chọn và bước xác nhận",
+      "fix": "Nút sửa có mặt nhưng chỉ thấy ảnh tĩnh của review và confirm, chưa thấy form/lỗi. Bổ sung ảnh chọn lớp, thiếu thông tin và lỗi để đánh giá đầy đủ phản hồi; kiểm trực tiếp khả năng quay lại sửa giữ dữ liệu."
+    },
+    {
+      "dimension": "8",
+      "image": "01-review-edit.png",
+      "element": "Buổi: Thứ Bảy 9:00",
+      "fix": "Nếu chuyển bản minh họa thành đặt chỗ thực, thêm ngày/tháng cụ thể ở lựa chọn và tóm tắt để phân biệt các cuối tuần."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tỷ lệ tương phản bằng công cụ; ảnh nhìn đọc được nhưng không xác nhận WCAG AA.",
+    "HF-2: kích thước vùng tương tác thực và khoảng đệm vô hình UNKNOWN từ ảnh.",
+    "HF-3: chưa kiểm phóng chữ 200% và cuộn thực; không thấy tràn ngang ở ảnh 390px/1280px.",
+    "HF-4: bàn phím, focus, thứ tự đọc và trình đọc màn hình UNKNOWN.",
+    "HF-5: không có ảnh form chọn lớp, lỗi và loading; không suy ra có hay thiếu trong implementation.",
+    "HF-7: browser back, đóng modal và giữ dữ liệu khi sửa UNKNOWN.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh; không thấy trạng thái chỉ bằng màu, cạnh tranh CTA khác nhiệm vụ, chi phí ẩn hoặc bằng chứng bịa đặt. Footer và confirm có nhãn minh họa.",
+    "Interaction runtime, thao tác FAQ, chuyển theme, gửi tới xưởng/backend và thành công đặt chỗ thực UNKNOWN.",
+    "TASTE.md không nằm trong packet được phép đọc nên chưa đối chiếu.",
+    "Đây là agent-heuristic thị giác độc lập; không phải human research hay approval."
+  ]
+}

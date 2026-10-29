@@ -18,7 +18,6 @@
  *   - mã màu viết cứng ngoài phần khai báo token (--tên: giá trị)
  *   - transition: all; outline: none mà không có :focus-visible
  *   - cỡ chữ dưới 12px; emoji dùng như icon
- *   - liên kết href="#"
  *   - mặc định kiểu AI generic (CRAFT.md mục 2): font duy nhất là Inter/Roboto/Arial/Open Sans/
  *     Lato/hệ thống; gradient tím–xanh; nhãn IN HOA lặp từ 3 chỗ; mũi tên "→" sau nhiều liên kết
  *
@@ -81,7 +80,6 @@ function check(file) {
       err('aria-prohibited', `<${m[1]}> có aria-label nhưng không có role: thêm role (group, region, status...) hoặc bỏ aria-label`);
     }
   }
-  let deadLinks = 0;
   for (const m of html.matchAll(/<(button|a)\b([^>]*)>([\s\S]*?)<\/\1>/gi)) {
     const text = m[3].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
     if (!text && !/aria-label(ledby)?=/i.test(m[2]) && !/<title>|aria-label=|<img\b[^>]*alt=["'][^"']+/i.test(m[3])) {
@@ -92,9 +90,8 @@ function check(file) {
     if (label && shown && !label.toLowerCase().includes(shown.toLowerCase())) {
       err('name-mismatch', `<${m[1]}> hiện "${shown.slice(0, 40)}" nhưng aria-label là "${label.slice(0, 40)}" (WCAG 2.5.3: tên phải chứa chữ đang hiện)`);
     }
-    if (m[1].toLowerCase() === 'a' && /href=["']#["']/i.test(m[2])) deadLinks += 1;
   }
-  if (deadLinks) warn('href', `${deadLinks} liên kết href="#" (ổn trong mockup; trang giao cho dev cần đích thật)`);
+  // Liên kết và hành vi thuộc flow-check; không báo trùng ở checker giao diện tĩnh.
 
   const css = localCss(html, file);
   const pageCss = localCss(html, file, true);

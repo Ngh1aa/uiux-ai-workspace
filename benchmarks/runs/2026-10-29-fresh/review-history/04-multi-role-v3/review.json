@@ -1,0 +1,104 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "04-conflict.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xử lý việc đặt lịch trùng ghế bằng cách chọn giờ còn trống.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chuyển sang Ghế 1 lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Có lỗi cụ thể và phương án 10:30; chưa kiểm chuyển giờ và kiểm tra lại."
+    },
+    "04-multi-role-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem lịch các ghế hôm nay, bệnh nhân muộn và khoảng trống.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Hồ Ngọc Mai đang muộn 15 phút.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Không thấy clipping ở desktop; dấu gạch ngang trong lịch vẫn chưa rõ nghĩa."
+    },
+    "04-multi-role-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Lễ tân theo dõi lượt đến, ghế và đặt lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Không thấy clipping ở desktop; dấu gạch ngang trong lịch vẫn chưa rõ nghĩa."
+    },
+    "04-multi-role-1440-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Lễ tân xem lịch ghế và chi tiết lịch hẹn ở desktop 1440.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch hoặc lượt muộn Hồ Ngọc Mai.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Không thấy clipping ở desktop; dấu gạch ngang trong lịch vẫn chưa rõ nghĩa."
+    },
+    "04-multi-role-1440-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Lễ tân xem lịch ghế và chi tiết lịch hẹn ở desktop 1440.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch hoặc lượt muộn Hồ Ngọc Mai.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Không thấy clipping ở desktop; dấu gạch ngang trong lịch vẫn chưa rõ nghĩa."
+    },
+    "04-multi-role-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem lịch hôm nay dạng danh sách trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Search đã đủ rộng, badge xuống hàng; detail còn dưới danh sách và đã có Về lịch hẹn. Không thấy clipping ở desktop; dấu gạch ngang trong lịch vẫn chưa rõ nghĩa."
+    },
+    "04-multi-role-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Lễ tân xem thứ tự bệnh nhân và chi tiết hẹn trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt muộn của Hồ Ngọc Mai.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Search đã đủ rộng, badge xuống hàng; detail còn dưới danh sách và đã có Về lịch hẹn. Không thấy clipping ở desktop; dấu gạch ngang trong lịch vẫn chưa rõ nghĩa."
+    },
+    "04-no-permission.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Báo lễ tân không được xem doanh thu và giải thích quyền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về lịch hôm nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Quyền UI và giới hạn backend mẫu được nói rõ."
+    },
+    "04-patient-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Bác sĩ xem bệnh nhân tiếp theo, dị ứng và kế hoạch khám.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm tra cảnh báo dị ứng trước Bắt đầu khám.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Cảnh báo dị ứng nổi bật; trạng thái Chưa đến và CTA Bắt đầu khám cần kiểm guard runtime."
+    },
+    "04-revenue-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Chủ phòng khám xem doanh thu và hiệu suất.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem dữ liệu và giới hạn biểu đồ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Dữ liệu chưa có được phân biệt với 0; nguồn mẫu rõ."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4.5,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3.5,
+    "8": 4,
+    "9": 3.5,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "7",
+      "image": "04-multi-role-1280-light.jpg",
+      "element": "Ô gạch ngang trong lịch cạnh ô 10:30 Ghế 1 Trống",
+      "fix": "Giải thích gạch ngang nghĩa là chưa có dữ liệu, không có lịch trong fixture hay ghế đang trống; nếu chưa xác nhận được có thể đặt thì nhãn rõ để lễ tân không nhầm với ô trống đã cóCTA."
+    },
+    {
+      "dimension": "9",
+      "image": "04-multi-role-390-light.jpg",
+      "element": "Panel Chi tiết lịch hẹn nằm sau toàn bộ danh sách",
+      "fix": "Search mobile đã hết lỗi co hẹp, có Về lịch hẹn. Tuy vậy cần kiểm sau khi chọn lượt có đưa focus/scroll tới chi tiết không; cân nhắc detail mở cạnh lượt hoặc drawer nếu chưa có. Ảnh này chỉ chứng minh vị trí, không chứng minh behavior."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tỷ lệ tương phản số học; điểm màu chỉ là heuristic thị giác, không xác nhận WCAG AA.",
+    "HF-2: hit area và vùng chạm thực UNKNOWN từ ảnh.",
+    "HF-3: không kết luận nội dung ở dưới viewport là clipping vĩnh viễn khi chưa kiểm cuộn; text 200% chưa kiểm.",
+    "HF-4: keyboard path, screen reader và focus đầy đủ UNKNOWN; vài ảnh có focus không chứng minh toàn bộ luồng.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh, trạng thái có chữ; không thấy cạnh tranh primary khác nhiệm vụ, deceptive pattern hoặc bằng chứng bịa không nhãn.",
+    "HF-7: browser/system back, dismiss, giữ state và điều hướng runtime UNKNOWN.",
+    "Interaction, persistence, native runtime, thiết bị thật và backend UNKNOWN; điểm 7/9 đánh giá biểu hiện nhìn thấy, không chứng nhận hành vi.",
+    "Đây là re-review đã biết brief, không phải first-read mù. independent=true nghĩa độc lập với người làm; không phải human research hay human approval.",
+    "Finding search 390 co hẹp/icon tràn đã hết trên ảnh mới cả hai theme.",
+    "Đã quan sát home 1280 và 1440 sáng/tối, không thấy clipping; ảnh là full-page nên không chứng minh viewport 800/900 và scroll/focus runtime.",
+    "HF-5: có conflict, permission denied và vùng doanh thu thiếu dữ liệu; loading/các state khác chưa có bằng chứng.",
+    "Màn bác sĩ/revenue/permission/conflict chưa có đầy đủ hai theme/kích thước bắt buộc.",
+    "Role enforcement/backend, guard Chưa đến trước Bắt đầu khám và lưu ghi chú UNKNOWN.",
+    "Không thẩm định nội dung y khoa. Duyệt hướng bằng người và approval vẫn UNKNOWN; agent này không thay thế."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Re-review ảnh mới; đã biết brief từ lượt trước. Không đọc source, rationale hoặc điểm của người làm. Không dùng điểm heuristic để chứng nhận runtime/accessibility/backend."
+}

@@ -25,7 +25,7 @@ Ba điểm khác starter:  1. <...> 2. <...> 3. <...>
 
 Một điểm táo bạo là đủ. Cả trang cùng gào thì không chỗ nào nổi.
 
-## 2. Danh sách cấm: các mặc định làm thiết kế trông như AI làm
+## 2. Tín hiệu cần xem xét trên render
 
 Mỗi dòng là tín hiệu cần xem xét, không phải điều cấm tuyệt đối. Giữ khi có lý do từ brief,
 design system hiện có, tác vụ, nền tảng hoặc khả năng tiếp cận; ghi ngắn bối cảnh, đánh đổi và

@@ -71,6 +71,11 @@ trong [`layout-and-density.md`](layout-and-density.md).
 
 ## 6. Chuỗi kiểm tra font
 
+Cặp chữ thử nghiệm chạy offline: [Source Serif 4 + Manrope](../design-system/fonts/README.md).
+Dùng serif cho tiêu đề biên tập và sans cho dữ liệu; không đổi font mặc định khi brief không cần.
+File đã có probe cmap tiếng Việt và `₫`, hash binary/license; nhìn thêm
+[specimen sáng/tối](../design-system/examples/data-table/README.md) trước khi chọn.
+
 Dán chuỗi này vào trang mẫu ở các cỡ 13, 15, 17, 24, 40 px và nhìn ở cả chữ thường lẫn chữ hoa:
 
 ```text

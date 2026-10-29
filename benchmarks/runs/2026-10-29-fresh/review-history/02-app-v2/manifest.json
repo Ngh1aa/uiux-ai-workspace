@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "created": "2026-10-29T10:12:32Z",
+  "size": "L",
+  "images": {
+    "02-app-1280-dark.jpg": "2886c6683a4e64b96b86f37e54b0fd23b9ced62818cbf821901bc88ca0f4ab91",
+    "02-app-1280-light.jpg": "35dcb4781c9660489f9efe3407f4b341c5e11ac4e95a2f234aa4e464e623c9d3",
+    "02-app-390-dark.jpg": "3d6c859002591c84e3bad139ba8bbffd933b197da6611b98ceecc2cedb5e1c3e",
+    "02-app-390-light.jpg": "bf9ccb4535e3ac1fd20bce038458c11c479126c196873f96cbe43e7181f6d8a3",
+    "02-booked.png": "73e1208ff390f3b565b24baa4f4520a250b3a27f50cc21982291156e45303c26",
+    "02-checkout-light.png": "9fdbc276a7a0d7b32155e827dc4d1366ad20698304880f64199100d5a7d0a2d8",
+    "02-conflict19.png": "39dd8bfa5c32ca4051e0aab2034d36b0d38049a5460ed53212f555f9472ef34c",
+    "02-detail-dark.png": "cbc74e44cb5425419a5fde174c22b658d5fb56bc5e507efecb804ece26c2c90f",
+    "02-empty.png": "4dcbed03747321aa64c153001e0e3b6bd106d2107a8779a0780f55d27a71b0bb"
+  },
+  "inputs": {
+    "brief.md": "5e70e076fc67e7b3b83e5f68eda24ccb793af60aa52b9ce1a6dd4a7fe33d76cd",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

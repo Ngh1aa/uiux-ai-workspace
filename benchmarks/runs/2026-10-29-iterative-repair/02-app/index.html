@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cầu Lông Gần Nhà</title>
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="../../../../design-system/starter/brand.css">
+<link rel="stylesheet" href="../../../../design-system/starter/app.css">
+<style>
+/* Thương hiệu app thể thao: xanh sân cỏ thay cho navy của starter kit. */
+:root {
+  --brand-900: #062a1f; --brand-800: #0a3d2d; --brand-700: #0c5540; --brand-600: #0f6b4f; --brand-100: #cfe8dc; --brand-50: #e7f4ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --brand-strong-dark: #11543f; --brand-tint-dark: #7fd3b0; --ds-action-primary-text: #062a1f; --ds-surface-brand-subtle: #12291f; --ds-action-selected-bg: #173a2c; --ds-action-selected-text: #d4f2e4; --ds-action-tertiary-bg-hover: #12291f; --ds-action-tertiary-bg-pressed: #173a2c; --ds-action-primary-bg-hover: #9ddfc3; --ds-action-primary-bg-pressed: #b5e8d2; }
+}
+:root[data-theme="dark"] { --brand-strong-dark: #11543f; --brand-tint-dark: #7fd3b0; --ds-action-primary-text: #062a1f; --ds-surface-brand-subtle: #12291f; --ds-action-selected-bg: #173a2c; --ds-action-selected-text: #d4f2e4; }
+
+/* Dấu ấn: vật gốc là vạch kẻ sân. Góc cứng 12px, hoạ tiết vạch sân trong card nổi bật,
+   giờ chơi to như bảng tỉ số. */
+:root {
+  --ds-card-radius: 12px; --ds-shape-card: 12px; --ds-shape-control: 10px;
+  --app-hero-motif:
+    linear-gradient(90deg, transparent calc(62% - 1px), color-mix(in srgb, #fff 20%, transparent) calc(62% - 1px) calc(62% + 1px), transparent calc(62% + 1px)),
+    linear-gradient(transparent calc(50% - 1px), color-mix(in srgb, #fff 20%, transparent) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(90deg, transparent 0 18px, color-mix(in srgb, #fff 14%, transparent) 18px 20px, transparent 20px);
+  --app-hero-motif-size: 100%; --app-hero-motif-radius: 0; --app-hero-motif-top: 0; --app-hero-motif-right: 0;
+}
+.scoreboard { display: flex; align-items: baseline; gap: 10px; margin: 0; font: 800 44px/48px var(--ds-font-family-sans); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.scoreboard span { font: 600 15px/20px var(--ds-font-family-sans); letter-spacing: 0; color: color-mix(in srgb, var(--ds-text-on-brand-strong) 85%, transparent); }
+.court-title { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; color: inherit; text-decoration: none; }
+.court-title:hover { text-decoration: underline; }
+
+/* Khối riêng của đề này */
+.court { display: flex; flex-direction: column; gap: var(--ds-space-300); padding: var(--ds-spacing-inset-md); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); color: inherit; text-decoration: none; }
+.court__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ds-spacing-inline-md); }
+.court__price { flex: none; text-align: right; white-space: nowrap; }
+.court__price strong { display: block; font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1.2 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.slots { display: flex; flex-wrap: wrap; gap: var(--ds-space-200); }
+.slot { display: inline-flex; align-items: center; justify-content: center; min-width: 72px; height: 44px; padding: 0 var(--ds-space-300); border: 0; border-radius: 12px; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); white-space: nowrap; cursor: pointer; font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/1 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.slot-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-space-200); }
+.slot-grid .app-choice { flex-direction: column; gap: 2px; height: 56px; font-size: var(--ds-type-label-md-font-size); }
+.slot-grid button.app-choice[aria-pressed="false"] { background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+.slot-grid .app-choice small { font-weight: var(--ds-font-weight-medium); font-size: 11px; }
+.amenities { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-space-300) var(--ds-spacing-inline-md); margin: 0; padding: 0; list-style: none; }
+.amenities li { display: flex; align-items: center; gap: var(--ds-space-200); white-space: normal; flex-wrap: wrap; }
+.amenities .ds-icon { color: var(--ds-text-brand); }
+.stepper { display: flex; align-items: center; gap: var(--ds-space-300); }
+.stepper output { min-width: 24px; text-align: center; font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.total { display: flex; align-items: baseline; justify-content: space-between; white-space: nowrap; }
+.total strong { font: var(--ds-font-weight-bold) 24px/32px var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
+.app-footer .ds-button[aria-disabled="true"] { background: var(--ds-action-disabled-bg); color: var(--ds-action-disabled-text); }
+.chips { display: flex; gap: var(--ds-space-200); overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--ds-spacing-inset-lg)); padding: 0 var(--ds-spacing-inset-lg); }
+.chips .ds-chip { flex: none; border-color: transparent; }
+.chips .ds-chip[aria-pressed="true"] { background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); }
+.textarea { width: 100%; min-height: 88px; box-sizing: border-box; padding: var(--ds-space-300) var(--ds-spacing-inset-md); border: var(--ds-border-width-100) solid var(--ds-field-border); border-radius: var(--ds-field-radius); background: var(--ds-field-bg); color: var(--ds-text-primary); font: inherit; resize: none; }
+  .app [hidden] { display:none; }
+  .app-checkout__what { white-space:normal; overflow:visible; text-overflow:clip; }
+  #booking .app-footer, #detail .app-footer { position:static; flex:none; }
+  #booking .app-body--checkout, #detail .app-body--checkout { padding-bottom:var(--ds-space-500); }
+  .slot-grid .app-choice small { font-size:12px; }
+  dialog { max-width:min(90vw,420px); box-sizing:border-box; padding:var(--ds-space-500); border:1px solid var(--ds-border-control); border-radius:var(--ds-shape-control); background:var(--ds-surface-raised); color:var(--ds-text-primary); }
+</style>
+<style>.app-gallery__item[hidden]{display:none}.app-gallery{display:block;max-width:440px;margin-inline:auto}.app-gallery__caption{display:none}</style></head>
+<body class="ds-root app">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
+  <symbol id="ds-i-bell" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="ds-i-bus" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="13.5" rx="2.5"/><path d="M5 11h14M8 20v-2.5M16 20v-2.5M8.5 14.5h.01M15.5 14.5h.01"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-coffee" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v3M12 3.5v3"/></symbol>
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-phone" viewBox="0 0 24 24"><rect x="7" y="3.5" width="10" height="17" rx="2.25"/><path d="M11 17.5h2"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+  <symbol id="ds-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.75"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+</svg>
+<!-- icons:end -->
+<main class="app-gallery" data-flow-mode="prototype" data-role="player">
+  <header class="app-gallery__intro ds-stack ds-stack--sm">
+    <h1 class="ds-text-title-lg">Cầu Lông Gần Nhà</h1>
+    <p class="ds-text-body-md ds-text-secondary">Mốc dữ liệu minh họa 23/10, độc lập ngày hệ thống. Năm màn cho người chơi Minh: tìm sân, xem chi tiết, đặt sân và lịch. Có nhánh khung giờ vừa hết chỗ; chưa thu tiền hoặc kết nối máy chủ.</p>
+  </header>
+
+  <!-- 1. Trang chủ -->
+  <section class="app-gallery__item" aria-label="Trang chủ">
+    <p class="app-gallery__caption">1. Trang chủ</p>
+    <div class="app-phone" data-screen="Trang chủ" id="home" data-entry>
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><div><p class="ds-text-body-sm ds-text-secondary" style="margin:0">Thứ Năm, 23/10</p><h1 class="ds-text-title-lg">Chào Minh</h1></div><a class="app-round" href="#notices" data-dialog="notices" aria-label="Thông báo"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></a></div>
+          <section class="app-hero" aria-labelledby="next-title">
+            <p class="ds-text-body-sm app-hero__muted" style="margin:0" id="next-title">Trận sắp tới, thứ Sáu 24/10</p>
+            <p class="scoreboard">18:00<span>đến 19:00</span></p>
+            <div>
+              <p class="ds-text-title-sm" style="margin:0">Sân Phú Nhuận</p>
+              <p class="ds-text-body-md app-hero__muted" style="margin:2px 0 0">Sân số 3, cách 1,2 km</p>
+            </div>
+          </section>
+          <div class="ds-section-header" style="margin-top:var(--ds-space-200)"><h2 class="ds-text-title-sm">Tối nay gần bạn</h2><a class="ds-link ds-text-label-md" href="#courts">Xem tất cả</a></div>
+          <section class="app-pick" aria-label="Sân Phú Nhuận">
+            <div class="app-pick__head"><div><a class="court-title ds-text-label-lg" href="#detail" data-court="phu">Sân Phú Nhuận</a><p class="app-meta" style="margin:2px 0 0">Phú Nhuận<span class="app-meta__gap"></span>1,2 km</p></div><p class="app-pick__price" style="margin:0"><strong>120.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <ul class="app-slots" aria-label="Khung trống Sân Phú Nhuận"><li><a class="app-slot" href="#detail" data-court="phu" data-time="18:00" data-time-slot aria-label="Đặt Sân Phú Nhuận, 18:00">18:00</a></li><li><a class="app-slot" href="#detail" data-court="phu" data-time="20:00" data-time-slot aria-label="Đặt Sân Phú Nhuận, 20:00">20:00</a></li><li><a class="app-slot" href="#detail" data-court="phu" data-time="21:00" data-time-slot aria-label="Đặt Sân Phú Nhuận, 21:00">21:00</a></li></ul>
+          </section>
+          <section class="app-pick" aria-label="Sân Kỳ Hoà">
+            <div class="app-pick__head"><div><a class="court-title ds-text-label-lg" href="#detail" data-court="ky">Sân Kỳ Hoà</a><p class="app-meta" style="margin:2px 0 0">Quận 10<span class="app-meta__gap"></span>2,8 km</p></div><p class="app-pick__price" style="margin:0"><strong>100.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <ul class="app-slots" aria-label="Khung trống Sân Kỳ Hoà"><li><a class="app-slot" href="#detail" data-court="ky" data-time="19:00" data-time-slot aria-label="Đặt Sân Kỳ Hoà, 19:00">19:00</a></li><li><a class="app-slot" href="#detail" data-court="ky" data-time="21:00" data-time-slot aria-label="Đặt Sân Kỳ Hoà, 21:00">21:00</a></li></ul>
+          </section>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#home" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Trang chủ</a>
+        <a class="app-tabbar__item" href="#courts"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg>Tìm sân</a>
+        <a class="app-tabbar__item" href="#schedule"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch</a>
+        <a class="app-tabbar__item" href="#profile" data-dialog="profile"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>Tôi</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 2. Danh sách sân -->
+  <section class="app-gallery__item" aria-label="Danh sách sân">
+    <p class="app-gallery__caption">2. Danh sách sân</p>
+    <div class="app-phone" data-screen="Danh sách sân" id="courts">
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <div class="app-screen">
+        <div class="app-body app-body--checkout-tabbar" data-pick-group>
+          <div class="app-large-title"><h1 class="ds-text-title-lg">Tìm sân</h1></div>
+          <div class="ds-field">
+            <label class="ds-visually-hidden" for="court-search">Tìm sân</label>
+            <div class="ds-field__wrap"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-field__control" id="court-search" type="search" placeholder="Tên sân hoặc đường"></div>
+          </div>
+          <div class="chips" role="group" aria-label="Lọc theo quận">
+            <button class="ds-chip" type="button" aria-pressed="true">Tất cả</button>
+            <button class="ds-chip" type="button" aria-pressed="false">Phú Nhuận</button>
+            <button class="ds-chip" type="button" aria-pressed="false">Quận 10</button>
+            <button class="ds-chip" type="button" aria-pressed="false">Quận 1</button>
+          </div>
+          <div data-search-empty hidden><p role="status">Không có sân phù hợp.</p><button class="ds-button" type="button" data-reset-search>Xóa bộ lọc</button></div><div class="ds-section-header"><h2 class="ds-text-title-sm">Tối nay</h2><span class="ds-text-body-sm ds-text-secondary">Gần nhất trước</span></div>
+          <section class="app-pick" aria-current="true" aria-label="Sân Phú Nhuận">
+            <div class="app-pick__head"><div><a class="court-title ds-text-label-lg" href="#detail" data-court="phu">Sân Phú Nhuận</a><p class="app-meta" style="margin:2px 0 0">Phú Nhuận<span class="app-meta__gap"></span>1,2 km</p></div><p class="app-pick__price" style="margin:0"><strong>120.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0" data-availability>Còn 3 khung trống tối nay</p>
+            <ul class="app-slots" aria-label="Khung trống Sân Phú Nhuận"><li><button class="app-slot" type="button" aria-pressed="false" data-what="Sân Phú Nhuận, 18:00" data-court="phu" data-time="18:00" data-time-slot data-total="120.000 ₫">18:00</button></li><li><button class="app-slot" type="button" aria-pressed="true" data-what="Sân Phú Nhuận, 20:00" data-court="phu" data-time="20:00" data-time-slot data-total="120.000 ₫">20:00</button></li><li><button class="app-slot" type="button" aria-pressed="false" data-what="Sân Phú Nhuận, 21:00" data-court="phu" data-time="21:00" data-time-slot data-total="120.000 ₫">21:00</button></li></ul>
+          </section>
+          <section class="app-pick" aria-label="Sân Kỳ Hoà">
+            <div class="app-pick__head"><div><a class="court-title ds-text-label-lg" href="#detail" data-court="ky">Sân Kỳ Hoà</a><p class="app-meta" style="margin:2px 0 0">Quận 10<span class="app-meta__gap"></span>2,8 km</p></div><p class="app-pick__price" style="margin:0"><strong>100.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0" data-availability>Còn 2 khung trống tối nay</p>
+            <ul class="app-slots" aria-label="Khung trống Sân Kỳ Hoà"><li><button class="app-slot" type="button" aria-pressed="false" data-what="Sân Kỳ Hoà, 19:00" data-court="ky" data-time="19:00" data-time-slot data-total="100.000 ₫">19:00</button></li><li><button class="app-slot" type="button" aria-pressed="false" data-what="Sân Kỳ Hoà, 21:00" data-court="ky" data-time="21:00" data-time-slot data-total="100.000 ₫">21:00</button></li></ul>
+          </section>
+          <section class="app-pick" aria-label="Sân Tân Định">
+            <div class="app-pick__head"><div><a class="court-title ds-text-label-lg" href="#detail" data-court="tan">Sân Tân Định</a><p class="app-meta" style="margin:2px 0 0">Quận 1<span class="app-meta__gap"></span>3,5 km</p></div><p class="app-pick__price" style="margin:0"><strong>150.000 ₫</strong><span class="ds-text-body-sm ds-text-secondary">mỗi giờ</span></p></div>
+            <p class="ds-text-body-sm ds-text-secondary" style="margin:0" data-availability>Còn 1 khung trống tối nay</p>
+            <ul class="app-slots" aria-label="Khung trống Sân Tân Định"><li><button class="app-slot" type="button" aria-pressed="false" data-what="Sân Tân Định, 20:00" data-court="tan" data-time="20:00" data-time-slot data-total="150.000 ₫">20:00</button></li></ul>
+          </section>
+        </div>
+      </div>
+      <div class="app-footer app-checkout app-checkout--floating" aria-live="polite" data-checkout>
+        <div class="app-checkout__row"><span class="app-checkout__what" data-checkout-what><strong>Sân Phú Nhuận, 20:00</strong></span><strong class="app-checkout__total" data-checkout-total>120.000 ₫</strong></div>
+        <a class="ds-button ds-button--primary ds-button--block" href="#detail" data-open-detail data-checkout-go>Đặt sân này</a>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Trang chủ</a>
+        <a class="app-tabbar__item" href="#courts" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg>Tìm sân</a>
+        <a class="app-tabbar__item" href="#schedule"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch</a>
+        <a class="app-tabbar__item" href="#profile" data-dialog="profile"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>Tôi</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 3. Chi tiết sân -->
+  <section class="app-gallery__item" aria-label="Chi tiết sân">
+    <p class="app-gallery__caption">3. Chi tiết sân</p>
+    <div class="app-phone" data-screen="Chi tiết sân" id="detail">
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#courts" data-back aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md" data-detail-name>Sân Phú Nhuận</h1>
+        <a class="app-round" href="#court-contact" data-dialog="court-contact" aria-label="Gọi sân"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-phone"/></svg></a>
+      </header>
+      <div class="app-screen">
+        <div class="app-body app-body--checkout">
+          <section class="app-panel" aria-label="Thông tin sân">
+            <div class="app-panel__section">
+              <div class="app-kv"><span class="app-kv__label">Khoảng cách</span><span class="app-kv__value" data-detail-area>1,2 km, Phú Nhuận</span></div>
+              <div class="app-kv"><span class="app-kv__label">Giá</span><span class="app-kv__value ds-tabular" data-detail-price>120.000 ₫ mỗi giờ</span></div>
+            </div>
+            <div class="app-panel__section">
+              <h2 class="app-panel__title">Tiện ích</h2>
+              <ul class="amenities">
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-bus"/></svg>Gửi xe</li>
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-user"/></svg>Phòng thay đồ</li>
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-bag"/></svg>Cho thuê vợt</li>
+                <li><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-coffee"/></svg>Nước uống</li>
+              </ul>
+            </div>
+          </section>
+          <section class="ds-card ds-stack ds-stack--sm" aria-labelledby="today-slots">
+            <div class="ds-section-header"><h2 class="app-panel__title" id="today-slots">23/10, tối nay</h2><span class="ds-text-body-sm ds-text-secondary">Mỗi khung 1 giờ</span></div>
+            <div class="slot-grid" role="group" aria-labelledby="today-slots" data-detail-slots></div>
+          </section>
+        </div>
+      </div>
+      <div class="app-footer app-checkout">
+        <div class="app-checkout__row"><span class="app-checkout__what"><strong data-detail-summary>23/10, 20:00 đến 21:00</strong></span><strong class="app-checkout__total" data-detail-total>120.000 ₫</strong></div>
+        <a class="ds-button ds-button--primary ds-button--block" href="#booking" data-open-booking>Đặt sân này</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Đặt sân, trạng thái lỗi -->
+  <section class="app-gallery__item" aria-label="Đặt sân, khung giờ vừa có người đặt">
+    <p class="app-gallery__caption">4. Đặt sân: khung giờ vừa có người đặt</p>
+    <div class="app-phone" data-screen="Đặt sân" id="booking">
+      <div class="app-status"><span class="app-status__time">17:44</span></div>
+      <header class="app-header">
+        <a class="app-round" href="#courts" data-back aria-label="Quay lại"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></a>
+        <h1 class="app-header__title ds-text-title-md">Đặt sân</h1>
+      </header>
+      <div class="app-screen">
+        <form class="app-body app-body--checkout" data-pick-group onsubmit="return false">
+          <div class="ds-banner ds-banner--danger" role="alert" data-race-error><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-alert"/></svg><div><p class="ds-text-label-lg">Khung 19:00 vừa có người đặt</p><p class="ds-text-body-sm">Chọn khung khác, bạn chưa bị trừ tiền.</p></div></div>
+          <section class="app-panel" aria-label="Lượt đặt">
+            <div class="app-panel__section">
+              <div class="app-kv"><span class="app-kv__label">Sân</span><span class="app-kv__value" data-booking-name>Sân Kỳ Hoà, Quận 10</span></div>
+              <div class="app-kv"><span class="app-kv__label">Ngày</span><span class="app-kv__value">Thứ Năm 23/10</span></div>
+            </div>
+            <div class="app-panel__section">
+              <h2 class="app-panel__title" id="other-slots">Khung còn trống</h2>
+              <ul class="app-slots" aria-labelledby="other-slots" data-booking-slots><li><button class="app-slot" type="button" aria-pressed="false" data-what="Sân Kỳ Hoà, 21:00" data-court="ky" data-time="21:00" data-time-slot data-total="100.000 ₫">21:00</button></li></ul>
+              <a class="ds-link ds-text-label-md" href="#courts" style="display:inline-flex;align-items:center;min-height:44px">Xem sân khác còn trống tối nay</a>
+            </div>
+          </section>
+          <section class="app-panel" aria-label="Chi tiết">
+            <div class="app-panel__section">
+              <div class="app-kv" style="align-items:center"><span class="ds-text-label-lg" id="players">Số người</span><span class="stepper"><button class="app-round" type="button" aria-label="Bớt một người" data-step="-1" style="background:var(--ds-surface-sunken)"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-minus"/></svg></button><output aria-labelledby="players" data-players>4</output><button class="app-round" type="button" aria-label="Thêm một người" data-step="1" style="background:var(--ds-surface-sunken)"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button></span></div>
+            </div>
+            <div class="app-panel__section">
+              <label class="ds-field__label" for="note">Ghi chú <span class="ds-text-secondary">(không bắt buộc)</span></label>
+              <textarea class="textarea" id="note" placeholder="Ví dụ: cần thuê 2 vợt"></textarea>
+            </div>
+          </section>
+        </form>
+      </div>
+      <div class="app-footer app-checkout" aria-live="polite" data-checkout>
+        <div class="app-checkout__row"><span class="app-checkout__what" data-checkout-what id="booking-reason" data-reason>Chọn khung giờ khác để tiếp tục</span><strong class="app-checkout__total" data-checkout-total>0 ₫</strong></div>
+        <button class="ds-button ds-button--primary ds-button--block" type="button" aria-disabled="true" data-review-booking data-primary aria-describedby="booking-reason" data-checkout-go>Đặt sân</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Lịch của tôi, tab Đã qua rỗng -->
+  <section class="app-gallery__item" aria-label="Lịch của tôi, tab Đã qua rỗng">
+    <p class="app-gallery__caption">5. Lịch của tôi: tab Đã qua rỗng</p>
+    <div class="app-phone" data-screen="Lịch của tôi" id="schedule">
+      <div class="app-status"><span class="app-status__time">17:42</span></div>
+      <div class="app-screen">
+        <div class="app-body">
+          <div class="app-large-title"><h1 class="ds-text-title-lg">Lịch của tôi</h1></div>
+          <section class="ds-card ds-stack ds-stack--sm" data-result id="booking-result" hidden role="status"><h2 class="ds-text-title-sm">Đã đặt sân minh họa</h2><p data-result-summary></p><p data-result-note></p><p>Người đặt: Minh; chưa thu tiền.</p><button class="ds-button ds-button--secondary" type="button" data-edit>Sửa lượt đặt</button><a class="ds-link" href="#home">Về trang chủ</a></section>
+          <div class="ds-segmented" role="group" aria-label="Lượt đặt">
+            <button class="ds-segmented__item" type="button" aria-pressed="false" data-schedule="upcoming">Sắp tới 1</button>
+            <button class="ds-segmented__item" type="button" aria-pressed="true" data-schedule="past">Đã qua</button>
+          </div>
+          <section class="ds-card" data-upcoming hidden><h2 class="ds-text-title-sm">Thứ Sáu 24/10</h2><p>Sân Phú Nhuận, sân số 3, 18:00 đến 19:00</p></section><div class="app-state-card" data-past>
+            <div class="ds-empty">
+              <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>
+              <h2 class="ds-text-title-sm" style="color:var(--ds-text-primary)">Chưa có trận nào đã chơi</h2>
+              <p class="ds-text-body-md" style="margin:0">Lượt đặt sẽ chuyển vào đây sau giờ chơi.</p>
+              <a class="ds-button ds-button--sm app-tonal" href="#courts">Tìm sân tối nay</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg>Trang chủ</a>
+        <a class="app-tabbar__item" href="#courts"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg>Tìm sân</a>
+        <a class="app-tabbar__item" href="#schedule" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Lịch</a>
+        <a class="app-tabbar__item" href="#profile" data-dialog="profile"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>Tôi</a>
+      </nav>
+    </div>
+  </section>
+</main>
+<dialog id="review" aria-labelledby="review-title" data-confirm><h2 id="review-title">Kiểm tra đặt sân</h2><p data-review-summary></p><p data-review-note></p><p>Minh đặt sân minh họa; chưa thu tiền. Bạn có thể sửa lượt đặt.</p><div class="ds-cluster"><button class="ds-button" type="button" data-close>Quay lại sửa</button><button class="ds-button ds-button--primary" type="button" data-confirm-action>Xác nhận đặt</button></div></dialog>
+<dialog id="profile" aria-labelledby="profile-title"><h2 id="profile-title">Hồ sơ Minh</h2><p>Vai trò: người chơi. Dữ liệu minh họa.</p><button class="ds-button" type="button" data-close>Đóng</button></dialog>
+<dialog id="notices" aria-labelledby="notices-title"><h2 id="notices-title">Thông báo</h2><p>Chưa có thông báo mới trong bản minh họa.</p><button class="ds-button" type="button" data-close>Đóng</button></dialog>
+<dialog id="court-contact" aria-labelledby="contact-title"><h2 id="contact-title">Liên hệ sân</h2><p data-contact>Sân Phú Nhuận: chưa cung cấp số điện thoại trong fixture.</p><button class="ds-button" type="button" data-close>Đóng</button></dialog>
+
+<script>
+const courts = {
+ phu:{name:'Sân Phú Nhuận',area:'Phú Nhuận',distance:'1,2 km',price:120000,slots:['18:00','20:00','21:00']},
+ ky:{name:'Sân Kỳ Hoà',area:'Quận 10',distance:'2,8 km',price:100000,slots:['19:00','21:00']},
+ tan:{name:'Sân Tân Định',area:'Quận 1',distance:'3,5 km',price:150000,slots:['20:00']}
+};
+let selected={court:'phu',time:'20:00'}, booking={court:'ky',time:'19:00'}, players=4, filter='Tất cả', origin='courts';
+let raceError=true, confirmed=null;const unavailable=new Set();
+const money = value => `${value.toLocaleString('vi-VN')} ₫`;
+const put=(selector,value)=>document.querySelector(selector).textContent=value;
+const summary = choice => `${courts[choice.court].name}, 23/10, ${choice.time}; ${players} người, ${money(courts[choice.court].price)} mỗi giờ`;
+function detail(){
+ const c=courts[selected.court];
+ document.querySelectorAll('[data-court][data-time]').forEach(control=>{const blocked=unavailable.has(control.dataset.court+'|'+control.dataset.time);control.setAttribute('aria-disabled',String(blocked));if(control.tagName==='BUTTON')control.disabled=blocked;if(blocked){control.setAttribute('aria-label',control.dataset.time+', đã kín');control.textContent=control.dataset.time+' Đã kín';}});
+ document.querySelectorAll('#courts button[data-court][data-time]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.court===selected.court&&button.dataset.time===selected.time)));
+ document.querySelectorAll('#courts .app-pick').forEach(card=>{if(card.querySelector('[data-court]').dataset.court===selected.court)card.setAttribute('aria-current','true');else card.removeAttribute('aria-current');});document.querySelectorAll('#courts .app-pick').forEach(card=>{const key=card.querySelector('[data-court]').dataset.court;const availability=card.querySelector('[data-availability]');const count=courts[key].slots.filter(t=>!unavailable.has(key+'|'+t)).length;if(availability)availability.textContent='Còn '+count+' khung trống tối nay';});
+ put('[data-detail-name]',c.name);put('[data-detail-area]',`${c.distance}, ${c.area}`);put('[data-detail-price]',`${money(c.price)} mỗi giờ`);put('[data-contact]',`${c.name}: chưa cung cấp số điện thoại trong fixture.`);
+ put('[data-detail-summary]',`23/10, ${selected.time}`);put('[data-detail-total]',money(c.price));
+ document.querySelector('[data-detail-slots]').innerHTML=c.slots.map(t=>`<button ${unavailable.has(selected.court+'|'+t)?'disabled':''} class="app-choice" type="button" data-detail-time="${t}" data-time-slot aria-pressed="${t===selected.time}">${t}<small>${unavailable.has(selected.court+'|'+t)?'Đã kín':t===selected.time?'Đang chọn':'Trống'}</small></button>`).join('');
+ document.querySelector('#detail [data-back]').href=`#${origin}`;
+ document.querySelector('#courts [data-checkout-what]').textContent=`${c.name}, 23/10, ${selected.time}`;
+ document.querySelector('#courts [data-checkout-total]').textContent=money(c.price);
+}
+function bookingView(){
+ const c=courts[booking.court];
+ put('[data-booking-name]',`${c.name}, ${c.area}`);document.querySelector('[data-race-error]').hidden=!raceError;
+ document.querySelector('[data-booking-slots]').innerHTML=c.slots.filter(t=>!(raceError&&t==='19:00')).map(t=>`<li><button class="app-slot" type="button" data-booking-time="${t}" data-time-slot aria-pressed="${t===booking.time&&!raceError}">${t}</button></li>`).join('');
+ const bar=document.querySelector('#booking [data-checkout]');
+ bar.querySelector('[data-checkout-what]').textContent=raceError?'Chọn khung giờ khác để tiếp tục':`${c.name}, 23/10, ${booking.time}`;
+ bar.querySelector('[data-checkout-total]').textContent=raceError?'0 ₫':money(c.price);
+ document.querySelector('[data-review-booking]').setAttribute('aria-disabled',String(raceError));
+ put('[data-players]',String(players));
+}
+function applyFilter(){
+ const query=document.querySelector('#court-search').value.toLocaleLowerCase('vi');
+ for(const card of document.querySelectorAll('#courts .app-pick')){
+  const key=card.querySelector('[data-court]').dataset.court,c=courts[key];
+  card.hidden=!(c.name.toLocaleLowerCase('vi').includes(query)&&(filter==='Tất cả'||c.area===filter));
+ }
+ document.querySelector('[data-search-empty]').hidden=Boolean(document.querySelectorAll('#courts .app-pick:not([hidden])').length);
+}
+document.querySelector('#court-search').addEventListener('input',applyFilter);
+document.addEventListener('click',event=>{
+ const target=event.target;
+ const dialogLink=target.closest('[data-dialog]');if(dialogLink){event.preventDefault();document.getElementById(dialogLink.dataset.dialog).showModal();}
+ if(target.closest('[data-close]'))target.closest('dialog').close();
+ const courtLink=target.closest('[data-court]');
+ if(courtLink){if(courtLink.dataset.time&&unavailable.has(courtLink.dataset.court+'|'+courtLink.dataset.time)){event.preventDefault();return;}selected={court:courtLink.dataset.court,time:courtLink.dataset.time||courts[courtLink.dataset.court].slots.find(t=>!unavailable.has(courtLink.dataset.court+'|'+t))};origin=courtLink.closest('#home')?'home':'courts';detail();if(courtLink.tagName==='BUTTON'){document.querySelectorAll('#courts .app-slot').forEach(b=>b.setAttribute('aria-pressed',String(b===courtLink)));}}
+ if(target.closest('[data-open-detail]')){origin='courts';detail();}
+ const detailSlot=target.closest('[data-detail-time]');if(detailSlot){selected.time=detailSlot.dataset.detailTime;detail();}
+ if(target.closest('[data-open-booking]')){booking={...selected};raceError=false;bookingView();}
+ const bookingSlot=target.closest('[data-booking-time]');if(bookingSlot){booking.time=bookingSlot.dataset.bookingTime;raceError=false;bookingView();}
+ const step=target.closest('[data-step]');if(step){players=Math.max(1,Math.min(8,players+Number(step.dataset.step)));bookingView();}
+ if(target.closest('[data-reset-search]')){document.querySelector('#court-search').value='';filter='Tất cả';document.querySelectorAll('.chips button').forEach(b=>b.setAttribute('aria-pressed',String(b.textContent==='Tất cả')));applyFilter();}
+ const chip=target.closest('.chips button');if(chip){filter=chip.textContent;document.querySelectorAll('.chips button').forEach(b=>b.setAttribute('aria-pressed',String(b===chip)));applyFilter();}
+ if(target.closest('[data-review-booking]')){
+  if(raceError)return;
+  put('[data-review-summary]',summary(booking));put('[data-review-note]',document.querySelector('#note').value||'Không có ghi chú');document.querySelector('#review').showModal();
+ }
+ if(target.closest('[data-confirm-action]')){
+  document.querySelector('#review').close();
+  if(booking.court==='ky'&&booking.time==='19:00'){unavailable.add('ky|19:00');raceError=true;detail();bookingView();return;}
+  confirmed={...booking,players,note:document.querySelector('#note').value};selected={...booking};detail();
+  document.querySelector('[data-schedule=upcoming]').textContent='Sắp tới 2';document.querySelector('[data-result]').hidden=false;put('[data-result-summary]',summary(booking));put('[data-result-note]',confirmed.note||'Không có ghi chú');
+  document.querySelector('[data-past]').hidden=true;document.querySelector('[data-upcoming]').hidden=false;
+  document.querySelectorAll('[data-schedule]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.schedule==='upcoming')));
+  location.hash='schedule';
+ }
+ if(target.closest('[data-edit]')){booking={court:confirmed.court,time:confirmed.time};players=confirmed.players;document.querySelector('#note').value=confirmed.note;selected={...booking};raceError=false;bookingView();location.hash='booking';}
+ const tab=target.closest('[data-schedule]');if(tab){const past=tab.dataset.schedule==='past';document.querySelector('[data-past]').hidden=!past;document.querySelector('[data-upcoming]').hidden=past;document.querySelector('[data-result]').hidden=past||!confirmed;document.querySelectorAll('[data-schedule]').forEach(b=>b.setAttribute('aria-pressed',String(b===tab)));}
+});
+document.querySelector('#booking [data-back]').href='#detail';
+function route(){const key=location.hash.slice(1)||'home';const allowed=['home','courts','detail','booking','schedule'];const active=allowed.includes(key)?key:'home';if(active==='courts')detail();document.querySelectorAll('.app-gallery__item').forEach(item=>{item.hidden=!item.querySelector('#'+active);});const heading=document.querySelector('#'+active+' h1');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}
+window.addEventListener('hashchange',route);detail();bookingView();route();
+</script></body></html>

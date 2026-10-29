@@ -1,0 +1,85 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "03-dashboard-1280-dark.jpg": {
+      "Màn này để làm gì?": "Ưu tiên nhập hàng sắp hết và xử lý đơn gửi trễ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng ở Len cotton màu kem.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đọc được thứ tự ưu tiên nhưng phần doanh thu dưới khá nhiều thông tin cho việc kho hôm nay."
+    },
+    "03-dashboard-1280-light.jpg": {
+      "Màn này để làm gì?": "Xem hàng đủ bán bao lâu, đơn quá hạn và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xử lý đơn #2041.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Bố cục rõ; chưa thấy hạn gửi cụ thể ngoài số ngày quá hạn."
+    },
+    "03-dashboard-390-dark.jpg": {
+      "Màn này để làm gì?": "Xử lý việc kho trên điện thoại theo từng khối.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ghi nhận nhập hàng.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Mỗi sản phẩm có khoảng trống lớn khiến danh sách dài; không thấy bán/ngày trong bản mobile."
+    },
+    "03-dashboard-390-light.jpg": {
+      "Màn này để làm gì?": "Xem hàng cần nhập và đơn cần gửi trước.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng Len cotton màu kem.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Danh sách hàng trên điện thoại khá cao; doanh thu và lời giải thích nằm sâu."
+    },
+    "03-stock-updated.png": {
+      "Màn này để làm gì?": "Hiển thị kho sau khi nhập hàng và đánh dấu một đơn đã gửi.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xử lý đơn #2045.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Số quá hạn ở đầu là 2 nhưng khối đơn vẫn nói 3; ghi chú tồn kho còn nói len kem chỉ đủ 2 ngày dù hàng đã lên 5 ngày."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3,
+    "8": 3,
+    "9": 3.5,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "03-dashboard-390-light.jpg",
+      "element": "Các hàng sản phẩm trong Ưu tiên nhập hàng",
+      "fix": "Giảm khoảng trống giữa tên/số lượng và Đủ X ngày/nhập hàng, nhóm mỗi sản phẩm thành cụm gọn hơn để bốn dòng không chiếm quá nhiều chiều dài mobile."
+    },
+    {
+      "dimension": "7",
+      "image": "03-stock-updated.png",
+      "element": "KPI quá hạn=2 nhưng mô tả danh sách vẫn 3 đơn quá hạn",
+      "fix": "Sau thao tác đánh dấu đơn đã gửi, đồng bộ tất cả chỉ số/tóm tắt với cùng trạng thái hiện tại. Toast có phản hồi nhưng các thông tin mâu thuẫn khiến chưa tin thay đổi đã hoàn tất."
+    },
+    {
+      "dimension": "8",
+      "image": "03-stock-updated.png",
+      "element": "Khối Tồn kho theo ngày bán: Len cotton màu kem chỉ đủ2ngày",
+      "fix": "Cập nhật lời khuyên sau nhập hàng: dòng LC-012 đã là15cuộn/đủ5ngày và KPI cần nhập sớm=0. Không giữ cảnh báo2ngày từ dữ liệu ban đầu."
+    },
+    {
+      "dimension": "9",
+      "image": "03-dashboard-390-light.jpg",
+      "element": "Thông tin bán mỗi ngày trong sản phẩm",
+      "fix": "Bản mobile bỏ chỉ số Bán/ngày dù đây là cơ sở tính ngày đủ bán. Hiện gọn thành dòng phụ khi cần hoặc hỗ trợ mở chi tiết để bảo toàn khả năng kiểm tra số liệu."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo contrast số học; không xác nhận AA từ ảnh.",
+    "HF-2: vùng chạm thực UNKNOWN.",
+    "HF-3: không thấy tràn ngang trong ảnh390/1280; text200% chưa kiểm.",
+    "HF-4: focus, keyboard path và screen reader UNKNOWN.",
+    "HF-5: không có ảnh dialog nhập hàng, lỗi nhập, empty/loading; implementation UNKNOWN.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh; cảnh báo có chữ/số, chỉ một CTA filled chính; dữ liệu mẫu có nhãn. Không thấy deceptive pattern hoặc fabricated evidence.",
+    "HF-7: browser back và navigation runtime UNKNOWN.",
+    "Không kiểm khả năng Undo hoặc rollback số kho/đơn, persistence, kết nối bán hàng/backend. Điểm7 chỉ dựa state đã render.",
+    "Không đọc TASTE.md hay skill data-visualization-and-dashboard-ux ngoài packet theo giới hạn reviewer; chỉ đánh giá biểu đồ nhìn thấy.",
+    "Đây là agent-heuristic thị giác độc lập, không phải human research hay approval."
+  ]
+}

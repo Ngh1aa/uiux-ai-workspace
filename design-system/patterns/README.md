@@ -20,6 +20,10 @@ làm đúng.
 
 ## Cách chọn pattern
 
+Bảng dữ liệu có lọc, sắp xếp, trạng thái và bàn phím: dùng `ds-table` hiện có theo
+[màn Sổ đơn hàng](../examples/data-table/README.md). Không tạo một component bảng song song.
+Giữ caption về đơn vị/nguồn khi giúp đọc số; trạng thái có chữ, màu/vạch chỉ là tín hiệu bổ sung.
+
 1. Viết ra câu hỏi người dùng mang tới màn: "hôm nay phải làm gì", "đã nộp xong chưa", "gói nào hợp".
 2. Chọn **một** pattern nổi bật (P01–P05) trả lời câu hỏi chính, nếu màn cần điểm nhấn.
 3. Lấp các vùng còn lại theo công thức chia vùng ở

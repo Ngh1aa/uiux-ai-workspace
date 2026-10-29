@@ -1,0 +1,103 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "04-conflict.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xử lý lịch hẹn trùng ghế.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chuyển sang Ghế 1 lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lỗi cụ thể, có lối đổi giờ; thao tác chuyển/kiểm lại chưa kiểm từ ảnh."
+    },
+    "04-multi-role-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Lễ tân xem giờ, ghế và trạng thái bệnh nhân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt Hồ Ngọc Mai muộn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy clipping desktop; dấu gạch ngang ở nhiều ô chưa rõ nghĩa."
+    },
+    "04-multi-role-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Lễ tân xem giờ, ghế và trạng thái bệnh nhân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt Hồ Ngọc Mai muộn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy clipping desktop; dấu gạch ngang ở nhiều ô chưa rõ nghĩa."
+    },
+    "04-multi-role-1440-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Lễ tân xem giờ, ghế và trạng thái bệnh nhân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt Hồ Ngọc Mai muộn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy clipping desktop; dấu gạch ngang ở nhiều ô chưa rõ nghĩa."
+    },
+    "04-multi-role-1440-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Lễ tân xem giờ, ghế và trạng thái bệnh nhân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt Hồ Ngọc Mai muộn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy clipping desktop; dấu gạch ngang ở nhiều ô chưa rõ nghĩa."
+    },
+    "04-multi-role-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Lễ tân xem lịch dạng danh sách và chi tiết trên mobile.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm bệnh nhân.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Search đủ rộng; chi tiết vẫn nằm sau toàn bộ lịch, có Về lịch hẹn."
+    },
+    "04-multi-role-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Lễ tân xem lịch dạng danh sách và chi tiết trên mobile.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm bệnh nhân.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Search đủ rộng; chi tiết vẫn nằm sau toàn bộ lịch, có Về lịch hẹn."
+    },
+    "04-no-permission.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Báo lễ tân không được xem doanh thu và chỉ quyền từng vai trò.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về lịch hôm nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Giới hạn mô phỏng/backend rõ, chưa thể xác nhận enforcement."
+    },
+    "04-patient-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Bác sĩ xem bệnh nhân kế tiếp, dị ứng và kế hoạch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm tra cảnh báo dị ứng.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chưa đến đi cùng Bắt đầu khám cần kiểm guard runtime."
+    },
+    "04-revenue-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Chủ phòng khám xem doanh thu và hiệu suất.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem dữ liệu và giới hạn biểu đồ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Vùng chưa có số được phân biệt với 0, nguồn mẫu được ghi rõ."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4.5,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3.5,
+    "8": 4,
+    "9": 3.5,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "7",
+      "image": "04-multi-role-1280-light.jpg",
+      "element": "Ô gạch ngang so với ô Trống 10:30",
+      "fix": "Giải thích rõ gạch ngang nghĩa là chưa có dữ liệu hay không có lượt trong fixture; người lễ tân cần phân biệt với khung đã xác nhận có thể đặt."
+    },
+    {
+      "dimension": "9",
+      "image": "04-multi-role-390-light.jpg",
+      "element": "Panel Chi tiết lịch hẹn nằm sau toàn bộ danh sách",
+      "fix": "Search mobile đủ rộng, có Về lịch hẹn. Cần kiểm chọn lượt có đưa focus/scroll đến chi tiết không; nếu chưa có thì đưa detail mở tại lượt hoặc drawer để giảm di chuyển."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tương phản số học; điểm màu là heuristic thị giác, không chứng nhận WCAG AA.",
+    "HF-2: vùng chạm thực, padding tương tác vô hình và quy đổi pt/dp UNKNOWN từ ảnh.",
+    "HF-4: bàn phím, focus toàn luồng, screen reader và thứ tự đọc UNKNOWN. Một ảnh có focus không xác nhận toàn luồng.",
+    "HF-6: đã soát trạng thái nhìn thấy, có nhãn chữ/số chứ không chỉ màu.",
+    "HF-7: browser/system back, dismiss, chuyển màn, giữ state và keyboard runtime UNKNOWN.",
+    "HF-8/HF-9/HF-10: đã soát ảnh, không thấy primary khác nhiệm vụ cạnh tranh, deceptive pattern hoặc bằng chứng giả không nhãn; dữ liệu minh họa có ghi rõ.",
+    "Text 200%, AT, reduced motion, native SDK/thiết bị thật, persistence và backend UNKNOWN.",
+    "Re-review đã biết brief; independent=true nghĩa độc lập với người làm. Đây là agent-heuristic, không phải human research, phê duyệt hướng hay approval.",
+    "HF-3: đã xem trực tiếp home 1280/1440 cả hai theme và 390 bổ sung, không thấy tràn ngang/clipping; ảnh full-page không chứng minh mọi trạng thái viewport 800/900. Text 200% chưa kiểm.",
+    "HF-5: có conflict, không quyền và vùng dữ liệu doanh thu thiếu; loading/các state khác chưa có bằng chứng.",
+    "Bác sĩ/revenue/permission/conflict chưa có đủ hai theme và cả hai kích thước bắt buộc.",
+    "Role enforcement/backend, lưu ghi chú, guard khi bệnh nhân Chưa đến và điều trị thực UNKNOWN; không thẩm định y khoa.",
+    "Duyệt hướng/human approval UNKNOWN, không thể thay bằng đánh giá agent."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Đánh giá lại trực tiếp tất cả ảnh final, đã biết brief từ các lượt trước; không phải first-read. Không đọc source/rationale hay điểm người làm. Điểm heuristic không xác nhận runtime, AT, native hay backend."
+}

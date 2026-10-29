@@ -70,3 +70,52 @@ auth hay nhánh lỗi. Các tình huống đó cần browser test của dự án
 Giữ [elementary visual sanity checklist](../checklists/elementary-visual-sanity-gate.md) để soát
 matched foreground/surface, state và crop khi shared owner thay đổi. Các thuộc tính khai báo crop
 không thay cho mở ảnh thật. Không suy ra coverage mà lệnh đã chạy chưa thực hiện.
+
+
+## Soát luồng (`flow-check.cjs`)
+
+Chỉ cần Node. Đọc cây HTML nguồn bằng tokenizer có trạng thái; không thực thi JS và không suy ra
+đồ thị điều hướng hay nghiệp vụ từ regex. Dùng cùng browser test của dự án:
+
+```sh
+node skills_UIUX/ui-craft-and-visual-qa/scripts/flow-check.cjs page.html --mode prototype --json qa/flow-source.json
+node --test skills_UIUX/ui-craft-and-visual-qa/scripts/flow-check.test.cjs
+node --test design-system/tests/gom-moc-flow.test.cjs
+```
+
+- `errors` / `FAIL`: liên kết giữ chỗ hoặc đích fragment thiếu trong nguồn khi không có khả năng
+  JS xử lý; biến mẫu/ghi chú nội bộ trong text; khai báo rủi ro cao nhưng cố tình bỏ review.
+- `warnings` / `WARN`: `no-entry`, `no-confirm`, `no-result`, `disabled-no-reason`, `row-mismatch`,
+  `label-long`, `time-no-date`, `caption` là tín hiệu cần đối chiếu ngữ cảnh. Các nhóm có thể trở
+  thành lỗi chắc chắn khi có hợp đồng tường minh. Không lấy từ khóa để kết luận giao dịch xảy ra.
+- `unknown` / `UNKNOWN`: event handler, submit form, thao tác tại chỗ, Back và navigation động cần
+  kiểm hành vi thực tế. `static_status: PASS` và exit 0 chỉ nghĩa không thấy lỗi chắc chắn trong
+  nguồn; `flow_status` luôn `UNKNOWN` ở lớp này. Không đổi UNKNOWN thành PASS trong báo cáo.
+- `--mode gallery` hoặc `data-flow-mode="gallery"`: artboard không hứa hoạt động như prototype.
+  Màn gốc đầu tiên, `data-entry`, `data-deep-link` có thể không có đường vào nội bộ.
+- `data-confirm` hoặc dialog/alertdialog cho bước review; `data-confirm-action` và `data-result`
+  mô tả hợp đồng kết quả. `data-review="inline|undo"` mô tả lựa chọn theo hậu quả. Metadata là
+  chỉ dẫn kiểm tra, không chứng minh hành vi hoạt động.
+- Nhãn số và chọn giờ hợp lệ; ngày có thể ở tiêu đề màn, `datetime` hoặc ngữ cảnh. Đơn vị biểu đồ,
+  nguồn, thời điểm cập nhật và nhãn minh họa được giữ khi hữu ích. “Thu gọn” không phải thu tiền.
+
+Fixture hợp lệ, sai và ngoại lệ cho cả 10 nhóm nằm trong `flow-check.test.cjs`. Booking regression
+chạy 390/1280 px, sáng/tối: root → review → kết quả, Back/sửa, tổng tiền, đúng lớp/khách, buổi kín và
+chọn lại, modal Escape/focus, lịch .ics. Đây là kiểm browser trên fixture, chưa xác minh backend,
+thiết bị native hoặc người dùng thật.
+
+| Checker | Chịu trách nhiệm |
+|---|---|
+| `static-check` | HTML/CSS cơ bản, accessible name, metadata, placeholder nội dung (Lorem/John Doe) |
+| `taste-check` | State đã render, layout, contrast, reflow, tài nguyên và axe; không đi luồng |
+| `flow-check` | Liên kết/hợp đồng nguồn và tín hiệu cần kiểm; biến template; không đo thị giác |
+| Browser tests | Hành động thật, dữ liệu, đối tượng/vai trò và khôi phục theo kịch bản cụ thể |
+
+`dead-link` chỉ nằm ở flow-check, không báo trùng `href` trong static-check. Một số phép đo như
+accessible name/contrast có thể được checker tĩnh hoặc render kiểm ở tầng bằng chứng khác nhau;
+không cộng lặp chúng thành nhiều lỗi nghiệp vụ.
+
+Trên Windows, chạy Python với `python -X utf8 ...` hoặc `$env:PYTHONUTF8='1'`; đọc/ghi file UTF-8.
+Node đã dùng `utf8` cho source/JSON. Không suy từ chữ console sai encoding rằng dữ liệu nguồn hỏng.
+
+`--locale vi-VN` chọn locale trình duyệt cho ngày/số/control bản địa. Benchmark ghi locale này tường minh; không suy format từ screenshot ở locale khác.

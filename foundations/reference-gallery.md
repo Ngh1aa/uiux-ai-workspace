@@ -53,6 +53,13 @@ và cách chọn nguồn trong
 | Chọn loại biểu đồ | Financial Times, *Visual Vocabulary* | Chọn theo quan hệ dữ liệu (so sánh, xu hướng, phần của tổng), không theo độ đẹp |
 | Màu và nhãn | Carbon, *Color palettes* cho dataviz; skill [`data-visualization-and-dashboard-ux`](../skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Màu phân loại giới hạn 6; nhãn trực tiếp thay chú giải khi được |
 
+## Màn tham chiếu có ảnh trong repo
+
+[Sổ đơn hàng và hai hướng trang chủ giáo viên](../design-system/examples/data-table/README.md)
+có ảnh điện thoại/desktop sáng/tối, lý do, đánh đổi, giới hạn và browser receipt.
+Đây là ví dụ do agent dựng, `CHƯA DUYỆT` bởi chủ repo; không suy thành kết quả người dùng thật.
+Tái sử dụng cấu trúc và câu hỏi thiết kế, không sao chép tên, số liệu hoặc mặc định thương hiệu.
+
 ## Sau khi tham khảo
 
 - Ghi nguồn đã xem vào ghi chú giao, kèm điều đã học. Không chép logo, ảnh, chữ của sản phẩm khác.

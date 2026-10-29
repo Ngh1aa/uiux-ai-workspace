@@ -1,0 +1,119 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "design-system/examples/gom-moc/app.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Chọn buổi",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chọn số người",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Phiếu giữ chỗ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "design-system/examples/gom-moc/app.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Chọn buổi",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chọn số người",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Phiếu giữ chỗ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "design-system/examples/gom-moc/app.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Chọn buổi",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chọn số người",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Phiếu giữ chỗ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "design-system/examples/gom-moc/app.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Chọn buổi",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chọn số người",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Phiếu giữ chỗ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

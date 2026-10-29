@@ -1,0 +1,90 @@
+{
+  "reviewer": {
+    "id": "fresh-gate-review-2026-10-30",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "review_stage": "first-review",
+  "cold_protocol": "re-read / known brief: reviewer already knew the task brief from an earlier packet; these are first impressions of these five images, not a fresh cold review",
+  "cold": {
+    "02-app-1280-dark.jpg": {
+      "Màn này để làm gì?": "Trang chủ để xem trận sắp tới và chọn nhanh giờ sân gần nhà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giờ 18:00 của Sân Phú Nhuận hoặc Xem tất cả.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy lỗi chồng lấn chắc chắn; viền focus quanh lời chào khiến tiêu đề trông như điều khiển tương tác."
+    },
+    "02-app-1280-light.jpg": {
+      "Màn này để làm gì?": "Xem lịch sắp tới và các khung sân còn trống tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giờ 20:00 của Phú Nhuận để tiếp tục đặt.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thẻ trận không có nhãn mở lịch rõ ràng; cần kiểm hành vi thật của thẻ."
+    },
+    "02-app-390-dark.jpg": {
+      "Màn này để làm gì?": "Tìm sân gần nhà và xem thời gian của trận đã đặt.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem tất cả để mở danh sách sân.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Tab Tôi hiện thêm nhưng ảnh không cho biết mục đích; phần giới thiệu ngoài khung app là metadata preview."
+    },
+    "02-app-390-light-result.png": {
+      "Màn này để làm gì?": "Lọc sân, chọn giờ trống và đặt sân đang chọn.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt sân này cho Kỳ Hoà 21:00.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông tin Kỳ Hoà còn một giờ khớp 19:00 đã kín và 21:00 đang chọn; nội dung dưới thanh xác nhận chưa thể kiểm từ ảnh."
+    },
+    "02-app-390-light.jpg": {
+      "Màn này để làm gì?": "Xem lượt đặt và chọn giờ để tìm sân nhanh.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Khung giờ trong thẻ sân hoặc Xem tất cả.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không thấy lỗi bố cục chắc chắn; vùng giữa thẻ cuối và navigation khá rộng."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4,
+    "9": 4,
+    "10": 4
+  },
+  "score_scope": "Heuristic scores apply only to the five supplied captures of home and one selected-results state; other screens and states UNKNOWN.",
+  "gate_result": "UNKNOWN",
+  "observations": [
+    {
+      "dimension": "1",
+      "image": "02-app-1280-light.jpg",
+      "element": "Thẻ trận sắp tới",
+      "fix": "Nếu thẻ có mở lịch, bổ sung dấu hiệu hành động nhẹ hoặc nhãn Xem lịch; kiểm hit area và keyboard behavior thực tế."
+    },
+    {
+      "dimension": "6",
+      "image": "02-app-390-light-result.png",
+      "element": "Số Còn 1 khung trống tối nay và hai chip 19:00 Đã kín / 21:00",
+      "fix": "Giữ quy tắc đếm giờ còn trống thống nhất khi giờ đổi trạng thái. Ảnh này cho thấy số 1 khớp một giờ còn chọn được; cần test runtime trước khi xác nhận toàn luồng."
+    },
+    {
+      "dimension": "3",
+      "image": "02-app-390-light-result.png",
+      "element": "Thanh xác nhận Đặt sân này nổi phía trên navigation",
+      "fix": "Kiểm cuối vùng cuộn có padding đủ chiều cao thanh xác nhận để nội dung sân phía dưới được cuộn lên đầy đủ; ảnh không chứng minh bị mất nội dung."
+    },
+    {
+      "dimension": "7",
+      "image": "02-app-390-dark.jpg",
+      "element": "Viền focus quanh Chào Minh",
+      "fix": "Xác nhận focus tới heading là chủ ý khi đổi màn và được chuyển đúng về hành động tiếp theo; không kết luận keyboard path từ ảnh tĩnh."
+    }
+  ],
+  "not_checked": [
+    "Cold review mới hoàn toàn: đã biết brief trước vòng này; phần cold là re-read / known brief.",
+    "Chi tiết sân, tiện ích và lưới đủ giờ: UNKNOWN vì không có ảnh màn tương ứng.",
+    "Checkout với số người, ghi chú, tổng tiền và lỗi tranh giờ 19:00 có cách khôi phục: UNKNOWN vì không có ảnh tương ứng.",
+    "Lịch của tôi, tab Sắp tới và trạng thái rỗng Đã qua: UNKNOWN vì không có ảnh tương ứng.",
+    "Tân Định và nội dung dưới viewport/khối nổi: UNKNOWN, không coi không thấy trong capture là không có trong source.",
+    "Loading, trạng thái dài, phóng chữ 200%, theme của danh sách chọn giờ và các màn khác: UNKNOWN.",
+    "Keyboard traversal toàn luồng, screen reader, tên vai trò accessible, thứ tự đọc và quản lý focus.",
+    "Kích thước hit target thực tế; đo contrast AA đầy đủ bằng pixel/token.",
+    "Click, back, cuộn cuối, cập nhật số khung trống và lưu dữ liệu ở runtime.",
+    "Không có chứng nhận native/device/AT từ screenshot."
+  ],
+  "summary": "Năm ảnh được mở trực tiếp cho thấy trang chủ rõ, màu xanh gắn với sân thể thao, các chip giờ đưa hành động lên gần nội dung. Ảnh kết quả đang chọn có số Còn 1 khung trống khớp 19:00 đã kín và 21:00 còn chọn. Không ghi hard fail chắc chắn trong ảnh. Điểm 4.05 chỉ phản ánh các màn đã thấy; cổng delivery L vẫn UNKNOWN vì thiếu ảnh các màn và trạng thái còn lại."
+}
