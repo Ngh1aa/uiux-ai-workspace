@@ -1,0 +1,100 @@
+{
+  "reviewer": {
+    "id": "fresh-gate-review-2026-10-30",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "review_stage": "first-review",
+  "cold_protocol": "first-impression-after-brief; brief was read before images, so this is not a valid blind cold read",
+  "cold": {
+    "02-app-1280-dark.jpg": {
+      "Màn này để làm gì?": "Trang chủ đặt sân, xem lịch gần nhất và tìm sân tối nay.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô tìm sân theo tên hoặc quận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thẻ lịch lớn đẩy liên kết xem cả ba sân xuống sát tab bar; không xác định được khả năng cuộn từ ảnh."
+    },
+    "02-app-1280-light.jpg": {
+      "Màn này để làm gì?": "Trang chủ tìm sân và xem lượt đặt đã xác nhận.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô tìm sân.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Liên kết xem cả ba sân nằm ngay mép trên tab bar, chưa được tách thoáng."
+    },
+    "02-app-390-dark.jpg": {
+      "Màn này để làm gì?": "Xem lượt đặt sắp tới và bắt đầu tìm sân gần nhà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm sân theo tên hoặc quận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lịch đã đặt chiếm phần lớn nửa đầu; đường tìm thêm sân ở sát đáy nội dung."
+    },
+    "02-app-390-light.jpg": {
+      "Màn này để làm gì?": "Đặt sân nhanh tối nay và mở lịch hiện có.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô tìm sân hoặc thẻ Sân Phú Nhuận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thẻ lượt đặt lớn hơn vùng tìm sân; cần cuộn để thấy thêm, chưa biết runtime."
+    },
+    "02-booked.png": {
+      "Màn này để làm gì?": "Xem lịch sân đã đặt với ngày, giờ và ghi chú.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tab Đã qua nếu cần kiểm lịch sử.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lượt Phú Nhuận tiếp tục dưới mép khung; không kết luận bị mất vì có thể cuộn."
+    },
+    "02-checkout-light.png": {
+      "Màn này để làm gì?": "Xác nhận sân, khung giờ, số người, ghi chú và tổng tiền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xác nhận đặt sân sau khi kiểm thông tin.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Giờ chỉ ghi tối nay, ít chắc chắn hơn một ngày cụ thể khi lưu hoặc xem lại ảnh."
+    },
+    "02-conflict19.png": {
+      "Màn này để làm gì?": "Báo giờ vừa bị đặt trước và đề nghị chọn lại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn khung khác hoặc Đổi khung giờ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Hành động trong khối lỗi ở sát tab bar; ảnh không chứng minh nó không thể cuộn vào đủ khung."
+    },
+    "02-detail-dark.png": {
+      "Màn này để làm gì?": "Xem giá, tiện ích và chọn giờ tại Sân Phú Nhuận.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Khung 18:00 còn trống.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Các giờ phía dưới tiếp tục ngoài vùng thấy; nhãn đang chọn mới có ở chú giải."
+    },
+    "02-empty.png": {
+      "Màn này để làm gì?": "Cho biết chưa có lịch đã qua và dẫn tìm sân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tìm sân tối nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Trạng thái rõ ràng, không thấy lỗi bố cục chắc chắn."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4.5,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "02-app-1280-light.jpg",
+      "element": "Liên kết Xem cả 3 sân tối nay sát mép trên tab bar; thẻ lịch cao",
+      "fix": "Giảm chiều cao phần lịch sắp tới hoặc chỉnh nhịp cuối vùng nội dung để liên kết có khoảng thở khi xuất hiện; kiểm tra cuộn thực tế trước kết luận che khuất."
+    },
+    {
+      "dimension": "1",
+      "image": "02-app-390-light.jpg",
+      "element": "Lượt đặt sắp tới đứng trước việc tìm sân tối nay",
+      "fix": "Cân nhắc phiên bản thẻ lịch gọn hơn để tác vụ tìm giờ trống được nhìn thấy sớm hơn."
+    },
+    {
+      "dimension": "8",
+      "image": "02-checkout-light.png",
+      "element": "Dòng Tối nay, 18:00–19:00",
+      "fix": "Bổ sung ngày cụ thể cạnh Tối nay trên bước xác nhận để giảm nhầm khi xem lại thông tin."
+    }
+  ],
+  "not_checked": [
+    "Bàn phím, thứ tự Tab và focus qua toàn bộ luồng; ảnh focus riêng lẻ không chứng minh toàn luồng.",
+    "VoiceOver, TalkBack, tên và vai trò accessible, thứ tự đọc.",
+    "Phóng chữ 200%, Dynamic Type và cỡ chữ hệ thống lớn.",
+    "Vùng hit target thực tế; kích thước hình vẽ không xác nhận vùng chạm.",
+    "Đo contrast AA bằng pixel/token đầy đủ, gồm mọi trạng thái.",
+    "Điều hướng back, cuộn tới cuối, click, loading, lưu và khôi phục dữ liệu ở runtime.",
+    "Tính đầy đủ của các màn/trạng thái/theme không có ảnh trong packet; không suy ra là source thiếu.",
+    "Cold review đúng thứ tự: brief đã được đọc trước ảnh; cold bên dưới là ấn tượng đầu sau brief và không phải đọc lạnh hợp lệ."
+  ],
+  "summary": "Ảnh cho thấy luồng đặt sân rõ, thương hiệu xanh hợp hoạt động thể thao, lỗi tranh giờ có hướng khôi phục và lịch rỗng có CTA. Nhịp dọc trang chủ còn khiến liên kết tìm đủ sân sát tab bar. Không ghi hard fail chắc chắn từ tập ảnh."
+}

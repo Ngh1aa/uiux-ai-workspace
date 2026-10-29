@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "created": "2026-10-29T10:19:23Z",
+  "size": "L",
+  "images": {
+    "04-multi-role-1280-dark.jpg": "19706794ff9febbe90fdb16eff21d647a504cbfaff22c2315ff02a5b536a78df",
+    "04-multi-role-1280-light.jpg": "70c88f0e648bd9f749494b88eaf2ec77ed6f04d21041d16749d4110dbc3525b5",
+    "04-multi-role-1440-dark.jpg": "73203fe724f787420987469050d7118b59b029ad0dacb70a00698968753f8612",
+    "04-multi-role-1440-light.jpg": "b69ff218957e2db58528600008deee505be82e83cfc5fa30ea39cbbe23694207",
+    "04-multi-role-390-dark.jpg": "7e4439ffc6bb977bef623f8c19d223d9aa8336aa36a6a3110ba31238494da3ae",
+    "04-multi-role-390-light-04-conflict.png": "c65e937e8361b51abab8832d727cd890373e516c49ebcf493803919c44a81761",
+    "04-multi-role-390-light-04-doctor.png": "f28c8c60edd6bd79989be10449c4b2fa61081852a762779fb9fd2a234c9050fc",
+    "04-multi-role-390-light-04-no-permission.png": "ad5e784aa8bb22a70324dd5f55be0e2d9abb918c364e660f9fa9eed0e86393a5",
+    "04-multi-role-390-light-04-owner.png": "a677cfe3a4474c539b2e87d0291f42a2b3598af2c6bf14c09cd25ca94800c105",
+    "04-multi-role-390-light.jpg": "2f89c51079389fa6404f6632b6e5f73db4d0395813fb71b37ddcd1011e53bdd1"
+  },
+  "inputs": {
+    "brief.md": "0f911668f6f498d73abd4aed5e86936582dd2757b3623d8007f37caef8df29db",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

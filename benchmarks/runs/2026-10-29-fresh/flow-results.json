@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "evidence_type": "actual_playwright_browser_assertions",
+  "native_status": "UNKNOWN",
+  "independent_review": false,
+  "briefs": {
+    "01-landing": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Đặt lớp, giữ lựa chọn khi quay lại sửa, tổng tiền đúng, xác nhận và trở lại",
+          "status": "PASS"
+        },
+        {
+          "name": "Số điện thoại sai bị chặn, sửa lại và tiếp tục được",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        },
+        {
+          "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "02-app": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Tìm không có kết quả và xoá bộ lọc",
+          "status": "PASS"
+        },
+        {
+          "name": "Khung19:00 race ở Kỳ Hoà, chọn21:00, giữ số người/ghi chú, tổng100000",
+          "status": "PASS"
+        },
+        {
+          "name": "Xem lại lịch mới và lịch mẫu; tab Đã qua rỗng",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        },
+        {
+          "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "03-dashboard": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Nhập số0 bị chặn, kiểm tra/sửa số lượng, lưu đúng tồn6+9=15",
+          "status": "PASS"
+        },
+        {
+          "name": "Gửi2041 cập nhật14→13 đơn chờ và3→2 quá hạn",
+          "status": "PASS"
+        },
+        {
+          "name": "Biểu đồ và bảng dữ liệu đúng tổng18550, đỉnhCN4120",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        },
+        {
+          "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "04-multi-role": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+          "status": "PASS"
+        },
+        {
+          "name": "Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+          "status": "PASS"
+        },
+        {
+          "name": "Owner dữ liệu đúng, chartpartial không bịa ngày",
+          "status": "PASS"
+        },
+        {
+          "name": "Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        },
+        {
+          "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "05-native": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        },
+        {
+          "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": [],
+      "native_status": "UNKNOWN"
+    }
+  }
+}

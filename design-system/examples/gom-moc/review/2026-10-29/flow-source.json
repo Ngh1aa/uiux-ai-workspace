@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "layer": "source-static",
+  "errorCount": 0,
+  "warningCount": 1,
+  "flow_status": "UNKNOWN",
+  "results": [
+    {
+      "page": "design-system/examples/gom-moc/app.html",
+      "mode": "prototype",
+      "static_status": "PASS",
+      "flow_status": "UNKNOWN",
+      "errors": [],
+      "warnings": [
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 90,
+          "message": "Nhãn “Chọn buổi còn chỗ” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        }
+      ],
+      "unknown": [
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 51,
+          "message": "“Đổi sáng tối”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 90,
+          "message": "“Chọn buổi còn chỗ”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 103,
+          "message": "“Bớt một người”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 105,
+          "message": "“Thêm một người”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 151,
+          "message": "“Thêm vào lịch”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 164,
+          "message": "“Quay lại sửa”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "no-result",
+          "status": "UNKNOWN",
+          "line": 164,
+          "message": "Cần bấm xác nhận và kiểm tra phản hồi, dữ liệu cùng đường khôi phục."
+        },
+        {
+          "rule": "runtime",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "HTML nguồn không chứng minh luồng, Back, tổng tiền, đúng đối tượng/vai trò, khôi phục lỗi hoặc navigation động. Chạy Playwright của dự án."
+        }
+      ]
+    }
+  ]
+}

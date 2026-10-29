@@ -1,0 +1,95 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "04-conflict.png": {
+      "Màn này để làm gì?": "Xử lý việc đặt lịch trùng ghế bằng cách chọn giờ còn trống.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chuyển sang Ghế 1 lúc 10:30.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Có lỗi cụ thể và giải pháp rõ; nút Kiểm tra lịch hẹn còn phải bấm thêm sau chuyển nên cần phản hồi trạng thái."
+    },
+    "04-multi-role-1280-dark.jpg": {
+      "Màn này để làm gì?": "Xem lịch các ghế hôm nay, bệnh nhân muộn và khoảng trống.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Hồ Ngọc Mai đang muộn 15 phút.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Lịch dễ đọc nhưng ô dấu gạch ngang chưa rõ trống hay không có dữ liệu."
+    },
+    "04-multi-role-1280-light.jpg": {
+      "Màn này để làm gì?": "Lễ tân theo dõi lượt đến, ghế và đặt lịch.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Không rõ vì sao chỉ 10:30 được ghi Trống trong khi nhiều ô là dấu gạch ngang."
+    },
+    "04-multi-role-390-dark.jpg": {
+      "Màn này để làm gì?": "Xem lịch hôm nay dạng danh sách trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Đặt lịch.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ô tìm kiếm bị bóp thành vạch nhỏ, icon tràn ra và không còn placeholder đọc được."
+    },
+    "04-multi-role-390-light.jpg": {
+      "Màn này để làm gì?": "Lễ tân xem thứ tự bệnh nhân và chi tiết hẹn trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Lượt muộn của Hồ Ngọc Mai.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Ô tìm kiếm co hẹp mất chức năng nhìn thấy; chi tiết lượt đã chọn xuống rất sâu sau cả lịch."
+    },
+    "04-no-permission.png": {
+      "Màn này để làm gì?": "Báo lễ tân không được xem doanh thu và giải thích quyền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Về lịch hôm nay.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Giới hạn bản mẫu được nói rõ, nhưng nhiều chữ giải thích quyền mang tính demo hơn công việc hằng ngày."
+    },
+    "04-patient-light.png": {
+      "Màn này để làm gì?": "Bác sĩ xem bệnh nhân tiếp theo, dị ứng và kế hoạch khám.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Kiểm tra cảnh báo dị ứng trước Bắt đầu khám.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nhãn Chưa đến đi cùng CTA Bắt đầu khám chưa giải thích có cần xác nhận bệnh nhân đã đến không."
+    },
+    "04-revenue-dark.png": {
+      "Màn này để làm gì?": "Chủ phòng khám xem doanh thu và hiệu suất.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xem dữ liệu và giới hạn biểu đồ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Chỗ thiếu dữ liệu được chỉ rõ; thông báo ghế 3 chưa đủ 7 ngày dù dùng từ 20/10 tới 28/10 khiến khó hiểu tiêu chí đủ dữ liệu."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4.5,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3.5,
+    "8": 4,
+    "9": 3,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "04-multi-role-390-light.jpg",
+      "element": "Hàng ô tìm bệnh nhân + badge muộn + ghế trống",
+      "fix": "Xếp ô tìm kiếm một hàng riêng trên mobile, các badge xuống hàng kế; hiện input bị bóp thành vạch mỏng và icon tràn khỏi viền."
+    },
+    {
+      "dimension": "7",
+      "image": "04-multi-role-1280-light.jpg",
+      "element": "Các ô lịch dấu gạch ngang so với ô10:30Ghế1Trống",
+      "fix": "Làm rõ dấu gạch ngang nghĩa là không có lịch mẫu, không có dữ liệu hay chỗ trống; người lễ tân cần phân biệt với khung đã được xác nhận có thể đặt. Điểm chỉ dựa trạng thái nhìn thấy."
+    },
+    {
+      "dimension": "9",
+      "image": "04-multi-role-390-dark.jpg",
+      "element": "Ô tìm bệnh nhân và panel Chi tiết lịch hẹn",
+      "fix": "Ngoài sửa ô search, trên mobile đưa chi tiết lượt được chọn gần vị trí chọn, trong drawer hoặc vùng mở cùng hàng, giảm phải kéo qua toàn bộ lịch. Đây là ảnh390 bổ sung; brief bắt buộc desktop1280/1440."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo contrast số học, không xác nhận WCAG AA từ ảnh.",
+    "HF-2: hit area thực UNKNOWN.",
+    "HF-3: không thấy clipping ở ảnh desktop1280 được cung cấp; ảnh390 bổ sung có search co hẹp/icon tràn, ghi observation vì390 ngoài kích thước desktop bắt buộc trong brief. Chưa có render1440x900 và chưa có text200%.",
+    "HF-4: focus, bàn phím đi qua lịch/form, screen reader UNKNOWN.",
+    "HF-5: đã thấy conflict, không quyền và empty dữ liệu doanh thu; loading/các state khác chưa có bằng chứng.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh; trạng thái lịch có nhãn chữ, chỉ có một primary CTA trong từng khu, phần doanh thu thiếu dữ liệu được phân biệt rõ và mẫu được gắn nhãn. Không thấy deceptive pattern hoặc fabricated evidence.",
+    "HF-7: browser back/modal dismissal và navigation runtime UNKNOWN.",
+    "Permission enforcement/backend, phân quyền dữ liệu thật, persistence, guard không bắt đầu khám khi bệnh nhân chưa đến UNKNOWN. Chỉ nhìn thấy UI mô phỏng với nhãn giới hạn rõ.",
+    "Màn bác sĩ/revenue/permission/conflict chưa có đủ cả hai theme và mọi kích thước bắt buộc; không suy ra source thiếu.",
+    "Không đánh giá tính đúng đắn của điều trị y khoa; chỉ đánh giá hierarchy và biểu hiện UI của dữ liệu brief.",
+    "Người duyệt hướng/human approval UNKNOWN và không thể được thay bằng review agent này. Đây là agent-heuristic thị giác độc lập."
+  ]
+}

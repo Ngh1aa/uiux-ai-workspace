@@ -1,0 +1,77 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "03-dashboard-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Ưu tiên nhập hàng sắp hết và xử lý đơn gửi trễ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng ở Len cotton màu kem.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Không thấy lỗi mới; thứ tự hàng cần nhập và đơn trễ rõ."
+    },
+    "03-dashboard-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem hàng đủ bán bao lâu, đơn quá hạn và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xử lý đơn #2041.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Không thấy lỗi mới; thứ tự hàng cần nhập và đơn trễ rõ."
+    },
+    "03-dashboard-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xử lý việc kho trên điện thoại theo từng khối.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ghi nhận nhập hàng.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Khoảng trống mỗi hàng sản phẩm vẫn cao; chỉ số Bán/ngày chưa thấy ở mobile."
+    },
+    "03-dashboard-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem hàng cần nhập và đơn cần gửi trước.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng Len cotton màu kem.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Khoảng trống mỗi hàng sản phẩm vẫn cao; chỉ số Bán/ngày chưa thấy ở mobile."
+    },
+    "03-stock-updated.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Hiển thị kho sau khi nhập hàng và đánh dấu một đơn đã gửi.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xử lý đơn #2045.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: KPI quá hạn 2/heading 2 đã khớp; lời khuyên đổi sang kim móc đủ 4 ngày, không còn cảnh báo len kem 2 ngày."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4,
+    "9": 3.5,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "03-dashboard-390-light.jpg",
+      "element": "Khoảng trống trong bốn hàng sản phẩm",
+      "fix": "Mỗi sản phẩm vẫn có khoảng trống lớn giữa tên/số tồn và đủ ngày/nút nhập; nén nhịp từng dòng trên mobile để ưu tiên việc kho xuất hiện gọn hơn."
+    },
+    {
+      "dimension": "9",
+      "image": "03-dashboard-390-dark.jpg",
+      "element": "Thông tin Bán/ngày trên mobile",
+      "fix": "Desktop có Bán/ngày nhưng mobile chưa thấy; đưa vào dòng phụ gọn hoặc vùng chi tiết mở để chủ shop kiểm được cơ sở tính đủ bán."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tỷ lệ tương phản số học; điểm màu chỉ là heuristic thị giác, không xác nhận WCAG AA.",
+    "HF-2: hit area và vùng chạm thực UNKNOWN từ ảnh.",
+    "HF-3: không kết luận nội dung ở dưới viewport là clipping vĩnh viễn khi chưa kiểm cuộn; text 200% chưa kiểm.",
+    "HF-4: keyboard path, screen reader và focus đầy đủ UNKNOWN; vài ảnh có focus không chứng minh toàn bộ luồng.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh, trạng thái có chữ; không thấy cạnh tranh primary khác nhiệm vụ, deceptive pattern hoặc bằng chứng bịa không nhãn.",
+    "HF-7: browser/system back, dismiss, giữ state và điều hướng runtime UNKNOWN.",
+    "Interaction, persistence, native runtime, thiết bị thật và backend UNKNOWN; điểm 7/9 đánh giá biểu hiện nhìn thấy, không chứng nhận hành vi.",
+    "Đây là re-review đã biết brief, không phải first-read mù. independent=true nghĩa độc lập với người làm; không phải human research hay human approval.",
+    "Finding stale trước được đóng trên 03-stock-updated.png: KPI 2 và heading 2 khớp; lời khuyên đổi sang kim móc đủ 4 ngày thay cho cảnh báo len kem 2 ngày.",
+    "HF-5: chưa có ảnh dialog nhập hàng/lỗi/empty/loading; implementation UNKNOWN.",
+    "Undo, tính chính xác cập nhật sau thao tác thật và lưu qua tải lại UNKNOWN.",
+    "TASTE.md và skill data-visualization ngoài packet chưa đọc theo giới hạn review."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Re-review ảnh mới; đã biết brief từ lượt trước. Không đọc source, rationale hoặc điểm của người làm. Không dùng điểm heuristic để chứng nhận runtime/accessibility/backend."
+}

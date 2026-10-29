@@ -64,7 +64,7 @@ thư mục có `SKILL.md`.
 | `responsive-and-device-strategy` | Breakpoint, bố cục theo cỡ màn |
 | `frontend-implementation` | Dựng HTML/CSS đúng ngữ nghĩa |
 | `web-quality-and-performance` | Tốc độ tải, Core Web Vitals |
-| `ui-craft-and-visual-qa` | Cải thiện UI hiện có, soát prototype và craft; có `taste-check.cjs`, `static-check.cjs` |
+| `ui-craft-and-visual-qa` | Cải thiện UI hiện có, soát prototype và craft; có `taste-check.cjs`, `static-check.cjs`, `flow-check.cjs`; hành vi theo FLOW.md |
 | `media-crop-and-layout-integrity` | Ảnh bị cắt sai, vỡ tỉ lệ |
 | `design-critique-and-rationale` | Phê bình theo rubric, lý do thiết kế |
 | `ux-laws-and-heuristics` | Đánh giá theo heuristic |

@@ -82,6 +82,7 @@ function parseArgs(argv) {
     else if (arg === '--layout') opts.layout = next();
     else if (arg === '--height') opts.height = Number(next());
     else if (arg === '--theme') opts.theme = next();
+    else if (arg === '--locale') opts.locale = next();
     else if (arg === '--screenshot') opts.screenshot = path.resolve(next());
     else if (arg === '--json') opts.json = path.resolve(next());
     else if (arg === '--format') opts.format = next();
@@ -95,6 +96,9 @@ function parseArgs(argv) {
   if (!['png', 'jpeg'].includes(opts.format)) throw new Error('--format phải là png hoặc jpeg');
   if (!['warn', 'strict'].includes(opts.layout)) throw new Error('--layout phải là warn hoặc strict');
   if (!['light', 'dark', 'both'].includes(opts.theme)) throw new Error('--theme phải là light, dark hoặc both');
+  if (opts.locale) {
+    try { new Intl.Locale(opts.locale); } catch { throw new Error('--locale phải là BCP 47 hợp lệ, ví dụ vi-VN'); }
+  }
   return opts;
 }
 
@@ -280,7 +284,12 @@ function auditInPage() {
         const full = (el.textContent || '').replace(/\s+/g, ' ').trim();
         if (full.length <= 24 && text.length >= 2 && lineCount(el) > 1) {
           const label = el.matches(INTERACTIVE) || el.closest('label, button, [role="button"], [role="tab"]');
-          if (label) errors.push({ rule: 'wrap', message: `Nhãn điều khiển ngắn bị gãy dòng: ${describe(el)}` });
+          const control = el.closest('button, [role="button"], [role="tab"]');
+          // A rich record button can contain a wrapping patient/object name plus
+          // separate time/status fields. That content is not a short CTA label.
+          const richRecord = control && control !== el && control.children.length > 1 &&
+            control.textContent.replace(/\s+/g, ' ').trim().length > 24;
+          if (label && !richRecord) errors.push({ rule: 'wrap', message: `Nhãn điều khiển ngắn bị gãy dòng: ${describe(el)}` });
           else warnings.push({ rule: 'wrap-review', message: `Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: ${describe(el)}` });
         }
         // Dòng cuối chỉ còn một chữ
@@ -627,7 +636,7 @@ async function main() {
       if (opts.reflow) passes.push({ width: 320, theme: 'light', reflow: true });
       for (const { width, theme, reflow } of passes) {
         {
-          const context = await browser.newContext({ viewport: { width, height: opts.height }, colorScheme: theme, reducedMotion: 'reduce' });
+          const context = await browser.newContext({ viewport: { width, height: opts.height }, colorScheme: theme, reducedMotion: 'reduce', ...(opts.locale ? {locale:opts.locale} : {}) });
           const tab = await context.newPage();
           const consoleErrors = [];
           tab.on('pageerror', (err) => consoleErrors.push(String(err.message || err)));

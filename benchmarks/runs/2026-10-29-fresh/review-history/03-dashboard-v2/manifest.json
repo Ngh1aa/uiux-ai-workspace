@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "created": "2026-10-29T10:12:32Z",
+  "size": "M",
+  "images": {
+    "03-dashboard-1280-dark.jpg": "d5445ebae805d03a3fd528bed04d0ea7af73bb1656c7efd325e5a2799f5cfd8e",
+    "03-dashboard-1280-light.jpg": "715f4c801acde8ca3da1be2f88692bb6fd7c8e0974a820c6f7802b5262afb2fd",
+    "03-dashboard-390-dark.jpg": "f1c47dd88cdf20fa8ecad9ca40f69a35a4861b0943756ee2fc32f5f71294145f",
+    "03-dashboard-390-light.jpg": "fc4b847c1f2297fd7a2bc975c90e92bc629de17d40a99a85a36d3f0c72545c06",
+    "03-stock-updated.png": "242a4f7160638a1b4081dd48ba9abd8073c31ec3d5fd0bc9948b2b66329e3d1d"
+  },
+  "inputs": {
+    "brief.md": "7cfea59df16c5207f34fee7be54be8c73b572c4dabca271aaba7b007b21cec5c",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

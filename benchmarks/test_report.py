@@ -29,6 +29,16 @@ class ReportTests(unittest.TestCase):
     def test_fresh_run_with_exact_source_and_distinct_reviewer(self):
         self.assertEqual(self.errors(), [])
 
+    def test_independent_panel_records_actual_reviewer_for_each_brief(self):
+        self.scores["protocol"]["reviewer_ids"] = {b: "reviewer-" + b for b in report.BRIEFS}
+        self.assertEqual(self.errors(), [])
+        self.scores["protocol"]["reviewer_ids"][next(iter(report.BRIEFS))] = "author"
+        self.assertTrue(self.errors())
+
+    def test_partial_reviewer_panel_is_rejected(self):
+        self.scores["protocol"]["reviewer_ids"] = {next(iter(report.BRIEFS)): "reviewer"}
+        self.assertTrue(self.errors())
+
     def test_missing_or_non_sha_source_rejected(self):
         for value in (None, "vòng cải tiến 1", "cc0276e"):
             with self.subTest(value=value):

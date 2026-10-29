@@ -1,0 +1,111 @@
+{
+  "reviewer": {
+    "id": "blind-review-repair-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "03-dashboard-1280-dark.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    },
+    "03-dashboard-1280-light.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    },
+    "03-dashboard-390-dark.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    },
+    "03-dashboard-390-light-result.png": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Kết quả đánh dấu gửi và trạng thái demo của các panel.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Gửi đơn quá hạn còn lại hoặc đóng menu để trở lại công việc.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] KPI và nhãn đã cùng còn 2 đơn; menu mở vẫn tạo khoảng trắng dài trước nội dung."
+    },
+    "03-dashboard-390-light-review-order.png": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Xác nhận đánh dấu đã gửi đơn 2041 chị Hà.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Đánh dấu gửi sau khi kiểm tra người nhận.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Mô tả vẫn nối Đà NẵngQuá 2 ngày thiếu khoảng cách/phân cách."
+    },
+    "03-dashboard-390-light.jpg": {
+      "Màn này để làm gì?": "[Re-read; đã biết brief] Dashboard Len Nhỏ để biết hàng cần nhập, đơn cần gửi và doanh thu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "[Re-read; đã biết brief] Nhập ngay cho len cotton màu kem hoặc Gửi đơn 2041 quá hạn 2 ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "[Re-read; đã biết brief] Reflow caption đã đọc bình thường; dải KPI giữ hướng hình ảnh len và các khối công việc rõ."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 3,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3,
+    "8": 3,
+    "9": 3,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "OPEN: khi menu mở, một vùng trắng dài gần một màn hình xuất hiện giữa navigation và tiêu đề công việc.",
+      "fix": "Giới hạn menu theo nội dung hoặc dùng drawer/overlay mobile; đừng dành toàn bộ chiều cao trống trước nội dung."
+    },
+    {
+      "dimension": "7",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "OPEN: ảnh kết quả vẫn giữ menu mở trên vùng trắng rất dài, làm trạng thái sau xử lý nằm xa điều hướng.",
+      "fix": "Khi chọn mục hoặc hoàn thành thao tác, đưa người dùng về đúng khu vực công việc và đóng menu nếu phù hợp; cần kiểm hành vi runtime."
+    },
+    {
+      "dimension": "8",
+      "image": "03-dashboard-390-light-review-order.png",
+      "element": "OPEN: dòng tóm tắt ghi Đà NẵngQuá 2 ngày, thiếu khoảng trắng giữa thành phố và tình trạng trễ.",
+      "fix": "Tách thành phố với Quá 2 ngày bằng dấu phân cách/dòng hoặc khoảng trắng; chụp lại modal."
+    },
+    {
+      "dimension": "9",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "OPEN: navigation mobile vẫn mang chiều cao lớn của vùng sidebar và đẩy dashboard xuống xa.",
+      "fix": "Cho navigation có cấu trúc riêng ở mobile, giữ nội dung công việc trong phần đầu màn sau khi mở/đóng menu."
+    },
+    {
+      "dimension": "4",
+      "image": "03-dashboard-390-dark.jpg",
+      "element": "RESOLVED: caption tồn kho đã chiếm chiều ngang đọc bình thường, không còn chia thành từng từ.",
+      "fix": "Giữ reflow này cho cả theme và thử tiếp 200% text."
+    },
+    {
+      "dimension": "6",
+      "image": "03-dashboard-390-light-result.png",
+      "element": "RESOLVED: KPI, câu dưới KPI và nhãn khu vực đều cùng ghi 2 đơn quá hạn; đơn 2041 có trạng thái Đã gửi rõ.",
+      "fix": "Giữ số lượng tính theo đơn đang cần xử lý; có thể tách hàng đã gửi sang kết quả vừa xử lý để danh sách gọn hơn."
+    },
+    {
+      "dimension": "10",
+      "image": "03-dashboard-390-light.jpg",
+      "element": "Bố cục mobile đã sửa measure caption, phần ví dụ trạng thái được thu gọn, làm tổng thể gọn và rõ hơn vòng trước.",
+      "fix": "Giữ thông tin demo ở disclosure, giảm cường độ hoạ tiết KPI nếu phép đo tương phản cho thấy cần."
+    }
+  ],
+  "not_checked": [
+    "Re-review đã biết brief và finding vòng trước; cold trong hồ sơ này là re-read, không phải first-read/blind cold mới. Reviewer vẫn độc lập với người làm, không đọc source/rationale/điểm người làm.",
+    "Đây là agent-heuristic từ screenshot, không phải human research, human approval hoặc bằng chứng triển khai.",
+    "HF-1: chưa đo tỷ lệ tương phản AA của tất cả chữ/icon ở hai theme; quan sát ảnh không chứng minh 4.5:1/3:1.",
+    "HF-2: chưa đo hit area thật; ảnh không chứng minh vùng nhận chạm web 24 px/iOS 44 pt/Android 48 dp.",
+    "HF-4: chưa kiểm bàn phím, focus order/indicator khi thao tác, focus trap/return và screen reader.",
+    "HF-5: trạng thái không có ảnh là UNKNOWN; không kết luận thiếu implementation từ thiếu screenshot.",
+    "HF-7: chưa kiểm Back, edge swipe, lịch sử, phục hồi state và quy ước nền tảng khi tương tác thật.",
+    "Chưa kiểm chữ phóng 200%, Dynamic Type/font scale, bàn phím ảo, nội dung dài, API/backend, lưu dữ liệu hoặc thông báo thật.",
+    "Không suy phần control nằm ngoài scroll viewport trong ảnh là không thể cuộn tới hoặc bị mất. Cần runtime để kiểm.",
+    "HF-3/HF-6/HF-8/HF-9/HF-10: không thấy vi phạm chắc chắn trong các ảnh v 2 cung cấp; đây không phải xác nhận mọi trạng thái đều đạt.",
+    "Ảnh review-order có overlay/header ở giữa ảnh full-page; chưa phân biệt được lỗi capture và lỗi cố định vị trí ở runtime.",
+    "Chưa kiểm retry, loading thật, cập nhật riêng từng panel, số liệu sau refresh, chart accessibility hoặc thao tác navigation."
+  ],
+  "review_stage": "re-review"
+}

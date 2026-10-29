@@ -1,29 +1,19 @@
 ---
 name: ios-app-design
-description: Defines iOS/iPadOS interface and behavior decisions using Apple guidelines, safe areas, navigation, Dynamic Type and accessibility. Applies to native app design and handoff, not mobile websites or automatic restyling.
+description: Thiết kế iOS. Dùng theo tác vụ được chọn trong WORKFLOWS.md.
 ---
 
-# iOS App Design
+# Thiết kế iOS
 
-## Decisions
-Read target brand, components, deployment target and current Apple HIG before choosing a pattern. Record whether a control is system-provided or custom and why. Keep app content distinct from system/navigation chrome; avoid replacing working native controls with decorative imitations.
+Chọn cỡ/track theo [WORKFLOWS.md](../../WORKFLOWS.md), không tự mở thêm quy trình.
 
-- Separate top-level destinations, pushed details, sheets and destructive confirmations. Specify interactive dismissal, cancellation and draft preservation.
-- Account for safe areas, keyboard and system overlays. Primary actions remain reachable with large text and short available height.
-- Use semantic text styles and color roles; test Dynamic Type, dark appearance, contrast and Reduce Motion. A system font is not a license to redistribute font files.
-- Apple recommends 44×44 **points** for hit targets; visible glyph size and hit area are distinct. CSS px and Android dp are separate units.
-- Design VoiceOver names, roles, values, reading order, grouped content and change announcements. Screenshot inspection cannot validate VoiceOver behavior.
-- Request permissions in context; specify denied/revoked states and useful fallback paths.
+Chọn theo deployment target, brand và control sẵn có. Phân biệt push/sheet/alert, dismissal và bản nháp; kiểm safe area, 44pt, Dynamic Type, VoiceOver, dark và Reduce Motion. Browser proof không thay native.
 
-## Spec sheet
-Concrete metrics — Dynamic Type ramp, bar heights, safe areas, sheet detents, control sizes, haptics,
-Liquid Glass layering and gestures — are in the [iOS spec sheet](references/ios-spec-sheet.md).
-Cross-platform patterns are in the [mobile patterns playbook](../mobile-app-design/references/mobile-patterns-playbook.md).
+Sai: Back mất bản nháp. Đúng: giữ state khi đóng sheet và kiểm trên OS mục tiêu.
 
-## Version and asset boundaries
-Select APIs/design resources for the declared OS range; keep availability and fallback notes in handoff. Review current materials such as Liquid Glass only when appropriate to scope, brand and SDK. Do not promise identical appearance across OS versions.
+Ghi quyết định, bằng chứng và giới hạn trong ghi chú hiện có; dùng PASS / FAIL / UNKNOWN.
+Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, Back, dữ liệu và hậu quả.
 
-Apple UI kits are link-only sources in the registry. Use them under their own terms; do not vendor or repackage Apple templates, fonts or extracted symbols for Android. Native system symbol usage and redistributed image assets have different rights.
-
-## Output
-Produce iOS-specific navigation, component behavior, semantic text/color mapping, accessibility annotations and an OS/test matrix. Use [Apple entries in the shared registry](../mobile-app-design/data/sources.json); record each adopted decision and its verification path.
+Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
+mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
+Tra đúng mẫu khi cần: [references theo tác vụ](references/ios-spec-sheet.md).

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sổ đơn hàng · Màn tham chiếu</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="../../fonts/pairs.css">
+<link rel="stylesheet" href="../../generated/tokens.css">
+<link rel="stylesheet" href="../../components/components.css">
+<link rel="stylesheet" href="table.css">
+<script src="table.js" defer></script>
+<body class="ds-root">
+<a class="skip" href="#orders">Đến đơn hàng</a>
+<header class="masthead"><p>XƯỞNG SỢI / VẬN HÀNH</p><button id="theme" class="ds-button ds-button--secondary" type="button">Đổi giao diện</button></header>
+<main>
+<div class="page-heading"><div><p class="eyebrow">29 THÁNG 10, 2026</p><h1>Đơn hàng cần xử lý.</h1><p class="intro">Đối chiếu lịch giao và khoản còn thu trước khi mở từng đơn.</p></div><p class="source">Dữ liệu minh hoạ<br>Cập nhật mẫu: 29/10/2026, 08:45</p></div>
+<section class="summary" aria-label="Tổng quan toàn bộ sổ đơn mẫu"><div><span>Đơn trong sổ</span><strong id="total-count"></strong></div><div><span>Còn cần xử lý</span><strong id="pending-count"></strong></div><div><span>Giá trị đơn (₫)</span><strong id="total-value"></strong></div></section>
+<form id="filters" role="search" class="filters"><div><label for="search">Tìm mã hoặc khách hàng</label><input class="ds-field__control" type="search" id="search" placeholder="Ví dụ: SO-102"></div><div><label for="status">Trạng thái</label><select class="ds-field__control" id="status"><option value="all">Tất cả</option><option value="pending">Chờ xác nhận</option><option value="packing">Đang đóng gói</option><option value="done">Đã giao</option></select></div><button class="ds-button ds-button--secondary" type="reset">Xoá bộ lọc</button></form>
+<p class="result-count" id="count" role="status" aria-live="polite"></p>
+<div id="orders" class="ds-table-wrap" tabindex="0" role="region" aria-label="Sổ đơn hàng, cuộn ngang để xem đủ cột">
+<table class="ds-table"><caption>Sổ đơn hàng · Đơn vị tiền: đồng (₫)</caption><thead><tr><th scope="col">Đơn / khách hàng</th><th scope="col">Ngày giao</th><th scope="col">Trạng thái</th><th scope="col" aria-sort="none"><button id="sort" type="button">Giá trị (₫) ↕</button></th><th scope="col">Chi tiết</th></tr></thead><tbody id="rows"></tbody></table></div>
+<section class="empty" id="empty" hidden><h2>Chưa có đơn phù hợp</h2><p>Thử mã đơn khác hoặc xoá bộ lọc để xem lại toàn bộ sổ.</p><button id="clear" class="ds-button ds-button--secondary" type="button">Xoá bộ lọc</button></section>
+<section class="font-specimen" aria-label="Mẫu chữ tiếng Việt"><p class="eyebrow">CẶP CHỮ THỬ NGHIỆM · CHƯA DUYỆT</p><h2>Những đường sợi của Nguyễn Thị Hường.</h2><p>Ể Ỗ Ậ Ữ Ờ Ẳ Ẵ Ặ Ừ Ỹ · ể ỗ ậ ữ ờ ẳ ẵ ặ ừ ỹ</p><p>Manrope / 1.204.567 ₫ / Trường Tiểu học Hàng Chiếu, Quảng Ngãi.</p></section>
+</main>
+<dialog id="detail" aria-labelledby="detail-title"><h2 id="detail-title"></h2><dl id="facts"></dl><p>Chi tiết trong phiên minh hoạ; chưa kết nối hệ thống đơn hàng.</p><button id="close" type="button" class="ds-button ds-button--primary">Đóng chi tiết</button></dialog>
+<footer>Màn tham chiếu do agent dựng · CHƯA DUYỆT · Không có giao dịch thật.</footer>
+</body></html>

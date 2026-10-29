@@ -57,16 +57,24 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
 - Skill: [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md) ·
   [`state-feedback-and-error-recovery`](skills_UIUX/state-feedback-and-error-recovery/SKILL.md) ·
   [`ux-writing-and-microcopy`](skills_UIUX/ux-writing-and-microcopy/SKILL.md)
-- Tham chiếu: [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md)
+- Tham chiếu có điều kiện: [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md)
 - Giao: bảng trạng thái đã dựng và đặc tả component (cấu trúc, biến thể, trợ năng).
 - Ngưỡng: các chiều liên quan ≥ 3/5, không hard-fail.
 
 ### M — Màn hình / tính năng
 
+Đường đọc trước khi dựng: START-HERE → AGENTS → TASTE → CRAFT → [FLOW](FLOW.md) → trang này →
+bốn SKILL.md dưới đây. Reference, pattern và nền tảng chỉ mở đúng phần cần khi quyết định phát sinh.
+Không đọc cả craft standards, PATTERNS hay thư viện pattern như điều kiện khởi đầu.
+Đo cùng đơn vị tách whitespace bằng `python scripts/reading-paths.py`; số trước/sau kèm file thực đọc.
+
+
 1. **Khung vấn đề** (1 trang): người dùng là ai, việc chính, câu "Làm sao để", kết quả đo được.
    Brief chỉ nêu giải pháp, hoặc chưa ai biết người dùng là ai, thì chạy
    [`design-thinking-lite`](skills_UIUX/design-thinking-lite/SKILL.md) ở mức M.
-2. **Luồng**: luồng chính (happy path) và ít nhất 2 nhánh lỗi, khôi phục.
+2. **Bối cảnh và nội dung trước**: ba câu người dùng ở đâu, vội thế nào, sợ gì khi bấm.
+   Viết chữ, số, đối tượng, trạng thái tiếng Việt thật; dữ liệu minh hoạ ghi rõ và vẫn khớp xuyên luồng.
+   **Luồng** theo [FLOW.md](FLOW.md): đường chính và ít nhất 2 nhánh lỗi/khôi phục phù hợp tác vụ.
 3. **Kiểm kê màn hình × trạng thái** trước khi vẽ.
 4. **Khung dây** (wireframe) và đi thử 5 kịch bản. Sửa lỗi trải nghiệm trước khi tô màu.
 5. **Thị giác**: áp design system và [thư viện pattern](design-system/patterns/README.md); dựng 2–3
@@ -181,8 +189,10 @@ Như **L**, cộng thêm:
   và artboard canvas đạt thêm `--layout strict` (không còn màn trống, nội dung dồn một bên, card mỏng).
 - Đã **nhìn ảnh chụp trang đã dựng**, không chỉ đọc code.
 - Đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
-- Đã bấm thử tác vụ chính và nhánh quay lại/sửa; dữ liệu đầu vào, tóm tắt và xác nhận khớp nhau.
-  Demo không có backend phải ghi rõ hành vi nào chỉ mô phỏng.
+- Kiểm luồng riêng theo [FLOW.md](FLOW.md): CTA đúng đích/đối tượng/vai trò, Back giữ ngữ cảnh,
+  sửa → kiểm tra hậu quả phù hợp → kết quả, dữ liệu/tổng tiền khớp, lỗi có khôi phục.
+  `flow-check` không có lỗi chắc chắn; cảnh báo được xét từng trường hợp. Luồng bắt buộc FAIL hoặc UNKNOWN
+  chặn kết luận Đạt dù render/rubric tốt. Demo ghi rõ phần mô phỏng và phạm vi gallery.
 - Contrast và vùng chạm đạt chuẩn trong [`CRAFT.md`](CRAFT.md); không chạm mặc định nào trong danh sách
   cấm mà không có lý do từ brief.
 - Rubric đạt ngưỡng của cỡ việc, không hard-fail.

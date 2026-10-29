@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "created": "2026-10-29T09:54:13Z",
+  "size": "L",
+  "images": {
+    "02-app-1280-dark.jpg": "761997cbc753d87d804a899c2843cec8dbba705f4525ae6321a194d9fb19777b",
+    "02-app-1280-light.jpg": "f1113f458deb784c89d33f78c5756c28476cd4afa0327193da2641977e6d3cc2",
+    "02-app-390-dark.jpg": "19bd73d00d7dbaff044a4b7d00c4123955118c3750e687725c89bedccae387cf",
+    "02-app-390-light-result.png": "3c3d3572203a57744167ae5b49839d63287f0d2b0d19128f301b3e3931ac7fba",
+    "02-app-390-light.jpg": "5f6927ca87c6c3c356bfe0632d0e4ad27642c053132249d628ae676803ef0516"
+  },
+  "inputs": {
+    "brief.md": "5e70e076fc67e7b3b83e5f68eda24ccb793af60aa52b9ce1a6dd4a7fe33d76cd",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "level": "error",
+    "rule": "overlay-ratio",
+    "path": null,
+    "message": "Thêm 251 dòng CSS nhưng chỉ xoá hoặc sửa 10 dòng CSS cũ (tỉ lệ 0.04, cần ≥ 0.30). Sửa thẳng ở file đang sở hữu style và xoá quy tắc bị thay thế thay vì viết lớp mới đè lên."
+  },
+  {
+    "level": "error",
+    "rule": "important",
+    "path": null,
+    "message": "Tăng ròng 139 `!important` (thêm 139, bỏ 0; tối đa 5). `!important` để thắng cascade cũ là dấu hiệu đang đè chứ không sửa nguồn."
+  },
+  {
+    "level": "error",
+    "rule": "dom-patch",
+    "path": "benchmarks/runs/2026-10-29-fresh/assets/common.js",
+    "message": "File JS mới tìm phần tử đã render rồi chèn hoặc sửa HTML. Sửa ở renderer, template hoặc component đang sinh ra phần tử đó để markup đúng ngay từ đầu."
+  },
+  {
+    "level": "error",
+    "rule": "dom-patch",
+    "path": "benchmarks/runs/2026-10-29-iterative-repair/assets/common.js",
+    "message": "File JS mới tìm phần tử đã render rồi chèn hoặc sửa HTML. Sửa ở renderer, template hoặc component đang sinh ra phần tử đó để markup đúng ngay từ đầu."
+  },
+  {
+    "level": "error",
+    "rule": "dom-patch",
+    "path": "design-system/examples/data-table/table.js",
+    "message": "File JS mới tìm phần tử đã render rồi chèn hoặc sửa HTML. Sửa ở renderer, template hoặc component đang sinh ra phần tử đó để markup đúng ngay từ đầu."
+  },
+  {
+    "level": "warning",
+    "rule": "generated",
+    "path": "design-system/examples/gom-moc/app.html",
+    "message": "File này là file sinh tự động. Kiểm tra đã sửa ở nguồn và chạy lại generator, không sửa tay bản sinh ra."
+  },
+  {
+    "level": "info",
+    "rule": "summary",
+    "path": null,
+    "message": "CSS: +251 / -10 dòng; file CSS sửa 1, thêm 13, xoá 0; !important ròng +139."
+  }
+]

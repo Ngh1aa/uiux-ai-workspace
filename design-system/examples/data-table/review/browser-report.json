@@ -1,0 +1,348 @@
+{
+  "status": "PASS",
+  "evidence_class": "AUTHORED_SYNTHETIC_BROWSER_CHECKS",
+  "engine": "chromium",
+  "human_review": "CHƯA DUYỆT",
+  "native": "UNKNOWN",
+  "screen_reader": "UNKNOWN",
+  "rows": [
+    {
+      "specimen": "table",
+      "width": 320,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "schedule-first",
+      "width": 320,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "task-first",
+      "width": 320,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "table",
+      "width": 320,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "schedule-first",
+      "width": 320,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "task-first",
+      "width": 320,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "table",
+      "width": 390,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "schedule-first",
+      "width": 390,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "task-first",
+      "width": 390,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "table",
+      "width": 390,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "schedule-first",
+      "width": 390,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "task-first",
+      "width": 390,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "table",
+      "width": 1280,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "schedule-first",
+      "width": 1280,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "task-first",
+      "width": 1280,
+      "scheme": "light",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "table",
+      "width": 1280,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "schedule-first",
+      "width": 1280,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    },
+    {
+      "specimen": "task-first",
+      "width": 1280,
+      "scheme": "dark",
+      "status": "PASS",
+      "console": "PASS",
+      "resources": "PASS",
+      "reflow": "PASS",
+      "enlarged_text": "PASS",
+      "axe": "PASS",
+      "fonts_offline": "PASS"
+    }
+  ],
+  "captures": [
+    {
+      "file": "table-390-light.png",
+      "sha256": "c6969fc2c114531297e3b6abe3167483c2f5bf2b239d5866d7c9138e385dc2d6",
+      "specimen": "table",
+      "width": 390,
+      "scheme": "light",
+      "inspected": true
+    },
+    {
+      "file": "schedule-first-390-light.png",
+      "sha256": "8aa363d4dfa71f2f61161bcb85ad3e32af7f933e44862327e5082d89446c5b5c",
+      "specimen": "schedule-first",
+      "width": 390,
+      "scheme": "light",
+      "inspected": true
+    },
+    {
+      "file": "task-first-390-light.png",
+      "sha256": "66b8d38df3f700d460a4202f1b624e2d623dfa894fa0b2929b6b430530e229c4",
+      "specimen": "task-first",
+      "width": 390,
+      "scheme": "light",
+      "inspected": true
+    },
+    {
+      "file": "table-390-dark.png",
+      "sha256": "bf2377cb57d0908584bc0917c9ebd3ebbac2b23611d6f924328eda75595c0244",
+      "specimen": "table",
+      "width": 390,
+      "scheme": "dark",
+      "inspected": true
+    },
+    {
+      "file": "schedule-first-390-dark.png",
+      "sha256": "19f360f8110a4c771eca29e20b541962ca0a63ce73e67bbe42f8e15ad2935762",
+      "specimen": "schedule-first",
+      "width": 390,
+      "scheme": "dark",
+      "inspected": true
+    },
+    {
+      "file": "task-first-390-dark.png",
+      "sha256": "ba286426619ca0d1637488ac64d6cdd86a0772ec31eae3ccd7017fda6f0803ed",
+      "specimen": "task-first",
+      "width": 390,
+      "scheme": "dark",
+      "inspected": true
+    },
+    {
+      "file": "table-1280-light.png",
+      "sha256": "34890beb5ecc038d46accd653b45480f7864e31afe25db74be41c1c7096f3455",
+      "specimen": "table",
+      "width": 1280,
+      "scheme": "light",
+      "inspected": true
+    },
+    {
+      "file": "schedule-first-1280-light.png",
+      "sha256": "d6d2c5394e5e1414549d073b847c5718ffb2f7170b437fce57c2e18e08d5f979",
+      "specimen": "schedule-first",
+      "width": 1280,
+      "scheme": "light",
+      "inspected": true
+    },
+    {
+      "file": "task-first-1280-light.png",
+      "sha256": "77b3f9df69f2f2d92e2102bde813c5194f9c785f1a5a192f19ffbe4da621ab67",
+      "specimen": "task-first",
+      "width": 1280,
+      "scheme": "light",
+      "inspected": true
+    },
+    {
+      "file": "table-1280-dark.png",
+      "sha256": "08a70429cbd67c70fd70160e6700aae81bca50f7aa7377a5e2846b43ab3f64bc",
+      "specimen": "table",
+      "width": 1280,
+      "scheme": "dark",
+      "inspected": true
+    },
+    {
+      "file": "schedule-first-1280-dark.png",
+      "sha256": "84ec518b2893aeb16feb78d43790b3a3b07deea562c2a0b14c1211d7171f456a",
+      "specimen": "schedule-first",
+      "width": 1280,
+      "scheme": "dark",
+      "inspected": true
+    },
+    {
+      "file": "task-first-1280-dark.png",
+      "sha256": "1ad6309e35944da7e527d8d721b0210736de594d50c8be9cac4cbcbaea80108c",
+      "specimen": "task-first",
+      "width": 1280,
+      "scheme": "dark",
+      "inspected": true
+    }
+  ],
+  "sources": {
+    "design-system/examples/data-table/index.html": "f28da1ddf1faf3f0aa18341cb4368ed6005925de734a9957af85fc7c28fbedab",
+    "design-system/examples/data-table/table.css": "904227fe2f897aa4099ff5c2aa7ea96657f7cca1225ebffb3dde3161f91f1138",
+    "design-system/examples/data-table/table.js": "570d7fb2f8efc68a5413622bea250898ada74fbf54af63d3b429f200c1d07a79",
+    "design-system/fonts/manifest.json": "3dc76ea42b525ba2c9e383bd67df9679863f35e0da242a46334b2bf20153ef41",
+    "skills_UIUX/visual-design-direction/examples/decision-lab/cases.json": "bb01fe001432cdddb390ebbe343cebecb9f7b0facd92dba57c0997eea20357fb",
+    "skills_UIUX/visual-design-direction/examples/decision-lab/lab.css": "b44402f41ea870cff968d862c3f9f77a64b7b84703da178b40abcf90aac74885",
+    "skills_UIUX/visual-design-direction/examples/decision-lab/lab.js": "9f333cae6686c3e421bf7fd50cfb91c4508b7a04e8d13484fb3ce03b83b07ea1"
+  },
+  "visual_review": {
+    "reviewer": "authoring agent",
+    "status": "INSPECTED",
+    "human_approval": "CHƯA DUYỆT",
+    "findings": [
+      "Hierarchy distinguishes heading, summary and table; units and status text remain visible.",
+      "Mobile table scroll is contained intentionally; no page overflow.",
+      "Vietnamese stacked marks and Dong render in both themes without visible clipping.",
+      "Teacher directions change task priority and structure with shared content; gallery notes are teaching material."
+    ],
+    "limits": [
+      "No independent aesthetic preference study",
+      "No native or screen reader session"
+    ]
+  }
+}

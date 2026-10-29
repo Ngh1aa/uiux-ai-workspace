@@ -1,0 +1,79 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/04-multi-role/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/04-multi-role/index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/04-multi-role/index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/04-multi-role/index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

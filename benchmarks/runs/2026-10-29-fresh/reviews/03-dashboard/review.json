@@ -1,0 +1,72 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "03-dashboard-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Ưu tiên nhập hàng và gửi đơn trễ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng LC-012 hoặc xử lý #2041.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thứ tự rõ; không thấy lỗi số liệu ở trạng thái ban đầu."
+    },
+    "03-dashboard-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Ưu tiên nhập hàng và gửi đơn trễ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng LC-012 hoặc xử lý #2041.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thứ tự rõ; không thấy lỗi số liệu ở trạng thái ban đầu."
+    },
+    "03-dashboard-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Quản lý việc kho trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng LC-012.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đã có Bán/ngày; mỗi dòng sản phẩm vẫn cao và nhiều khoảng trống."
+    },
+    "03-dashboard-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Quản lý việc kho trên điện thoại.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Nhập hàng LC-012.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đã có Bán/ngày; mỗi dòng sản phẩm vẫn cao và nhiều khoảng trống."
+    },
+    "03-stock-updated.png": {
+      "Màn này để làm gì?": "Đánh giá lại đã biết brief, ảnh final: Xem trạng thái sau nhập hàng và xử lý một đơn.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Xử lý #2045.",
+      "Điều gì trông sai, rối hoặc thiếu?": "KPI 2/heading 2 khớp, lời khuyên đổi sang kim móc 4 ngày; Bán/ngày đã hiện."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4.5,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4,
+    "9": 4,
+    "10": 4
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "03-dashboard-390-light.jpg",
+      "element": "Khoảng trống giữa tên/số tồn và Đủ ngày/nút nhập của sản phẩm",
+      "fix": "Mobile đã có Bán/ngày nhưng vẫn nhiều khoảng trống nội bộ từng hàng. Giảm khoảng giữa metadata và action để xem 4 sản phẩm/đơn trễ nhanh hơn."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tương phản số học; điểm màu là heuristic thị giác, không chứng nhận WCAG AA.",
+    "HF-2: vùng chạm thực, padding tương tác vô hình và quy đổi pt/dp UNKNOWN từ ảnh.",
+    "HF-4: bàn phím, focus toàn luồng, screen reader và thứ tự đọc UNKNOWN. Một ảnh có focus không xác nhận toàn luồng.",
+    "HF-6: đã soát trạng thái nhìn thấy, có nhãn chữ/số chứ không chỉ màu.",
+    "HF-7: browser/system back, dismiss, chuyển màn, giữ state và keyboard runtime UNKNOWN.",
+    "HF-8/HF-9/HF-10: đã soát ảnh, không thấy primary khác nhiệm vụ cạnh tranh, deceptive pattern hoặc bằng chứng giả không nhãn; dữ liệu minh họa có ghi rõ.",
+    "Text 200%, AT, reduced motion, native SDK/thiết bị thật, persistence và backend UNKNOWN.",
+    "Re-review đã biết brief; independent=true nghĩa độc lập với người làm. Đây là agent-heuristic, không phải human research, phê duyệt hướng hay approval.",
+    "HF-3: không thấy tràn ngang hoặc chồng nội dung trên 390/1280 final; text 200% chưa kiểm.",
+    "HF-5: chưa có ảnh dialog nhập hàng, lỗi, empty/loading; implementation UNKNOWN.",
+    "Đã thấy Bán/ngày trên mobile. Ảnh stock-updated: KPI 2/heading 2 khớp và lời khuyên chuyển sang kim móc 4 ngày; không còn hai stale finding cũ.",
+    "Điểm 7 dựa toast và trạng thái sau cập nhật; chưa xác nhận thao tác thật, Undo, lưu qua tải lại hay kết nối bán hàng.",
+    "TASTE.md và skill data-visualization ngoài packet chưa đọc theo giới hạn review."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Đánh giá lại trực tiếp tất cả ảnh final, đã biết brief từ các lượt trước; không phải first-read. Không đọc source/rationale hay điểm người làm. Điểm heuristic không xác nhận runtime, AT, native hay backend."
+}

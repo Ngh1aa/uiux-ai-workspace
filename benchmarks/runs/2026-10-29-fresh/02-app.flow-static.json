@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "layer": "source-static",
+  "errorCount": 0,
+  "warningCount": 15,
+  "flow_status": "UNKNOWN",
+  "results": [
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\02-app\\index.html",
+      "mode": "prototype",
+      "static_status": "PASS",
+      "flow_status": "UNKNOWN",
+      "errors": [],
+      "warnings": [
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 3,
+          "message": "Nhãn “Tìm sân theo tên hoặc quận” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 3,
+          "message": "Nhãn “Sân Phú Nhuận Cách 1,2 km, còn 3 khung 120.000 ₫ / giờ” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 3,
+          "message": "Nhãn “Xem cả 3 sân tối nay” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 5,
+          "message": "Nhãn “‹ Danh sách sân” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "disabled-no-reason",
+          "status": "WARN",
+          "line": 5,
+          "message": "Nút chính bị khóa: chưa thấy lý do liên kết trong nguồn; kiểm khả năng nhìn/đọc được trên render."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 5,
+          "message": "Nhãn “Tiếp tục đặt sân” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 6,
+          "message": "Nhãn “‹ Đổi khung giờ” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 6,
+          "message": "Nhãn “Xác nhận đặt sân” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 7,
+          "message": "Nhãn “Đặt thêm một buổi” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 7,
+          "message": "Nhãn “Tìm sân tối nay” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "no-entry",
+          "status": "WARN",
+          "line": 4,
+          "message": "#list chưa có đường vào khai báo trong file này; router, deep link hoặc file khác có thể hợp lệ."
+        },
+        {
+          "rule": "no-entry",
+          "status": "WARN",
+          "line": 5,
+          "message": "#detail chưa có đường vào khai báo trong file này; router, deep link hoặc file khác có thể hợp lệ."
+        },
+        {
+          "rule": "no-entry",
+          "status": "WARN",
+          "line": 6,
+          "message": "#booking chưa có đường vào khai báo trong file này; router, deep link hoặc file khác có thể hợp lệ."
+        },
+        {
+          "rule": "no-entry",
+          "status": "WARN",
+          "line": 7,
+          "message": "#history chưa có đường vào khai báo trong file này; router, deep link hoặc file khác có thể hợp lệ."
+        },
+        {
+          "rule": "time-no-date",
+          "status": "WARN",
+          "line": 2,
+          "message": "Giờ chưa thấy ngày trong ngữ cảnh nguồn; kiểm bộ chọn ngày, lịch lặp hoặc đồng hồ trước khi thêm chữ."
+        }
+      ],
+      "unknown": [
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 2,
+          "message": "“Đổi sáng tối”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 3,
+          "message": "“Xem lịch”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 3,
+          "message": "“Tìm sân theo tên hoặc quận”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 3,
+          "message": "“Sân Phú Nhuận Cách 1,2 km, còn 3 khung 120.000 ₫ / giờ”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 3,
+          "message": "“Xem cả 3 sân tối nay”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 4,
+          "message": "“‹ Trang chủ”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 5,
+          "message": "“‹ Danh sách sân”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 6,
+          "message": "“‹ Đổi khung giờ”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 6,
+          "message": "“Chọn khung khác”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 6,
+          "message": "“Xác nhận đặt sân”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 7,
+          "message": "“Sắp tới”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 7,
+          "message": "“Đã qua”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 7,
+          "message": "“Đặt thêm một buổi”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 7,
+          "message": "“Tìm sân tối nay”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 8,
+          "message": "“Trang chủ”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 8,
+          "message": "“Tìm sân”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 8,
+          "message": "“Lịch của tôi”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "runtime",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "HTML nguồn không chứng minh luồng, Back, tổng tiền, đúng đối tượng/vai trò, khôi phục lỗi hoặc navigation động. Chạy Playwright của dự án."
+        }
+      ]
+    }
+  ]
+}

@@ -13,8 +13,8 @@ tra được bằng mắt.
 - Không rối màu. Màu nhấn chỉ dùng cho thứ thật sự quan trọng, không highlight tràn lan.
 - Mỗi màn có **một** thông tin chính rõ ràng; phân cấp chính, phụ phải nhìn ra ngay.
 - Không nhồi quá nhiều thông tin trong một màn. Thừa thì tách màn hoặc thu gọn.
-- Không để màn trống: không có mảng trống lớn ở đáy hay bên phải. Thiếu nội dung thì thu khung, chia lại
-  cột hoặc thêm thông tin có ích (tóm tắt, tiến độ, bước tiếp theo), không kéo giãn khoảng cách để lấp.
+- Khoảng trống xét theo tác vụ và nội dung thật; form ngắn có thể kết thúc sớm. Thu khung/chia cột khi hữu ích,
+  không kéo giãn card hoặc bịa thêm dữ liệu để lấp viewport.
 
 ## Bố cục desktop
 

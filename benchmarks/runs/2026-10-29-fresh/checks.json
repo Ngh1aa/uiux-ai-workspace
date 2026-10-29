@@ -1,0 +1,635 @@
+{
+  "version": 2,
+  "run": "2026-10-29-fresh",
+  "checked_at": "2026-10-29T17:20:18.051Z",
+  "source": {
+    "repo_commit": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+    "dirty": true,
+    "checker_sha256": "53b124b8b726b33536a0ae0b29cf68a526dff62a4e9fec0abcd69fcd93d18384",
+    "checkers": {
+      "render": "53b124b8b726b33536a0ae0b29cf68a526dff62a4e9fec0abcd69fcd93d18384",
+      "flow": "22a6abc708c91cce5f27fddd9c80b3f1ca72d274f65714b34adafb1802d6aa34",
+      "static": "f6a2899454d87d76161514c44e41a59ebb83944c597fa31aef3b756e8b6d4e30"
+    },
+    "patch": {
+      "path": "provenance/local.patch",
+      "sha256": "bcae38bc0068d4d65e042ffd2c101e91769dd698a73552a4a3c2d3d919cf2704"
+    },
+    "manifest": {
+      "path": "provenance/manifest.json",
+      "sha256": "5f7524c544ad5fa89a554edaf5dde1435641a3a6de1fcb4ccbd9a5fa5ed995ea"
+    },
+    "browser_test_sha256": "115ba036154d714542b6d0e0e3cc8ed028d95fcf256de03f79aa93f70121fad1",
+    "browser_exit_code": 0,
+    "run_files": {
+      "01-landing/brand.css": "9765c689a817aee4685a706806630c625a25f7a1a9d004080fea245804176ec8",
+      "01-landing/index.html": "10cb3b7005c23e600e766dae38012745c1999b0d25c01e7b010766f5b329cdc7",
+      "02-app/brand.css": "ff43a8ffd2d678121fe49c3f68eafe07cb4c7714975337b63dc77d28b658b02a",
+      "02-app/index.html": "5eef442efebbe0c451930424272c53275da00a0b8b347707ce75c312367adff0",
+      "03-dashboard/brand.css": "c2dfdfd3e207dfa5a2af14657b92bd2d60ffc588eeae12baeff81ff360b13e10",
+      "03-dashboard/index.html": "9e1565986eff3113092e44393fcf12c44221ea60f5a5459a8bb2716a0762f072",
+      "04-multi-role/brand.css": "986a8c6a9a8574d4d11281c84876af1b73e8baf39a3d8cc643af46499cda9d5e",
+      "04-multi-role/index.html": "144c620ce638118d06993e412d8dfe417046612aeae5eae566a345e42ade1880",
+      "05-native/brand.css": "0afdb2fb3f0cc3088553ec308eb5e08d359f55380a38299108c17587dda91e3e",
+      "05-native/index.html": "30fbe9bddc8d8f06c8a5a96d3fd202c9d89319a8bc23883fc22957d93e859a0e",
+      "assets/common.js": "29dcfa605e6dc583afcdd408db56d2797527fbe1dcd0687885508096e375a22d",
+      "assets/directions.css": "010f52c107a895a157911af233f6ed98f6b1d15cd6f5a5ca9812052531474f59",
+      "assets/ui.css": "3d6d4e3f9b011be122584ebb94e4688a39268e098ca4a375e85f8d1ea2ea7ff6",
+      "flow.browser.cjs": "115ba036154d714542b6d0e0e3cc8ed028d95fcf256de03f79aa93f70121fad1"
+    },
+    "images": {
+      "shots/01-landing-1024-dark.jpg": "a7c3c17d5f565dc6757322a4ca51173ebd9f2a0d30baa5808ad41b05ca7b6c67",
+      "shots/01-landing-1024-light.jpg": "0ecaa2832f805540dd09cdf8ea7f79f98254b64d7d594f7bcd8778deed43a0fb",
+      "shots/01-landing-1280-dark.jpg": "4ed8096cc46d03fea49a4987f0dfde2a8720a54c38c3129e1340bf53c7364c78",
+      "shots/01-landing-1280-light.jpg": "6a346d09c97f2f5a3018e0031f8dde66dfb5bfa477813b58030b57b7c4884d60",
+      "shots/01-landing-1440-dark.jpg": "ce4074145d825481fae11d3c1b71e48bfb764ffbaf05c2be85d20a5d4caa2b44",
+      "shots/01-landing-1440-light.jpg": "eccc8541c4d334bf12d0bb256a0aade65d4f6b670b8abedf17a3beacabc1c738",
+      "shots/01-landing-390-dark.jpg": "cafb43060acb149ab00f361455785078953aadee07e9ae7e9bec49a7ce9bde2f",
+      "shots/01-landing-390-light.jpg": "5cc7337cacfaca913beec0d6a74a8631ef69577b48ea0251f143c69f3d4c2c6d",
+      "shots/02-app-1024-dark.jpg": "dc075e68bfb16f6494987ed29891cdf923a39ebd3b0d6b3ad137c181cd28b475",
+      "shots/02-app-1024-light.jpg": "508b8be71f4a172bf401e93d9cf6a8b7c2eb3d8636cea874d71a466eaa505e68",
+      "shots/02-app-1280-dark.jpg": "d26537c087130bbaccd0ea3f69ba7c8e7981d85d5204b271ab1b9b4050eead89",
+      "shots/02-app-1280-light.jpg": "0697018de959538bd5f17164a67b46ac6f3f8e8e6c6c1515d300e669eed5bf68",
+      "shots/02-app-1440-dark.jpg": "f8131606abe3ad953e5ba787478a55c652e2024ab24cc42abcbbb5eb8361dab4",
+      "shots/02-app-1440-light.jpg": "f1e08e7b543fd6ae03c0f70328c2d07f83c46e9568ec7c0ab4dc41dde4f880b7",
+      "shots/02-app-390-dark.jpg": "2d3c1bc1421ac0b799fa8bb3a9e4f0f612473649615ce5e1e646a1c6c06eb5d8",
+      "shots/02-app-390-light.jpg": "fdac9d5016c3ef4842ea41ae464ddbefd43494431674967825f0b6d03e45cc9e",
+      "shots/03-dashboard-1024-dark.jpg": "7e2a5d82dfb01dc3ea01a39fc352605676e2878dba6037c6356409f40dc2ece8",
+      "shots/03-dashboard-1024-light.jpg": "02f6bf1f9a334a2d7eaeb92cf42cc1f412f8b706391592f58714111c17d8d68f",
+      "shots/03-dashboard-1280-dark.jpg": "e3b40de1e3751e1cd9c866ac8bb8b8c573642526bc1ec1619405157b80ddd1f9",
+      "shots/03-dashboard-1280-light.jpg": "cc29504c79924d25d762509a542b965ef49e9336366c03d633441d299a0f4998",
+      "shots/03-dashboard-1440-dark.jpg": "50e59896abda101f147f1b68c01c3ca8c6aaca0a21945e48c5f906a3ecb0eda3",
+      "shots/03-dashboard-1440-light.jpg": "dc5a229ac7fb0c657d19eca26176268f4c3d40a89dca17279819fb52a99baf92",
+      "shots/03-dashboard-390-dark.jpg": "1a9ec141371a104c58aaaf52c08f8f9720f43565fdb1a47bd86d3f556cc19499",
+      "shots/03-dashboard-390-light.jpg": "143470a50d3edadbda87369e69c45b3f997137a619cf50cd7eebc2e2f4041411",
+      "shots/04-multi-role-1024-dark.jpg": "5e1f774f0e9170503c38174f42723cbc606b14fe02bf481ebd5bb81a7fd7af0a",
+      "shots/04-multi-role-1024-light.jpg": "73d5de4f4403fe0e200aaed049a3f3ab042fe3440cb4019671b071fdf5312817",
+      "shots/04-multi-role-1280-dark.jpg": "da9b876b1f871f4a5931a88b053a75745c96de57ae94cd0b9b751ecacfd215f3",
+      "shots/04-multi-role-1280-light.jpg": "f6b3030ee7e1e0b58759ff88a722419f32135f8db2af07ca2bce41347a09d90b",
+      "shots/04-multi-role-1440-dark.jpg": "479151f57ea77d49223c558a78259d1505827dc274212f32e01dab2617784c27",
+      "shots/04-multi-role-1440-light.jpg": "5ffbb076cb15b8472b740c234037e854a80eb84795a31613df8c8796b3bf233e",
+      "shots/04-multi-role-390-dark.jpg": "51ea1e008dc9a9e1278d9b537e650a7bff73849e61c798962c0e358e54c6f665",
+      "shots/04-multi-role-390-light.jpg": "035c854a1fa3112427ad33f6b98ba0b79d2899d19af2e6e1539568a778664d9a",
+      "shots/05-native-1024-dark.jpg": "e9c6dbf111ccd94eeac269954b5ab30903bb08e0c8026dc7ee0bcf952c7dd6ba",
+      "shots/05-native-1024-light.jpg": "3e67043b66785e31d23dee7867cfb6814b87db2ca625c03f6bbde436ef3d5f28",
+      "shots/05-native-1280-dark.jpg": "a636a5786f782dcb730ddea92795b173bea1eee8002886b0cc422f6fc9fe719b",
+      "shots/05-native-1280-light.jpg": "22b8483ebbc987ff50f796326bd7379036300c7bfe3c9fefad82a3b95be9d6d5",
+      "shots/05-native-1440-dark.jpg": "45545bc61bb66dd9e4758207bc722d33265450ee520b8fe6ece3a5144a9c9181",
+      "shots/05-native-1440-light.jpg": "23d3afc4e73037b34c42fec5c4c421d0767545ead88d6262acad96db945efefb",
+      "shots/05-native-390-dark.jpg": "80b876c1fb59cab1543dc1ef1ade9700072184f5683521461227f660719f48c2",
+      "shots/05-native-390-light.jpg": "f5e3057e042056b754b156ca8376608e056a057417d803975024da65e8fe4d84",
+      "shots/behavior/01-confirm.png": "a4bd492a54ce87f77b0d0f52fc028e46378654370034af76599fb13328b999c5",
+      "shots/behavior/01-landing-1280-dark-initial.png": "259d770293f9fdf49dd071bcd0477a01a8eea943066ebf1fa0b24542753f6928",
+      "shots/behavior/01-landing-1280-light-initial.png": "b753fd0d6e047853d669e024e07d2b478246364bfcd35283cf8f3e44bdeed05c",
+      "shots/behavior/01-landing-390-dark-initial.png": "731bae7d4d29b3c9e6ce1d0d495c9ab34abaeda9ae5c5b7f657a97611d8eac8d",
+      "shots/behavior/01-landing-390-light-initial.png": "26646607bf93fa145519432ad77c7a8ba16ee58d16ba598c84e00f77e46757f6",
+      "shots/behavior/01-review-edit.png": "ffc7231269f5add8372d0614f447b1e81a652fc0af2fee333d93f32226770bf8",
+      "shots/behavior/02-app-1280-dark-initial.png": "e033829c2ac0afb1a3b657a739d093c8df93610e9c0b3dbe9990a93fa2822366",
+      "shots/behavior/02-app-1280-light-initial.png": "894090f419fc881c965d38bdb4c22b1f8e525397e34ffd08f7a330f2b37bdf21",
+      "shots/behavior/02-app-390-dark-initial.png": "84dff9915f3a44c9378c396afb93b98286139a6152a490d52da343114756cd5a",
+      "shots/behavior/02-app-390-light-initial.png": "cb896cb793c73b060c83fbced3712fdadcbac00eb82e0da6a5cd8597b4ec47b0",
+      "shots/behavior/02-booked.png": "48594af8cced6336c85ab08060b584a4184cdf9fcc7222ef3f6bf0c7c48cd8fd",
+      "shots/behavior/02-calendar-dark.png": "055562f690dbe45cb7c166f6b34d0b64006dcadfe2ab12b1d9ddc40268aeb394",
+      "shots/behavior/02-calendar-light.png": "4adbf03842142a79756746ebb226a5ce044e00862ac0408eb04dd95d6baeddda",
+      "shots/behavior/02-checkout-dark.png": "b60100956b78c3a8bf58adf9826a25ac9f8d574540b69fcde7e228b3d9eb304c",
+      "shots/behavior/02-checkout-light.png": "89aa33c2f0c696887618bb5b957959dea546e7fc3ccf0d1113d9c8b3840aae65",
+      "shots/behavior/02-conflict19.png": "1d454c3741bc202192ec4acf5b4492db198e92241af9d45b9aff7cab8eea3ffe",
+      "shots/behavior/02-detail-dark.png": "cbc74e44cb5425419a5fde174c22b658d5fb56bc5e507efecb804ece26c2c90f",
+      "shots/behavior/02-detail-light.png": "c74b414edd5b894789e6f03af8f689344b8f266475c88bf462b95288cdd94531",
+      "shots/behavior/02-empty.png": "4dcbed03747321aa64c153001e0e3b6bd106d2107a8779a0780f55d27a71b0bb",
+      "shots/behavior/02-list-dark.png": "a05d09a2897ca5c947c2cc1611c82cfccc877721b8facab3964e3ebe3147d314",
+      "shots/behavior/02-list-light.png": "e8630f9497e189f86200f934143e426f28b0a6032eff662b0c7f9ad51750d525",
+      "shots/behavior/03-dashboard-1280-dark-initial.png": "05c01926b6b5a4a4bc580b64c398a4e2a69e03e1dcbbc3dfe965cbbc46f30bee",
+      "shots/behavior/03-dashboard-1280-light-initial.png": "d7b3af29e312c8f56efe98fe5667d1645015e6cda8c80f1e9937c1c40721832e",
+      "shots/behavior/03-dashboard-390-dark-initial.png": "53d97c27eeef63b03b918e83efe059825488d209b1187ad425990755ccfbfbfb",
+      "shots/behavior/03-dashboard-390-light-initial.png": "4ac523aec1308c443c1b090b651aa74bfe25b416664ce6838dc2f42b477afd35",
+      "shots/behavior/03-stock-updated.png": "0dd210c0bc0c798e8d5cd86b3a96553d2a93be41fdb74735201adf7d70718017",
+      "shots/behavior/04-conflict.png": "5697909a69df1af6fdc21f218ed2751d618b03178d9cfa8aaf4f06a222cef214",
+      "shots/behavior/04-doctor.png": "60d7060c742d376dad710e512cef17eeda243fbcaa5569f478f482dbfe558ff8",
+      "shots/behavior/04-multi-role-1280-dark-initial.png": "ca601a6c6aaeede2e1ce4eaa36a7ea6a73fca975e8e05a74a9555432c96bf79a",
+      "shots/behavior/04-multi-role-1280-light-initial.png": "65c7182698e2f88a76efb0aaf5e8261981578902e5faba11ba6dae42dab7ef67",
+      "shots/behavior/04-multi-role-390-dark-initial.png": "8feee13e798325b55ab7eb714a87842e3bcdda206eafd3a593ad6ac7c7eba3cb",
+      "shots/behavior/04-multi-role-390-light-initial.png": "cd7124cea85ee3ec42385de61112e4d32338dea2eebee2966ad90a176245968a",
+      "shots/behavior/04-no-permission.png": "6d470cb434351149f76564940a84a821eeec02099c9f249fb25527d0f7b6f43f",
+      "shots/behavior/04-owner.png": "ecab227174cc8da00d80ac78382c4ee7eac7e7c4ab6ee6c247c90b4467d7cc77",
+      "shots/behavior/04-patient-dark.png": "429f3a2ff9368da3428718c27a38d87e75e4a4ea94cde9dcce3534e53d339543",
+      "shots/behavior/04-patient-light.png": "c1614682cf2c77e73ee903a15563763b96f9aceee3fcf6582602b734ed35d005",
+      "shots/behavior/04-permissions-dark.png": "e1b33fe51df0b178060668213ec7868901d8db9540aab7969138b7fbf1780356",
+      "shots/behavior/04-permissions-light.png": "856336cc52a1ead5357c68603f2e34daca6a00f7a7f653c0ca63ed0ea4415459",
+      "shots/behavior/04-revenue-dark.png": "cdc1574767c8dd4bbf2592b2bd9bc2b6738cf8664c2837aeeb0ad894cef9aeb7",
+      "shots/behavior/04-revenue-light.png": "ecab227174cc8da00d80ac78382c4ee7eac7e7c4ab6ee6c247c90b4467d7cc77",
+      "shots/behavior/05-Android-alert-dark.png": "dd5dde3d93332071949828c3197116c2c70ee44d8b522a4edffe47c245ba7f32",
+      "shots/behavior/05-Android-alert-light.png": "445387e605be6fd67fc5af4b86ac300e8ca88a4807de4f7728565b527e40df06",
+      "shots/behavior/05-Android-assignment-dark.png": "ed7257b398c624c0ac31fe574474a9316722df6d2f9874acf9069f37428ef2b4",
+      "shots/behavior/05-Android-assignment-light.png": "846969f2ce9e7e10fb41397846ba041069c2ef49e33461faef070734dfd819df",
+      "shots/behavior/05-Android-cancel.png": "3a925a31fe94d3a91d6824b271a23935e8a5f98253bae785568a1097414d44dd",
+      "shots/behavior/05-Android-date-error.png": "508628827185d74f95175f19a97184bdba3722b8e6cb9cb8e319a0b87ae060a7",
+      "shots/behavior/05-Android-draft-bottom.png": "480936bfc7cccc9689ae74eb609cc162d0fdb1cde15efb69b7f39060d772f25d",
+      "shots/behavior/05-Android-home-result.png": "6a1ad107765386aba096269ae34db30c77e57c22e7c2952b23e150c6458eed90",
+      "shots/behavior/05-Android-request-dark.png": "adf69d21c8fce22b8740674a63cf16451bc584b4a26f288d5563b9e0396afdec",
+      "shots/behavior/05-Android-request-light.png": "51ebeda4989904c47e727632880b6cb9a525fee6d93f0972e11c4cd8d5a8dc3a",
+      "shots/behavior/05-iOS-alert-dark.png": "ca09ffb9c687e6a23f6c0828266f1a8cda746e0ecbf2ea4c2d719aa11ff95911",
+      "shots/behavior/05-iOS-alert-light.png": "556259b2786416f5e09dc966a7148def519d447c95aa0aa3c619b9869fa95cae",
+      "shots/behavior/05-iOS-assignment-dark.png": "83a53d1c34929dbcebbfa6f381ff4836f54a2ea588ca51b678c82fbffbcf3e28",
+      "shots/behavior/05-iOS-assignment-light.png": "e694a941cefe022d76cc5207e353188b2c79775553632c6bc98e2c15c86427aa",
+      "shots/behavior/05-iOS-cancel.png": "556259b2786416f5e09dc966a7148def519d447c95aa0aa3c619b9869fa95cae",
+      "shots/behavior/05-iOS-date-error.png": "aa1e61e46e291aba85942935f5c6dd0f4f9531f270017bdabbbfee16f1908535",
+      "shots/behavior/05-iOS-draft-bottom.png": "c57956ca1a57aed384b5895ac58359d4316d7f51d1de86ebb51e5c26f3299485",
+      "shots/behavior/05-iOS-home-result.png": "95469a30fd7f216e2af2cc7e0cfbe37e4fc8d2c10ebe0a49dc2f65b31647f175",
+      "shots/behavior/05-iOS-request-dark.png": "e35b742d4b76ecdfbd8c5fe4777fcfbb18282acebb75c2ece47c3056b1b16ad2",
+      "shots/behavior/05-iOS-request-light.png": "44877b425e48aa8a6ca000a16dccf77e9707af4c92c72d51964fbbc1b3856dee",
+      "shots/behavior/05-native-1280-dark-initial.png": "2bb10995f3ca054f0dd8a5ef3737d65e9d887ca98800c486989a4951f8e1d878",
+      "shots/behavior/05-native-1280-light-initial.png": "9900f5f884060bea604896597085345011ac8a3fd1c647ef206b8bae3bc78971",
+      "shots/behavior/05-native-390-dark-initial.png": "a356ddfd679ab37f44cb5e890162e9f55f75ef7a6be6dbb1be839cc4c06c3fe0",
+      "shots/behavior/05-native-390-light-initial.png": "134fc5419bf5852f38cbcac615cbb35c9229e5729540420b70cff06839fb0959",
+      "shots/directions/01-landing-1280-alternate.png": "dca328837d7a803d592dbb7943d7f9bf0fb0fa3de37af5bb0ae43033d76b1fcf",
+      "shots/directions/01-landing-1280-selected.png": "b753fd0d6e047853d669e024e07d2b478246364bfcd35283cf8f3e44bdeed05c",
+      "shots/directions/01-landing-390-alternate.png": "ddba8759a6f9ade99f83b6c66be0fcb947d74cd41789d13174e567b740dc12bd",
+      "shots/directions/01-landing-390-selected.png": "26646607bf93fa145519432ad77c7a8ba16ee58d16ba598c84e00f77e46757f6",
+      "shots/directions/02-app-1280-alternate.png": "980ff525d726a0686f88f977352c26078947acfa65a8afe3d5037b6ba1920848",
+      "shots/directions/02-app-1280-selected.png": "894090f419fc881c965d38bdb4c22b1f8e525397e34ffd08f7a330f2b37bdf21",
+      "shots/directions/02-app-390-alternate.png": "e40ffde42b4fb584ed9568d71f3cad0a5643a8cbfc5812a1397e87d540026652",
+      "shots/directions/02-app-390-selected.png": "cb896cb793c73b060c83fbced3712fdadcbac00eb82e0da6a5cd8597b4ec47b0",
+      "shots/directions/03-dashboard-1280-alternate.png": "2f591b654934f5ceb5166c3ee1f264bce0140e4d5d261f2191a5822b2459196f",
+      "shots/directions/03-dashboard-1280-selected.png": "d7b3af29e312c8f56efe98fe5667d1645015e6cda8c80f1e9937c1c40721832e",
+      "shots/directions/03-dashboard-390-alternate.png": "9779b93d0fd6f152cf11887196f26e00c6153af595846332bcbc9d0e61d66868",
+      "shots/directions/03-dashboard-390-selected.png": "4ac523aec1308c443c1b090b651aa74bfe25b416664ce6838dc2f42b477afd35",
+      "shots/directions/04-multi-role-1280-alternate.png": "2241b49c17a7d7b4ab514baf296eaae473e09bef13c1439e65206ab2f70a5b40",
+      "shots/directions/04-multi-role-1280-selected.png": "65c7182698e2f88a76efb0aaf5e8261981578902e5faba11ba6dae42dab7ef67",
+      "shots/directions/04-multi-role-390-alternate.png": "57cab576ddc7e70e180606d8a2730dd017c7906f3b80cd1954c5d9622d5c4c8c",
+      "shots/directions/04-multi-role-390-selected.png": "cd7124cea85ee3ec42385de61112e4d32338dea2eebee2966ad90a176245968a",
+      "shots/directions/05-native-1280-alternate.png": "ecf7d65fb7e70819d06ad9f4f8c985f0d7f018fb99e17bc5f7e298c761e95942",
+      "shots/directions/05-native-1280-selected.png": "9900f5f884060bea604896597085345011ac8a3fd1c647ef206b8bae3bc78971",
+      "shots/directions/05-native-390-alternate.png": "9e2a5c4d259be8982e5e9d59289deadba296653b613c28d2d1c2463e2c6bd133",
+      "shots/directions/05-native-390-selected.png": "134fc5419bf5852f38cbcac615cbb35c9229e5729540420b70cff06839fb0959"
+    }
+  },
+  "briefs": {
+    "01-landing": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "01-landing/brand.css": "9765c689a817aee4685a706806630c625a25f7a1a9d004080fea245804176ec8",
+          "01-landing/index.html": "10cb3b7005c23e600e766dae38012745c1999b0d25c01e7b010766f5b329cdc7"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "01-landing.render.json",
+        "sha256": "ce4faf80ce1aeb584058d6989f7b37ff05d132546c5e891d4824c82e55f348f3"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "01-landing.flow-static.json",
+          "sha256": "a4434e36bab9ad5e97a64ccc7e68ac0f7bc81a8cefd68637157467322b442cc9"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Đặt lớp, giữ lựa chọn khi quay lại sửa, tổng tiền đúng, xác nhận và trở lại",
+              "status": "PASS"
+            },
+            {
+              "name": "Số điện thoại sai bị chặn, sửa lại và tiếp tục được",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            },
+            {
+              "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "0880845ae34bcd24ccd1f71c95da6e4ff3e2e0159d234d5c86aedb2a41d22d3c"
+        }
+      },
+      "issues": []
+    },
+    "02-app": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "02-app/brand.css": "ff43a8ffd2d678121fe49c3f68eafe07cb4c7714975337b63dc77d28b658b02a",
+          "02-app/index.html": "5eef442efebbe0c451930424272c53275da00a0b8b347707ce75c312367adff0"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "02-app.render.json",
+        "sha256": "7b3fc665f504b2ab6910a4bbbedf33c3547485b962142ccef9eed90d48eb7d54"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "02-app.flow-static.json",
+          "sha256": "4683d6b76f1855c9ba4cc0908ba95ad30198056a60c1fda98b97d51737ad58a4"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Tìm không có kết quả và xoá bộ lọc",
+              "status": "PASS"
+            },
+            {
+              "name": "Khung19:00 race ở Kỳ Hoà, chọn21:00, giữ số người/ghi chú, tổng100000",
+              "status": "PASS"
+            },
+            {
+              "name": "Xem lại lịch mới và lịch mẫu; tab Đã qua rỗng",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            },
+            {
+              "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "0880845ae34bcd24ccd1f71c95da6e4ff3e2e0159d234d5c86aedb2a41d22d3c"
+        }
+      },
+      "issues": []
+    },
+    "03-dashboard": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 2,
+      "axe": "RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "03-dashboard/brand.css": "c2dfdfd3e207dfa5a2af14657b92bd2d60ffc588eeae12baeff81ff360b13e10",
+          "03-dashboard/index.html": "9e1565986eff3113092e44393fcf12c44221ea60f5a5459a8bb2716a0762f072"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "03-dashboard.render.json",
+        "sha256": "8839a7a10adc72b63517f572c40157d0b36cb606465ff546a5e1222ec084238c"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "03-dashboard.flow-static.json",
+          "sha256": "e6d778751517d36545434a051d555c7e0c88151025e0250386a92cf1d14a0a79"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Nhập số0 bị chặn, kiểm tra/sửa số lượng, lưu đúng tồn6+9=15",
+              "status": "PASS"
+            },
+            {
+              "name": "Gửi2041 cập nhật14→13 đơn chờ và3→2 quá hạn",
+              "status": "PASS"
+            },
+            {
+              "name": "Biểu đồ và bảng dữ liệu đúng tổng18550, đỉnhCN4120",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            },
+            {
+              "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "0880845ae34bcd24ccd1f71c95da6e4ff3e2e0159d234d5c86aedb2a41d22d3c"
+        }
+      },
+      "issues": [
+        {
+          "rule": "wrap-review",
+          "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Ưu tiên nhập hàng\"",
+          "level": "warning",
+          "screen": "Kho Len Nhỏ",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "wrap-review",
+          "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Ưu tiên nhập hàng\"",
+          "level": "warning",
+          "screen": "Kho Len Nhỏ",
+          "width": 390,
+          "theme": "dark"
+        }
+      ]
+    },
+    "04-multi-role": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 18,
+      "axe": "RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "04-multi-role/brand.css": "986a8c6a9a8574d4d11281c84876af1b73e8baf39a3d8cc643af46499cda9d5e",
+          "04-multi-role/index.html": "144c620ce638118d06993e412d8dfe417046612aeae5eae566a345e42ade1880"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "04-multi-role.render.json",
+        "sha256": "3fba76d13b806fe5bc116be8a165fa7027874e65187a17642fa40b5ddfc9f665"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "04-multi-role.flow-static.json",
+          "sha256": "fd1c9311eb9e58d9285dfa856c53922931b17b168655b373a000fc2c8d9f3c68"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Xung đột9:30 Ghế1, chuyển10:30, giữ input, sửa/xác nhận lịch",
+              "status": "PASS"
+            },
+            {
+              "name": "Doctor dị ứng rõ, ghi chú giữ sau start, không tự bịa bệnh nhân kế",
+              "status": "PASS"
+            },
+            {
+              "name": "Owner dữ liệu đúng, chartpartial không bịa ngày",
+              "status": "PASS"
+            },
+            {
+              "name": "Lễ tân deep-link doanh thu bị chặn, không render số tiền trong DOM",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            },
+            {
+              "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "0880845ae34bcd24ccd1f71c95da6e4ff3e2e0159d234d5c86aedb2a41d22d3c"
+        }
+      },
+      "issues": [
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.muted \"Nguyễn Thảo, lễ tân\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Lịch hôm nay\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.meta \"Ai đang đến, ghế nào còn trống?\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.badge \"1 lượt muộn 15 phút\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 1px (nên ≥ 16px): p.calendar-legend \"Trạng thái có nhãn chữ. Chọn lượt để xem\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "widow",
+          "message": "Dòng cuối chỉ còn một chữ: p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.muted \"Nguyễn Thảo, lễ tân\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Lịch hôm nay\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.meta \"Ai đang đến, ghế nào còn trống?\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.badge \"1 lượt muộn 15 phút\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 1px (nên ≥ 16px): p.calendar-legend \"Trạng thái có nhãn chữ. Chọn lượt để xem\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "widow",
+          "message": "Dòng cuối chỉ còn một chữ: p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "edge",
+          "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "wrap-review",
+          "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lâm Gia Bảo, 8 tuổi\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 1024,
+          "theme": "light"
+        },
+        {
+          "rule": "wrap-review",
+          "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lâm Gia Bảo, 8 tuổi\"",
+          "level": "warning",
+          "screen": "Lễ tân lịch hôm nay",
+          "width": 1024,
+          "theme": "dark"
+        }
+      ]
+    },
+    "05-native": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "05-native/brand.css": "0afdb2fb3f0cc3088553ec308eb5e08d359f55380a38299108c17587dda91e3e",
+          "05-native/index.html": "30fbe9bddc8d8f06c8a5a96d3fd202c9d89319a8bc23883fc22957d93e859a0e"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "05-native.render.json",
+        "sha256": "e2db6ac5c7ca7a482476698f331138510638670853acd00fd44997f780e77784"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "05-native.flow-static.json",
+          "sha256": "a69b70f97e442d4cdc973d4ec411bc176cc7032b05dcf844a12b076da857cda2"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "iOS: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "iOS: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "iOS: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: chưa chọn ảnh được báo lỗi, chọn tệp và nộp mẫu, đếm2→1",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: ngày quá khứ lỗi, sửa ngày giữ lý do/ghi chú, tạo đơn",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: Giữ đơn không xoá, Huỷ xoá đúng đơn đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            },
+            {
+              "name": "Ảnh initial390/1280 light/dark đã tạo, overflow kiểm riêng",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "native_status": "UNKNOWN",
+          "evidence": "flow-results.json",
+          "sha256": "0880845ae34bcd24ccd1f71c95da6e4ff3e2e0159d234d5c86aedb2a41d22d3c"
+        },
+        "native_status": "UNKNOWN"
+      },
+      "issues": []
+    }
+  }
+}

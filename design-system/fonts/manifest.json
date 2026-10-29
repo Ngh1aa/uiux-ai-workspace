@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "retrieved_on": "2026-10-29",
+  "fonts": [
+    {
+      "family": "Source Serif 4",
+      "file": "source-serif-4/SourceSerif4-opsz-wght.ttf",
+      "sha256": "97b2d4da6e3cb494b5a1e66ae176914d852ccabef49e0c02c0df25f3e39aca0b",
+      "bytes": 1209508,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/SourceSerif4%5Bopsz%2Cwght%5D.ttf",
+      "license": "source-serif-4/OFL.txt",
+      "license_sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9",
+      "glyph_probe": "ỂỖẬỮỜẲẴẶỪỸểỗậữờẳẵặừỹNguyễn Thị Hường, Trường Tiểu học Hàng Chiếu, Quảng Ngãi1.204.567 ₫",
+      "glyph_check": "PASS",
+      "axes": {
+        "wght": [
+          200.0,
+          900.0
+        ],
+        "opsz": [
+          8.0,
+          60.0
+        ]
+      }
+    },
+    {
+      "family": "Manrope",
+      "file": "manrope/Manrope-wght.ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+      "bytes": 164700,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/Manrope%5Bwght%5D.ttf",
+      "license": "manrope/OFL.txt",
+      "license_sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b",
+      "glyph_probe": "ỂỖẬỮỜẲẴẶỪỸểỗậữờẳẵặừỹNguyễn Thị Hường, Trường Tiểu học Hàng Chiếu, Quảng Ngãi1.204.567 ₫",
+      "glyph_check": "PASS",
+      "axes": {
+        "wght": [
+          200.0,
+          800.0
+        ]
+      }
+    }
+  ]
+}

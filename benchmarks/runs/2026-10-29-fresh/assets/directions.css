@@ -1,0 +1,41 @@
+/* Direction B is a deliberately different composition, evaluated against selected A. */
+:root[data-direction=alternate] .pottery-hero{grid-template-columns:6fr 6fr;gap:64px;background:var(--subtle)}
+:root[data-direction=alternate] .pottery-hero .clay-art{grid-column:1;grid-row:1}
+:root[data-direction=alternate] .pottery-hero .hero-copy{grid-column:2;grid-row:1}
+:root[data-direction=alternate] .pottery-hero h1{font-size:52px;letter-spacing:-1.7px}
+:root[data-direction=alternate] .pottery-hero .art-bg{fill:var(--bg)}
+:root[data-direction=alternate] .pottery-hero figcaption{display:block}
+:root[data-direction=alternate] [data-brand=sport]{background:var(--bg)}
+:root[data-direction=alternate] #home{display:flex;flex-direction:column;gap:20px}
+:root[data-direction=alternate] #home>header{order:-4}
+:root[data-direction=alternate] #home>.screen-head{order:-3}
+:root[data-direction=alternate] #home>.search-button{order:-2}
+:root[data-direction=alternate] #home>.list-button{order:-1}
+:root[data-direction=alternate] #home>.hero-ticket{background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:20px}
+:root[data-direction=alternate] #home .hero-ticket h2{font-size:20px}
+:root[data-direction=alternate] #home .hero-ticket .ticket-time{font-size:28px;margin-top:12px}
+:root[data-direction=alternate] #home .hero-ticket .ticket-foot{margin-top:12px;padding-top:12px}
+:root[data-direction=alternate] #home .hero-ticket:before,:root[data-direction=alternate] #home .hero-ticket:after{display:none}
+:root[data-direction=alternate][data-brand=yarn] .workspace>header h1{font-size:28px}
+:root[data-direction=alternate][data-brand=yarn] .workspace>header h1 br{display:none}
+:root[data-direction=alternate][data-brand=yarn] .work-grid>#revenue{order:-3;grid-column:span 8}
+:root[data-direction=alternate][data-brand=yarn] .work-grid>#orders{order:-2;grid-column:span 4}
+:root[data-direction=alternate][data-brand=yarn] .work-grid>#inventory{order:1;grid-column:span 8}
+:root[data-direction=alternate][data-brand=yarn] .work-grid>.soft{order:2;grid-column:span 4}
+:root[data-direction=alternate][data-brand=dental] .calendar{display:flex;flex-direction:column;padding:12px 20px;gap:8px}
+:root[data-direction=alternate][data-brand=dental] .cal-head,:root[data-direction=alternate][data-brand=dental] .cal-time,:root[data-direction=alternate][data-brand=dental] .cal-empty{display:none}
+:root[data-direction=alternate][data-brand=dental] .calendar .appointment{margin:0;min-height:76px;display:grid;grid-template-columns:128px 1fr 100px;column-gap:16px;padding:12px}
+:root[data-direction=alternate][data-brand=dental] .calendar .appointment:before{content:attr(data-timeslot);grid-column:1;grid-row:1/3;color:var(--brand);font-size:14px;font-weight:600}
+:root[data-direction=alternate][data-brand=dental] .calendar .appointment strong{grid-column:2;font-size:14px}
+:root[data-direction=alternate][data-brand=dental] .calendar .appointment span{grid-column:2;font-size:12px}
+:root[data-direction=alternate][data-brand=dental] .calendar .appointment small{grid-column:3;grid-row:1/3;font-size:12px;justify-self:end}
+:root[data-direction=alternate][data-brand=dental] .calendar .free-slot{margin:0;min-height:64px}
+:root[data-direction=alternate][data-brand=dental] .calendar .free-slot:before{content:'10:30, Ghế 1 — '}
+:root[data-direction=alternate][data-brand=school] .native-body>.student-line{order:-4}
+:root[data-direction=alternate][data-brand=school] .native-body>div:has(>.timetable){order:-3}
+:root[data-direction=alternate][data-brand=school] .native-body>div:has(>.teacher-note){order:-2}
+:root[data-direction=alternate][data-brand=school] .native-body>.task-group{order:-1}
+:root[data-direction=alternate][data-brand=school] .timetable{border-radius:4px}
+:root[data-direction=alternate][data-brand=school] .timetable .dismissal{background:var(--brand);color:var(--onbrand)}
+:root[data-direction=alternate][data-brand=school] .native-body>.demo-label{order:9}
+@media(max-width:700px){:root[data-direction=alternate] .pottery-hero{grid-template-columns:1fr;gap:24px}:root[data-direction=alternate] .pottery-hero .clay-art{grid-column:1;grid-row:1;max-width:260px}:root[data-direction=alternate] .pottery-hero .hero-copy{grid-column:1;grid-row:2}:root[data-direction=alternate] .pottery-hero h1{font-size:42px}:root[data-direction=alternate][data-brand=yarn] .work-grid>#revenue,:root[data-direction=alternate][data-brand=yarn] .work-grid>#orders,:root[data-direction=alternate][data-brand=yarn] .work-grid>#inventory,:root[data-direction=alternate][data-brand=yarn] .work-grid>.soft{grid-column:1}:root[data-direction=alternate][data-brand=dental] .calendar .appointment{grid-template-columns:80px 1fr;gap:4px 12px}:root[data-direction=alternate][data-brand=dental] .calendar .appointment:before{font-size:12px}:root[data-direction=alternate][data-brand=dental] .calendar .appointment strong{font-size:12px}:root[data-direction=alternate][data-brand=dental] .calendar .appointment small{grid-column:2;grid-row:3;justify-self:start}}

@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Reading-path/capability regression compares the recorded baseline.
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -34,6 +36,8 @@ jobs:
         run: python scripts/validate-skills.py
       - name: Static page checker tests (no Playwright needed)
         run: node --test ui-craft-and-visual-qa/scripts/static-check.test.cjs
+      - name: Flow source checker fixtures (no browser needed)
+        run: node --test ui-craft-and-visual-qa/scripts/flow-check.test.cjs
       - name: Internal Markdown links resolve
         working-directory: .
         run: python scripts/check-links.py
@@ -43,6 +47,9 @@ jobs:
       - name: Benchmark provenance and result validation tests
         working-directory: .
         run: python -m unittest discover -s benchmarks -p "test_*.py"
+      - name: Benchmark runner history and date guards
+        working-directory: .
+        run: node --test benchmarks/run.test.cjs
       - name: Independent review packet tests
         working-directory: .
         run: python -m unittest discover -s scripts/tests -p "test_*.py"
@@ -73,6 +80,8 @@ jobs:
         run: python design-system/scripts/export-native.py --check
       - name: Validate tokens, layering, contrast and component CSS
         run: python design-system/scripts/validate.py --report
+      - name: Bundled font licenses, hashes and Vietnamese glyph coverage
+        run: python design-system/scripts/check-fonts.py
       - name: Design system regression and negative tests
         run: python -m pytest -q design-system/tests
       - name: Starter brand layer passes the brand check
@@ -93,6 +102,15 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules
         run: node --test design-system/tests/gom-moc-flow.test.cjs
+      - name: Booking flow source contract (runtime verified separately above)
+        run: node skills_UIUX/ui-craft-and-visual-qa/scripts/flow-check.cjs design-system/examples/gom-moc/app.html --mode prototype
+      - name: Benchmark browser flow regressions (five briefs per run)
+        env:
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+          BENCHMARK_SHOTS: ${{ runner.temp }}/benchmark-flow-shots
+        run: |
+          node benchmarks/runs/2026-10-29-iterative-repair/flow.browser.cjs --json "$RUNNER_TEMP/repair-flow.json"
+          node benchmarks/runs/2026-10-29-fresh/flow.browser.cjs --json "$RUNNER_TEMP/fresh-flow.json"
       - name: Starter kit passes the taste check
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules

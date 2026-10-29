@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "created": "2026-10-29T09:45:55Z",
+  "size": "L",
+  "images": {
+    "05-Android-alert-dark.png": "07c048839b6c4d9d8390936db048bf814182b2a796aeca5b1a2b146c6e0cd134",
+    "05-Android-assignment-light.png": "df093fb5dd06c4bc6cce1f84e2f246da43ee42b8c75a6c82c3399c4a86f13933",
+    "05-Android-request-light.png": "d6dc69a79834106c8a3109b4d828dc4faffe2b95584c9715bca9aa8ba71bae37",
+    "05-iOS-alert-dark.png": "18558bed0900a0e29c846f48cf8661bfebe0e7bcf16a64720c97fb66ee436e63",
+    "05-iOS-assignment-light.png": "78e872464336a41a411e802fbf254ef1420e77607b90388d5b3256a3dc323b48",
+    "05-iOS-request-light.png": "00bd57d4c4f27a18c4a6f9ad2902997be9f11e2c7e5c4c6e118fcd22a10715a8",
+    "05-native-1280-dark.jpg": "6c5b80f17b79f8b9a541d632b016076bac87939f159d32c19230e9e1cdfd617f",
+    "05-native-1280-light.jpg": "08777aa990446e79a341a8c371e1996fc7746d3c27f84ccd63ab1014374f8c71",
+    "05-native-390-dark.jpg": "65e715e2ed7c789feed3de0740bb613c38f6b78ae1ccee6950af8b4feef23b35",
+    "05-native-390-light.jpg": "d3b726f61fded4f12d2f1981b6f47edaf79b66a7f01735d8ff9600c0219f886f"
+  },
+  "inputs": {
+    "brief.md": "451c0572baf949842bf3a2cdfbcee33e488aa75ace53015896dfd26f66e6b3ab",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

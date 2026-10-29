@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "created": "2026-10-29T10:36:03Z",
+  "size": "L",
+  "images": {
+    "04-conflict.png": "cea0b63190f37ad7e93f921fda5a8ec89616ff386e9f3e7dd648bf72cdbac14a",
+    "04-multi-role-1280-dark.jpg": "da9b876b1f871f4a5931a88b053a75745c96de57ae94cd0b9b751ecacfd215f3",
+    "04-multi-role-1280-light.jpg": "f6b3030ee7e1e0b58759ff88a722419f32135f8db2af07ca2bce41347a09d90b",
+    "04-multi-role-1440-dark.jpg": "479151f57ea77d49223c558a78259d1505827dc274212f32e01dab2617784c27",
+    "04-multi-role-1440-light.jpg": "5ffbb076cb15b8472b740c234037e854a80eb84795a31613df8c8796b3bf233e",
+    "04-multi-role-390-dark.jpg": "51ea1e008dc9a9e1278d9b537e650a7bff73849e61c798962c0e358e54c6f665",
+    "04-multi-role-390-light.jpg": "035c854a1fa3112427ad33f6b98ba0b79d2899d19af2e6e1539568a778664d9a",
+    "04-no-permission.png": "6d470cb434351149f76564940a84a821eeec02099c9f249fb25527d0f7b6f43f",
+    "04-patient-light.png": "c1614682cf2c77e73ee903a15563763b96f9aceee3fcf6582602b734ed35d005",
+    "04-revenue-dark.png": "cdc1574767c8dd4bbf2592b2bd9bc2b6738cf8664c2837aeeb0ad894cef9aeb7"
+  },
+  "inputs": {
+    "brief.md": "0f911668f6f498d73abd4aed5e86936582dd2757b3623d8007f37caef8df29db",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

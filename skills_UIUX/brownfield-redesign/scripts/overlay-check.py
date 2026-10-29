@@ -27,7 +27,7 @@ from pathlib import Path
 STYLE_EXT = {".css", ".scss", ".sass", ".less"}
 SCRIPT_EXT = {".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx"}
 MARKUP_EXT = {".html", ".htm", ".vue", ".svelte", ".astro", ".jsx", ".tsx"}
-GENERATED_RE = re.compile(r"generated|do not edit|auto-?generated|không sửa tay", re.I)
+GENERATED_RE = re.compile(r"(?:<!--|/\*|//|^\s*#)[^\n]*(?:generated|do not edit|auto-?generated|không sửa tay)", re.I | re.M)
 ALLOW_RE = re.compile(r"brownfield-allow:\s*\S")
 DOM_QUERY_RE = re.compile(r"querySelector(All)?\(|getElementsBy\w+\(|getElementById\(")
 DOM_WRITE_RE = re.compile(
@@ -116,10 +116,18 @@ def is_meaningful(line: str) -> bool:
 
 def check(repo: Path, base: str, head: str | None, opts: argparse.Namespace) -> list[dict]:
     changes = collect(repo, base, head)
+    total_changes = len(changes)
+    includes = getattr(opts, "include", [])
+    if includes:
+        changes = {name: change for name, change in changes.items()
+                   if any(name == prefix or name.startswith(prefix.rstrip('/') + '/') for prefix in includes)}
     findings: list[dict] = []
 
     def add(level: str, rule: str, message: str, path: str | None = None) -> None:
         findings.append({"level": level, "rule": rule, "path": path, "message": message})
+
+    if includes:
+        add("info", "scope", f"Chỉ soát {includes}: {len(changes)}/{total_changes} file thay đổi. Không kết luận cho phần ngoài scope.")
 
     styles = [c for c in changes.values() if c.ext in STYLE_EXT]
     css_added = sum(1 for c in styles for line in c.added if is_meaningful(line))
@@ -256,6 +264,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo", default=".", help="thư mục git của dự án (mặc định: thư mục hiện tại)")
     parser.add_argument("--base", default="origin/main", help="nhánh hoặc commit gốc trước redesign")
     parser.add_argument("--head", default=None, help="nhánh redesign (bỏ trống: so với cây làm việc hiện tại)")
+    parser.add_argument("--include", action="append", default=[], help="scope file/thư mục sản phẩm trong monorepo; lặp để thêm scope, không đổi ngưỡng")
     parser.add_argument("--min-added", type=int, default=80, help="chỉ xét tỉ lệ khi thêm ít nhất N dòng CSS")
     parser.add_argument("--min-ratio", type=float, default=0.3, help="tỉ lệ xoá/thêm CSS tối thiểu")
     parser.add_argument("--layer-lines", type=int, default=60, help="file CSS mới từ N dòng bị xét là lớp")
@@ -263,6 +272,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--generated", action="append", default=[], help="mẫu đường dẫn file sinh tự động")
     parser.add_argument("--json", dest="json_out", help="ghi kết quả JSON ra file")
     opts = parser.parse_args(argv)
+    if any(not value or value.startswith(('/', '\\')) or '..' in Path(value).parts or ':' in value for value in opts.include):
+        parser.error("--include cần đường dẫn tương đối trong repo")
 
     repo = Path(opts.repo).resolve()
     try:
