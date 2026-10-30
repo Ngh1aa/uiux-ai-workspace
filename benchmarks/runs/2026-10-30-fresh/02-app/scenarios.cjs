@@ -9,7 +9,7 @@ module.exports = async (page, pass, assert) => {
   assert.strictEqual(await q('[data-test="tab-past"]').getAttribute('aria-pressed'), 'true');
   assert.ok(await q('[data-test="past-empty"]').isVisible());
   assert.match(await q('[data-test="past-empty"]').innerText(), /Chưa có lượt đã qua/);
-  pass('Lịch của tôi: tab Đã qua hiện trạng thái rỗng có nút Tìm sân');
+  pass('Lịch của tôi: tab Đã qua hiện trạng thái rỗng gọn, bên dưới là sân còn khung tối nay');
 
   // 2. Nút Tiếp tục khoá khi chưa chọn khung, có lý do gắn với nút
   await q('#home-courts [data-test="court-pn"]').click();

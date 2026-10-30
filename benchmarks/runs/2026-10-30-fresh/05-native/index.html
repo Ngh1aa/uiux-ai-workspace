@@ -74,8 +74,8 @@ button { font: inherit; color: inherit; }
 .ios-row.rst { min-height: 44px; padding: 8px 16px; }
 .ios-row__title { font-size: 17px; }
 .ios-head { margin: 0; padding: 0 16px; color: var(--ds-text-secondary); font: var(--ds-font-weight-semibold) 15px/20px var(--ds-font-family-sans); }
-.ios-card { padding: 12px 16px; border-radius: 10px; background: var(--ds-surface-raised); display: flex; flex-direction: column; gap: 6px; }
-.ios-danger { width: 100%; min-height: 44px; border: 0; border-radius: 10px; background: var(--ds-surface-raised); color: var(--ds-action-danger-bg); font-size: 17px; cursor: pointer; }
+.ios-card { padding: 12px 16px; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); display: flex; flex-direction: column; gap: 6px; }
+.ios-danger { width: 100%; min-height: 50px; border: 0; border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); color: var(--ds-action-danger-bg); font-size: 17px; cursor: pointer; }
 .ios-tabs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; justify-content: space-around; align-items: center; padding: 8px 16px 30px; border-top: 0.5px solid var(--ds-border-subtle); background: color-mix(in srgb, var(--ds-surface-raised) 94%, transparent); backdrop-filter: blur(20px); }
 .tab { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 48px; min-height: 44px; padding: 0 12px; border: 0; border-radius: 22px; background: none; color: var(--ds-text-secondary); cursor: pointer; font: var(--ds-font-weight-semibold) 14px/20px var(--ds-font-family-sans); }
 .tab .ds-icon { width: 24px; height: 24px; }
@@ -85,7 +85,7 @@ button { font: inherit; color: inherit; }
 .ios-input { width: 100%; min-height: 44px; border: 0; background: none; color: var(--ds-text-primary); font: inherit; font-size: 17px; }
 .ios-input::placeholder, .md-field textarea::placeholder, .md-field input::placeholder { color: var(--ds-text-secondary); }
 textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-height: 22px; }
-.ios-block { padding: 12px 16px; border-radius: 10px; background: var(--ds-surface-raised); display: flex; flex-direction: column; gap: 10px; }
+.ios-block { padding: 12px 16px; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); display: flex; flex-direction: column; gap: 10px; }
 .ios-block.has-error { box-shadow: inset 0 0 0 1.5px var(--ds-action-danger-bg); }
 .ios-asheet { position: absolute; left: 8px; right: 8px; bottom: 34px; z-index: 5; display: flex; flex-direction: column; gap: 8px; }
 .ios-asheet__grp { overflow: hidden; border-radius: 14px; background: var(--ds-surface-raised); }
@@ -93,11 +93,24 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
 .ios-asheet__grp button + button { border-top: 0.5px solid var(--ds-border-subtle); }
 .ios-asheet .is-cancel { font-weight: var(--ds-font-weight-semibold); }
 
+.ios .ios-group { border-radius: var(--ds-card-radius); }
+.ios .ios-input { height: 44px; }
+.ios textarea.ios-input { height: auto; }
+.who { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
+.who__name { margin: 0; font: var(--ds-font-weight-bold) 24px/30px var(--app-font-display); letter-spacing: -0.01em; }
+.who .meta { margin: 0; }
+.dlg-data { display: flex; flex-direction: column; gap: 2px; }
 /* ---------- Android ---------- */
+.md .md-card { border-radius: var(--ds-card-radius); }
+.md .md-topbar { padding: 0 16px 0 4px; }
+.md .md-topbar__title.is-root { margin-left: 12px; padding: 0; }
+.md .md-field input { height: 48px; }
+.md-btn--outline-danger { width: 100%; background: none; color: var(--ds-action-danger-bg); box-shadow: inset 0 0 0 1px var(--ds-border-control); }
 .md .md-body { gap: 16px; }
 .md-title-sm { margin: 0; padding: 8px 4px 0; color: var(--ds-text-brand); font: var(--ds-font-weight-semibold) 14px/20px var(--ds-font-family-sans); }
 .md-surface { overflow: hidden; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
-.md-item.rst { min-height: 72px; padding: 8px 16px; }
+.md-item.rst { min-height: 72px; padding: 12px 16px; }
+.md-item__chip { margin-top: 6px; }
 .md-li { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; padding: 0 16px; font-size: 16px; }
 .md-li + .md-li, .md-item + .md-item { border-top: 1px solid var(--ds-border-subtle); }
 .md-nav { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; justify-content: space-around; align-items: center; padding: 12px 16px 28px; background: var(--ds-surface-raised); }
@@ -190,10 +203,12 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
 
   const leaveTitle = l => `Nghỉ ${l.session.toLowerCase()} ${l.dow} ${l.d}`;
   const todo = st => st.hw.filter(h => !h.done);
+  const others = (st, h) => todo(st).filter(x => x.id !== h.id);
+  const who = st => `<div class="who"><span class="avatar" aria-hidden="true">GH</span><div><p class="who__name">Trần Gia Hân</p><p class="meta">Lớp 2/3, gửi cô Lê Thu Hà</p></div></div>`;
   function formIssue(f) {
     const day = DAYS.find(x => x.d === f.date);
     if (!day) return { field: null, why: 'Chưa chọn ngày nghỉ' };
-    if (day.past) return { field: `${cap(day.dow)} ${day.d} đã qua. Chọn từ hôm nay, thứ Tư 22/10.`, why: 'Ngày nghỉ đã qua' };
+    if (day.past) return { field: `${cap(day.dow)} ${day.d} đã qua. Chọn từ thứ Tư 22/10.`, why: 'Ngày nghỉ đã qua' };
     if (!f.reason.trim()) return { field: null, why: 'Chưa nhập lý do' };
     return null;
   }
@@ -257,9 +272,11 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
         <ul class="ios-group">
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Môn</span></span><span class="ios-row__value">${h.subj}</span></li>
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Hạn nộp</span></span><span class="ios-row__value num">${h.due}</span></li>
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Giáo viên</span></span><span class="ios-row__value">Cô Lê Thu Hà</span></li>
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Bài làm</span></span><span class="ios-row__value">${h.done ? `1 ảnh, ${h.done}` : 'Chưa có ảnh'}</span></li>
         </ul>
-        <section class="ios-section" aria-labelledby="${st.uid}-ds"><h3 class="ios-head" id="${st.uid}-ds">Mô tả</h3><div class="ios-card"><p class="para">${esc(h.desc)}</p></div></section>`,
+        <section class="ios-section" aria-labelledby="${st.uid}-ds"><h3 class="ios-head" id="${st.uid}-ds">Mô tả</h3><div class="ios-card"><p class="para">${esc(h.desc)}</p></div></section>
+        ${others(st, h).length ? `<section class="ios-section" aria-labelledby="${st.uid}-or"><h3 class="ios-head" id="${st.uid}-or">Bài chưa nộp khác</h3>${I.rowsHw(st, others(st, h))}</section>` : ''}`,
         bar + (st.overlay === 'pick' ? `<div class="nt-scrim" data-act="close-overlay"></div><div class="ios-asheet" role="dialog" aria-modal="true" aria-label="Nộp ảnh bài làm"><div class="ios-asheet__grp"><button data-act="photo" data-test="pick-camera">Chụp ảnh</button><button data-act="photo" data-test="pick-library">Chọn từ thư viện</button></div><div class="ios-asheet__grp"><button class="is-cancel" data-act="close-overlay" data-test="pick-cancel">Hủy</button></div></div>` : ''),
         h.done ? '' : 'pad-act');
     },
@@ -267,25 +284,26 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
       const l = st.leaves.find(x => x.id === st.arg);
       const alert = st.overlay === 'cancel' ? `<div class="nt-scrim" aria-hidden="true"></div>
         <div class="ios-alert" role="alertdialog" aria-modal="true" aria-labelledby="${st.uid}-at" aria-describedby="${st.uid}-am" data-test="confirm">
-          <div class="ios-alert__body"><h2 class="ios-alert__title" id="${st.uid}-at">Hủy đơn?</h2><p class="ios-alert__msg" id="${st.uid}-am">${esc(leaveTitle(l))}, lý do “${esc(l.reason)}”.</p></div>
+          <div class="ios-alert__body"><h2 class="ios-alert__title" id="${st.uid}-at">Hủy đơn?</h2><p class="ios-alert__msg dlg-data" id="${st.uid}-am"><span>${esc(leaveTitle(l))}</span><span>Lý do: ${esc(l.reason)}</span></p></div>
           <div class="ios-alert__actions"><button data-act="close-overlay" data-test="confirm-dismiss">Hủy</button><button class="is-danger" data-act="do-cancel" data-test="confirm-cancel">Hủy đơn</button></div></div>` : '';
       return I.pushed(st, `
+        ${who(st)}
         <ul class="ios-group">
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Ngày</span></span><span class="ios-row__value num">${cap(l.dow)} ${l.d}</span></li>
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Buổi</span></span><span class="ios-row__value">${l.session}</span></li>
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Lý do</span></span><span class="ios-row__value">${esc(l.reason)}</span></li>
-          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Gửi tới</span></span><span class="ios-row__value">Cô Lê Thu Hà</span></li>
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Trạng thái</span></span><span data-test="leave-status">${leaveChip(l)}</span></li>
         </ul>
-        ${l.status === 'sent' ? `<button class="ios-danger" data-act="ask-cancel" data-test="cancel-leave">Hủy đơn</button>` : ''}`, alert);
+        `, (l.status === 'sent' ? `<div class="actbar"><button class="ios-danger" data-act="ask-cancel" data-test="cancel-leave">Hủy đơn</button></div>` : '') + alert, l.status === 'sent' ? 'pad-act' : '');
     },
     form(st, behind) {
       const f = st.form, iss = formIssue(f), u = st.uid;
-      return `<div class="ios-behind" aria-hidden="true" inert>${behind}</div>
+      return `<div class="ios-behind" aria-hidden="true" inert>${behind.split('<div class="ios-body">')[0]}</div></div>
       <div class="ios-sheet" role="dialog" aria-modal="true" aria-labelledby="${u}-ft" data-test="form">
         <span class="ios-grabber" aria-hidden="true"></span>
         <div class="ios-nav"><span class="ios-nav__lead"><button class="ios-link" data-act="close-form" data-test="form-cancel">Hủy</button></span><h2 class="ios-nav__title" id="${u}-ft">Xin nghỉ</h2><span class="ios-nav__trail"></span></div>
         <div class="nt-scroll"><div class="ios-body">
+          ${who(st)}
           <section class="ios-section" aria-labelledby="${u}-fd"><h3 class="ios-head" id="${u}-fd">Ngày nghỉ</h3>
             <div class="ios-block${iss && iss.field ? ' has-error' : ''}" data-test="date-field">${I.daysHtml(st)}${iss && iss.field ? `<p class="field-err" id="${u}-de" data-test="date-error">${ic('i-alert')}<span>${iss.field}</span></p>` : ''}</div></section>
           <section class="ios-section" aria-labelledby="${u}-fs"><h3 class="ios-head" id="${u}-fs">Buổi</h3><div class="seg" role="group" aria-labelledby="${u}-fs">${SESSIONS.map(s => `<button data-act="session" data-v="${s}" aria-pressed="${f.session === s}">${s}</button>`).join('')}</div></section>
@@ -301,7 +319,7 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
   /* ---------- Android ---------- */
   const M = {
     rowsHw(st, list) {
-      return `<ul class="md-surface md-list">${list.map(h => `<li><button class="md-item rst" data-act="open-hw" data-id="${h.id}" data-test="hw-${h.id}"><span class="md-item__lead">${ic('i-task')}</span><span class="md-item__body"><span class="md-item__title">${esc(h.title)}</span><span class="md-item__sub">${h.subj}, hạn ${h.due.replace('Thứ', 'thứ')}</span></span>${hwChip(h)}</button></li>`).join('')}</ul>`;
+      return `<ul class="md-surface md-list">${list.map(h => `<li><button class="md-item rst" data-act="open-hw" data-id="${h.id}" data-test="hw-${h.id}"><span class="md-item__lead">${ic('i-task')}</span><span class="md-item__body"><span class="md-item__title">${esc(h.title)}</span><span class="md-item__sub">${h.subj}, hạn ${h.due.replace('Thứ', 'thứ')}</span><span class="md-item__chip">${hwChip(h)}</span></span></button></li>`).join('')}</ul>`;
     },
     rowsLeave(st) {
       return `<ul class="md-surface md-list">${st.leaves.map(l => `<li><button class="md-item rst" data-act="open-leave" data-id="${l.id}" data-test="leave-${l.id}"><span class="md-item__lead">${ic('i-calplus')}</span><span class="md-item__body"><span class="md-item__title">${esc(leaveTitle(l))}</span><span class="md-item__sub">${esc(l.reason)}</span></span>${leaveChip(l)}</button></li>`).join('')}</ul>`;
@@ -312,8 +330,8 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
     snack(st, low) { return st.flash ? `<div class="md-snack${low ? ' is-low' : ''}" role="status" data-test="result"><span>${esc(st.flash)}</span><button data-act="dismiss-flash">Đóng</button></div>` : ''; },
     fab(st) { return `<button class="md-fab${st.flash ? ' is-up' : ''}" data-act="new-leave" data-test="new-leave">${ic('i-calplus')}Xin nghỉ</button>`; },
     root(st, body, fab = true) {
-      return `<div class="md-topbar"><h1 class="md-topbar__title" style="padding-left:12px">${TITLES[st.view]}</h1></div>
-        <div class="nt-scroll"><div class="md-body" style="padding-bottom:${fab ? 190 : 120}px">${body}</div></div>${fab ? M.fab(st) : ''}${M.snack(st)}${M.nav(st)}`;
+      return `<div class="md-topbar"><h1 class="md-topbar__title is-root">${TITLES[st.view]}</h1></div>
+        <div class="nt-scroll"><div class="md-body" style="padding-bottom:${fab ? 200 : 120}px">${body}</div></div>${fab ? M.fab(st) : ''}${M.snack(st)}${M.nav(st)}`;
     },
     today(st) {
       return M.root(st, `
@@ -339,9 +357,11 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
         <ul class="md-surface md-list">
           <li class="md-li"><span>Môn</span><span class="nt-muted">${h.subj}</span></li>
           <li class="md-li"><span>Hạn nộp</span><span class="nt-muted num">${h.due}</span></li>
+          <li class="md-li"><span>Giáo viên</span><span class="nt-muted">Cô Lê Thu Hà</span></li>
           <li class="md-li"><span>Bài làm</span><span class="nt-muted">${h.done ? `1 ảnh, ${h.done}` : 'Chưa có ảnh'}</span></li>
         </ul>
-        <h3 class="md-title-sm">Mô tả</h3><div class="md-card"><p class="para">${esc(h.desc)}</p></div>`,
+        <h3 class="md-title-sm">Mô tả</h3><div class="md-card"><p class="para">${esc(h.desc)}</p></div>
+        ${others(st, h).length ? `<h3 class="md-title-sm">Bài chưa nộp khác</h3>${M.rowsHw(st, others(st, h))}` : ''}`,
         bar + (st.overlay === 'pick' ? `<div class="nt-scrim" data-act="close-overlay"></div><div class="md-bsheet" role="dialog" aria-modal="true" aria-label="Nộp ảnh bài làm"><div class="md-bsheet__handle" aria-hidden="true"></div><button data-act="photo" data-test="pick-camera">${ic('i-cam')}Chụp ảnh</button><button data-act="photo" data-test="pick-library">${ic('i-img')}Chọn từ thư viện</button><button data-act="close-overlay" data-test="pick-cancel">${ic('i-x')}Hủy</button></div>` : ''),
         h.done ? 120 : 150);
     },
@@ -350,23 +370,24 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
       const dlg = st.overlay === 'cancel' ? `<div class="nt-scrim" aria-hidden="true"></div>
         <div class="md-dialog" role="alertdialog" aria-modal="true" aria-labelledby="${st.uid}-at" aria-describedby="${st.uid}-am" data-test="confirm">
           <span class="md-dialog__icon">${ic('i-trash')}</span><h2 class="md-dialog__title" id="${st.uid}-at">Hủy đơn?</h2>
-          <p class="md-dialog__msg" id="${st.uid}-am">${esc(leaveTitle(l))}, lý do “${esc(l.reason)}”.</p>
+          <p class="md-dialog__msg dlg-data" id="${st.uid}-am"><span>${esc(leaveTitle(l))}</span><span>Lý do: ${esc(l.reason)}</span></p>
           <div class="md-dialog__actions"><button class="md-btn md-btn--text" data-act="close-overlay" data-test="confirm-dismiss">Hủy</button><button class="md-btn md-btn--text md-btn--danger" data-act="do-cancel" data-test="confirm-cancel">Hủy đơn</button></div></div>` : '';
       return M.pushed(st, `
+        ${who(st)}
         <ul class="md-surface md-list">
           <li class="md-li"><span>Ngày</span><span class="nt-muted num">${cap(l.dow)} ${l.d}</span></li>
           <li class="md-li"><span>Buổi</span><span class="nt-muted">${l.session}</span></li>
           <li class="md-li"><span>Lý do</span><span class="nt-muted">${esc(l.reason)}</span></li>
-          <li class="md-li"><span>Gửi tới</span><span class="nt-muted">Cô Lê Thu Hà</span></li>
           <li class="md-li"><span>Trạng thái</span><span data-test="leave-status">${leaveChip(l)}</span></li>
         </ul>
-        ${l.status === 'sent' ? `<div style="display:flex;justify-content:flex-end"><button class="md-btn md-btn--text md-btn--danger" data-act="ask-cancel" data-test="cancel-leave">${ic('i-trash')}Hủy đơn</button></div>` : ''}`, dlg);
+        `, (l.status === 'sent' ? `<div class="actbar md-actbar"><button class="md-btn md-btn--outline-danger" data-act="ask-cancel" data-test="cancel-leave">${ic('i-trash')}Hủy đơn</button></div>` : '') + dlg, l.status === 'sent' ? 150 : 120);
     },
     form(st) {
       const f = st.form, iss = formIssue(f), u = st.uid;
       return `<div class="nt-screen" role="dialog" aria-modal="true" aria-labelledby="${u}-ft" data-test="form">
         <div class="md-topbar"><button class="md-iconbtn" data-act="close-form" data-test="form-cancel">${ic('i-x')}<span class="ds-visually-hidden">Đóng</span></button><h1 class="md-topbar__title" id="${u}-ft">Xin nghỉ</h1></div>
         <div class="nt-scroll"><div class="md-body" style="padding-bottom:180px;gap:24px">
+          ${who(st)}
           <div class="md-group${iss && iss.field ? ' has-error' : ''}" data-test="date-field"><p class="md-group__label" id="${u}-fd">Ngày nghỉ</p>${daysHtml(st)}${iss && iss.field ? `<p class="field-err" id="${u}-de" data-test="date-error">${ic('i-alert')}<span>${iss.field}</span></p>` : ''}</div>
           <div class="md-group"><p class="md-group__label" id="${u}-fs">Buổi</p><div class="seg" role="group" aria-labelledby="${u}-fs">${SESSIONS.map(s => `<button data-act="session" data-v="${s}" aria-pressed="${f.session === s}">${s}</button>`).join('')}</div></div>
           <div class="md-field"><label class="md-field__label" for="${u}-r">Lý do</label><input id="${u}-r" data-bind="reason" data-test="reason" placeholder="Ví dụ: Bị sốt" value="${esc(f.reason)}"></div>
