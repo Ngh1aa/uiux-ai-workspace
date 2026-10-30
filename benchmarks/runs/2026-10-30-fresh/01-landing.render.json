@@ -1,0 +1,124 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "NOT_RUN",
+  "results": [
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 1024,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 1024,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/01-landing/index.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

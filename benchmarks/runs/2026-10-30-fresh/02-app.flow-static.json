@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "layer": "source-static",
+  "errorCount": 0,
+  "warningCount": 0,
+  "flow_status": "UNKNOWN",
+  "results": [
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "mode": "prototype",
+      "static_status": "PASS",
+      "flow_status": "UNKNOWN",
+      "errors": [],
+      "warnings": [],
+      "unknown": [
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 219,
+          "message": "“Tất cả”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 220,
+          "message": "“Phú Nhuận”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 221,
+          "message": "“Quận 10”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 222,
+          "message": "“Quận 1”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 228,
+          "message": "“Xóa tìm kiếm”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 246,
+          "message": "“Quay lại”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 266,
+          "message": "“Quay lại”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 289,
+          "message": "“Bớt một người”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 291,
+          "message": "“Thêm một người”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 321,
+          "message": "“Đóng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 334,
+          "message": "“Hủy”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "no-result",
+          "status": "UNKNOWN",
+          "line": 335,
+          "message": "Cần bấm xác nhận và kiểm tra phản hồi, dữ liệu cùng đường khôi phục."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 353,
+          "message": "“Sắp tới”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 354,
+          "message": "“Đã qua”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "runtime",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "HTML nguồn không chứng minh luồng, Back, tổng tiền, đúng đối tượng/vai trò, khôi phục lỗi hoặc navigation động. Chạy Playwright của dự án."
+        }
+      ]
+    }
+  ]
+}

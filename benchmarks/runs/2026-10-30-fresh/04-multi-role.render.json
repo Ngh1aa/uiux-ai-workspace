@@ -1,0 +1,3071 @@
+{
+  "errorCount": 319,
+  "warningCount": 374,
+  "axe": "NOT_RUN",
+  "results": [
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-frame: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 207px: div.rx-head \"Lịch hôm nay Thứ Ba, 28/10Đã đến 1Đang k\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 261px bởi khung main.rx-main: button.ds-button \"Đặt lịch\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 65px: button.rx-cell \"Võ Thị HồngTrám răngĐã đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 21px bởi khung section.rx-panel: span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 7px: td \"Đã qua\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: td \"Đã qua\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 7px bởi khung section.rx-panel: span.rx-cell \"Đã qua\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 88px: button.rx-cell \"Đặng Quốc ViệtNhổ răng khônĐang khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 7px bởi khung section.rx-panel: span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 69px bởi khung section.rx-panel: span.ds-badge \"Đang khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 101px: button.rx-cell \"Hồ Ngọc MaiCạo vôiMuộn 15 phút\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 30px bởi khung section.rx-panel: span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 17px bởi khung section.rx-panel: span.rx-cell__svc \"Cạo vôi\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 106px bởi khung section.rx-panel: span.ds-badge \"Muộn 15 phút\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 81px: button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 38px bởi khung section.rx-panel: span.ds-badge \"Trùng lịch\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 20px: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 5px bởi khung section.rx-panel: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 80px: button.rx-cell \"Trương Văn NamTái khám niềngChưa đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 20px bởi khung section.rx-panel: span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 2px bởi khung section.rx-panel: span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 60px bởi khung section.rx-panel: span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 42px: div.rx-panel__head \"Đặt lịch\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 13px bởi khung main.rx-main: h2 \"Đặt lịch\""
+            },
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: label.ds-field__label \"Họ tên bệnh nhân\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: label.ds-field__label \"Họ tên bệnh nhân\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: label.ds-field__label \"Dịch vụ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 9px: label.ds-field__label \"Ghế\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 30px: div.ds-field__wrap \"Ghế 1Ghế 2Ghế 3\""
+            },
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 18px: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 30px: div.ds-field__wrap \"9:3010:0010:30\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 51px: p.rx-conflict__title \"Ghế 1 lúc 9:30 đã có Lâm Gia Bảo (nhổ ră\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 62px bởi khung main.rx-main: span \"Ghế 1 lúc 9:30 đã có Lâm Gia Bảo (nhổ ră\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 17px bởi khung main.rx-main: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 25px: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 25px bởi khung main.rx-main: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 25px: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 33px bởi khung main.rx-main: button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 29px: button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: p.rx-reason \"Khung đã có người, chọn khung khác\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 130px: div.rx-form__btns \"Hủy Đặt lịch\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 52px bởi khung main.rx-main: button.ds-button \"Hủy\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h1 \"Lịch hôm nay\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Đang khám 1\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Chưa đến 2\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Ghế 1BS. Đức\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Ghế 2BS. Hoàng Lan\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Ghế 2BS. Hoàng Lan\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Ghế 3KTV Trần Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Ghế 3KTV Trần Bảo\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×140px < 44×44: button.rx-cell \"Võ Thị HồngTrám răngĐã đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Trám răng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Trám răng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell \"Đã qua\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell \"Đã qua\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×157px < 44×44: button.rx-cell \"Đặng Quốc ViệtNhổ răng khônĐang khám\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Nhổ răng khôn\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Nhổ răng khôn\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Đang khám\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×140px < 44×44: button.rx-cell \"Hồ Ngọc MaiCạo vôiMuộn 15 phút\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Cạo vôi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Cạo vôi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Muộn 15 phút\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×157px < 44×44: button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 2px (nên ≥ 16px): span.rx-cell__svc \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Trùng lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 26×157px < 44×44: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×157px < 44×44: button.rx-cell \"Trương Văn NamTái khám niềngChưa đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 26×64px < 44×44: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Đặt lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Đặt lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Họ tên bệnh nhân\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Dịch vụ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Ghế\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 1 lúc 9:30 đã có Lâm Gia Bảo (nhổ ră\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 18×48px < 44×44: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 18×48px < 44×44: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 18×48px < 44×44: button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-reason \"Khung đã có người, chọn khung khác\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Hủy\""
+            },
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0b6e66 ở span.rx-mark; #005925 ở span.ds-badge \"Đã đến\"; #06488c ở span.ds-badge \"Đang khám\"; #654003 ở span.ds-badge \"Muộn 15 phút\"; #a5282a ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 6px bởi khung section.rx-frame: strong \"BS. Phan Minh Đức\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 216px: div.rx-head \"Bệnh nhân tiếp theo9:30, Thứ Ba, 28/10, \""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 287px bởi khung main.rx-main: button.ds-button \"Gọi bệnh nhân\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 36px: p.rx-patient__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 68px: ul.rx-facts \"8 tuổiNgười đi kèm: mẹ, chị Lâm ThuNhổ r\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 19px bởi khung main.rx-main: span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 45px bởi khung main.rx-main: p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 36px: p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 45px bởi khung main.rx-main: p.rx-allergy__value \"Penicillin\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 131px: p.rx-allergy__value \"Penicillin\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 45px bởi khung main.rx-main: p.rx-allergy__ctx \"Không dùng kháng sinh nhóm penicillin\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 44px: p.rx-allergy__ctx \"Không dùng kháng sinh nhóm penicillin\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 27px: h2 \"Hôm nay, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 43px: li \"1Gây tê tại chỗ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 45px: li \"2Nhổ R74\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 29px: h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 56px: li \"Khám tổng quát\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 54px: li \"Chụp phim\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 48px: li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 47px bởi khung main.rx-main: h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 13px: h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 71px bởi khung main.rx-main: span.rx-row__time \"8:00\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 175px bởi khung main.rx-main: span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 71px bởi khung main.rx-main: span.rx-row__time \"9:30\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 191px bởi khung main.rx-main: span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 71px bởi khung main.rx-main: span.rx-row__time \"10:30\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"BS. Phan Minh Đức\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"BS. Phan Minh Đức\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h1 \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-reason \"Gọi bệnh nhân trước khi bắt đầu khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Gọi bệnh nhân\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-patient__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-patient__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"8 tuổi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"8 tuổi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Người đi kèm: mẹ, chị Lâm Thu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"mẹ, chị Lâm Thu\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"mẹ, chị Lâm Thu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-allergy__value \"Penicillin\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-allergy__ctx \"Không dùng kháng sinh nhóm penicillin\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Hôm nay, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"1Gây tê tại chỗ\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"2Nhổ R74\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Khám tổng quát\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Khám tổng quát\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Chụp phim\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Chụp phim\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-row__time \"8:00\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-row__time \"9:30\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-row__time \"10:30\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-reason \"Nhập ghi chú để lưu\""
+            }
+          ]
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 16px bởi khung section.rx-frame: strong \"Lê Quỳnh Anh\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 16px bởi khung section.rx-frame: span \"Chủ phòng khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 226px: p.rx-hero__value \"186.200.000 đ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 25px: p.rx-hero__ctx \"+8,6%so với cùng kỳ tháng 9: 171.500.000\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 37px bởi khung main.rx-main: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 26px: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 118px: p.rx-fill__big \"78%cả phòng khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 98px bởi khung main.rx-main: strong \"78%\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 155px bởi khung main.rx-main: span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 49px: div.rx-chair__top \"Ghế 1, BS. Đức81%\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 42px bởi khung main.rx-main: span \"Ghế 1, BS. Đức\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 86px bởi khung main.rx-main: span.rx-num \"81%\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 67px: div.rx-chair__top \"Ghế 2, BS. Hoàng Lan75%\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 59px bởi khung main.rx-main: span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 104px bởi khung main.rx-main: span.rx-num \"75%\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 58px: div.rx-chair__top \"Ghế 3, KTV Trần BảoChưa có số\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 44px bởi khung main.rx-main: span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 94px bởi khung main.rx-main: span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 59px: div.rx-empty \"Chưa đủ 7 ngày dữ liệuDùng từ thứ Hai, 2\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 96px bởi khung main.rx-main: strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 96px bởi khung main.rx-main: span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lê Quỳnh Anh\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Lê Quỳnh Anh\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Chủ phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Chủ phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Doanh thu\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-head__sub \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-hero__value \"186.200.000 đ\""
+            },
+            {
+              "rule": "widow",
+              "message": "Dòng cuối chỉ còn một chữ: span \"so với cùng kỳ tháng 9: 171.500.000 đ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 5px (nên ≥ 16px): span \"so với cùng kỳ tháng 9: 171.500.000 đ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Doanh thu theo ngày, tháng 10 (triệu đ)\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"78%\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 1, BS. Đức\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 1, BS. Đức\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-num \"81%\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-num \"75%\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            }
+          ]
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-frame: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 171px: h1 \"Không có quyền xem Doanh thu\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 109px: div.rx-actions \"Quay lại Đổi vai trò\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Trang và chức năng\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 145px bởi khung section.rx-panel: th.is-me \"Lễ tân (bạn)\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 234px bởi khung section.rx-panel: th \"Bác sĩ\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 386px bởi khung section.rx-panel: th \"Chủ phòng khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Lịch hôm nay\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 92px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 214px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 302px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Đặt lịch, xếp khách vãng lai\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 212px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 300px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Xác nhận đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 91px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Gọi bệnh nhân, bắt đầu khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Doanh thu\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Đổi vai trò\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Quay lại\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đổi vai trò\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Quyền theo vai trò\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Quyền theo vai trò\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Trang và chức năng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th.is-me \"Lễ tân (bạn)\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Bác sĩ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Chủ phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Lịch hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-yes \"Có\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Đặt lịch, xếp khách vãng lai\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Xác nhận đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Gọi bệnh nhân, bắt đầu khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Doanh thu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Đổi vai trò\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-frame: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 207px: div.rx-head \"Lịch hôm nay Thứ Ba, 28/10Đã đến 1Đang k\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 261px bởi khung main.rx-main: button.ds-button \"Đặt lịch\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 65px: button.rx-cell \"Võ Thị HồngTrám răngĐã đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 21px bởi khung section.rx-panel: span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 7px: td \"Đã qua\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: td \"Đã qua\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 7px bởi khung section.rx-panel: span.rx-cell \"Đã qua\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 88px: button.rx-cell \"Đặng Quốc ViệtNhổ răng khônĐang khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 7px bởi khung section.rx-panel: span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 69px bởi khung section.rx-panel: span.ds-badge \"Đang khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 101px: button.rx-cell \"Hồ Ngọc MaiCạo vôiMuộn 15 phút\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 30px bởi khung section.rx-panel: span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 17px bởi khung section.rx-panel: span.rx-cell__svc \"Cạo vôi\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 106px bởi khung section.rx-panel: span.ds-badge \"Muộn 15 phút\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 81px: button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 38px bởi khung section.rx-panel: span.ds-badge \"Trùng lịch\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 20px: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 5px bởi khung section.rx-panel: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 80px: button.rx-cell \"Trương Văn NamTái khám niềngChưa đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 20px bởi khung section.rx-panel: span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 2px bởi khung section.rx-panel: span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 60px bởi khung section.rx-panel: span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 42px: div.rx-panel__head \"Đặt lịch\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 13px bởi khung main.rx-main: h2 \"Đặt lịch\""
+            },
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: label.ds-field__label \"Họ tên bệnh nhân\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: label.ds-field__label \"Họ tên bệnh nhân\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: label.ds-field__label \"Dịch vụ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 9px: label.ds-field__label \"Ghế\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 30px: div.ds-field__wrap \"Ghế 1Ghế 2Ghế 3\""
+            },
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 18px: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 30px: div.ds-field__wrap \"9:3010:0010:30\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 51px: p.rx-conflict__title \"Ghế 1 lúc 9:30 đã có Lâm Gia Bảo (nhổ ră\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 62px bởi khung main.rx-main: span \"Ghế 1 lúc 9:30 đã có Lâm Gia Bảo (nhổ ră\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 17px bởi khung main.rx-main: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 25px: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 25px bởi khung main.rx-main: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 25px: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 33px bởi khung main.rx-main: button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 29px: button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 29px bởi khung main.rx-main: p.rx-reason \"Khung đã có người, chọn khung khác\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 130px: div.rx-form__btns \"Hủy Đặt lịch\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 52px bởi khung main.rx-main: button.ds-button \"Hủy\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h1 \"Lịch hôm nay\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Đang khám 1\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Chưa đến 2\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Ghế 1BS. Đức\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Ghế 2BS. Hoàng Lan\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Ghế 2BS. Hoàng Lan\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Ghế 3KTV Trần Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Ghế 3KTV Trần Bảo\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×140px < 44×44: button.rx-cell \"Võ Thị HồngTrám răngĐã đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Trám răng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Trám răng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell \"Đã qua\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell \"Đã qua\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×157px < 44×44: button.rx-cell \"Đặng Quốc ViệtNhổ răng khônĐang khám\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Nhổ răng khôn\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Nhổ răng khôn\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Đang khám\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×140px < 44×44: button.rx-cell \"Hồ Ngọc MaiCạo vôiMuộn 15 phút\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Cạo vôi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Cạo vôi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Muộn 15 phút\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×157px < 44×44: button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 2px (nên ≥ 16px): span.rx-cell__svc \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Trùng lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 26×157px < 44×44: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 28×157px < 44×44: button.rx-cell \"Trương Văn NamTái khám niềngChưa đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 26×64px < 44×44: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Đặt lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Đặt lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Họ tên bệnh nhân\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Dịch vụ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Ghế\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 1 lúc 9:30 đã có Lâm Gia Bảo (nhổ ră\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 18×48px < 44×44: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 18×48px < 44×44: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "target",
+              "message": "Vùng chạm 18×48px < 44×44: button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-reason \"Khung đã có người, chọn khung khác\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Hủy\""
+            },
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0d5b54 ở span.rx-mark; #c3e7c9 ở span.ds-badge \"Đã đến\"; #c6dfff ở span.ds-badge \"Đang khám\"; #f6d7b2 ở span.ds-badge \"Muộn 15 phút\"; #420005 ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 6px bởi khung section.rx-frame: strong \"BS. Phan Minh Đức\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 216px: div.rx-head \"Bệnh nhân tiếp theo9:30, Thứ Ba, 28/10, \""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 287px bởi khung main.rx-main: button.ds-button \"Gọi bệnh nhân\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 36px: p.rx-patient__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 68px: ul.rx-facts \"8 tuổiNgười đi kèm: mẹ, chị Lâm ThuNhổ r\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 19px bởi khung main.rx-main: span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 45px bởi khung main.rx-main: p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 36px: p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 45px bởi khung main.rx-main: p.rx-allergy__value \"Penicillin\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 131px: p.rx-allergy__value \"Penicillin\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 45px bởi khung main.rx-main: p.rx-allergy__ctx \"Không dùng kháng sinh nhóm penicillin\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 44px: p.rx-allergy__ctx \"Không dùng kháng sinh nhóm penicillin\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 27px: h2 \"Hôm nay, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 43px: li \"1Gây tê tại chỗ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 45px: li \"2Nhổ R74\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 29px: h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 56px: li \"Khám tổng quát\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 54px: li \"Chụp phim\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 48px: li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 47px bởi khung main.rx-main: h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 13px: h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 71px bởi khung main.rx-main: span.rx-row__time \"8:00\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 175px bởi khung main.rx-main: span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 71px bởi khung main.rx-main: span.rx-row__time \"9:30\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 191px bởi khung main.rx-main: span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 71px bởi khung main.rx-main: span.rx-row__time \"10:30\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"BS. Phan Minh Đức\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"BS. Phan Minh Đức\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h1 \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-reason \"Gọi bệnh nhân trước khi bắt đầu khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Gọi bệnh nhân\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-patient__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-patient__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"8 tuổi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"8 tuổi\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Người đi kèm: mẹ, chị Lâm Thu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"mẹ, chị Lâm Thu\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"mẹ, chị Lâm Thu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Nhổ răng sữa\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Chưa đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-allergy__value \"Penicillin\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-allergy__ctx \"Không dùng kháng sinh nhóm penicillin\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Hôm nay, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"1Gây tê tại chỗ\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"2Nhổ R74\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Khám tổng quát\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Khám tổng quát\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Chụp phim\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Chụp phim\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Ghế 1 hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-row__time \"8:00\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.ds-badge \"Đã đến\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-row__time \"9:30\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-row__time \"10:30\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-reason \"Nhập ghi chú để lưu\""
+            }
+          ]
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 16px bởi khung section.rx-frame: strong \"Lê Quỳnh Anh\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 16px bởi khung section.rx-frame: span \"Chủ phòng khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 226px: p.rx-hero__value \"186.200.000 đ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 25px: p.rx-hero__ctx \"+8,6%so với cùng kỳ tháng 9: 171.500.000\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 37px bởi khung main.rx-main: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 26px: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 118px: p.rx-fill__big \"78%cả phòng khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 98px bởi khung main.rx-main: strong \"78%\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 155px bởi khung main.rx-main: span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 49px: div.rx-chair__top \"Ghế 1, BS. Đức81%\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 42px bởi khung main.rx-main: span \"Ghế 1, BS. Đức\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 86px bởi khung main.rx-main: span.rx-num \"81%\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 67px: div.rx-chair__top \"Ghế 2, BS. Hoàng Lan75%\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 59px bởi khung main.rx-main: span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 104px bởi khung main.rx-main: span.rx-num \"75%\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 58px: div.rx-chair__top \"Ghế 3, KTV Trần BảoChưa có số\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 44px bởi khung main.rx-main: span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 94px bởi khung main.rx-main: span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 59px: div.rx-empty \"Chưa đủ 7 ngày dữ liệuDùng từ thứ Hai, 2\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 96px bởi khung main.rx-main: strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 96px bởi khung main.rx-main: span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lê Quỳnh Anh\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Lê Quỳnh Anh\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Chủ phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Chủ phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Doanh thu\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.rx-head__sub \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-hero__value \"186.200.000 đ\""
+            },
+            {
+              "rule": "widow",
+              "message": "Dòng cuối chỉ còn một chữ: span \"so với cùng kỳ tháng 9: 171.500.000 đ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 5px (nên ≥ 16px): span \"so với cùng kỳ tháng 9: 171.500.000 đ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Doanh thu theo ngày, tháng 10 (triệu đ)\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"78%\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 1, BS. Đức\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 1, BS. Đức\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-num \"81%\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-num \"75%\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            }
+          ]
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-frame: strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 171px: h1 \"Không có quyền xem Doanh thu\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 109px: div.rx-actions \"Quay lại Đổi vai trò\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Trang và chức năng\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 145px bởi khung section.rx-panel: th.is-me \"Lễ tân (bạn)\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 234px bởi khung section.rx-panel: th \"Bác sĩ\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 386px bởi khung section.rx-panel: th \"Chủ phòng khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Lịch hôm nay\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 92px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 214px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 302px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Đặt lịch, xếp khách vãng lai\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 212px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 300px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Xác nhận đến\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 91px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Gọi bệnh nhân, bắt đầu khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Doanh thu\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 24px bởi khung section.rx-panel: th \"Đổi vai trò\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): strong \"Nguyễn Thảo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Quay lại\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đổi vai trò\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Quyền theo vai trò\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h2 \"Quyền theo vai trò\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Trang và chức năng\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th.is-me \"Lễ tân (bạn)\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Bác sĩ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Chủ phòng khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Lịch hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-yes \"Có\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Đặt lịch, xếp khách vãng lai\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.rx-no \"Ẩn\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Xác nhận đến\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Gọi bệnh nhân, bắt đầu khám\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Doanh thu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): th \"Đổi vai trò\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1024,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 8px: button.rx-cell \"Đặng Quốc ViệtNhổ răng khônĐang khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 21px: button.rx-cell \"Hồ Ngọc MaiCạo vôiMuộn 15 phút\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 17px bởi khung section.rx-panel: span.ds-badge \"Muộn 15 phút\""
+            },
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 3px: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 3px: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 7px: button.rx-slot \"10:00 Ghế 1\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Nhổ răng khôn\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0b6e66 ở span.rx-mark; #005925 ở span.ds-badge \"Đã đến\"; #06488c ở span.ds-badge \"Đang khám\"; #654003 ở span.ds-badge \"Muộn 15 phút\"; #a5282a ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 14px: span.rx-row__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span.rx-row__meta \"Trám răng\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 22px: span.rx-row__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 19px: span.rx-row__meta \"Nhổ răng sữa\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h1 \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Hôm nay, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__meta \"Trám răng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__meta \"Nhổ răng sữa\""
+            }
+          ]
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 54px: p.rx-kpi__value \"3.450.000 đ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"13\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"16\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"19\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"22\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"25\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span.is-now \"28\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-hero__value \"186.200.000 đ\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-kpi__label \"Hôm nay đến 10:00\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-kpi__ctx \"12 lượt dự kiến cả ngày\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-kpi__label \"Lượt huỷ tháng 10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            }
+          ]
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 120px bởi khung section.rx-panel: th \"Chủ phòng khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 36px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 34px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1024,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 8px: button.rx-cell \"Đặng Quốc ViệtNhổ răng khônĐang khám\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 21px: button.rx-cell \"Hồ Ngọc MaiCạo vôiMuộn 15 phút\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 17px bởi khung section.rx-panel: span.ds-badge \"Muộn 15 phút\""
+            },
+            {
+              "rule": "wrap",
+              "message": "Nhãn điều khiển ngắn bị gãy dòng: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 3px: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 3px: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 7px: button.rx-slot \"10:00 Ghế 1\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Đặng Quốc Việt\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Nhổ răng khôn\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Hồ Ngọc Mai\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__name \"Trương Văn Nam\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-cell__svc \"Tái khám niềng\""
+            },
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0d5b54 ở span.rx-mark; #c3e7c9 ở span.ds-badge \"Đã đến\"; #c6dfff ở span.ds-badge \"Đang khám\"; #f6d7b2 ở span.ds-badge \"Muộn 15 phút\"; #420005 ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 14px: span.rx-row__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span.rx-row__meta \"Trám răng\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 22px: span.rx-row__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 19px: span.rx-row__meta \"Nhổ răng sữa\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h1 \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Hôm nay, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__name \"Võ Thị Hồng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__meta \"Trám răng\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-row__meta \"Nhổ răng sữa\""
+            }
+          ]
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 54px: p.rx-kpi__value \"3.450.000 đ\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"10\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"13\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"16\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"19\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"22\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span \"25\""
+            },
+            {
+              "rule": "overflow",
+              "message": "Nội dung tràn ngang 6px: span.is-now \"28\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-hero__value \"186.200.000 đ\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-kpi__label \"Hôm nay đến 10:00\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-kpi__ctx \"12 lượt dự kiến cả ngày\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: p.rx-kpi__label \"Lượt huỷ tháng 10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"cả phòng khám\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 2, BS. Hoàng Lan\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span \"Ghế 3, KTV Trần Bảo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Chưa có số\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Chưa đủ 7 ngày dữ liệu\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: span.rx-muted \"Dùng từ thứ Hai, 20/10\""
+            }
+          ]
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 120px bởi khung section.rx-panel: th \"Chủ phòng khám\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 36px bởi khung section.rx-panel: span.rx-yes \"Có\""
+            },
+            {
+              "rule": "clipped",
+              "message": "Chữ bị cắt mất 34px bởi khung section.rx-panel: span.rx-no \"Ẩn\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Bệnh nhân tiếp theo\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Dị ứng, lần khám trước\""
+            },
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: th \"Tỉ lệ lấp ghế, lượt huỷ\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0b6e66 ở span.rx-mark; #005925 ở span.ds-badge \"Đã đến\"; #06488c ở span.ds-badge \"Đang khám\"; #654003 ở span.ds-badge \"Muộn 15 phút\"; #a5282a ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0d5b54 ở span.rx-mark; #c3e7c9 ở span.ds-badge \"Đã đến\"; #c6dfff ở span.ds-badge \"Đang khám\"; #f6d7b2 ở span.ds-badge \"Muộn 15 phút\"; #420005 ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0b6e66 ở span.rx-mark; #005925 ở span.ds-badge \"Đã đến\"; #06488c ở span.ds-badge \"Đang khám\"; #654003 ở span.ds-badge \"Muộn 15 phút\"; #a5282a ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "colors",
+              "message": "5 nhóm màu trong một màn (nên ≤ 3): #0d5b54 ở span.rx-mark; #c3e7c9 ở span.ds-badge \"Đã đến\"; #c6dfff ở span.ds-badge \"Đang khám\"; #f6d7b2 ở span.ds-badge \"Muộn 15 phút\"; #420005 ở button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            }
+          ]
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay (reflow 320 px)",
+          "errors": [
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 207px: div.rx-head \"Lịch hôm nay Thứ Ba, 28/10Đã đến 1Đang k\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 65px: button.rx-cell \"Võ Thị HồngTrám răngĐã đến\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 7px: td \"Đã qua\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 6px: td \"Đã qua\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 88px: button.rx-cell \"Đặng Quốc ViệtNhổ răng khônĐang khám\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 101px: button.rx-cell \"Hồ Ngọc MaiCạo vôiMuộn 15 phút\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 81px: button.rx-cell \"Lâm Gia BảoNhổ răng sữaTrùng lịch\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 20px: button.rx-cell \"Trống\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 80px: button.rx-cell \"Trương Văn NamTái khám niềngChưa đến\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 42px: div.rx-panel__head \"Đặt lịch\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 9px: label.ds-field__label \"Ghế\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 30px: div.ds-field__wrap \"Ghế 1Ghế 2Ghế 3\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 18px: label.ds-field__label \"Giờ, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 30px: div.ds-field__wrap \"9:3010:0010:30\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 51px: p.rx-conflict__title \"Ghế 1 lúc 9:30 đã có Lâm Gia Bảo (nhổ ră\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 25px: button.rx-slot \"9:30 Ghế 2\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 25px: button.rx-slot \"9:30 Ghế 3\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 29px: button.rx-slot \"10:00 Ghế 1\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 130px: div.rx-form__btns \"Hủy Đặt lịch\""
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo (reflow 320 px)",
+          "errors": [
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 216px: div.rx-head \"Bệnh nhân tiếp theo9:30, Thứ Ba, 28/10, \""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 36px: p.rx-patient__name \"Lâm Gia Bảo\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 68px: ul.rx-facts \"8 tuổiNgười đi kèm: mẹ, chị Lâm ThuNhổ r\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 36px: p.rx-allergy__label \"Dị ứng\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 131px: p.rx-allergy__value \"Penicillin\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 44px: p.rx-allergy__ctx \"Không dùng kháng sinh nhóm penicillin\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 27px: h2 \"Hôm nay, Thứ Ba, 28/10\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 43px: li \"1Gây tê tại chỗ\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 45px: li \"2Nhổ R74\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 29px: h2 \"Lần trước, thứ Sáu 12/09\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 56px: li \"Khám tổng quát\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 54px: li \"Chụp phim\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 48px: li \"Hẹn nhổ răng sữa R74\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 13px: h2 \"Ghế 1 hôm nay\""
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu (reflow 320 px)",
+          "errors": [
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 226px: p.rx-hero__value \"186.200.000 đ\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 25px: p.rx-hero__ctx \"+8,6%so với cùng kỳ tháng 9: 171.500.000\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 26px: h2 \"Tỉ lệ lấp ghế tháng 10\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 118px: p.rx-fill__big \"78%cả phòng khám\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 49px: div.rx-chair__top \"Ghế 1, BS. Đức81%\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 67px: div.rx-chair__top \"Ghế 2, BS. Hoàng Lan75%\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 58px: div.rx-chair__top \"Ghế 3, KTV Trần BảoChưa có số\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 59px: div.rx-empty \"Chưa đủ 7 ngày dữ liệuDùng từ thứ Hai, 2\""
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu (reflow 320 px)",
+          "errors": [
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 171px: h1 \"Không có quyền xem Doanh thu\""
+            },
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 109px: div.rx-actions \"Quay lại Đổi vai trò\""
+            }
+          ],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}
