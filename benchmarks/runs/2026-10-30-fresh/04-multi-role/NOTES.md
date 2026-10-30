@@ -57,9 +57,10 @@ Mỗi khung là một phiên app độc lập (state riêng), cùng một mã re
 
 ## Kiểm
 
-- static-check: 0 lỗi. flow-check --mode prototype: tĩnh PASS, 0 lỗi (luồng UNKNOWN như mọi trang có JS).
-- check-brand.py brand.css: ĐẠT.
-- taste-check --layout strict, 1280×800 và 1440, sáng và tối: 0 lỗi; còn 4 cảnh báo "5 nhóm màu" ở màn lịch lễ tân (giữ: bốn trạng thái lượt khám đề bắt buộc cộng màu xung đột, mỗi màu gắn trạng thái thật bằng chip có chữ và icon).
-- scenarios.cjs chạy bằng Playwright (Chromium cục bộ, 1280×800): 9/9 PASS, không lỗi JS.
-- Đã xem ảnh render 1280 sáng/tối và 1440 sáng.
+- Khổ hẹp: 1024–1279 dùng container query trên khung: thanh bên thành rail icon 76px (nút 52px, nhãn ẩn cho trình đọc màn hình kèm title), lề và chữ KPI gọn hơn, trục ngày thưa hơn. Dưới 1024 (390, reflow 320): mỗi khung nằm trong vùng cuộn ngang (role=region, tabindex=0, aria-label tên màn) và giữ tối thiểu 1024px; không làm bố cục điện thoại.
+- Màu trạng thái gom về 3 nhóm: trung tính (Đã đến, Chưa đến), thương hiệu (Đang khám, Đã gọi, Đang chọn), đỏ cảnh báo (Muộn, Trùng lịch, Dị ứng).
+- static-check: 0 lỗi. flow-check --mode prototype: tĩnh PASS, 0 lỗi (luồng UNKNOWN như mọi trang có JS). check-brand.py: ĐẠT.
+- taste-check 390, 1024, 1280, 1440, sáng và tối, --layout strict --reflow: 0 lỗi, 0 cảnh báo.
+- scenarios.cjs bằng Playwright (Chromium cục bộ, 1280×800): 9/9 PASS, không lỗi JS.
+- Đã xem ảnh 1024 sáng, 1280 sáng/tối, 1440 sáng.
 - Chưa kiểm: axe-core (không cài), trình đọc màn hình thật, người dùng thật. Hướng thị giác CHƯA DUYỆT.

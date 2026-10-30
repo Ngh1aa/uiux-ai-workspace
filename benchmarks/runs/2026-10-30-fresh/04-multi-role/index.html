@@ -15,7 +15,8 @@
   .rx-label { margin: 0 0 calc(-1 * var(--ds-space-300)); padding-inline: var(--ds-space-800); color: var(--ds-text-secondary); font: var(--ds-font-weight-semibold) 14px/20px var(--ds-font-family-sans); }
 
   /* Khung app */
-  .rx-frame { position: relative; display: grid; grid-template-rows: 64px minmax(0, 1fr); width: 100%; max-width: 1440px; height: 800px; margin-inline: auto; overflow: hidden; background: var(--ds-surface-page); }
+  .rx-scroll { overflow-x: auto; overflow-y: hidden; }
+  .rx-frame { container-type: inline-size; position: relative; display: grid; grid-template-rows: 64px minmax(0, 1fr); width: 100%; min-width: 1024px; max-width: 1440px; height: 800px; margin-inline: auto; overflow: hidden; background: var(--ds-surface-page); }
   @media (min-width: 1440px) { .rx-frame { height: 900px; } }
   .rx-top { position: relative; z-index: 5; display: flex; align-items: center; gap: var(--ds-space-600); padding: 0 var(--ds-space-600) 0 var(--ds-space-500); border-bottom: 1px solid var(--ds-border-subtle); background: var(--ds-surface-raised); }
   .rx-brand { display: flex; align-items: center; gap: var(--ds-space-300); width: 200px; font: 700 18px/1 var(--app-font-display); letter-spacing: -0.01em; }
@@ -67,6 +68,7 @@
   .rx-muted { color: var(--ds-text-secondary); }
   .rx-num { font-variant-numeric: tabular-nums; }
   .ds-badge { font-size: 13px; }
+  .ds-badge--brand { --_bg: var(--ds-surface-brand-subtle); --_fg: var(--ds-text-brand); --_bd: color-mix(in srgb, var(--ds-text-brand) 40%, transparent); --_ic: var(--ds-text-brand); }
 
   /* Lưới lịch */
   .rx-sched { padding: 0; overflow: hidden; }
@@ -134,7 +136,7 @@
   .rx-dl dt { color: var(--ds-text-secondary); }
   .rx-dl dd { margin: 0; font-weight: 600; }
   .rx-result { display: flex; flex-direction: column; gap: var(--ds-space-400); }
-  .rx-result__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; background: var(--ds-feedback-success-surface); color: var(--ds-feedback-success-icon); }
+  .rx-result__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
 
   /* Bác sĩ */
   .rx-patient { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ds-space-500); align-items: center; }
@@ -173,8 +175,8 @@
   .rx-chart__plot { position: relative; display: flex; align-items: flex-end; gap: 4px; border-bottom: 1px solid var(--ds-border-control); background: linear-gradient(var(--ds-border-subtle), var(--ds-border-subtle)) 0 0 / 100% 1px no-repeat, linear-gradient(var(--ds-border-subtle), var(--ds-border-subtle)) 0 33.33% / 100% 1px no-repeat, linear-gradient(var(--ds-border-subtle), var(--ds-border-subtle)) 0 66.66% / 100% 1px no-repeat; }
   .rx-bar { flex: 1; min-width: 0; border-radius: 4px 4px 0 0; background: color-mix(in srgb, var(--ds-surface-brand-strong) 34%, var(--ds-surface-raised)); }
   .rx-bar--now { background: var(--ds-surface-brand-strong); }
-  .rx-chart__x { grid-column: 2; display: flex; gap: 4px; padding-top: var(--ds-space-200); color: var(--ds-text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
-  .rx-chart__x span { flex: 1; min-width: 0; text-align: center; }
+  .rx-chart__x { grid-column: 2; position: relative; height: 24px; margin-top: var(--ds-space-200); color: var(--ds-text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .rx-chart__x span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
   .rx-chart__x .is-now { color: var(--ds-text-primary); font-weight: 700; }
   .rx-fill { display: flex; flex-direction: column; flex: 1; justify-content: space-between; gap: var(--ds-space-300); }
   .rx-fill__big { display: flex; align-items: baseline; gap: var(--ds-space-300); margin: 0; }
@@ -204,9 +206,34 @@
   .rx-perm tr:last-child th, .rx-perm tr:last-child td { border-bottom: 0; }
   .rx-perm td.is-me { background: var(--ds-surface-brand-subtle); }
   .rx-yes, .rx-no { display: inline-flex; align-items: center; gap: var(--ds-space-200); font-weight: 600; }
-  .rx-yes .ds-icon { color: var(--ds-feedback-success-icon); }
+  .rx-yes .ds-icon { color: var(--ds-text-brand); }
   .rx-no { color: var(--ds-text-secondary); font-weight: 500; }
 
+
+  /* Khung 1024–1279: thanh bên thành rail icon, mật độ gọn */
+  @container (max-width: 1279px) {
+    .rx-body { grid-template-columns: 76px minmax(0, 1fr); }
+    .rx-side { align-items: center; padding: var(--ds-space-400) var(--ds-space-200); }
+    .rx-nav { justify-content: center; width: 52px; min-height: 52px; padding: 0; }
+    .rx-nav__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .rx-main { padding-inline: var(--ds-space-600); gap: var(--ds-space-500); }
+    .rx-sched th.rx-time { width: 60px; padding-left: var(--ds-space-300); }
+    .rx-cell { padding: 6px var(--ds-space-200); }
+    .rx-cell__name { font-size: 14px; }
+    .rx-cell .ds-badge .ds-icon, .rx-queue .ds-badge .ds-icon, .rx-rows .ds-badge .ds-icon { display: none; }
+    .rx-search { width: 220px; }
+    .rx-row__time { width: 46px; }
+    .rx-kpi { padding: var(--ds-space-400) var(--ds-space-500); }
+    .rx-kpi__value { font-size: 22px; line-height: 30px; }
+    .rx-hero { padding: var(--ds-space-500) var(--ds-space-600); }
+    .rx-hero__value { font-size: 36px; line-height: 44px; }
+    .rx-denied { padding: var(--ds-space-600); }
+    .rx-perm thead th { white-space: normal; }
+    .rx-perm th, .rx-perm td { padding: var(--ds-space-200) var(--ds-space-300); }
+    .rx-perm h2 { padding: var(--ds-space-500) var(--ds-space-300) 0; }
+    .rx-denied.c-5 { grid-column: span 4; }
+    .rx-perm.c-7 { grid-column: span 8; }
+  }
   .rx-toast { position: absolute; right: var(--ds-space-800); bottom: var(--ds-space-600); z-index: 6; max-width: 420px; }
   .rx-toast .ds-icon { flex: none; }
   @media (prefers-reduced-motion: no-preference) { .rx-toast:not([hidden]) { animation: rx-in 200ms var(--ds-easing-enter, ease-out); } }
@@ -238,16 +265,16 @@
 
 <div class="rx-gallery">
   <p class="rx-label" data-annotation>1. Lễ tân: lịch hôm nay</p>
-  <section class="rx-frame" id="s-reception" data-screen="Lễ tân: lịch hôm nay" data-entry="start" data-role="reception" data-view="schedule" data-preset="conflict"></section>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Lễ tân: lịch hôm nay"><section class="rx-frame" id="s-reception" data-screen="Lễ tân: lịch hôm nay" data-entry="start" data-role="reception" data-view="schedule" data-preset="conflict"></section></div>
 
   <p class="rx-label" data-annotation>2. Bác sĩ: bệnh nhân tiếp theo</p>
-  <section class="rx-frame" id="s-doctor" data-screen="Bác sĩ: bệnh nhân tiếp theo" data-entry="start" data-role="doctor" data-view="next"></section>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Bác sĩ: bệnh nhân tiếp theo"><section class="rx-frame" id="s-doctor" data-screen="Bác sĩ: bệnh nhân tiếp theo" data-entry="start" data-role="doctor" data-view="next"></section></div>
 
   <p class="rx-label" data-annotation>3. Chủ phòng khám: doanh thu</p>
-  <section class="rx-frame" id="s-owner" data-screen="Chủ phòng khám: doanh thu" data-entry="start" data-role="owner" data-view="revenue"></section>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Chủ phòng khám: doanh thu"><section class="rx-frame" id="s-owner" data-screen="Chủ phòng khám: doanh thu" data-entry="start" data-role="owner" data-view="revenue"></section></div>
 
   <p class="rx-label" data-annotation>4. Lễ tân mở trang Doanh thu</p>
-  <section class="rx-frame" id="s-denied" data-screen="Lễ tân mở trang Doanh thu" data-deep-link="revenue" data-role="reception" data-view="revenue" data-prev="schedule"></section>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Lễ tân mở trang Doanh thu"><section class="rx-frame" id="s-denied" data-screen="Lễ tân mở trang Doanh thu" data-deep-link="revenue" data-role="reception" data-view="revenue" data-prev="schedule"></section></div>
 </div>
 
 <script>
@@ -269,9 +296,9 @@
   const OPEN_FROM = 3; // từ 9:30 trở đi còn đặt được
   const SERVICES = ['Khám tổng quát', 'Trám răng', 'Cạo vôi', 'Nhổ răng', 'Tái khám niềng'];
   const STATUS = {
-    arrived: { text: 'Đã đến', tone: 'success', icon: 'ds-i-check-circle' },
-    inchair: { text: 'Đang khám', tone: 'info', icon: 'ds-i-stethoscope' },
-    late: { text: 'Muộn 15 phút', tone: 'warning', icon: 'ds-i-alert' },
+    arrived: { text: 'Đã đến', tone: 'neutral', icon: 'ds-i-check-circle' },
+    inchair: { text: 'Đang khám', tone: 'brand', icon: 'ds-i-stethoscope' },
+    late: { text: 'Muộn 15 phút', tone: 'danger', icon: 'ds-i-alert' },
     pending: { text: 'Chưa đến', tone: 'neutral', icon: 'ds-i-clock' },
   };
   const DAILY = [6.1, 7.4, 5.2, 7.9, 8.3, 6.6, 2.4, 7.1, 6.8, 7.7, 8.6, 6.2, 5.9, 2.1, 6.9, 7.3, 8.1, 7.5, 6.4, 6.7, 2.6, 7.8, 8.4, 6.9, 7.2, 6.5, 6.15, 3.45];
@@ -340,7 +367,7 @@
   function side(st) {
     const cur = st.view;
     return `<nav class="rx-side" aria-label="Điều hướng chính">${NAV[st.role].map((v) => `
-      <button class="rx-nav" type="button" data-act="nav" data-view="${v}" data-test="nav-${v}" data-k="nav-${v}" ${v === cur ? 'aria-current="page"' : ''}>${icon(VIEWS[v].icon)}${VIEWS[v].label}</button>`).join('')}
+      <button class="rx-nav" type="button" data-act="nav" data-view="${v}" data-test="nav-${v}" data-k="nav-${v}" title="${VIEWS[v].label}" ${v === cur ? 'aria-current="page"' : ''}>${icon(VIEWS[v].icon)}<span class="rx-nav__label">${VIEWS[v].label}</span></button>`).join('')}
     </nav>`;
   }
 
@@ -361,7 +388,7 @@
         const inner = `<span class="rx-cell__name">${esc(a.name)}</span><span class="rx-cell__svc">${esc(a.svc)}</span>${here ? `<span class="ds-badge ds-badge--danger">${icon('ds-i-alert')}Trùng lịch</span>` : badge(a.status)}`;
         return `<td>${rec ? `<button type="button" class="${cls}" data-act="appt" data-id="${a.id}" data-test="appt-${a.id}" data-k="appt-${a.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`}</td>`;
       }
-      if (here) return `<td><div class="rx-cell rx-cell--pick" data-test="pick"><span class="rx-cell__name">${esc(f.name) || 'Lượt mới'}</span><span class="rx-cell__svc">${esc(f.svc)}</span><span class="ds-badge ds-badge--info">${icon('ds-i-calendar-plus')}Đang chọn</span></div></td>`;
+      if (here) return `<td><div class="rx-cell rx-cell--pick" data-test="pick"><span class="rx-cell__name">${esc(f.name) || 'Lượt mới'}</span><span class="rx-cell__svc">${esc(f.svc)}</span><span class="ds-badge ds-badge--brand">${icon('ds-i-calendar-plus')}Đang chọn</span></div></td>`;
       if (t < OPEN_FROM) return `<td><span class="rx-cell rx-cell--idle">Đã qua</span></td>`;
       if (!rec) return `<td><span class="rx-cell rx-cell--idle">Trống</span></td>`;
       return `<td><button type="button" class="rx-cell rx-cell--free" data-act="slot" data-c="${c}" data-t="${t}" data-test="slot-${c}-${t}" data-k="slot-${c}-${t}" aria-label="Trống, đặt lịch ${CHAIRS[c].name} lúc ${time}"><span aria-hidden="true">${icon('ds-i-plus')}</span>Trống</button></td>`;
@@ -454,7 +481,7 @@
   function nextPatient(st, fid) {
     const d = st.doc;
     const state = d.started ? 'inchair' : d.called ? 'called' : 'pending';
-    const stBadge = state === 'inchair' ? badge('inchair') : state === 'called' ? `<span class="ds-badge ds-badge--info">${icon('ds-i-info')}Đã gọi</span>` : badge('pending');
+    const stBadge = state === 'inchair' ? badge('inchair') : state === 'called' ? `<span class="ds-badge ds-badge--brand">${icon('ds-i-info')}Đã gọi</span>` : badge('pending');
     const startReason = d.started ? '' : d.called ? '' : 'Gọi bệnh nhân trước khi bắt đầu khám';
     const queue = st.appts.filter((a) => a.c === 1).sort((a, b) => a.t - b.t);
     const qRows = TIMES.map((time, t) => {
@@ -498,7 +525,7 @@
   function revenue(st, fid) {
     const max = 10;
     const bars = DAILY.map((v, i) => `<span class="rx-bar${i === 27 ? ' rx-bar--now' : ''}" style="height:${(v / max) * 100}%" title="${i + 1}/10: ${v.toLocaleString('vi-VN')} triệu đ"></span>`).join('');
-    const xs = DAILY.map((_, i) => `<span class="${i === 27 ? 'is-now' : ''}">${(i + 1) % 3 === 1 || i === 27 ? i + 1 : ''}</span>`).join('');
+    const xs = DAILY.map((_, i) => ((i + 1) % 3 === 1 && i < 25) || i === 27 ? `<span class="${i === 27 ? 'is-now' : ''}" style="left:${((i + 0.5) / DAILY.length) * 100}%">${i + 1}</span>` : '').join('');
     return `<div class="rx-head"><div><h1>Doanh thu</h1><p class="rx-head__sub">${DATE}</p></div></div>
       <section class="rx-hero c-6" aria-labelledby="${fid}-m" data-test="month">
         <p class="rx-hero__label" id="${fid}-m">Doanh thu tháng 10 đến 28/10</p>
