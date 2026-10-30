@@ -63,6 +63,13 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
    có thể chạy lại với `--refresh`. Khi đã có review, tạo revision mới để giữ bằng chứng đã duyệt.
    Ảnh state chỉ tạo từ browser scenarios được ghi riêng trong `shots/behavior/`; ảnh initial không chứng minh coverage toàn bộ màn.
 
+## Chấm lại theo gu chủ repo (2026-10-30)
+
+Sau khi TASTE được bổ sung và checker có luật mới, hai lượt 2026-10-29 được soát và chấm lại:
+**0/10 bài đạt theo TASTE** (bảng cũ ghi 8/10 Đạt). Chi tiết, bằng chứng và các chỗ checker còn bỏ sót ở
+[evidence/2026-10-30](evidence/2026-10-30/README.md). Điểm cũ trong `REPORT.md` giữ nguyên làm lịch sử; lượt
+mới phải đạt theo TASTE hiện tại.
+
 ## Đọc kết quả thế nào
 
 - *Lỗi soát* phải bằng 0. Đây là mức sàn, không phải bằng chứng đẹp.

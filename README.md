@@ -7,6 +7,16 @@ Bộ não thiết kế cá nhân để Claude thiết kế website và app đẹ
 Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thiết kế …"*. Claude clone repo,
 đọc [`START-HERE.md`](START-HERE.md) rồi làm theo.
 
+Khi chỉ dùng repo để thiết kế, clone gọn, bỏ ảnh và bằng chứng benchmark (khoảng 8 MB thay vì gần 90 MB):
+
+```sh
+git clone --depth 1 --filter=blob:none --sparse https://github.com/Ngh1aa/uiux-ai-workspace
+cd uiux-ai-workspace
+git sparse-checkout set --no-cone '/*' '!/benchmarks/runs/' '!/benchmarks/evidence/' '!/benchmarks/trials/' '!/design-system/examples/*/review/'
+```
+
+Sửa chính repo, chạy benchmark hay chạy CI thì clone đầy đủ.
+
 ## Bên trong có gì
 
 | Phần | Vai trò |
