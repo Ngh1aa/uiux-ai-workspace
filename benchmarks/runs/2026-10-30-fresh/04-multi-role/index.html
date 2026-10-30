@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Răng Xinh: lịch, bệnh nhân, doanh thu</title>
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/fonts/pairs.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="brand.css">
+<style>
+  body { background: var(--ds-surface-sunken); }
+  .rx-gallery { display: flex; flex-direction: column; gap: var(--ds-space-600); padding-block: var(--ds-space-600) var(--ds-space-1200); }
+  .rx-label { margin: 0 0 calc(-1 * var(--ds-space-300)); padding-inline: var(--ds-space-800); color: var(--ds-text-secondary); font: var(--ds-font-weight-semibold) 14px/20px var(--ds-font-family-sans); }
+
+  /* Khung app */
+  .rx-scroll { overflow-x: auto; overflow-y: hidden; }
+  .rx-frame { container-type: inline-size; position: relative; display: grid; grid-template-rows: 64px minmax(0, 1fr); width: 100%; min-width: 1024px; max-width: 1440px; height: 800px; margin-inline: auto; overflow: hidden; background: var(--ds-surface-page); }
+  @media (min-width: 1440px) { .rx-frame { height: 900px; } }
+  .rx-top { position: relative; z-index: 5; display: flex; align-items: center; gap: var(--ds-space-600); padding: 0 var(--ds-space-600) 0 var(--ds-space-500); border-bottom: 1px solid var(--ds-border-subtle); background: var(--ds-surface-raised); }
+  .rx-brand { display: flex; align-items: center; gap: var(--ds-space-300); width: 200px; font: 700 18px/1 var(--app-font-display); letter-spacing: -0.01em; }
+  .rx-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
+  .rx-mark svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linejoin: round; }
+  .rx-today { flex: 1; margin: 0; color: var(--ds-text-secondary); font-size: 14px; }
+  .rx-today strong { color: var(--ds-text-primary); font-weight: 600; }
+  .rx-acct__btn { display: flex; align-items: center; gap: var(--ds-space-300); min-height: 48px; padding: 4px 12px 4px 4px; border: 1px solid var(--ds-border-subtle); border-radius: 999px; background: var(--ds-surface-raised); color: var(--ds-text-primary); font: inherit; cursor: pointer; }
+  .rx-acct__btn:hover { background: var(--ds-action-secondary-bg-hover); }
+  .rx-acct__text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25; }
+  .rx-acct__text strong { font-size: 14px; font-weight: 600; }
+  .rx-acct__text span { color: var(--ds-text-secondary); font-size: 12px; }
+  .rx-avatar { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 999px; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); font: 700 14px/1 var(--app-font-display); }
+  .rx-menu { width: 300px; padding: var(--ds-space-200); }
+  .rx-menu__title { padding: var(--ds-space-200) var(--ds-space-300); color: var(--ds-text-secondary); font: 600 13px/18px var(--ds-font-family-sans); }
+  .rx-menu .ds-menu__item { min-height: 56px; }
+  .rx-menu__role { display: flex; flex-direction: column; flex: 1; line-height: 1.3; }
+  .rx-menu__role span { color: var(--ds-text-secondary); font-size: 13px; }
+  .rx-menu__tick { width: 20px; height: 20px; color: var(--ds-text-brand); visibility: hidden; }
+  .rx-menu [aria-checked="true"] .rx-menu__tick { visibility: visible; }
+  .rx-menu [aria-checked="true"] { background: var(--ds-surface-brand-subtle); }
+
+  .rx-body { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 0; }
+  .rx-side { display: flex; flex-direction: column; gap: var(--ds-space-100); padding: var(--ds-space-400) var(--ds-space-300); border-right: 1px solid var(--ds-border-subtle); background: var(--ds-surface-raised); }
+  .rx-nav { display: flex; align-items: center; gap: var(--ds-space-300); width: 100%; min-height: 48px; padding: 0 var(--ds-space-300); border: 0; border-radius: var(--ds-shape-control); background: transparent; color: var(--ds-text-secondary); font: 500 15px/1.3 var(--ds-font-family-sans); text-align: left; white-space: nowrap; cursor: pointer; }
+  .rx-nav:hover { background: var(--ds-action-secondary-bg-hover); color: var(--ds-text-primary); }
+  .rx-nav[aria-current="page"] { background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); font-weight: 700; }
+
+  .rx-main { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: auto minmax(0, 1fr); gap: var(--ds-space-600); min-height: 0; padding: var(--ds-space-500) var(--ds-space-800) var(--ds-space-600); overflow: hidden; }
+  .rx-main--doctor { grid-template-rows: auto auto auto minmax(0, 1fr); gap: var(--ds-space-500) var(--ds-space-600); }
+  .rx-main--owner { grid-template-rows: auto auto minmax(0, 1fr); }
+  .rx-main--denied { grid-template-rows: minmax(0, 1fr); }
+  .rx-perm { display: flex; flex-direction: column; }
+  .rx-perm table { flex: 1; }
+  .rx-row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-space-300); }
+  .c-3 { grid-column: span 3; } .c-4 { grid-column: span 4; } .c-5 { grid-column: span 5; } .c-6 { grid-column: span 6; } .c-7 { grid-column: span 7; } .c-8 { grid-column: span 8; } .c-12 { grid-column: 1 / -1; }
+  .rx-head { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-400); }
+  .rx-head h1 { margin: 0; font: 700 28px/36px var(--app-font-display); letter-spacing: -0.015em; }
+  .rx-head__sub { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-200); margin: var(--ds-space-100) 0 0; color: var(--ds-text-secondary); font-size: 14px; }
+  .rx-actions { display: flex; align-items: center; gap: var(--ds-space-300); }
+  .rx-search { position: relative; width: 260px; }
+  .rx-search .ds-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ds-text-secondary); pointer-events: none; }
+  .rx-search input { width: 100%; min-height: 44px; padding: 0 14px 0 44px; border: 1px solid var(--ds-border-control); border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); color: var(--ds-text-primary); font: 15px var(--ds-font-family-sans); }
+  .rx-search input::placeholder { color: var(--ds-text-tertiary); }
+
+  .rx-panel { display: flex; flex-direction: column; gap: var(--ds-space-400); min-height: 0; padding: var(--ds-space-500) var(--ds-space-600); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+  .rx-panel h2 { margin: 0; font: 700 17px/24px var(--app-font-display); }
+  .rx-panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-300); }
+  .rx-muted { color: var(--ds-text-secondary); }
+  .rx-num { font-variant-numeric: tabular-nums; }
+  .ds-badge { font-size: 13px; }
+  .ds-badge--brand { --_bg: var(--ds-surface-brand-subtle); --_fg: var(--ds-text-brand); --_bd: color-mix(in srgb, var(--ds-text-brand) 40%, transparent); --_ic: var(--ds-text-brand); }
+
+  /* Lưới lịch */
+  .rx-sched { padding: 0; overflow: hidden; }
+  .rx-sched table { width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed; }
+  .rx-sched th { padding: var(--ds-space-300) var(--ds-space-300); text-align: left; vertical-align: middle; border-bottom: 1px solid var(--ds-border-subtle); font: 700 15px/1.3 var(--ds-font-family-sans); }
+  .rx-sched th span { display: block; color: var(--ds-text-secondary); font-weight: 500; font-size: 13px; }
+  .rx-sched th.rx-time { width: 72px; padding-left: var(--ds-space-500); color: var(--ds-text-secondary); font-weight: 600; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .rx-sched tbody th.rx-time { vertical-align: top; padding-top: var(--ds-space-400); }
+  .rx-sched td { padding: 2px; vertical-align: top; border-bottom: 1px solid var(--ds-border-subtle); border-left: 1px solid var(--ds-border-subtle); }
+  .rx-sched tr:last-child td, .rx-sched tr:last-child th { border-bottom: 0; }
+  .rx-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; height: 100%; min-height: 64px; padding: 6px var(--ds-space-300); border: 2px solid transparent; border-radius: var(--ds-shape-control); background: transparent; color: var(--ds-text-primary); font: inherit; text-align: left; }
+  button.rx-cell { cursor: pointer; }
+  button.rx-cell:hover { background: var(--ds-action-secondary-bg-hover); }
+  .rx-cell--appt { background: var(--ds-surface-brand-subtle); }
+  .rx-cell__name { font-weight: 700; font-size: 15px; line-height: 1.35; }
+  .rx-cell__svc { color: var(--ds-text-secondary); font-size: 13px; line-height: 1.35; margin-bottom: 2px; }
+  .rx-cell .ds-badge { font-size: 12px; line-height: 16px; }
+  .rx-cell--free { justify-content: center; align-items: center; flex-direction: row; gap: var(--ds-space-200); color: var(--ds-text-brand); font-weight: 600; font-size: 14px; border: 1px dashed var(--ds-border-control); }
+  .rx-cell--free span { display: inline-flex; }
+  .rx-cell--free .ds-icon { width: 18px; height: 18px; }
+  .rx-cell--idle { justify-content: center; align-items: center; color: var(--ds-text-secondary); font-size: 14px; }
+  .rx-cell--conflict { border-color: var(--ds-feedback-danger-icon); background: var(--ds-feedback-danger-surface); }
+  .rx-cell--pick { border: 2px dashed var(--ds-action-primary-bg); background: var(--ds-surface-raised); color: var(--ds-text-primary); flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+  .rx-cell--new { border-color: var(--ds-action-primary-bg); }
+  .rx-cell.is-dim { opacity: .35; }
+
+  /* Danh sách dòng trong panel */
+  .rx-rows { margin: 0; padding: 0; list-style: none; }
+  .rx-rows li + li { border-top: 1px solid var(--ds-border-subtle); }
+  .rx-row { display: flex; align-items: center; gap: var(--ds-space-300); width: 100%; min-height: 60px; padding: var(--ds-space-200) 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+  .rx-row:hover .rx-row__name { color: var(--ds-text-brand); }
+  .rx-row__time { width: 48px; flex: none; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .rx-row__body { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+  .rx-row__name { font-weight: 600; }
+  .rx-row__meta { color: var(--ds-text-secondary); font-size: 13px; }
+  .rx-row .rx-chev { width: 20px; height: 20px; color: var(--ds-text-secondary); }
+  .rx-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-space-200); margin: 0; padding: 0; list-style: none; }
+  .rx-slot { white-space: nowrap; display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-200); width: 100%; min-height: 48px; padding: 0 var(--ds-space-300); border: 1px solid var(--ds-border-subtle); border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); color: var(--ds-text-primary); font: 600 14px/1.2 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; cursor: pointer; }
+  .rx-slot:hover { border-color: var(--ds-action-primary-bg); }
+  .rx-slot .ds-icon { width: 18px; height: 18px; color: var(--ds-text-brand); }
+  .rx-sec { display: flex; flex-direction: column; gap: var(--ds-space-200); }
+  .rx-sec h2 { display: flex; align-items: center; justify-content: space-between; }
+  .rx-count { color: var(--ds-text-secondary); font: 600 14px/1 var(--ds-font-family-sans); }
+
+  /* Form đặt lịch */
+  .rx-form { display: flex; flex-direction: column; gap: var(--ds-space-300); min-height: 0; }
+  .rx-form .ds-field__control { min-height: 44px; font-size: 15px; }
+  .rx-form .ds-field__label { font-size: 14px; line-height: 20px; }
+  .rx-form .ds-field { gap: 4px; }
+  .rx-conflict { display: flex; flex-direction: column; gap: var(--ds-space-300); padding: var(--ds-space-400); border: 2px solid var(--ds-feedback-danger-icon); border-radius: var(--ds-shape-control); background: var(--ds-feedback-danger-surface); color: var(--ds-feedback-danger-text); }
+  .rx-conflict p { margin: 0; }
+  .rx-conflict__title { display: flex; gap: var(--ds-space-200); font-weight: 700; line-height: 1.4; }
+  .rx-conflict__title .ds-icon { flex: none; color: var(--ds-feedback-danger-icon); }
+  .rx-slots--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rx-slots--3 .rx-slot { justify-content: center; padding: 0 var(--ds-space-200); font-size: 13px; white-space: nowrap; }
+  .rx-slots--3 .rx-slot .ds-icon { display: none; }
+  .rx-conflict .rx-slots .rx-slot { border-color: var(--ds-feedback-danger-border); }
+  .rx-form__foot { display: flex; flex-direction: column; gap: var(--ds-space-200); margin-top: auto; }
+  .rx-form__btns { display: flex; gap: var(--ds-space-300); }
+  .rx-form__btns .ds-button { flex: 1; }
+  .rx-reason { margin: 0; color: var(--ds-text-secondary); font-size: 13px; line-height: 1.4; }
+  .rx-reason:empty { display: none; }
+  .rx-back { align-self: flex-start; }
+  .rx-dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ds-space-300) var(--ds-space-400); margin: 0; }
+  .rx-dl dt { color: var(--ds-text-secondary); }
+  .rx-dl dd { margin: 0; font-weight: 600; }
+  .rx-result { display: flex; flex-direction: column; gap: var(--ds-space-400); }
+  .rx-result__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+
+  /* Bác sĩ */
+  .rx-patient { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ds-space-500); align-items: center; }
+  .rx-patient .rx-avatar { width: 72px; height: 72px; font-size: 24px; }
+  .rx-patient__name { margin: 0; font: 700 30px/38px var(--app-font-display); letter-spacing: -0.015em; }
+  .rx-facts { display: flex; flex-wrap: wrap; gap: var(--ds-space-200) var(--ds-space-600); margin: var(--ds-space-200) 0 0; padding: 0; list-style: none; color: var(--ds-text-secondary); }
+  .rx-facts strong { color: var(--ds-text-primary); font-weight: 600; }
+  .rx-allergy { display: flex; flex-direction: column; justify-content: center; gap: var(--ds-space-100); padding: var(--ds-space-500) var(--ds-space-600); border: 2px solid var(--ds-feedback-danger-icon); border-radius: var(--ds-card-radius); background: var(--ds-feedback-danger-surface); color: var(--ds-feedback-danger-text); }
+  .rx-allergy__label { display: flex; align-items: center; gap: var(--ds-space-200); margin: 0; font-weight: 700; font-size: 15px; }
+  .rx-allergy__label .ds-icon { color: var(--ds-feedback-danger-icon); }
+  .rx-allergy__value { margin: 0; font: 800 34px/40px var(--app-font-display); letter-spacing: -0.01em; }
+  .rx-allergy__ctx { margin: 0; font-weight: 600; }
+  .rx-steps { display: flex; flex-direction: column; gap: var(--ds-space-300); margin: 0; padding: 0; list-style: none; }
+  .rx-steps li { display: flex; align-items: center; gap: var(--ds-space-300); font-weight: 600; }
+  .rx-steps__n { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 999px; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); font: 700 13px/1 var(--ds-font-family-sans); }
+  .rx-steps--past .rx-steps__n { background: var(--ds-surface-sunken); color: var(--ds-text-secondary); }
+  .rx-steps--past li { font-weight: 500; }
+  .rx-queue li { display: flex; align-items: center; gap: var(--ds-space-300); min-height: 52px; }
+  .rx-notes { display: flex; flex-direction: column; gap: var(--ds-space-300); }
+  .rx-notes textarea { flex: 1; min-height: 72px; width: 100%; padding: var(--ds-space-300) var(--ds-space-400); border: 1px solid var(--ds-border-control); border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); color: var(--ds-text-primary); font: 15px/1.55 var(--ds-font-family-sans); resize: none; }
+  .rx-notes__foot { display: flex; align-items: center; justify-content: flex-end; gap: var(--ds-space-400); }
+
+  /* Chủ phòng khám */
+  .rx-hero { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: var(--ds-space-300); overflow: hidden; padding: var(--ds-space-600) var(--ds-space-800); border-radius: var(--ds-card-radius); background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
+  .rx-hero__label { margin: 0; font-weight: 600; color: color-mix(in srgb, var(--ds-text-on-brand-strong) 86%, transparent); }
+  .rx-hero__value { margin: 0; font: 800 44px/48px var(--app-font-display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .rx-hero__ctx { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-300); margin: 0; }
+  .rx-hero__delta { display: inline-flex; align-items: center; min-height: 28px; padding: 0 var(--ds-space-300); border-radius: 999px; background: var(--ds-surface-raised); color: var(--ds-text-brand); font-weight: 700; font-size: 14px; }
+  .rx-kpi { display: flex; flex-direction: column; justify-content: space-between; gap: var(--ds-space-200); padding: var(--ds-space-500) var(--ds-space-600); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+  .rx-kpi__label { margin: 0; color: var(--ds-text-secondary); font-weight: 600; font-size: 14px; }
+  .rx-kpi__value { margin: 0; white-space: nowrap; font: 800 26px/34px var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .rx-kpi__ctx { margin: 0; font-size: 14px; color: var(--ds-text-secondary); }
+  .rx-chart { display: grid; grid-template-columns: 56px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; flex: 1; min-height: 0; }
+  .rx-chart__axis { position: relative; color: var(--ds-text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .rx-chart__axis span { position: absolute; right: 10px; transform: translateY(50%); }
+  .rx-chart__plot { position: relative; display: flex; align-items: flex-end; gap: 4px; border-bottom: 1px solid var(--ds-border-control); background: linear-gradient(var(--ds-border-subtle), var(--ds-border-subtle)) 0 0 / 100% 1px no-repeat, linear-gradient(var(--ds-border-subtle), var(--ds-border-subtle)) 0 33.33% / 100% 1px no-repeat, linear-gradient(var(--ds-border-subtle), var(--ds-border-subtle)) 0 66.66% / 100% 1px no-repeat; }
+  .rx-bar { flex: 1; min-width: 0; border-radius: 4px 4px 0 0; background: color-mix(in srgb, var(--ds-surface-brand-strong) 34%, var(--ds-surface-raised)); }
+  .rx-bar--now { background: var(--ds-surface-brand-strong); }
+  .rx-chart__x { grid-column: 2; position: relative; height: 24px; margin-top: var(--ds-space-200); color: var(--ds-text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .rx-chart__x span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+  .rx-chart__x .is-now { color: var(--ds-text-primary); font-weight: 700; }
+  .rx-fill { display: flex; flex-direction: column; flex: 1; justify-content: space-between; gap: var(--ds-space-300); }
+  .rx-fill__big { display: flex; align-items: baseline; gap: var(--ds-space-300); margin: 0; }
+  .rx-fill__big strong { font: 800 40px/44px var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .rx-chair { display: flex; flex-direction: column; gap: var(--ds-space-200); padding: var(--ds-space-200) 0; }
+  .rx-chair + .rx-chair { border-top: 1px solid var(--ds-border-subtle); }
+  .rx-chair__top { display: flex; justify-content: space-between; gap: var(--ds-space-300); font-weight: 600; }
+  .rx-chair .ds-progress { height: 8px; }
+  .rx-empty { display: flex; align-items: center; gap: var(--ds-space-300); padding: var(--ds-space-300); border: 1px dashed var(--ds-border-control); border-radius: var(--ds-shape-control); }
+  .rx-empty .ds-icon { flex: none; color: var(--ds-text-secondary); }
+  .rx-empty p { margin: 0; line-height: 1.4; }
+  .rx-empty strong { display: block; }
+
+  /* Không có quyền */
+  .rx-denied { display: flex; flex-direction: column; justify-content: center; gap: var(--ds-space-400); padding: var(--ds-space-800); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+  .rx-denied__icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 999px; background: var(--ds-feedback-warning-surface); color: var(--ds-feedback-warning-icon); }
+  .rx-denied h1 { margin: 0; font: 700 28px/36px var(--app-font-display); letter-spacing: -0.015em; }
+  .rx-denied .rx-actions { flex-wrap: wrap; }
+  .rx-denied p { margin: 0; color: var(--ds-text-secondary); font-size: 16px; line-height: 1.55; }
+  .rx-perm { padding: 0; overflow: hidden; }
+  .rx-perm h2 { padding: var(--ds-space-500) var(--ds-space-600) 0; }
+  .rx-perm table { width: 100%; height: 100%; border-collapse: collapse; }
+  .rx-perm th, .rx-perm td { padding: 0 var(--ds-space-500); text-align: left; border-bottom: 1px solid var(--ds-border-subtle); }
+  .rx-perm thead th { height: 52px; white-space: nowrap; color: var(--ds-text-secondary); font-weight: 600; font-size: 14px; }
+  .rx-perm thead th.is-me { color: var(--ds-text-brand); }
+  .rx-perm tbody th { font-weight: 600; }
+  .rx-perm tr:last-child th, .rx-perm tr:last-child td { border-bottom: 0; }
+  .rx-perm td.is-me { background: var(--ds-surface-brand-subtle); }
+  .rx-yes, .rx-no { display: inline-flex; align-items: center; gap: var(--ds-space-200); font-weight: 600; }
+  .rx-yes .ds-icon { color: var(--ds-text-brand); }
+  .rx-no { color: var(--ds-text-secondary); font-weight: 500; }
+
+
+  /* Khung 1024–1279: thanh bên thành rail icon, mật độ gọn */
+  @container (max-width: 1279px) {
+    .rx-body { grid-template-columns: 76px minmax(0, 1fr); }
+    .rx-side { align-items: center; padding: var(--ds-space-400) var(--ds-space-200); }
+    .rx-nav { justify-content: center; width: 52px; min-height: 52px; padding: 0; }
+    .rx-nav__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .rx-main { padding-inline: var(--ds-space-600); gap: var(--ds-space-500); }
+    .rx-sched th.rx-time { width: 60px; padding-left: var(--ds-space-300); }
+    .rx-cell { padding: 6px var(--ds-space-200); }
+    .rx-cell__name { font-size: 14px; }
+    .rx-cell .ds-badge .ds-icon, .rx-queue .ds-badge .ds-icon, .rx-rows .ds-badge .ds-icon { display: none; }
+    .rx-search { width: 220px; }
+    .rx-row__time { width: 46px; }
+    .rx-kpi { padding: var(--ds-space-400) var(--ds-space-500); }
+    .rx-kpi__value { font-size: 22px; line-height: 30px; }
+    .rx-hero { padding: var(--ds-space-500) var(--ds-space-600); }
+    .rx-hero__value { font-size: 36px; line-height: 44px; }
+    .rx-denied { padding: var(--ds-space-600); }
+    .rx-perm thead th { white-space: normal; }
+    .rx-perm th, .rx-perm td { padding: var(--ds-space-200) var(--ds-space-300); }
+    .rx-perm h2 { padding: var(--ds-space-500) var(--ds-space-300) 0; }
+    .rx-denied.c-5 { grid-column: span 4; }
+    .rx-perm.c-7 { grid-column: span 8; }
+  }
+  .rx-toast { position: absolute; right: var(--ds-space-800); bottom: var(--ds-space-600); z-index: 6; max-width: 420px; }
+  .rx-toast .ds-icon { flex: none; }
+  @media (prefers-reduced-motion: no-preference) { .rx-toast:not([hidden]) { animation: rx-in 200ms var(--ds-easing-enter, ease-out); } }
+  @keyframes rx-in { from { opacity: 0; transform: translateY(8px); } }
+</style>
+</head>
+<body class="ds-root">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-calendar-plus" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4M12 12.5v5M9.5 15h5"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+  <symbol id="ds-i-stethoscope" viewBox="0 0 24 24"><path d="M6 3.75v5a4 4 0 0 0 8 0v-5"/><path d="M10 12.75v1.75a5 5 0 0 0 10 0V13"/><circle cx="20" cy="11" r="2"/></symbol>
+  <symbol id="ds-i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><rect x="5.5" y="11" width="3" height="6" rx="1"/><rect x="10.5" y="6" width="3" height="11" rx="1"/><rect x="15.5" y="9" width="3" height="8" rx="1"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-bell" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5M12 8v.01"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="ds-i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="ds-i-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="app-i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="app-i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="app-i-swap" viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></symbol>
+  <symbol id="app-i-minus" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+</svg>
+
+<div class="rx-gallery">
+  <p class="rx-label" data-annotation>1. Lễ tân: lịch hôm nay</p>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Lễ tân: lịch hôm nay"><section class="rx-frame" id="s-reception" data-screen="Lễ tân: lịch hôm nay" data-entry="start" data-role="reception" data-view="schedule" data-preset="conflict"></section></div>
+
+  <p class="rx-label" data-annotation>2. Bác sĩ: bệnh nhân tiếp theo</p>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Bác sĩ: bệnh nhân tiếp theo"><section class="rx-frame" id="s-doctor" data-screen="Bác sĩ: bệnh nhân tiếp theo" data-entry="start" data-role="doctor" data-view="next"></section></div>
+
+  <p class="rx-label" data-annotation>3. Chủ phòng khám: doanh thu</p>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Chủ phòng khám: doanh thu"><section class="rx-frame" id="s-owner" data-screen="Chủ phòng khám: doanh thu" data-entry="start" data-role="owner" data-view="revenue"></section></div>
+
+  <p class="rx-label" data-annotation>4. Lễ tân mở trang Doanh thu</p>
+  <div class="rx-scroll" role="region" tabindex="0" aria-label="Lễ tân mở trang Doanh thu"><section class="rx-frame" id="s-denied" data-screen="Lễ tân mở trang Doanh thu" data-deep-link="revenue" data-role="reception" data-view="revenue" data-prev="schedule"></section></div>
+</div>
+
+<script>
+(() => {
+  const DATE = 'Thứ Ba, 28/10';
+  const ROLES = {
+    reception: { label: 'Lễ tân', person: 'Nguyễn Thảo', initials: 'NT', home: 'schedule' },
+    doctor: { label: 'Bác sĩ', person: 'BS. Phan Minh Đức', initials: 'MĐ', home: 'next' },
+    owner: { label: 'Chủ phòng khám', person: 'Lê Quỳnh Anh', initials: 'QA', home: 'revenue' },
+  };
+  const VIEWS = {
+    next: { label: 'Bệnh nhân tiếp theo', icon: 'ds-i-stethoscope', roles: ['doctor'] },
+    schedule: { label: 'Lịch hôm nay', icon: 'ds-i-calendar', roles: ['reception', 'doctor', 'owner'] },
+    revenue: { label: 'Doanh thu', icon: 'ds-i-chart', roles: ['owner'] },
+  };
+  const NAV = { reception: ['schedule'], doctor: ['next', 'schedule'], owner: ['revenue', 'schedule'] };
+  const CHAIRS = { 1: { name: 'Ghế 1', who: 'BS. Đức' }, 2: { name: 'Ghế 2', who: 'BS. Hoàng Lan' }, 3: { name: 'Ghế 3', who: 'KTV Trần Bảo' } };
+  const TIMES = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30'];
+  const OPEN_FROM = 3; // từ 9:30 trở đi còn đặt được
+  const SERVICES = ['Khám tổng quát', 'Trám răng', 'Cạo vôi', 'Nhổ răng', 'Tái khám niềng'];
+  const STATUS = {
+    arrived: { text: 'Đã đến', tone: 'neutral', icon: 'ds-i-check-circle' },
+    inchair: { text: 'Đang khám', tone: 'brand', icon: 'ds-i-stethoscope' },
+    late: { text: 'Muộn 15 phút', tone: 'danger', icon: 'ds-i-alert' },
+    pending: { text: 'Chưa đến', tone: 'neutral', icon: 'ds-i-clock' },
+  };
+  const DAILY = [6.1, 7.4, 5.2, 7.9, 8.3, 6.6, 2.4, 7.1, 6.8, 7.7, 8.6, 6.2, 5.9, 2.1, 6.9, 7.3, 8.1, 7.5, 6.4, 6.7, 2.6, 7.8, 8.4, 6.9, 7.2, 6.5, 6.15, 3.45];
+
+  const icon = (id, cls = 'ds-icon') => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const badge = (key) => { const s = STATUS[key]; return `<span class="ds-badge ds-badge--${s.tone}">${icon(s.icon)}${s.text}</span>`; };
+  const money = (n) => n.toLocaleString('vi-VN') + ' đ';
+
+  function initialState(frame) {
+    const st = {
+      role: frame.dataset.role, view: frame.dataset.view, prev: frame.dataset.prev || null,
+      menu: false, query: '', panel: 'upcoming', panelPrev: null, toast: null, focus: null, lastNew: null,
+      appts: [
+        { id: 'a1', t: 0, c: 1, name: 'Võ Thị Hồng', svc: 'Trám răng', status: 'arrived' },
+        { id: 'a2', t: 1, c: 2, name: 'Đặng Quốc Việt', svc: 'Nhổ răng khôn', status: 'inchair' },
+        { id: 'a3', t: 2, c: 3, name: 'Hồ Ngọc Mai', svc: 'Cạo vôi', status: 'late' },
+        { id: 'a4', t: 3, c: 1, name: 'Lâm Gia Bảo', svc: 'Nhổ răng sữa', status: 'pending', age: 8 },
+        { id: 'a5', t: 4, c: 2, name: 'Trương Văn Nam', svc: 'Tái khám niềng', status: 'pending' },
+      ],
+      form: { name: '', svc: SERVICES[0], c: 2, t: 3 },
+      doc: { called: false, started: false, note: '', saved: null },
+    };
+    if (frame.dataset.preset === 'conflict') {
+      st.panel = 'booking';
+      st.form = { name: 'Ngô Thanh Tâm', svc: 'Khám tổng quát', c: 1, t: 3 };
+    }
+    return st;
+  }
+
+  const at = (st, c, t) => st.appts.find((a) => a.c === c && a.t === t);
+  const freeSlots = (st) => {
+    const out = [];
+    for (let t = OPEN_FROM; t < TIMES.length; t++) for (const c of [1, 2, 3]) if (!at(st, c, t)) out.push({ c, t });
+    return out;
+  };
+  const nearest = (st, c, t) => freeSlots(st)
+    .map((s) => ({ ...s, d: Math.abs(s.t - t) * 10 + (s.c === c ? 0 : 1) + (s.t < t ? 5 : 0) }))
+    .sort((a, b) => a.d - b.d).slice(0, 4);
+  const can = (role, view) => VIEWS[view].roles.includes(role);
+
+  /* ---------- Thanh trên và thanh bên ---------- */
+  function top(st, fid) {
+    const r = ROLES[st.role];
+    const items = Object.entries(ROLES).map(([k, v]) => `
+      <li role="none"><button class="ds-menu__item" role="menuitemradio" aria-checked="${k === st.role}" data-act="role" data-role="${k}" data-test="role-${k}" data-k="role-${k}" tabindex="-1">
+        <span class="rx-avatar" aria-hidden="true">${v.initials}</span>
+        <span class="rx-menu__role"><strong>${v.label}</strong><span>${v.person}</span></span>
+        ${icon('ds-i-check', 'ds-icon rx-menu__tick')}
+      </button></li>`).join('');
+    return `<header class="rx-top">
+      <div class="rx-brand"><span class="rx-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 3.5c-2.6 0-4 2-4 4.6 0 2.4 1 4 1.6 6.1.6 2.3.9 6.3 2.6 6.3 1.6 0 1.6-4.6 4.3-4.6s2.7 4.6 4.3 4.6c1.7 0 2-4 2.6-6.3.6-2.1 1.6-3.7 1.6-6.1 0-2.6-1.4-4.6-4-4.6-1.9 0-2.8 1.1-4.5 1.1S9.4 3.5 7.5 3.5Z"/></svg></span>Răng Xinh</div>
+      <p class="rx-today"><strong>${DATE}</strong></p>
+      <div class="ds-menu-anchor rx-acct">
+        <button class="rx-acct__btn" type="button" aria-haspopup="menu" aria-expanded="${st.menu}" aria-controls="${fid}-menu" data-act="menu" data-test="account" data-k="account">
+          <span class="rx-avatar" aria-hidden="true">${r.initials}</span>
+          <span class="rx-acct__text"><strong>${r.person}</strong><span>${r.label}</span></span>
+          ${icon('ds-i-chevron-down')}
+        </button>
+        <ul class="ds-menu ds-menu--end rx-menu" role="menu" id="${fid}-menu" aria-labelledby="${fid}-menu-t" ${st.menu ? '' : 'hidden'}>
+          <li role="presentation" class="rx-menu__title" id="${fid}-menu-t">Đổi vai trò</li>${items}
+        </ul>
+      </div>
+    </header>`;
+  }
+  function side(st) {
+    const cur = st.view;
+    return `<nav class="rx-side" aria-label="Điều hướng chính">${NAV[st.role].map((v) => `
+      <button class="rx-nav" type="button" data-act="nav" data-view="${v}" data-test="nav-${v}" data-k="nav-${v}" title="${VIEWS[v].label}" ${v === cur ? 'aria-current="page"' : ''}>${icon(VIEWS[v].icon)}<span class="rx-nav__label">${VIEWS[v].label}</span></button>`).join('')}
+    </nav>`;
+  }
+
+  /* ---------- Lịch hôm nay ---------- */
+  function schedule(st, fid) {
+    const rec = st.role === 'reception';
+    const f = st.form;
+    const booking = rec && st.panel === 'booking';
+    const q = st.query.trim().toLowerCase();
+    const counts = { arrived: 0, inchair: 0, late: 0, pending: 0 };
+    st.appts.forEach((a) => counts[a.status]++);
+    const rows = TIMES.map((time, t) => `<tr><th scope="row" class="rx-time">${time}</th>${[1, 2, 3].map((c) => {
+      const a = at(st, c, t);
+      const here = booking && f.c === c && f.t === t;
+      if (a) {
+        const dim = q && !a.name.toLowerCase().includes(q) ? ' is-dim' : '';
+        const cls = `rx-cell rx-cell--appt${here ? ' rx-cell--conflict' : ''}${st.lastNew === a.id ? ' rx-cell--new' : ''}${dim}`;
+        const inner = `<span class="rx-cell__name">${esc(a.name)}</span><span class="rx-cell__svc">${esc(a.svc)}</span>${here ? `<span class="ds-badge ds-badge--danger">${icon('ds-i-alert')}Trùng lịch</span>` : badge(a.status)}`;
+        return `<td>${rec ? `<button type="button" class="${cls}" data-act="appt" data-id="${a.id}" data-test="appt-${a.id}" data-k="appt-${a.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`}</td>`;
+      }
+      if (here) return `<td><div class="rx-cell rx-cell--pick" data-test="pick"><span class="rx-cell__name">${esc(f.name) || 'Lượt mới'}</span><span class="rx-cell__svc">${esc(f.svc)}</span><span class="ds-badge ds-badge--brand">${icon('ds-i-calendar-plus')}Đang chọn</span></div></td>`;
+      if (t < OPEN_FROM) return `<td><span class="rx-cell rx-cell--idle">Đã qua</span></td>`;
+      if (!rec) return `<td><span class="rx-cell rx-cell--idle">Trống</span></td>`;
+      return `<td><button type="button" class="rx-cell rx-cell--free" data-act="slot" data-c="${c}" data-t="${t}" data-test="slot-${c}-${t}" data-k="slot-${c}-${t}" aria-label="Trống, đặt lịch ${CHAIRS[c].name} lúc ${time}"><span aria-hidden="true">${icon('ds-i-plus')}</span>Trống</button></td>`;
+    }).join('')}</tr>`).join('');
+    const matches = q ? st.appts.filter((a) => a.name.toLowerCase().includes(q)).length : null;
+    return `<div class="rx-head">
+        <div><h1>Lịch hôm nay</h1>
+          <p class="rx-head__sub" data-test="counts"><span>${DATE}</span><span>Đã đến ${counts.arrived}</span><span>Đang khám ${counts.inchair}</span><span>Muộn ${counts.late}</span><span data-test="count-pending">Chưa đến ${counts.pending}</span></p></div>
+        <div class="rx-actions">
+          <div class="rx-search" role="search">${icon('ds-i-search')}<label class="ds-visually-hidden" for="${fid}-q">Tìm bệnh nhân</label><input id="${fid}-q" type="search" placeholder="Tìm bệnh nhân" value="${esc(st.query)}" data-act="query" data-test="search" data-k="search" aria-describedby="${fid}-qs"></div>
+          <span class="ds-visually-hidden" id="${fid}-qs" role="status">${matches === null ? '' : `${matches} lượt khớp`}</span>
+          ${rec ? `<button class="ds-button ds-button--primary" type="button" data-act="new" data-test="book" data-k="book">${icon('ds-i-calendar-plus')}Đặt lịch</button>` : ''}
+        </div>
+      </div>
+      <section class="rx-panel rx-sched c-7" aria-label="Lịch theo ghế, ${DATE}">
+        <table data-test="schedule"><thead><tr><th scope="col" class="rx-time">Giờ</th>${[1, 2, 3].map((c) => `<th scope="col">${CHAIRS[c].name}<span>${CHAIRS[c].who}</span></th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>
+      </section>
+      ${rec ? receptionPanel(st, fid) : viewerPanel(st)}`;
+  }
+
+  function receptionPanel(st, fid) {
+    if (st.panel === 'booking') return bookingForm(st, fid);
+    if (st.panel === 'booked') {
+      const a = st.appts.find((x) => x.id === st.lastNew);
+      return `<section class="rx-panel c-5 rx-result" data-test="booking-result" aria-labelledby="${fid}-res">
+        <span class="rx-result__icon">${icon('ds-i-check-circle', 'ds-icon ds-icon--lg')}</span>
+        <h2 id="${fid}-res" tabindex="-1" data-k="res">Đã đặt lịch</h2>
+        <dl class="rx-dl"><dt>Bệnh nhân</dt><dd>${esc(a.name)}</dd><dt>Giờ</dt><dd>${TIMES[a.t]}, ${DATE}</dd><dt>Ghế</dt><dd>${CHAIRS[a.c].name}, ${CHAIRS[a.c].who}</dd><dt>Dịch vụ</dt><dd>${esc(a.svc)}</dd><dt>Trạng thái</dt><dd>${badge(a.status)}</dd></dl>
+        <div class="rx-form__btns" style="margin-top:auto"><button class="ds-button ds-button--secondary" type="button" data-act="close" data-test="result-close" data-k="result-close">Đóng</button><button class="ds-button ds-button--primary" type="button" data-act="new" data-test="book-again" data-k="book-again">Đặt lịch</button></div>
+      </section>`;
+    }
+    if (st.panel.startsWith('appt:')) {
+      const a = st.appts.find((x) => x.id === st.panel.slice(5));
+      const canArrive = a.status === 'late' || a.status === 'pending';
+      return `<section class="rx-panel c-5" data-test="appt-detail" aria-labelledby="${fid}-ad">
+        <button class="ds-button ds-button--tertiary rx-back" type="button" data-act="close" data-test="detail-back" data-k="detail-back">${icon('app-i-arrow-left')}Quay lại</button>
+        <h2 id="${fid}-ad" tabindex="-1" data-k="ad">${esc(a.name)}${a.age ? `, ${a.age} tuổi` : ''}</h2>
+        <dl class="rx-dl"><dt>Giờ</dt><dd>${TIMES[a.t]}, ${DATE}</dd><dt>Ghế</dt><dd>${CHAIRS[a.c].name}, ${CHAIRS[a.c].who}</dd><dt>Dịch vụ</dt><dd>${esc(a.svc)}</dd><dt>Trạng thái</dt><dd data-test="detail-status">${badge(a.status)}</dd></dl>
+        ${canArrive ? `<button class="ds-button ds-button--primary" type="button" style="margin-top:auto" data-act="arrive" data-id="${a.id}" data-test="arrive" data-k="arrive">${icon('ds-i-check')}Xác nhận đến</button>` : ''}
+      </section>`;
+    }
+    const soon = st.appts.filter((a) => a.status === 'late' || a.status === 'pending').sort((a, b) => a.t - b.t);
+    const free = freeSlots(st);
+    return `<section class="rx-panel c-5" data-test="upcoming" aria-label="Sắp đến và khung trống">
+      <div class="rx-sec"><h2 id="${fid}-up">Sắp đến <span class="rx-count">${soon.length}</span></h2>
+        <ul class="rx-rows" aria-labelledby="${fid}-up">${soon.map((a) => `<li><button class="rx-row" type="button" data-act="appt" data-id="${a.id}" data-test="row-${a.id}" data-k="row-${a.id}">
+          <span class="rx-row__time">${TIMES[a.t]}</span><span class="rx-row__body"><span class="rx-row__name">${esc(a.name)}</span><span class="rx-row__meta">${CHAIRS[a.c].name}</span></span>${badge(a.status)}${icon('ds-i-chevron-right', 'ds-icon rx-chev')}</button></li>`).join('')}</ul></div>
+      <div class="rx-sec"><h2 id="${fid}-free">Khung trống <span class="rx-count">${free.length}</span></h2>
+        <ul class="rx-slots" aria-labelledby="${fid}-free">${free.map((s) => `<li><button class="rx-slot" type="button" data-act="slot" data-c="${s.c}" data-t="${s.t}" data-test="free-${s.c}-${s.t}" data-k="free-${s.c}-${s.t}">${TIMES[s.t]} ${CHAIRS[s.c].name}${icon('ds-i-plus')}</button></li>`).join('')}</ul></div>
+    </section>`;
+  }
+
+  function bookingForm(st, fid) {
+    const f = st.form;
+    const taken = at(st, f.c, f.t);
+    const reason = !f.name.trim() ? 'Nhập họ tên bệnh nhân' : taken ? 'Khung đã có người, chọn khung khác' : '';
+    const alts = taken ? nearest(st, f.c, f.t).slice(0, 3) : [];
+    return `<form class="rx-panel c-5 rx-form" data-test="booking-form" aria-labelledby="${fid}-bt" novalidate>
+      <div class="rx-panel__head"><h2 id="${fid}-bt" tabindex="-1" data-k="bt">Đặt lịch</h2>
+        <button class="ds-button ds-button--tertiary" type="button" data-act="close" data-test="booking-cancel-x" data-k="bx" aria-label="Đóng"><span aria-hidden="true">${icon('ds-i-x')}</span></button></div>
+      <div class="ds-field"><label class="ds-field__label" for="${fid}-name">Họ tên bệnh nhân</label>
+        <input class="ds-field__control" id="${fid}-name" autocomplete="off" value="${esc(f.name)}" data-act="fname" data-test="f-name" data-k="f-name"></div>
+      <div class="ds-field"><label class="ds-field__label" for="${fid}-svc">Dịch vụ</label>
+        <div class="ds-field__wrap ds-field__wrap--select"><select class="ds-field__control" id="${fid}-svc" data-act="fsvc" data-test="f-svc" data-k="f-svc">${SERVICES.map((s) => `<option${s === f.svc ? ' selected' : ''}>${s}</option>`).join('')}</select></div></div>
+      <div class="rx-row2"><div class="ds-field"><label class="ds-field__label" for="${fid}-chair">Ghế</label>
+        <div class="ds-field__wrap ds-field__wrap--select"><select class="ds-field__control" id="${fid}-chair" data-act="fchair" data-test="f-chair" data-k="f-chair" ${taken ? `aria-invalid="true" aria-describedby="${fid}-cf"` : ''}>${[1, 2, 3].map((c) => `<option value="${c}"${c === f.c ? ' selected' : ''}>${CHAIRS[c].name}</option>`).join('')}</select></div></div>
+      <div class="ds-field"><label class="ds-field__label" for="${fid}-time">Giờ, ${DATE}</label>
+        <div class="ds-field__wrap ds-field__wrap--select"><select class="ds-field__control" id="${fid}-time" data-act="ftime" data-test="f-time" data-k="f-time" ${taken ? `aria-invalid="true" aria-describedby="${fid}-cf"` : ''}>${TIMES.slice(OPEN_FROM).map((t, i) => `<option value="${i + OPEN_FROM}"${i + OPEN_FROM === f.t ? ' selected' : ''}>${t}</option>`).join('')}</select></div></div></div>
+      ${taken ? `<div class="rx-conflict" role="alert" data-test="conflict" id="${fid}-cf">
+        <p class="rx-conflict__title">${icon('ds-i-alert')}<span>${CHAIRS[f.c].name} lúc ${TIMES[f.t]} đã có ${esc(taken.name)} (${esc(taken.svc.toLowerCase())})</span></p>
+        <ul class="rx-slots rx-slots--3" aria-label="Khung trống gần nhất">${alts.map((s, i) => `<li><button class="rx-slot" type="button" data-act="alt" data-c="${s.c}" data-t="${s.t}" data-test="alt-slot" data-k="alt-${i}">${TIMES[s.t]} ${CHAIRS[s.c].name}${icon('ds-i-check')}</button></li>`).join('')}</ul>
+      </div>` : ''}
+      <div class="rx-form__foot">
+        <p class="rx-reason" id="${fid}-why" data-reason data-test="book-reason">${reason}</p>
+        <div class="rx-form__btns"><button class="ds-button ds-button--secondary" type="button" data-act="close" data-test="booking-cancel" data-k="bc">Hủy</button>
+        <button class="ds-button ds-button--primary" type="submit" data-test="book-submit" data-k="bs" data-primary aria-describedby="${fid}-why" ${reason ? 'disabled' : ''}>Đặt lịch</button></div>
+      </div>
+    </form>`;
+  }
+
+  function viewerPanel(st) {
+    const soon = st.appts.filter((a) => a.status !== 'arrived').sort((a, b) => a.t - b.t);
+    return `<section class="rx-panel c-5" aria-label="Lượt trong ngày" data-test="viewer-panel">
+      <div class="rx-sec"><h2>Lượt trong ngày <span class="rx-count">${st.appts.length}</span></h2>
+      <ul class="rx-rows rx-queue">${soon.map((a) => `<li><span class="rx-row__time">${TIMES[a.t]}</span><span class="rx-row__body"><span class="rx-row__name">${esc(a.name)}</span><span class="rx-row__meta">${CHAIRS[a.c].name}, ${esc(a.svc)}</span></span>${badge(a.status)}</li>`).join('')}</ul></div>
+    </section>`;
+  }
+
+  /* ---------- Bác sĩ: bệnh nhân tiếp theo ---------- */
+  function nextPatient(st, fid) {
+    const d = st.doc;
+    const state = d.started ? 'inchair' : d.called ? 'called' : 'pending';
+    const stBadge = state === 'inchair' ? badge('inchair') : state === 'called' ? `<span class="ds-badge ds-badge--brand">${icon('ds-i-info')}Đã gọi</span>` : badge('pending');
+    const startReason = d.started ? '' : d.called ? '' : 'Gọi bệnh nhân trước khi bắt đầu khám';
+    const queue = st.appts.filter((a) => a.c === 1).sort((a, b) => a.t - b.t);
+    const qRows = TIMES.map((time, t) => {
+      const a = queue.find((x) => x.t === t);
+      if (!a) return t === 5 ? `<li><span class="rx-row__time">${time}</span><span class="rx-row__body"><span class="rx-row__name rx-muted">Trống</span></span></li>` : '';
+      const s = a.id === 'a4' ? stBadge : badge(a.status);
+      return `<li><span class="rx-row__time">${time}</span><span class="rx-row__body"><span class="rx-row__name">${esc(a.name)}</span><span class="rx-row__meta">${esc(a.svc)}</span></span>${s}</li>`;
+    }).join('');
+    return `<div class="rx-head">
+        <div><h1>Bệnh nhân tiếp theo</h1><p class="rx-head__sub">9:30, ${DATE}, Ghế 1</p></div>
+        <div class="rx-actions">
+          ${d.started ? '' : `<span class="rx-reason" id="${fid}-sr" data-test="start-reason">${startReason}</span>
+          <button class="ds-button ${d.called ? 'ds-button--primary' : 'ds-button--secondary'}" type="button" data-act="start" data-test="start" data-k="start" aria-describedby="${fid}-sr" ${d.called ? '' : 'disabled'} ${d.called ? '' : 'data-primary'}>${icon('ds-i-stethoscope')}Bắt đầu khám</button>`}
+          <button class="ds-button ${d.called ? 'ds-button--secondary' : 'ds-button--primary'}" type="button" data-act="call" data-test="call" data-k="call">${icon('ds-i-bell')}Gọi bệnh nhân</button>
+        </div>
+      </div>
+      <section class="rx-panel c-8 rx-patient" aria-label="Bệnh nhân" data-test="patient">
+        <span class="rx-avatar" aria-hidden="true">GB</span>
+        <div><p class="rx-patient__name">Lâm Gia Bảo</p>
+          <ul class="rx-facts"><li><strong>8 tuổi</strong></li><li>Người đi kèm: <strong>mẹ, chị Lâm Thu</strong></li><li>Nhổ răng sữa</li><li data-test="patient-status">${stBadge}</li></ul></div>
+      </section>
+      <section class="rx-allergy c-4" role="alert" aria-label="Dị ứng" data-test="allergy">
+        <p class="rx-allergy__label">${icon('ds-i-alert')}Dị ứng</p>
+        <p class="rx-allergy__value">Penicillin</p>
+        <p class="rx-allergy__ctx">Không dùng kháng sinh nhóm penicillin</p>
+      </section>
+      <section class="rx-panel c-4" aria-labelledby="${fid}-today"><h2 id="${fid}-today">Hôm nay, ${DATE}</h2>
+        <ol class="rx-steps"><li><span class="rx-steps__n">1</span>Gây tê tại chỗ</li><li><span class="rx-steps__n">2</span>Nhổ R74</li></ol></section>
+      <section class="rx-panel c-4" aria-labelledby="${fid}-last"><h2 id="${fid}-last">Lần trước, thứ Sáu 12/09</h2>
+        <ul class="rx-steps rx-steps--past"><li><span class="rx-steps__n">${icon('ds-i-check', 'ds-icon ds-icon--sm')}</span>Khám tổng quát</li><li><span class="rx-steps__n">${icon('ds-i-check', 'ds-icon ds-icon--sm')}</span>Chụp phim</li><li><span class="rx-steps__n">${icon('ds-i-check', 'ds-icon ds-icon--sm')}</span>Hẹn nhổ răng sữa R74</li></ul></section>
+      <section class="rx-panel c-4" aria-labelledby="${fid}-q1" style="grid-row: span 2"><h2 id="${fid}-q1">Ghế 1 hôm nay</h2>
+        <ul class="rx-rows rx-queue">${qRows}</ul></section>
+      <section class="rx-panel c-8 rx-notes" aria-labelledby="${fid}-nt"><h2 id="${fid}-nt"><label for="${fid}-note">Ghi chú</label></h2>
+        <textarea id="${fid}-note" data-act="note" data-test="note" data-k="note">${esc(d.note)}</textarea>
+        <div class="rx-notes__foot"><span class="rx-reason" id="${fid}-nr" role="status" data-test="note-status">${d.saved ? `Đã lưu ghi chú lúc ${d.saved}, ${DATE}` : d.note.trim() ? '' : 'Nhập ghi chú để lưu'}</span>
+          <button class="ds-button ds-button--primary" type="button" data-act="save" data-test="save-note" data-k="save-note" data-primary aria-describedby="${fid}-nr" ${d.note.trim() ? '' : 'disabled'}>Lưu ghi chú</button></div>
+      </section>`;
+  }
+
+  /* ---------- Chủ phòng khám: doanh thu ---------- */
+  function revenue(st, fid) {
+    const max = 10;
+    const bars = DAILY.map((v, i) => `<span class="rx-bar${i === 27 ? ' rx-bar--now' : ''}" style="height:${(v / max) * 100}%" title="${i + 1}/10: ${v.toLocaleString('vi-VN')} triệu đ"></span>`).join('');
+    const xs = DAILY.map((_, i) => ((i + 1) % 3 === 1 && i < 25) || i === 27 ? `<span class="${i === 27 ? 'is-now' : ''}" style="left:${((i + 0.5) / DAILY.length) * 100}%">${i + 1}</span>` : '').join('');
+    return `<div class="rx-head"><div><h1>Doanh thu</h1><p class="rx-head__sub">${DATE}</p></div></div>
+      <section class="rx-hero c-6" aria-labelledby="${fid}-m" data-test="month">
+        <p class="rx-hero__label" id="${fid}-m">Doanh thu tháng 10 đến 28/10</p>
+        <p class="rx-hero__value">186.200.000 đ</p>
+        <p class="rx-hero__ctx"><span class="rx-hero__delta">+8,6%</span><span>so với cùng kỳ tháng 9: 171.500.000 đ</span></p>
+      </section>
+      <section class="rx-kpi c-3" aria-labelledby="${fid}-d"><p class="rx-kpi__label" id="${fid}-d">Hôm nay đến 10:00</p><p class="rx-kpi__value">3.450.000 đ</p><p class="rx-kpi__ctx">12 lượt dự kiến cả ngày</p></section>
+      <section class="rx-kpi c-3" aria-labelledby="${fid}-x"><p class="rx-kpi__label" id="${fid}-x">Lượt huỷ tháng 10</p><p class="rx-kpi__value">9</p></section>
+      <section class="rx-panel c-8" aria-labelledby="${fid}-c"><div class="rx-panel__head"><h2 id="${fid}-c">Doanh thu theo ngày, tháng 10 (triệu đ)</h2></div>
+        <div class="rx-chart" role="img" aria-label="Doanh thu theo ngày từ 1/10 đến 28/10, cao nhất 8,6 triệu đ ngày 11/10, hôm nay 3,45 triệu đ đến 10:00">
+          <div class="rx-chart__axis" aria-hidden="true"><span style="bottom:100%">10</span><span style="bottom:66.66%">6,7</span><span style="bottom:33.33%">3,3</span><span style="bottom:0">0</span></div>
+          <div class="rx-chart__plot">${bars}</div>
+          <div class="rx-chart__x" aria-hidden="true">${xs}</div>
+        </div></section>
+      <section class="rx-panel c-4" aria-labelledby="${fid}-f" data-test="fill"><h2 id="${fid}-f">Tỉ lệ lấp ghế tháng 10</h2>
+        <div class="rx-fill">
+          <p class="rx-fill__big"><strong>78%</strong></p>
+          <div>
+            <div class="rx-chair"><div class="rx-chair__top"><span>Ghế 1, BS. Đức</span><span class="rx-num">81%</span></div><div class="ds-progress" role="progressbar" aria-label="Ghế 1" aria-valuenow="81" aria-valuemin="0" aria-valuemax="100"><div class="ds-progress__bar" style="width:81%"></div></div></div>
+            <div class="rx-chair"><div class="rx-chair__top"><span>Ghế 2, BS. Hoàng Lan</span><span class="rx-num">75%</span></div><div class="ds-progress" role="progressbar" aria-label="Ghế 2" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"><div class="ds-progress__bar" style="width:75%"></div></div></div>
+            <div class="rx-chair"><div class="rx-chair__top"><span>Ghế 3, KTV Trần Bảo</span><span class="rx-muted">Chưa có số</span></div>
+              <div class="rx-empty" data-test="chair3-empty">${icon('ds-i-clock')}<p><strong>Chưa đủ 7 ngày dữ liệu</strong><span class="rx-muted">Dùng từ thứ Hai, 20/10</span></p></div></div>
+          </div>
+        </div></section>`;
+  }
+
+  /* ---------- Không có quyền ---------- */
+  function denied(st, fid) {
+    const rows = [['Lịch hôm nay', ['reception', 'doctor', 'owner']], ['Đặt lịch, xếp khách vãng lai', ['reception']], ['Xác nhận đến', ['reception']], ['Bệnh nhân tiếp theo', ['doctor']], ['Dị ứng, lần khám trước', ['doctor']], ['Gọi bệnh nhân, bắt đầu khám', ['doctor']], ['Doanh thu', ['owner']], ['Tỉ lệ lấp ghế, lượt huỷ', ['owner']], ['Đổi vai trò', ['reception', 'doctor', 'owner']]];
+    return `<section class="rx-denied c-5" data-test="denied" aria-labelledby="${fid}-dn">
+        <span class="rx-denied__icon">${icon('app-i-lock', 'ds-icon ds-icon--lg')}</span>
+        <h1 id="${fid}-dn" tabindex="-1" data-k="dn">Không có quyền xem&nbsp;${VIEWS[st.view].label.replace(" ", "&nbsp;")}</h1>
+        <div class="rx-actions"><button class="ds-button ds-button--primary" type="button" data-act="back" data-test="denied-back" data-k="denied-back">${icon('app-i-arrow-left')}Quay lại</button>
+        <button class="ds-button ds-button--secondary" type="button" data-act="menu" data-test="denied-switch" data-k="denied-switch">${icon('app-i-swap')}Đổi vai trò</button></div>
+      </section>
+      <section class="rx-panel rx-perm c-7" aria-labelledby="${fid}-pm" data-test="perm">
+        <h2 id="${fid}-pm">Quyền theo vai trò</h2>
+        <table><thead><tr><th scope="col">Trang và chức năng</th>${Object.entries(ROLES).map(([k, v]) => `<th scope="col" class="${k === st.role ? 'is-me' : ''}">${v.label}${k === st.role ? ' (bạn)' : ''}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map(([name, ok]) => `<tr><th scope="row">${name}</th>${Object.keys(ROLES).map((k) => `<td class="${k === st.role ? 'is-me' : ''}">${ok.includes(k) ? `<span class="rx-yes">${icon('ds-i-check')}Có</span>` : `<span class="rx-no">${icon('app-i-minus')}Ẩn</span>`}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      </section>`;
+  }
+
+  /* ---------- Render ---------- */
+  function render(frame) {
+    const st = frame._st, fid = frame.id;
+    const activeKey = frame.contains(document.activeElement) ? document.activeElement.dataset.k : null;
+    let body, mod = '';
+    if (!can(st.role, st.view)) body = denied(st, fid);
+    else if (st.view === 'schedule') body = schedule(st, fid);
+    else if (st.view === 'next') { body = nextPatient(st, fid); mod = ' rx-main--doctor'; }
+    else { body = revenue(st, fid); mod = ' rx-main--owner'; }
+    if (!can(st.role, st.view)) mod = ' rx-main--denied';
+    const toast = st.toast ? `${icon('ds-i-check-circle')}<span>${esc(st.toast)}</span>` : '';
+    frame.innerHTML = `${top(st, fid)}<div class="rx-body">${side(st)}<main class="rx-main${mod}" id="${fid}-main" data-test="main" data-view="${can(st.role, st.view) ? st.view : 'denied'}">${body}</main></div>
+      <div class="ds-toast rx-toast" role="status" aria-live="polite" data-test="toast" ${st.toast ? '' : 'hidden'}>${toast}</div>`;
+    const key = st.focus || activeKey;
+    st.focus = null;
+    if (key) {
+      const el = frame.querySelector(`[data-k="${key}"]`) || (key.startsWith('row-') ? frame.querySelector('.rx-row') : null);
+      if (el && !el.disabled) { el.focus({ preventScroll: true }); if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') { const n = el.value.length; el.setSelectionRange(n, n); } }
+    }
+  }
+
+  function say(frame, msg) {
+    const st = frame._st;
+    st.toast = msg;
+    clearTimeout(frame._tt);
+    frame._tt = setTimeout(() => { st.toast = null; const t = frame.querySelector('[data-test="toast"]'); if (t) { t.hidden = true; } }, 6000);
+  }
+
+  function go(frame, view) {
+    const st = frame._st;
+    if (view !== st.view) { st.prev = st.view; st.view = view; }
+    st.focus = `nav-${view}`;
+  }
+
+  function act(frame, el, ev) {
+    const st = frame._st;
+    const a = el.dataset.act;
+    if (a === 'menu') { st.menu = !st.menu; st.focus = st.menu ? `role-${st.role}` : 'account'; }
+    else if (a === 'role') {
+      const r = el.dataset.role;
+      st.menu = false;
+      if (r !== st.role) { st.role = r; st.prev = null; st.view = ROLES[r].home; st.panel = 'upcoming'; say(frame, `Đã đổi sang vai trò ${ROLES[r].label}`); }
+      st.focus = 'account';
+    }
+    else if (a === 'nav') { st.menu = false; go(frame, el.dataset.view); }
+    else if (a === 'back') { const to = st.prev && can(st.role, st.prev) ? st.prev : ROLES[st.role].home; st.prev = st.view; st.view = to; st.focus = `nav-${to}`; }
+    else if (a === 'new') { st.panelPrev = 'upcoming'; st.panel = 'booking'; const s = freeSlots(st)[0]; st.form = { name: '', svc: SERVICES[0], c: s.c, t: s.t }; st.focus = 'f-name'; }
+    else if (a === 'slot') { st.panelPrev = st.panel === 'booking' ? st.panelPrev : st.panel; st.panel = 'booking'; st.form = { ...st.form, c: +el.dataset.c, t: +el.dataset.t }; if (st.panelPrev === 'booked') { st.form.name = ''; st.panelPrev = 'upcoming'; } st.focus = 'f-name'; }
+    else if (a === 'alt') { st.form.c = +el.dataset.c; st.form.t = +el.dataset.t; st.focus = 'f-chair'; say(frame, `Đã chọn ${TIMES[st.form.t]} ${CHAIRS[st.form.c].name}`); }
+    else if (a === 'close') { const back = st.panel.startsWith('appt:') ? (st.panelPrev || 'upcoming') : 'upcoming'; const from = st.panel; st.panel = back === 'booking' ? 'booking' : back; st.focus = from.startsWith('appt:') ? `row-${from.slice(5)}` : 'book'; }
+    else if (a === 'appt') { st.panelPrev = st.panel === 'booking' ? 'booking' : 'upcoming'; st.panel = `appt:${el.dataset.id}`; st.focus = 'ad'; }
+    else if (a === 'arrive') { const x = st.appts.find((y) => y.id === el.dataset.id); x.status = 'arrived'; say(frame, `Đã xác nhận ${x.name} đã đến`); st.focus = 'detail-back'; }
+    else if (a === 'call') { st.doc.called = true; say(frame, 'Đã gọi Lâm Gia Bảo vào Ghế 1'); st.focus = 'start'; }
+    else if (a === 'start') { st.doc.started = true; say(frame, 'Bắt đầu khám Lâm Gia Bảo lúc 9:30'); st.focus = 'note'; }
+    else if (a === 'save') { st.doc.saved = '9:31'; say(frame, 'Đã lưu ghi chú'); st.focus = 'note'; }
+    else return;
+    ev.preventDefault();
+    render(frame);
+  }
+
+  function submit(frame) {
+    const st = frame._st, f = st.form;
+    if (!f.name.trim() || at(st, f.c, f.t)) return;
+    const id = `n${st.appts.length + 1}`;
+    st.appts.push({ id, t: f.t, c: f.c, name: f.name.trim(), svc: f.svc, status: 'pending' });
+    st.lastNew = id; st.panel = 'booked'; st.focus = 'res';
+    say(frame, `Đã đặt lịch ${f.name.trim()} lúc ${TIMES[f.t]}, ${CHAIRS[f.c].name}`);
+    render(frame);
+  }
+
+  function updateReason(frame) {
+    const st = frame._st, f = st.form;
+    const reason = !f.name.trim() ? 'Nhập họ tên bệnh nhân' : at(st, f.c, f.t) ? 'Khung đã có người, chọn khung khác' : '';
+    const btn = frame.querySelector('[data-test="book-submit"]');
+    frame.querySelector('[data-test="book-reason"]').textContent = reason;
+    btn.disabled = !!reason;
+    const pick = frame.querySelector('[data-test="pick"] .rx-cell__name');
+    if (pick) pick.textContent = f.name || 'Lượt mới';
+  }
+
+  document.querySelectorAll('.rx-frame').forEach((frame) => {
+    frame._st = initialState(frame);
+    render(frame);
+    frame.addEventListener('click', (ev) => {
+      const el = ev.target.closest('[data-act]');
+      if (el && frame.contains(el) && !['query', 'fname', 'note', 'fsvc', 'fchair', 'ftime'].includes(el.dataset.act)) act(frame, el, ev);
+      else if (frame._st.menu && !ev.target.closest('.rx-acct')) { frame._st.menu = false; render(frame); }
+    });
+    frame.addEventListener('submit', (ev) => { ev.preventDefault(); submit(frame); });
+    frame.addEventListener('input', (ev) => {
+      const st = frame._st, el = ev.target, a = el.dataset.act;
+      if (a === 'query') { st.query = el.value; render(frame); }
+      else if (a === 'fname') { st.form.name = el.value; updateReason(frame); }
+      else if (a === 'note') {
+        st.doc.note = el.value; st.doc.saved = null;
+        const b = frame.querySelector('[data-test="save-note"]'); b.disabled = !el.value.trim();
+        frame.querySelector('[data-test="note-status"]').textContent = el.value.trim() ? '' : 'Nhập ghi chú để lưu';
+      }
+    });
+    frame.addEventListener('change', (ev) => {
+      const st = frame._st, el = ev.target, a = el.dataset.act;
+      if (a === 'fsvc') { st.form.svc = el.value; render(frame); }
+      else if (a === 'fchair') { st.form.c = +el.value; render(frame); }
+      else if (a === 'ftime') { st.form.t = +el.value; render(frame); }
+    });
+    frame.addEventListener('keydown', (ev) => {
+      const st = frame._st;
+      if (ev.key === 'Escape') {
+        if (st.menu) { st.menu = false; st.focus = 'account'; render(frame); ev.preventDefault(); }
+        else if (st.panel !== 'upcoming' && st.view === 'schedule' && st.role === 'reception') { const btn = frame.querySelector('[data-act="close"]'); if (btn) act(frame, btn, ev); }
+        return;
+      }
+      if (st.menu && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(ev.key)) {
+        const items = [...frame.querySelectorAll('[role="menuitemradio"]')];
+        const i = items.indexOf(document.activeElement);
+        const n = ev.key === 'Home' ? 0 : ev.key === 'End' ? items.length - 1 : (i + (ev.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+        items[n].focus(); ev.preventDefault();
+      }
+      if (ev.key === 'Tab' && st.menu) { st.menu = false; render(frame); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

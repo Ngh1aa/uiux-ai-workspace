@@ -36,3 +36,5 @@ benchmarks/runs/*/shots/*-1024-*.jpg
 # referenced image instead of requiring a later rerender to reproduce its hash.
 !benchmarks/runs/2026-10-29-*/shots/*-dark.jpg
 !benchmarks/runs/2026-10-29-*/shots/*-1024-*.jpg
+!benchmarks/runs/2026-10-30-*/shots/*-dark.jpg
+!benchmarks/runs/2026-10-30-*/shots/*-1024-*.jpg

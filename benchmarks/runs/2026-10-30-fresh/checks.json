@@ -1,0 +1,684 @@
+{
+  "version": 2,
+  "run": "2026-10-30-fresh",
+  "checked_at": "2026-10-30T10:08:19.788Z",
+  "source": {
+    "repo_commit": "19c0dec1b679e841f55858e5fb67ec75e99b7a43",
+    "dirty": true,
+    "checker_sha256": "91db7c0e25011aa06e49179d78ddedcf7a00e0719cadbc17bc850a7b8ab5166d",
+    "checkers": {
+      "render": "91db7c0e25011aa06e49179d78ddedcf7a00e0719cadbc17bc850a7b8ab5166d",
+      "flow": "09b08a46ec93f8ed8a66a7f6627ced6dca82e7b2300c146d68e5b7fd85d8fb2b",
+      "static": "bca11075e7b5e05b973c08798c4d322a4a747ac33e01fc3f05ed2286cd839ee0"
+    },
+    "patch": {
+      "path": "provenance/local.patch",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "manifest": {
+      "path": "provenance/manifest.json",
+      "sha256": "f4bc3865e6ae62c39cfc3ce126438bf5ec5f0b181381604ca1e55ef624a5446e"
+    },
+    "browser_test_sha256": "688498bcf09eb6c7c041f59ad11df2761325721c5e70f370415daf82a604bc73",
+    "browser_exit_code": 0,
+    "run_files": {
+      "01-landing/brand.css": "a08a2b011cddd5326487f3c94bf575be18f89b0ad50f73fc99cef29117ea5076",
+      "01-landing/index.html": "29c7cae2d251a22dfd7be9ae80318d85651a843d51326e38bd9310d389badb0b",
+      "01-landing/scenarios.cjs": "4c2d865f09abdc308aea0b6d3a55ab1e20ad454523ab981ae4e3fc1fdddecbef",
+      "02-app/brand.css": "fb65b42fbf93af9fea3cd21a433d56104a12fbb587b792a30e40a0e27caa70af",
+      "02-app/index.html": "a61d9cae7313a64bc3cfae79a7b58cac24490389610594b0110e7b9c9b128283",
+      "02-app/scenarios.cjs": "d4bee505df06554a7afd25cb47cc589a61c97f95168eb89157254f347d9bc52e",
+      "03-dashboard/brand.css": "6236b0f2dba5db8e6da133a69ce883c9126e2c62c254762853b98180661934b8",
+      "03-dashboard/index.html": "eedd358a2189b689843ac171c959aa9765d6dd45f87ff14306817894aa27ff0d",
+      "03-dashboard/scenarios.cjs": "51d9f0f750e6887ada36f41902ff55c9db5ed63344f2b80c65eb2671c758cf55",
+      "04-multi-role/brand.css": "60b124d7785d4665f3fc20053849a3d7b8e8fa59b5d2da39b13240979cd6d223",
+      "04-multi-role/index.html": "30044894ff206fb4ec456611e98445ec4fc1a2a91f3e2d2f6fb9f96cfbaf1125",
+      "04-multi-role/scenarios.cjs": "bbc27c29e20c8d5f7351d9ef9c2db148a97fc000f6674db193733110e071da37",
+      "05-native/brand.css": "14fb58a639643376175f2a0683dcf444029a8171112770895532b0e1b59a4da3",
+      "05-native/index.html": "b9c29ea47c8e1704a4946f3428c9a8327ba67be1fb1ea428a1c21af56cfb7e4c",
+      "05-native/scenarios.cjs": "ee25421708a67373cf5535087af98063304615d8d669df470c50237fbc2fca6f",
+      "flow.browser.cjs": "688498bcf09eb6c7c041f59ad11df2761325721c5e70f370415daf82a604bc73"
+    },
+    "images": {
+      "shots/01-landing-1024-dark.jpg": "22995510f34bb61b3c3ba464ea240bcb183fa83a1637cad92b2ac45e65150ca4",
+      "shots/01-landing-1024-light.jpg": "6b0462c93ecfad9f60a418662834d6b500a59c688fbda902492e2d0498175657",
+      "shots/01-landing-1280-dark.jpg": "aaa9d58619738638f3ce0231fae554a205c820d18ad598b6d7e96331d09a190e",
+      "shots/01-landing-1280-light.jpg": "625cdd87eb61e6b1fa4c9e7e4a152a6229c3fe9ed8945821bf8dba67446c7e29",
+      "shots/01-landing-1440-dark.jpg": "566da7d3098d669da8fb270508bbfcb7dd1c74b0f3b3603bc6383b864a880bf3",
+      "shots/01-landing-1440-light.jpg": "c6decb2416f7b21adcf6eb4de02b3735957fc83eb8d8e3c98202130501a4a61a",
+      "shots/01-landing-390-dark.jpg": "3b3173c728572c6f995c0557a10d74036e1d8de1c2b11f4f8f63785b11af58b9",
+      "shots/01-landing-390-light.jpg": "cddb297b870009b88c4239aefe3d6ba0f15e9ecc0bf8ac773ce1d6ed6346a134",
+      "shots/02-app-1024-dark.jpg": "11167b8c679d631c232fb2617f172cf2f87325bc5e230ea5c8d97e8afeca9608",
+      "shots/02-app-1024-light.jpg": "510061a19e73c0b519c8118259a5e23f53eb6147702dfcd2aa8a42a163907218",
+      "shots/02-app-1280-dark.jpg": "38df8e43b9136cb7b128e68ea69b6afd43b51bc4c0ac252d7972492b6938728c",
+      "shots/02-app-1280-light.jpg": "4c79bc2c62168c6922177bd5aa675632de9ccf992980c46ee3d469d419ec3881",
+      "shots/02-app-1440-dark.jpg": "c81cf87832780f978b4cd96e9f93fbdff512c51c84a74b3facfa0bcfd0cdaf3a",
+      "shots/02-app-1440-light.jpg": "2811205e96c22e872d35cbac55047c3a3d7e0ca0fd38a4b21703aae485d0639c",
+      "shots/02-app-390-dark.jpg": "8fe27245c7f316b2d8b512c40d0ac8fbd42c14a992c9916346038faecf0b04c6",
+      "shots/02-app-390-light.jpg": "84aee927992e5a68700a7b934d3a7867c243b1aaa21c044a2067fde0dce12b2e",
+      "shots/03-dashboard-1024-dark.jpg": "23a053081b6e3d94416cdd06927f181a9cfe3941ce0b7e94d0752717baf20568",
+      "shots/03-dashboard-1024-light.jpg": "4107ac45f75b266ab924ed8a525c4f91e01f2c52756a8e8bf50933ba0dc350be",
+      "shots/03-dashboard-1280-dark.jpg": "939d3141ef8349ff0d729c25cdd9b440485db84b112cd0469aa5b231b06cc7c3",
+      "shots/03-dashboard-1280-light.jpg": "c5a55108d64952a44b158d26ef5e20d328e56d15dc88651b7e837b45d11edb38",
+      "shots/03-dashboard-1440-dark.jpg": "e829b4393edd9a780c43dee4f14701bb376129078ca2266316daf6d1b5ca412f",
+      "shots/03-dashboard-1440-light.jpg": "dd1382035e686a41c849c262910f724eb2677d0b2d9150e214ec22b1d3d8aae5",
+      "shots/03-dashboard-390-dark.jpg": "2f4de7d31fc8e54ba888084a76521a586491aa2007bebd2a0a258e775bc46a99",
+      "shots/03-dashboard-390-light.jpg": "e417f7db57ef1c35ca7f7e4d5f4f8fe74ada0cc14327aab4be0d93f06edbb9f0",
+      "shots/04-multi-role-1024-dark.jpg": "77c736b267d5aa0277e71ecce1b7b11f3959a991ecd33b462a796a2f25f33bbe",
+      "shots/04-multi-role-1024-light.jpg": "2bc22d393e8401684884536ecba4f154b43f2ecdda5b9dbf53d2ed27d9356dc3",
+      "shots/04-multi-role-1280-dark.jpg": "13fa178f14e21f01464797d8d9c5522d221da368a8ade11d359040e10cab9a0d",
+      "shots/04-multi-role-1280-light.jpg": "3b5653aad7c4b0df303f89a7be65c510fe39e3d5a1c1aa9d023a0b5e9a2cea2e",
+      "shots/04-multi-role-1440-dark.jpg": "b71b8f59b43354d41a6469ead1fa4cdc1e9f2a8284a62371e0e90137347c3c00",
+      "shots/04-multi-role-1440-light.jpg": "52f5801317cf0754ac02cce24ac873b2da80444403e4e79bfd210f061b4576fd",
+      "shots/04-multi-role-390-dark.jpg": "e258e98b429771426b158b235cea244988861271f8725a55556a2489235d5245",
+      "shots/04-multi-role-390-light.jpg": "0f6016500bb2d60101b6e1f90f6bfcef6f2a5a8dae24412cbba31ac102a37dfc",
+      "shots/05-native-1024-dark.jpg": "e6aa2b3283add2404acbf6c25dac68402d83743068bd666fe2e13557a926782a",
+      "shots/05-native-1024-light.jpg": "5c0ba3141b9725ec87d43bbd9e0eafab5cd3467bb550bf29acd20de6d20af047",
+      "shots/05-native-1280-dark.jpg": "935ddcbc23455c62c74f089c9b8f065de0895bde70641f63c22de34c07564e67",
+      "shots/05-native-1280-light.jpg": "f55f70e60d7527791fc9ee84d7d3c9b602e52fdf44e2641dc84d78b339d0e4c3",
+      "shots/05-native-1440-dark.jpg": "2a6fef454707841935f59a9401e0cccf638c630e24e1540f3d4820ebd81d369c",
+      "shots/05-native-1440-light.jpg": "5658036d64744a67b80ecbb32464c3d8c668e202d08aced08967b70644f0a0ea",
+      "shots/05-native-390-dark.jpg": "7e86850318939f259218e1e346775fc40acdef07551166700887f96b9e1c68df",
+      "shots/05-native-390-light.jpg": "84d6232e2cfc39033fc51fc8491175213d356aebd546babe6e56fa1391078cbf",
+      "shots/behavior/01-landing-end.png": "bc3e6ae1d42197f25f32d86226300355aba18a961c3746c306202b7ef5982105",
+      "shots/behavior/02-app-end.png": "0d47436a9364bbcab7337b636e1d614105896475ca560503812ab3560a0dcca7",
+      "shots/behavior/03-dashboard-end.png": "8c028b77cd62f63745432c80d51849aa7f9bd9e7044b5a12816c993022c48f53",
+      "shots/behavior/04-multi-role-end.png": "3244593fee7f1644189ad7e5e026ec96dbed8607cdcb0bf77e37a4b702ce8ef0",
+      "shots/behavior/05-native-end.png": "4b88acc42b765f79c904b8f6337f96cf1feba12fb05fe3efe225595ad3cd7aac"
+    }
+  },
+  "briefs": {
+    "01-landing": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "NOT_RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "01-landing/NOTES.md": "f305eba6025fdc98a0deb5c19925cf13d736e1975059bb9bead9ad8938a47a34",
+          "01-landing/brand.css": "a08a2b011cddd5326487f3c94bf575be18f89b0ad50f73fc99cef29117ea5076",
+          "01-landing/index.html": "29c7cae2d251a22dfd7be9ae80318d85651a843d51326e38bd9310d389badb0b",
+          "01-landing/scenarios.cjs": "4c2d865f09abdc308aea0b6d3a55ab1e20ad454523ab981ae4e3fc1fdddecbef"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "01-landing.render.json",
+        "sha256": "421e894e72f901de12aa9497ffd71d20dd01fa918fe24d7db3b3bc37d1bc38be"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "01-landing.flow-static.json",
+          "sha256": "5b7d0a608dda5c87f45820d4bf87ceaebb345fb858a303850267c31d0ef4daae"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Nút khoá kèm lý do: Chọn lớp → Chọn ngày → Chọn ca; ngày hiện thứ + ngày tháng",
+              "status": "PASS"
+            },
+            {
+              "name": "Bàn xoay cơ bản, ngày đầu, ca sáng hết chỗ: ô ca bị khoá, nhãn \"Hết chỗ\"",
+              "status": "PASS"
+            },
+            {
+              "name": "Lỗi vượt chỗ và số điện thoại sai → sửa → nút mở khoá, tổng 2 × 450.000 ₫ = 900.000 ₫",
+              "status": "PASS"
+            },
+            {
+              "name": "Xác nhận có Hủy: Hủy quay về form, giữ nguyên lớp, ngày, ca, số người, liên hệ",
+              "status": "PASS"
+            },
+            {
+              "name": "Đổi sang Nặn tay → xác nhận 700.000 ₫ → kết quả có mã; thẻ trạng thái hiện ở đầu và cuối trang; số chỗ còn giảm 2",
+              "status": "PASS"
+            },
+            {
+              "name": "Đóng hộp giữa chừng rồi mở lại: bản nháp còn nguyên",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "57b54736582749198db717018b8d187ae2f51d5b89bf57d3bd714a196601a140"
+        }
+      },
+      "issues": []
+    },
+    "02-app": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 8,
+      "axe": "NOT_RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "02-app/NOTES.md": "11e20cbcff6ce03ac8dae60e27bd6da0060d9a8e4ad4c97a72a5e02e1967101b",
+          "02-app/brand.css": "fb65b42fbf93af9fea3cd21a433d56104a12fbb587b792a30e40a0e27caa70af",
+          "02-app/index.html": "a61d9cae7313a64bc3cfae79a7b58cac24490389610594b0110e7b9c9b128283",
+          "02-app/scenarios.cjs": "d4bee505df06554a7afd25cb47cc589a61c97f95168eb89157254f347d9bc52e"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "02-app.render.json",
+        "sha256": "4313a1cf8822683aebb1e8428b3da55adc33572c8d14f745f54f3c762f05f25d"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "02-app.flow-static.json",
+          "sha256": "77e364818e073e96b61f507cc99b913fbedabd9bb0835e7e17c9acf90f91c848"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Lịch của tôi: tab Đã qua hiện trạng thái rỗng có nút Tìm sân",
+              "status": "PASS"
+            },
+            {
+              "name": "Chi tiết sân: Tiếp tục khoá kèm lý do khi chưa chọn khung",
+              "status": "PASS"
+            },
+            {
+              "name": "Back: Chi tiết về Trang chủ hoặc Tìm sân tuỳ nơi vào; Đặt sân về Chi tiết đúng sân, giữ khung đã chọn",
+              "status": "PASS"
+            },
+            {
+              "name": "Đặt Sân Phú Nhuận 20:00: Hủy giữ form, xác nhận → Đã đặt sân → Lịch của tôi có lượt mới, trang chủ và số khung cập nhật",
+              "status": "PASS"
+            },
+            {
+              "name": "Kỳ Hoà 19:00 vừa bị đặt: báo lỗi, nút Đặt sân khoá kèm lý do, chọn 21:00 từ gợi ý → đặt thành công",
+              "status": "PASS"
+            },
+            {
+              "name": "Khung giờ trong form mở sheet riêng, khung đã đặt không chọn được, chọn xong về đúng form",
+              "status": "PASS"
+            },
+            {
+              "name": "Chạm 21:00 trên thẻ Sân Kỳ Hoà ở Tìm sân → Chi tiết đúng sân, khung chọn sẵn; Back về Tìm sân",
+              "status": "PASS"
+            },
+            {
+              "name": "Tìm sân: không có kết quả → Xóa tìm kiếm; lọc Quận 10 còn Sân Kỳ Hoà",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "57b54736582749198db717018b8d187ae2f51d5b89bf57d3bd714a196601a140"
+        }
+      },
+      "issues": [
+        {
+          "rule": "void",
+          "message": "Khoảng trống 489px cách đầu màn 323px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 489px cách đầu màn 323px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 1024,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 1024,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 1280,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 1280,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 1440,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Lịch của tôi",
+          "width": 1440,
+          "theme": "dark"
+        }
+      ]
+    },
+    "03-dashboard": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "NOT_RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "03-dashboard/NOTES.md": "829acd0ab1e666165b86ebf5d0d6953bbb82809bbcc569bb0524e9eca6c48f06",
+          "03-dashboard/brand.css": "6236b0f2dba5db8e6da133a69ce883c9126e2c62c254762853b98180661934b8",
+          "03-dashboard/index.html": "eedd358a2189b689843ac171c959aa9765d6dd45f87ff14306817894aa27ff0d",
+          "03-dashboard/scenarios.cjs": "51d9f0f750e6887ada36f41902ff55c9db5ed63344f2b80c65eb2671c758cf55"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "03-dashboard.render.json",
+        "sha256": "f3a5218be2e772c5b9cd807cc4f064995f3181d86d61280e7bc767ba71e2a270"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "03-dashboard.flow-static.json",
+          "sha256": "7fb6a131893bb31e8c86a75f2340fe934499e9136302df186dca1d9f141ad119"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Mở trang: 14 đơn chờ gửi, 3 quá hạn, 1 cần nhập gấp (LC-012), biểu đồ 7 cột, tổng 18.550, gửi trước #2041",
+              "status": "PASS"
+            },
+            {
+              "name": "Gửi đơn #2041 → Hủy: hộp thoại đóng, số không đổi, focus về đúng nút vừa bấm",
+              "status": "PASS"
+            },
+            {
+              "name": "Gửi đơn #2041 → xác nhận → thẻ kết quả; đơn chờ gửi 13, quá hạn 2, gửi trước chuyển sang #2045",
+              "status": "PASS"
+            },
+            {
+              "name": "Hoàn tác gửi đơn: #2041 trở lại, 14 và 3 như cũ",
+              "status": "PASS"
+            },
+            {
+              "name": "Ghi nhập hàng LC-012: nút xác nhận khoá khi chưa nhập, lý do hiện và gắn aria-describedby",
+              "status": "PASS"
+            },
+            {
+              "name": "Nhập 0 → lỗi, nút khoá; sửa thành 30 → xác nhận → kết quả; LC-012 còn 36 cuộn, đủ bán 12 ngày, cần nhập gấp 0, sắp hết hàng 3",
+              "status": "PASS"
+            },
+            {
+              "name": "Ghi nhập hàng KM-035 → Esc: không ghi, còn 4 cây",
+              "status": "PASS"
+            },
+            {
+              "name": "Gửi cả 3 đơn quá hạn: danh sách rỗng có thông báo, quá hạn 0, đơn chờ gửi 11",
+              "status": "PASS"
+            },
+            {
+              "name": "390px: không cuộn ngang",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "57b54736582749198db717018b8d187ae2f51d5b89bf57d3bd714a196601a140"
+        }
+      },
+      "issues": []
+    },
+    "04-multi-role": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "axe": "NOT_RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "04-multi-role/NOTES.md": "6f910a400d2cdf5b9ded7249b67f50c0666420a3003011e98bcb09d64aa8674f",
+          "04-multi-role/brand.css": "60b124d7785d4665f3fc20053849a3d7b8e8fa59b5d2da39b13240979cd6d223",
+          "04-multi-role/index.html": "30044894ff206fb4ec456611e98445ec4fc1a2a91f3e2d2f6fb9f96cfbaf1125",
+          "04-multi-role/scenarios.cjs": "bbc27c29e20c8d5f7351d9ef9c2db148a97fc000f6674db193733110e071da37"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "04-multi-role.render.json",
+        "sha256": "140795aebc740bc25f2c5f807d3c6e045a2e324aa5111d32c227cba9194f5120"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "04-multi-role.flow-static.json",
+          "sha256": "bee0c57fa7adf944c4aca01a94db0af9e50ecf252ad97487abd861e1df44fbb9"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "Xếp khách vãng lai vào Ghế 1 9:30 đã có người: hiện xung đột, nút Đặt lịch khoá có lý do",
+              "status": "PASS"
+            },
+            {
+              "name": "Chọn khung trống gợi ý → Đặt lịch → thẻ kết quả, lưới lịch và số Chưa đến cập nhật",
+              "status": "PASS"
+            },
+            {
+              "name": "Form trống: Đặt lịch khoá với lý do \"Nhập họ tên bệnh nhân\"; Hủy về danh sách Sắp đến",
+              "status": "PASS"
+            },
+            {
+              "name": "Chỉ bàn phím: Tab tới Đặt lịch, Enter, gõ tên, Enter đặt; Esc đóng thẻ kết quả",
+              "status": "PASS"
+            },
+            {
+              "name": "Dòng Hồ Ngọc Mai mở đúng lượt → Xác nhận đến → Quay lại về Sắp đến, danh sách cập nhật",
+              "status": "PASS"
+            },
+            {
+              "name": "Bác sĩ: dị ứng Penicillin riêng khối; Bắt đầu khám khoá có lý do → Gọi bệnh nhân → Bắt đầu khám → Lưu ghi chú",
+              "status": "PASS"
+            },
+            {
+              "name": "Chủ phòng khám: doanh thu tháng, Ghế 3 trạng thái rỗng, điều hướng ẩn mục của bác sĩ",
+              "status": "PASS"
+            },
+            {
+              "name": "Lễ tân mở Doanh thu: trạng thái không có quyền → Quay lại về Lịch hôm nay",
+              "status": "PASS"
+            },
+            {
+              "name": "Đổi vai trò bằng menu tài khoản (bàn phím): sang Chủ phòng khám mở Doanh thu, ẩn Đặt lịch; Esc đóng menu",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "evidence": "flow-results.json",
+          "sha256": "57b54736582749198db717018b8d187ae2f51d5b89bf57d3bd714a196601a140"
+        }
+      },
+      "issues": []
+    },
+    "05-native": {
+      "status": "PASS",
+      "checker_exit_code": 0,
+      "errors": 0,
+      "warnings": 16,
+      "axe": "NOT_RUN",
+      "sample": {
+        "source": "local-original; see NOTES.md",
+        "files": {
+          "05-native/NOTES.md": "6a504799a59f57ef8f0c90d93e034edded2d901d2652ec435683c852182616c8",
+          "05-native/brand.css": "14fb58a639643376175f2a0683dcf444029a8171112770895532b0e1b59a4da3",
+          "05-native/index.html": "b9c29ea47c8e1704a4946f3428c9a8327ba67be1fb1ea428a1c21af56cfb7e4c",
+          "05-native/scenarios.cjs": "ee25421708a67373cf5535087af98063304615d8d669df470c50237fbc2fca6f"
+        }
+      },
+      "render": {
+        "status": "PASS",
+        "evidence": "05-native.render.json",
+        "sha256": "15e2023a44e3f8f808f0bb6a98281a61b0ed13cdb3ebcfe1c95b279e3598656b"
+      },
+      "flow": {
+        "status": "PASS",
+        "static": {
+          "status": "PASS",
+          "errors": 0,
+          "evidence": "05-native.flow-static.json",
+          "sha256": "24db1d1a244f3363099d97013120b4e77df681f9fbfc410bdf1ac0a96b8d7f70"
+        },
+        "browser": {
+          "status": "PASS",
+          "browser_status": "PASS",
+          "scenarios": [
+            {
+              "name": "iOS: Hôm nay → Tập đọc: Cây dừa → Nộp ảnh (Hủy, rồi Chụp ảnh) → kết quả Đã nộp → Back về Hôm nay, bài chưa nộp 2 → 1",
+              "status": "PASS"
+            },
+            {
+              "name": "iOS: dòng Bài 14 mở đúng bài Toán, Back về Hôm nay giữ số đã cập nhật",
+              "status": "PASS"
+            },
+            {
+              "name": "iOS: Xin nghỉ chọn thứ Ba 21/10 → lỗi tại trường ngày, Gửi đơn khoá kèm lý do → chọn thứ Sáu 24/10 → gửi → kết quả và đơn mới trong danh sách",
+              "status": "PASS"
+            },
+            {
+              "name": "iOS: form trống khoá Gửi đơn với lý do Chưa chọn ngày nghỉ, rồi Chưa nhập lý do; đóng form về Hôm nay",
+              "status": "PASS"
+            },
+            {
+              "name": "iOS: Hủy đơn → hộp xác nhận, bấm Hủy giữ đơn Đã gửi → Hủy đơn lần nữa → xác nhận → kết quả, đơn chuyển Đã hủy, Back về Hôm nay",
+              "status": "PASS"
+            },
+            {
+              "name": "iOS: Chi tiết bài tập Back về Hôm nay; tab Đơn nghỉ và Bài tập chuyển viên đang chọn và hiện đúng danh sách",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: Hôm nay → Tập đọc: Cây dừa → Nộp ảnh (Hủy, rồi Chụp ảnh) → kết quả Đã nộp → Back về Hôm nay, bài chưa nộp 2 → 1",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: dòng Bài 14 mở đúng bài Toán, Back về Hôm nay giữ số đã cập nhật",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: Xin nghỉ chọn thứ Ba 21/10 → lỗi tại trường ngày, Gửi đơn khoá kèm lý do → chọn thứ Sáu 24/10 → gửi → kết quả và đơn mới trong danh sách",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: form trống khoá Gửi đơn với lý do Chưa chọn ngày nghỉ, rồi Chưa nhập lý do; đóng form về Hôm nay",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: Hủy đơn → hộp xác nhận, bấm Hủy giữ đơn Đã gửi → Hủy đơn lần nữa → xác nhận → kết quả, đơn chuyển Đã hủy, Back về Hôm nay",
+              "status": "PASS"
+            },
+            {
+              "name": "Android: Chi tiết bài tập Back về Hôm nay; tab Đơn nghỉ và Bài tập chuyển viên đang chọn và hiện đúng danh sách",
+              "status": "PASS"
+            },
+            {
+              "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+              "status": "PASS"
+            }
+          ],
+          "console_errors": [],
+          "native_status": "UNKNOWN",
+          "evidence": "flow-results.json",
+          "sha256": "57b54736582749198db717018b8d187ae2f51d5b89bf57d3bd714a196601a140"
+        },
+        "native_status": "UNKNOWN"
+      },
+      "issues": [
+        {
+          "rule": "void",
+          "message": "Khoảng trống 277px cách đầu màn 539px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 253px cách đầu màn 571px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 390,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 277px cách đầu màn 539px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 253px cách đầu màn 571px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 390,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 219px cách đầu màn 540px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 1024,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 195px cách đầu màn 572px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 1024,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 219px cách đầu màn 540px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 1024,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 195px cách đầu màn 572px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 1024,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 219px cách đầu màn 540px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 1280,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 195px cách đầu màn 572px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 1280,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 219px cách đầu màn 540px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 1280,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 195px cách đầu màn 572px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 1280,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 219px cách đầu màn 540px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 1440,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 195px cách đầu màn 572px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 1440,
+          "theme": "light"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 219px cách đầu màn 540px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "iOS Chi tiết bài tập",
+          "width": 1440,
+          "theme": "dark"
+        },
+        {
+          "rule": "void",
+          "message": "Khoảng trống 195px cách đầu màn 572px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace",
+          "level": "warning",
+          "screen": "Android Chi tiết bài tập",
+          "width": 1440,
+          "theme": "dark"
+        }
+      ]
+    }
+  }
+}
