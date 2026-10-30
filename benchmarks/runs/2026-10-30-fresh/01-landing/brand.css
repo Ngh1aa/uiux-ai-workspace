@@ -1,0 +1,153 @@
+/* Đất Nung: lớp thương hiệu. Men ngọc trên nền sứ mộc. Nạp sau generated/tokens.css. */
+
+:root {
+  --brand-900: #16322a;
+  --brand-800: #1f4137;
+  --brand-700: #274e42;
+  --brand-600: #2f5b4e;
+  --brand-100: #d6e6df;
+  --brand-50: #e7f0ec;
+
+  /* Màu đất và men chỉ dùng trong hình vẽ */
+  --dn-clay: #b07a52;
+  --dn-clay-deep: #8a5a38;
+  --dn-glaze: #7fae9c;
+  --dn-wheel: #c9d2cc;
+  --dn-ring: rgba(47, 91, 78, 0.16);
+
+  --ds-surface-page: #eef1ec;
+  --ds-surface-raised: #fbfcfa;
+  --ds-surface-sunken: #e2e8e3;
+  --ds-surface-brand-subtle: var(--brand-50);
+  --ds-surface-brand-strong: var(--brand-600);
+  --ds-text-primary: #1b211e;
+  --ds-text-secondary: #4d5852;
+  --ds-text-tertiary: #59645e;
+  --ds-text-brand: var(--brand-600);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #d5ddd7;
+  --ds-border-control: #7a867f;
+  --ds-action-disabled-bg: #e2e8e3;
+  --ds-action-disabled-text: #5f6a64;
+  --ds-feedback-neutral-surface: #e6ebe7;
+  --ds-feedback-neutral-border: #cdd6d0;
+  --ds-feedback-neutral-text: #333d38;
+  --ds-feedback-neutral-icon: #4d5852;
+
+  --ds-action-primary-bg: var(--brand-600);
+  --ds-action-primary-bg-hover: var(--brand-700);
+  --ds-action-primary-bg-pressed: var(--brand-800);
+  --ds-action-primary-text: #ffffff;
+  --ds-action-secondary-bg: #fbfcfa;
+  --ds-action-secondary-bg-hover: #edf2ee;
+  --ds-action-secondary-bg-pressed: #e2e8e3;
+  --ds-action-secondary-text: #1b211e;
+  --ds-action-secondary-border: #7a867f;
+  --ds-action-tertiary-bg-hover: var(--brand-50);
+  --ds-action-tertiary-bg-pressed: var(--brand-100);
+  --ds-action-tertiary-text: var(--brand-600);
+  --ds-action-selected-bg: var(--brand-50);
+  --ds-action-selected-text: var(--brand-900);
+  --ds-action-selected-indicator: var(--brand-600);
+  --ds-border-focus: var(--brand-600);
+
+  /* Hình khối: bo 14px cho mọi card, control dạng viên như mép cốc */
+  --ds-shape-card: 14px;
+  --ds-card-radius: 14px;
+  --ds-shape-control: 999px;
+  --ds-shape-sheet: 14px;
+  --ds-card-border: var(--ds-border-subtle);
+  --ds-elevation-raised: none;
+  --ds-size-control-sm: 44px;
+
+  --app-font-display: "Source Serif 4", Georgia, serif;
+  --app-font-body: "Be Vietnam Pro", system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand-tint-dark: #9fcbbb;
+    --dn-clay: #a8754f;
+    --dn-clay-deep: #7c5232;
+    --dn-glaze: #8dbcaa;
+    --dn-wheel: #34403a;
+    --dn-ring: rgba(159, 203, 187, 0.16);
+    --ds-surface-page: #121715;
+    --ds-surface-raised: #1a211e;
+    --ds-surface-sunken: #242d29;
+    --ds-surface-brand-subtle: #1c2c26;
+    --ds-surface-brand-strong: #2f5b4e;
+    --ds-text-primary: #edf2ee;
+    --ds-text-secondary: #b3c0b8;
+    --ds-text-tertiary: #9daaa3;
+    --ds-text-brand: var(--brand-tint-dark);
+    --ds-text-on-brand-strong: #ffffff;
+    --ds-border-subtle: #2d3833;
+    --ds-border-control: #85938b;
+    --ds-action-primary-bg: var(--brand-tint-dark);
+    --ds-action-primary-bg-hover: #b2d7c9;
+    --ds-action-primary-bg-pressed: #c4e1d6;
+    --ds-action-primary-text: #0e241d;
+    --ds-action-secondary-bg: #1a211e;
+    --ds-action-secondary-bg-hover: #242d29;
+    --ds-action-secondary-bg-pressed: #2d3833;
+    --ds-action-secondary-text: #edf2ee;
+    --ds-action-secondary-border: #75837b;
+    --ds-action-tertiary-bg-hover: #1c2c26;
+    --ds-action-tertiary-bg-pressed: #24392f;
+    --ds-action-tertiary-text: var(--brand-tint-dark);
+    --ds-action-selected-bg: #20352d;
+    --ds-action-selected-text: #dcefe7;
+    --ds-action-selected-indicator: var(--brand-tint-dark);
+    --ds-border-focus: var(--brand-tint-dark);
+    --ds-action-disabled-bg: #242d29;
+    --ds-action-disabled-text: #9daaa3;
+    --ds-feedback-neutral-surface: #242d29;
+    --ds-feedback-neutral-border: #3a4740;
+    --ds-feedback-neutral-text: #d7e0da;
+    --ds-feedback-neutral-icon: #b3c0b8;
+  }
+}
+
+:root[data-theme="dark"] {
+  --brand-tint-dark: #9fcbbb;
+  --dn-clay: #a8754f;
+  --dn-clay-deep: #7c5232;
+  --dn-glaze: #8dbcaa;
+  --dn-wheel: #34403a;
+  --dn-ring: rgba(159, 203, 187, 0.16);
+  --ds-surface-page: #121715;
+  --ds-surface-raised: #1a211e;
+  --ds-surface-sunken: #242d29;
+  --ds-surface-brand-subtle: #1c2c26;
+  --ds-surface-brand-strong: #2f5b4e;
+  --ds-text-primary: #edf2ee;
+  --ds-text-secondary: #b3c0b8;
+  --ds-text-tertiary: #9daaa3;
+  --ds-text-brand: var(--brand-tint-dark);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #2d3833;
+  --ds-border-control: #85938b;
+  --ds-action-primary-bg: var(--brand-tint-dark);
+  --ds-action-primary-bg-hover: #b2d7c9;
+  --ds-action-primary-bg-pressed: #c4e1d6;
+  --ds-action-primary-text: #0e241d;
+  --ds-action-secondary-bg: #1a211e;
+  --ds-action-secondary-bg-hover: #242d29;
+  --ds-action-secondary-bg-pressed: #2d3833;
+  --ds-action-secondary-text: #edf2ee;
+  --ds-action-secondary-border: #75837b;
+  --ds-action-tertiary-bg-hover: #1c2c26;
+  --ds-action-tertiary-bg-pressed: #24392f;
+  --ds-action-tertiary-text: var(--brand-tint-dark);
+  --ds-action-selected-bg: #20352d;
+  --ds-action-selected-text: #dcefe7;
+  --ds-action-selected-indicator: var(--brand-tint-dark);
+  --ds-border-focus: var(--brand-tint-dark);
+  --ds-action-disabled-bg: #242d29;
+  --ds-action-disabled-text: #9daaa3;
+  --ds-feedback-neutral-surface: #242d29;
+  --ds-feedback-neutral-border: #3a4740;
+  --ds-feedback-neutral-text: #d7e0da;
+  --ds-feedback-neutral-icon: #b3c0b8;
+}

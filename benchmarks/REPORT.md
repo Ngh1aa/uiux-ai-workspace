@@ -26,6 +26,11 @@ Review độc lập lượt mới gắn với packet/ảnh/điểm có hash; age
 | 2026-10-29-iterative-repair | Sửa tiếp | Có | 03-dashboard | M | 0 | 0 | PASS | 0 | 4.00 | 4 (mọi chiều) | Đạt |
 | 2026-10-29-iterative-repair | Đề mới (tái dùng) | Có | 04-multi-role | L | 0 | 18 | PASS | 0 | 4.15 | 4 (Bố cục, khoảng cách, Chữ, Màu, tương phản, Tương tác, phản hồi, Nội dung, câu chữ, Hợp nền tảng, co giãn, Tay nghề, dấu ấn) | Đạt |
 | 2026-10-29-iterative-repair | Đề mới (tái dùng) | Có | 05-native | L | 0 | 0 | PASS | 0 | 3.85 | 3 (Tay nghề, dấu ấn) | Chưa đạt |
+| 2026-10-30-fresh | Làm mới | Không | 01-landing | M | 0 | 0 | PASS | 0 | 4.25 | 4 (Bố cục, khoảng cách, Màu, tương phản, Tương tác, phản hồi, Hợp nền tảng, co giãn, Tay nghề, dấu ấn) | Đạt |
+| 2026-10-30-fresh | Làm mới | Không | 02-app | L | 0 | 8 | PASS | 0 | 4.10 | 4 (Phân cấp, Bố cục, khoảng cách, Chữ, Màu, tương phản, Nhất quán, Nội dung, câu chữ, Hợp nền tảng, co giãn, Tay nghề, dấu ấn) | Đạt |
+| 2026-10-30-fresh | Làm mới | Không | 03-dashboard | M | 0 | 0 | PASS | 0 | 4.25 | 4 (Bố cục, khoảng cách, Chữ, Màu, tương phản, Hợp nền tảng, co giãn, Tay nghề, dấu ấn) | Đạt |
+| 2026-10-30-fresh | Làm mới | Không | 04-multi-role | L | 0 | 0 | PASS | 0 | 4.10 | 4 (Phân cấp, Bố cục, khoảng cách, Chữ, Màu, tương phản, Nhất quán, Nội dung, câu chữ, Hợp nền tảng, co giãn, Tay nghề, dấu ấn) | Đạt |
+| 2026-10-30-fresh | Làm mới | Không | 05-native | L | 0 | 16 | PASS | 0 | 3.95 | 3.5 (Bố cục, khoảng cách, Tay nghề, dấu ấn) | Chưa đạt |
 
 ## Ghi chú từng lần chạy
 
@@ -37,3 +42,5 @@ Review độc lập lượt mới gắn với packet/ảnh/điểm có hash; age
 - **2026-10-29-fresh** (agent-heuristic, repo `d7000758c2e2aa273785455ae91d255fe3be04e0`), Ghi chú lượt mới: Agent fresh có ngữ cảnh sạch, không xem lời giải cũ. Sau tạo mới có sửa regression bởi root; đây là kết quả sau sửa, không phải điểm first-shot. SHA chỉ định baseline HEAD; code local được định danh bằng patch/manifest/hash. Native, backend, user research và human approval UNKNOWN. Điểm còn dưới ngưỡng được giữ nguyên.
 - **2026-10-29-iterative-repair**: code local chưa commit, manifest `5f7524c544ad5fa89a554edaf5dde1435641a3a6de1fcb4ccbd9a5fa5ed995ea`; native của đề 05 `UNKNOWN` (browser-only).
 - **2026-10-29-iterative-repair** (agent-heuristic, repo `d7000758c2e2aa273785455ae91d255fe3be04e0`), Ghi chú lượt mới: 01/02/03 sửa từ v2. 04/05 tái dùng đề mới; không coi là cải tiến lịch sử hoặc lượt fresh độc lập thứ hai. SHA chỉ định baseline HEAD; code local được định danh bằng patch/manifest/hash. Native, backend, user research và human approval UNKNOWN. Điểm còn dưới ngưỡng được giữ nguyên.
+- **2026-10-30-fresh**: code local chưa commit, manifest `f4bc3865e6ae62c39cfc3ce126438bf5ec5f0b181381604ca1e55ef624a5446e`; native của đề 05 `UNKNOWN` (browser-only).
+- **2026-10-30-fresh** (agent-heuristic, repo `19c0dec1b679e841f55858e5fb67ec75e99b7a43`), Ghi chú lượt mới: 

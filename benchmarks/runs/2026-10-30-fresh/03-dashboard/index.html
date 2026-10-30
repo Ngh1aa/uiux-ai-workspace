@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kho Len Nhỏ</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/fonts/pairs.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="brand.css">
+<style>
+  :root { --serif: "Source Serif 4", Georgia, serif; --gap: var(--ds-space-600); }
+  * { box-sizing: border-box; }
+  .ds-root [hidden] { display: none; }
+  html, body { margin: 0; background: var(--ds-surface-page); }
+  body { overflow-x: hidden; }
+  h1, h2, p { margin: 0; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: var(--ds-space-600) var(--ds-space-800) var(--ds-space-1200); }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-400); }
+  .brand { display: inline-flex; align-items: center; gap: var(--ds-space-200); font-weight: 700; font-size: 17px; color: var(--ds-text-primary); }
+  .brand__mark { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+  .today { color: var(--ds-text-secondary); font-size: 15px; }
+  .title { font-family: var(--serif); font-weight: 600; font-size: 30px; line-height: 1.2; letter-spacing: -0.01em; color: var(--ds-text-primary); margin-top: var(--ds-space-800); }
+
+  .status { margin-top: var(--ds-space-400); align-items: center; }
+  .status__text { flex: 1; font-weight: 500; }
+  .status .ds-button { flex: none; }
+
+  .hero { position: relative; margin-top: var(--ds-space-600); padding: var(--ds-space-800); border-radius: var(--ds-card-radius);
+    background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong);
+    outline: 1.5px dashed color-mix(in srgb, var(--ds-text-on-brand-strong) 45%, transparent); outline-offset: -8px;
+    display: grid; grid-template-columns: 1fr auto; gap: var(--ds-space-600); align-items: center; }
+  .hero__label { font-size: 15px; font-weight: 500; opacity: .92; }
+  .hero__value { font-family: var(--serif); font-weight: 600; font-size: 60px; line-height: 1.05; font-variant-numeric: tabular-nums; margin-top: var(--ds-space-100); }
+  .hero__next { margin-top: var(--ds-space-200); font-size: 15px; }
+  .hero__next strong { font-weight: 600; }
+  .hero__stats { display: flex; gap: 0; }
+  .hero__stat { display: flex; flex-direction: column; gap: var(--ds-space-100); padding: 0 var(--ds-space-600); min-width: 132px; }
+  .hero__stat + .hero__stat { border-left: 1px solid color-mix(in srgb, var(--ds-text-on-brand-strong) 30%, transparent); }
+  .hero__stat span { font-size: 14px; opacity: .92; }
+  .hero__stat strong { font-family: var(--serif); font-size: 32px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+  .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--ds-space-800); }
+  .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .col-12 { grid-column: span 12; }
+  .sec { display: flex; flex-direction: column; gap: var(--ds-space-300); min-width: 0; }
+  .sec h2 { font-family: var(--serif); font-weight: 600; font-size: 21px; line-height: 1.25; color: var(--ds-text-primary); }
+  .sec__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ds-space-400); flex-wrap: wrap; }
+  .panel { background: var(--ds-surface-raised); border: 1px solid var(--ds-border-subtle); border-radius: var(--ds-card-radius); overflow: hidden; }
+
+  .stock { width: 100%; border-collapse: collapse; }
+  .stock th { text-align: left; font-size: 13px; font-weight: 600; color: var(--ds-text-secondary); padding: var(--ds-space-300) var(--ds-space-400); border-bottom: 1px solid var(--ds-border-subtle); white-space: nowrap; }
+  .stock td { padding: var(--ds-space-300) var(--ds-space-400); vertical-align: middle; border-top: 1px solid var(--ds-border-subtle); }
+  .stock tbody tr:first-child td { border-top: 0; }
+  .stock .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .stock .act { text-align: right; width: 1%; }
+  .stock tr.is-urgent td { background: var(--ds-feedback-warning-surface); }
+  .prod { display: flex; flex-direction: column; }
+  .prod__name { font-weight: 600; color: var(--ds-text-primary); }
+  .prod__code { font-size: 13px; color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; }
+  .ds-badge { font-size: 13px; }
+  .btn-row { white-space: nowrap; }
+  @media (min-width: 1200px) { .prod__name { white-space: nowrap; } .stock th, .stock td { padding-inline: var(--ds-space-300); } .stock th:first-child, .stock td:first-child { padding-left: var(--ds-space-500); } }
+
+  .orders { list-style: none; margin: 0; padding: 0; }
+  .order { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "who late" "where act"; gap: var(--ds-space-100) var(--ds-space-400); align-items: center; padding: var(--ds-space-300) var(--ds-space-500); }
+  .order + .order { border-top: 1px solid var(--ds-border-subtle); }
+  .order__who { grid-area: who; font-weight: 600; }
+  .order__id { font-variant-numeric: tabular-nums; }
+  .order__late { grid-area: late; justify-self: end; }
+  .order__where { grid-area: where; display: inline-flex; align-items: center; gap: var(--ds-space-100); color: var(--ds-text-secondary); font-size: 14px; }
+  .order__act { grid-area: act; justify-self: end; }
+  .orders-empty { display: flex; align-items: center; gap: var(--ds-space-300); padding: var(--ds-space-500); color: var(--ds-feedback-success-text); font-weight: 500; }
+  .orders-empty .ds-icon { color: var(--ds-feedback-success-icon); }
+
+  .total { font-size: 15px; color: var(--ds-text-secondary); }
+  .total strong { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ds-text-primary); font-variant-numeric: tabular-nums; }
+  .chart { list-style: none; margin: 0; padding: var(--ds-space-500) var(--ds-space-600) var(--ds-space-400); display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--ds-space-400); align-items: end; height: 260px; }
+  .bar { display: flex; flex-direction: column; align-items: center; height: 100%; min-width: 0; }
+  .bar__track { flex: 1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: var(--ds-space-100); }
+  .bar__val { font-size: 13px; font-weight: 600; color: var(--ds-text-primary); font-variant-numeric: tabular-nums; }
+  .bar__col { width: min(100%, 72px); height: var(--h); background: var(--ds-text-brand); border-radius: 6px 6px 2px 2px; }
+  .bar__day { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: var(--ds-text-secondary); line-height: 1.3; padding-top: var(--ds-space-100); }
+  .bar__day b { color: var(--ds-text-primary); font-weight: 600; }
+
+  .dlg__title { font-family: var(--serif); font-weight: 600; font-size: 22px; line-height: 1.25; }
+  .kv { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: var(--ds-space-200) var(--ds-space-400); }
+  .kv dt { color: var(--ds-text-secondary); }
+  .kv dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .reason { margin: 0; font-size: 14px; color: var(--ds-text-secondary); }
+  .reason.is-error { color: var(--ds-feedback-danger-text); font-weight: 500; }
+  .preview { padding: var(--ds-space-300) var(--ds-space-400); border-radius: var(--ds-shape-control); background: var(--ds-surface-sunken); }
+  .ds-dialog .ds-button { min-height: 44px; }
+
+  @media (max-width: 1199px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .col-8, .col-4, .col-12 { grid-column: auto; }
+  }
+  @media (max-width: 1023px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero__stats { flex-wrap: wrap; }
+    .hero__stat:first-child { padding-left: 0; }
+  }
+  @media (max-width: 699px) {
+    .wrap { padding: var(--ds-space-400) var(--ds-space-400) var(--ds-space-1000); }
+    .title { font-size: 26px; margin-top: var(--ds-space-600); }
+    .hero { padding: var(--ds-space-600); gap: var(--ds-space-500); }
+    .hero__value { font-size: 52px; }
+    .hero__stats { display: flex; flex-direction: column; }
+    .hero__stat { flex-direction: row; align-items: baseline; justify-content: space-between; min-width: 0; padding: var(--ds-space-200) 0; }
+    .hero__stat + .hero__stat { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--ds-text-on-brand-strong) 30%, transparent); }
+    .hero__stat strong { font-size: 24px; }
+    .grid { gap: var(--ds-space-800); margin-top: var(--ds-space-800); }
+    .stock thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .stock, .stock tbody { display: block; }
+    .stock tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "prod prod" "left days" "rate rate" "act act"; gap: var(--ds-space-200) var(--ds-space-300); padding: var(--ds-space-400); border-top: 1px solid var(--ds-border-subtle); }
+    .stock tbody tr:first-child { border-top: 0; }
+    .stock tr.is-urgent { background: var(--ds-feedback-warning-surface); }
+    .stock td, .stock tr.is-urgent td { display: block; padding: 0; border: 0; background: none; }
+    .stock td.c-prod { grid-area: prod; } .stock td.c-days { grid-area: days; text-align: right; }
+    .stock td.c-left { grid-area: left; text-align: left; align-self: center; } .stock td.c-rate { grid-area: rate; text-align: left; white-space: normal; }
+    .stock td.c-act { grid-area: act; width: auto; }
+    .stock td.c-left::before, .stock td.c-rate::before { content: attr(data-label) " "; color: var(--ds-text-secondary); font-size: 14px; }
+    .stock td.c-act .ds-button { width: 100%; }
+    .order { padding: var(--ds-space-300) var(--ds-space-400); }
+    .chart { padding: var(--ds-space-400) var(--ds-space-300) var(--ds-space-300); gap: var(--ds-space-100); height: 230px; }
+    .bar__val { font-size: 12px; }
+    .bar__day { font-size: 12px; }
+  }
+</style>
+</head>
+<body class="ds-root">
+<!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 11.5a1 1 0 0 1-1 .9h-9a1 1 0 0 1-1-.9z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-pin" viewBox="0 0 24 24"><path d="M12 20.5s6-5.4 6-10.5a6 6 0 1 0-12 0c0 5.1 6 10.5 6 10.5Z"/><circle cx="12" cy="10" r="2.25"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+</svg>
+<!-- icons:end -->
+<div class="wrap">
+  <header class="top">
+    <span class="brand"><span class="brand__mark" aria-hidden="true"><svg class="ds-icon ds-icon--sm"><use href="#ds-i-bag"/></svg></span>Len Nhỏ</span>
+    <time class="today" datetime="2026-10-30">Thứ Sáu, 30/10/2026</time>
+  </header>
+
+  <main>
+    <h1 class="title">Việc kho hôm nay</h1>
+
+    <div class="ds-banner ds-banner--success status" role="status" tabindex="-1" id="status" data-test="result" data-result hidden>
+      <svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>
+      <p class="status__text" data-test="result-text"></p>
+      <button class="ds-button ds-button--sm ds-button--secondary" type="button" data-test="result-undo" id="undo">Hoàn tác</button>
+      <button class="ds-icon-button" type="button" aria-label="Đóng" data-test="result-close" id="status-close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-x"/></svg></button>
+    </div>
+
+    <section class="hero" aria-labelledby="hero-label">
+      <div>
+        <p class="hero__label" id="hero-label">Đơn chờ gửi</p>
+        <p class="hero__value" data-test="kpi-pending">14</p>
+        <p class="hero__next" data-test="next-order"></p>
+      </div>
+      <div class="hero__stats">
+        <p class="hero__stat"><span>Quá hạn gửi</span><strong data-test="kpi-overdue">3</strong></p>
+        <p class="hero__stat"><span>Cần nhập gấp</span><strong data-test="kpi-urgent">1</strong></p>
+        <p class="hero__stat"><span>Sắp hết hàng</span><strong data-test="kpi-low">4</strong></p>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="sec col-8" aria-labelledby="h-stock">
+        <div class="sec__head"><h2 id="h-stock">Sắp hết hàng</h2></div>
+        <div class="panel">
+          <table class="stock">
+            <thead><tr><th scope="col">Sản phẩm</th><th scope="col" class="num">Còn</th><th scope="col" class="num">Bán mỗi ngày</th><th scope="col" class="num">Đủ bán</th><th scope="col"><span class="ds-visually-hidden">Thao tác</span></th></tr></thead>
+            <tbody id="stock-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sec col-4" aria-labelledby="h-orders">
+        <div class="sec__head"><h2 id="h-orders">Đơn quá hạn gửi</h2></div>
+        <div class="panel" id="orders-panel"></div>
+      </section>
+
+      <section class="sec col-12" aria-labelledby="h-rev">
+        <div class="sec__head">
+          <h2 id="h-rev">Doanh thu 7 ngày (nghìn đồng)</h2>
+          <p class="total">Tổng <strong data-test="rev-total">18.550</strong></p>
+        </div>
+        <div class="panel">
+          <ol class="chart" data-test="rev-chart" aria-labelledby="h-rev">
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.150</span><span class="bar__col" style="--h:43%" aria-hidden="true"></span></span><span class="bar__day"><b>T6</b>23/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">3.480</span><span class="bar__col" style="--h:69.6%" aria-hidden="true"></span></span><span class="bar__day"><b>T7</b>24/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">4.120</span><span class="bar__col" style="--h:82.4%" aria-hidden="true"></span></span><span class="bar__day"><b>CN</b>25/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">1.890</span><span class="bar__col" style="--h:37.8%" aria-hidden="true"></span></span><span class="bar__day"><b>T2</b>26/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.260</span><span class="bar__col" style="--h:45.2%" aria-hidden="true"></span></span><span class="bar__day"><b>T3</b>27/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.010</span><span class="bar__col" style="--h:40.2%" aria-hidden="true"></span></span><span class="bar__day"><b>T4</b>28/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.640</span><span class="bar__col" style="--h:52.8%" aria-hidden="true"></span></span><span class="bar__day"><b>T5</b>29/10</span></li>
+          </ol>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<dialog class="ds-dialog" id="dlg-restock" aria-labelledby="restock-title" data-test="restock-dialog">
+  <form class="ds-dialog__body" id="restock-form" method="dialog" novalidate>
+    <h2 class="dlg__title" id="restock-title">Ghi nhập hàng</h2>
+    <dl class="kv">
+      <dt>Sản phẩm</dt><dd data-test="restock-product" id="restock-product"></dd>
+      <dt>Còn</dt><dd id="restock-left"></dd>
+    </dl>
+    <div class="ds-field">
+      <label class="ds-field__label" for="restock-qty" id="restock-qty-label">Số lượng nhập</label>
+      <div class="ds-field__wrap"><input class="ds-field__control" id="restock-qty" data-test="restock-qty" type="number" inputmode="numeric" min="1" max="999" step="1" autocomplete="off"></div>
+    </div>
+    <dl class="kv preview" id="restock-preview" data-test="restock-preview" hidden>
+      <dt>Còn sau khi nhập</dt><dd id="restock-after"></dd>
+      <dt>Đủ bán</dt><dd id="restock-days"></dd>
+    </dl>
+    <p class="reason" id="restock-reason" data-test="restock-reason" data-reason>Nhập số lượng từ 1 đến 999</p>
+    <div class="ds-dialog__actions">
+      <button class="ds-button ds-button--secondary" type="button" data-test="dialog-cancel" data-close>Hủy</button>
+      <button class="ds-button ds-button--primary" type="submit" id="restock-confirm" data-test="restock-confirm" data-confirm-action data-to="status" aria-describedby="restock-reason" disabled>Ghi nhập hàng</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="ds-dialog" id="dlg-send" aria-labelledby="send-title" data-test="send-dialog">
+  <form class="ds-dialog__body" id="send-form" method="dialog">
+    <h2 class="dlg__title" id="send-title">Gửi đơn</h2>
+    <dl class="kv">
+      <dt>Đơn</dt><dd data-test="send-order" id="send-id"></dd>
+      <dt>Khách</dt><dd id="send-name"></dd>
+      <dt>Nơi nhận</dt><dd id="send-city"></dd>
+      <dt>Quá hạn gửi</dt><dd id="send-late"></dd>
+    </dl>
+    <div class="ds-dialog__actions">
+      <button class="ds-button ds-button--secondary" type="button" data-test="send-cancel" data-close>Hủy</button>
+      <button class="ds-button ds-button--primary" type="submit" data-test="send-confirm" data-confirm-action data-to="status">Gửi đơn</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const LOW = 7, URGENT = 2;
+  let state = {
+    pending: 14,
+    products: [
+      { code: 'LC-012', name: 'Len cotton màu kem', left: 6, rate: 3, unit: 'cuộn' },
+      { code: 'KM-035', name: 'Kim móc 3,5 mm', left: 4, rate: 1, unit: 'cây' },
+      { code: 'LW-207', name: 'Len lông cừu màu rêu', left: 9, rate: 2, unit: 'cuộn' },
+      { code: 'LC-031', name: 'Len cotton màu hồng đất', left: 15, rate: 2, unit: 'cuộn' }
+    ],
+    orders: [
+      { id: '2041', name: 'chị Hà', city: 'Đà Nẵng', late: 2 },
+      { id: '2045', name: 'anh Tuấn', city: 'Hà Nội', late: 1 },
+      { id: '2047', name: 'chị Mai', city: 'Cần Thơ', late: 1 }
+    ]
+  };
+  let before = null;
+  const clone = s => JSON.parse(JSON.stringify(s));
+  const days = p => Math.floor(p.left / p.rate);
+  const USE = {
+    'ds-i-alert': '<use href="#ds-i-alert"/>', 'ds-i-check': '<use href="#ds-i-check"/>',
+    'ds-i-clock': '<use href="#ds-i-clock"/>', 'ds-i-pin': '<use href="#ds-i-pin"/>'
+  };
+  const icon = id => `<svg class="ds-icon ds-icon--sm" aria-hidden="true">${USE[id]}</svg>`;
+
+  function render() {
+    $('#stock-body').innerHTML = state.products.map(p => {
+      const d = days(p), urgent = d <= URGENT;
+      const chip = urgent ? `<span class="ds-badge ds-badge--warning">${icon('ds-i-alert')}${d} ngày</span>`
+        : d > LOW ? `<span class="ds-badge ds-badge--success">${icon('ds-i-check')}${d} ngày</span>`
+        : `<span class="ds-badge ds-badge--neutral">${d} ngày</span>`;
+      return `<tr class="${urgent ? 'is-urgent' : ''}" data-test="stock-row-${p.code}">
+        <td class="c-prod"><span class="prod"><span class="prod__name">${p.name}</span><span class="prod__code">${p.code}</span></span></td>
+        <td class="c-left num" data-label="Còn" data-test="left-${p.code}">${p.left} ${p.unit}</td>
+        <td class="c-rate num" data-label="Bán mỗi ngày">${p.rate} ${p.unit}</td>
+        <td class="c-days num" data-test="days-${p.code}">${chip}</td>
+        <td class="c-act act"><button class="ds-button ds-button--sm ds-button--secondary btn-row" type="button" data-restock="${p.code}" data-test="restock-open-${p.code}">Ghi nhập hàng</button></td>
+      </tr>`;
+    }).join('');
+    $('#orders-panel').innerHTML = state.orders.length ? `<ul class="orders" data-test="overdue-list">${state.orders.map(o => `
+      <li class="order" data-test="overdue-row-${o.id}">
+        <span class="order__who"><span class="order__id">#${o.id}</span> ${o.name}</span>
+        <span class="order__late ds-badge ds-badge--danger">${icon('ds-i-clock')}Quá ${o.late} ngày</span>
+        <span class="order__where">${icon('ds-i-pin')}${o.city}</span>
+        <button class="ds-button ds-button--sm ds-button--secondary order__act" type="button" data-send="${o.id}" data-test="send-open-${o.id}">Gửi đơn</button>
+      </li>`).join('')}</ul>`
+      : `<p class="orders-empty" data-test="overdue-empty"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>Không còn đơn quá hạn gửi</p>`;
+    $('[data-test="kpi-pending"]').textContent = state.pending;
+    $('[data-test="kpi-overdue"]').textContent = state.orders.length;
+    $('[data-test="kpi-urgent"]').textContent = state.products.filter(p => days(p) <= URGENT).length;
+    $('[data-test="kpi-low"]').textContent = state.products.filter(p => days(p) <= LOW).length;
+    const n = state.orders[0];
+    $('[data-test="next-order"]').innerHTML = n
+      ? `Gửi trước: <strong>#${n.id} ${n.name}, ${n.city}</strong>, quá ${n.late} ngày`
+      : 'Không còn đơn quá hạn gửi';
+  }
+
+  const status = $('#status');
+  function showResult(text, canUndo) {
+    $('[data-test="result-text"]').textContent = text;
+    $('#undo').hidden = !canUndo;
+    status.hidden = false;
+    status.focus();
+  }
+  $('#undo').addEventListener('click', () => {
+    if (!before) return;
+    state = before.state; const msg = before.undoText; before = null;
+    render(); showResult(msg, false);
+  });
+  $('#status-close').addEventListener('click', () => { status.hidden = true; $('.title').setAttribute('tabindex', '-1'); $('.title').focus(); });
+
+  let opener = null, current = null;
+  function open(dlg, btn) { opener = btn; dlg.returnValue = ''; dlg.showModal(); }
+  document.querySelectorAll('dialog').forEach(d => {
+    d.querySelector('[data-close]').addEventListener('click', () => d.close('cancel'));
+    d.addEventListener('close', () => {
+      if (d.returnValue === 'done') return;
+      if (opener && document.contains(opener)) opener.focus();
+    });
+  });
+
+  // Ghi nhập hàng
+  const qty = $('#restock-qty'), confirmBtn = $('#restock-confirm'), reason = $('#restock-reason');
+  function validate() {
+    const p = current; const raw = qty.value.trim(); const v = Number(raw);
+    const ok = raw !== '' && Number.isInteger(v) && v >= 1 && v <= 999;
+    confirmBtn.disabled = !ok;
+    qty.setAttribute('aria-invalid', String(raw !== '' && !ok));
+    reason.hidden = ok;
+    reason.classList.toggle('is-error', raw !== '' && !ok);
+    reason.textContent = 'Nhập số lượng từ 1 đến 999';
+    $('#restock-preview').hidden = !ok;
+    if (ok) {
+      $('#restock-after').textContent = `${p.left + v} ${p.unit}`;
+      $('#restock-days').textContent = `${Math.floor((p.left + v) / p.rate)} ngày`;
+    }
+  }
+  qty.addEventListener('input', validate);
+  document.addEventListener('click', e => {
+    const r = e.target.closest('[data-restock]');
+    if (r) {
+      current = state.products.find(p => p.code === r.dataset.restock);
+      $('#restock-product').textContent = `${current.name} (${current.code})`;
+      $('#restock-left').textContent = `${current.left} ${current.unit}`;
+      $('#restock-qty-label').textContent = `Số lượng nhập (${current.unit})`;
+      qty.value = ''; validate();
+      open($('#dlg-restock'), r); qty.focus();
+    }
+    const s = e.target.closest('[data-send]');
+    if (s) {
+      current = state.orders.find(o => o.id === s.dataset.send);
+      $('#send-id').textContent = `#${current.id}`;
+      $('#send-name').textContent = current.name;
+      $('#send-city').textContent = current.city;
+      $('#send-late').textContent = `${current.late} ngày`;
+      open($('#dlg-send'), s);
+    }
+  });
+  $('#restock-form').addEventListener('submit', e => {
+    e.preventDefault(); validate(); if (confirmBtn.disabled) return;
+    const v = Number(qty.value), p = current;
+    before = { state: clone(state), undoText: `Đã hoàn tác ghi nhập hàng ${p.name} (${p.code})` };
+    state.products.find(x => x.code === p.code).left += v;
+    const dlg = $('#dlg-restock'); dlg.close('done');
+    render(); showResult(`Đã ghi nhập ${v} ${p.unit} ${p.name} (${p.code})`, true);
+  });
+  $('#send-form').addEventListener('submit', e => {
+    e.preventDefault(); const o = current;
+    before = { state: clone(state), undoText: `Đã hoàn tác gửi đơn #${o.id}` };
+    state.orders = state.orders.filter(x => x.id !== o.id);
+    state.pending -= 1;
+    $('#dlg-send').close('done');
+    render(); showResult(`Đã gửi đơn #${o.id} cho ${o.name}, ${o.city}`, true);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

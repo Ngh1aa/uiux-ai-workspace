@@ -1,0 +1,137 @@
+/* Thương hiệu "Cầu Lông Gần Nhà": xanh thảm sân, nền trắng xám ngả xanh, góc 12px cứng như mép sân.
+ * Nạp sau generated/tokens.css và components.css, trước app.css. Khối tối chép giống hệt hai lần. */
+
+:root {
+  --brand-900: #0a3b2e;
+  --brand-800: #0c4a3a;
+  --brand-700: #0e5a46;
+  --brand-600: #106b52;
+  --brand-100: #d5ede3;
+  --brand-50: #e9f5f0;
+  --ds-surface-page: #f2f4f1;
+  --ds-surface-raised: #ffffff;
+  --ds-surface-sunken: #e6eae5;
+  --ds-surface-brand-subtle: var(--brand-50);
+  --ds-surface-brand-strong: var(--brand-600);
+  --ds-text-primary: #141a17;
+  --ds-text-secondary: #56605b;
+  --ds-text-tertiary: #5e6863;
+  --ds-text-brand: var(--brand-600);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #dde3de;
+  --ds-border-control: #7d8782;
+  --ds-action-disabled-bg: #e6eae5;
+  --ds-action-disabled-text: #5f6964;
+  --ds-feedback-neutral-surface: #ecefeb;
+  --ds-feedback-neutral-border: #d2d8d3;
+  --ds-feedback-neutral-text: #36403b;
+  --ds-feedback-neutral-icon: #56605b;
+  --ds-action-primary-bg: var(--brand-600);
+  --ds-action-primary-bg-hover: var(--brand-700);
+  --ds-action-primary-bg-pressed: var(--brand-800);
+  --ds-action-primary-text: #ffffff;
+  --ds-action-secondary-bg: #ffffff;
+  --ds-action-secondary-bg-hover: #edf1ee;
+  --ds-action-secondary-bg-pressed: #e1e7e2;
+  --ds-action-secondary-text: #141a17;
+  --ds-action-secondary-border: #838d88;
+  --ds-action-tertiary-bg-hover: var(--brand-50);
+  --ds-action-tertiary-bg-pressed: var(--brand-100);
+  --ds-action-tertiary-text: var(--brand-600);
+  --ds-action-selected-bg: var(--brand-100);
+  --ds-action-selected-text: var(--brand-900);
+  --ds-action-selected-indicator: var(--brand-600);
+  --ds-border-focus: var(--brand-600);
+
+  /* Hình khối: góc cứng như vạch sân */
+  --ds-shape-card: 12px;
+  --ds-card-radius: 12px;
+  --ds-shape-control: 10px;
+  --ds-shape-sheet: 20px;
+  --ds-card-border: transparent;
+  --ds-elevation-raised: none;
+  --ds-size-control-sm: 44px;
+
+  /* Số và giờ kiểu bảng tỉ số */
+  --app-font-display: "Manrope", "Be Vietnam Pro", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand-strong-dark: #17573f;
+    --brand-tint-dark: #7fd3b0;
+    --ds-surface-page: #0f1412;
+    --ds-surface-raised: #18201c;
+    --ds-surface-sunken: #222b27;
+    --ds-surface-brand-subtle: #15302a;
+    --ds-surface-brand-strong: var(--brand-strong-dark);
+    --ds-text-primary: #eef2ef;
+    --ds-text-secondary: #aeb8b3;
+    --ds-text-tertiary: #98a39d;
+    --ds-text-brand: var(--brand-tint-dark);
+    --ds-text-on-brand-strong: #ffffff;
+    --ds-border-subtle: #29332e;
+    --ds-border-control: #86918b;
+    --ds-action-primary-bg: var(--brand-tint-dark);
+    --ds-action-primary-bg-hover: #97dcbf;
+    --ds-action-primary-bg-pressed: #aee4cd;
+    --ds-action-primary-text: #072b1f;
+    --ds-action-secondary-bg: #18201c;
+    --ds-action-secondary-bg-hover: #222b27;
+    --ds-action-secondary-bg-pressed: #29332e;
+    --ds-action-secondary-text: #eef2ef;
+    --ds-action-secondary-border: #6f7a75;
+    --ds-action-tertiary-bg-hover: #173229;
+    --ds-action-tertiary-bg-pressed: #1e4034;
+    --ds-action-tertiary-text: var(--brand-tint-dark);
+    --ds-action-selected-bg: #1e4034;
+    --ds-action-selected-text: #d3f1e4;
+    --ds-action-selected-indicator: var(--brand-tint-dark);
+    --ds-border-focus: var(--brand-tint-dark);
+    --ds-action-disabled-bg: #222b27;
+    --ds-action-disabled-text: #98a39d;
+    --ds-feedback-neutral-surface: #222b27;
+    --ds-feedback-neutral-border: #37423d;
+    --ds-feedback-neutral-text: #d7ded9;
+    --ds-feedback-neutral-icon: #aeb8b3;
+  }
+}
+
+:root[data-theme="dark"] {
+  --brand-strong-dark: #17573f;
+  --brand-tint-dark: #7fd3b0;
+  --ds-surface-page: #0f1412;
+  --ds-surface-raised: #18201c;
+  --ds-surface-sunken: #222b27;
+  --ds-surface-brand-subtle: #15302a;
+  --ds-surface-brand-strong: var(--brand-strong-dark);
+  --ds-text-primary: #eef2ef;
+  --ds-text-secondary: #aeb8b3;
+  --ds-text-tertiary: #98a39d;
+  --ds-text-brand: var(--brand-tint-dark);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #29332e;
+  --ds-border-control: #86918b;
+  --ds-action-primary-bg: var(--brand-tint-dark);
+  --ds-action-primary-bg-hover: #97dcbf;
+  --ds-action-primary-bg-pressed: #aee4cd;
+  --ds-action-primary-text: #072b1f;
+  --ds-action-secondary-bg: #18201c;
+  --ds-action-secondary-bg-hover: #222b27;
+  --ds-action-secondary-bg-pressed: #29332e;
+  --ds-action-secondary-text: #eef2ef;
+  --ds-action-secondary-border: #6f7a75;
+  --ds-action-tertiary-bg-hover: #173229;
+  --ds-action-tertiary-bg-pressed: #1e4034;
+  --ds-action-tertiary-text: var(--brand-tint-dark);
+  --ds-action-selected-bg: #1e4034;
+  --ds-action-selected-text: #d3f1e4;
+  --ds-action-selected-indicator: var(--brand-tint-dark);
+  --ds-border-focus: var(--brand-tint-dark);
+  --ds-action-disabled-bg: #222b27;
+  --ds-action-disabled-text: #98a39d;
+  --ds-feedback-neutral-surface: #222b27;
+  --ds-feedback-neutral-border: #37423d;
+  --ds-feedback-neutral-text: #d7ded9;
+  --ds-feedback-neutral-icon: #aeb8b3;
+}

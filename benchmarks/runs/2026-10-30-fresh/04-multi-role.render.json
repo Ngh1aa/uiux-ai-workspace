@@ -1,0 +1,259 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "NOT_RUN",
+  "results": [
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1024,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1024,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/04-multi-role/index.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "Lễ tân: lịch hôm nay (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Bác sĩ: bệnh nhân tiếp theo (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lễ tân mở trang Doanh thu (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

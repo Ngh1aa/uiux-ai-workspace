@@ -1,0 +1,119 @@
+{
+  "run": "2026-10-30-fresh",
+  "repo_commit": "19c0dec1b679e841f55858e5fb67ec75e99b7a43",
+  "reviewer": "agent-heuristic",
+  "protocol": {
+    "kind": "fresh",
+    "parent_run": null,
+    "author_id": "fresh-agents-2026-10-30",
+    "reviewer_id": "orchestrator-agent-2026-10-30",
+    "independent_review": false,
+    "generation_note": "Mỗi đề do một agent ngữ cảnh sạch dựng, không xem lượt cũ. Sau runner, agent sửa lỗi runner và các điểm điều phối viên nêu khi xem ảnh (bỏ mục tự thêm, ghi chú kỳ); đây là kết quả sau sửa, không phải điểm first-shot.",
+    "review_note": "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh. Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
+  },
+  "briefs": {
+    "01-landing": {
+      "size": "M",
+      "scores": {
+        "1": 4.5,
+        "2": 4.5,
+        "3": 4,
+        "4": 4.5,
+        "5": 4,
+        "6": 4.5,
+        "7": 4,
+        "8": 4.5,
+        "9": 4,
+        "10": 4
+      },
+      "hard_fails": [],
+      "notes": [
+        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
+      ]
+    },
+    "02-app": {
+      "size": "L",
+      "scores": {
+        "1": 4.5,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4.5,
+        "8": 4,
+        "9": 4,
+        "10": 4
+      },
+      "hard_fails": [],
+      "notes": [
+        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
+        "Còn 8 cảnh báo void ở tab Đã qua: khoảng trống dưới thẻ rỗng sau khi bỏ mục tự thêm; chờ chủ repo quyết.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
+      ]
+    },
+    "03-dashboard": {
+      "size": "M",
+      "scores": {
+        "1": 4.5,
+        "2": 4.5,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4.5,
+        "7": 4.5,
+        "8": 4.5,
+        "9": 4,
+        "10": 4
+      },
+      "hard_fails": [],
+      "notes": [
+        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
+      ]
+    },
+    "04-multi-role": {
+      "size": "L",
+      "scores": {
+        "1": 4.5,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4.5,
+        "8": 4,
+        "9": 4,
+        "10": 4
+      },
+      "hard_fails": [],
+      "notes": [
+        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
+        "Dưới 1024px khung giữ bề rộng desktop trong vùng cuộn ngang.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
+      ]
+    },
+    "05-native": {
+      "size": "L",
+      "scores": {
+        "1": 4,
+        "2": 4,
+        "3": 3.5,
+        "4": 4,
+        "5": 4,
+        "6": 4,
+        "7": 4.5,
+        "8": 4,
+        "9": 4,
+        "10": 3.5
+      },
+      "hard_fails": [],
+      "notes": [
+        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
+        "Còn 16 cảnh báo void ở Chi tiết bài tập: màn ngắn có nút cố định ở đáy, không lấp bằng nội dung tự thêm; native thật UNKNOWN.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
+      ]
+    }
+  }
+}
