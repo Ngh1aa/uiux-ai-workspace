@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Nhà Trường iOS và Android</title>
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/fonts/pairs.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="../../../../design-system/starter/app.css">
+<link rel="stylesheet" href="../../../../design-system/starter/native.css">
+<style>
+body { margin: 0; background: var(--ds-surface-sunken); color: var(--ds-text-primary); font-family: var(--ds-font-family-sans); }
+.gal { display: flex; flex-wrap: wrap; gap: 40px 32px; padding: 32px; justify-content: center; }
+.gal__item { display: flex; flex-direction: column; gap: 8px; }
+.gal__name { margin: 0; color: var(--ds-text-secondary); font: var(--ds-font-weight-semibold) 14px/20px var(--ds-font-family-sans); }
+.app-phone.md-phone { border-radius: 36px; }
+.app-status { height: 44px; padding-top: 4px; }
+.app-status__time { font-size: 15px; }
+.md .app-status { padding: 4px 24px 0; }
+.md .app-status__time { font-size: 14px; font-weight: var(--ds-font-weight-medium); }
+button { font: inherit; color: inherit; }
+.rst { border: 0; background: none; padding: 0; margin: 0; text-align: left; cursor: pointer; width: 100%; }
+.num { font-family: var(--app-font-display); font-variant-numeric: tabular-nums; }
+
+/* Thẻ bài chưa nộp: thẻ nổi bật duy nhất mỗi màn */
+.hero { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: var(--ds-card-radius); background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
+.hero__label { margin: 0; font: var(--ds-font-weight-semibold) 15px/20px var(--ds-font-family-sans); }
+.hero__big { margin: 0; display: flex; align-items: baseline; gap: 8px; font: var(--ds-font-weight-bold) 48px/52px var(--app-font-display); letter-spacing: -0.02em; }
+.hero__big small { font: var(--ds-font-weight-semibold) 17px/22px var(--ds-font-family-sans); letter-spacing: 0; }
+.hero__ctx { margin: 0; font-size: 14px; line-height: 20px; color: color-mix(in srgb, var(--ds-text-on-brand-strong) 88%, transparent); }
+
+.avatar { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); font: var(--ds-font-weight-bold) 17px/1 var(--app-font-display); }
+.chip { display: inline-flex; align-items: center; gap: 4px; flex: none; min-height: 24px; padding: 0 8px; border-radius: 999px; font: var(--ds-font-weight-semibold) 12px/16px var(--ds-font-family-sans); white-space: nowrap; }
+.chip--todo { background: var(--ds-feedback-warning-surface); color: var(--ds-feedback-warning-text); }
+.chip--ok { background: var(--ds-feedback-success-surface); color: var(--ds-feedback-success-text); }
+.chip--off { background: var(--ds-feedback-neutral-surface); color: var(--ds-feedback-neutral-text); }
+.status-card { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--ds-card-radius); background: var(--ds-feedback-success-surface); color: var(--ds-feedback-success-text); font: var(--ds-font-weight-semibold) 15px/20px var(--ds-font-family-sans); }
+.status-card .ds-icon { flex: none; }
+.notice { margin: 0; font-size: 16px; line-height: 24px; }
+.meta { color: var(--ds-text-secondary); font-size: 14px; line-height: 20px; }
+.para { margin: 0; font-size: 16px; line-height: 24px; }
+.dtitle { margin: 0; font: var(--ds-font-weight-bold) 26px/32px var(--app-font-display); letter-spacing: -0.01em; }
+
+/* Chọn ngày dạng dải ngày, dùng chung hai nền tảng */
+.days { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.day { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none; width: 48px; min-height: 56px; border: 1px solid var(--ds-border-control); border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); cursor: pointer; }
+.day span { font-size: 12px; line-height: 16px; color: var(--ds-text-secondary); }
+.day b { font: var(--ds-font-weight-bold) 15px/20px var(--app-font-display); font-variant-numeric: tabular-nums; }
+.day[aria-pressed="true"] { border-color: var(--ds-action-primary-bg); background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); }
+.day[aria-pressed="true"] span { color: inherit; }
+.day.is-past:not([aria-pressed="true"]) b { color: var(--ds-text-secondary); }
+.has-error .day[aria-pressed="true"] { border-color: var(--ds-action-danger-bg); background: var(--ds-action-danger-bg); }
+.field-err { display: flex; gap: 6px; align-items: flex-start; margin: 0; color: var(--ds-feedback-danger-text); font-size: 14px; line-height: 20px; }
+.field-err .ds-icon { width: 18px; height: 18px; margin-top: 1px; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; border-radius: 10px; background: var(--ds-surface-sunken); }
+.seg button { min-height: 40px; border: 0; border-radius: 8px; background: none; font-size: 15px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ds-surface-raised); font-weight: var(--ds-font-weight-semibold); box-shadow: 0 1px 3px color-mix(in srgb, var(--ds-text-primary) 18%, transparent); }
+.seg-wrap { padding: 2px 0; }
+
+/* Thanh đáy cố định cho hành động chính; nội dung có khoảng đệm bằng chiều cao thanh */
+.actbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 34px; background: var(--ds-surface-raised); border-top: 0.5px solid var(--ds-border-subtle); }
+.actbar__why { margin: 0; color: var(--ds-text-secondary); font-size: 14px; line-height: 20px; text-align: center; }
+.btn-main { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 50px; border: 0; border-radius: var(--ds-shape-control); background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); font: var(--ds-font-weight-semibold) 17px/22px var(--ds-font-family-sans); cursor: pointer; }
+.btn-main[aria-disabled="true"] { background: var(--ds-action-disabled-bg); color: var(--ds-action-disabled-text); cursor: not-allowed; }
+.md .btn-main { min-height: 48px; border-radius: 24px; font-size: 15px; font-weight: var(--ds-font-weight-medium); }
+.pad-act { padding-bottom: 150px !important; }
+.pad-act-why { padding-bottom: 180px !important; }
+
+/* ---------- iOS ---------- */
+.ios .ios-body { gap: 28px; }
+.ios-row.rst { min-height: 44px; }
+.ios-row__title { font-size: 17px; }
+.ios-head { margin: 0; padding: 0 16px; color: var(--ds-text-secondary); font: var(--ds-font-weight-regular) 13px/18px var(--ds-font-family-sans); text-transform: uppercase; letter-spacing: 0.02em; }
+.ios-card { padding: 12px 16px; border-radius: 10px; background: var(--ds-surface-raised); display: flex; flex-direction: column; gap: 6px; }
+.ios-danger { width: 100%; min-height: 44px; border: 0; border-radius: 10px; background: var(--ds-surface-raised); color: var(--ds-action-danger-bg); font-size: 17px; cursor: pointer; }
+.ios-tabs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; justify-content: space-around; align-items: center; padding: 8px 16px 30px; border-top: 0.5px solid var(--ds-border-subtle); background: color-mix(in srgb, var(--ds-surface-raised) 94%, transparent); backdrop-filter: blur(20px); }
+.tab { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 48px; min-height: 44px; padding: 0 12px; border: 0; border-radius: 22px; background: none; color: var(--ds-text-secondary); cursor: pointer; font: var(--ds-font-weight-semibold) 14px/20px var(--ds-font-family-sans); }
+.tab .ds-icon { width: 24px; height: 24px; }
+.tab[aria-current="page"] { padding: 0 16px 0 12px; background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+.tab:not([aria-current="page"]) .tab__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ios-sheet .ios-body { padding-bottom: 180px; }
+.ios-input { width: 100%; min-height: 44px; border: 0; background: none; color: var(--ds-text-primary); font: inherit; font-size: 17px; }
+.ios-input::placeholder, .md-field textarea::placeholder, .md-field input::placeholder { color: var(--ds-text-secondary); }
+textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-height: 22px; }
+.ios-block { padding: 12px 16px; border-radius: 10px; background: var(--ds-surface-raised); display: flex; flex-direction: column; gap: 10px; }
+.ios-block.has-error { box-shadow: inset 0 0 0 1.5px var(--ds-action-danger-bg); }
+.ios-asheet { position: absolute; left: 8px; right: 8px; bottom: 34px; z-index: 5; display: flex; flex-direction: column; gap: 8px; }
+.ios-asheet__grp { overflow: hidden; border-radius: 14px; background: var(--ds-surface-raised); }
+.ios-asheet button { display: block; width: 100%; min-height: 56px; border: 0; background: none; color: var(--nt-tint); font-size: 20px; cursor: pointer; }
+.ios-asheet__grp button + button { border-top: 0.5px solid var(--ds-border-subtle); }
+.ios-asheet .is-cancel { font-weight: var(--ds-font-weight-semibold); }
+
+/* ---------- Android ---------- */
+.md .md-body { gap: 16px; }
+.md-title-sm { margin: 0; padding: 8px 4px 0; color: var(--ds-text-brand); font: var(--ds-font-weight-semibold) 14px/20px var(--ds-font-family-sans); }
+.md-surface { overflow: hidden; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+.md-item.rst { min-height: 72px; padding: 8px 16px; }
+.md-li { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; padding: 0 16px; font-size: 16px; }
+.md-li + .md-li, .md-item + .md-item { border-top: 1px solid var(--ds-border-subtle); }
+.md-nav { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; justify-content: space-around; align-items: center; padding: 12px 16px 28px; background: var(--ds-surface-raised); }
+.md-nav .tab { min-height: 48px; border-radius: 24px; }
+.md-nav .tab[aria-current="page"] { background: var(--ds-action-selected-bg); color: var(--ds-action-selected-text); }
+.md .md-fab { bottom: 112px; border: 0; cursor: pointer; }
+.md .md-fab.is-up { bottom: 176px; }
+.md-snack { position: absolute; left: 16px; right: 16px; bottom: 104px; z-index: 4; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 4px 4px 4px 16px; border-radius: 6px; background: var(--ds-surface-inverse); color: var(--ds-text-on-inverse); font-size: 14px; line-height: 20px; box-shadow: var(--ds-elevation-floating); }
+.md-snack span { flex: 1; }
+.md-snack button { min-height: 48px; padding: 0 12px; border: 0; background: none; color: var(--ds-text-on-inverse); font-weight: var(--ds-font-weight-semibold); cursor: pointer; }
+.md-field { min-height: 56px; }
+.md-field__label { background: var(--ds-surface-page); }
+.md-field textarea { padding: 16px 0; min-height: 88px; }
+.md-group { display: flex; flex-direction: column; gap: 10px; }
+.md-group__label { margin: 0; color: var(--ds-text-secondary); font-size: 14px; line-height: 20px; font-weight: var(--ds-font-weight-medium); }
+.md .seg { padding: 0; gap: 0; border-radius: 24px; background: none; box-shadow: inset 0 0 0 1px var(--ds-border-control); overflow: hidden; }
+.md .seg button { min-height: 48px; border-radius: 0; font-size: 14px; font-weight: var(--ds-font-weight-medium); }
+.md .seg button + button { border-left: 1px solid var(--ds-border-control); }
+.md .seg button[aria-pressed="true"] { background: var(--ds-action-selected-bg); color: var(--ds-action-selected-text); box-shadow: none; }
+.md-bsheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; padding: 8px 0 36px; border-radius: 28px 28px 0 0; background: var(--ds-surface-raised); }
+.md-bsheet__handle { width: 32px; height: 4px; margin: 14px auto 12px; border-radius: 2px; background: var(--ds-border-control); }
+.md-bsheet button { display: flex; align-items: center; gap: 16px; width: 100%; min-height: 56px; padding: 0 24px; border: 0; background: none; font-size: 16px; cursor: pointer; text-align: left; }
+.md-dialog .md-btn { min-height: 48px; }
+.md-actbar { padding-bottom: 28px; }
+@media (max-width: 430px) { .gal { padding: 0; gap: 0; } .gal__name { padding: 12px 16px; } }
+</style>
+</head>
+<body class="ds-root">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="i-task" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16.5" rx="2"/><path d="M9 4V3h6v1M8.5 12.5l2.5 2.5 4.5-4.5"/></symbol>
+  <symbol id="i-calplus" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4M12 12.5v5M9.5 15h5"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2.2l1.5-2h5.6l1.5 2h2.2A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-img" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m4.5 17 5-5 4 4 2.5-2.5 3.5 3.5"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12.5h8L17 7"/></symbol>
+</svg>
+
+<main class="gal">
+  <div class="gal__item"><p class="gal__name" data-annotation>iOS Hôm nay</p><div class="app-phone nt ios" data-screen="iOS Hôm nay" data-p="ios" data-init="today"></div></div>
+  <div class="gal__item"><p class="gal__name" data-annotation>iOS Chi tiết bài tập</p><div class="app-phone nt ios" data-screen="iOS Chi tiết bài tập" data-p="ios" data-init="hwd"></div></div>
+  <div class="gal__item"><p class="gal__name" data-annotation>iOS Xin nghỉ</p><div class="app-phone nt ios" data-screen="iOS Xin nghỉ" data-p="ios" data-init="form"></div></div>
+  <div class="gal__item"><p class="gal__name" data-annotation>iOS Hủy đơn</p><div class="app-phone nt ios" data-screen="iOS Hủy đơn" data-p="ios" data-init="cancel"></div></div>
+  <div class="gal__item"><p class="gal__name" data-annotation>Android Hôm nay</p><div class="app-phone nt md md-phone" data-screen="Android Hôm nay" data-p="md" data-init="today"></div></div>
+  <div class="gal__item"><p class="gal__name" data-annotation>Android Chi tiết bài tập</p><div class="app-phone nt md md-phone" data-screen="Android Chi tiết bài tập" data-p="md" data-init="hwd"></div></div>
+  <div class="gal__item"><p class="gal__name" data-annotation>Android Xin nghỉ</p><div class="app-phone nt md md-phone" data-screen="Android Xin nghỉ" data-p="md" data-init="form"></div></div>
+  <div class="gal__item"><p class="gal__name" data-annotation>Android Hủy đơn</p><div class="app-phone nt md md-phone" data-screen="Android Hủy đơn" data-p="md" data-init="cancel"></div></div>
+</main>
+
+<script>
+(() => {
+  const NOW = '20:41';
+  const DAYS = [
+    { d: '21/10', dow: 'thứ Ba', s: 'T3', past: true },
+    { d: '22/10', dow: 'thứ Tư', s: 'T4' },
+    { d: '23/10', dow: 'thứ Năm', s: 'T5' },
+    { d: '24/10', dow: 'thứ Sáu', s: 'T6' },
+    { d: '27/10', dow: 'thứ Hai', s: 'T2' },
+    { d: '28/10', dow: 'thứ Ba', s: 'T3' }
+  ];
+  const SESSIONS = ['Sáng', 'Chiều', 'Cả ngày'];
+  const TABS = [
+    { id: 'today', label: 'Hôm nay', icon: 'i-home' },
+    { id: 'hwlist', label: 'Bài tập', icon: 'i-task' },
+    { id: 'leaves', label: 'Đơn nghỉ', icon: 'i-calplus' }
+  ];
+  const TITLES = { today: 'Hôm nay', hwlist: 'Bài tập', leaves: 'Đơn nghỉ', hwd: 'Bài tập', leave: 'Đơn xin nghỉ' };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ic = (id, cls = '') => `<svg class="ds-icon ${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+  function fresh(p) {
+    return {
+      p, view: 'today', arg: null, stack: [], overlay: null, flash: null,
+      hw: [
+        { id: 'cay-dua', title: 'Tập đọc: Cây dừa', subj: 'Tiếng Việt', due: 'Thứ Năm 23/10, 20:00', desc: 'Đọc to bài Cây dừa ba lần cùng bố mẹ, chép khổ thơ đầu vào vở ô li rồi chụp ảnh trang vở.', done: null },
+        { id: 'bai-14', title: 'Bài 14: Phép cộng có nhớ', subj: 'Toán', due: 'Thứ Sáu 24/10, 20:00', desc: 'Làm bài 1, 2 và 3 trong vở bài tập Toán, trình bày phép tính theo cột dọc rồi chụp ảnh trang làm bài.', done: null }
+      ],
+      leaves: [{ id: 'l1', d: '27/10', dow: 'thứ Hai', session: 'Cả ngày', reason: 'Đi khám răng', note: '', status: 'sent' }],
+      form: { date: null, session: 'Cả ngày', reason: '', note: '' }
+    };
+  }
+
+  const leaveTitle = l => `Nghỉ ${l.session.toLowerCase()} ${l.dow} ${l.d}`;
+  const todo = st => st.hw.filter(h => !h.done);
+  function formIssue(f) {
+    const day = DAYS.find(x => x.d === f.date);
+    if (!day) return { field: null, why: 'Chưa chọn ngày nghỉ' };
+    if (day.past) return { field: `${cap(day.dow)} ${day.d} đã qua. Chọn từ hôm nay, thứ Tư 22/10.`, why: 'Ngày nghỉ đã qua' };
+    if (!f.reason.trim()) return { field: null, why: 'Chưa nhập lý do' };
+    return null;
+  }
+
+  /* ---------- Phần dùng chung theo nền tảng ---------- */
+  function heroCard(st) {
+    const t = todo(st);
+    const next = t[0];
+    return `<section class="hero" data-test="hero" aria-label="Bài chưa nộp">
+      <p class="hero__label">Bài chưa nộp</p>
+      <p class="hero__big"><span data-test="todo-count">${t.length}</span><small>bài</small></p>
+      <p class="hero__ctx">${next ? `Hạn gần nhất ${next.due.replace('Thứ', 'thứ')}` : 'Đã nộp đủ bài hôm nay'}</p>
+    </section>`;
+  }
+  function flashCard(st) {
+    if (!st.flash || st.p !== 'ios') return '';
+    return `<div class="status-card" role="status" data-test="result">${ic('i-ok')}<span>${esc(st.flash)}</span></div>`;
+  }
+  function hwChip(h) { return h.done ? `<span class="chip chip--ok">Đã nộp</span>` : `<span class="chip chip--todo">Chưa nộp</span>`; }
+  function leaveChip(l) { return l.status === 'sent' ? `<span class="chip chip--ok">Đã gửi</span>` : `<span class="chip chip--off">Đã hủy</span>`; }
+
+  /* ---------- iOS ---------- */
+  const I = {
+    rowsHw(st, list) {
+      return `<ul class="ios-group">${list.map(h => `<li><button class="ios-row rst" data-act="open-hw" data-id="${h.id}" data-test="hw-${h.id}"><span class="ios-row__body"><span class="ios-row__title">${esc(h.title)}</span><span class="ios-row__sub">${h.subj}, hạn ${h.due.replace('Thứ', 'thứ')}</span></span>${hwChip(h)}${ic('i-right', 'ios-row__chev')}</button></li>`).join('')}</ul>`;
+    },
+    rowsLeave(st) {
+      return `<ul class="ios-group">${st.leaves.map(l => `<li><button class="ios-row rst" data-act="open-leave" data-id="${l.id}" data-test="leave-${l.id}"><span class="ios-row__body"><span class="ios-row__title">${esc(leaveTitle(l))}</span><span class="ios-row__sub">${esc(l.reason)}</span></span>${leaveChip(l)}${ic('i-right', 'ios-row__chev')}</button></li>`).join('')}</ul>`;
+    },
+    tabs(st) {
+      return `<nav class="ios-tabs" aria-label="Điều hướng chính">${TABS.map(t => `<button class="tab" data-act="tab" data-id="${t.id}" data-test="tab-${t.id}"${st.view === t.id ? ' aria-current="page"' : ''}>${ic(t.icon)}<span class="tab__label">${t.label}</span></button>`).join('')}</nav>`;
+    },
+    root(st, body, trail = '') {
+      return `<div class="nt-scroll"><div class="ios-nav"><span class="ios-nav__lead"></span><span></span><span class="ios-nav__trail">${trail}</span></div>
+        <h1 class="ios-large">${TITLES[st.view]}</h1><div class="ios-body">${flashCard(st)}${body}</div></div>${I.tabs(st)}`;
+    },
+    newLeave: `<button class="ios-link ios-link--strong" data-act="new-leave" data-test="new-leave">Xin nghỉ</button>`,
+    today(st) {
+      return I.root(st, `
+        <ul class="ios-group"><li class="ios-row"><span class="avatar" aria-hidden="true">GH</span><span class="ios-row__body"><span class="ios-row__title">Trần Gia Hân</span><span class="ios-row__sub">Lớp 2/3, Trường Tiểu học Minh hoạ</span><span class="ios-row__sub">Cô chủ nhiệm Lê Thu Hà</span></span></li></ul>
+        <section class="ios-section">${heroCard(st)}${todo(st).length ? I.rowsHw(st, todo(st)) : ''}</section>
+        <section class="ios-section" aria-labelledby="${st.uid}-tm"><h2 class="ios-head" id="${st.uid}-tm">Ngày mai, thứ Năm 23/10</h2>
+          <ul class="ios-group">${['Tiếng Việt', 'Toán', 'Tự nhiên và Xã hội', 'Âm nhạc'].map((s, i) => `<li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">${s}</span></span><span class="ios-row__value">Tiết ${i + 1}</span></li>`).join('')}
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Tan học</span></span><span class="ios-row__value num">16:30</span></li></ul></section>
+        <section class="ios-section" aria-labelledby="${st.uid}-nt"><h2 class="ios-head" id="${st.uid}-nt">Thông báo mới nhất</h2>
+          <div class="ios-card"><p class="notice">Thứ Bảy 25/10 trường tổ chức ngày hội đọc sách, phụ huynh đăng ký tham gia trước thứ Năm.</p><span class="meta">Cô Hà, 19:12 hôm nay</span></div></section>
+        <section class="ios-section" aria-labelledby="${st.uid}-lv"><h2 class="ios-head" id="${st.uid}-lv">Đơn xin nghỉ</h2>${I.rowsLeave(st)}</section>`, I.newLeave);
+    },
+    hwlist(st) { return I.root(st, `<section class="ios-section">${I.rowsHw(st, st.hw)}</section>`); },
+    leaves(st) { return I.root(st, `<section class="ios-section">${I.rowsLeave(st)}</section>`, I.newLeave); },
+    pushed(st, body, extra = '', padCls = '') {
+      const back = TITLES[st.stack[st.stack.length - 1]?.view] || 'Hôm nay';
+      return `<div class="ios-nav"><span class="ios-nav__lead"><button class="ios-link" data-act="back" data-test="back">${ic('i-left')}${back}</button></span><h1 class="ios-nav__title">${TITLES[st.view]}</h1><span class="ios-nav__trail"></span></div>
+        <div class="nt-scroll"><div class="ios-body ${padCls}">${flashCard(st)}${body}</div></div>${extra}`;
+    },
+    hwd(st) {
+      const h = st.hw.find(x => x.id === st.arg);
+      const bar = h.done ? '' : `<div class="actbar"><button class="btn-main" data-act="pick" data-test="submit-photo">${ic('i-cam')}Nộp ảnh</button></div>`;
+      return I.pushed(st, `
+        <div class="ios-section" style="padding:0 4px;gap:8px"><h2 class="dtitle" data-test="hw-title">${esc(h.title)}</h2><span>${hwChip(h)}</span></div>
+        <ul class="ios-group">
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Môn</span></span><span class="ios-row__value">${h.subj}</span></li>
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Hạn nộp</span></span><span class="ios-row__value num">${h.due}</span></li>
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Bài làm</span></span><span class="ios-row__value">${h.done ? `1 ảnh, ${h.done}` : 'Chưa có ảnh'}</span></li>
+        </ul>
+        <section class="ios-section" aria-labelledby="${st.uid}-ds"><h3 class="ios-head" id="${st.uid}-ds">Mô tả</h3><div class="ios-card"><p class="para">${esc(h.desc)}</p></div></section>`,
+        bar + (st.overlay === 'pick' ? `<div class="nt-scrim" data-act="close-overlay"></div><div class="ios-asheet" role="dialog" aria-modal="true" aria-label="Nộp ảnh bài làm"><div class="ios-asheet__grp"><button data-act="photo" data-test="pick-camera">Chụp ảnh</button><button data-act="photo" data-test="pick-library">Chọn từ thư viện</button></div><div class="ios-asheet__grp"><button class="is-cancel" data-act="close-overlay" data-test="pick-cancel">Hủy</button></div></div>` : ''),
+        h.done ? '' : 'pad-act');
+    },
+    leave(st) {
+      const l = st.leaves.find(x => x.id === st.arg);
+      const alert = st.overlay === 'cancel' ? `<div class="nt-scrim" aria-hidden="true"></div>
+        <div class="ios-alert" role="alertdialog" aria-modal="true" aria-labelledby="${st.uid}-at" aria-describedby="${st.uid}-am" data-test="confirm">
+          <div class="ios-alert__body"><h2 class="ios-alert__title" id="${st.uid}-at">Hủy đơn?</h2><p class="ios-alert__msg" id="${st.uid}-am">${esc(leaveTitle(l))}, lý do “${esc(l.reason)}”.</p></div>
+          <div class="ios-alert__actions"><button data-act="close-overlay" data-test="confirm-dismiss">Hủy</button><button class="is-danger" data-act="do-cancel" data-test="confirm-cancel">Hủy đơn</button></div></div>` : '';
+      return I.pushed(st, `
+        <ul class="ios-group">
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Ngày</span></span><span class="ios-row__value num">${cap(l.dow)} ${l.d}</span></li>
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Buổi</span></span><span class="ios-row__value">${l.session}</span></li>
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Lý do</span></span><span class="ios-row__value">${esc(l.reason)}</span></li>
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Gửi tới</span></span><span class="ios-row__value">Cô Lê Thu Hà</span></li>
+          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Trạng thái</span></span><span data-test="leave-status">${leaveChip(l)}</span></li>
+        </ul>
+        ${l.status === 'sent' ? `<button class="ios-danger" data-act="ask-cancel" data-test="cancel-leave">Hủy đơn</button>` : ''}`, alert);
+    },
+    form(st, behind) {
+      const f = st.form, iss = formIssue(f), u = st.uid;
+      return `<div class="ios-behind" aria-hidden="true" inert>${behind}</div>
+      <div class="ios-sheet" role="dialog" aria-modal="true" aria-labelledby="${u}-ft" data-test="form">
+        <span class="ios-grabber" aria-hidden="true"></span>
+        <div class="ios-nav"><span class="ios-nav__lead"><button class="ios-link" data-act="close-form" data-test="form-cancel">Hủy</button></span><h2 class="ios-nav__title" id="${u}-ft">Xin nghỉ</h2><span class="ios-nav__trail"></span></div>
+        <div class="nt-scroll"><div class="ios-body">
+          <section class="ios-section" aria-labelledby="${u}-fd"><h3 class="ios-head" id="${u}-fd">Ngày nghỉ</h3>
+            <div class="ios-block${iss && iss.field ? ' has-error' : ''}" data-test="date-field">${I.daysHtml(st)}${iss && iss.field ? `<p class="field-err" id="${u}-de" data-test="date-error">${ic('i-alert')}<span>${iss.field}</span></p>` : ''}</div></section>
+          <section class="ios-section" aria-labelledby="${u}-fs"><h3 class="ios-head" id="${u}-fs">Buổi</h3><div class="seg" role="group" aria-labelledby="${u}-fs">${SESSIONS.map(s => `<button data-act="session" data-v="${s}" aria-pressed="${f.session === s}">${s}</button>`).join('')}</div></section>
+          <section class="ios-section" aria-labelledby="${u}-fr"><h3 class="ios-head" id="${u}-fr"><label for="${u}-r">Lý do</label></h3><div class="ios-block" style="padding-block:0"><input class="ios-input" id="${u}-r" data-bind="reason" data-test="reason" placeholder="Ví dụ: Bị sốt" value="${esc(f.reason)}"></div></section>
+          <section class="ios-section" aria-labelledby="${u}-fn"><h3 class="ios-head" id="${u}-fn"><label for="${u}-n">Ghi chú cho cô</label></h3><div class="ios-block" style="padding-block:0"><textarea class="ios-input" id="${u}-n" data-bind="note" rows="3">${esc(f.note)}</textarea></div></section>
+        </div></div>
+        ${submitBar(st)}
+      </div>`;
+    },
+    daysHtml(st) { return daysHtml(st); }
+  };
+
+  /* ---------- Android ---------- */
+  const M = {
+    rowsHw(st, list) {
+      return `<ul class="md-surface md-list">${list.map(h => `<li><button class="md-item rst" data-act="open-hw" data-id="${h.id}" data-test="hw-${h.id}"><span class="md-item__lead">${ic('i-task')}</span><span class="md-item__body"><span class="md-item__title">${esc(h.title)}</span><span class="md-item__sub">${h.subj}, hạn ${h.due.replace('Thứ', 'thứ')}</span></span>${hwChip(h)}</button></li>`).join('')}</ul>`;
+    },
+    rowsLeave(st) {
+      return `<ul class="md-surface md-list">${st.leaves.map(l => `<li><button class="md-item rst" data-act="open-leave" data-id="${l.id}" data-test="leave-${l.id}"><span class="md-item__lead">${ic('i-calplus')}</span><span class="md-item__body"><span class="md-item__title">${esc(leaveTitle(l))}</span><span class="md-item__sub">${esc(l.reason)}</span></span>${leaveChip(l)}</button></li>`).join('')}</ul>`;
+    },
+    nav(st) {
+      return `<nav class="md-nav" aria-label="Điều hướng chính">${TABS.map(t => `<button class="tab" data-act="tab" data-id="${t.id}" data-test="tab-${t.id}"${st.view === t.id ? ' aria-current="page"' : ''}>${ic(t.icon)}<span class="tab__label">${t.label}</span></button>`).join('')}</nav>`;
+    },
+    snack(st) { return st.flash ? `<div class="md-snack" role="status" data-test="result"><span>${esc(st.flash)}</span><button data-act="dismiss-flash">Đóng</button></div>` : ''; },
+    fab(st) { return `<button class="md-fab${st.flash ? ' is-up' : ''}" data-act="new-leave" data-test="new-leave">${ic('i-calplus')}Xin nghỉ</button>`; },
+    root(st, body, fab = true) {
+      return `<div class="md-topbar"><h1 class="md-topbar__title" style="padding-left:12px">${TITLES[st.view]}</h1></div>
+        <div class="nt-scroll"><div class="md-body" style="padding-bottom:${fab ? 190 : 120}px">${body}</div></div>${fab ? M.fab(st) : ''}${M.snack(st)}${M.nav(st)}`;
+    },
+    today(st) {
+      return M.root(st, `
+        <div class="md-surface"><div class="md-item"><span class="avatar" aria-hidden="true">GH</span><span class="md-item__body"><span class="md-item__title">Trần Gia Hân</span><span class="md-item__sub">Lớp 2/3, Trường Tiểu học Minh hoạ</span><span class="md-item__sub">Cô chủ nhiệm Lê Thu Hà</span></span></div></div>
+        ${heroCard(st)}${todo(st).length ? M.rowsHw(st, todo(st)) : ''}
+        <h2 class="md-title-sm">Ngày mai, thứ Năm 23/10</h2>
+        <ul class="md-surface md-list">${['Tiếng Việt', 'Toán', 'Tự nhiên và Xã hội', 'Âm nhạc'].map((s, i) => `<li class="md-li"><span>${s}</span><span class="nt-muted">Tiết ${i + 1}</span></li>`).join('')}<li class="md-li"><span>Tan học</span><span class="nt-muted num">16:30</span></li></ul>
+        <h2 class="md-title-sm">Thông báo mới nhất</h2>
+        <div class="md-card"><p class="notice">Thứ Bảy 25/10 trường tổ chức ngày hội đọc sách, phụ huynh đăng ký tham gia trước thứ Năm.</p><span class="meta">Cô Hà, 19:12 hôm nay</span></div>
+        <h2 class="md-title-sm">Đơn xin nghỉ</h2>${M.rowsLeave(st)}`);
+    },
+    hwlist(st) { return M.root(st, M.rowsHw(st, st.hw), false); },
+    leaves(st) { return M.root(st, M.rowsLeave(st)); },
+    pushed(st, body, extra = '', pad = 120, lead = 'back') {
+      return `<div class="md-topbar"><button class="md-iconbtn" data-act="back" data-test="back" aria-label="Quay lại">${ic('i-back')}</button><h1 class="md-topbar__title">${TITLES[st.view]}</h1></div>
+        <div class="nt-scroll"><div class="md-body" style="padding-bottom:${pad}px">${body}</div></div>${extra}${M.snack(st)}`;
+    },
+    hwd(st) {
+      const h = st.hw.find(x => x.id === st.arg);
+      const bar = h.done ? '' : `<div class="actbar md-actbar"><button class="btn-main" data-act="pick" data-test="submit-photo">${ic('i-cam')}Nộp ảnh</button></div>`;
+      return M.pushed(st, `
+        <div style="display:flex;flex-direction:column;gap:8px;padding:0 4px"><h2 class="dtitle" data-test="hw-title">${esc(h.title)}</h2><span>${hwChip(h)}</span></div>
+        <ul class="md-surface md-list">
+          <li class="md-li"><span>Môn</span><span class="nt-muted">${h.subj}</span></li>
+          <li class="md-li"><span>Hạn nộp</span><span class="nt-muted num">${h.due}</span></li>
+          <li class="md-li"><span>Bài làm</span><span class="nt-muted">${h.done ? `1 ảnh, ${h.done}` : 'Chưa có ảnh'}</span></li>
+        </ul>
+        <h3 class="md-title-sm">Mô tả</h3><div class="md-card"><p class="para">${esc(h.desc)}</p></div>`,
+        bar + (st.overlay === 'pick' ? `<div class="nt-scrim" data-act="close-overlay"></div><div class="md-bsheet" role="dialog" aria-modal="true" aria-label="Nộp ảnh bài làm"><div class="md-bsheet__handle" aria-hidden="true"></div><button data-act="photo" data-test="pick-camera">${ic('i-cam')}Chụp ảnh</button><button data-act="photo" data-test="pick-library">${ic('i-img')}Chọn từ thư viện</button><button data-act="close-overlay" data-test="pick-cancel">${ic('i-x')}Hủy</button></div>` : ''),
+        h.done ? 120 : 150);
+    },
+    leave(st) {
+      const l = st.leaves.find(x => x.id === st.arg);
+      const dlg = st.overlay === 'cancel' ? `<div class="nt-scrim" aria-hidden="true"></div>
+        <div class="md-dialog" role="alertdialog" aria-modal="true" aria-labelledby="${st.uid}-at" aria-describedby="${st.uid}-am" data-test="confirm">
+          <span class="md-dialog__icon">${ic('i-trash')}</span><h2 class="md-dialog__title" id="${st.uid}-at">Hủy đơn?</h2>
+          <p class="md-dialog__msg" id="${st.uid}-am">${esc(leaveTitle(l))}, lý do “${esc(l.reason)}”.</p>
+          <div class="md-dialog__actions"><button class="md-btn md-btn--text" data-act="close-overlay" data-test="confirm-dismiss">Hủy</button><button class="md-btn md-btn--text md-btn--danger" data-act="do-cancel" data-test="confirm-cancel">Hủy đơn</button></div></div>` : '';
+      return M.pushed(st, `
+        <ul class="md-surface md-list">
+          <li class="md-li"><span>Ngày</span><span class="nt-muted num">${cap(l.dow)} ${l.d}</span></li>
+          <li class="md-li"><span>Buổi</span><span class="nt-muted">${l.session}</span></li>
+          <li class="md-li"><span>Lý do</span><span class="nt-muted">${esc(l.reason)}</span></li>
+          <li class="md-li"><span>Gửi tới</span><span class="nt-muted">Cô Lê Thu Hà</span></li>
+          <li class="md-li"><span>Trạng thái</span><span data-test="leave-status">${leaveChip(l)}</span></li>
+        </ul>
+        ${l.status === 'sent' ? `<div style="display:flex;justify-content:flex-end"><button class="md-btn md-btn--text md-btn--danger" data-act="ask-cancel" data-test="cancel-leave">${ic('i-trash')}Hủy đơn</button></div>` : ''}`, dlg);
+    },
+    form(st) {
+      const f = st.form, iss = formIssue(f), u = st.uid;
+      return `<div class="nt-screen" role="dialog" aria-modal="true" aria-labelledby="${u}-ft" data-test="form">
+        <div class="md-topbar"><button class="md-iconbtn" data-act="close-form" data-test="form-cancel" aria-label="Đóng">${ic('i-x')}</button><h1 class="md-topbar__title" id="${u}-ft">Xin nghỉ</h1></div>
+        <div class="nt-scroll"><div class="md-body" style="padding-bottom:180px;gap:24px">
+          <div class="md-group${iss && iss.field ? ' has-error' : ''}" data-test="date-field"><p class="md-group__label" id="${u}-fd">Ngày nghỉ</p>${daysHtml(st)}${iss && iss.field ? `<p class="field-err" id="${u}-de" data-test="date-error">${ic('i-alert')}<span>${iss.field}</span></p>` : ''}</div>
+          <div class="md-group"><p class="md-group__label" id="${u}-fs">Buổi</p><div class="seg" role="group" aria-labelledby="${u}-fs">${SESSIONS.map(s => `<button data-act="session" data-v="${s}" aria-pressed="${f.session === s}">${s}</button>`).join('')}</div></div>
+          <div class="md-field"><label class="md-field__label" for="${u}-r">Lý do</label><input id="${u}-r" data-bind="reason" data-test="reason" placeholder="Ví dụ: Bị sốt" value="${esc(f.reason)}"></div>
+          <div class="md-field"><label class="md-field__label" for="${u}-n">Ghi chú cho cô</label><textarea id="${u}-n" data-bind="note" rows="3">${esc(f.note)}</textarea></div>
+        </div></div>
+        ${submitBar(st)}
+      </div>`;
+    }
+  };
+
+  function daysHtml(st) {
+    return `<div class="days" role="group" aria-label="Ngày nghỉ">${DAYS.map(x => `<button class="day${x.past ? ' is-past' : ''}" data-act="date" data-v="${x.d}" data-test="day-${x.d.replace('/', '-')}" aria-pressed="${st.form.date === x.d}" aria-label="${cap(x.dow)} ${x.d}"${st.form.date === x.d && x.past ? ` aria-describedby="${st.uid}-de"` : ''}><span>${x.s}</span><b>${x.d.slice(0, 2)}</b></button>`).join('')}</div>`;
+  }
+  function submitBar(st) {
+    const iss = formIssue(st.form);
+    return `<div class="actbar${st.p === 'md' ? ' md-actbar' : ''}">${iss ? `<p class="actbar__why" id="${st.uid}-why" data-test="submit-why">${iss.why}</p>` : ''}<button class="btn-main" data-primary data-act="send" data-test="send"${iss ? ` aria-disabled="true" aria-describedby="${st.uid}-why"` : ''}>Gửi đơn</button></div>`;
+  }
+
+  /* ---------- Bộ điều khiển mỗi khung ---------- */
+  const phones = [...document.querySelectorAll('[data-p]')];
+  const states = new Map();
+  function render(ph) {
+    const st = states.get(ph), R = st.p === 'ios' ? I : M;
+    let inner;
+    if (st.p === 'md' && st.view === 'form') inner = M.form(st);
+    else {
+      inner = R[st.view](st);
+      if (st.p === 'ios' && st.overlay === 'form') inner = I.form(st, inner);
+    }
+    const scroll = ph.querySelector('.nt-scroll');
+    const keep = scroll && ph.dataset.view === st.view + (st.arg || '') ? scroll.scrollTop : 0;
+    ph.innerHTML = `<div class="app-status"><span class="app-status__time">${NOW}</span></div><div class="nt-screen">${inner}${st.p === 'ios' ? '<span class="ios-home" aria-hidden="true"></span>' : '<span class="md-gesture" aria-hidden="true"></span>'}</div>`;
+    ph.dataset.view = st.view + (st.arg || '');
+    const ns = ph.querySelector('.nt-screen > .nt-scroll, .ios-sheet .nt-scroll');
+    if (ns && keep) ns.scrollTop = keep;
+  }
+  function go(st, view, arg = null) { st.stack.push({ view: st.view, arg: st.arg }); st.view = view; st.arg = arg; st.overlay = null; st.flash = null; }
+  function back(st) { const prev = st.stack.pop(); if (prev) { st.view = prev.view; st.arg = prev.arg; } st.overlay = null; }
+
+  phones.forEach((ph, i) => {
+    const st = fresh(ph.dataset.p); st.uid = `ph${i}`;
+    states.set(ph, st);
+    const init = ph.dataset.init;
+    if (init === 'hwd') go(st, 'hwd', 'cay-dua');
+    if (init === 'cancel') { go(st, 'leave', 'l1'); st.overlay = 'cancel'; }
+    if (init === 'form') {
+      st.form = { date: '21/10', session: 'Cả ngày', reason: 'Bị sốt', note: '' };
+      if (st.p === 'ios') st.overlay = 'form'; else go(st, 'form');
+    }
+    render(ph);
+
+    ph.addEventListener('click', e => {
+      const el = e.target.closest('[data-act]');
+      if (!el || !ph.contains(el)) return;
+      const a = el.dataset.act;
+      if (a === 'tab') { st.view = el.dataset.id; st.arg = null; st.stack = []; st.overlay = null; st.flash = null; }
+      else if (a === 'open-hw') go(st, 'hwd', el.dataset.id);
+      else if (a === 'open-leave') go(st, 'leave', el.dataset.id);
+      else if (a === 'back') { back(st); st.flash = null; }
+      else if (a === 'pick') st.overlay = 'pick';
+      else if (a === 'close-overlay') st.overlay = null;
+      else if (a === 'photo') { st.hw.find(x => x.id === st.arg).done = `${NOW} thứ Tư 22/10`; st.overlay = null; st.flash = 'Đã nộp ảnh bài làm'; }
+      else if (a === 'ask-cancel') st.overlay = 'cancel';
+      else if (a === 'do-cancel') {
+        const l = st.leaves.find(x => x.id === st.arg); l.status = 'cancelled';
+        back(st); st.flash = `Đã hủy đơn ${leaveTitle(l).charAt(0).toLowerCase() + leaveTitle(l).slice(1)}`;
+      }
+      else if (a === 'new-leave') {
+        st.form = { date: null, session: 'Cả ngày', reason: '', note: '' }; st.flash = null;
+        if (st.p === 'ios') st.overlay = 'form'; else go(st, 'form');
+      }
+      else if (a === 'close-form') { if (st.p === 'ios') st.overlay = null; else back(st); }
+      else if (a === 'date') st.form.date = el.dataset.v;
+      else if (a === 'session') st.form.session = el.dataset.v;
+      else if (a === 'send') {
+        if (el.getAttribute('aria-disabled') === 'true') return;
+        const day = DAYS.find(x => x.d === st.form.date);
+        const l = { id: 'l' + (st.leaves.length + 1), d: day.d, dow: day.dow, session: st.form.session, reason: st.form.reason.trim(), note: st.form.note, status: 'sent' };
+        st.leaves.unshift(l);
+        if (st.p === 'ios') st.overlay = null; else back(st);
+        st.flash = `Đã gửi đơn ${leaveTitle(l).charAt(0).toLowerCase() + leaveTitle(l).slice(1)}`;
+      }
+      else if (a === 'dismiss-flash') st.flash = null;
+      else return;
+      render(ph);
+      const focusT = ph.querySelector('[data-test="confirm-dismiss"], [data-test="result"], .ios-sheet .ios-link, [data-test="form"] .md-iconbtn');
+      if (focusT && focusT.tagName === 'BUTTON') focusT.focus({ preventScroll: true });
+    });
+    ph.addEventListener('input', e => {
+      const b = e.target.dataset.bind; if (!b) return;
+      st.form[b] = e.target.value;
+      const bar = ph.querySelector('.actbar'); const tmp = document.createElement('div');
+      tmp.innerHTML = submitBar(st); bar.replaceWith(tmp.firstElementChild);
+    });
+    ph.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && (st.overlay === 'cancel' || st.overlay === 'pick')) { st.overlay = null; render(ph); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

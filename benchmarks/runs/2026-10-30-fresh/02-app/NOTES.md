@@ -55,6 +55,11 @@ Ba điểm khác starter:  1. bo 12px thay 24px  2. font số Manrope kiểu b�
 ## Kiểm tra
 
 - `check-brand.py brand.css`: ĐẠT, 0 lỗi.
-- `static-check.cjs`, `flow-check.cjs --mode prototype`: xem báo cáo cuối lượt.
-- `scenarios.cjs`: kịch bản Playwright; máy dựng không có trình duyệt nên chưa chạy được ở lượt này.
-- Chưa kiểm: render thật, ảnh sáng/tối, `taste-check.cjs`, trình đọc màn hình, thiết bị thật, người dùng thật.
+- `static-check.cjs index.html`: ĐẠT, 0 lỗi.
+- `flow-check.cjs --mode prototype`: tĩnh PASS, 0 FAIL, 0 WARN; 16 UNKNOWN (nút xử lý bằng JS tại chỗ, runtime), đã phủ bằng kịch bản.
+- `scenarios.cjs`: 7/7 PASS trên Chromium 1243 sẵn trong máy (Playwright 1.63 cần trỏ `executablePath`), 0 lỗi JS trang.
+  Hai nút khoá (`aria-disabled`) được bấm bằng `force: true` để chứng minh bấm vào không chuyển màn.
+- `taste-check.cjs` 390 và 1280, sáng và tối: 0 lỗi, 0 cảnh báo. Thẻ rỗng tab Đã qua đánh dấu `data-whitespace`
+  (khoảng thở có chủ đích trong thẻ rỗng, không phải mảng trống của màn). axe-core chưa cài nên chưa chạy.
+- Đã xem ảnh: gallery 1280 sáng; sheet chọn khung, sheet xác nhận, kết quả, Lịch có lượt mới, Trang chủ cập nhật ở cả sáng và tối.
+- Chưa kiểm: trình đọc màn hình thật, chữ phóng 200%, thiết bị thật, người dùng thật; duyệt hướng `CHƯA DUYỆT`.
