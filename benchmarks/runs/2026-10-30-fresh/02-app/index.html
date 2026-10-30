@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cầu Lông Gần Nhà</title>
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/fonts/pairs.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="../../../../design-system/starter/app.css">
+<style>
+  body { margin: 0; background: var(--ds-surface-sunken); }
+  .app-gallery { justify-content: center; }
+  .app-phone[data-active] { outline: var(--ds-border-width-200) solid var(--ds-border-focus); outline-offset: 4px; }
+  .app h1, .app h2, .app p, .app ul { margin: 0; }
+  .app ul { padding: 0; list-style: none; }
+  .num { font-family: var(--app-font-display); font-variant-numeric: tabular-nums; }
+
+  /* Tiêu đề màn tab */
+  .head { display: flex; flex-direction: column; gap: var(--ds-space-100); padding: var(--ds-space-200) var(--ds-spacing-inset-lg) var(--ds-space-300); }
+  .head h1 { font: var(--ds-font-weight-bold) 28px/1.2 var(--app-font-display); letter-spacing: -0.01em; }
+  .head__date { color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); }
+  .app-header h1 { font: var(--ds-font-weight-bold) 20px/1.3 var(--app-font-display); }
+
+  /* Card nổi bật: lượt sắp tới, sơ đồ vạch sân nằm cột riêng */
+  .app-hero { --app-hero-motif: none; }
+  .hero__grid { display: grid; grid-template-columns: 1fr 64px; gap: var(--ds-space-400); align-items: start; }
+  .hero__text { display: flex; flex-direction: column; gap: var(--ds-space-100); min-width: 0; }
+  .hero__label { font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/1.4 var(--ds-font-family-sans); }
+  .hero__time { font: var(--ds-font-weight-bold) 32px/1.15 var(--app-font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; white-space: nowrap; }
+  .hero__date { font-weight: var(--ds-font-weight-semibold); }
+  .hero__court { width: 64px; height: 104px; color: var(--ds-text-on-brand-strong); }
+  .btn-on-brand { --_bg: var(--ds-text-on-brand-strong); --_bg-hover: var(--ds-text-on-brand-strong); --_bg-pressed: var(--ds-text-on-brand-strong); --_fg: var(--ds-surface-brand-strong); --_border: transparent; align-self: flex-start; }
+
+  /* Mục */
+  .sec-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin-top: var(--ds-space-200); }
+  .sec-head h2, .block-title { font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); }
+  .text-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--ds-space-200); border: 0; background: none; color: var(--ds-text-brand); font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/1 var(--ds-font-family-sans); cursor: pointer; }
+
+  /* Card sân: dùng chung cho Trang chủ và Tìm sân */
+  .courts { display: flex; flex-direction: column; gap: var(--ds-space-300); }
+  .court { display: grid; grid-template-columns: 1fr auto; gap: var(--ds-space-200) var(--ds-space-300); width: 100%; padding: var(--ds-space-400); border: 0; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); color: var(--ds-text-primary); text-align: left; font: inherit; cursor: pointer; }
+  .court:hover { background: var(--ds-action-secondary-bg-hover); }
+  .court__name { font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); }
+  .court__price { text-align: right; white-space: nowrap; font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1.3 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .court__unit { color: var(--ds-text-secondary); font: var(--ds-font-weight-medium) var(--ds-font-size-100)/1 var(--ds-font-family-sans); }
+  .court__meta { display: flex; align-items: center; gap: var(--ds-space-300); color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); white-space: nowrap; }
+  .court__meta span { display: inline-flex; align-items: center; gap: var(--ds-space-100); }
+  .court__slots { display: flex; align-items: center; gap: var(--ds-space-300); flex-wrap: wrap; }
+  .court__count { display: inline-flex; align-items: center; height: 28px; padding: 0 var(--ds-space-300); border-radius: var(--ds-shape-pill); background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); font: var(--ds-font-weight-semibold) var(--ds-font-size-100)/1 var(--ds-font-family-sans); white-space: nowrap; }
+  .court__count--none { background: var(--ds-surface-sunken); color: var(--ds-text-secondary); }
+  .court__times { display: flex; gap: var(--ds-space-200); font: var(--ds-font-weight-semibold) var(--ds-type-body-sm-font-size)/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .court__chev { align-self: center; color: var(--ds-text-secondary); }
+
+  /* Tìm sân */
+  .search .ds-field__control { min-height: 48px; background: var(--ds-surface-raised); }
+  .chips { display: flex; gap: var(--ds-space-200); overflow-x: auto; scrollbar-width: none; }
+  .app .ds-chip { min-height: 44px; white-space: nowrap; background: var(--ds-surface-raised); }
+  .app .ds-chip[aria-pressed="true"] { background: var(--ds-action-selected-bg); }
+
+  /* Chi tiết sân */
+  .amen { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-space-200) var(--ds-space-300); }
+  .amen li { display: flex; align-items: center; gap: var(--ds-space-200); min-height: 32px; }
+  .amen .ds-icon { color: var(--ds-text-brand); }
+  .board { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+  .slot { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-300); width: 100%; min-height: 52px; padding: 0 var(--ds-space-400); border: 0; background: transparent; color: var(--ds-text-primary); font: inherit; text-align: left; cursor: pointer; }
+  .slot + .slot { border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+  .slot:hover { background: var(--ds-action-secondary-bg-hover); }
+  .slot__time { font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .slot__state { display: inline-flex; align-items: center; gap: var(--ds-space-100); color: var(--ds-text-brand); font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/1 var(--ds-font-family-sans); }
+  .slot[aria-disabled="true"] { background: repeating-linear-gradient(135deg, var(--ds-surface-sunken) 0 6px, var(--ds-surface-raised) 6px 12px); color: var(--ds-text-secondary); cursor: not-allowed; }
+  .slot[aria-disabled="true"] .slot__state { color: var(--ds-text-secondary); }
+  .slot[aria-pressed="true"] { background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); }
+  .slot[aria-pressed="true"] .slot__state { color: var(--ds-action-primary-text); }
+  .block-head { display: flex; align-items: baseline; justify-content: space-between; min-height: 32px; margin-top: var(--ds-space-200); }
+
+  /* Chân màn có nút chính */
+  .app-footer { gap: var(--ds-space-200); padding-bottom: var(--ds-space-600); }
+  .body--footer { padding-bottom: 200px; }
+  .reason { display: flex; align-items: center; gap: var(--ds-space-100); color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); line-height: 1.4; }
+  .reason[hidden] { display: none; }
+  .ds-button[aria-disabled="true"] { --_bg: var(--ds-action-disabled-bg); --_bg-hover: var(--ds-action-disabled-bg); --_bg-pressed: var(--ds-action-disabled-bg); --_fg: var(--ds-action-disabled-text); cursor: not-allowed; }
+  .total-label { color: var(--ds-text-secondary); }
+
+  /* Đặt sân */
+  .alt { display: flex; flex-wrap: wrap; gap: var(--ds-space-200); margin-top: var(--ds-space-200); }
+  .alt .ds-button { min-height: 44px; background: var(--ds-surface-raised); }
+  .ds-banner p + p { margin-top: var(--ds-space-100); }
+  .stepper { display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 var(--ds-space-200) 0 var(--ds-space-400); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+  .stepper__ctrl { display: flex; align-items: center; gap: var(--ds-space-200); }
+  .stepper .app-round { background: var(--ds-surface-sunken); }
+  .stepper__val { min-width: 32px; text-align: center; font: var(--ds-font-weight-bold) var(--ds-font-size-600)/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .app-select { background: var(--ds-surface-raised); color: var(--ds-text-primary); font: inherit; cursor: pointer; border-radius: var(--ds-shape-control); }
+  .app-select__val { font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .app-select__val--empty { color: var(--ds-text-secondary); font: var(--ds-font-weight-medium) var(--ds-type-body-md-font-size)/1 var(--ds-font-family-sans); }
+  textarea.ds-field__control { min-height: 88px; padding-block: var(--ds-space-300); resize: vertical; font: inherit; background: var(--ds-surface-raised); }
+
+  /* Lớp sheet trong khung */
+  .layer { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end; }
+  .layer[hidden] { display: none; }
+  .layer .ds-sheet { position: relative; }
+  .sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-space-300); }
+  .sheet-actions .ds-button { min-height: 52px; }
+  .sheet-kv { padding: 0 var(--ds-space-400); border-radius: var(--ds-card-radius); background: var(--ds-surface-page); }
+  .sheet-kv .app-kv { min-height: 44px; align-items: center; }
+  .sheet-kv .app-kv + .app-kv { border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
+  .app-kv--total .app-kv__value { font: var(--ds-font-weight-bold) var(--ds-font-size-600)/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .sheet .board { background: var(--ds-surface-page); }
+
+  /* Kết quả */
+  .result { display: flex; flex-direction: column; gap: var(--ds-space-400); padding: var(--ds-space-600) var(--ds-spacing-inset-lg) var(--ds-space-800); }
+  .result[hidden] { display: none; }
+  .result__icon { display: grid; place-items: center; width: 64px; height: 64px; border-radius: var(--ds-shape-pill); background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+  .result__icon .ds-icon { width: 32px; height: 32px; }
+  .result h2 { font: var(--ds-font-weight-bold) 26px/1.2 var(--app-font-display); }
+  .result .sheet-kv { background: var(--ds-surface-raised); }
+  .result__actions { display: flex; flex-direction: column; gap: var(--ds-space-200); }
+  .result__actions .ds-button { min-height: 52px; }
+
+  /* Lịch của tôi */
+  .bookings { display: flex; flex-direction: column; gap: var(--ds-space-300); }
+  .bk { display: grid; grid-template-columns: 64px 1fr; gap: var(--ds-space-400); align-items: center; padding: var(--ds-space-400); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+  .bk__day { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ds-space-100); height: 64px; border-radius: var(--ds-shape-control); background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); }
+  .bk__dow { font: var(--ds-font-weight-semibold) var(--ds-font-size-100)/1 var(--ds-font-family-sans); }
+  .bk__dm { font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .bk__body { display: flex; flex-direction: column; gap: var(--ds-space-100); min-width: 0; }
+  .bk__top { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-200); }
+  .bk__time { font: var(--ds-font-weight-bold) var(--ds-font-size-600)/1.2 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .bk__meta { display: flex; gap: var(--ds-space-300); color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); white-space: nowrap; }
+  .tag-new { display: inline-flex; align-items: center; gap: var(--ds-space-100); height: 28px; padding: 0 var(--ds-space-300); border-radius: var(--ds-shape-pill); background: var(--ds-feedback-success-surface); color: var(--ds-feedback-success-text); font: var(--ds-font-weight-semibold) var(--ds-font-size-100)/1 var(--ds-font-family-sans); white-space: nowrap; }
+  .seg-count { margin-left: var(--ds-space-100); font-variant-numeric: tabular-nums; }
+  .sched-body { min-height: 100%; box-sizing: border-box; }
+  .sched-panel { display: flex; flex-direction: column; }
+  .sched-panel[hidden] { display: none; }
+  .empty-wrap { flex: 1; justify-content: center; }
+  .empty-wrap .ds-empty { padding-block: var(--ds-space-1200); }
+  .empty-wrap h2 { color: var(--ds-text-primary); font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); }
+  .empty-wrap .ds-button { min-height: 44px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .slot, .court, .ds-chip { transition: background-color 120ms ease; }
+  }
+</style>
+</head>
+<body class="ds-root app">
+<!-- icons:start -->
+<!-- icons:end -->
+<main class="app-gallery">
+
+  <!-- 1. Trang chủ -->
+  <section class="app-gallery__item" aria-label="Trang chủ">
+    <p class="app-gallery__caption" data-annotation>Trang chủ</p>
+    <div class="app-phone" id="s-home" data-screen="Trang chủ" data-entry="màn khởi đầu">
+      <div class="app-status"><span class="app-status__time">17:45</span></div>
+      <div class="app-screen">
+        <header class="head">
+          <h1 tabindex="-1">Chào Minh</h1>
+          <p class="head__date">Thứ Năm 23/10</p>
+        </header>
+        <div class="app-body">
+          <section class="app-hero" id="home-hero" aria-labelledby="hero-label"></section>
+          <div class="sec-head">
+            <h2>Tối nay gần bạn</h2>
+            <a class="text-link" href="#s-list" data-to="s-list">Xem tất cả</a>
+          </div>
+          <ul class="courts" id="home-courts"></ul>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#s-home" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="app-tabbar__label">Trang chủ</span></a>
+        <a class="app-tabbar__item" href="#s-list"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span class="app-tabbar__label">Tìm sân</span></a>
+        <a class="app-tabbar__item" href="#s-schedule"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="app-tabbar__label">Lịch của tôi</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 2. Danh sách sân -->
+  <section class="app-gallery__item" aria-label="Danh sách sân">
+    <p class="app-gallery__caption" data-annotation>Danh sách sân</p>
+    <div class="app-phone" id="s-list" data-screen="Danh sách sân">
+      <div class="app-status"><span class="app-status__time">17:45</span></div>
+      <div class="app-screen">
+        <header class="head">
+          <h1 tabindex="-1">Tìm sân</h1>
+          <p class="head__date">Tối nay, Thứ Năm 23/10</p>
+        </header>
+        <div class="app-body">
+          <div class="ds-field search">
+            <label class="ds-visually-hidden" for="q">Tìm theo tên sân</label>
+            <div class="ds-field__wrap">
+              <svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg>
+              <input class="ds-field__control" id="q" type="search" placeholder="Tên sân" autocomplete="off" data-test="search">
+            </div>
+          </div>
+          <div class="chips" role="group" aria-label="Lọc theo quận" id="chips">
+            <button class="ds-chip" type="button" data-action="filter" data-district="all" aria-pressed="true">Tất cả</button>
+            <button class="ds-chip" type="button" data-action="filter" data-district="Phú Nhuận" aria-pressed="false">Phú Nhuận</button>
+            <button class="ds-chip" type="button" data-action="filter" data-district="Quận 10" aria-pressed="false" data-test="chip-q10">Quận 10</button>
+            <button class="ds-chip" type="button" data-action="filter" data-district="Quận 1" aria-pressed="false">Quận 1</button>
+          </div>
+          <ul class="courts" id="list-courts"></ul>
+          <div class="ds-empty" id="list-empty" hidden data-test="list-empty">
+            <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-search"/></svg></span>
+            <h2 class="block-title">Không tìm thấy sân</h2>
+            <button class="ds-button ds-button--secondary" type="button" data-action="clear-search" data-test="clear-search">Xóa tìm kiếm</button>
+          </div>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#s-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="app-tabbar__label">Trang chủ</span></a>
+        <a class="app-tabbar__item" href="#s-list" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span class="app-tabbar__label">Tìm sân</span></a>
+        <a class="app-tabbar__item" href="#s-schedule"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="app-tabbar__label">Lịch của tôi</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 3. Chi tiết sân -->
+  <section class="app-gallery__item" aria-label="Chi tiết sân">
+    <p class="app-gallery__caption" data-annotation>Chi tiết sân</p>
+    <div class="app-phone" id="s-detail" data-screen="Chi tiết sân" data-entry="thẻ sân ở Trang chủ và Tìm sân">
+      <div class="app-status"><span class="app-status__time">17:45</span></div>
+      <header class="app-header">
+        <button class="app-round" type="button" data-action="back" aria-label="Quay lại" data-test="detail-back"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></button>
+        <h1 class="app-header__title" id="detail-title" tabindex="-1">Sân Phú Nhuận</h1>
+      </header>
+      <div class="app-screen">
+        <div class="app-body body--footer" id="detail-body"></div>
+      </div>
+      <div class="app-footer">
+        <div class="app-checkout__row"><span class="app-checkout__what" id="detail-sum"></span><span class="app-checkout__total" id="detail-total"></span></div>
+        <p class="reason" id="detail-reason" data-reason>Chọn một khung giờ trống</p>
+        <button class="ds-button ds-button--primary ds-button--block" type="button" data-action="continue" data-to="s-book" aria-describedby="detail-reason" data-test="continue">Tiếp tục</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Đặt sân -->
+  <section class="app-gallery__item" aria-label="Đặt sân">
+    <p class="app-gallery__caption" data-annotation>Đặt sân</p>
+    <div class="app-phone" id="s-book" data-screen="Đặt sân">
+      <div class="app-status"><span class="app-status__time">17:45</span></div>
+      <header class="app-header">
+        <button class="app-round" type="button" data-action="back" aria-label="Quay lại" id="book-back" data-test="book-back"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></button>
+        <h1 class="app-header__title" id="book-title" tabindex="-1">Đặt sân</h1>
+      </header>
+      <div class="app-screen">
+        <div class="app-body body--footer" id="book-form">
+          <div class="ds-banner ds-banner--danger" id="book-error" role="alert" data-test="book-error" hidden></div>
+          <section class="app-panel">
+            <div class="app-panel__section">
+              <div class="app-kv"><span class="app-kv__label">Sân</span><span class="app-kv__value" id="book-court"></span></div>
+              <div class="app-kv"><span class="app-kv__label">Ngày</span><span class="app-kv__value">Thứ Năm 23/10</span></div>
+              <div class="app-kv"><span class="app-kv__label">Giá mỗi giờ</span><span class="app-kv__value num" id="book-price"></span></div>
+            </div>
+          </section>
+          <div class="ds-field">
+            <span class="ds-field__label" id="slot-label">Khung giờ</span>
+            <button class="app-select" type="button" id="book-slot" data-action="open-slot-sheet" data-to="slot-sheet" aria-labelledby="slot-label book-slot-val" data-test="book-slot">
+              <span class="app-select__lead"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg><span id="book-slot-val" class="app-select__val"></span></span>
+              <svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+            </button>
+          </div>
+          <div class="stepper" role="group" aria-labelledby="people-label">
+            <span class="ds-field__label" id="people-label">Số người</span>
+            <div class="stepper__ctrl">
+              <button class="app-round" type="button" data-action="people" data-step="-1" aria-label="Bớt một người"><svg class="ds-icon" aria-hidden="true"><use href="#app-i-minus"/></svg></button>
+              <span class="stepper__val" id="book-people" aria-live="polite">4</span>
+              <button class="app-round" type="button" data-action="people" data-step="1" aria-label="Thêm một người"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="ds-field">
+            <label class="ds-field__label" for="book-note">Ghi chú</label>
+            <textarea class="ds-field__control" id="book-note" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="result" id="book-result" data-result hidden data-test="booking-result" role="status">
+          <span class="result__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg></span>
+          <h2 id="result-title" tabindex="-1">Đã đặt sân</h2>
+          <div class="sheet-kv" id="result-kv"></div>
+          <div class="result__actions">
+            <button class="ds-button ds-button--primary ds-button--block" type="button" data-action="view-schedule" data-to="s-schedule" data-test="result-schedule">Xem lịch</button>
+            <button class="ds-button ds-button--secondary ds-button--block" type="button" data-to="s-home">Về trang chủ</button>
+          </div>
+        </div>
+      </div>
+      <div class="app-footer" id="book-footer">
+        <div class="app-checkout__row"><span class="app-checkout__what total-label">Tổng tiền</span><span class="app-checkout__total" id="book-total" data-test="book-total"></span></div>
+        <p class="reason" id="book-reason" data-reason>Chọn khung giờ để đặt sân</p>
+        <button class="ds-button ds-button--primary ds-button--block" type="button" id="book-submit" data-action="book-submit" data-to="book-confirm" aria-describedby="book-reason" data-test="book">Đặt sân</button>
+      </div>
+
+      <div class="layer" id="slot-sheet" role="dialog" aria-modal="true" aria-labelledby="slot-sheet-title" hidden data-test="slot-sheet">
+        <div class="ds-scrim" data-action="close-sheet"></div>
+        <div class="ds-sheet sheet">
+          <span class="ds-sheet__grabber" aria-hidden="true"></span>
+          <div class="ds-sheet__header">
+            <h2 class="block-title" id="slot-sheet-title">Chọn khung giờ</h2>
+            <button class="app-round" type="button" data-action="close-sheet" aria-label="Đóng"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-x"/></svg></button>
+          </div>
+          <div class="board" role="group" aria-labelledby="slot-sheet-title" id="sheet-slots"></div>
+        </div>
+      </div>
+
+      <div class="layer" id="book-confirm" role="dialog" aria-modal="true" aria-labelledby="confirm-title" hidden data-test="confirm-sheet">
+        <div class="ds-scrim" data-action="close-sheet"></div>
+        <div class="ds-sheet">
+          <span class="ds-sheet__grabber" aria-hidden="true"></span>
+          <h2 class="block-title" id="confirm-title">Đặt sân</h2>
+          <div class="sheet-kv" id="confirm-kv"></div>
+          <div class="sheet-actions">
+            <button class="ds-button ds-button--secondary" type="button" data-action="close-sheet" data-test="confirm-cancel">Hủy</button>
+            <button class="ds-button ds-button--primary" type="button" data-action="confirm-book" data-confirm-action data-to="book-result" data-test="confirm-book">Đặt sân</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Lịch của tôi -->
+  <section class="app-gallery__item" aria-label="Lịch của tôi">
+    <p class="app-gallery__caption" data-annotation>Lịch của tôi</p>
+    <div class="app-phone" id="s-schedule" data-screen="Lịch của tôi">
+      <div class="app-status"><span class="app-status__time">17:45</span></div>
+      <div class="app-screen">
+        <header class="head">
+          <h1 tabindex="-1">Lịch của tôi</h1>
+        </header>
+        <div class="app-body sched-body">
+          <div class="ds-segmented" role="group" aria-label="Lượt đặt">
+            <button class="ds-segmented__item" type="button" data-action="tab" data-tab="upcoming" aria-pressed="false" data-test="tab-upcoming">Sắp tới<span class="seg-count" id="upcoming-count"></span></button>
+            <button class="ds-segmented__item" type="button" data-action="tab" data-tab="past" aria-pressed="true" data-test="tab-past">Đã qua</button>
+          </div>
+          <div class="sched-panel" id="panel-upcoming" hidden>
+            <ul class="bookings" id="bookings" data-test="upcoming-list"></ul>
+          </div>
+          <div class="sched-panel empty-wrap" id="panel-past" data-test="past-empty">
+            <div class="ds-empty">
+              <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>
+              <h2>Chưa có lượt đã qua</h2>
+              <a class="ds-button ds-button--secondary" href="#s-list" data-to="s-list">Tìm sân</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="app-tabbar" aria-label="Điều hướng chính">
+        <a class="app-tabbar__item" href="#s-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="app-tabbar__label">Trang chủ</span></a>
+        <a class="app-tabbar__item" href="#s-list"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span class="app-tabbar__label">Tìm sân</span></a>
+        <a class="app-tabbar__item" href="#s-schedule" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="app-tabbar__label">Lịch của tôi</span></a>
+      </nav>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const TODAY = 'Thứ Năm 23/10';
+  const SLOTS = ['17:00', '18:00', '19:00', '20:00', '21:00'];
+  const COURTS = {
+    pn: { name: 'Sân Phú Nhuận', district: 'Phú Nhuận', dist: '1,2 km', price: 120000, booked: ['17:00', '19:00'], amen: ['Gửi xe', 'Phòng thay đồ', 'Cho thuê vợt', 'Nước uống'] },
+    kh: { name: 'Sân Kỳ Hoà', district: 'Quận 10', dist: '2,8 km', price: 100000, booked: ['17:00', '18:00', '20:00'], amen: ['Gửi xe', 'Nước uống'] },
+    td: { name: 'Sân Tân Định', district: 'Quận 1', dist: '3,5 km', price: 150000, booked: ['17:00', '18:00', '19:00', '21:00'], amen: ['Gửi xe', 'Phòng thay đồ', 'Nước uống'] },
+  };
+  const ORDER = ['pn', 'kh', 'td'];
+  // Lượt đặt: order nhỏ hơn là sớm hơn (hôm nay = 1, thứ Sáu 24/10 = 2)
+  const bookings = [{ court: 'pn', dow: 'Thứ Sáu', dm: '24/10', order: 2, time: '18:00', no: 3, people: 4, isNew: false }];
+  let conflict = { court: 'kh', time: '19:00' };   // khung vừa bị người khác đặt khi xác nhận
+  const st = { filter: 'all', q: '', tab: 'past' };
+  const detail = { court: 'pn', slot: '18:00' };
+  const book = { court: 'kh', slot: null, people: 4, error: '19:00', done: false };
+  const cameFrom = {};
+  const PARENT = { 's-detail': 's-list', 's-book': 's-detail' };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const ic = (id, cls = '') => `<svg class="ds-icon ${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
+  const money = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
+  const end = t => (parseInt(t, 10) + 1) + ':00';
+  const range = t => `${t}–${end(t)}`;
+  const free = id => SLOTS.filter(s => !COURTS[id].booked.includes(s));
+  const kv = (rows) => rows.map(([k, v, cls = '']) => `<div class="app-kv ${cls}"><span class="app-kv__label">${k}</span><span class="app-kv__value">${v}</span></div>`).join('');
+
+  function courtCard(id) {
+    const c = COURTS[id]; const f = free(id);
+    return `<li><button class="court" type="button" data-action="open-court" data-court="${id}" data-test="court-${id}">
+      <span class="court__name">${c.name}</span>
+      <span class="court__price">${money(c.price)}<span class="court__unit">/giờ</span></span>
+      <span class="court__meta"><span>${ic('ds-i-pin', 'ds-icon--sm')}${c.district}</span><span>${c.dist}</span></span><span></span>
+      <span class="court__slots"><span class="court__count${f.length ? '' : ' court__count--none'}">${f.length ? f.length + ' khung trống' : 'Hết khung'}</span><span class="court__times">${f.map(t => `<span>${t}</span>`).join('')}</span></span>
+      <span class="court__chev">${ic('ds-i-chevron-right')}</span>
+    </button></li>`;
+  }
+
+  function renderHome() {
+    const next = [...bookings].sort((a, b) => a.order - b.order || a.time.localeCompare(b.time))[0];
+    const c = COURTS[next.court];
+    $('#home-hero').innerHTML = `<div class="hero__grid">
+        <div class="hero__text">
+          <p class="hero__label app-hero__muted" id="hero-label">Lượt sắp tới</p>
+          <p class="hero__time" data-test="hero-time">${range(next.time)}</p>
+          <p class="hero__date">${next.dow} ${next.dm}</p>
+          <p class="app-hero__muted">${c.name}, sân số ${next.no}</p>
+        </div>
+        <svg class="hero__court" viewBox="0 0 64 104" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <rect x="1" y="1" width="62" height="102" rx="2" opacity=".55"/>
+          <path d="M1 52h62" stroke-width="3"/>
+          <path d="M1 36h62M1 68h62M32 1v35M32 68v35M6 1v102M58 1v102" opacity=".55"/>
+          <rect x="33" y="69" width="24" height="33" fill="currentColor" fill-opacity=".28" stroke="none"/>
+        </svg>
+      </div>
+      <a class="ds-button btn-on-brand" href="#s-schedule" data-action="view-schedule" data-to="s-schedule" data-test="hero-schedule">Xem lịch</a>`;
+    $('#home-courts').innerHTML = ORDER.map(courtCard).join('');
+  }
+
+  function renderList() {
+    const q = st.q.trim().toLowerCase();
+    const ids = ORDER.filter(id => (st.filter === 'all' || COURTS[id].district === st.filter) && (!q || COURTS[id].name.toLowerCase().includes(q)));
+    $('#list-courts').innerHTML = ids.map(courtCard).join('');
+    $('#list-empty').hidden = ids.length > 0;
+    document.querySelectorAll('#chips .ds-chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.district === st.filter)));
+  }
+
+  function slotRow(courtId, t, selected, action) {
+    const taken = COURTS[courtId].booked.includes(t);
+    const isSel = !taken && selected === t;
+    const state = taken ? 'Đã đặt' : isSel ? `${ic('app-i-check', 'ds-icon--sm')}Đang chọn` : 'Trống';
+    return `<button class="slot" type="button" data-action="${action}" data-slot="${t}" aria-pressed="${isSel}"${taken ? ' aria-disabled="true"' : ''} data-test="${action}-${t.slice(0, 2)}">
+      <span class="slot__time">${range(t)}</span><span class="slot__state">${state}</span></button>`;
+  }
+
+  function setPrimary(btn, reason, ok, text) {
+    btn.setAttribute('aria-disabled', String(!ok));
+    reason.hidden = ok;
+    if (text) reason.innerHTML = ic('ds-i-info', 'ds-icon--sm') + text;
+  }
+
+  function renderDetail() {
+    const c = COURTS[detail.court];
+    if (detail.slot && c.booked.includes(detail.slot)) detail.slot = null;
+    $('#detail-title').textContent = c.name;
+    $('#detail-body').innerHTML = `
+      <section class="app-panel">
+        <div class="app-panel__section">${kv([['Quận', c.district], ['Cách', c.dist], ['Giá mỗi giờ', `<span class="num">${money(c.price)}</span>`]])}</div>
+        <div class="app-panel__section"><h2 class="block-title">Tiện ích</h2><ul class="amen">${c.amen.map(a => `<li>${ic('app-i-check', 'ds-icon--sm')}${a}</li>`).join('')}</ul></div>
+      </section>
+      <div class="block-head"><h2 class="block-title" id="slots-title">Khung giờ hôm nay</h2><span class="head__date">${TODAY}</span></div>
+      <div class="board" role="group" aria-labelledby="slots-title">${SLOTS.map(t => slotRow(detail.court, t, detail.slot, 'pick-slot')).join('')}</div>`;
+    $('#detail-sum').innerHTML = detail.slot ? `<strong>${range(detail.slot)}</strong>` : 'Chưa chọn khung';
+    $('#detail-total').textContent = detail.slot ? money(c.price) : money(0);
+    setPrimary($('[data-action="continue"]'), $('#detail-reason'), !!detail.slot, free(detail.court).length ? 'Chọn một khung giờ trống' : 'Sân đã hết khung hôm nay');
+  }
+
+  function renderBook() {
+    const c = COURTS[book.court];
+    const form = $('#book-form'), result = $('#book-result');
+    form.hidden = book.done; result.hidden = !book.done;
+    $('#book-footer').hidden = book.done; $('#book-back').hidden = book.done;
+    if (book.done) return;
+    $('#book-court').textContent = c.name;
+    $('#book-price').textContent = money(c.price);
+    const val = $('#book-slot-val');
+    val.textContent = book.slot ? range(book.slot) : 'Chưa chọn';
+    val.className = 'app-select__val' + (book.slot ? '' : ' app-select__val--empty');
+    $('#book-slot').setAttribute('aria-invalid', String(!!book.error && !book.slot));
+    $('#book-people').textContent = book.people;
+    $('#book-total').textContent = money(book.slot ? c.price : 0);
+    const err = $('#book-error');
+    if (book.error && !book.slot) {
+      const alts = free(book.court);
+      err.innerHTML = `${ic('ds-i-alert')}<div><p><strong>Khung ${book.error} vừa có người đặt</strong></p>` +
+        (alts.length ? `<p>Chọn khung khác còn trống:</p><div class="alt">${alts.map(t => `<button class="ds-button ds-button--secondary ds-button--sm num" type="button" data-action="pick-book-slot" data-slot="${t}" data-test="alt-${t.slice(0, 2)}">${range(t)}</button>`).join('')}</div>`
+          : `<p>Sân này hết khung hôm nay.</p><div class="alt"><a class="ds-button ds-button--secondary ds-button--sm" href="#s-list" data-to="s-list">Tìm sân</a></div>`) + `</div>`;
+      err.hidden = false;
+    } else err.hidden = true;
+    setPrimary($('#book-submit'), $('#book-reason'), !!book.slot, book.error ? 'Chọn khung khác để đặt sân' : 'Chọn khung giờ để đặt sân');
+  }
+
+  function renderSheetSlots() {
+    $('#sheet-slots').innerHTML = SLOTS.map(t => slotRow(book.court, t, book.slot, 'pick-sheet-slot')).join('');
+  }
+
+  function renderSchedule() {
+    const list = [...bookings].sort((a, b) => a.order - b.order || a.time.localeCompare(b.time));
+    $('#bookings').innerHTML = list.map(b => `<li class="bk" data-test="booking">
+        <div class="bk__day"><span class="bk__dow">${b.dow}</span><span class="bk__dm">${b.dm}</span></div>
+        <div class="bk__body">
+          <div class="bk__top"><span class="bk__time">${range(b.time)}</span>${b.isNew ? `<span class="tag-new">${ic('app-i-check', 'ds-icon--sm')}Mới đặt</span>` : ''}</div>
+          <span>${COURTS[b.court].name}</span>
+          <span class="bk__meta"><span>Sân số ${b.no}</span><span>${b.people} người</span></span>
+        </div></li>`).join('');
+    $('#upcoming-count').textContent = list.length;
+    document.querySelectorAll('[data-action="tab"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tab === st.tab)));
+    $('#panel-upcoming').hidden = st.tab !== 'upcoming';
+    $('#panel-past').hidden = st.tab !== 'past';
+  }
+
+  function renderAll() { renderHome(); renderList(); renderDetail(); renderBook(); renderSchedule(); }
+
+  function setActive(id) {
+    document.querySelectorAll('[data-screen]').forEach(s => s.toggleAttribute('data-active', s.id === id));
+  }
+  function go(id, fromEl, back) {
+    const from = fromEl && fromEl.closest('[data-screen]');
+    if (!back && from && from.id !== id && PARENT[id]) cameFrom[id] = from.id;
+    setActive(id);
+    const phone = document.getElementById(id);
+    phone.scrollIntoView({ block: 'start', inline: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    const h = phone.querySelector('h1');
+    if (h) h.focus({ preventScroll: true });
+  }
+  function goBack(el) {
+    const cur = el.closest('[data-screen]').id;
+    const to = cameFrom[cur] || PARENT[cur];
+    delete cameFrom[cur];
+    if (cur === 's-book') { detail.court = book.court; detail.slot = book.slot; renderDetail(); }
+    go(to, null, true);
+  }
+
+  let lastFocus = null;
+  function openSheet(id, opener) {
+    lastFocus = opener;
+    const layer = document.getElementById(id);
+    layer.hidden = false;
+    const first = layer.querySelector('.ds-sheet button');
+    if (first) first.focus();
+  }
+  function closeSheets() {
+    document.querySelectorAll('.layer').forEach(l => { l.hidden = true; });
+    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  }
+
+  function fillConfirm() {
+    const c = COURTS[book.court];
+    $('#confirm-kv').innerHTML = kv([['Sân', c.name], ['Ngày', TODAY], ['Khung giờ', `<span class="num">${range(book.slot)}</span>`], ['Số người', book.people], ['Tổng tiền', money(c.price), 'app-kv--total']]);
+  }
+
+  function confirmBook(btn) {
+    const c = COURTS[book.court];
+    btn.setAttribute('aria-disabled', 'true');
+    closeSheets();
+    btn.removeAttribute('aria-disabled');
+    if (conflict && conflict.court === book.court && conflict.time === book.slot) {
+      c.booked.push(book.slot);
+      book.error = book.slot; book.slot = null; conflict = null;
+      renderAll();
+      $('#book-error').focus && $('#book-error').setAttribute('tabindex', '-1');
+      $('#book-error').focus();
+      return;
+    }
+    c.booked.push(book.slot);
+    const no = 2;
+    bookings.forEach(b => { b.isNew = false; });
+    bookings.push({ court: book.court, dow: 'Thứ Năm', dm: '23/10', order: 1, time: book.slot, no, people: book.people, isNew: true });
+    $('#result-kv').innerHTML = kv([['Sân', c.name], ['Ngày', TODAY], ['Khung giờ', `<span class="num">${range(book.slot)}</span>`], ['Sân số', no], ['Số người', book.people], ['Tổng tiền', money(c.price), 'app-kv--total']]);
+    book.done = true; st.tab = 'upcoming';
+    renderAll();
+    $('#result-title').focus();
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-action], [data-to], a[href^="#s-"]');
+    if (!t) return;
+    e.preventDefault();
+    if (t.getAttribute('aria-disabled') === 'true') return;
+    const a = t.dataset.action;
+    switch (a) {
+      case 'open-court': detail.court = t.dataset.court; detail.slot = null; renderDetail(); return go('s-detail', t);
+      case 'pick-slot': detail.slot = t.dataset.slot; return renderDetail();
+      case 'continue':
+        Object.assign(book, { court: detail.court, slot: detail.slot, people: 4, error: null, done: false });
+        $('#book-note').value = '';
+        renderBook(); return go('s-book', t);
+      case 'back': return goBack(t);
+      case 'filter': st.filter = t.dataset.district; return renderList();
+      case 'clear-search': st.q = ''; st.filter = 'all'; $('#q').value = ''; renderList(); return $('#q').focus();
+      case 'open-slot-sheet': renderSheetSlots(); return openSheet('slot-sheet', t);
+      case 'pick-sheet-slot': case 'pick-book-slot':
+        book.slot = t.dataset.slot; book.error = book.error && null; closeSheets(); renderBook();
+        return $('#book-slot').focus();
+      case 'close-sheet': return closeSheets();
+      case 'people': book.people = Math.min(12, Math.max(1, book.people + Number(t.dataset.step))); return renderBook();
+      case 'book-submit': fillConfirm(); return openSheet('book-confirm', t);
+      case 'confirm-book': return confirmBook(t);
+      case 'tab': st.tab = t.dataset.tab; return renderSchedule();
+      case 'view-schedule': st.tab = 'upcoming'; renderSchedule(); return go('s-schedule', t);
+    }
+    const to = t.dataset.to || (t.getAttribute('href') || '').slice(1);
+    if (to && document.getElementById(to) && document.getElementById(to).hasAttribute('data-screen')) go(to, t);
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+  $('#q').addEventListener('input', e => { st.q = e.target.value; renderList(); });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
