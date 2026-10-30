@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đất Nung xưởng gốm</title>
+<meta name="description" content="Lớp làm gốm cuối tuần cho người mới ở 24 Hàng Chiếu, Hà Nội.">
+<link rel="stylesheet" href="../../../../design-system/fonts/pairs.css">
+<link rel="stylesheet" href="brand.css">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+  :root { --drip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -40 1200 120' preserveAspectRatio='none'%3E%3Cpath fill='%232340b0' d='M0 -40 H1200 V0 H1132.5 Q1126.5 0 1126.5 8 V26.5 Q1126.5 36 1117 36 Q1107.5 36 1107.5 26.5 V8 Q1107.5 0 1101.5 0 H1020.5 Q1014.5 0 1014.5 8 V38.5 Q1014.5 45 1008 45 Q1001.5 45 1001.5 38.5 V8 Q1001.5 0 995.5 0 H874 Q868 0 868 8 V40 Q868 46 862 46 Q856 46 856 40 V8 Q856 0 850 0 H725.5 Q719.5 0 719.5 8 V72.5 Q719.5 78 714 78 Q708.5 78 708.5 72.5 V8 Q708.5 0 702.5 0 H653 Q647 0 647 8 V40 Q647 49 638 49 Q629 49 629 40 V8 Q629 0 623 0 H576.5 Q570.5 0 570.5 8 V54.5 Q570.5 61 564 61 Q557.5 61 557.5 54.5 V8 Q557.5 0 551.5 0 H474.5 Q468.5 0 468.5 8 V13.5 Q468.5 23 459 23 Q449.5 23 449.5 13.5 V8 Q449.5 0 443.5 0 H343 Q337 0 337 8 V28 Q337 36 329 36 Q321 36 321 28 V8 Q321 0 315 0 H227.5 Q221.5 0 221.5 8 V68.5 Q221.5 74 216 74 Q210.5 74 210.5 68.5 V8 Q210.5 0 204.5 0 H122.5 Q116.5 0 116.5 8 V39.5 Q116.5 46 110 46 Q103.5 46 103.5 39.5 V8 Q103.5 0 97.5 0 H54.5 Q48.5 0 48.5 8 V45.5 Q48.5 54 40 54 Q31.5 54 31.5 45.5 V8 Q31.5 0 25.5 0 H0 Z'/%3E%3C/svg%3E"); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="wrap top">
+  <a class="brand" href="#dau-trang" id="dau-trang">Đất Nung</a>
+  <nav aria-label="Mục chính">
+    <a href="#lop-hoc">Lớp học</a>
+    <a href="#buoi-hoc">Buổi học</a>
+    <a href="#lich-hoc">Lịch học</a>
+    <a href="#hoi-dap">Hỏi đáp</a>
+    <a class="tel" href="tel:0912345678">0912 345 678</a>
+  </nav>
+</header>
+
+<main>
+  <!-- Hero: chữ rất lớn bên trái, chiếc cốc trên bàn xoay bên phải; men lam chảy xuống theo cuộn -->
+  <section class="wrap hero" aria-labelledby="loi-hua">
+    <div class="copy">
+      <h1 id="loi-hua" class="display" data-reveal>Ba tiếng, một khối đất, một chiếc cốc của riêng bạn.</h1>
+      <div class="act">
+        <button class="btn btn--primary btn--lg" type="button" data-open-booking data-to="dat-cho"><span>Đặt chỗ</span><span class="dot" aria-hidden="true"></span></button>
+        <div class="facts">
+          <div><span class="label">Mỗi buổi</span><strong class="num">từ 300.000 ₫</strong></div>
+          <div><span class="label">Mở lớp</span><strong>Thứ Bảy, Chủ nhật</strong></div>
+        </div>
+      </div>
+      <p class="booked" role="status" data-booked></p>
+    </div>
+
+    <div class="cup" role="img" aria-label="Chiếc cốc gốm trên bàn xoay, men lam chảy từ miệng cốc xuống">
+      <svg id="cup" viewBox="0 0 400 480" style="--g:1" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="cup-clip">
+            <path d="M108 148 C104 250 112 352 140 396 Q200 412 260 396 C288 352 296 250 292 148 Z"/>
+            <ellipse cx="200" cy="148" rx="92" ry="20"/>
+            <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z"/>
+          </clipPath>
+          <linearGradient id="cup-shade" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
+            <stop offset=".22" stop-color="#fff" stop-opacity=".1"/>
+            <stop offset=".55" stop-color="#000" stop-opacity="0"/>
+            <stop offset="1" stop-color="#000" stop-opacity=".32"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="200" cy="452" rx="196" ry="26" fill="#000" opacity=".12"/>
+        <path d="M24 420 V436 A176 36 0 0 0 376 436 V420 Z" style="fill:var(--wheel)"/>
+        <ellipse cx="200" cy="420" rx="176" ry="36" style="fill:var(--wheel-top)"/>
+        <g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2" stroke-linecap="round">
+          <ellipse class="spin" cx="200" cy="420" rx="152" ry="30" stroke-dasharray="64 30"/>
+          <ellipse class="spin" cx="200" cy="420" rx="118" ry="23" stroke-dasharray="40 22"/>
+        </g>
+        <g class="clay">
+          <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z" style="fill:var(--clay-body)"/>
+          <path d="M108 148 C104 250 112 352 140 396 Q200 412 260 396 C288 352 296 250 292 148 Z" style="fill:var(--clay-body)"/>
+          <ellipse cx="200" cy="148" rx="92" ry="20" style="fill:var(--clay-body)"/>
+          <g fill="none" style="stroke:var(--clay-shade)" stroke-opacity=".45" stroke-width="1.5">
+            <path d="M110 200 Q200 214 290 200"/><path d="M111 250 Q200 266 291 250"/><path d="M114 300 Q200 316 288 300"/><path d="M122 350 Q200 366 280 350"/>
+          </g>
+        </g>
+        <g clip-path="url(#cup-clip)">
+          <g id="glaze" transform="translate(0 300)">
+            <path d="M0 -700 H400 V0 H368 Q362 0 362 8 V38 Q362 44 356 44 Q350 44 350 38 V8 Q350 0 344 0 H301 Q295 0 295 8 V71 Q295 78 288 78 Q281 78 281 71 V8 Q281 0 275 0 H225 Q219 0 219 8 V21 Q219 26 214 26 Q209 26 209 21 V8 Q209 0 203 0 H160 Q154 0 154 8 V56 Q154 64 146 64 Q138 64 138 56 V8 Q138 0 132 0 H84 Q78 0 78 8 V28 Q78 34 72 34 Q66 34 66 28 V8 Q66 0 60 0 H0 Z" style="fill:var(--glaze)"/>
+          </g>
+          <rect x="0" y="100" width="400" height="320" fill="url(#cup-shade)"/>
+          <rect x="132" y="150" width="10" height="230" rx="5" fill="#fff" opacity=".22"/>
+        </g>
+        <ellipse cx="200" cy="150" rx="78" ry="14" style="fill:var(--cup-inside)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Ba lớp: danh sách chữ lớn, không card -->
+  <section class="wrap classes" id="lop-hoc" aria-labelledby="t-lop">
+    <div class="side">
+      <h2 id="t-lop" class="h2" data-reveal>Ba lớp</h2>
+    </div>
+    <div class="list">
+      <ul class="rows">
+        <li>
+          <button class="row" type="button" data-open-booking data-class="0" data-to="dat-cho">
+            <svg class="ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><ellipse cx="32" cy="52" rx="26" ry="6" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M20 20 C19 32 21 42 25 48 Q32 50 39 48 C43 42 45 32 44 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><ellipse cx="32" cy="20" rx="12" ry="3" style="fill:var(--glaze)"/></svg>
+            <span class="name">Bàn xoay cơ bản</span>
+            <span class="meta"><span>3 giờ</span><span>8 người</span></span>
+            <span class="price num">450.000 ₫</span>
+            <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
+        </li>
+        <li>
+          <button class="row" type="button" data-open-booking data-class="1" data-to="dat-cho">
+            <svg class="ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M10 30 C12 46 22 52 32 52 C42 52 52 46 54 30 C46 33 40 31 32 31 C24 31 18 33 10 30 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M24 40 Q28 37 32 40 Q36 43 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="32" cy="18" r="7" style="fill:var(--glaze)"/></svg>
+            <span class="name">Nặn tay</span>
+            <span class="meta"><span>2,5 giờ</span><span>10 người</span></span>
+            <span class="price num">350.000 ₫</span>
+            <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
+        </li>
+        <li>
+          <button class="row" type="button" data-open-booking data-class="2" data-to="dat-cho">
+            <svg class="ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M18 14 C17 30 19 44 23 52 Q32 55 41 52 C45 44 47 30 46 14 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M17.6 14 H46.4 C46.4 22 46 28 45.6 30 Q44 30 43.5 34 Q42 38 40.5 34 L40 30 H30 Q29.5 38 27.5 38 Q25.5 38 25 31 L24 30 H18.4 C18 25 17.7 20 17.6 14 Z" style="fill:var(--glaze)"/></svg>
+            <span class="name">Tráng men</span>
+            <span class="meta"><span>2 giờ</span><span>8 người</span></span>
+            <span class="price num">300.000 ₫</span>
+            <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
+        </li>
+      </ul>
+      <div class="incl">
+        <p>Giá đã gồm đất, men, nung và trà.</p>
+        <p>Sản phẩm nung xong nhận sau 2 tuần.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Một buổi học: men lam chảy phủ cả section theo cuộn -->
+  <section class="flood" id="buoi-hoc" aria-labelledby="t-buoi" data-flood>
+    <div class="flood__glaze" aria-hidden="true">
+      <svg viewBox="0 0 1200 80" preserveAspectRatio="none" focusable="false"><path d="M0 -40 H1200 V0 H1132.5 Q1126.5 0 1126.5 8 V26.5 Q1126.5 36 1117 36 Q1107.5 36 1107.5 26.5 V8 Q1107.5 0 1101.5 0 H1020.5 Q1014.5 0 1014.5 8 V38.5 Q1014.5 45 1008 45 Q1001.5 45 1001.5 38.5 V8 Q1001.5 0 995.5 0 H874 Q868 0 868 8 V40 Q868 46 862 46 Q856 46 856 40 V8 Q856 0 850 0 H725.5 Q719.5 0 719.5 8 V72.5 Q719.5 78 714 78 Q708.5 78 708.5 72.5 V8 Q708.5 0 702.5 0 H653 Q647 0 647 8 V40 Q647 49 638 49 Q629 49 629 40 V8 Q629 0 623 0 H576.5 Q570.5 0 570.5 8 V54.5 Q570.5 61 564 61 Q557.5 61 557.5 54.5 V8 Q557.5 0 551.5 0 H474.5 Q468.5 0 468.5 8 V13.5 Q468.5 23 459 23 Q449.5 23 449.5 13.5 V8 Q449.5 0 443.5 0 H343 Q337 0 337 8 V28 Q337 36 329 36 Q321 36 321 28 V8 Q321 0 315 0 H227.5 Q221.5 0 221.5 8 V68.5 Q221.5 74 216 74 Q210.5 74 210.5 68.5 V8 Q210.5 0 204.5 0 H122.5 Q116.5 0 116.5 8 V39.5 Q116.5 46 110 46 Q103.5 46 103.5 39.5 V8 Q103.5 0 97.5 0 H54.5 Q48.5 0 48.5 8 V45.5 Q48.5 54 40 54 Q31.5 54 31.5 45.5 V8 Q31.5 0 25.5 0 H0 Z"/></svg>
+    </div>
+    <div class="wrap">
+      <div class="head">
+        <h2 id="t-buoi" class="h2" data-reveal>Một buổi học</h2>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <span class="n num" aria-hidden="true">01</span>
+          <h3>Làm quen với đất</h3>
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 44 C8 30 20 18 33 20 C47 22 56 34 50 46 C44 54 18 54 12 44 Z"/><path d="M24 34 Q32 28 40 34"/><path d="M22 40 Q32 33 42 40"/><path d="M27 29 Q32 26 37 29"/></svg>
+        </li>
+        <li class="step">
+          <span class="n num" aria-hidden="true">02</span>
+          <h3>Tạo hình</h3>
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><ellipse cx="32" cy="52" rx="26" ry="6"/><path d="M20 16 C19 30 21 40 25 47 Q32 49 39 47 C43 40 45 30 44 16"/><ellipse cx="32" cy="16" rx="12" ry="3"/><path d="M8 40 Q12 36 16 40" stroke-dasharray="3 4"/><path d="M48 40 Q52 36 56 40" stroke-dasharray="3 4"/></svg>
+        </li>
+        <li class="step">
+          <span class="n num" aria-hidden="true">03</span>
+          <h3>Chọn men</h3>
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 30 H50 C50 44 42 52 32 52 C22 52 14 44 14 30 Z"/><path d="M15 34 H49"/><path d="M24 34 V40 Q24 43 26 43 Q28 43 28 40 V34"/><path d="M38 34 V44 Q38 47 40 47 Q42 47 42 44 V34"/><path d="M32 8 C32 8 26 16 26 20 A6 6 0 0 0 38 20 C38 16 32 8 32 8 Z"/></svg>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Lịch học và hỏi đáp: hai cột lệch -->
+  <section class="wrap info" aria-label="Lịch học và hỏi đáp">
+    <div class="sched" id="lich-hoc">
+      <h2 class="h2" data-reveal>Lịch học</h2>
+      <dl>
+        <div class="day">
+          <dt>Thứ Bảy</dt>
+          <dd><span>Ca sáng</span><time class="num" datetime="09:00">9:00</time></dd>
+          <dd><span>Ca chiều</span><time class="num" datetime="14:00">14:00</time></dd>
+        </div>
+        <div class="day">
+          <dt>Chủ nhật</dt>
+          <dd><span>Ca sáng</span><time class="num" datetime="09:00">9:00</time></dd>
+          <dd><span>Ca chiều</span><time class="num" datetime="14:00">14:00</time></dd>
+        </div>
+      </dl>
+    </div>
+    <div class="faq" id="hoi-dap">
+      <h2 class="h2" data-reveal>Hỏi đáp</h2>
+      <div class="qa">
+        <h3>Chưa từng làm gốm có học được không?</h3>
+        <p>Được, lớp dành cho người mới, mỗi bàn có người hướng dẫn.</p>
+      </div>
+      <div class="qa">
+        <h3>Có được mang con nhỏ theo không?</h3>
+        <p>Trẻ từ 8 tuổi tham gia lớp Nặn tay cùng bố mẹ.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap end" id="lien-he">
+    <div class="addr">
+      <address>24 Hàng Chiếu, Hoàn Kiếm, Hà Nội</address>
+      <a class="tel num" href="tel:0912345678">0912 345 678</a>
+    </div>
+    <div class="act">
+      <button class="btn btn--primary btn--lg" type="button" data-open-booking data-to="dat-cho"><span>Đặt chỗ</span><span class="dot" aria-hidden="true"></span></button>
+      <p class="booked" role="status" data-booked></p>
+    </div>
+  </div>
+  <p class="mark" aria-hidden="true"><span>Đất Nung</span></p>
+</footer>
+
+<!-- Sheet đặt chỗ: chọn, xác nhận, kết quả -->
+<dialog class="sheet" id="dat-cho" aria-labelledby="t-form">
+  <form class="view" data-view="form" method="dialog" novalidate>
+    <div class="sheet-head">
+      <h2 id="t-form">Đặt chỗ</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Đóng"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <fieldset>
+        <legend>Lớp</legend>
+        <div class="opts" data-group="cls"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Ngày</legend>
+        <div class="opts opts--2" data-group="day"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Ca</legend>
+        <div class="opts opts--2" data-group="slot"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Số người</legend>
+        <div class="stepper">
+          <button type="button" data-step="-1" aria-label="Bớt một người">−</button>
+          <output id="people" aria-live="polite">1</output>
+          <button type="button" data-step="1" aria-label="Thêm một người">+</button>
+          <span class="cap" data-cap></span>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="f-name">Họ tên</label>
+        <input id="f-name" name="name" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="f-phone">Số điện thoại</label>
+        <input id="f-phone" name="phone" inputmode="tel" autocomplete="tel">
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <div class="total"><span class="label">Tổng</span><strong class="num" data-total>450.000 ₫</strong></div>
+      <p class="reason" id="why" data-reason>Chọn ngày học</p>
+      <button class="btn btn--primary" type="button" data-primary data-go-confirm aria-disabled="true" aria-describedby="why">Đặt chỗ</button>
+    </div>
+  </form>
+
+  <section class="view" data-view="confirm" role="alertdialog" aria-labelledby="t-confirm" hidden>
+    <div class="sheet-head">
+      <h2 id="t-confirm">Đặt chỗ</h2>
+      <button class="icon-btn" type="button" data-back aria-label="Quay lại"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="confirm-card"><dl class="kv" data-summary="confirm"></dl></div>
+    </div>
+    <div class="sheet-foot">
+      <div class="total"><span class="label">Tổng</span><strong class="num" data-total>450.000 ₫</strong></div>
+      <div class="foot-btns">
+        <button class="btn btn--ghost" type="button" data-back>Hủy</button>
+        <button class="btn btn--primary" type="button" data-confirm-action data-to="ket-qua">Đặt chỗ</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" data-view="result" id="ket-qua" data-result aria-labelledby="t-done" hidden>
+    <div class="sheet-body">
+      <div class="done-icon" aria-hidden="true"><svg><use href="#i-check"/></svg></div>
+      <h2 class="done-title" id="t-done">Đã đặt chỗ</h2>
+      <div class="person"><span class="avatar" data-initials aria-hidden="true"></span><div><b data-person-name></b><span class="num" data-person-phone></span></div></div>
+      <div class="result-card"><dl class="kv" data-summary="result"></dl></div>
+      <p class="summary">Hẹn bạn ở 24 Hàng Chiếu, Hoàn Kiếm.</p>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn btn--primary" type="button" data-close>Xong</button>
+    </div>
+  </section>
+</dialog>
+
+<script src="site.js"></script>
+</body>
+</html>
