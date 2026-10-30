@@ -42,7 +42,9 @@ Ba điểm khác starter:  1. bo 12px thay 24px  2. font số Manrope kiểu b�
 - Lỗi: đặt Sân Kỳ Hoà 19:00 lần đầu luôn trả "vừa có người đặt" (mô phỏng tranh chấp). Form xoá khung đã chọn,
   hiện banner lỗi kèm các khung còn trống của sân để chọn ngay, hoặc "Đổi khung" mở sheet; nút "Đặt sân" khoá kèm lý do
   (aria-describedby) tới khi chọn khung mới. Khung đặt hình Đặt sân ban đầu hiện sẵn trạng thái lỗi này để duyệt ảnh.
-- Lịch của tôi ban đầu mở tab Đã qua để thể hiện trạng thái rỗng (đề yêu cầu); đi từ "Xem lịch" thì mở Sắp tới.
+- Lịch của tôi ban đầu mở tab Đã qua để thể hiện trạng thái rỗng (đề yêu cầu): thẻ rỗng gọn, bên dưới là "Tối nay gần bạn"
+  (3 sân của đề) để đặt tiếp ngay; đi từ "Xem lịch" thì mở Sắp tới.
+- Thẻ sân (Trang chủ, Tìm sân, Lịch) có các khung trống tối nay là nút bấm được: mở Chi tiết đúng sân với khung đó chọn sẵn.
 
 ## Phần mô phỏng, dữ liệu mẫu
 
@@ -55,11 +57,10 @@ Ba điểm khác starter:  1. bo 12px thay 24px  2. font số Manrope kiểu b�
 ## Kiểm tra
 
 - `check-brand.py brand.css`: ĐẠT, 0 lỗi.
-- `static-check.cjs index.html`: ĐẠT, 0 lỗi.
-- `flow-check.cjs --mode prototype`: tĩnh PASS, 0 FAIL, 0 WARN; 16 UNKNOWN (nút xử lý bằng JS tại chỗ, runtime), đã phủ bằng kịch bản.
-- `scenarios.cjs`: 7/7 PASS trên Chromium 1243 sẵn trong máy (Playwright 1.63 cần trỏ `executablePath`), 0 lỗi JS trang.
+- `static-check.cjs`: 0 lỗi. `flow-check.cjs --mode prototype`: tĩnh PASS, 0 FAIL, 0 WARN; UNKNOWN là nút JS tại chỗ và runtime, phủ bằng kịch bản.
+- `scenarios.cjs`: 8/8 PASS trên Chromium 1243 sẵn trong máy (Playwright 1.63, trỏ `executablePath`), 0 lỗi JS trang.
   Hai nút khoá (`aria-disabled`) được bấm bằng `force: true` để chứng minh bấm vào không chuyển màn.
-- `taste-check.cjs` 390 và 1280, sáng và tối: 0 lỗi, 0 cảnh báo. Thẻ rỗng tab Đã qua đánh dấu `data-whitespace`
-  (khoảng thở có chủ đích trong thẻ rỗng, không phải mảng trống của màn). axe-core chưa cài nên chưa chạy.
-- Đã xem ảnh: gallery 1280 sáng; sheet chọn khung, sheet xác nhận, kết quả, Lịch có lượt mới, Trang chủ cập nhật ở cả sáng và tối.
+- `taste-check.cjs --width 390 --width 1024 --width 1280 --width 1440 --height 900 --reflow`, sáng và tối: 0 lỗi, 0 cảnh báo,
+  không dùng `data-whitespace`. axe-core chưa cài nên chưa chạy.
+- Đã xem ảnh: gallery 1280 và 1440 sáng; sheet chọn khung, sheet xác nhận, kết quả, Lịch có lượt mới, Trang chủ cập nhật ở sáng và tối.
 - Chưa kiểm: trình đọc màn hình thật, chữ phóng 200%, thiết bị thật, người dùng thật; duyệt hướng `CHƯA DUYỆT`.

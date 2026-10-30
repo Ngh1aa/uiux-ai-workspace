@@ -413,7 +413,7 @@
       <span class="court__meta"><span>${ic('ds-i-pin', 'ds-icon--sm')}${c.district}</span><span>${c.dist}</span></span>
       <span class="court__slots"><span class="court__count${f.length ? '' : ' court__count--none'}">${f.length ? f.length + ' khung trống' : 'Hết khung'}</span></span>
       <span class="court__chev">${ic('ds-i-chevron-right')}</span>
-    </button>${f.length ? `<div class="court__chips" role="group" aria-label="Khung trống tối nay ở ${c.name}">${f.map(t => `<button class="court__chip" type="button" data-action="open-court" data-court="${id}" data-slot="${t}" aria-label="${range(t)} ở ${c.name}">${t}</button>`).join('')}</div>` : ''}</li>`;
+    </button>${f.length ? `<div class="court__chips" role="group" aria-label="Khung trống tối nay ở ${c.name}">${f.map(t => `<button class="court__chip" type="button" data-action="open-court" data-court="${id}" data-slot="${t}" >${t}<span class="ds-visually-hidden"> ở ${c.name}</span></button>`).join('')}</div>` : ''}</li>`;
   }
 
   function renderHome() {
