@@ -1,0 +1,43 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-iterative-repair/02-app/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-iterative-repair/02-app/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}
