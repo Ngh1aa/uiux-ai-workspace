@@ -22,7 +22,7 @@ làm đúng.
 
 Bảng dữ liệu có lọc, sắp xếp, trạng thái và bàn phím: dùng `ds-table` hiện có theo
 [màn Sổ đơn hàng](../examples/data-table/README.md). Không tạo một component bảng song song.
-Giữ caption về đơn vị/nguồn khi giúp đọc số; trạng thái có chữ, màu/vạch chỉ là tín hiệu bổ sung.
+Đơn vị đặt trong nhãn cột hoặc cạnh con số, không thêm dòng caption giải thích. Trạng thái dùng nhãn chữ hoặc chip, không dùng thanh màu bên trái (xem [TASTE.md](../../TASTE.md)).
 
 1. Viết ra câu hỏi người dùng mang tới màn: "hôm nay phải làm gì", "đã nộp xong chưa", "gói nào hợp".
 2. Chọn **một** pattern nổi bật (P01–P05) trả lời câu hỏi chính, nếu màn cần điểm nhấn.
@@ -65,7 +65,7 @@ và **dùng sai** thường gặp.
 | P14 | Sự kiện, `pt-date` | ô ngày, tiêu đề, giờ và nơi, chỗ còn lại, nút | Lớp, buổi live, hội thảo | Ngày, giờ, hành động | Thiếu múi giờ hoặc hình thức (online, tại chỗ) |
 | P15 | Dòng danh sách, `pt-list`, `pt-thumb` | ảnh nhỏ, tên, meta hai cụm, badge trạng thái | Danh sách duyệt, đơn hàng, bài nộp | Dòng cao ≥ 56 px, 2 tầng chữ | Badge trạng thái chỉ bằng màu, không có chữ và icon |
 | P16 | Bài viết | chuyên mục, thời gian đọc, tiêu đề, đoạn trích, liên kết | Blog, hướng dẫn, tin | Trích 2–3 dòng | Card bài viết không có đoạn trích |
-| P17 | Lời chứng thực, `pt-quote` | trích dẫn, avatar, tên, vai trò | Landing, trang khoá học | Có vai trò cụ thể | Lời bịa ghi như thật: ghi "minh hoạ" cho tới khi có lời thật |
+| P17 | Lời chứng thực, `pt-quote` | trích dẫn, avatar, tên, vai trò | Landing, trang khoá học | Có vai trò cụ thể | Lời bịa ghi như thật: ghi "minh hoạ" trong phần bàn giao (không trên màn) cho tới khi có lời thật |
 | P18 | Người, `pt-avatar--lg`, `pt-tags` | avatar, tên, vai trò, thẻ chuyên môn, số năm | Giám khảo, giáo viên, đội ngũ | Vai trò và một bằng chứng năng lực | Ảnh chân dung không tên |
 
 ### Quy trình và thời gian
@@ -84,7 +84,7 @@ và **dùng sai** thường gặp.
 | P23 | Bảng giá, `pt-plans`, `pt-plan[aria-current]` | tên gói, giá và đơn vị, quyền lợi, nút; gói gợi ý có viền và badge | 2–4 gói | Quyền lợi so sánh được giữa các gói | Ép người dùng vào gói đắt bằng nút mờ ở gói rẻ |
 | P24 | So sánh, `pt-compare` trong `pt-scroll` | bảng quyền lợi, dấu có và không có nhãn | Đi cùng P23 khi quyền lợi nhiều | Có `th scope`, có `aria-label` cho dấu | Bảng rộng không cuộn được trên điện thoại |
 | P25 | Lời mời cuối, `pt-band` | tiêu đề hạn, câu giảm lo, nút | Cuối landing, cuối trang chi tiết | Một hành động chính | Nhiều nút ngang hàng |
-| P26 | Bằng chứng, `pt-proof` (`pt-proof--2`) | 2–4 ô số lớn và nhãn, ghi chú nguồn | Landing, giới thiệu | Có nguồn hoặc ghi "minh hoạ" | Số làm tròn đẹp không có nguồn |
+| P26 | Bằng chứng, `pt-proof` (`pt-proof--2`) | 2–4 ô số lớn và nhãn | Landing, giới thiệu | Có nguồn; số minh hoạ ghi trong phần bàn giao | Số làm tròn đẹp không có nguồn |
 
 ### Trạng thái
 

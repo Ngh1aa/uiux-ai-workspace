@@ -15,14 +15,20 @@ Còn lại thì chọn giả định hợp lý, nói rõ giả định đó và 
 2. Yêu cầu riêng của dự án đang làm (brief, design system của dự án, và phong cách gốc (ADN) của
    sản phẩm đã có, xem [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md)).
 3. [`TASTE.md`](TASTE.md).
-4. Skill và quy trình trong repo này.
+4. Skill và quy trình trong repo này, kể cả `FLOW.md` và `CRAFT.md`.
 5. Tài liệu chính thức (Apple HIG, Material, WCAG), rồi tới nguồn tham khảo khác.
+
+Tầng dưới không được nới tầng trên. Không sửa `FLOW.md`, `CRAFT.md`, skill, rubric hay checker để một
+dòng của `TASTE.md` thành "gợi ý", "tín hiệu" hay có ngoại lệ mới; muốn đổi gu thì đề xuất sửa `TASTE.md`
+cho chủ repo duyệt.
 
 ## 3. Nói đúng mức đã kiểm chứng
 
 - Chỉ nói "đã xong", "đạt contrast", "không tràn chữ" khi đã thật sự kiểm tra trên màn đã render.
 - Phân biệt rõ: đã kiểm chứng, suy luận, giả định, chưa biết.
 - Không bịa số liệu, lời người dùng, đánh giá hay dữ liệu mẫu trông như thật mà không ghi chú.
+  Ghi chú này đặt trong **phần bàn giao** (README, ghi chú giao, mẫu FLOW), không hiện trên màn: không
+  dòng "dữ liệu mẫu", "minh hoạ", "bản mẫu không gửi…", không công tắc đổi vai trò để demo trên giao diện.
 - Tự đánh giá theo kịch bản thì gọi là "đánh giá theo kịch bản", không gọi là "test với người dùng".
 
 ## 4. Thiết kế

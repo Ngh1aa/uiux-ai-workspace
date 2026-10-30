@@ -11,11 +11,11 @@ Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thi�
 
 | Phần | Vai trò |
 |---|---|
-| [`START-HERE.md`](START-HERE.md) | Cửa vào duy nhất: bước 0 tiếp nhận thương hiệu, rồi 4 bước Claude làm theo |
+| [`START-HERE.md`](START-HERE.md) | Cửa vào duy nhất: 6 bước Claude làm theo, bắt đầu từ brand brief |
 | [`BRAND-BRIEF.template.md`](BRAND-BRIEF.template.md) | Brand brief cho từng khách hàng |
-| [`TASTE.md`](TASTE.md) | Gu thiết kế và các lỗi không được lặp lại |
+| [`TASTE.md`](TASTE.md) | Gu thiết kế và các lỗi không được lặp lại; đứng trên mọi tài liệu khác của repo |
 | [`TASTE-LOG.md`](TASTE-LOG.md) | Nhật ký lỗi có thật, nguồn để cập nhật gu |
-| [`CRAFT.md`](CRAFT.md) | Số liệu cốt lõi, danh sách cấm kiểu AI generic, ảnh và icon |
+| [`CRAFT.md`](CRAFT.md) | Kế hoạch thị giác, danh sách cấm kiểu AI generic, số liệu cốt lõi, ảnh và icon |
 | [`foundations/`](foundations/README.md) | Kiến thức nền: bố cục và mật độ, Gestalt, chữ tiếng Việt, màu OKLCH, chuyển động, ảnh, tham khảo theo loại màn |
 | [`GLOSSARY.md`](GLOSSARY.md) | Bảng thuật ngữ và quy tắc viết tiếng Việt |
 | [`WORKFLOWS.md`](WORKFLOWS.md) | Quy trình theo cỡ việc, từ sửa nhỏ tới sản phẩm mới |

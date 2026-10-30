@@ -80,3 +80,10 @@ test('bắt div có aria-label mà không có role', () => {
   assert.ok(run('<div aria-label="Đang tải">A</div>').errors.includes('aria-prohibited'));
   assert.ok(!run('<div role="status" aria-label="Đang tải">A</div>').errors.includes('aria-prohibited'));
 });
+
+test('TASTE: bắt ghi chú bản mẫu, biến mẫu và chữ dưới 12px; bỏ qua nhãn data-annotation', () => {
+  const bad = run('<style>.t{font-size:10px}</style><p>Ngữ cảnh mẫu lúc 9:15</p><p>Đã nhắc {{count}} phụ huynh</p><p class="t">Hạn 15/10</p>');
+  for (const rule of ['demo-note', 'template-var', 'small']) assert.ok(bad.errors.includes(rule), rule);
+  const ok = run('<p data-annotation>Dữ liệu minh hoạ theo đề bài</p><p>Lịch học tuần này</p>');
+  assert.deepEqual(ok.errors, []);
+});

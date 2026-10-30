@@ -295,3 +295,60 @@ test('toast nền đậm không bị tính là card nổi bật', () => {
   assert.ok(!r.rules('Toast', 'warnings').includes('thin-highlight'));
   assert.ok(!r.rules('Toast', 'errors').includes('highlight'));
 });
+
+// Quy tắc của chủ repo (TASTE.md), thêm 2026-10-30 từ lỗi thật trên benchmark 2026-10-29-fresh.
+test('bắt ghi chú bản mẫu hiện trên màn, bỏ qua nhãn artboard data-annotation', () => {
+  const bad = run('<section data-screen="Demo"><div class="card">Ngữ cảnh mẫu lúc 9:15</div><div class="card">Bản mẫu không gửi bài cho cô.</div></section>');
+  assert.ok(bad.rules('Demo', 'errors').includes('demo-note'));
+  assert.equal(bad.code, 1);
+  const ok = run('<section data-screen="Nhãn"><p data-annotation>Dữ liệu minh hoạ theo đề bài</p><div class="card">Lịch học tuần này</div></section>');
+  assert.ok(!ok.rules('Nhãn', 'errors').includes('demo-note'));
+});
+
+test('bắt biến mẫu lộ trên màn', () => {
+  const r = run('<section data-screen="Biến"><div class="card">Đã gửi nhắc cho {{count}} phụ huynh</div></section>');
+  assert.ok(r.rules('Biến', 'errors').includes('template-var'));
+});
+
+test('bắt chữ dưới 12px', () => {
+  const r = run('<section data-screen="Nhỏ"><div class="card"><span style="font-size:10px">Hạn thứ Năm 23/10</span></div></section>');
+  assert.ok(r.rules('Nhỏ', 'errors').includes('small-text'));
+  assert.ok(!run(GOOD).rules('Tốt', 'errors').includes('small-text'));
+});
+
+test('bắt thanh màu bên trái card, không bắt vạch chia mảnh 1px', () => {
+  const bad = run('<section data-screen="Vạch"><div class="card" style="border-left:4px solid #c2410c">Đơn #2041 quá hạn</div></section>');
+  assert.ok(bad.rules('Vạch', 'errors').includes('left-bar'));
+  const pseudo = run('<section data-screen="Vạch giả"><div class="card bar">Đơn #2045 quá hạn</div></section>',
+    '.bar{position:relative}.bar::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#2563eb}');
+  assert.ok(pseudo.rules('Vạch giả', 'errors').includes('left-bar'));
+  const ok = run('<section data-screen="Chia"><div class="card" style="display:flex"><span>A</span><span style="border-left:1px solid #d0d3db;padding-left:8px">B</span></div></section>');
+  assert.ok(!ok.rules('Chia', 'errors').includes('left-bar'));
+});
+
+test('bắt hoạ tiết ::before đè lên chữ, không bắt hoạ tiết ở góc trống', () => {
+  const css = '.lines{position:relative}.lines::after{content:"";position:absolute;inset:0 0 0 40%;border-left:1px solid #fff;opacity:.3}' +
+    '.corner{position:relative}.corner::before{content:"";position:absolute;right:0;bottom:0;width:24px;height:24px;background:#fff;opacity:.2}';
+  const bad = run('<section data-screen="Đè"><div class="hero lines"><p style="margin:0">Lượt đặt sắp tới</p><p style="margin:0;font-size:28px;line-height:36px">Sân Phú Nhuận số 3</p><p style="margin:0">18:00 Thứ Sáu 24/10</p></div></section>', css);
+  assert.ok(bad.rules('Đè', 'errors').includes('decor-overlap'));
+  const ok = run('<section data-screen="Góc"><div class="hero corner"><p style="margin:0">Lượt đặt</p><p style="margin:0;font-size:28px;line-height:36px">Sân 3</p><p style="margin:0">18:00</p></div></section>', css);
+  assert.ok(!ok.rules('Góc', 'errors').includes('decor-overlap'));
+});
+
+test('bắt nút bị bottom nav che khi đã cuộn hết, không bắt khi có khoảng đệm', () => {
+  const frame = (pad) => `<section data-screen="Khung${pad}" style="position:relative;height:600px;padding:0;gap:0">
+    <div style="overflow:auto;height:600px;padding:16px ${pad ? '16px 96px' : '16px 0'};box-sizing:border-box">
+      <div class="card" style="height:520px">Bài làm</div><button type="button" style="width:100%">Nộp bài</button></div>
+    <nav aria-label="Chính" style="position:absolute;left:0;right:0;bottom:0;height:72px;background:#fff">Hôm nay</nav></section>`;
+  const bad = run(frame(false));
+  assert.ok(bad.rules('Khungfalse', 'errors').includes('fixed-overlap'));
+  const ok = run(frame(true));
+  assert.ok(!ok.rules('Khungtrue', 'errors').includes('fixed-overlap'));
+});
+
+test('cảnh báo dòng giải thích phụ dưới tiêu đề, không cảnh báo dữ liệu', () => {
+  const bad = run('<section data-screen="Phụ"><h2 style="font-size:24px;margin:0">Tối nay gần bạn</h2><p style="margin:0">Chọn sân còn giờ, đặt nhanh sau giờ làm.</p></section>');
+  assert.ok(bad.rules('Phụ', 'warnings').includes('subtitle'));
+  const ok = run('<section data-screen="Dữ liệu"><h2 style="font-size:24px;margin:0">Sân Phú Nhuận</h2><p style="margin:0">Thứ Sáu 24/10, sân số 3</p></section>');
+  assert.ok(!ok.rules('Dữ liệu', 'warnings').includes('subtitle'));
+});

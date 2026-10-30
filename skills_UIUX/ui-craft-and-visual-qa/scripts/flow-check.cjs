@@ -155,8 +155,10 @@ function checkHtml(html, { page = '<html>', mode } = {}) {
         : `Biến mẫu/ghi chú nội bộ trong text nguồn: ${ownText.slice(0, 90)}`);
     }
     // Lorem/source placeholders belong to static-check, not a second flow diagnostic.
-    if (/\b(?:caption|hint|note)\b/.test(node.attrs.class || '') && /^(?:bấm|chạm)\b/i.test(text(node))) {
-      issue(warnings, 'caption', node, 'Hướng dẫn thao tác có thể dư; giữ nếu giúp hiểu hay tiếp cận. Nguồn, đơn vị, cập nhật và nhãn minh họa không bị cấm.');
+    // TASTE.md "Chữ trên màn": không dòng giải thích phụ (hướng dẫn thao tác, ghi chú kỳ/cập nhật/nguồn, ghi chú bản mẫu).
+    if (/\b(?:caption|hint|note)\b/.test(node.attrs.class || '') && !excluded &&
+        /^(?:bấm|chạm|nhấn|chọn để)\b|^(?:cập nhật|nguồn|đơn vị)\b|minh h(?:o[aạ]|ọa)|\bdữ liệu mẫu\b|\bbản mẫu\b/i.test(text(node))) {
+      issue(warnings, 'caption', node, 'Dòng giải thích phụ trên màn (TASTE.md): bỏ, hoặc đưa đơn vị vào nhãn và ghi chú bản mẫu vào phần bàn giao.');
     }
     if (/\b\d{1,2}:\d{2}\b/.test(ownText) && !excluded) {
       const context = ancestor(node, n => has(n, 'data-screen')) || ancestor(node, n => n.tag === 'article' || n.tag === 'form') || node.parent || node;
