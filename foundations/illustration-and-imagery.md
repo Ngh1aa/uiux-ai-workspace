@@ -1,80 +1,38 @@
 # Ảnh, minh hoạ và icon
 
-Trang này trả lời: **dùng ảnh hay minh hoạ, giữ chúng đồng bộ thế nào, và làm gì khi chưa có ảnh thật?**
-Phần chọn hướng nghệ thuật cho dự án nằm trong skill
-[`asset-media-and-art-direction`](../skills_UIUX/asset-media-and-art-direction/SKILL.md); phần cắt ảnh
-trong khung nằm trong [`media-crop-and-layout-integrity`](../skills_UIUX/media-crop-and-layout-integrity/SKILL.md).
+Dùng ảnh hay minh hoạ, giữ đồng bộ thế nào, làm gì khi chưa có ảnh thật. Hướng nghệ thuật ở skill
+[`asset-media-and-art-direction`](../skills_UIUX/asset-media-and-art-direction/SKILL.md); cắt ảnh ở
+[`media-crop-and-layout-integrity`](../skills_UIUX/media-crop-and-layout-integrity/SKILL.md).
 
 ## 1. Ảnh hay minh hoạ
 
-| Dùng ảnh thật khi | Dùng minh hoạ khi |
-|---|---|
-| Cần niềm tin: người thật, sản phẩm thật, nơi thật | Khái niệm trừu tượng: bảo mật, đồng bộ, "chưa có dữ liệu" |
-| Người dùng cần thấy thứ họ sẽ nhận (khoá học, món ăn, phòng) | Trạng thái rỗng, lỗi, onboarding |
-| Thương hiệu dựa vào cảm xúc thật (giáo dục, y tế, du lịch) | Cần đồng bộ tuyệt đối giữa nhiều màn |
+Ảnh thật khi cần niềm tin (người, sản phẩm, nơi thật) hoặc người dùng cần thấy thứ họ sẽ nhận. Minh hoạ cho
+khái niệm trừu tượng, trạng thái rỗng, lỗi, onboarding. Không trộn hai thứ trong một khối.
 
-Không trộn hai thứ trong cùng một khối. Một sản phẩm có thể có cả hai, nhưng mỗi loại một vai trò rõ.
+## 2. Hệ minh hoạ đồng bộ
 
-## 2. Một hệ minh hoạ đồng bộ
-
-Minh hoạ trông "lấy từ năm nguồn" là lỗi phổ biến nhất. Chốt sáu thông số trước khi vẽ hoặc chọn:
-
-| Thông số | Ví dụ quyết định |
-|---|---|
-| Nét | Nét đều 2 px, đầu tròn; hoặc không nét, chỉ mảng |
-| Màu | Chỉ dùng thang thương hiệu và xám, tối đa 3 bậc mỗi hình |
-| Hình khối | Bo tròn theo bán kính card của dự án |
-| Phối cảnh | Phẳng chính diện; không trộn với isometric |
-| Người | Có hoặc không có mặt; tỉ lệ đầu thân cố định |
-| Chi tiết | Mức chi tiết bằng nhau ở cùng cỡ hiển thị |
-
-Minh hoạ trạng thái rỗng trong repo (P27) là ví dụ tối giản: hai mảng chồng nhau, một icon, màu từ token.
-Đủ để có hình, không cần hoạ sĩ.
+Chốt sáu thông số trước khi vẽ: nét (đều 2 px đầu tròn, hoặc chỉ mảng), màu (thang thương hiệu và xám, tối đa
+3 bậc mỗi hình), hình khối (bo theo bán kính card), phối cảnh (phẳng, không trộn isometric), người (có hay không,
+tỉ lệ cố định), mức chi tiết (bằng nhau ở cùng cỡ). **Hoạ tiết và minh hoạ không bao giờ đè lên chữ** (TASTE).
 
 ## 3. Ảnh
 
-- **Tỉ lệ cố định theo vai trò:** 16:9 cho bìa và video, 4:3 cho card, 1:1 cho chân dung và sản phẩm.
-  Khai báo bằng `aspect-ratio` để trang không nhảy khi ảnh tải xong.
-- **Chủ thể trong vùng an toàn:** mặt người và sản phẩm nằm trong 60% giữa khung, vì khung sẽ bị cắt khác
-  nhau trên điện thoại và desktop. Dùng `object-position` khi chủ thể lệch.
-- **Đồng bộ màu ảnh:** cùng nhiệt độ màu, cùng độ tương phản. Ảnh lẫn ấm lạnh trông như ghép từ nhiều nơi.
-- **Chữ trên ảnh** cần lớp phủ (scrim) đủ để chữ đạt 4,5:1 ở chỗ ảnh sáng nhất, không chỉ chỗ trung bình.
-- **Văn bản thay thế (`alt`)** mô tả điều ảnh nói trong ngữ cảnh đó, không mô tả pixel. Ảnh trang trí để
-  `alt=""`.
-- **Hiệu năng:** `width`, `height`, `loading="lazy"` cho ảnh dưới màn đầu, định dạng AVIF hoặc WebP, nhiều
-  cỡ qua `srcset`.
+- Tỉ lệ theo vai trò: 16:9 bìa, 4:3 card, 1:1 chân dung và sản phẩm; khai báo `aspect-ratio`.
+- Chủ thể trong 60% giữa khung; chỉnh `object-position` khi lệch.
+- Cùng nhiệt độ màu và độ tương phản giữa các ảnh.
+- Chữ trên ảnh có lớp phủ đạt 4,5:1 ở chỗ ảnh sáng nhất.
+- `alt` nói điều ảnh nói trong ngữ cảnh; ảnh trang trí `alt=""`. Có `width`, `height`, `loading="lazy"`.
 
 ## 4. Khi chưa có ảnh thật
 
-Không để khối xám trống và không dùng ảnh stock không liên quan. Dùng ảnh giữ chỗ có chú thích (P30):
-nền sọc từ token `media`, ghi tỉ lệ và nội dung ảnh cần chụp ("Ảnh 1:1: cận cảnh sản phẩm"). Khách hàng
-nhìn vào hiểu ngay cần cung cấp gì, và bản nháp không giả vờ là bản thật.
-
-Ảnh do AI tạo chỉ dùng khi brief cho phép, ghi rõ trong ghi chú giao, và không dùng cho người thật, sản
-phẩm thật hay bằng chứng (lời chứng thực, ảnh sự kiện).
-
-### Art direction trước khi chọn asset
-
-Ghi một câu ảnh giúp quyết định gì, rồi chốt chủ thể, góc máy, ánh sáng, nền, crop mobile/desktop,
-quyền dùng và nguồn. Ví dụ lớp gốm: tay đang sửa miệng bát, ánh sáng cửa sổ, nền xưởng thật;
-ảnh này giúp hiểu thao tác sẽ học. Một hình chiếc bình clip-art chỉ để lấp hero không đáp ứng việc đó.
-Minh hoạ phẳng vẫn hợp lệ nếu diễn đạt đúng khái niệm và khớp brand; không cấm theo kỹ thuật vẽ.
-
-Chưa có ảnh xưởng được cấp quyền: dùng P30 với dòng “Ảnh cần cung cấp: thao tác vuốt gốm, 4:3”,
-ghi asset là `MISSING` trong bàn giao. Không dùng ảnh stock để ngầm chứng minh cơ sở vật chất.
-Caption về nguồn, thời điểm, đơn vị hoặc tính minh hoạ được giữ khi giúp hiểu và tránh hiểu nhầm.
+Dùng khối nền đúng tỉ lệ từ token `media`, không ảnh stock lạc tông, không ảnh AI cho người thật hay bằng chứng.
+Ghi ảnh còn thiếu ("thao tác vuốt gốm, 4:3", asset `MISSING`) **trong phần bàn giao, không ghi chú trên màn**.
 
 ## 5. Icon
 
-- Một bộ icon cho cả sản phẩm: cùng lưới 24 px, cùng độ dày nét, cùng kiểu đầu nét. Repo dùng bộ nét 1,75 px
-  bo tròn trong `design-system/components/icons.svg`.
-- Icon đi kèm chữ, trừ vài icon ai cũng hiểu (đóng, tìm, quay lại) và vẫn phải có `aria-label`.
-- Cỡ icon theo cỡ chữ đi cùng: 16 px với chữ 13–14, 20 px với chữ 15–17, 24 px cho thanh điều hướng.
-- Icon không phải trang trí cho mọi dòng; danh sách mà dòng nào cũng có icon giống nhau là nhiễu.
+Một bộ cho cả sản phẩm: lưới 24 px, nét 1,75 px bo tròn (`design-system/components/icons.svg`). Cỡ 16 với chữ
+13–14, 20 với chữ 15–17, 24 cho điều hướng. Nút chỉ có icon có `aria-label`. Không icon giống nhau ở mọi dòng.
+Bottom nav điện thoại: tab đang chọn là viên có icon và nhãn, tab khác chỉ icon (TASTE); ví dụ
+[Sai/Đúng, mục G](examples/README.md).
 
-## Nguồn
-
-- Nielsen Norman Group, *Photos as Web Content* và *Icon Usability*.
-- Material Design 3, *Imagery* và *Icons*.
-- W3C, *WAI Images Tutorial* (cây quyết định viết `alt`).
-- web.dev, *Optimize Cumulative Layout Shift* và *Serve responsive images*.
+Nguồn chính: Material 3 *Imagery* và *Icons*, W3C *WAI Images Tutorial*, web.dev *CLS*.
