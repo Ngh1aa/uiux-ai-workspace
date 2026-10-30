@@ -28,7 +28,12 @@ card viền mảnh, mọi thứ cỡ vừa, không có chỗ nào đáng nhớ. 
 
 Khi chủ repo gửi màn đã duyệt, đối chiếu với các màn đó trước, không đối chiếu với starter.
 
-## 3. Landing: mỗi section một hình
+## 3. Màn app: đặt theo ngón tay
+
+Hành động chính trong vùng ngón cái chạm tới (nửa dưới điện thoại) hoặc góc trên phải trên desktop. Thông tin đọc
+nhiều đặt trên, tra cứu đặt dưới hoặc vùng phụ.
+
+## 4. Landing: mỗi section một hình
 
 | Nội dung | Hình |
 |---|---|
@@ -40,7 +45,7 @@ Khi chủ repo gửi màn đã duyệt, đối chiếu với các màn đó trư
 
 Đổi nhịp nền trắng, nhạt, trắng, đậm; không quá một section nền đậm ngoài dải lời mời.
 
-## 4. Dấu hiệu bố cục "mặc định"
+## 5. Dấu hiệu bố cục "mặc định"
 
 Mọi section cùng chiều cao và căn giữa; mọi card cùng cỡ dù khác tầm quan trọng; ảnh luôn bên phải; không có
 chỗ nào thật to hay thật nhỏ. Thấy một dấu hiệu thì quay lại kế hoạch thị giác trong [`CRAFT.md`](../CRAFT.md).

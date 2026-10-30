@@ -19,6 +19,7 @@ Mỗi chuyển động phải làm một trong bốn việc, nếu không thì b
 
 Không thao tác nào chờ quá ~400 ms; đóng nhanh hơn mở (70–80%). `easing.enter` cho vật xuất hiện,
 `easing.exit` cho vật rời đi, `easing.standard` cho vật di chuyển; `linear` chỉ cho thanh tiến độ.
+Hiệu ứng nảy chỉ cho phản hồi vui (thả tim), không cho modal hay sheet.
 Chỉ animate `transform` và `opacity`; mở rộng chiều cao bằng `grid-template-rows: 0fr → 1fr`.
 
 ## 3. Giảm chuyển động

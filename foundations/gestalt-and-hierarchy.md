@@ -12,6 +12,7 @@ hoặc phải giải thích một quyết định bố cục.
 | Vùng chung | Card, khối nền nhạt bao một nhóm | Card lồng card lồng card |
 | Liên tục | Cột căn trái thẳng hàng; stepper; dòng thời gian | Mỗi khối căn một kiểu |
 | Hình và nền | Sheet, modal có lớp phủ đủ đậm | Nền và card gần cùng độ sáng |
+| Khép kín | Hàng cuộn ngang để card cuối bị cắt mép, báo còn nữa | Card vừa khít khung, không ai biết cuộn được |
 
 Khoảng cách không tốn gì; khung và màu tốn sự chú ý. Ví dụ: [Sai/Đúng, mục B](examples/README.md).
 
