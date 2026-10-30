@@ -60,17 +60,17 @@ Ngoại lệ có lý do so với chrome gốc (theo TASTE, đứng trên HIG/Mat
 
 | Điều | Kết quả |
 |---|---|
-| `static-check.cjs` | 0 lỗi, 1 cảnh báo "3 chỗ chữ IN HOA nhỏ": đến từ CSS dùng chung được nạp (`native.css` `.ios-section__head`, `app.css` `.app-panel__title`, `.web-table th`, `components.css` `.ds-text-label-sm`); trang không dùng các class đó, nên giữ |
-| `flow-check.cjs --mode prototype` | tĩnh PASS, luồng UNKNOWN (đúng thiết kế của checker) |
-| `check-brand.py brand.css` | ĐẠT, 0 lỗi sáng và tối |
-| `node --check scenarios.cjs` | OK |
-| `scenarios.cjs` | 12 kịch bản (6 mỗi nền tảng) PASS khi chạy qua shim jsdom trong scratchpad; **chưa chạy bằng Playwright thật** vì máy không tải được Chromium (cdn.playwright.dev bị chặn). `isVisible` trong shim chỉ là "có trong DOM" |
+| `taste-check.cjs --width 390 --width 1280 --height 900`, sáng và tối | 0 lỗi, 0 cảnh báo; đã xem ảnh 390 và 1280 sáng/tối |
+| `static-check.cjs` | 0 lỗi (cảnh báo IN HOA đến từ CSS dùng chung không dùng trên trang) |
+| `flow-check.cjs --mode prototype` | tĩnh PASS, luồng UNKNOWN (thiết kế của checker) |
+| `check-brand.py brand.css` | ĐẠT |
+| `scenarios.cjs` qua `flow.browser.cjs` (Playwright Chromium thật, 390×844, sáng) | PASS, 12 kịch bản + không lỗi JS |
+
+Sửa sau vòng taste-check đầu: đệm đáy bằng thanh tab/thanh hành động; sheet iOS chỉ giữ thanh tiêu đề màn sau (không còn tab bar dưới lớp phủ); đệm đáy Android đủ cho FAB + thanh điều hướng; tiêu đề thanh trên Android cách mép 16px; ô nhập cao 44–48px; một bán kính card 14px; thân hộp xác nhận là hai dòng dữ liệu (tên đơn, lý do); màn chi tiết thêm khối Bài làm, Giáo viên, Bài chưa nộp khác; màn đơn và form có dòng học sinh, nút Hủy đơn nằm trên thanh đáy.
 
 ## Chưa kiểm được (UNKNOWN)
 
-- Render thật: chưa mở ảnh 390×844 nào, sáng hay tối. Tràn chữ, gãy dòng, vị trí viên tab, độ cao thanh đáy, dải ngày cuộn ngang: chưa nhìn.
-- Dark mode thật: chỉ có tương phản token qua `check-brand.py`; chưa nhìn ảnh.
-- `taste-check.cjs`: chưa chạy được (không có trình duyệt).
+- Dark mode chỉ chạy taste-check và xem ảnh; kịch bản Playwright chỉ chạy chế độ sáng.
 - Thiết bị thật: Dynamic Type lớn nhất (AX5), font scale 200% Android, VoiceOver, TalkBack, vuốt mép trái iOS, predictive back Android, máy Android tầm trung.
 - Native: chưa dựng SwiftUI/Compose; app thật nên dùng `NavigationStack`, `.sheet`, `.alert`, `confirmationDialog` và `Scaffold`, `NavigationBar`, `AlertDialog`, `ModalBottomSheet` với token trong `design-system/generated/native/`.
-- Chọn ảnh, camera và quyền truy cập ảnh: chỉ mô phỏng bằng nút; chưa có backend gửi đơn hay nộp bài.
+- Chọn ảnh, camera và quyền truy cập ảnh chỉ mô phỏng bằng nút; chưa có backend gửi đơn hay nộp bài.
