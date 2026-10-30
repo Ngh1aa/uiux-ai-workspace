@@ -312,3 +312,8 @@ legend { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transfor
   dialog.sheet[open] { animation: none; }
   *, *::before, *::after { transition-duration: 0s !important; animation: none !important; }
 }
+
+/* Trình duyệt không hỗ trợ cắt nền theo chữ: chữ mực đặc, không men */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .mark span { color: var(--ink); background: none; }
+}
