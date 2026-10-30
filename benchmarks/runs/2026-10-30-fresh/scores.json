@@ -9,7 +9,7 @@
     "reviewer_id": "orchestrator-agent-2026-10-30",
     "independent_review": false,
     "generation_note": "Mỗi đề do một agent ngữ cảnh sạch dựng, không xem lượt cũ. Sau runner, agent sửa lỗi runner và các điểm điều phối viên nêu khi xem ảnh (bỏ mục tự thêm, ghi chú kỳ); đây là kết quả sau sửa, không phải điểm first-shot.",
-    "review_note": "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh."
+    "review_note": "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh. Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
   },
   "briefs": {
     "01-landing": {
@@ -28,7 +28,8 @@
       },
       "hard_fails": [],
       "notes": [
-        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh."
+        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
       ]
     },
     "02-app": {
@@ -48,7 +49,8 @@
       "hard_fails": [],
       "notes": [
         "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
-        "Còn 8 cảnh báo void ở tab Đã qua: khoảng trống dưới thẻ rỗng sau khi bỏ mục tự thêm; chờ chủ repo quyết."
+        "Còn 8 cảnh báo void ở tab Đã qua: khoảng trống dưới thẻ rỗng sau khi bỏ mục tự thêm; chờ chủ repo quyết.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
       ]
     },
     "03-dashboard": {
@@ -67,7 +69,8 @@
       },
       "hard_fails": [],
       "notes": [
-        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh."
+        "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
       ]
     },
     "04-multi-role": {
@@ -87,7 +90,8 @@
       "hard_fails": [],
       "notes": [
         "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
-        "Dưới 1024px khung giữ bề rộng desktop trong vùng cuộn ngang."
+        "Dưới 1024px khung giữ bề rộng desktop trong vùng cuộn ngang.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
       ]
     },
     "05-native": {
@@ -107,7 +111,8 @@
       "hard_fails": [],
       "notes": [
         "Tự chấm của agent điều phối sau khi xem ảnh, không độc lập. CHƯA DUYỆT: chờ chủ repo xem ảnh.",
-        "Còn 16 cảnh báo void ở Chi tiết bài tập: màn ngắn có nút cố định ở đáy, không lấp bằng nội dung tự thêm; native thật UNKNOWN."
+        "Còn 16 cảnh báo void ở Chi tiết bài tập: màn ngắn có nút cố định ở đáy, không lấp bằng nội dung tự thêm; native thật UNKNOWN.",
+        "Chủ repo xem ảnh ngày 30/10: \"xấu quá\". Lượt này qua checker nhưng chưa đạt gu chủ repo; điểm tự chấm ở đây cao hơn đánh giá của chủ repo."
       ]
     }
   }

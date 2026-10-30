@@ -17,6 +17,11 @@ Ghi chú riêng từng đề (kế hoạch thị giác, phần chạy giả lậ
   Hiện giữ màn gọn và để cảnh báo `void`.
 - 04 dưới 1024px: khung desktop nằm trong vùng cuộn ngang, không làm bố cục điện thoại.
 
+## Chủ repo duyệt
+
+Ngày 30/10 chủ repo xem ảnh và nhận xét "xấu quá", vẫn cho merge để lưu lượt này. Kết luận: qua được
+checker không có nghĩa đạt gu; điểm "Đạt" trong REPORT là tự chấm của agent, không phải duyệt của chủ repo.
+
 ## Chưa kiểm
 
 axe-core, trình đọc màn hình, chữ phóng 200%, thiết bị và app native thật, người dùng thật. Điểm là
