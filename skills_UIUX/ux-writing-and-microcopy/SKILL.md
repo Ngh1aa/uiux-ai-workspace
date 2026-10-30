@@ -7,7 +7,7 @@ description: Chữ trong giao diện. Dùng theo tác vụ được chọn trong
 
 Chọn cỡ/track theo [WORKFLOWS.md](../../WORKFLOWS.md), không tự mở thêm quy trình.
 
-Viết ngắn, quen thuộc và nhất quán thuật ngữ. CTA nói hành động, lỗi nói cách khôi phục, trạng thái minh bạch. Ba từ là gợi ý; giữ số/giờ khi giúp chọn đúng, giữ đơn vị/nguồn/caption hữu ích.
+Viết ngắn, quen thuộc và nhất quán thuật ngữ. CTA nói hành động, lỗi nói cách khôi phục, trạng thái minh bạch. Nhãn nút tối đa 3 từ (động từ + đối tượng), cùng nhãn trên nút, tiêu đề sheet xác nhận và nút xác nhận. Ngày luôn kèm thứ hoặc ngày tháng. Không dòng giải thích phụ, không ghi chú bản mẫu trên màn; đơn vị đặt ngay trong nhãn cột hoặc số (xem [TASTE.md](../../TASTE.md) "Chữ trên màn").
 
 Sai: lỗi chỉ ghi có lỗi xảy ra. Đúng: khung giờ đã kín, chọn 21:00 để tiếp tục.
 

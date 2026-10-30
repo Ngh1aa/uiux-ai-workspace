@@ -34,6 +34,14 @@
  *   - ảnh, font, CSS, script tải lỗi (mã HTTP ≥ 400 hoặc không tải được)
  *   - axe-core (nếu có cài): vi phạm WCAG mức serious hoặc critical
  *   - --reflow: tràn ngang ở 320 px
+ *   - quy tắc chủ repo trong TASTE.md:
+ *     demo-note      ghi chú bản mẫu trên màn ("dữ liệu mẫu", "bản mẫu không…", "ngữ cảnh mẫu")
+ *     template-var   lộ biến mẫu {{…}}
+ *     small-text     chữ dưới 12 px
+ *     left-bar       thanh màu bên trái card hay dòng (viền trái ≥ 3 px có màu, hoặc vạch ::before)
+ *     decor-overlap  hoạ tiết ::before/::after chạy qua dòng chữ (vân nền phủ kín khối thì bỏ qua)
+ *     fixed-overlap  nội dung bị thanh cố định ở đáy che khi đã cuộn hết
+ *     Chữ trong phần tử có data-annotation (nhãn artboard, gallery) không bị soát các luật chữ trên.
  * CẢNH BÁO:
  *   - card ngang hàng có bán kính bo góc khác nhau
  *   - hơn 3 nhóm màu sắc trong một màn
@@ -47,13 +55,14 @@
  *   - coverage: màn rộng ≥ 1024 px mà nội dung dồn một bên, bỏ trống > 28% bề ngang bên phải
  *   - flat-scale: chữ lớn nhất chưa gấp 1,5 lần chữ thân (màn hẹp dưới 600 px: 1,3 lần)
  *   - thin-highlight: card nổi bật dưới 3 dòng chữ hoặc chỉ một cỡ chữ, hoặc nội dung phủ dưới nửa card
+ *   - subtitle: dòng giải thích phụ ngay dưới tiêu đề (câu có dấu chấm, hoặc mở đầu "chọn", "bấm", "để"…)
  *
  * axe-core là tuỳ chọn: cài cùng chỗ với Playwright (npm install axe-core@4). Không có thì kết
  * quả ghi "axe: chưa chạy"; khi giao phải nói rõ phần khả năng tiếp cận chưa được soát tự động.
  *
  * Đây là tín hiệu tự động, không thay việc nhìn ảnh chụp và không phải bằng chứng đạt WCAG.
  * Cần Playwright. Script tự tìm: NODE_PATH, node_modules gần đó, rồi thư mục npm toàn cục.
- * Không có thì xem mục "Khi không chạy được taste-check" trong START-HERE.md.
+ * Không có thì xem mục "Khi không chạy được taste-check" trong scripts/README.md.
  */
 'use strict';
 const fs = require('node:fs');
@@ -536,6 +545,134 @@ function auditInPage() {
     }
     if (hues.size > 3) {
       warnings.push({ rule: 'colors', message: `${hues.size} nhóm màu trong một màn (nên ≤ 3): ${[...hues.values()].join('; ')}` });
+    }
+
+    // 9. Quy tắc của chủ repo (TASTE.md): chữ trên màn, thanh màu trái, hoạ tiết đè chữ, thanh cố định che.
+    // Nhãn artboard/gallery nằm ngoài màn đánh dấu data-annotation để không bị soát như chữ trên màn.
+    const annotated = (el) => !!el.closest('[data-annotation]');
+    const DEMO = /\b(?:dữ liệu|số liệu|lời|lịch|ngữ cảnh|nội dung|mẫu tương tác)\s+(?:mẫu|minh ho[aạ]|minh họa|từ đề|theo đề)|\b(?:bản|là) minh (?:ho[aạ]|họa)\b|\bminh (?:ho[aạ]|họa) theo\b|\bbản mẫu (?:này|không|chưa)|\btrong bản mẫu\b|\bbrowser preview\b|\bdữ liệu (?:từ |theo )?đề bài\b|\bmô phỏng quyền\b|\btheo brief\b|\bbackend\b/i;
+    const textWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = textWalker.nextNode(); node; node = textWalker.nextNode()) {
+      const parent = node.parentElement;
+      if (!parent || !visible(parent) || parent.closest('script, style, template') || annotated(parent)) continue;
+      const t = node.textContent.replace(/\s+/g, ' ').trim();
+      if (!t) continue;
+      if (/\{\{|\}\}/.test(t)) errors.push({ rule: 'template-var', message: `Lộ biến mẫu trên màn: "${t.slice(0, 60)}"` });
+      if (DEMO.test(t)) errors.push({ rule: 'demo-note', message: `Ghi chú bản mẫu hiện trên màn: "${t.slice(0, 60)}". Chuyển vào phần bàn giao` });
+    }
+    const SUBTITLE = /[.?…]$|^(?:bấm|chạm|chọn|xem|nhấn|kéo|để|giúp|theo|mỗi|đây là|tất cả)\b/i;
+    for (const el of all) {
+      if (annotated(el)) continue;
+      const st = getComputedStyle(el);
+      const text = ownText(el);
+      // Chữ phụ dưới 12 px (làm tròn 11,5 để chừa sai số render).
+      if (text && parseFloat(st.fontSize) < 11.5) {
+        errors.push({ rule: 'small-text', message: `Chữ ${parseFloat(st.fontSize).toFixed(1)}px < 12px: ${describe(el)}` });
+      }
+      // Dòng giải thích phụ ngay dưới tiêu đề.
+      if (/^H[1-4]$/.test(el.tagName) || el.getAttribute('role') === 'heading') {
+        const next = el.nextElementSibling;
+        const nt = next && visible(next) && !next.matches(INTERACTIVE) && !next.closest('[role="alert"], [role="status"], [aria-live]')
+          ? (next.textContent || '').replace(/\s+/g, ' ').trim() : '';
+        if (nt && next.children.length <= 1 && parseFloat(getComputedStyle(next).fontSize) < parseFloat(st.fontSize) &&
+            nt.split(' ').length >= 4 && SUBTITLE.test(nt)) {
+          warnings.push({ rule: 'subtitle', message: `Dòng giải thích phụ dưới tiêu đề: "${nt.slice(0, 60)}". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái` });
+        }
+      }
+      if (el === root || el.matches(CONTROL) || el.closest('nav, [role="navigation"], [role="tablist"]') || el.matches('blockquote') || el.querySelector(':scope > blockquote')) continue;
+      // Thanh màu bên trái card hay dòng: viền trái dày có màu, hoặc ::before/::after dạng vạch dọc sát mép trái.
+      const r = el.getBoundingClientRect();
+      if (r.height >= 24 && el.textContent.trim()) {
+        const lw = parseFloat(st.borderLeftWidth) || 0;
+        const rw = parseFloat(st.borderRightWidth) || 0;
+        const lc = toRgba(st.borderLeftColor);
+        const coloured = (c) => c[3] > 0.3 && hsl(c)[1] >= 0.2;
+        let bar = st.borderLeftStyle !== 'none' && lw >= 3 && rw <= lw / 2 && coloured(lc);
+        for (const pseudo of ['::before', '::after']) {
+          if (bar) break;
+          const ps = getComputedStyle(el, pseudo);
+          if (!ps.content || ps.content === 'none' || ps.display === 'none' || ps.position !== 'absolute') continue;
+          const w = parseFloat(ps.width) || 0;
+          const h = parseFloat(ps.height) || 0;
+          const left = parseFloat(ps.left);
+          bar = w > 0 && w <= 8 && h >= r.height * 0.6 && Number.isFinite(left) && left <= 4 && coloured(toRgba(ps.backgroundColor));
+        }
+        if (bar) errors.push({ rule: 'left-bar', message: `Thanh màu bên trái: ${describe(el)}. Dùng nhãn chữ, chip hoặc icon cho trạng thái` });
+      }
+      // Hoạ tiết ::before/::after định vị tuyệt đối chạy qua dòng chữ bên trong khối.
+      if (['relative', 'absolute', 'fixed', 'sticky'].includes(st.position)) {
+        const lines = [...el.querySelectorAll('*')].filter((c) => visible(c) && ownText(c) && !annotated(c)).flatMap((c) => textRects(c));
+        if (!lines.length) continue;
+        for (const pseudo of ['::before', '::after']) {
+          const ps = getComputedStyle(el, pseudo);
+          if (!ps.content || ps.content === 'none' || ps.display === 'none' || ps.position !== 'absolute') continue;
+          if (ps.content !== '""' && ps.content !== "''") continue; // ký tự trang trí như dấu ngoặc kép là chữ, không phải hoạ tiết
+          const painted = (toRgba(ps.backgroundColor)[3] > 0.05 || ps.backgroundImage !== 'none' ||
+            ['Top', 'Right', 'Bottom', 'Left'].some((s) => parseFloat(ps[`border${s}Width`]) > 0 && ps[`border${s}Style`] !== 'none'));
+          if (!painted || Number(ps.opacity) < 0.03) continue;
+          const bl = parseFloat(st.borderLeftWidth) || 0;
+          const bt = parseFloat(st.borderTopWidth) || 0;
+          const w = parseFloat(ps.width) || 0;
+          const h = parseFloat(ps.height) || 0;
+          const px = r.left + bl + (Number.isFinite(parseFloat(ps.left)) ? parseFloat(ps.left) : (r.width - bl - (parseFloat(st.borderRightWidth) || 0)) - w - (parseFloat(ps.right) || 0));
+          const py = r.top + bt + (Number.isFinite(parseFloat(ps.top)) ? parseFloat(ps.top) : (r.height - bt - (parseFloat(st.borderBottomWidth) || 0)) - h - (parseFloat(ps.bottom) || 0));
+          // Vân nền phủ kín cả khối (background-image, không viền) là bề mặt, không phải hoạ tiết đặt lên chữ.
+          const noBorder = ['Top', 'Right', 'Bottom', 'Left'].every((s) => !(parseFloat(ps[`border${s}Width`]) > 0) || ps[`border${s}Style`] === 'none');
+          if (noBorder && ps.backgroundImage !== 'none' && w * h >= r.width * r.height * 0.9) continue;
+          const hit = lines.find((t) => Math.min(t.right, px + w) - Math.max(t.left, px) > 4 && Math.min(t.bottom, py + h) - Math.max(t.top, py) > 2);
+          if (hit) errors.push({ rule: 'decor-overlap', message: `Hoạ tiết ${pseudo} của ${describe(el)} đè lên chữ. Dời hoạ tiết ra vùng không có chữ` });
+        }
+      }
+    }
+
+    // Thanh cố định ở đáy (bottom nav, thanh hành động) che nội dung khi đã cuộn hết.
+    const bars = all.filter((el) => {
+      if (el === root || el.closest('[role="dialog"], [aria-modal="true"]')) return false;
+      const st = getComputedStyle(el);
+      if (!['fixed', 'sticky', 'absolute'].includes(st.position)) return false;
+      const r = el.getBoundingClientRect();
+      if (r.width < rootRect.width * 0.6 || r.height < 32 || r.height > 160) return false;
+      if (toRgba(st.backgroundColor)[3] < 0.9 && !(st.backgroundImage && st.backgroundImage !== 'none')) return false;
+      if (st.position === 'fixed') return Math.abs(r.bottom - window.innerHeight) <= 4;
+      // sticky: mép đáy vùng cuộn; absolute: mép đáy khối định vị gần nhất (khung điện thoại).
+      let port = null;
+      for (let n = el.parentElement; n && !port; n = n.parentElement) {
+        const ns = getComputedStyle(n);
+        if (['auto', 'scroll'].includes(ns.overflowY)) port = n;
+        else if (st.position === 'absolute' && ns.position !== 'static') port = n;
+      }
+      const bottom = port ? Math.min(port.getBoundingClientRect().bottom, port === document.scrollingElement ? window.innerHeight : Infinity) : window.innerHeight;
+      return Math.abs(r.bottom - bottom) <= 4;
+    });
+    if (bars.length) {
+      const scrollerOf = (el) => {
+        for (let n = el.parentElement; n; n = n.parentElement) {
+          const ns = getComputedStyle(n);
+          if (['auto', 'scroll'].includes(ns.overflowY) && n.scrollHeight > n.clientHeight + 1) return n;
+        }
+        return document.scrollingElement;
+      };
+      const targets = all.filter((el) => el !== root && !bars.some((b) => b.contains(el) || el.contains(b)) &&
+        (el.matches(INTERACTIVE) || ownText(el)) && !annotated(el));
+      const saved = new Map();
+      for (const el of targets) {
+        const sc = scrollerOf(el);
+        if (!saved.has(sc)) { saved.set(sc, sc.scrollTop); sc.scrollTop = sc.scrollHeight; }
+      }
+      for (const el of targets) {
+        const r = el.getBoundingClientRect();
+        if (!(r.width > 0 && r.height > 0)) continue;
+        for (const bar of bars) {
+          const b = bar.getBoundingClientRect();
+          const dy = Math.min(r.bottom, b.bottom) - Math.max(r.top, b.top);
+          const dx = Math.min(r.right, b.right) - Math.max(r.left, b.left);
+          if (dy > 4 && dx > 4) {
+            errors.push({ rule: 'fixed-overlap', message: `${describe(el)} bị ${describe(bar).split(' ')[0]} che ${Math.round(dy)}px khi đã cuộn hết. Thêm khoảng đệm đáy bằng chiều cao thanh` });
+            break;
+          }
+        }
+      }
+      for (const [sc, top] of saved) sc.scrollTop = top;
     }
 
     const dedupe = (items) => {
