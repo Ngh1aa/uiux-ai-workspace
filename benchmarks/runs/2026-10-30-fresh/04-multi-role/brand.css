@@ -1,0 +1,138 @@
+/* Thương hiệu "Răng Xinh": phòng khám nha gia đình ở Huế.
+ * Xanh ngọc (men răng, nước súc miệng), nền trắng lạnh, bo 14px. Ghi đè token ngữ nghĩa. */
+
+:root {
+  --brand-900: #063b36;
+  --brand-800: #08504a;
+  --brand-700: #0a5f58;
+  --brand-600: #0b6e66;
+  --brand-100: #d5ede9;
+  --brand-50: #ebf6f4;
+
+  --ds-font-family-sans: "Manrope", "Be Vietnam Pro", system-ui, sans-serif;
+  --app-font-display: "Be Vietnam Pro", "Manrope", system-ui, sans-serif;
+
+  --ds-surface-page: #f2f6f5;
+  --ds-surface-raised: #ffffff;
+  --ds-surface-sunken: #e5eeec;
+  --ds-surface-brand-subtle: var(--brand-50);
+  --ds-surface-brand-strong: var(--brand-600);
+  --ds-text-primary: #13201e;
+  --ds-text-secondary: #4b5c59;
+  --ds-text-tertiary: #566663;
+  --ds-text-brand: var(--brand-600);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #d9e4e1;
+  --ds-border-control: #788985;
+  --ds-action-disabled-bg: #e5eeec;
+  --ds-action-disabled-text: #5c6b68;
+  --ds-feedback-neutral-surface: #e9f0ee;
+  --ds-feedback-neutral-border: #cbd8d5;
+  --ds-feedback-neutral-text: #2f3d3a;
+  --ds-feedback-neutral-icon: #4b5c59;
+
+  --ds-action-primary-bg: var(--brand-600);
+  --ds-action-primary-bg-hover: var(--brand-700);
+  --ds-action-primary-bg-pressed: var(--brand-800);
+  --ds-action-primary-text: #ffffff;
+  --ds-action-secondary-bg: #ffffff;
+  --ds-action-secondary-bg-hover: #edf3f2;
+  --ds-action-secondary-bg-pressed: #dfe9e7;
+  --ds-action-secondary-text: #13201e;
+  --ds-action-secondary-border: #7d8e8a;
+  --ds-action-tertiary-bg-hover: var(--brand-50);
+  --ds-action-tertiary-bg-pressed: var(--brand-100);
+  --ds-action-tertiary-text: var(--brand-600);
+  --ds-action-selected-bg: var(--brand-100);
+  --ds-action-selected-text: var(--brand-900);
+  --ds-action-selected-indicator: var(--brand-600);
+  --ds-border-focus: var(--brand-600);
+
+  --ds-shape-card: 14px;
+  --ds-card-radius: 14px;
+  --ds-shape-control: 10px;
+  --ds-shape-sheet: 18px;
+  --ds-card-border: transparent;
+  --ds-elevation-raised: none;
+  --ds-size-control-sm: 44px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand-strong-dark: #0d5b54;
+    --brand-tint-dark: #82d4c8;
+    --ds-surface-page: #0e1514;
+    --ds-surface-raised: #172120;
+    --ds-surface-sunken: #202c2a;
+    --ds-surface-brand-subtle: #15302c;
+    --ds-surface-brand-strong: var(--brand-strong-dark);
+    --ds-text-primary: #eef5f3;
+    --ds-text-secondary: #afc0bc;
+    --ds-text-tertiary: #97aaa6;
+    --ds-text-brand: var(--brand-tint-dark);
+    --ds-text-on-brand-strong: #ffffff;
+    --ds-border-subtle: #293735;
+    --ds-border-control: #82938f;
+    --ds-action-primary-bg: var(--brand-tint-dark);
+    --ds-action-primary-bg-hover: #9adfd4;
+    --ds-action-primary-bg-pressed: #b1e8df;
+    --ds-action-primary-text: #062e2a;
+    --ds-action-secondary-bg: #172120;
+    --ds-action-secondary-bg-hover: #202c2a;
+    --ds-action-secondary-bg-pressed: #293735;
+    --ds-action-secondary-text: #eef5f3;
+    --ds-action-secondary-border: #6b7d79;
+    --ds-action-tertiary-bg-hover: #15302c;
+    --ds-action-tertiary-bg-pressed: #1d3d38;
+    --ds-action-tertiary-text: var(--brand-tint-dark);
+    --ds-action-selected-bg: #1d3d38;
+    --ds-action-selected-text: #d6f2ed;
+    --ds-action-selected-indicator: var(--brand-tint-dark);
+    --ds-border-focus: var(--brand-tint-dark);
+    --ds-action-disabled-bg: #202c2a;
+    --ds-action-disabled-text: #97aaa6;
+    --ds-feedback-neutral-surface: #202c2a;
+    --ds-feedback-neutral-border: #374744;
+    --ds-feedback-neutral-text: #d5e1de;
+    --ds-feedback-neutral-icon: #afc0bc;
+  }
+}
+
+:root[data-theme="dark"] {
+  --brand-strong-dark: #0d5b54;
+  --brand-tint-dark: #82d4c8;
+  --ds-surface-page: #0e1514;
+  --ds-surface-raised: #172120;
+  --ds-surface-sunken: #202c2a;
+  --ds-surface-brand-subtle: #15302c;
+  --ds-surface-brand-strong: var(--brand-strong-dark);
+  --ds-text-primary: #eef5f3;
+  --ds-text-secondary: #afc0bc;
+  --ds-text-tertiary: #97aaa6;
+  --ds-text-brand: var(--brand-tint-dark);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #293735;
+  --ds-border-control: #82938f;
+  --ds-action-primary-bg: var(--brand-tint-dark);
+  --ds-action-primary-bg-hover: #9adfd4;
+  --ds-action-primary-bg-pressed: #b1e8df;
+  --ds-action-primary-text: #062e2a;
+  --ds-action-secondary-bg: #172120;
+  --ds-action-secondary-bg-hover: #202c2a;
+  --ds-action-secondary-bg-pressed: #293735;
+  --ds-action-secondary-text: #eef5f3;
+  --ds-action-secondary-border: #6b7d79;
+  --ds-action-tertiary-bg-hover: #15302c;
+  --ds-action-tertiary-bg-pressed: #1d3d38;
+  --ds-action-tertiary-text: var(--brand-tint-dark);
+  --ds-action-selected-bg: #1d3d38;
+  --ds-action-selected-text: #d6f2ed;
+  --ds-action-selected-indicator: var(--brand-tint-dark);
+  --ds-border-focus: var(--brand-tint-dark);
+  --ds-action-disabled-bg: #202c2a;
+  --ds-action-disabled-text: #97aaa6;
+  --ds-feedback-neutral-surface: #202c2a;
+  --ds-feedback-neutral-border: #374744;
+  --ds-feedback-neutral-text: #d5e1de;
+  --ds-feedback-neutral-icon: #afc0bc;
+}
