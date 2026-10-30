@@ -1,7 +1,7 @@
 name: Benchmark recheck (tạm)
 
 # Workflow tạm để soát lại các bài benchmark đã đóng băng bằng taste-check mới,
-# rồi commit kết quả JSON vào benchmarks/evidence/2026-10-30/. Gỡ trước khi merge.
+# rồi commit kết quả JSON vào benchmarks/evidence/2026-10-30/. Gỡ trước khi merge. (lần 2)
 
 on:
   push:
