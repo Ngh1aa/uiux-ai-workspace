@@ -86,9 +86,9 @@ test('template-leak: visible interpolation/internal notes fail, sample code and 
   assert.ok(has(check('<p>TODO sửa bản nháp</p>'), 'template-leak', 'errors'));
   for (const html of ['<p>2 người</p>', '<code>{{count}}</code>', '<template>{{count}}</template>', '<script>const a="{{count}}";</script>', '<!-- TODO -->']) assert.ok(!has(check(html), 'template-leak', 'errors'));
 });
-test('caption: review redundant instruction, preserve units/source/update/synthetic label', () => {
-  assert.ok(has(check('<p class="hint">Bấm để mở lớp</p>'), 'caption'));
-  for (const html of ['<p class="caption">Nghìn đồng, tháng 10</p>', '<p class="note">Cập nhật 7:45</p>', '<p class="note">Dữ liệu minh họa</p>', '<p class="caption">Nguồn: sổ thu</p>']) assert.ok(!has(check(html), 'caption'));
+test('caption: dòng giải thích phụ và ghi chú bản mẫu bị cảnh báo theo TASTE, dữ liệu thật thì không', () => {
+  for (const html of ['<p class="hint">Bấm để mở lớp</p>', '<p class="note">Cập nhật 7:45</p>', '<p class="note">Dữ liệu minh họa</p>', '<p class="caption">Nguồn: sổ thu</p>']) assert.ok(has(check(html), 'caption'), html);
+  for (const html of ['<p class="note">Còn 3 chỗ trống</p>', '<p class="caption">Thứ Sáu 24/10, sân số 3</p>']) assert.ok(!has(check(html), 'caption'), html);
 });
 
 test('template binding and hidden content require render before claiming a leak', () => {

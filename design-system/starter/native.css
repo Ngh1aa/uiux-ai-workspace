@@ -51,7 +51,7 @@
 .ios-field--left { text-align: left; }
 .ios-field::placeholder { color: var(--ds-text-secondary); }
 .ios-tabbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 0 34px; border-top: 0.5px solid var(--nt-hair); background: color-mix(in srgb, var(--ds-surface-raised) 92%, transparent); backdrop-filter: blur(20px); }
-.ios-tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 44px; color: var(--ds-text-secondary); text-decoration: none; font: var(--ds-font-weight-medium) 11px/13px var(--ds-font-family-sans); }
+.ios-tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 44px; color: var(--ds-text-secondary); text-decoration: none; font: var(--ds-font-weight-medium) 12px/14px var(--ds-font-family-sans); } /* TASTE: chữ phụ ≥ 12px, chặt hơn HIG 10–11pt */
 .ios-tabbar a .ds-icon { width: 26px; height: 26px; }
 .ios-tabbar a[aria-current="page"] { color: var(--nt-tint); }
 .ios-home { position: absolute; left: 50%; bottom: 8px; z-index: 6; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: var(--ds-text-primary); }

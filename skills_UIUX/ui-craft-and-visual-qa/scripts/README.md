@@ -29,11 +29,29 @@ Tuỳ chọn: `--root` (thư mục phục vụ file, mặc định thư mục hi
 `--height`, `--theme light|dark|both`, `--screenshot <thư mục>`, `--json <file>`,
 `--layout warn|strict`. Thoát với mã 1
 khi có lỗi, mã 2 khi không chạy được. Cần Playwright: script tự tìm qua `NODE_PATH`, `node_modules`
-gần đó và thư mục npm toàn cục; không thấy thì in cách xử lý (xem thêm mục "Khi không chạy được
-taste-check" trong [`START-HERE.md`](../../../START-HERE.md)).
+gần đó và thư mục npm toàn cục; không thấy thì in cách xử lý (xem mục "Khi không chạy được taste-check" bên dưới).
 Test: `node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs`.
 
 Script là tín hiệu tự động, không thay việc mở ảnh chụp ra nhìn.
+
+Luật theo [`TASTE.md`](../../../TASTE.md), là **lỗi**: `demo-note` (ghi chú bản mẫu trên màn), `template-var`
+(`{{…}}`), `small-text` (chữ < 12 px), `left-bar` (thanh màu bên trái card), `decor-overlap` (hoạ tiết đè chữ),
+`fixed-overlap` (thanh cố định ở đáy che nội dung khi đã cuộn hết). `subtitle` (dòng giải thích phụ dưới tiêu
+đề) là cảnh báo phải xem từng chỗ. Nhãn artboard hay gallery nằm ngoài màn thì đánh dấu `data-annotation`.
+
+### Khi không chạy được taste-check
+
+Theo thứ tự:
+
+1. Cài Playwright ngoài repo rồi chạy lại:
+   `npm install --prefix /tmp/pw playwright@1 && npx --prefix /tmp/pw playwright install chromium`,
+   sau đó đặt `NODE_PATH=/tmp/pw/node_modules`.
+2. Mạng chặn, không cài được: mở trang bằng trình duyệt có sẵn trong phiên, chụp 390 px và 1280 px ở
+   cả sáng và tối, soát bằng mắt theo checklist "Trước khi giao" trong [`TASTE.md`](../../../TASTE.md).
+3. Luôn chạy thêm `static-check.cjs` (không cần cài gì).
+
+Khi giao, ghi rõ đã soát bằng cách nào và phần nào chưa soát được. Không nói "đã đạt" khi mới chỉ
+soát tĩnh.
 
 Trên website, section/header/footer full-bleed là vùng bố cục, không tự động tính là card nổi bật.
 Các card thật và canvas `data-screen` vẫn được kiểm tra. Khi runtime thay nguồn ảnh, request cũ
@@ -86,7 +104,7 @@ node --test design-system/tests/gom-moc-flow.test.cjs
 - `errors` / `FAIL`: liên kết giữ chỗ hoặc đích fragment thiếu trong nguồn khi không có khả năng
   JS xử lý; biến mẫu/ghi chú nội bộ trong text; khai báo rủi ro cao nhưng cố tình bỏ review.
 - `warnings` / `WARN`: `no-entry`, `no-confirm`, `no-result`, `disabled-no-reason`, `row-mismatch`,
-  `label-long`, `time-no-date`, `caption` là tín hiệu cần đối chiếu ngữ cảnh. Các nhóm có thể trở
+  `label-long`, `time-no-date`, `caption` cần xem từng chỗ; quy tắc gốc ở `TASTE.md` không có ngoại lệ ngoài brief. Các nhóm có thể trở
   thành lỗi chắc chắn khi có hợp đồng tường minh. Không lấy từ khóa để kết luận giao dịch xảy ra.
 - `unknown` / `UNKNOWN`: event handler, submit form, thao tác tại chỗ, Back và navigation động cần
   kiểm hành vi thực tế. `static_status: PASS` và exit 0 chỉ nghĩa không thấy lỗi chắc chắn trong

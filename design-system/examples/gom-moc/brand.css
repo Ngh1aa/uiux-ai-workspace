@@ -66,8 +66,9 @@
   --app-font-display: "Lora", Georgia, "Times New Roman", serif;
   /* Vòng bàn xoay: các vòng tròn đồng tâm mờ trên card nổi bật */
   --app-hero-motif: repeating-radial-gradient(circle, transparent 0 13px, color-mix(in srgb, var(--ds-text-on-brand-strong) 14%, transparent) 13px 14px);
-  --app-hero-motif-size: 240px;
-  --app-hero-motif-top: -80px;
+  /* Vòng gốm nằm gọn ở góc trên phải, phía trên dòng tiêu đề: không đè chữ (TASTE). */
+  --app-hero-motif-size: 160px;
+  --app-hero-motif-top: -120px;
   --app-hero-motif-right: -70px;
 }
 

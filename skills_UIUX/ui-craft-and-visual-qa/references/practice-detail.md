@@ -2,6 +2,9 @@
 
 Mở khi gặp điều kiện nêu trong SKILL.md. Quy trình và thứ tự đọc chỉ do WORKFLOWS.md sở hữu.
 
+Các mục đã có trong [TASTE.md](../../../TASTE.md) (thanh màu bên trái card, " · ", dòng giải thích phụ,
+ghi chú bản mẫu trên màn, emoji làm icon) là lỗi, không phải "dấu hiệu cần xem xét"; TASTE thắng phần dưới.
+
 # UI Craft & Visual QA
 
 ## Goal

@@ -25,11 +25,11 @@ Ba điểm khác starter:  1. <...> 2. <...> 3. <...>
 
 Một điểm táo bạo là đủ. Cả trang cùng gào thì không chỗ nào nổi.
 
-## 2. Tín hiệu cần xem xét trên render
+## 2. Danh sách cấm: các mặc định làm thiết kế trông như AI làm
 
-Mỗi dòng là tín hiệu cần xem xét, không phải điều cấm tuyệt đối. Giữ khi có lý do từ brief,
-design system hiện có, tác vụ, nền tảng hoặc khả năng tiếp cận; ghi ngắn bối cảnh, đánh đổi và
-cách kiểm chứng trên màn render. Không đổi font, màu hay cấu trúc chỉ để né checklist.
+Mỗi dòng là mặc định cần tránh. Chỉ giữ khi brief, design system của khách hoặc nền tảng yêu cầu rõ;
+ghi lý do trong phần bàn giao. Dòng có đánh dấu **(TASTE)** là quy tắc của chủ repo, không có ngoại lệ
+ngoài brief. Không đổi font, màu hay cấu trúc chỉ để né checklist.
 
 **Chữ**
 - Inter, Roboto, Arial, Open Sans, Lato hay font hệ thống làm font duy nhất của trang.
@@ -49,16 +49,19 @@ cách kiểm chứng trên màn render. Không đổi font, màu hay cấu trúc
 - Ba card tính năng giống hệt nhau, mỗi card một icon trong vòng tròn.
 - Section nào cũng "tiêu đề + 3 card"; mọi khối đều là card bo tròn; card lồng card.
 - Mọi thứ căn giữa; mọi section cùng chiều cao và khoảng cách.
-- Thanh màu bên trái mỗi khối, mỗi khối một màu.
+- **(TASTE)** Thanh màu bên trái card hay khối, dù một màu hay mỗi khối một màu.
 - Màn desktop chỉ dùng một cột hẹp, nửa phải bỏ trống; mảng trống lớn ở đáy màn hoặc đáy card.
 - Card nổi bật chỉ có một con số trên nền màu; card nào cũng chỉ một tiêu đề và một dòng phụ.
 - Kéo giãn khoảng cách hoặc chiều cao khung để "lấp" màn thay vì sắp lại bố cục.
 
 **Chi tiết**
 - Emoji làm icon, bullet hay nút.
-- Nối cụm từ bằng " · "; mũi tên "→" sau mọi liên kết.
+- **(TASTE)** Nối cụm từ bằng " · ".
+- Mũi tên "→" sau mọi liên kết.
+- **(TASTE)** Dòng giải thích phụ dưới tiêu đề, ghi chú "dữ liệu mẫu", "minh hoạ", "bản mẫu…" hiện trên màn.
+- **(TASTE)** Hoạ tiết trang trí chạy đè lên chữ.
 - Glassmorphism, glow, bóng đổ dày dùng làm trang trí khắp nơi.
-- Số liệu, lời chứng thực, logo khách hàng bịa trông như thật mà không ghi "minh hoạ".
+- Số liệu, lời chứng thực, logo khách hàng bịa trông như thật mà không ghi chú "minh hoạ" trong phần bàn giao.
 - "Lorem ipsum", "John Doe", "Acme Inc".
 
 `static-check.cjs` bắt được một phần danh sách này (font mặc định, gradient tím, eyebrow, emoji,

@@ -152,15 +152,17 @@
 /* ---------- Thanh tab nổi ---------- */
 .app-tabbar {
   position: absolute; left: var(--ds-spacing-inset-lg); right: var(--ds-spacing-inset-lg); bottom: var(--ds-space-600); z-index: 3;
-  display: grid; grid-template-columns: repeat(var(--_items, 4), 1fr); gap: var(--ds-space-50); padding: var(--ds-space-100);
+  display: flex; gap: var(--ds-space-100); padding: var(--ds-space-200);
   border-radius: var(--ds-shape-pill); background: var(--ds-surface-brand-strong); box-shadow: var(--ds-elevation-floating);
 }
+/* TASTE: tab đang chọn nở thành viên có icon trái, nhãn phải; tab khác chỉ icon (nhãn vẫn đọc được bằng trình đọc màn hình). */
 .app-tabbar__item {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px;
+  flex: 1 1 0; display: flex; align-items: center; justify-content: center; gap: var(--ds-space-200); min-width: 48px; min-height: 48px;
   border-radius: var(--ds-shape-pill); color: color-mix(in srgb, var(--ds-text-on-brand-strong) 78%, transparent); text-decoration: none; white-space: nowrap;
-  font: var(--ds-font-weight-medium) 11px/14px var(--ds-font-family-sans);
+  font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/var(--ds-type-label-md-line-height) var(--ds-font-family-sans);
 }
-.app-tabbar__item[aria-current="page"] { background: var(--ds-text-on-brand-strong); color: var(--ds-surface-brand-strong); font-weight: var(--ds-font-weight-bold); }
+.app-tabbar__item:not([aria-current="page"]) .app-tabbar__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.app-tabbar__item[aria-current="page"] { flex: 2.2 1 0; padding-inline: var(--ds-space-300); background: var(--ds-text-on-brand-strong); color: var(--ds-surface-brand-strong); font-weight: var(--ds-font-weight-bold); }
 .app-tabbar__item:focus-visible, .app-hero :focus-visible { outline-color: var(--ds-text-on-brand-strong); }
 
 /* ---------- Trạng thái ---------- */
@@ -197,7 +199,8 @@
 .web-main { display: flex; flex-direction: column; gap: var(--ds-spacing-stack-lg); width: 100%; max-width: 1180px; padding: var(--ds-spacing-stack-xl) var(--ds-spacing-gutter-wide); box-sizing: border-box; }
 .web-top { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-spacing-inline-md); }
 .web-top h1 { margin: 0; }
-.web-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)); gap: var(--ds-spacing-stack-md); align-items: end; }
+/* Hàng số liệu nằm sát đáy và chạy tới mép phải: đẩy hoạ tiết lên trên để không đè chữ (TASTE). */
+.web-hero { --app-hero-motif-top: -136px; display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)); gap: var(--ds-spacing-stack-md); align-items: end; }
 .web-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--ds-spacing-stack-md); align-items: start; }
 .web-table { width: 100%; border-collapse: collapse; font-size: var(--ds-type-body-md-font-size); }
 .web-table th { padding: var(--ds-space-300) var(--ds-spacing-inset-md); color: var(--ds-text-secondary); text-align: left; white-space: nowrap; font: var(--ds-type-label-sm-font-weight) var(--ds-type-label-sm-font-size)/var(--ds-type-label-sm-line-height) var(--ds-font-family-sans); letter-spacing: var(--ds-type-label-sm-letter-spacing); text-transform: uppercase; }
@@ -301,4 +304,9 @@
 @media (max-width: 360px) {
   .app-hero__stat { padding-inline: 0; white-space: normal; text-align: center; }
   .app-hero__stat .app-hero__muted { font-size: var(--ds-type-label-sm-font-size); }
+}
+
+/* Màn rất hẹp: chữ chạy hết bề ngang nên hoạ tiết góc sẽ đè chữ (TASTE); bỏ hoạ tiết. */
+@media (max-width: 359px) {
+  .app-hero::before { display: none; }
 }

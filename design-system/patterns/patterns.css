@@ -29,7 +29,8 @@
 
 /* ---------- 1–5. Card nổi bật ---------- */
 .pt-hero { position: relative; display: flex; flex-direction: column; gap: var(--ds-space-400); overflow: hidden; padding: var(--ds-space-600); border-radius: var(--pt-radius); background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
-.pt-hero::before { content: ""; position: absolute; top: var(--app-hero-motif-top, -64px); right: var(--app-hero-motif-right, -56px); width: var(--app-hero-motif-size, 200px); height: var(--app-hero-motif-size, 200px); border-radius: var(--app-hero-motif-radius, var(--ds-shape-pill)); background: var(--app-hero-motif, color-mix(in srgb, var(--ds-text-on-brand-strong) 9%, transparent)); pointer-events: none; }
+/* Khối mẫu có chữ chạy hết bề ngang ở mọi cỡ thẻ, nên không đặt hoạ tiết góc (TASTE: hoạ tiết không đè chữ).
+   Dự án muốn hoạ tiết thì đặt ở vùng không có chữ và qua decor-overlap của taste-check. */
 .pt-hero > * { position: relative; }
 .pt-hero .pt-label, .pt-hero__soft { color: color-mix(in srgb, var(--ds-text-on-brand-strong) 84%, transparent); }
 .pt-hero__row { display: flex; align-items: center; gap: var(--ds-space-300); }
