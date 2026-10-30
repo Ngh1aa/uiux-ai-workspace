@@ -152,15 +152,17 @@
 /* ---------- Thanh tab nổi ---------- */
 .app-tabbar {
   position: absolute; left: var(--ds-spacing-inset-lg); right: var(--ds-spacing-inset-lg); bottom: var(--ds-space-600); z-index: 3;
-  display: grid; grid-template-columns: repeat(var(--_items, 4), 1fr); gap: var(--ds-space-50); padding: var(--ds-space-100);
+  display: flex; gap: var(--ds-space-100); padding: var(--ds-space-200);
   border-radius: var(--ds-shape-pill); background: var(--ds-surface-brand-strong); box-shadow: var(--ds-elevation-floating);
 }
+/* TASTE: tab đang chọn nở thành viên có icon trái, nhãn phải; tab khác chỉ icon (nhãn vẫn đọc được bằng trình đọc màn hình). */
 .app-tabbar__item {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px;
+  flex: 1 1 0; display: flex; align-items: center; justify-content: center; gap: var(--ds-space-200); min-width: 48px; min-height: 48px;
   border-radius: var(--ds-shape-pill); color: color-mix(in srgb, var(--ds-text-on-brand-strong) 78%, transparent); text-decoration: none; white-space: nowrap;
-  font: var(--ds-font-weight-medium) 11px/14px var(--ds-font-family-sans);
+  font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/var(--ds-type-label-md-line-height) var(--ds-font-family-sans);
 }
-.app-tabbar__item[aria-current="page"] { background: var(--ds-text-on-brand-strong); color: var(--ds-surface-brand-strong); font-weight: var(--ds-font-weight-bold); }
+.app-tabbar__item:not([aria-current="page"]) .app-tabbar__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.app-tabbar__item[aria-current="page"] { flex: 2.2 1 0; padding-inline: var(--ds-space-300); background: var(--ds-text-on-brand-strong); color: var(--ds-surface-brand-strong); font-weight: var(--ds-font-weight-bold); }
 .app-tabbar__item:focus-visible, .app-hero :focus-visible { outline-color: var(--ds-text-on-brand-strong); }
 
 /* ---------- Trạng thái ---------- */
