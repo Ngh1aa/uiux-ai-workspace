@@ -1,73 +1,45 @@
 # Chuyển động
 
-Trang này trả lời: **khi nào nên có chuyển động, nhanh bao nhiêu, theo đường cong nào?** Phần làm cụ thể
-(mẫu code, vi tương tác) nằm trong skill
+Khi nào có chuyển động, nhanh bao nhiêu, theo đường cong nào. Mẫu code ở skill
 [`motion-and-microinteractions`](../skills_UIUX/motion-and-microinteractions/SKILL.md).
 
-## 1. Chuyển động phải có việc để làm
+## 1. Chỉ khi có việc
 
-Mỗi chuyển động trả lời được một trong bốn câu, nếu không thì bỏ:
+Mỗi chuyển động phải làm một trong bốn việc, nếu không thì bỏ: **phản hồi** (nút lún, công tắc trượt),
+**liên tục** (sheet trượt từ đáy, chi tiết mở từ dòng được chọn), **trạng thái** (tiến độ, dấu tích khi lưu),
+**chú ý** (badge mới nảy một lần). App và màn quản trị không có chuyển động trang trí. Website thương hiệu và
+landing được kể chuyện bằng chuyển động theo cuộn (mục 4).
 
-| Việc | Ví dụ |
-|---|---|
-| **Phản hồi:** "đã nhận thao tác" | Nút lún khi bấm, công tắc trượt, ô nhập rung nhẹ khi sai |
-| **Liên tục:** "cái mới đến từ đâu" | Sheet trượt từ đáy, chi tiết mở rộng từ dòng được chọn |
-| **Trạng thái:** "đang làm, xong rồi" | Thanh tiến độ, skeleton, dấu tích hiện ra khi lưu |
-| **Chú ý:** "nhìn chỗ này" | Badge mới nảy một lần, con số đếm lên khi vào màn |
-
-Chuyển động trang trí (nền trôi, icon lắc liên tục, mọi thứ trượt vào khi cuộn) làm chậm người dùng và
-tốn pin. Landing được phép có một khoảnh khắc trình diễn, app thì không.
-
-## 2. Thời lượng
+## 2. Thời lượng và đường cong
 
 | Token | Thời lượng | Dùng cho |
 |---|---|---|
-| `duration.instant` | 0 ms | Đổi trạng thái không cần chuyển tiếp; chế độ giảm chuyển động |
 | `duration.fast` | 120 ms | Hover, nhấn, công tắc, tooltip |
-| `duration.base` | 200 ms | Mở menu, đổi tab, hiện toast |
-| `duration.slow` | 320 ms | Sheet, modal, chuyển màn, mở rộng vùng lớn |
+| `duration.base` | 200 ms | Menu, đổi tab, toast |
+| `duration.slow` | 320 ms | Sheet, modal, chuyển màn |
 
-Quy tắc: vật càng to, đi càng xa thì càng lâu; nhưng không thao tác nào của người dùng phải chờ quá
-khoảng 400 ms. Đóng nhanh hơn mở (khoảng 70–80% thời lượng mở), vì người dùng đã quyết định rời đi.
+Không thao tác nào chờ quá ~400 ms; đóng nhanh hơn mở (70–80%). `easing.enter` cho vật xuất hiện,
+`easing.exit` cho vật rời đi, `easing.standard` cho vật di chuyển; `linear` chỉ cho thanh tiến độ.
+Hiệu ứng nảy chỉ cho phản hồi vui (thả tim), không cho modal hay sheet.
+Chỉ animate `transform` và `opacity`; mở rộng chiều cao bằng `grid-template-rows: 0fr → 1fr`.
 
-## 3. Đường cong
+## 3. Giảm chuyển động
 
-| Token | Khi nào |
-|---|---|
-| `easing.standard` | Vật đi từ chỗ này sang chỗ khác trong màn |
-| `easing.enter` | Vật xuất hiện: vào nhanh, chậm dần khi tới chỗ |
-| `easing.exit` | Vật biến mất: bắt đầu chậm, rời nhanh |
+Khi hệ điều hành bật giảm chuyển động: thay trượt và phóng bằng mờ dần hoặc đổi ngay, tắt chuyển động tự chạy,
+giữ phản hồi trạng thái. Chuyển động tự chạy quá 5 giây phải có nút dừng (WCAG 2.2.2).
 
-Không dùng `linear` cho vật chuyển động (trông máy móc); `linear` chỉ hợp cho thanh tiến độ và vòng quay.
-Hiệu ứng nảy (spring, overshoot) dùng tiết kiệm, cho phản hồi vui như thả tim, không cho modal.
+Tự kiểm: quay màn ở 0,25×; bật giảm chuyển động và đi lại luồng chính; bấm liên tục 5 lần xem có chồng hay khoá.
 
-## 4. Chỉ animate thứ rẻ
+## 4. Website thương hiệu và landing
 
-Trình duyệt vẽ mượt `transform` và `opacity`. Animate `width`, `height`, `top`, `margin`, `box-shadow` buộc
-tính lại bố cục mỗi khung hình và giật trên điện thoại yếu. Mở rộng chiều cao thì dùng `grid-template-rows:
-0fr → 1fr` hoặc `transform: scaleY` cho phần nền.
+Theo 9 trang chủ repo chọn ([`owner-picks.md`](owner-picks.md)). Hai nhịp, không trộn:
 
-## 5. Giảm chuyển động
+- **Nhịp kể chuyện:** chữ trồi từng dòng, khối hiện ra, ảnh nở, đổi màu section. 0,8–1,4 s,
+  `cubic-bezier(.16,1,.3,1)` hoặc `(.165,.84,.44,1)`, trễ 60–100 ms giữa các dòng. Bắt đầu khi khối qua 75–90%
+  chiều cao màn. Hiệu ứng gắn với cuộn thì chạy theo vị trí cuộn, không theo thời gian.
+- **Nhịp thao tác:** rê chuột, nút, menu. Giữ bảng mục 2.
 
-Một số người bị chóng mặt, buồn nôn với chuyển động lớn (rối loạn tiền đình). Khi hệ điều hành bật
-"giảm chuyển động":
+Mỗi trang tối đa 3 loại hiệu ứng kể chuyện. Màn chờ có logo dưới 1,2 s, chỉ lần đầu trong phiên. Công thức dựng
+sẵn kèm bản tĩnh: [`motion-recipes/index.html`](motion-recipes/index.html).
 
-- Thay trượt và phóng to bằng mờ dần (`opacity`) hoặc đổi ngay.
-- Tắt chuyển động tự chạy, parallax, video nền tự phát.
-- Giữ phản hồi trạng thái (dấu tích, đổi màu) vì nó mang thông tin.
-
-`components.css` đã có khối `@media (prefers-reduced-motion: reduce)`; CSS của dự án phải theo cùng cách.
-Chuyển động tự chạy quá 5 giây phải có nút dừng (WCAG 2.2, tiêu chí 2.2.2).
-
-## 6. Tự kiểm tra
-
-- Quay màn hình ở tốc độ 0,25×: chuyển động có kể đúng câu chuyện "từ đâu tới, đi đâu" không?
-- Bật giảm chuyển động trong hệ điều hành và đi lại luồng chính.
-- Bấm liên tục 5 lần: animation có xếp hàng, chồng chéo, hay khoá thao tác không?
-
-## Nguồn
-
-- Material Design 3, *Motion: easing and duration*.
-- Apple Human Interface Guidelines, *Motion*.
-- W3C, *WCAG 2.2*, tiêu chí 2.2.2 và 2.3.3; MDN, *prefers-reduced-motion*.
-- Val Head, *Designing Interface Animation* (2016).
+Nguồn chính: Material 3 *Motion*, Apple HIG *Motion*, MDN `prefers-reduced-motion`.
