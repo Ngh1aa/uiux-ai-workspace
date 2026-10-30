@@ -85,6 +85,12 @@
   .step:nth-child(2) .wheel { --s: 64px; font-size: 26px; }
   .step:nth-child(3) .wheel { --s: 72px; font-size: 30px; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); border-color: var(--ds-surface-brand-strong); }
   .step h3 { font-size: 16px; font-weight: 600; line-height: 1.4; text-wrap: balance; }
+  @media (max-width: 599px) {
+    .steps { grid-template-columns: 1fr; gap: 0; }
+    .step { display: grid; grid-template-columns: 104px 1fr; align-items: center; text-align: left; gap: 8px; }
+    .step .wheel { margin: 14px 0; justify-self: center; }
+    .step h3 { font-size: 18px; }
+  }
   @media (min-width: 840px) { .step h3 { font-size: 18px; } }
 
   /* FAQ */

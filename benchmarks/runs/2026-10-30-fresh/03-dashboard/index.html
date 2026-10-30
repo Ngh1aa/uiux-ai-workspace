@@ -61,7 +61,7 @@
   .prod__code { font-size: 13px; color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; }
   .ds-badge { font-size: 13px; }
   .btn-row { white-space: nowrap; }
-  @media (min-width: 1024px) { .prod__name { white-space: nowrap; } .stock th, .stock td { padding-inline: var(--ds-space-300); } .stock th:first-child, .stock td:first-child { padding-left: var(--ds-space-500); } }
+  @media (min-width: 1200px) { .prod__name { white-space: nowrap; } .stock th, .stock td { padding-inline: var(--ds-space-300); } .stock th:first-child, .stock td:first-child { padding-left: var(--ds-space-500); } }
 
   .orders { list-style: none; margin: 0; padding: 0; }
   .order { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "who late" "where act"; gap: var(--ds-space-100) var(--ds-space-400); align-items: center; padding: var(--ds-space-300) var(--ds-space-500); }
@@ -93,8 +93,11 @@
   .preview { padding: var(--ds-space-300) var(--ds-space-400); border-radius: var(--ds-shape-control); background: var(--ds-surface-sunken); }
   .ds-dialog .ds-button { min-height: 44px; }
 
+  @media (max-width: 1199px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .col-8, .col-4, .col-12 { grid-column: auto; }
+  }
   @media (max-width: 1023px) {
-    .col-8, .col-4 { grid-column: span 12; }
     .hero { grid-template-columns: 1fr; }
     .hero__stats { flex-wrap: wrap; }
     .hero__stat:first-child { padding-left: 0; }
@@ -111,12 +114,12 @@
     .grid { gap: var(--ds-space-800); margin-top: var(--ds-space-800); }
     .stock thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     .stock, .stock tbody { display: block; }
-    .stock tr { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "prod days" "left rate" "act act"; gap: var(--ds-space-200) var(--ds-space-300); padding: var(--ds-space-400); border-top: 1px solid var(--ds-border-subtle); }
+    .stock tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "prod prod" "left days" "rate rate" "act act"; gap: var(--ds-space-200) var(--ds-space-300); padding: var(--ds-space-400); border-top: 1px solid var(--ds-border-subtle); }
     .stock tbody tr:first-child { border-top: 0; }
     .stock tr.is-urgent { background: var(--ds-feedback-warning-surface); }
     .stock td, .stock tr.is-urgent td { display: block; padding: 0; border: 0; background: none; }
     .stock td.c-prod { grid-area: prod; } .stock td.c-days { grid-area: days; text-align: right; }
-    .stock td.c-left { grid-area: left; text-align: left; } .stock td.c-rate { grid-area: rate; text-align: right; }
+    .stock td.c-left { grid-area: left; text-align: left; align-self: center; } .stock td.c-rate { grid-area: rate; text-align: left; white-space: normal; }
     .stock td.c-act { grid-area: act; width: auto; }
     .stock td.c-left::before, .stock td.c-rate::before { content: attr(data-label) " "; color: var(--ds-text-secondary); font-size: 14px; }
     .stock td.c-act .ds-button { width: 100%; }

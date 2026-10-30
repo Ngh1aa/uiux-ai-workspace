@@ -85,9 +85,10 @@ Luồng / đường vào:            PASS  hai nút "Đặt chỗ" (đầu trang
 Back / giữ bản nháp:          PASS  Hủy ở xác nhận về form giữ dữ liệu; đóng X giữa chừng giữ bản nháp
 Sửa → xác nhận → kết quả:     PASS  đổi lớp → tổng 700.000 ₫ → mã DN-ddmm-01; thẻ trạng thái ở cả hai nút; chỗ còn giảm
 Lỗi → khôi phục:              PASS  vượt chỗ, số điện thoại sai, ca hết chỗ khoá
-Bằng chứng:                   scenarios.cjs (6 kịch bản) chạy Playwright 1.63 chromium 390×844: 6 PASS, 0 lỗi JS;
+Bằng chứng:                   taste-check 390/1024/1280/1440 sáng+tối + reflow 320: 0 lỗi 0 cảnh báo;
+                              scenarios.cjs (6 kịch bản) chạy Playwright 1.63 chromium 390×844: 6 PASS, 0 lỗi JS;
                               static-check 0 lỗi; flow-check tĩnh PASS (cảnh báo/UNKNOWN runtime đã kiểm bằng Playwright);
                               check-brand.py brand.css ĐẠT; ảnh 390/1280 sáng/tối đã xem, không tràn ngang
 Phần mô phỏng / dữ liệu mẫu:  số chỗ đã đặt, mã đặt chỗ sinh trong JS (xem mục trên)
-Chưa kiểm:                    backend, thiết bị thật, người dùng thật, 768/1440, chữ phóng 200%
+Chưa kiểm:                    backend, thiết bị thật, người dùng thật, 768, chữ phóng 200%
 ```
