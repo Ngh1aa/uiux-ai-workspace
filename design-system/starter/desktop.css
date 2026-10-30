@@ -55,7 +55,8 @@
 
 /* Card nổi bật desktop: 3 tầng (nhãn, số chính, ngữ cảnh) + dải số phụ */
 .dk-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ds-space-600); overflow: hidden; padding: var(--ds-space-800); border-radius: var(--ds-card-radius); background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
-.dk-hero::before { content: ""; position: absolute; inset: auto -80px -120px auto; width: 320px; height: 320px; border-radius: var(--app-hero-motif-radius, var(--ds-shape-pill)); background: var(--app-hero-motif, color-mix(in srgb, var(--ds-text-on-brand-strong) 9%, transparent)); pointer-events: none; }
+/* Hoạ tiết ở góc trên phải, phía trên dải số liệu: không đè chữ (TASTE). */
+.dk-hero::before { content: ""; position: absolute; inset: -250px -80px auto auto; width: 320px; height: 320px; border-radius: var(--app-hero-motif-radius, var(--ds-shape-pill)); background: var(--app-hero-motif, color-mix(in srgb, var(--ds-text-on-brand-strong) 9%, transparent)); pointer-events: none; }
 .dk-hero > * { position: relative; }
 .dk-hero__label { margin: 0; color: color-mix(in srgb, var(--ds-text-on-brand-strong) 82%, transparent); }
 .dk-hero__value { margin: var(--ds-space-100) 0 var(--ds-space-200); font: var(--ds-font-weight-bold) 56px/60px var(--app-font-display, var(--ds-font-family-sans)); letter-spacing: var(--ds-font-tracking-tight); font-variant-numeric: tabular-nums; }
@@ -125,7 +126,7 @@
 /* Chia đôi đăng nhập */
 .dk-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; max-width: 1440px; height: 900px; margin-inline: auto; overflow: hidden; background: var(--ds-surface-page); }
 .dk-brandside { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: var(--ds-space-600); overflow: hidden; padding: var(--ds-space-1200) var(--ds-space-1000); background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
-.dk-brandside::before { content: ""; position: absolute; right: -160px; top: 120px; width: 560px; height: 560px; border-radius: var(--app-hero-motif-radius, var(--ds-shape-pill)); background: var(--app-hero-motif, color-mix(in srgb, var(--ds-text-on-brand-strong) 8%, transparent)); }
+.dk-brandside::before { content: ""; position: absolute; right: -200px; top: -280px; width: 560px; height: 560px; border-radius: var(--app-hero-motif-radius, var(--ds-shape-pill)); background: var(--app-hero-motif, color-mix(in srgb, var(--ds-text-on-brand-strong) 8%, transparent)); }
 .dk-brandside > * { position: relative; }
 .dk-brandside h1 { margin: 0; max-width: 14ch; font: var(--ds-font-weight-bold) 48px/56px var(--app-font-display, var(--ds-font-family-sans)); letter-spacing: var(--ds-font-tracking-tight); }
 .dk-brandside .dk-hero__label { max-width: 40ch; }
