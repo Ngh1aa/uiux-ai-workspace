@@ -109,6 +109,7 @@ button { font: inherit; color: inherit; }
 /* ---------- Hero ---------- */
 .hero { padding-top: 24px; padding-bottom: 56px; display: grid; gap: 32px; }
 .hero h1 { max-width: 11.5ch; }
+.hero .copy { display: grid; gap: 28px; }
 .hero .act { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
 .hero .facts { display: flex; gap: 28px; }
 .hero .facts div { display: grid; gap: 2px; }
