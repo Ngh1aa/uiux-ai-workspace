@@ -41,7 +41,7 @@ module.exports = async (page, pass, assert) => {
     assert.equal(await page.getAttribute(S(form, 'send'), 'aria-disabled'), 'true');
     const why = await page.getAttribute(S(form, 'send'), 'aria-describedby');
     assert.match(await text(`[data-screen="${form}"] #${why}`), /Ngày nghỉ đã qua/);
-    await page.click(S(form, 'send'));
+    await page.click(S(form, 'send'), { force: true });
     assert.ok(await visible(S(form, 'form')), 'nút khoá không gửi đơn');
     await page.click(S(form, 'day-24-10'));
     assert.ok(await gone(S(form, 'date-error')));
