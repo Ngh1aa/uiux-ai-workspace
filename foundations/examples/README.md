@@ -82,5 +82,6 @@ Trung tính cho việc bình thường, màu thương hiệu cho việc đang di
 
 ## Màn chủ repo đã duyệt
 
-Chưa có. Khi chủ repo gửi màn đẹp, mỗi màn vào đây với ảnh, một câu vì sao đẹp và nguyên tắc nó minh hoạ. Các màn
-này đứng trên mọi ví dụ do agent dựng và mọi tham khảo ngoài.
+Website: 9 trang chủ repo chọn ngày 30/10/2026, phân tích và số đo ở [`owner-picks.md`](../owner-picks.md).
+Màn app: chưa có. Khi chủ repo gửi màn đẹp, mỗi màn vào đây với ảnh, một câu vì sao đẹp và nguyên tắc nó minh
+hoạ. Các màn này đứng trên mọi ví dụ do agent dựng và mọi tham khảo ngoài.

@@ -55,7 +55,8 @@ và cách chọn nguồn trong
 
 ## Màn tham chiếu trong repo
 
-Chưa có màn nào được chủ repo duyệt. Màn do agent dựng ([sổ đơn hàng](../design-system/examples/data-table/README.md),
+Website và landing: dùng 9 trang chủ repo chọn ở [`owner-picks.md`](owner-picks.md) trước mọi dòng ở bảng
+trên. Màn app: chưa có màn nào được chủ repo duyệt. Màn do agent dựng ([sổ đơn hàng](../design-system/examples/data-table/README.md),
 các lượt benchmark) là `CHƯA DUYỆT`: dùng để xem cấu trúc, không dùng làm chuẩn gu. Khi có màn đã duyệt,
 chúng nằm ở [`examples/`](examples/README.md) và được ưu tiên trên mọi tham khảo ngoài.
 

@@ -7,7 +7,8 @@ Khi nào có chuyển động, nhanh bao nhiêu, theo đường cong nào. Mẫu
 
 Mỗi chuyển động phải làm một trong bốn việc, nếu không thì bỏ: **phản hồi** (nút lún, công tắc trượt),
 **liên tục** (sheet trượt từ đáy, chi tiết mở từ dòng được chọn), **trạng thái** (tiến độ, dấu tích khi lưu),
-**chú ý** (badge mới nảy một lần). App không có chuyển động trang trí; landing được một khoảnh khắc trình diễn.
+**chú ý** (badge mới nảy một lần). App và màn quản trị không có chuyển động trang trí. Website thương hiệu và
+landing được kể chuyện bằng chuyển động theo cuộn (mục 4).
 
 ## 2. Thời lượng và đường cong
 
@@ -28,5 +29,17 @@ Khi hệ điều hành bật giảm chuyển động: thay trượt và phóng b
 giữ phản hồi trạng thái. Chuyển động tự chạy quá 5 giây phải có nút dừng (WCAG 2.2.2).
 
 Tự kiểm: quay màn ở 0,25×; bật giảm chuyển động và đi lại luồng chính; bấm liên tục 5 lần xem có chồng hay khoá.
+
+## 4. Website thương hiệu và landing
+
+Theo 9 trang chủ repo chọn ([`owner-picks.md`](owner-picks.md)). Hai nhịp, không trộn:
+
+- **Nhịp kể chuyện:** chữ trồi từng dòng, khối hiện ra, ảnh nở, đổi màu section. 0,8–1,4 s,
+  `cubic-bezier(.16,1,.3,1)` hoặc `(.165,.84,.44,1)`, trễ 60–100 ms giữa các dòng. Bắt đầu khi khối qua 75–90%
+  chiều cao màn. Hiệu ứng gắn với cuộn thì chạy theo vị trí cuộn, không theo thời gian.
+- **Nhịp thao tác:** rê chuột, nút, menu. Giữ bảng mục 2.
+
+Mỗi trang tối đa 3 loại hiệu ứng kể chuyện. Màn chờ có logo dưới 1,2 s, chỉ lần đầu trong phiên. Công thức dựng
+sẵn kèm bản tĩnh: [`motion-recipes/index.html`](motion-recipes/index.html).
 
 Nguồn chính: Material 3 *Motion*, Apple HIG *Motion*, MDN `prefers-reduced-motion`.

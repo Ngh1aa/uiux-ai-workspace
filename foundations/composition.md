@@ -26,7 +26,9 @@ card viền mảnh, mọi thứ cỡ vừa, không có chỗ nào đáng nhớ. 
 2. **Một chỗ thật to** và phần còn lại lùi hẳn về. Chênh lệch cỡ, không chênh lệch màu.
 3. **Bỏ bớt** viền, khung, nhãn phụ cho tới khi màn chỉ còn những thứ phải có.
 
-Khi chủ repo gửi màn đã duyệt, đối chiếu với các màn đó trước, không đối chiếu với starter.
+Ví dụ thật từ trang chủ repo chọn: giao diện đổi theo giờ của hãng đèn, chữ logo tự xếp lại của agency, chữ
+dọc kiểu in ấn của trang sự kiện ([`owner-picks.md`](owner-picks.md)). Đối chiếu với các trang đó trước, không
+đối chiếu với starter.
 
 ## 3. Màn app: đặt theo ngón tay
 
