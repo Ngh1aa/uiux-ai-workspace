@@ -22,6 +22,7 @@ tỉ lệ cố định), mức chi tiết (bằng nhau ở cùng cỡ). **Hoạ 
 - Cùng nhiệt độ màu và độ tương phản giữa các ảnh.
 - Chữ trên ảnh có lớp phủ đạt 4,5:1 ở chỗ ảnh sáng nhất.
 - `alt` nói điều ảnh nói trong ngữ cảnh; ảnh trang trí `alt=""`. Có `width`, `height`, `loading="lazy"`.
+- Định dạng AVIF hoặc WebP, nhiều cỡ qua `srcset`.
 
 ## 4. Khi chưa có ảnh thật
 

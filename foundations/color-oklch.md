@@ -44,6 +44,9 @@ kề; placeholder trong repo 4,5:1. Tránh đen tuyền trên trắng tuyền �
 - Giảm C của accent khi chói; đổi L trước khi tăng độ rực.
 - Biểu đồ giữ nghĩa màu giữa hai chế độ; **nhãn đặt trực tiếp trên dữ liệu, không dùng chú giải** (TASTE).
 - Không chớp nền sáng khi tải; khai báo `color-scheme` để input, select, scrollbar đúng chế độ.
+- Kiểm riêng mặc định, hover, focus, đang chọn, bị khoá và lỗi ở cả hai chế độ.
+- Không áp `filter: brightness()` cho mọi ảnh; ảnh sản phẩm và chân dung giữ màu thật.
+- Có nút đổi giao diện thì lưu lựa chọn của người dùng; không có thì theo hệ thống.
 
 ## 5. Bao nhiêu màu
 
