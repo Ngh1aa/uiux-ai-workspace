@@ -47,7 +47,7 @@ button { font: inherit; color: inherit; }
 
 /* Chọn ngày dạng dải ngày, dùng chung hai nền tảng */
 .days { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
-.day { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none; width: 48px; min-height: 56px; border: 1px solid var(--ds-border-control); border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); cursor: pointer; }
+.day { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none; width: 48px; min-height: 56px; border: 1px solid var(--ds-border-control); border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); cursor: pointer; }
 .day span[aria-hidden] { font-size: 12px; line-height: 16px; color: var(--ds-text-secondary); }
 .day b { font: var(--ds-font-weight-bold) 15px/20px var(--app-font-display); font-variant-numeric: tabular-nums; }
 .day[aria-pressed="true"] { border-color: var(--ds-action-primary-bg); background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); }
@@ -98,8 +98,7 @@ textarea.ios-input { min-height: 104px; padding: 11px 0; resize: none; line-heig
 .ios textarea.ios-input { height: auto; }
 .who { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
 .who__name { margin: 0; font: var(--ds-font-weight-bold) 24px/30px var(--app-font-display); letter-spacing: -0.01em; }
-.who > div { min-width: 0; }
-.who__name, .who .meta { margin: 0; overflow-wrap: anywhere; }
+.who .meta { margin: 0; }
 .work { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 12px 16px; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
 .work__ic { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: var(--ds-shape-control); background: var(--ds-surface-sunken); color: var(--ds-text-secondary); }
 .work b { display: block; font-size: 16px; line-height: 22px; font-weight: var(--ds-font-weight-semibold); }
@@ -208,7 +207,6 @@ textarea.ios-input { min-height: 104px; padding: 11px 0; resize: none; line-heig
   const leaveTitle = l => `Nghỉ ${l.session.toLowerCase()} ${l.dow} ${l.d}`;
   const todo = st => st.hw.filter(h => !h.done);
   const work = h => `<div class="work" data-test="work"><span class="work__ic">${ic(h.done ? 'i-img' : 'i-cam')}</span><span><b>${h.done ? '1 ảnh đã nộp' : 'Chưa có ảnh'}</b><span class="meta">${h.done ? `Nộp lúc ${h.done}` : `Hạn ${h.due.replace('Thứ', 'thứ')}`}</span></span></div>`;
-  const others = (st, h) => todo(st).filter(x => x.id !== h.id);
   const who = st => `<div class="who"><span class="avatar" aria-hidden="true">GH</span><div><p class="who__name">Trần Gia Hân</p><p class="meta">Lớp 2/3, gửi cô Lê Thu Hà</p></div></div>`;
   function formIssue(f) {
     const day = DAYS.find(x => x.d === f.date);
@@ -277,11 +275,9 @@ textarea.ios-input { min-height: 104px; padding: 11px 0; resize: none; line-heig
         <ul class="ios-group">
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Môn</span></span><span class="ios-row__value">${h.subj}</span></li>
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Hạn nộp</span></span><span class="ios-row__value num">${h.due}</span></li>
-          <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Giáo viên</span></span><span class="ios-row__value">Cô Lê Thu Hà</span></li>
         </ul>
         <section class="ios-section" aria-labelledby="${st.uid}-bl"><h3 class="ios-head" id="${st.uid}-bl">Bài làm</h3>${work(h)}</section>
-        <section class="ios-section" aria-labelledby="${st.uid}-ds"><h3 class="ios-head" id="${st.uid}-ds">Mô tả</h3><div class="ios-card"><p class="para">${esc(h.desc)}</p></div></section>
-        ${others(st, h).length ? `<section class="ios-section" aria-labelledby="${st.uid}-or"><h3 class="ios-head" id="${st.uid}-or">Bài chưa nộp khác</h3>${I.rowsHw(st, others(st, h))}</section>` : ''}`,
+        <section class="ios-section" aria-labelledby="${st.uid}-ds"><h3 class="ios-head" id="${st.uid}-ds">Mô tả</h3><div class="ios-card"><p class="para">${esc(h.desc)}</p></div></section>`,
         bar + (st.overlay === 'pick' ? `<div class="nt-scrim" data-act="close-overlay"></div><div class="ios-asheet" role="dialog" aria-modal="true" aria-label="Nộp ảnh bài làm"><div class="ios-asheet__grp"><button data-act="photo" data-test="pick-camera">Chụp ảnh</button><button data-act="photo" data-test="pick-library">Chọn từ thư viện</button></div><div class="ios-asheet__grp"><button class="is-cancel" data-act="close-overlay" data-test="pick-cancel">Hủy</button></div></div>` : ''),
         h.done ? '' : 'pad-act');
     },
@@ -362,11 +358,9 @@ textarea.ios-input { min-height: 104px; padding: 11px 0; resize: none; line-heig
         <ul class="md-surface md-list">
           <li class="md-li"><span>Môn</span><span class="nt-muted">${h.subj}</span></li>
           <li class="md-li"><span>Hạn nộp</span><span class="nt-muted num">${h.due}</span></li>
-          <li class="md-li"><span>Giáo viên</span><span class="nt-muted">Cô Lê Thu Hà</span></li>
         </ul>
         <h3 class="md-title-sm">Bài làm</h3>${work(h)}
-        <h3 class="md-title-sm">Mô tả</h3><div class="md-card"><p class="para">${esc(h.desc)}</p></div>
-        ${others(st, h).length ? `<h3 class="md-title-sm">Bài chưa nộp khác</h3>${M.rowsHw(st, others(st, h))}` : ''}`,
+        <h3 class="md-title-sm">Mô tả</h3><div class="md-card"><p class="para">${esc(h.desc)}</p></div>`,
         bar + (st.overlay === 'pick' ? `<div class="nt-scrim" data-act="close-overlay"></div><div class="md-bsheet" role="dialog" aria-modal="true" aria-label="Nộp ảnh bài làm"><div class="md-bsheet__handle" aria-hidden="true"></div><button data-act="photo" data-test="pick-camera">${ic('i-cam')}Chụp ảnh</button><button data-act="photo" data-test="pick-library">${ic('i-img')}Chọn từ thư viện</button><button data-act="close-overlay" data-test="pick-cancel">${ic('i-x')}Hủy</button></div>` : ''),
         h.done ? 120 : 150);
     },

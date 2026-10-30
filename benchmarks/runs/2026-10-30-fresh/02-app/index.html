@@ -138,6 +138,9 @@
   .sched-panel { display: flex; flex-direction: column; }
   .sched-panel[hidden] { display: none; }
   .empty-wrap { gap: var(--ds-space-300); }
+  /* Thanh tab nằm trên dải nền đặc: vùng cuộn dừng phía trên thanh, không lộ nội dung sau/dưới thanh */
+  .app-phone:has(.app-tabbar) .app-screen { margin-bottom: 100px; }
+  .app-phone:has(.app-tabbar) .app-body { padding-bottom: var(--ds-space-400); }
   .empty-wrap .ds-empty { padding: var(--ds-space-600) var(--ds-space-400); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
   .empty-wrap h2 { color: var(--ds-text-primary); font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); }
   .empty-wrap .ds-button { min-height: 44px; }
@@ -360,12 +363,8 @@
             <div class="ds-empty" data-test="past-empty">
               <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>
               <h2>Chưa có lượt đã qua</h2>
+              <a class="ds-button ds-button--secondary" href="#s-list" data-to="s-list">Tìm sân</a>
             </div>
-            <div class="sec-head">
-              <h2>Tối nay gần bạn</h2>
-              <a class="text-link" href="#s-list" data-to="s-list">Xem tất cả</a>
-            </div>
-            <ul class="courts" id="past-courts"></ul>
           </div>
         </div>
       </div>
@@ -435,7 +434,6 @@
       </div>
       <a class="ds-button btn-on-brand" href="#s-schedule" data-action="view-schedule" data-to="s-schedule" data-test="hero-schedule">Xem lịch</a>`;
     $('#home-courts').innerHTML = ORDER.map(courtCard).join('');
-    $('#past-courts').innerHTML = ORDER.map(courtCard).join('');
   }
 
   function renderList() {
