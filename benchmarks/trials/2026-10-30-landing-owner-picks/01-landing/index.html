@@ -5,12 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Đất Nung xưởng gốm</title>
 <meta name="description" content="Lớp làm gốm cuối tuần cho người mới ở 24 Hàng Chiếu, Hà Nội.">
-<link rel="stylesheet" href="../../../../design-system/fonts/pairs.css">
+<link rel="preconnect" href="https://images.unsplash.com">
 <link rel="stylesheet" href="brand.css">
 <script>document.documentElement.classList.add('js')</script>
-<style>
-  :root { --drip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -40 1200 120' preserveAspectRatio='none'%3E%3Cpath fill='%232340b0' d='M0 -40 H1200 V0 Q1141 6 1082 0 C1063 0 1062 13.3 1060.5 43 A10 10 0 0 1 1043.5 43 C1042 13.3 1041 0 1022 0 Q1003.3 6 984.5 0 C960.8 0 959.5 6 957.6 11.5 A12.5 12.5 0 0 1 936.4 11.5 C934.5 6 933.3 0 909.5 0 Q900.3 6 891 0 C873.9 0 873 17.3 871.6 60 A9 9 0 0 1 856.4 60 C855 17.3 854.1 0 837 0 Q798.5 6 760 0 C741 0 740 12 738.5 38 A10 10 0 0 1 721.5 38 C720 12 719 0 700 0 Q683.8 6 667.5 0 C641.9 0 640.5 13 638.5 38.5 A13.5 13.5 0 0 1 615.5 38.5 C613.5 13 612.1 0 586.5 0 Q540 6 493.5 0 C475.4 0 474.5 14.5 473.1 48.5 A9.5 9.5 0 0 1 456.9 48.5 C455.5 14.5 454.6 0 436.5 0 Q384 6 331.5 0 C315.4 0 314.5 10.3 313.2 32.5 A8.5 8.5 0 0 1 298.8 32.5 C297.5 10.3 296.6 0 280.5 0 Q228 6 175.5 0 C161.3 0 160.5 8.8 159.4 27.5 A7.5 7.5 0 0 1 146.6 27.5 C145.5 8.8 144.8 0 130.5 0 Q107.5 6 84.5 0 C62.6 0 61.5 18.5 59.8 62.5 A11.5 11.5 0 0 1 40.2 62.5 C38.5 18.5 37.4 0 15.5 0 Q7.8 6 0 0 Z'/%3E%3C/svg%3E"); }
-</style>
 </head>
 <body>
 
@@ -30,178 +27,93 @@
     <a href="#buoi-hoc">Buổi học</a>
     <a href="#lich-hoc">Lịch học</a>
     <a href="#hoi-dap">Hỏi đáp</a>
-    <a class="tel" href="tel:0912345678">0912 345 678</a>
+    <a class="tel num" href="tel:0912345678">0912 345 678</a>
   </nav>
 </header>
 
 <main>
-  <!-- Hero: chữ rất lớn bên trái, chiếc cốc trên bàn xoay bên phải; men lam chảy xuống theo cuộn -->
-  <section class="wrap hero" aria-labelledby="loi-hua">
-    <div class="copy">
-      <h1 id="loi-hua" class="display" data-reveal>Ba tiếng, một khối đất, một chiếc cốc của riêng bạn.</h1>
-      <div class="act">
-        <button class="btn btn--primary btn--lg" type="button" data-open-booking data-to="dat-cho"><span>Đặt chỗ</span><span class="dot" aria-hidden="true"></span></button>
+  <section class="hero" aria-labelledby="loi-hua">
+    <div class="wrap hero-text">
+      <h1 id="loi-hua" class="display" data-reveal>Ba tiếng, một khối đất, một chiếc cốc của <em>riêng bạn.</em></h1>
+      <div class="hero-side">
         <div class="facts">
-          <div><span class="label">Mỗi buổi</span><strong class="num">từ 300.000 ₫</strong></div>
           <div><span class="label">Mở lớp</span><strong>Thứ Bảy, Chủ nhật</strong></div>
+          <div><span class="label">Ca học</span><strong class="num">9:00 và 14:00</strong></div>
+          <div><span class="label">Mỗi buổi</span><strong class="num">từ 300.000 ₫</strong></div>
         </div>
+        <button class="btn btn--primary btn--lg" type="button" data-open-booking data-to="dat-cho">Đặt chỗ <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+        <p class="booked" role="status" data-booked></p>
       </div>
-      <p class="booked" role="status" data-booked></p>
     </div>
-
-    <div class="cup" role="img" aria-label="Chiếc cốc gốm trên bàn xoay, men lam chảy từ miệng cốc xuống">
-      <svg id="cup" viewBox="0 0 400 480" style="--g:1" aria-hidden="true" focusable="false">
-        <defs>
-          <clipPath id="cup-clip">
-            <path d="M108 148 C104 250 112 352 140 396 Q200 412 260 396 C288 352 296 250 292 148 Z"/>
-            <ellipse cx="200" cy="148" rx="92" ry="20"/>
-            <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z"/>
-          </clipPath>
-          <clipPath id="body-clip"><path d="M108 148 C104 250 112 352 140 396 Q200 412 260 396 C288 352 296 250 292 148 Z"/><ellipse cx="200" cy="148" rx="92" ry="20"/></clipPath>
-          <!-- khối trụ: sáng bên trái, tối dần sang phải, viền tối ở mép -->
-          <linearGradient id="cup-shade" x1="108" x2="292" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#000" stop-opacity=".28"/>
-            <stop offset=".1" stop-color="#fff" stop-opacity=".06"/>
-            <stop offset=".24" stop-color="#fff" stop-opacity=".3"/>
-            <stop offset=".38" stop-color="#fff" stop-opacity=".04"/>
-            <stop offset=".7" stop-color="#000" stop-opacity=".1"/>
-            <stop offset=".93" stop-color="#000" stop-opacity=".38"/>
-            <stop offset="1" stop-color="#000" stop-opacity=".2"/>
-          </linearGradient>
-          <linearGradient id="handle-shade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#fff" stop-opacity=".18"/>
-            <stop offset=".5" stop-color="#000" stop-opacity="0"/>
-            <stop offset="1" stop-color="#000" stop-opacity=".35"/>
-          </linearGradient>
-          <!-- men đọng dày, sẫm hơn ở mép giọt -->
-          <linearGradient id="glaze-pool" x1="0" y1="-700" x2="0" y2="80" gradientUnits="userSpaceOnUse">
-            <stop offset="0" style="stop-color:color-mix(in oklab, var(--glaze), #fff 8%)"/>
-            <stop offset=".86" style="stop-color:var(--glaze)"/>
-            <stop offset=".95" style="stop-color:color-mix(in oklab, var(--glaze), #000 38%)"/>
-            <stop offset="1" style="stop-color:color-mix(in oklab, var(--glaze), #000 45%)"/>
-          </linearGradient>
-          <radialGradient id="inside" cx=".5" cy=".85" r=".7">
-            <stop offset="0" style="stop-color:var(--cup-inside)"/>
-            <stop offset="1" style="stop-color:color-mix(in oklab, var(--cup-inside), #000 45%)"/>
-          </radialGradient>
-          <radialGradient id="wheel-light" cx=".42" cy=".4" r=".6">
-            <stop offset="0" stop-color="#fff" stop-opacity=".16"/>
-            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="grain" x="0" y="0" width="100%" height="100%">
-            <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="5"/>
-            <feColorMatrix type="matrix" values="0 0 0 0 .2  0 0 0 0 .14  0 0 0 0 .08  0 0 0 -1.6 1.05"/>
-          </filter>
-          <filter id="blur6" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
-          <filter id="blur3" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>
-        </defs>
-        <ellipse cx="200" cy="456" rx="196" ry="24" fill="#000" opacity=".16" filter="url(#blur6)"/>
-        <path d="M24 420 V436 A176 36 0 0 0 376 436 V420 Z" style="fill:var(--wheel)"/>
-        <ellipse cx="200" cy="420" rx="176" ry="36" style="fill:var(--wheel-top)"/>
-        <ellipse cx="200" cy="420" rx="176" ry="36" fill="url(#wheel-light)"/>
-        <ellipse cx="200" cy="421" rx="175" ry="35" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="1.5"/>
-        <g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2" stroke-linecap="round">
-          <ellipse class="spin" cx="200" cy="420" rx="152" ry="30" stroke-dasharray="64 30"/>
-          <ellipse class="spin" cx="200" cy="420" rx="118" ry="23" stroke-dasharray="40 22"/>
-        </g>
-        <ellipse cx="214" cy="402" rx="96" ry="13" fill="#000" opacity=".45" filter="url(#blur6)"/>
-        <g class="clay">
-          <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z" style="fill:var(--clay-body)"/>
-          <path d="M108 148 C104 250 112 352 140 396 Q200 412 260 396 C288 352 296 250 292 148 Z" style="fill:var(--clay-body)"/>
-          <ellipse cx="200" cy="148" rx="92" ry="20" style="fill:var(--clay-body)"/>
-          <g fill="none" style="stroke:var(--clay-shade)" stroke-opacity=".45" stroke-width="1.5">
-            <path d="M110 200 Q200 214 290 200"/><path d="M111 250 Q200 266 291 250"/><path d="M114 300 Q200 316 288 300"/><path d="M122 350 Q200 366 280 350"/>
-          </g>
-        </g>
-        <g clip-path="url(#cup-clip)">
-          <rect x="100" y="120" width="290" height="300" filter="url(#grain)" opacity=".55"/>
-          <g fill="#3b2a1e" opacity=".4"><circle cx="169.0" cy="195.0" r="0.9"/><circle cx="124.7" cy="284.3" r="1.3"/><circle cx="214.6" cy="371.1" r="1.1"/><circle cx="118.6" cy="260.6" r="0.9"/><circle cx="154.4" cy="287.8" r="0.9"/><circle cx="257.5" cy="188.7" r="1.1"/><circle cx="223.0" cy="295.3" r="0.9"/><circle cx="213.6" cy="252.0" r="1.1"/><circle cx="120.2" cy="359.2" r="1.3"/><circle cx="185.8" cy="285.4" r="2.1"/><circle cx="166.3" cy="349.3" r="1.1"/><circle cx="130.1" cy="292.5" r="1.1"/><circle cx="177.5" cy="287.1" r="0.9"/><circle cx="211.3" cy="303.6" r="1.6"/><circle cx="231.8" cy="259.2" r="1.3"/><circle cx="193.9" cy="374.2" r="1.3"/><circle cx="164.8" cy="344.3" r="1.1"/><circle cx="126.4" cy="229.7" r="1.6"/><circle cx="266.0" cy="329.2" r="1.3"/><circle cx="219.2" cy="177.0" r="2.1"/><circle cx="185.6" cy="335.7" r="1.1"/><circle cx="276.3" cy="257.8" r="0.9"/><circle cx="246.6" cy="292.9" r="1.3"/><circle cx="171.9" cy="241.2" r="1.6"/><circle cx="214.1" cy="265.8" r="0.9"/><circle cx="278.3" cy="270.0" r="0.9"/><circle cx="122.7" cy="322.7" r="2.1"/><circle cx="286.8" cy="350.7" r="1.3"/><circle cx="238.1" cy="365.8" r="1.3"/><circle cx="116.0" cy="267.1" r="1.1"/><circle cx="219.5" cy="274.5" r="1.1"/><circle cx="247.2" cy="190.0" r="1.1"/><circle cx="182.0" cy="372.7" r="1.6"/><circle cx="126.2" cy="264.2" r="2.1"/><circle cx="160.9" cy="191.8" r="1.6"/><circle cx="264.1" cy="224.6" r="1.6"/><circle cx="285.6" cy="318.4" r="1.6"/><circle cx="280.6" cy="195.0" r="1.1"/><circle cx="138.6" cy="312.8" r="0.9"/><circle cx="197.4" cy="296.7" r="1.3"/><circle cx="161.6" cy="193.8" r="2.1"/><circle cx="177.0" cy="291.4" r="1.1"/><circle cx="233.5" cy="279.6" r="2.1"/><circle cx="227.3" cy="331.6" r="1.6"/><circle cx="270.3" cy="341.0" r="2.1"/><circle cx="181.1" cy="252.6" r="0.9"/></g>
-          <g id="glaze" transform="translate(0 300)">
-            <path d="M0 -700 H400 V0 Q386.5 4 373 0 C359.7 0 359 11 357.9 37 A7 7 0 0 1 346.1 37 C345 11 344.3 0 331 0 Q320.5 4 310 0 C294.8 0 294 20.5 292.8 74 A8 8 0 0 1 279.2 74 C278 20.5 277.2 0 262 0 Q246 4 230 0 C218.6 0 218 6 217.1 18 A6 6 0 0 1 206.9 18 C206 6 205.4 0 194 0 Q181.5 4 169 0 C151.9 0 151 16.5 149.7 57 A9 9 0 0 1 134.3 57 C133 16.5 132.1 0 115 0 Q103 4 91 0 C77.7 0 77 7.5 76 23 A7 7 0 0 1 64 23 C63 7.5 62.3 0 49 0 Q24.5 4 0 0 Z" fill="url(#glaze-pool)"/>
-          </g>
-          <rect x="100" y="100" width="200" height="320" fill="url(#cup-shade)"/>
-          <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z" fill="url(#handle-shade)"/>
-          <rect x="130" y="160" width="16" height="140" rx="8" fill="#fff" style="opacity:calc(var(--g) * .3)" filter="url(#blur3)"/>
-          <rect x="136" y="172" width="4" height="110" rx="2" fill="#fff" style="opacity:calc(var(--g) * .5)"/>
-        </g>
-        <ellipse cx="200" cy="148" rx="91" ry="19.5" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2.5"/>
-        <ellipse cx="200" cy="150" rx="78" ry="14" fill="url(#inside)"/>
-      </svg>
+    <div class="grow" data-grow>
+      <div class="grow-stick">
+        <div class="grow-media"><img src="https://images.unsplash.com/photo-1764507768733-667e135d8cb9?auto=format&fit=crop&w=1920&h=1080&q=80" srcset="https://images.unsplash.com/photo-1764507768733-667e135d8cb9?auto=format&fit=crop&w=960&h=540&q=80 960w, https://images.unsplash.com/photo-1764507768733-667e135d8cb9?auto=format&fit=crop&w=1920&h=1080&q=80 1920w, https://images.unsplash.com/photo-1764507768733-667e135d8cb9?auto=format&fit=crop&w=2880&h=1620&q=80 2880w" sizes="100vw" width="1920" height="1080" alt="Một người đang làm gốm trên bàn xoay trong xưởng" fetchpriority="high" decoding="async"></div>
+      </div>
     </div>
   </section>
 
-  <!-- Ba lớp: danh sách chữ lớn, không card -->
   <section class="wrap classes" id="lop-hoc" aria-labelledby="t-lop">
-    <div class="side">
+    <div class="sec-head">
       <h2 id="t-lop" class="h2" data-reveal>Ba lớp</h2>
-      <div class="incl">
-        <p>Giá đã gồm đất, men, nung và trà.</p>
-        <p>Sản phẩm nung xong nhận sau 2&nbsp;tuần.</p>
-      </div>
+      <p>Giá đã gồm đất, men, nung và trà. Sản phẩm nung xong nhận sau 2&nbsp;tuần.</p>
     </div>
-    <div class="list">
-      <ul class="rows">
+    <ul class="cards">
         <li>
-          <button class="row" type="button" data-label-context data-open-booking data-class="0" data-to="dat-cho">
-            <svg class="ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><ellipse cx="32" cy="52" rx="26" ry="6" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M20 20 C19 32 21 42 25 48 Q32 50 39 48 C43 42 45 32 44 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><ellipse cx="32" cy="20" rx="12" ry="3" style="fill:var(--glaze)"/></svg>
-            <span class="name">Bàn xoay cơ bản</span>
-            <span class="meta"><span>3 giờ</span><span>8 người</span></span>
-            <span class="price num">450.000 ₫</span>
-            <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+          <button class="card" type="button" data-open-booking data-class="0" data-to="dat-cho" data-label-context>
+            <span class="arch" data-unveil><img src="https://images.unsplash.com/photo-1590605095243-072811dbe64c?auto=format&fit=crop&w=800&h=1000&q=80" srcset="https://images.unsplash.com/photo-1590605095243-072811dbe64c?auto=format&fit=crop&w=400&h=500&q=80 400w, https://images.unsplash.com/photo-1590605095243-072811dbe64c?auto=format&fit=crop&w=800&h=1000&q=80 800w, https://images.unsplash.com/photo-1590605095243-072811dbe64c?auto=format&fit=crop&w=1200&h=1500&q=80 1200w" sizes="(min-width: 760px) 30vw, 90vw" width="800" height="1000" alt="Hai bàn tay đang vuốt thành một chiếc bình đất trên bàn xoay" loading="lazy" decoding="async"></span>
+            <span class="card-row">
+              <span class="card-name">Bàn xoay cơ bản</span>
+              <span class="card-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-chevron"/></svg></span>
+              <span class="card-meta"><span>3 giờ</span><span>8 người</span><span class="card-price num">450.000 ₫</span></span>
+            </span>
           </button>
         </li>
         <li>
-          <button class="row" type="button" data-label-context data-open-booking data-class="1" data-to="dat-cho">
-            <svg class="ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M10 30 C12 46 22 52 32 52 C42 52 52 46 54 30 C46 33 40 31 32 31 C24 31 18 33 10 30 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M24 40 Q28 37 32 40 Q36 43 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="32" cy="18" r="7" style="fill:var(--glaze)"/></svg>
-            <span class="name">Nặn tay</span>
-            <span class="meta"><span>2,5 giờ</span><span>10 người</span></span>
-            <span class="price num">350.000 ₫</span>
-            <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+          <button class="card" type="button" data-open-booking data-class="1" data-to="dat-cho" data-label-context>
+            <span class="arch" data-unveil><img src="https://images.unsplash.com/photo-1771523350747-638a89667c8f?auto=format&fit=crop&w=800&h=1000&q=80" srcset="https://images.unsplash.com/photo-1771523350747-638a89667c8f?auto=format&fit=crop&w=400&h=500&q=80 400w, https://images.unsplash.com/photo-1771523350747-638a89667c8f?auto=format&fit=crop&w=800&h=1000&q=80 800w, https://images.unsplash.com/photo-1771523350747-638a89667c8f?auto=format&fit=crop&w=1200&h=1500&q=80 1200w" sizes="(min-width: 760px) 30vw, 90vw" width="800" height="1000" alt="Đôi tay phủ đất đang nặn một món gốm" loading="lazy" decoding="async"></span>
+            <span class="card-row">
+              <span class="card-name">Nặn tay</span>
+              <span class="card-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-chevron"/></svg></span>
+              <span class="card-meta"><span>2,5 giờ</span><span>10 người</span><span class="card-price num">350.000 ₫</span></span>
+            </span>
           </button>
         </li>
         <li>
-          <button class="row" type="button" data-label-context data-open-booking data-class="2" data-to="dat-cho">
-            <svg class="ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M18 14 C17 30 19 44 23 52 Q32 55 41 52 C45 44 47 30 46 14 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M17.6 14 H46.4 C46.4 22 46 28 45.6 30 Q44 30 43.5 34 Q42 38 40.5 34 L40 30 H30 Q29.5 38 27.5 38 Q25.5 38 25 31 L24 30 H18.4 C18 25 17.7 20 17.6 14 Z" style="fill:var(--glaze)"/></svg>
-            <span class="name">Tráng men</span>
-            <span class="meta"><span>2 giờ</span><span>8 người</span></span>
-            <span class="price num">300.000 ₫</span>
-            <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+          <button class="card" type="button" data-open-booking data-class="2" data-to="dat-cho" data-label-context>
+            <span class="arch" data-unveil><img src="https://images.unsplash.com/photo-1673339065013-f8411fb93848?auto=format&fit=crop&w=800&h=1000&q=80" srcset="https://images.unsplash.com/photo-1673339065013-f8411fb93848?auto=format&fit=crop&w=400&h=500&q=80 400w, https://images.unsplash.com/photo-1673339065013-f8411fb93848?auto=format&fit=crop&w=800&h=1000&q=80 800w, https://images.unsplash.com/photo-1673339065013-f8411fb93848?auto=format&fit=crop&w=1200&h=1500&q=80 1200w" sizes="(min-width: 760px) 30vw, 90vw" width="800" height="1000" alt="Cọ quét men lên một chiếc bát" loading="lazy" decoding="async"></span>
+            <span class="card-row">
+              <span class="card-name">Tráng men</span>
+              <span class="card-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-chevron"/></svg></span>
+              <span class="card-meta"><span>2 giờ</span><span>8 người</span><span class="card-price num">300.000 ₫</span></span>
+            </span>
           </button>
         </li>
-      </ul>
-    </div>
+    </ul>
   </section>
 
-  <!-- Một buổi học: men lam chảy phủ cả section theo cuộn -->
-  <section class="flood" id="buoi-hoc" aria-labelledby="t-buoi" data-flood>
-    <div class="flood__glaze" aria-hidden="true">
-      <svg viewBox="0 0 1200 80" preserveAspectRatio="xMidYMin slice" focusable="false"><path d="M0 -40 H1200 V0 Q1141 6 1082 0 C1063 0 1062 13.3 1060.5 43 A10 10 0 0 1 1043.5 43 C1042 13.3 1041 0 1022 0 Q1003.3 6 984.5 0 C960.8 0 959.5 6 957.6 11.5 A12.5 12.5 0 0 1 936.4 11.5 C934.5 6 933.3 0 909.5 0 Q900.3 6 891 0 C873.9 0 873 17.3 871.6 60 A9 9 0 0 1 856.4 60 C855 17.3 854.1 0 837 0 Q798.5 6 760 0 C741 0 740 12 738.5 38 A10 10 0 0 1 721.5 38 C720 12 719 0 700 0 Q683.8 6 667.5 0 C641.9 0 640.5 13 638.5 38.5 A13.5 13.5 0 0 1 615.5 38.5 C613.5 13 612.1 0 586.5 0 Q540 6 493.5 0 C475.4 0 474.5 14.5 473.1 48.5 A9.5 9.5 0 0 1 456.9 48.5 C455.5 14.5 454.6 0 436.5 0 Q384 6 331.5 0 C315.4 0 314.5 10.3 313.2 32.5 A8.5 8.5 0 0 1 298.8 32.5 C297.5 10.3 296.6 0 280.5 0 Q228 6 175.5 0 C161.3 0 160.5 8.8 159.4 27.5 A7.5 7.5 0 0 1 146.6 27.5 C145.5 8.8 144.8 0 130.5 0 Q107.5 6 84.5 0 C62.6 0 61.5 18.5 59.8 62.5 A11.5 11.5 0 0 1 40.2 62.5 C38.5 18.5 37.4 0 15.5 0 Q7.8 6 0 0 Z"/></svg>
+  <section class="wrap session" id="buoi-hoc" aria-labelledby="t-buoi">
+    <div class="sec-head">
+      <h2 id="t-buoi" class="h2" data-reveal>Một buổi <em>học</em></h2>
     </div>
-    <div class="wrap">
-      <div class="head">
-        <h2 id="t-buoi" class="h2" data-reveal>Một buổi học</h2>
-      </div>
-      <ol class="steps">
+    <ol class="steps">
         <li class="step">
-          <span class="n num" aria-hidden="true">01</span>
+          <span class="arch" data-unveil><img src="https://images.unsplash.com/photo-1507022787381-b30170b5ebf4?auto=format&fit=crop&w=720&h=960&q=80" srcset="https://images.unsplash.com/photo-1507022787381-b30170b5ebf4?auto=format&fit=crop&w=360&h=480&q=80 360w, https://images.unsplash.com/photo-1507022787381-b30170b5ebf4?auto=format&fit=crop&w=720&h=960&q=80 720w, https://images.unsplash.com/photo-1507022787381-b30170b5ebf4?auto=format&fit=crop&w=1080&h=1440&q=80 1080w" sizes="(min-width: 760px) 30vw, 90vw" width="720" height="960" alt="Bàn tay ấn vào khối đất đang quay" loading="lazy" decoding="async"></span>
+          <span class="step-n num" aria-hidden="true">01</span>
           <h3>Làm quen với đất</h3>
-          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 44 C8 30 20 18 33 20 C47 22 56 34 50 46 C44 54 18 54 12 44 Z"/><path d="M24 34 Q32 28 40 34"/><path d="M22 40 Q32 33 42 40"/><path d="M27 29 Q32 26 37 29"/></svg>
         </li>
         <li class="step">
-          <span class="n num" aria-hidden="true">02</span>
+          <span class="arch" data-unveil><img src="https://images.unsplash.com/photo-1607556671927-78a6605e290b?auto=format&fit=crop&w=720&h=960&q=80" srcset="https://images.unsplash.com/photo-1607556671927-78a6605e290b?auto=format&fit=crop&w=360&h=480&q=80 360w, https://images.unsplash.com/photo-1607556671927-78a6605e290b?auto=format&fit=crop&w=720&h=960&q=80 720w, https://images.unsplash.com/photo-1607556671927-78a6605e290b?auto=format&fit=crop&w=1080&h=1440&q=80 1080w" sizes="(min-width: 760px) 30vw, 90vw" width="720" height="960" alt="Đôi tay kéo thành một chiếc cốc trên bàn xoay" loading="lazy" decoding="async"></span>
+          <span class="step-n num" aria-hidden="true">02</span>
           <h3>Tạo hình</h3>
-          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><ellipse cx="32" cy="52" rx="26" ry="6"/><path d="M20 16 C19 30 21 40 25 47 Q32 49 39 47 C43 40 45 30 44 16"/><ellipse cx="32" cy="16" rx="12" ry="3"/><path d="M8 40 Q12 36 16 40" stroke-dasharray="3 4"/><path d="M48 40 Q52 36 56 40" stroke-dasharray="3 4"/></svg>
         </li>
         <li class="step">
-          <span class="n num" aria-hidden="true">03</span>
+          <span class="arch" data-unveil><img src="https://images.unsplash.com/photo-1771523351104-03d9c2cc347c?auto=format&fit=crop&w=720&h=960&q=80" srcset="https://images.unsplash.com/photo-1771523351104-03d9c2cc347c?auto=format&fit=crop&w=360&h=480&q=80 360w, https://images.unsplash.com/photo-1771523351104-03d9c2cc347c?auto=format&fit=crop&w=720&h=960&q=80 720w, https://images.unsplash.com/photo-1771523351104-03d9c2cc347c?auto=format&fit=crop&w=1080&h=1440&q=80 1080w" sizes="(min-width: 760px) 30vw, 90vw" width="720" height="960" alt="Những bát men nhiều màu trên bàn" loading="lazy" decoding="async"></span>
+          <span class="step-n num" aria-hidden="true">03</span>
           <h3>Chọn men</h3>
-          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 30 H50 C50 44 42 52 32 52 C22 52 14 44 14 30 Z"/><path d="M15 34 H49"/><path d="M24 34 V40 Q24 43 26 43 Q28 43 28 40 V34"/><path d="M38 34 V44 Q38 47 40 47 Q42 47 42 44 V34"/><path d="M32 8 C32 8 26 16 26 20 A6 6 0 0 0 38 20 C38 16 32 8 32 8 Z"/></svg>
         </li>
-      </ol>
-    </div>
+    </ol>
   </section>
 
-  <!-- Lịch học và hỏi đáp: hai cột lệch -->
   <section class="wrap info" aria-label="Lịch học và hỏi đáp">
     <div class="sched" id="lich-hoc">
       <h2 class="h2" data-reveal>Lịch học</h2>
@@ -232,15 +144,15 @@
   </section>
 </main>
 
-<footer>
-  <div class="wrap end" id="lien-he">
-    <div class="addr">
-      <address>24 Hàng Chiếu,<br>Hoàn Kiếm, Hà&nbsp;Nội</address>
-      <a class="tel num" href="tel:0912345678">0912 345 678</a>
-    </div>
-    <div class="act">
-      <button class="btn btn--primary btn--lg" type="button" data-open-booking data-to="dat-cho"><span>Đặt chỗ</span><span class="dot" aria-hidden="true"></span></button>
+<footer class="end" id="lien-he">
+  <div class="wrap end-in">
+    <div class="end-act">
+      <button class="btn btn--white btn--lg" type="button" data-open-booking data-to="dat-cho">Đặt chỗ <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
       <p class="booked" role="status" data-booked></p>
+    </div>
+    <div class="end-foot">
+      <address>24 Hàng Chiếu, Hoàn Kiếm, Hà&nbsp;Nội</address>
+      <a class="num" href="tel:0912345678">0912 345 678</a>
     </div>
   </div>
   <p class="mark" aria-hidden="true"><span>Đất Nung</span></p>
