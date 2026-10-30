@@ -113,7 +113,36 @@ chỗ trống thật, gửi xác nhận và thanh toán chưa làm.
    - Thêm: nút "Đặt chỗ" ở 390 px không còn sát tiêu đề; câu trả lời Hỏi đáp dùng `text-wrap: pretty` để không còn
      một chữ lẻ ở 1024 px.
 
-## Điểm yếu còn lại
+## Vòng 5: đổi hướng chữ, màu và ảnh (chủ repo: "animation đã có nhưng typo, hình ảnh, màu sắc hoàn toàn không đạt")
+
+Chủ repo chọn: **cho dùng ảnh**, chữ và màu theo **DOD / Wedding**. Các vòng 1–4 ở trên là lịch sử của hướng men lam
+đã bị loại; cốc SVG, men chảy và section xanh đã bỏ.
+
+| | Vòng 1–4 | Vòng 5 |
+|---|---|---|
+| Hình ảnh | Cốc vẽ SVG | 7 ảnh thật (Unsplash), ảnh rộng đầu trang và ảnh trong khung vòm như miệng lò nung |
+| Chữ | Có chân Source Serif mảnh + Be Vietnam Pro | Một họ không chân hình học Plus Jakarta Sans 600 (tiêu đề 124 px, giãn chữ −0,045em); đúng một từ nghiêng có chân Cormorant Garamond mỗi tiêu đề lớn ("riêng bạn.", "học"), như chữ viết tay của Wedding |
+| Màu | Nền đất xám + men lam | Trắng ngà #f8f6f2, mực #1f1d1b, một màu đất nung #b9441f cho nút, số bước, dải cuối trang |
+| Bố cục | Cốc bên phải tiêu đề | DOD: tiêu đề lớn trái, dữ kiện và nút phải; ảnh rộng nở ra tràn màn khi cuộn; lưới 3 lớp so le; 3 bước ảnh vòm so le; dải đất nung cuối trang có địa chỉ lớn và chữ "Đất Nung" khổng lồ |
+
+Chuyển động giữ lại: chữ trồi từng dòng; ảnh đầu trang nở theo cuộn; ảnh hiện từ dưới lên trong khung vòm
+(`clip-path`, 1,3 s, `cubic-bezier(.16,1,.3,1)`); cuộn mượt cho chuột. Giảm chuyển động: mọi thứ hiện ngay.
+
+Ảnh: tải từ Unsplash (giấy phép Unsplash, dùng tự do) bằng workflow GitHub Actions tạm vì máy dựng không ra được mạng;
+đã xoá workflow sau khi tải. Mã ảnh: 1764507768733-667e135d8cb9 (đầu trang), 1590605095243-072811dbe64c,
+1771523350747-638a89667c8f, 1673339065013-f8411fb93848 (ba lớp), 1507022787381-b30170b5ebf4,
+1607556671927-78a6605e290b, 1771523351104-03d9c2cc347c (ba bước). Khi có ảnh thật của xưởng thì thay cùng tên file.
+Font: Plus Jakarta Sans và Cormorant Garamond (OFL), tự host trong `fonts/`, chỉ các cỡ dùng tới.
+
+Soát vòng 5: `taste-check` 390/1024/1280/1440 sáng/tối, reflow 320: 0 lỗi; 24 cảnh báo đều là `subtitle` cho
+câu trả lời Hỏi đáp và dòng "Giá đã gồm…" mà đề bắt buộc. `static-check` 0 lỗi. Luồng đặt chỗ chạy lại bằng kịch bản.
+
+Điểm yếu vòng 5:
+- Ảnh là ảnh kho, không phải xưởng Đất Nung; tông ảnh khá đồng đều nhưng chưa được chỉnh màu chung.
+- Lưới "Ba lớp" và "Một buổi học" cùng kiểu ảnh vòm so le, hai section liền nhau hơi giống nhau.
+- Chữ nghiêng Cormorant ở cỡ lớn có dấu tiếng Việt hơi mảnh; cần chủ repo xem có hợp không.
+
+## Điểm yếu còn lại (vòng 1–4)
 
 - Cốc đã có khối và chất liệu nhưng vẫn là hình vẽ; ảnh thật (khi brief cho phép) sẽ mạnh hơn.
 - Ba bước chỉ có tên vì đề không cho mô tả; phần dưới cột tiêu đề "Một buổi học" ở desktop vẫn để thoáng.

@@ -165,17 +165,13 @@ section { scroll-margin-top: 24px; }
 
 /* Cuối trang: dải màu đất nung (DOD, BCG) */
 .end { background: var(--accent); color: var(--on-accent); }
-.end-in { padding-block: clamp(72px, 10vw, 136px) 40px; display: grid; gap: 48px; }
-.end .h2 { max-width: 12ch; }
+.end-in { padding-block: clamp(72px, 10vw, 136px) 24px; display: grid; gap: 40px; }
+.end-addr { display: grid; gap: 12px; justify-items: start; }
+.end-addr address { font-style: normal; font-weight: 600; font-size: clamp(34px, 4.6vw, 64px); line-height: 1.05; letter-spacing: -.04em; }
+.end-addr a { text-decoration: none; font-weight: 600; font-size: 20px; min-height: 44px; display: inline-flex; align-items: center; }
 .end-act { display: grid; gap: 16px; justify-items: start; }
 .end .booked { color: var(--on-accent); }
-.end-foot { display: grid; gap: 16px; padding-top: 28px; border-top: 1px solid color-mix(in oklab, var(--on-accent) 30%, transparent); }
-.end-foot address { font-style: normal; font-weight: 500; font-size: 19px; line-height: 1.45; }
-.end-foot a { text-decoration: none; font-weight: 600; font-size: 19px; min-height: 44px; display: inline-flex; align-items: center; }
-@media (min-width: 900px) {
-  .end-in { grid-template-columns: 1fr auto; align-items: end; }
-  .end-foot { grid-column: 1 / -1; grid-template-columns: 1fr auto; align-items: center; }
-}
+@media (min-width: 900px) { .end-in { grid-template-columns: 1fr auto; align-items: end; } .end-act { justify-items: end; } }
 .mark { font-weight: 700; font-size: clamp(72px, 19vw, 300px); line-height: .8; letter-spacing: -.06em; white-space: nowrap; padding: 40px 0 0; overflow: hidden; text-align: center; color: color-mix(in oklab, var(--on-accent) 92%, var(--accent)); }
 .mark span { display: inline-block; transform: translateY(12%); }
 
