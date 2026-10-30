@@ -13,6 +13,7 @@
 <style>
   :root { --serif: "Source Serif 4", Georgia, serif; --gap: var(--ds-space-600); }
   * { box-sizing: border-box; }
+  .ds-root [hidden] { display: none; }
   html, body { margin: 0; background: var(--ds-surface-page); }
   body { overflow-x: hidden; }
   h1, h2, p { margin: 0; }
@@ -29,8 +30,8 @@
 
   .hero { position: relative; margin-top: var(--ds-space-600); padding: var(--ds-space-800); border-radius: var(--ds-card-radius);
     background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong);
+    outline: 1.5px dashed color-mix(in srgb, var(--ds-text-on-brand-strong) 45%, transparent); outline-offset: -8px;
     display: grid; grid-template-columns: 1fr auto; gap: var(--ds-space-600); align-items: center; }
-  .hero::after { content: ""; position: absolute; inset: 8px; border: 1.5px dashed color-mix(in srgb, var(--ds-text-on-brand-strong) 45%, transparent); border-radius: 6px; pointer-events: none; }
   .hero__label { font-size: 15px; font-weight: 500; opacity: .92; }
   .hero__value { font-family: var(--serif); font-weight: 600; font-size: 60px; line-height: 1.05; font-variant-numeric: tabular-nums; margin-top: var(--ds-space-100); }
   .hero__next { margin-top: var(--ds-space-200); font-size: 15px; }
@@ -42,7 +43,7 @@
   .hero__stat strong { font-family: var(--serif); font-size: 32px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
 
   .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--ds-space-800); }
-  .col-7 { grid-column: span 7; } .col-5 { grid-column: span 5; } .col-12 { grid-column: span 12; }
+  .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .col-12 { grid-column: span 12; }
   .sec { display: flex; flex-direction: column; gap: var(--ds-space-300); min-width: 0; }
   .sec h2 { font-family: var(--serif); font-weight: 600; font-size: 21px; line-height: 1.25; color: var(--ds-text-primary); }
   .sec__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ds-space-400); flex-wrap: wrap; }
@@ -60,6 +61,7 @@
   .prod__code { font-size: 13px; color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; }
   .ds-badge { font-size: 13px; }
   .btn-row { white-space: nowrap; }
+  @media (min-width: 1024px) { .prod__name { white-space: nowrap; } .stock th, .stock td { padding-inline: var(--ds-space-300); } .stock th:first-child, .stock td:first-child { padding-left: var(--ds-space-500); } }
 
   .orders { list-style: none; margin: 0; padding: 0; }
   .order { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "who late" "where act"; gap: var(--ds-space-100) var(--ds-space-400); align-items: center; padding: var(--ds-space-300) var(--ds-space-500); }
@@ -75,7 +77,8 @@
   .total { font-size: 15px; color: var(--ds-text-secondary); }
   .total strong { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ds-text-primary); font-variant-numeric: tabular-nums; }
   .chart { list-style: none; margin: 0; padding: var(--ds-space-500) var(--ds-space-600) var(--ds-space-400); display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--ds-space-400); align-items: end; height: 260px; }
-  .bar { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: var(--ds-space-100); min-width: 0; }
+  .bar { display: flex; flex-direction: column; align-items: center; height: 100%; min-width: 0; }
+  .bar__track { flex: 1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: var(--ds-space-100); }
   .bar__val { font-size: 13px; font-weight: 600; color: var(--ds-text-primary); font-variant-numeric: tabular-nums; }
   .bar__col { width: min(100%, 72px); height: var(--h); background: var(--ds-text-brand); border-radius: 6px 6px 2px 2px; }
   .bar__day { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: var(--ds-text-secondary); line-height: 1.3; padding-top: var(--ds-space-100); }
@@ -91,7 +94,7 @@
   .ds-dialog .ds-button { min-height: 44px; }
 
   @media (max-width: 1023px) {
-    .col-7, .col-5 { grid-column: span 12; }
+    .col-8, .col-4 { grid-column: span 12; }
     .hero { grid-template-columns: 1fr; }
     .hero__stats { flex-wrap: wrap; }
     .hero__stat:first-child { padding-left: 0; }
@@ -101,17 +104,17 @@
     .title { font-size: 26px; margin-top: var(--ds-space-600); }
     .hero { padding: var(--ds-space-600); gap: var(--ds-space-500); }
     .hero__value { font-size: 52px; }
-    .hero__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .hero__stat { min-width: 0; padding: 0 var(--ds-space-300); }
-    .hero__stat span { font-size: 13px; }
-    .hero__stat strong { font-size: 26px; }
+    .hero__stats { display: flex; flex-direction: column; }
+    .hero__stat { flex-direction: row; align-items: baseline; justify-content: space-between; min-width: 0; padding: var(--ds-space-200) 0; }
+    .hero__stat + .hero__stat { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--ds-text-on-brand-strong) 30%, transparent); }
+    .hero__stat strong { font-size: 24px; }
     .grid { gap: var(--ds-space-800); margin-top: var(--ds-space-800); }
     .stock thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     .stock, .stock tbody { display: block; }
     .stock tr { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "prod days" "left rate" "act act"; gap: var(--ds-space-200) var(--ds-space-300); padding: var(--ds-space-400); border-top: 1px solid var(--ds-border-subtle); }
     .stock tbody tr:first-child { border-top: 0; }
     .stock tr.is-urgent { background: var(--ds-feedback-warning-surface); }
-    .stock td { display: block; padding: 0; border: 0; background: none !important; }
+    .stock td, .stock tr.is-urgent td { display: block; padding: 0; border: 0; background: none; }
     .stock td.c-prod { grid-area: prod; } .stock td.c-days { grid-area: days; text-align: right; }
     .stock td.c-left { grid-area: left; text-align: left; } .stock td.c-rate { grid-area: rate; text-align: right; }
     .stock td.c-act { grid-area: act; width: auto; }
@@ -166,7 +169,7 @@
     </section>
 
     <div class="grid">
-      <section class="sec col-7" aria-labelledby="h-stock">
+      <section class="sec col-8" aria-labelledby="h-stock">
         <div class="sec__head"><h2 id="h-stock">Sắp hết hàng</h2></div>
         <div class="panel">
           <table class="stock">
@@ -176,7 +179,7 @@
         </div>
       </section>
 
-      <section class="sec col-5" aria-labelledby="h-orders">
+      <section class="sec col-4" aria-labelledby="h-orders">
         <div class="sec__head"><h2 id="h-orders">Đơn quá hạn gửi</h2></div>
         <div class="panel" id="orders-panel"></div>
       </section>
@@ -188,13 +191,13 @@
         </div>
         <div class="panel">
           <ol class="chart" data-test="rev-chart" aria-labelledby="h-rev">
-            <li class="bar"><span class="bar__val">2.150</span><span class="bar__col" style="--h:47.8%" aria-hidden="true"></span><span class="bar__day"><b>T6</b>23/10</span></li>
-            <li class="bar"><span class="bar__val">3.480</span><span class="bar__col" style="--h:77.3%" aria-hidden="true"></span><span class="bar__day"><b>T7</b>24/10</span></li>
-            <li class="bar"><span class="bar__val">4.120</span><span class="bar__col" style="--h:91.6%" aria-hidden="true"></span><span class="bar__day"><b>CN</b>25/10</span></li>
-            <li class="bar"><span class="bar__val">1.890</span><span class="bar__col" style="--h:42%" aria-hidden="true"></span><span class="bar__day"><b>T2</b>26/10</span></li>
-            <li class="bar"><span class="bar__val">2.260</span><span class="bar__col" style="--h:50.2%" aria-hidden="true"></span><span class="bar__day"><b>T3</b>27/10</span></li>
-            <li class="bar"><span class="bar__val">2.010</span><span class="bar__col" style="--h:44.7%" aria-hidden="true"></span><span class="bar__day"><b>T4</b>28/10</span></li>
-            <li class="bar"><span class="bar__val">2.640</span><span class="bar__col" style="--h:58.7%" aria-hidden="true"></span><span class="bar__day"><b>T5</b>29/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.150</span><span class="bar__col" style="--h:43%" aria-hidden="true"></span></span><span class="bar__day"><b>T6</b>23/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">3.480</span><span class="bar__col" style="--h:69.6%" aria-hidden="true"></span></span><span class="bar__day"><b>T7</b>24/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">4.120</span><span class="bar__col" style="--h:82.4%" aria-hidden="true"></span></span><span class="bar__day"><b>CN</b>25/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">1.890</span><span class="bar__col" style="--h:37.8%" aria-hidden="true"></span></span><span class="bar__day"><b>T2</b>26/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.260</span><span class="bar__col" style="--h:45.2%" aria-hidden="true"></span></span><span class="bar__day"><b>T3</b>27/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.010</span><span class="bar__col" style="--h:40.2%" aria-hidden="true"></span></span><span class="bar__day"><b>T4</b>28/10</span></li>
+            <li class="bar"><span class="bar__track"><span class="bar__val">2.640</span><span class="bar__col" style="--h:52.8%" aria-hidden="true"></span></span><span class="bar__day"><b>T5</b>29/10</span></li>
           </ol>
         </div>
       </section>
@@ -220,7 +223,7 @@
     <p class="reason" id="restock-reason" data-test="restock-reason" data-reason>Nhập số lượng từ 1 đến 999</p>
     <div class="ds-dialog__actions">
       <button class="ds-button ds-button--secondary" type="button" data-test="dialog-cancel" data-close>Hủy</button>
-      <button class="ds-button ds-button--primary" type="submit" id="restock-confirm" data-test="restock-confirm" data-confirm-action aria-describedby="restock-reason" disabled>Ghi nhập hàng</button>
+      <button class="ds-button ds-button--primary" type="submit" id="restock-confirm" data-test="restock-confirm" data-confirm-action data-to="status" aria-describedby="restock-reason" disabled>Ghi nhập hàng</button>
     </div>
   </form>
 </dialog>
@@ -236,7 +239,7 @@
     </dl>
     <div class="ds-dialog__actions">
       <button class="ds-button ds-button--secondary" type="button" data-test="send-cancel" data-close>Hủy</button>
-      <button class="ds-button ds-button--primary" type="submit" data-test="send-confirm" data-confirm-action>Gửi đơn</button>
+      <button class="ds-button ds-button--primary" type="submit" data-test="send-confirm" data-confirm-action data-to="status">Gửi đơn</button>
     </div>
   </form>
 </dialog>
@@ -316,7 +319,7 @@
   $('#status-close').addEventListener('click', () => { status.hidden = true; $('.title').setAttribute('tabindex', '-1'); $('.title').focus(); });
 
   let opener = null, current = null;
-  function open(dlg, btn) { opener = btn; dlg.showModal(); }
+  function open(dlg, btn) { opener = btn; dlg.returnValue = ''; dlg.showModal(); }
   document.querySelectorAll('dialog').forEach(d => {
     d.querySelector('[data-close]').addEventListener('click', () => d.close('cancel'));
     d.addEventListener('close', () => {
