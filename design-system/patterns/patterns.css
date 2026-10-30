@@ -199,3 +199,8 @@
   .pt-stats { grid-template-columns: minmax(0, 1fr); }
   .pt-stats > div + div { border-left: 0; border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
 }
+
+/* Màn rất hẹp: chữ chạy hết bề ngang nên hoạ tiết góc sẽ đè chữ (TASTE); bỏ hoạ tiết. */
+@media (max-width: 359px) {
+  .pt-hero::before { display: none; }
+}

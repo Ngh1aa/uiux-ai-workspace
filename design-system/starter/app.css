@@ -305,3 +305,8 @@
   .app-hero__stat { padding-inline: 0; white-space: normal; text-align: center; }
   .app-hero__stat .app-hero__muted { font-size: var(--ds-type-label-sm-font-size); }
 }
+
+/* Màn rất hẹp: chữ chạy hết bề ngang nên hoạ tiết góc sẽ đè chữ (TASTE); bỏ hoạ tiết. */
+@media (max-width: 359px) {
+  .app-hero::before { display: none; }
+}
