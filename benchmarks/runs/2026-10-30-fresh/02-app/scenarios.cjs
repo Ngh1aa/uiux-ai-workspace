@@ -9,7 +9,7 @@ module.exports = async (page, pass, assert) => {
   assert.strictEqual(await q('[data-test="tab-past"]').getAttribute('aria-pressed'), 'true');
   assert.ok(await q('[data-test="past-empty"]').isVisible());
   assert.match(await q('[data-test="past-empty"]').innerText(), /Chưa có lượt đã qua/);
-  pass('Lịch của tôi: tab Đã qua hiện trạng thái rỗng gọn, bên dưới là sân còn khung tối nay');
+  pass('Lịch của tôi: tab Đã qua hiện trạng thái rỗng có nút Tìm sân');
 
   // 2. Nút Tiếp tục khoá khi chưa chọn khung, có lý do gắn với nút
   await q('#home-courts [data-test="court-pn"]').click();
@@ -105,14 +105,14 @@ module.exports = async (page, pass, assert) => {
 
   // 7. Bấm khung trống ngay trên thẻ sân → Chi tiết đúng sân, khung đã chọn sẵn, Back về Lịch của tôi
   await fresh();
-  await q('#past-courts [data-court="kh"][data-slot="21:00"]').click();
+  await q('#list-courts [data-court="kh"][data-slot="21:00"]').click();
   assert.ok(await active('#s-detail'));
   assert.strictEqual((await q('#detail-title').innerText()).trim(), 'Sân Kỳ Hoà');
   assert.strictEqual(await q('[data-test="pick-slot-21"]').getAttribute('aria-pressed'), 'true');
   assert.strictEqual(await q('[data-test="continue"]').getAttribute('aria-disabled'), 'false');
   await q('[data-test="detail-back"]').click();
-  assert.ok(await active('#s-schedule'));
-  pass('Chạm 21:00 trên thẻ Sân Kỳ Hoà (dưới trạng thái rỗng Đã qua) → Chi tiết đúng sân, khung chọn sẵn; Back về Lịch của tôi');
+  assert.ok(await active('#s-list'));
+  pass('Chạm 21:00 trên thẻ Sân Kỳ Hoà ở Tìm sân → Chi tiết đúng sân, khung chọn sẵn; Back về Tìm sân');
 
   // 8. Tìm không ra → Xóa tìm kiếm khôi phục danh sách
   await q('[data-test="search"]').fill('Thủ Đức');

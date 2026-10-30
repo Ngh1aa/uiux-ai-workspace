@@ -60,13 +60,13 @@ Ngoại lệ có lý do so với chrome gốc (theo TASTE, đứng trên HIG/Mat
 
 | Điều | Kết quả |
 |---|---|
-| `taste-check.cjs --width 390 --width 1280 --height 900`, sáng và tối | 0 lỗi, 0 cảnh báo; đã xem ảnh 390 và 1280 sáng/tối |
+| `taste-check.cjs --locale vi-VN --width 390 --width 1024 --width 1280 --width 1440 --height 900 --reflow`, sáng và tối | 0 lỗi; còn cảnh báo `void` ở iOS và Android Chi tiết bài tập (khoảng trống 195–277px trên thanh "Nộp ảnh"). Giữ có chủ đích: màn chỉ có đúng các mục đề nêu (tên bài, môn, hạn nộp, mô tả, trạng thái nộp, nút nộp ảnh), nút cố định ở đáy; không lấp bằng nội dung tự thêm |
 | `static-check.cjs` | 0 lỗi (cảnh báo IN HOA đến từ CSS dùng chung không dùng trên trang) |
 | `flow-check.cjs --mode prototype` | tĩnh PASS, luồng UNKNOWN (thiết kế của checker) |
 | `check-brand.py brand.css` | ĐẠT |
 | `scenarios.cjs` qua `flow.browser.cjs` (Playwright Chromium thật, 390×844, sáng) | PASS, 12 kịch bản + không lỗi JS |
 
-Sửa sau vòng taste-check đầu: đệm đáy bằng thanh tab/thanh hành động; sheet iOS chỉ giữ thanh tiêu đề màn sau (không còn tab bar dưới lớp phủ); đệm đáy Android đủ cho FAB + thanh điều hướng; tiêu đề thanh trên Android cách mép 16px; ô nhập cao 44–48px; một bán kính card 14px; thân hộp xác nhận là hai dòng dữ liệu (tên đơn, lý do); màn chi tiết thêm khối Bài làm, Giáo viên, Bài chưa nộp khác; màn đơn và form có dòng học sinh, nút Hủy đơn nằm trên thanh đáy.
+Sửa sau vòng taste-check đầu: đệm đáy bằng thanh tab/thanh hành động; sheet iOS chỉ giữ thanh tiêu đề màn sau (không còn tab bar dưới lớp phủ); đệm đáy Android đủ cho FAB + thanh điều hướng; tiêu đề thanh trên Android cách mép 16px; ô nhập cao 44–48px; một bán kính card 14px; thân hộp xác nhận là hai dòng dữ liệu (tên đơn, lý do); màn chi tiết thêm khối Bài làm (trạng thái nộp), không thêm hàng nào khác ngoài đề; ô ngày có `position: relative` để nhãn ẩn không tràn ngang ở reflow 320px; màn đơn và form có dòng học sinh, nút Hủy đơn nằm trên thanh đáy.
 
 ## Chưa kiểm được (UNKNOWN)
 
