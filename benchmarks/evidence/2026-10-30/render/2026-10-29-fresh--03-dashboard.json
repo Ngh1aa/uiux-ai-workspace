@@ -1,0 +1,99 @@
+{
+  "errorCount": 8,
+  "warningCount": 5,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/03-dashboard/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Kho Len Nhỏ",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Nguồn: dữ liệu đề bài. Không có kết nối bán hàng trực tiếp.\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Cách tính: tồn kho ÷ bán mỗi ngày, làm tròn xuống. Đây là ướ\". Chuyển vào phần bàn giao"
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: h2 \"Ưu tiên nhập hàng\""
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Theo số ngày còn đủ bán, ít nhất trước\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Len cotton màu kem còn đủ 2 ngày, ít nhất trong kho mẫu. Ghi\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/03-dashboard/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Kho Len Nhỏ",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Nguồn: dữ liệu đề bài. Không có kết nối bán hàng trực tiếp.\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Cách tính: tồn kho ÷ bán mỗi ngày, làm tròn xuống. Đây là ướ\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span \"4.500\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span \"3.000\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span \"1.500\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span \"0\""
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Theo số ngày còn đủ bán, ít nhất trước\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Len cotton màu kem còn đủ 2 ngày, ít nhất trong kho mẫu. Ghi\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

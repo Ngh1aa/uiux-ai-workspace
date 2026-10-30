@@ -1,0 +1,107 @@
+{
+  "errorCount": 3,
+  "warningCount": 12,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-iterative-repair/01-landing/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung, lớp gốm cuối tuần",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Dữ liệu minh hoạ. Gửi yêu cầu bên dưới chỉ mô phỏng; gọi xưở\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "decor-overlap",
+              "message": "Hoạ tiết ::before của section.book \"Đặt chỗ cuối tuần này Chọn lớp và ca, rồ\" đè lên chữ. Dời hoạ tiết ra vùng không có chữ"
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Lớp cho người chưa từng làm gốm, mỗi bàn có người hướng dẫn.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn một lớp, đặt một ca. Không cần mang gì theo.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Nhào đất, cảm độ ẩm, tập giữ tay cho vững.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Kéo thành cốc trên bàn xoay hoặc nặn bằng tay, có người kèm \". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn màu men cho sản phẩm. Xưởng nung và báo bạn đến lấy.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn lớp và ca, rồi gọi để xưởng giữ chỗ cho bạn.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-iterative-repair/01-landing/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Đất Nung, lớp gốm cuối tuần",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Dữ liệu minh hoạ. Gửi yêu cầu bên dưới chỉ mô phỏng; gọi xưở\". Chuyển vào phần bàn giao"
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Lớp cho người chưa từng làm gốm, mỗi bàn có người hướng dẫn.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn một lớp, đặt một ca. Không cần mang gì theo.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Nhào đất, cảm độ ẩm, tập giữ tay cho vững.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Kéo thành cốc trên bàn xoay hoặc nặn bằng tay, có người kèm \". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn màu men cho sản phẩm. Xưởng nung và báo bạn đến lấy.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn lớp và ca, rồi gọi để xưởng giữ chỗ cho bạn.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

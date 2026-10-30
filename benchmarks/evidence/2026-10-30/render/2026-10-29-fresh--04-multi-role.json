@@ -1,0 +1,103 @@
+{
+  "errorCount": 4,
+  "warningCount": 10,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/04-multi-role/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Phòng khám mở 8:00–20:00. Lịch chiều chưa được cung cấp tron\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Lịch theo dữ liệu đề bài. Mọi cập nhật trong phiên là minh h\". Chuyển vào phần bàn giao"
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.muted \"Nguyễn Thảo, lễ tân\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Lịch hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.meta \"Ai đang đến, ghế nào còn trống?\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.badge \"1 lượt muộn 15 phút\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 1px (nên ≥ 16px): p.calendar-legend \"Trạng thái có nhãn chữ. Chọn lượt để xem\""
+            },
+            {
+              "rule": "widow",
+              "message": "Dòng cuối chỉ còn một chữ: p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\""
+            },
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Ai đang đến, ghế nào còn trống?\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/04-multi-role/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Phòng khám mở 8:00–20:00. Lịch chiều chưa được cung cấp tron\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Lịch theo dữ liệu đề bài. Mọi cập nhật trong phiên là minh h\". Chuyển vào phần bàn giao"
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Ai đang đến, ghế nào còn trống?\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

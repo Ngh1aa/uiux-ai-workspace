@@ -1,0 +1,71 @@
+{
+  "errorCount": 4,
+  "warningCount": 2,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/02-app/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [
+            {
+              "rule": "decor-overlap",
+              "message": "Hoạ tiết ::before của div.hero-ticket \"Lượt đặt sắp tớiSân Phú NhuậnThứ Sáu 24/\" đè lên chữ. Dời hoạ tiết ra vùng không có chữ"
+            },
+            {
+              "rule": "decor-overlap",
+              "message": "Hoạ tiết ::after của div.hero-ticket \"Lượt đặt sắp tớiSân Phú NhuậnThứ Sáu 24/\" đè lên chữ. Dời hoạ tiết ra vùng không có chữ"
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn sân còn giờ, đặt nhanh sau giờ làm.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/02-app/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [
+            {
+              "rule": "decor-overlap",
+              "message": "Hoạ tiết ::before của div.hero-ticket \"Lượt đặt sắp tớiSân Phú NhuậnThứ Sáu 24/\" đè lên chữ. Dời hoạ tiết ra vùng không có chữ"
+            },
+            {
+              "rule": "decor-overlap",
+              "message": "Hoạ tiết ::after của div.hero-ticket \"Lượt đặt sắp tớiSân Phú NhuậnThứ Sáu 24/\" đè lên chữ. Dời hoạ tiết ra vùng không có chữ"
+            }
+          ],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Chọn sân còn giờ, đặt nhanh sau giờ làm.\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}
