@@ -161,6 +161,8 @@
   border-radius: var(--ds-shape-pill); color: color-mix(in srgb, var(--ds-text-on-brand-strong) 78%, transparent); text-decoration: none; white-space: nowrap;
   font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/var(--ds-type-label-md-line-height) var(--ds-font-family-sans);
 }
+/* Markup cũ chưa bọc nhãn trong .app-tabbar__label (các lượt benchmark đã đóng băng): giữ bố cục icon trên, nhãn dưới. */
+.app-tabbar__item:not(:has(.app-tabbar__label)) { flex-direction: column; gap: 2px; padding-inline: 0; min-height: 56px; }
 .app-tabbar__item:not([aria-current="page"]) .app-tabbar__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .app-tabbar__item[aria-current="page"] { flex: 2.2 1 0; padding-inline: var(--ds-space-300); background: var(--ds-text-on-brand-strong); color: var(--ds-surface-brand-strong); font-weight: var(--ds-font-weight-bold); }
 .app-tabbar__item:focus-visible, .app-hero :focus-visible { outline-color: var(--ds-text-on-brand-strong); }

@@ -33,7 +33,7 @@ const path = require('node:path');
 const DOT = /\S\s[·•]\s\S/;
 const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
 // Cùng mẫu với taste-check.cjs (demo-note).
-const DEMO = /\b(?:dữ liệu|số liệu|lời|lịch|ngữ cảnh|nội dung|mẫu tương tác)\s+(?:mẫu|minh ho[aạ]|minh họa|từ đề|theo đề)|\b(?:bản|là) minh (?:ho[aạ]|họa)\b|\bminh (?:ho[aạ]|họa) theo\b|\bbản mẫu (?:này|không|chưa)|\btrong bản mẫu\b|\bbrowser preview\b|\bdữ liệu (?:từ |theo )?đề bài\b|\bmô phỏng quyền\b|\btheo brief\b|\bbackend\b/i;
+const DEMO = /\b(?:dữ liệu|số liệu|lời|lịch|ngữ cảnh|nội dung|mẫu tương tác)\s+(?:mẫu|minh ho[aạ]|minh họa|từ đề|theo đề)|\b(?:bản|là) minh (?:ho[aạ]|họa)(?![\p{L}])|\bminh (?:ho[aạ]|họa) theo\b|\bbản mẫu (?:này|không|chưa)|\btrong bản mẫu\b|\bbrowser preview\b|\bdữ liệu (?:từ |theo )?đề bài\b|\bmô phỏng quyền\b|\btheo brief\b|\bbackend\b/iu;
 
 function visibleText(html) {
   return html

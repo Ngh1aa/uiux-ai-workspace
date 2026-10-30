@@ -550,7 +550,7 @@ function auditInPage() {
     // 9. Quy tắc của chủ repo (TASTE.md): chữ trên màn, thanh màu trái, hoạ tiết đè chữ, thanh cố định che.
     // Nhãn artboard/gallery nằm ngoài màn đánh dấu data-annotation để không bị soát như chữ trên màn.
     const annotated = (el) => !!el.closest('[data-annotation]');
-    const DEMO = /\b(?:dữ liệu|số liệu|lời|lịch|ngữ cảnh|nội dung|mẫu tương tác)\s+(?:mẫu|minh ho[aạ]|minh họa|từ đề|theo đề)|\b(?:bản|là) minh (?:ho[aạ]|họa)\b|\bminh (?:ho[aạ]|họa) theo\b|\bbản mẫu (?:này|không|chưa)|\btrong bản mẫu\b|\bbrowser preview\b|\bdữ liệu (?:từ |theo )?đề bài\b|\bmô phỏng quyền\b|\btheo brief\b|\bbackend\b/i;
+    const DEMO = /\b(?:dữ liệu|số liệu|lời|lịch|ngữ cảnh|nội dung|mẫu tương tác)\s+(?:mẫu|minh ho[aạ]|minh họa|từ đề|theo đề)|\b(?:bản|là) minh (?:ho[aạ]|họa)(?![\p{L}])|\bminh (?:ho[aạ]|họa) theo\b|\bbản mẫu (?:này|không|chưa)|\btrong bản mẫu\b|\bbrowser preview\b|\bdữ liệu (?:từ |theo )?đề bài\b|\bmô phỏng quyền\b|\btheo brief\b|\bbackend\b/iu;
     const textWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     for (let node = textWalker.nextNode(); node; node = textWalker.nextNode()) {
       const parent = node.parentElement;
