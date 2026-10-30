@@ -1,0 +1,53 @@
+{
+  "errorCount": 0,
+  "warningCount": 2,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/01-landing/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Landing",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Một cuối tuần chậm lại. Ngồi bên bàn xoay, để đôi tay thử mộ\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/01-landing/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Landing",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "subtitle",
+              "message": "Dòng giải thích phụ dưới tiêu đề: \"Một cuối tuần chậm lại. Ngồi bên bàn xoay, để đôi tay thử mộ\". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái"
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}
