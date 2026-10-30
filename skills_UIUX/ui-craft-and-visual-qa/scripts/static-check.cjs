@@ -14,10 +14,12 @@
  *   - aria-label của nút/liên kết không chứa chữ đang hiện trên nút (WCAG 2.5.3)
  *   - div/span/p có aria-label mà không có role (ARIA cấm, trình đọc màn hình bỏ qua)
  *   - chữ giữ chỗ kiểu "Lorem ipsum", "John Doe", "Acme"
+ *   - TASTE.md: ghi chú bản mẫu trên màn (demo-note), biến mẫu {{…}} (template-var), cỡ chữ dưới 12px (small)
+ *     Chữ trong phần tử có data-annotation (nhãn artboard, gallery) được bỏ qua.
  * CẢNH BÁO:
  *   - mã màu viết cứng ngoài phần khai báo token (--tên: giá trị)
  *   - transition: all; outline: none mà không có :focus-visible
- *   - cỡ chữ dưới 12px; emoji dùng như icon
+ *   - emoji dùng như icon
  *   - mặc định kiểu AI generic (CRAFT.md mục 2): font duy nhất là Inter/Roboto/Arial/Open Sans/
  *     Lato/hệ thống; gradient tím–xanh; nhãn IN HOA lặp từ 3 chỗ; mũi tên "→" sau nhiều liên kết
  *
@@ -30,10 +32,13 @@ const path = require('node:path');
 
 const DOT = /\S\s[·•]\s\S/;
 const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
+// Cùng mẫu với taste-check.cjs (demo-note).
+const DEMO = /\b(?:dữ liệu|số liệu|lời|lịch|ngữ cảnh|nội dung|mẫu tương tác)\s+(?:mẫu|minh ho[aạ]|minh họa|từ đề|theo đề)|\b(?:bản|là) minh (?:ho[aạ]|họa)\b|\bminh (?:ho[aạ]|họa) theo\b|\bbản mẫu (?:này|không|chưa)|\btrong bản mẫu\b|\bbrowser preview\b|\bdữ liệu (?:từ |theo )?đề bài\b|\bmô phỏng quyền\b|\btheo brief\b|\bbackend\b/i;
 
 function visibleText(html) {
   return html
     .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<([a-z][\w-]*)\b[^>]*\bdata-annotation\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<(script|style|svg|template)\b[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<[^>]+>/g, '\n')
     .replace(/&nbsp;/g, ' ')
@@ -70,6 +75,8 @@ function check(file) {
   for (const line of visibleText(html)) {
     if (DOT.test(line)) err('dot', `nối cụm từ bằng dấu chấm giữa: "${line.slice(0, 80)}"`);
     if (/lorem ipsum|john doe|\bacme\b/i.test(line)) err('placeholder', `chữ giữ chỗ: "${line.slice(0, 60)}"`);
+    if (DEMO.test(line)) err('demo-note', `ghi chú bản mẫu trên màn: "${line.slice(0, 60)}" (chuyển vào phần bàn giao)`);
+    if (/\{\{|\}\}/.test(line)) err('template-var', `lộ biến mẫu: "${line.slice(0, 60)}"`);
     if (EMOJI.test(line) && line.length <= 3) warn('emoji', `emoji dùng như icon: "${line}" (dùng icon SVG)`);
   }
   for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
@@ -101,7 +108,7 @@ function check(file) {
     if (!d || d.startsWith('--') || d.startsWith('@')) continue;
     for (const c of d.match(/#[0-9a-f]{3,8}\b|\brgba?\([^)]*\)/gi) || []) hardcoded.add(c.toLowerCase());
     const size = d.match(/^font-size\s*:\s*(\d+(?:\.\d+)?)px/i);
-    if (size && Number(size[1]) < 12) warn('small', `cỡ chữ ${size[1]}px dưới 12px`);
+    if (size && Number(size[1]) < 12) err('small', `cỡ chữ ${size[1]}px dưới 12px (TASTE: chữ phụ ≥ 12px)`);
   }
   if (hardcoded.size) warn('hex', `${hardcoded.size} màu viết cứng ngoài token: ${[...hardcoded].slice(0, 6).join(', ')}`);
   // Mặc định kiểu AI generic (CRAFT.md mục 2)
