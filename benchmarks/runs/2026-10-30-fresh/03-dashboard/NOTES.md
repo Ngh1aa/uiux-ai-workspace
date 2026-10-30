@@ -75,3 +75,10 @@ Toàn bộ số liệu lấy đúng từ đề (dữ liệu minh hoạ, không p
 - Đã nhìn ảnh 1280 và 390, sáng và tối, hộp thoại Ghi nhập hàng, trạng thái sau khi gửi hết đơn. Không cuộn ngang ở cả hai cỡ.
 - Chưa kiểm: axe-core (không cài), trình đọc màn hình thật, thiết bị thật, người dùng thật.
 - Dashboard gate: FAIL có chủ ý ở "last-updated/nguồn" (TASTE cấm dòng cập nhật/nguồn) và trạng thái tải/lỗi từng panel (không backend).
+
+## Vòng sửa theo runner chính thức (390, 1024, 1280, 1440 sáng/tối + reflow 320)
+
+- Lỗi nút "Ghi nhập hàng" bị panel cắt ở 1024 và reflow 320 tràn 64px (do 11 gap của lưới 12 cột rộng hơn khung 288px):
+  dưới 1200px lưới chuyển một cột (bảng, đơn, biểu đồ xếp dọc, mỗi khối rộng hết khung); chặn xuống dòng tên chỉ từ 1200px.
+- Dòng sản phẩm ở điện thoại: tên chiếm hết hàng đầu, chip đủ bán cạnh "Còn", nên "Len cotton màu hồng đất" không còn xuống dòng.
+- Kết quả: taste-check runner 0 lỗi 0 cảnh báo; static-check 0 lỗi; flow-check 0 FAIL 0 WARN; scenarios.cjs 9/9 PASS.
