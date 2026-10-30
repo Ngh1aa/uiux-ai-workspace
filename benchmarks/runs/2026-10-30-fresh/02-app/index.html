@@ -13,9 +13,9 @@
 <style>
   body { margin: 0; background: var(--ds-surface-sunken); }
   .app-gallery { justify-content: center; }
-  .app-phone[data-active] { outline: var(--ds-border-width-200) solid var(--ds-border-focus); outline-offset: 4px; }
   .app h1, .app h2, .app p, .app ul { margin: 0; }
   .app ul { padding: 0; list-style: none; }
+  .app-phone .app-body[hidden], .app-phone .app-footer[hidden], .app-phone .app-round[hidden] { display: none; }
   .num { font-family: var(--app-font-display); font-variant-numeric: tabular-nums; }
 
   /* Tiêu đề màn tab */
@@ -29,7 +29,7 @@
   .hero__grid { display: grid; grid-template-columns: 1fr 64px; gap: var(--ds-space-400); align-items: start; }
   .hero__text { display: flex; flex-direction: column; gap: var(--ds-space-100); min-width: 0; }
   .hero__label { font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/1.4 var(--ds-font-family-sans); }
-  .hero__time { font: var(--ds-font-weight-bold) 32px/1.15 var(--app-font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; white-space: nowrap; }
+  .hero__time { font: var(--ds-font-weight-bold) 30px/1.15 var(--app-font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; white-space: nowrap; }
   .hero__date { font-weight: var(--ds-font-weight-semibold); }
   .hero__court { width: 64px; height: 104px; color: var(--ds-text-on-brand-strong); }
   .btn-on-brand { --_bg: var(--ds-text-on-brand-strong); --_bg-hover: var(--ds-text-on-brand-strong); --_bg-pressed: var(--ds-text-on-brand-strong); --_fg: var(--ds-surface-brand-strong); --_border: transparent; align-self: flex-start; }
@@ -41,7 +41,7 @@
 
   /* Card sân: dùng chung cho Trang chủ và Tìm sân */
   .courts { display: flex; flex-direction: column; gap: var(--ds-space-300); }
-  .court { display: grid; grid-template-columns: 1fr auto; gap: var(--ds-space-200) var(--ds-space-300); width: 100%; padding: var(--ds-space-400); border: 0; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); color: var(--ds-text-primary); text-align: left; font: inherit; cursor: pointer; }
+  .court { display: grid; grid-template-columns: 1fr auto 20px; gap: var(--ds-space-200) var(--ds-space-300); width: 100%; padding: var(--ds-space-400); border: 0; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); color: var(--ds-text-primary); text-align: left; font: inherit; cursor: pointer; }
   .court:hover { background: var(--ds-action-secondary-bg-hover); }
   .court__name { font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); }
   .court__price { text-align: right; white-space: nowrap; font: var(--ds-font-weight-bold) var(--ds-font-size-500)/1.3 var(--app-font-display); font-variant-numeric: tabular-nums; }
@@ -52,7 +52,8 @@
   .court__count { display: inline-flex; align-items: center; height: 28px; padding: 0 var(--ds-space-300); border-radius: var(--ds-shape-pill); background: var(--ds-surface-brand-subtle); color: var(--ds-text-brand); font: var(--ds-font-weight-semibold) var(--ds-font-size-100)/1 var(--ds-font-family-sans); white-space: nowrap; }
   .court__count--none { background: var(--ds-surface-sunken); color: var(--ds-text-secondary); }
   .court__times { display: flex; gap: var(--ds-space-200); font: var(--ds-font-weight-semibold) var(--ds-type-body-sm-font-size)/1 var(--app-font-display); font-variant-numeric: tabular-nums; }
-  .court__chev { align-self: center; color: var(--ds-text-secondary); }
+  .court__meta, .court__slots { grid-column: 1 / 3; }
+  .court__chev { grid-column: 3; grid-row: 1 / 4; align-self: center; display: flex; color: var(--ds-text-secondary); }
 
   /* Tìm sân */
   .search .ds-field__control { min-height: 48px; background: var(--ds-surface-raised); }
@@ -131,10 +132,11 @@
   .bk__meta { display: flex; gap: var(--ds-space-300); color: var(--ds-text-secondary); font-size: var(--ds-type-body-sm-font-size); white-space: nowrap; }
   .tag-new { display: inline-flex; align-items: center; gap: var(--ds-space-100); height: 28px; padding: 0 var(--ds-space-300); border-radius: var(--ds-shape-pill); background: var(--ds-feedback-success-surface); color: var(--ds-feedback-success-text); font: var(--ds-font-weight-semibold) var(--ds-font-size-100)/1 var(--ds-font-family-sans); white-space: nowrap; }
   .seg-count { margin-left: var(--ds-space-100); font-variant-numeric: tabular-nums; }
-  .sched-body { min-height: 100%; box-sizing: border-box; }
+  #s-schedule .app-screen { display: flex; flex-direction: column; }
+  .sched-body { flex: 1; }
   .sched-panel { display: flex; flex-direction: column; }
   .sched-panel[hidden] { display: none; }
-  .empty-wrap { flex: 1; justify-content: center; }
+  .empty-wrap { flex: 1; justify-content: center; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
   .empty-wrap .ds-empty { padding-block: var(--ds-space-1200); }
   .empty-wrap h2 { color: var(--ds-text-primary); font: var(--ds-font-weight-semibold) var(--ds-font-size-500)/1.3 var(--ds-font-family-sans); }
   .empty-wrap .ds-button { min-height: 44px; }
@@ -146,7 +148,25 @@
 </head>
 <body class="ds-root app">
 <!-- icons:start -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="app-i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="app-i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="ds-i-alert" viewBox="0 0 24 24"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.75v.01"/></symbol>
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="ds-i-chevron-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="ds-i-chevron-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v10a1 1 0 0 0 1 1h3.5v-5.5h3V20H17a1 1 0 0 0 1-1V9"/></symbol>
+  <symbol id="ds-i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 11v5M12 8v.01"/></symbol>
+  <symbol id="ds-i-pin" viewBox="0 0 24 24"><path d="M12 20.5s6-5.4 6-10.5a6 6 0 1 0-12 0c0 5.1 6 10.5 6 10.5Z"/><circle cx="12" cy="10" r="2.25"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.25"/><path d="m15.75 15.75 4 4"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+</svg>
 <!-- icons:end -->
+<!-- Icon do script dựng: <use href="#ds-i-pin"/> <use href="#ds-i-chevron-right"/> <use href="#app-i-check"/> <use href="#ds-i-info"/> <use href="#ds-i-alert"/> -->
 <main class="app-gallery">
 
   <!-- 1. Trang chủ -->
@@ -247,7 +267,7 @@
       </header>
       <div class="app-screen">
         <div class="app-body body--footer" id="book-form">
-          <div class="ds-banner ds-banner--danger" id="book-error" role="alert" data-test="book-error" hidden></div>
+          <div class="ds-banner ds-banner--danger" id="book-error" role="alert" tabindex="-1" data-test="book-error" hidden></div>
           <section class="app-panel">
             <div class="app-panel__section">
               <div class="app-kv"><span class="app-kv__label">Sân</span><span class="app-kv__value" id="book-court"></span></div>
@@ -329,13 +349,13 @@
         </header>
         <div class="app-body sched-body">
           <div class="ds-segmented" role="group" aria-label="Lượt đặt">
-            <button class="ds-segmented__item" type="button" data-action="tab" data-tab="upcoming" aria-pressed="false" data-test="tab-upcoming">Sắp tới<span class="seg-count" id="upcoming-count"></span></button>
+            <button class="ds-segmented__item" type="button" data-action="tab" data-tab="upcoming" aria-pressed="false" data-test="tab-upcoming">Sắp tới</button>
             <button class="ds-segmented__item" type="button" data-action="tab" data-tab="past" aria-pressed="true" data-test="tab-past">Đã qua</button>
           </div>
           <div class="sched-panel" id="panel-upcoming" hidden>
             <ul class="bookings" id="bookings" data-test="upcoming-list"></ul>
           </div>
-          <div class="sched-panel empty-wrap" id="panel-past" data-test="past-empty">
+          <div class="sched-panel empty-wrap" id="panel-past" data-test="past-empty" data-whitespace>
             <div class="ds-empty">
               <span class="ds-empty__icon"><svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span>
               <h2>Chưa có lượt đã qua</h2>
@@ -385,7 +405,7 @@
     return `<li><button class="court" type="button" data-action="open-court" data-court="${id}" data-test="court-${id}">
       <span class="court__name">${c.name}</span>
       <span class="court__price">${money(c.price)}<span class="court__unit">/giờ</span></span>
-      <span class="court__meta"><span>${ic('ds-i-pin', 'ds-icon--sm')}${c.district}</span><span>${c.dist}</span></span><span></span>
+      <span class="court__meta"><span>${ic('ds-i-pin', 'ds-icon--sm')}${c.district}</span><span>${c.dist}</span></span>
       <span class="court__slots"><span class="court__count${f.length ? '' : ' court__count--none'}">${f.length ? f.length + ' khung trống' : 'Hết khung'}</span><span class="court__times">${f.map(t => `<span>${t}</span>`).join('')}</span></span>
       <span class="court__chev">${ic('ds-i-chevron-right')}</span>
     </button></li>`;
@@ -466,7 +486,7 @@
     $('#book-total').textContent = money(book.slot ? c.price : 0);
     const err = $('#book-error');
     if (book.error && !book.slot) {
-      const alts = free(book.court);
+      const alts = free(book.court).filter(t => t !== book.error);
       err.innerHTML = `${ic('ds-i-alert')}<div><p><strong>Khung ${book.error} vừa có người đặt</strong></p>` +
         (alts.length ? `<p>Chọn khung khác còn trống:</p><div class="alt">${alts.map(t => `<button class="ds-button ds-button--secondary ds-button--sm num" type="button" data-action="pick-book-slot" data-slot="${t}" data-test="alt-${t.slice(0, 2)}">${range(t)}</button>`).join('')}</div>`
           : `<p>Sân này hết khung hôm nay.</p><div class="alt"><a class="ds-button ds-button--secondary ds-button--sm" href="#s-list" data-to="s-list">Tìm sân</a></div>`) + `</div>`;
@@ -481,14 +501,13 @@
 
   function renderSchedule() {
     const list = [...bookings].sort((a, b) => a.order - b.order || a.time.localeCompare(b.time));
-    $('#bookings').innerHTML = list.map(b => `<li class="bk" data-test="booking">
+    $('#bookings').innerHTML = list.map(b => `<li class="bk" data-test="booking" data-new="${b.isNew}">
         <div class="bk__day"><span class="bk__dow">${b.dow}</span><span class="bk__dm">${b.dm}</span></div>
         <div class="bk__body">
-          <div class="bk__top"><span class="bk__time">${range(b.time)}</span>${b.isNew ? `<span class="tag-new">${ic('app-i-check', 'ds-icon--sm')}Mới đặt</span>` : ''}</div>
+          <span class="bk__time">${range(b.time)}</span>
           <span>${COURTS[b.court].name}</span>
           <span class="bk__meta"><span>Sân số ${b.no}</span><span>${b.people} người</span></span>
         </div></li>`).join('');
-    $('#upcoming-count').textContent = list.length;
     document.querySelectorAll('[data-action="tab"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tab === st.tab)));
     $('#panel-upcoming').hidden = st.tab !== 'upcoming';
     $('#panel-past').hidden = st.tab !== 'past';
@@ -543,7 +562,6 @@
       c.booked.push(book.slot);
       book.error = book.slot; book.slot = null; conflict = null;
       renderAll();
-      $('#book-error').focus && $('#book-error').setAttribute('tabindex', '-1');
       $('#book-error').focus();
       return;
     }
@@ -575,7 +593,7 @@
       case 'clear-search': st.q = ''; st.filter = 'all'; $('#q').value = ''; renderList(); return $('#q').focus();
       case 'open-slot-sheet': renderSheetSlots(); return openSheet('slot-sheet', t);
       case 'pick-sheet-slot': case 'pick-book-slot':
-        book.slot = t.dataset.slot; book.error = book.error && null; closeSheets(); renderBook();
+        book.slot = t.dataset.slot; book.error = null; closeSheets(); renderBook();
         return $('#book-slot').focus();
       case 'close-sheet': return closeSheets();
       case 'people': book.people = Math.min(12, Math.max(1, book.people + Number(t.dataset.step))); return renderBook();
