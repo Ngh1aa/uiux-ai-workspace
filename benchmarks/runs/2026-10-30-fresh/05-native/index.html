@@ -48,10 +48,10 @@ button { font: inherit; color: inherit; }
 /* Chọn ngày dạng dải ngày, dùng chung hai nền tảng */
 .days { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
 .day { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none; width: 48px; min-height: 56px; border: 1px solid var(--ds-border-control); border-radius: var(--ds-shape-control); background: var(--ds-surface-raised); cursor: pointer; }
-.day span { font-size: 12px; line-height: 16px; color: var(--ds-text-secondary); }
+.day span[aria-hidden] { font-size: 12px; line-height: 16px; color: var(--ds-text-secondary); }
 .day b { font: var(--ds-font-weight-bold) 15px/20px var(--app-font-display); font-variant-numeric: tabular-nums; }
 .day[aria-pressed="true"] { border-color: var(--ds-action-primary-bg); background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); }
-.day[aria-pressed="true"] span { color: inherit; }
+.day[aria-pressed="true"] span[aria-hidden] { color: inherit; }
 .day.is-past:not([aria-pressed="true"]) b { color: var(--ds-text-secondary); }
 .has-error .day[aria-pressed="true"] { border-color: var(--ds-action-danger-bg); background: var(--ds-action-danger-bg); }
 .field-err { display: flex; gap: 6px; align-items: flex-start; margin: 0; color: var(--ds-feedback-danger-text); font-size: 14px; line-height: 20px; }
@@ -67,14 +67,13 @@ button { font: inherit; color: inherit; }
 .btn-main { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 50px; border: 0; border-radius: var(--ds-shape-control); background: var(--ds-action-primary-bg); color: var(--ds-action-primary-text); font: var(--ds-font-weight-semibold) 17px/22px var(--ds-font-family-sans); cursor: pointer; }
 .btn-main[aria-disabled="true"] { background: var(--ds-action-disabled-bg); color: var(--ds-action-disabled-text); cursor: not-allowed; }
 .md .btn-main { min-height: 48px; border-radius: 24px; font-size: 15px; font-weight: var(--ds-font-weight-medium); }
-.pad-act { padding-bottom: 150px !important; }
-.pad-act-why { padding-bottom: 180px !important; }
+.ios .ios-body.pad-act { padding-bottom: 150px; }
 
 /* ---------- iOS ---------- */
 .ios .ios-body { gap: 28px; }
-.ios-row.rst { min-height: 44px; }
+.ios-row.rst { min-height: 44px; padding: 8px 16px; }
 .ios-row__title { font-size: 17px; }
-.ios-head { margin: 0; padding: 0 16px; color: var(--ds-text-secondary); font: var(--ds-font-weight-regular) 13px/18px var(--ds-font-family-sans); text-transform: uppercase; letter-spacing: 0.02em; }
+.ios-head { margin: 0; padding: 0 16px; color: var(--ds-text-secondary); font: var(--ds-font-weight-semibold) 15px/20px var(--ds-font-family-sans); }
 .ios-card { padding: 12px 16px; border-radius: 10px; background: var(--ds-surface-raised); display: flex; flex-direction: column; gap: 6px; }
 .ios-danger { width: 100%; min-height: 44px; border: 0; border-radius: 10px; background: var(--ds-surface-raised); color: var(--ds-action-danger-bg); font-size: 17px; cursor: pointer; }
 .ios-tabs { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; justify-content: space-around; align-items: center; padding: 8px 16px 30px; border-top: 0.5px solid var(--ds-border-subtle); background: color-mix(in srgb, var(--ds-surface-raised) 94%, transparent); backdrop-filter: blur(20px); }
@@ -107,6 +106,7 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
 .md .md-fab { bottom: 112px; border: 0; cursor: pointer; }
 .md .md-fab.is-up { bottom: 176px; }
 .md-snack { position: absolute; left: 16px; right: 16px; bottom: 104px; z-index: 4; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 4px 4px 4px 16px; border-radius: 6px; background: var(--ds-surface-inverse); color: var(--ds-text-on-inverse); font-size: 14px; line-height: 20px; box-shadow: var(--ds-elevation-floating); }
+.md-snack.is-low { bottom: 40px; }
 .md-snack span { flex: 1; }
 .md-snack button { min-height: 48px; padding: 0 12px; border: 0; background: none; color: var(--ds-text-on-inverse); font-weight: var(--ds-font-weight-semibold); cursor: pointer; }
 .md-field { min-height: 56px; }
@@ -309,7 +309,7 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
     nav(st) {
       return `<nav class="md-nav" aria-label="Điều hướng chính">${TABS.map(t => `<button class="tab" data-act="tab" data-id="${t.id}" data-test="tab-${t.id}"${st.view === t.id ? ' aria-current="page"' : ''}>${ic(t.icon)}<span class="tab__label">${t.label}</span></button>`).join('')}</nav>`;
     },
-    snack(st) { return st.flash ? `<div class="md-snack" role="status" data-test="result"><span>${esc(st.flash)}</span><button data-act="dismiss-flash">Đóng</button></div>` : ''; },
+    snack(st, low) { return st.flash ? `<div class="md-snack${low ? ' is-low' : ''}" role="status" data-test="result"><span>${esc(st.flash)}</span><button data-act="dismiss-flash">Đóng</button></div>` : ''; },
     fab(st) { return `<button class="md-fab${st.flash ? ' is-up' : ''}" data-act="new-leave" data-test="new-leave">${ic('i-calplus')}Xin nghỉ</button>`; },
     root(st, body, fab = true) {
       return `<div class="md-topbar"><h1 class="md-topbar__title" style="padding-left:12px">${TITLES[st.view]}</h1></div>
@@ -328,8 +328,8 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
     hwlist(st) { return M.root(st, M.rowsHw(st, st.hw), false); },
     leaves(st) { return M.root(st, M.rowsLeave(st)); },
     pushed(st, body, extra = '', pad = 120, lead = 'back') {
-      return `<div class="md-topbar"><button class="md-iconbtn" data-act="back" data-test="back" aria-label="Quay lại">${ic('i-back')}</button><h1 class="md-topbar__title">${TITLES[st.view]}</h1></div>
-        <div class="nt-scroll"><div class="md-body" style="padding-bottom:${pad}px">${body}</div></div>${extra}${M.snack(st)}`;
+      return `<div class="md-topbar"><button class="md-iconbtn" data-act="back" data-test="back">${ic('i-back')}<span class="ds-visually-hidden">Quay lại</span></button><h1 class="md-topbar__title">${TITLES[st.view]}</h1></div>
+        <div class="nt-scroll"><div class="md-body" style="padding-bottom:${pad}px">${body}</div></div>${extra}${M.snack(st, true)}`;
     },
     hwd(st) {
       const h = st.hw.find(x => x.id === st.arg);
@@ -365,7 +365,7 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
     form(st) {
       const f = st.form, iss = formIssue(f), u = st.uid;
       return `<div class="nt-screen" role="dialog" aria-modal="true" aria-labelledby="${u}-ft" data-test="form">
-        <div class="md-topbar"><button class="md-iconbtn" data-act="close-form" data-test="form-cancel" aria-label="Đóng">${ic('i-x')}</button><h1 class="md-topbar__title" id="${u}-ft">Xin nghỉ</h1></div>
+        <div class="md-topbar"><button class="md-iconbtn" data-act="close-form" data-test="form-cancel">${ic('i-x')}<span class="ds-visually-hidden">Đóng</span></button><h1 class="md-topbar__title" id="${u}-ft">Xin nghỉ</h1></div>
         <div class="nt-scroll"><div class="md-body" style="padding-bottom:180px;gap:24px">
           <div class="md-group${iss && iss.field ? ' has-error' : ''}" data-test="date-field"><p class="md-group__label" id="${u}-fd">Ngày nghỉ</p>${daysHtml(st)}${iss && iss.field ? `<p class="field-err" id="${u}-de" data-test="date-error">${ic('i-alert')}<span>${iss.field}</span></p>` : ''}</div>
           <div class="md-group"><p class="md-group__label" id="${u}-fs">Buổi</p><div class="seg" role="group" aria-labelledby="${u}-fs">${SESSIONS.map(s => `<button data-act="session" data-v="${s}" aria-pressed="${f.session === s}">${s}</button>`).join('')}</div></div>
@@ -378,7 +378,7 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
   };
 
   function daysHtml(st) {
-    return `<div class="days" role="group" aria-label="Ngày nghỉ">${DAYS.map(x => `<button class="day${x.past ? ' is-past' : ''}" data-act="date" data-v="${x.d}" data-test="day-${x.d.replace('/', '-')}" aria-pressed="${st.form.date === x.d}" aria-label="${cap(x.dow)} ${x.d}"${st.form.date === x.d && x.past ? ` aria-describedby="${st.uid}-de"` : ''}><span>${x.s}</span><b>${x.d.slice(0, 2)}</b></button>`).join('')}</div>`;
+    return `<div class="days" role="group" aria-label="Ngày nghỉ">${DAYS.map(x => `<button class="day${x.past ? ' is-past' : ''}" data-act="date" data-v="${x.d}" data-test="day-${x.d.replace('/', '-')}" aria-pressed="${st.form.date === x.d}"${st.form.date === x.d && x.past ? ` aria-describedby="${st.uid}-de"` : ''}><span aria-hidden="true">${x.s}</span><b aria-hidden="true">${x.d.slice(0, 2)}</b><span class="ds-visually-hidden">${cap(x.dow)} ${x.d}</span></button>`).join('')}</div>`;
   }
   function submitBar(st) {
     const iss = formIssue(st.form);
