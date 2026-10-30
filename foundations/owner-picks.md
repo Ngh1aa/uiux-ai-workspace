@@ -23,7 +23,8 @@ trang. Lấy nguyên tắc và con số. Bản dựng lại các chuyển độn
 
 1. **Ít màu.** Đen trắng hoặc trung tính ấm, cộng tối đa một màu nhấn. Màu đến từ ảnh.
 2. **Một họ chữ, chênh cỡ rất lớn.** Tiêu đề 56–120 px, khoảng dòng 0,85–1,0, giãn chữ âm nhẹ. Chữ thường 12–16 px.
-   Muốn thêm họ thứ hai thì chỉ cho một vai: chữ có chân cho câu tuyên bố, chữ viết tay cho một từ.
+   Cả trang một họ chữ. Không chêm một từ nghiêng có chân hay chữ viết tay vào tiêu đề: chủ repo thấy "font
+   khác nhau" và "AI" (xem mục 6).
 3. **Ảnh thật là nhân vật chính.** Ảnh tràn màn hoặc đặt lệch, ít card, ít viền, bo góc 0–6 px hoặc nút viên.
 4. **Một ý tưởng của ngành thành tương tác:** đèn theo giờ, chữ logo tự xếp lại, chữ dọc kiểu in ấn, ảnh trại nở ra.
    Đây là "chữ ký thị giác" trong [`composition.md`](composition.md) §2, và là thứ các lượt benchmark còn thiếu.
@@ -56,7 +57,28 @@ trang. Lấy nguyên tắc và con số. Bản dựng lại các chuyển độn
 
 ## 5. Khi dựng website hoặc landing
 
+0. Hỏi chủ repo hai điều trước khi dựng: có được dùng ảnh thật không, và chữ, màu nên gần trang nào ở §1.
 1. Chọn 1–2 trang ở bảng §1 gần ngành hoặc gần cảm giác brief cần; ghi tên vào khối kế hoạch thị giác.
 2. Chốt ý tưởng ngành sẽ thành tương tác (§2 mục 4) trước khi chọn màu.
 3. Lấy công thức chuyển động từ [`motion-recipes/index.html`](motion-recipes/index.html), mỗi trang tối đa 3 công thức.
 4. Màn app và quản trị không áp phần này: ở đó chuyển động vẫn chỉ để phản hồi thao tác ([`motion.md`](motion.md)).
+
+## 6. Bài học từ lần dựng thử đề 01 (30/10/2026)
+
+Đề landing xưởng gốm được làm lại sáu vòng theo trang này ([PR #242](https://github.com/Ngh1aa/uiux-ai-workspace/pull/242)).
+Chủ repo khen chuyển động, chê chữ, ảnh và màu. Rút ra:
+
+- **Ảnh thật quyết định phần lớn vẻ đẹp** của 9 trang. Hình vẽ SVG, dù đổ bóng kỹ, vẫn bị chê. Đề cấm ảnh thì hỏi chủ
+  repo trước; ảnh kho (Unsplash) đặt làm chỗ giữ ảnh, ghi mã ảnh trong phần bàn giao.
+- **Chữ và màu bám đúng 1–2 trang mẫu chủ repo chọn**, không tự pha. Nền đất xám + men lam + chữ có chân mảnh bị chê
+  "hoàn toàn không đạt"; trắng ngà + mực + một màu nhấn + một họ chữ không chân theo DOD/Wedding được làm tiếp.
+- **Một trang một họ chữ.** Chêm một từ nghiêng có chân hay chữ viết tay vào tiêu đề bị chê "font khác nhau" và "AI".
+- **Từ ngữ thường ngày, thống nhất:** tiêu đề section dùng đúng chữ ở menu ("Lớp học", không "Ba lớp"); nhãn quen
+  thuộc ("Ngày học", "Giờ học", "Học phí"); bỏ câu văn mẫu kiểu "Hẹn bạn ở…".
+- **Chuyển động được giữ:** chữ trồi từng dòng, ảnh đầu trang nở ra theo cuộn, ảnh hiện dần trong khung, cuộn mượt
+  cho chuột (R8 trong [`motion-recipes`](motion-recipes/index.html)).
+- **Hỏi hướng trước, dựng sau.** Bốn vòng đầu dựng theo phán đoán của agent rồi bị bỏ; một câu hỏi chọn trang mẫu ở
+  đầu (§5 bước 0) đã tránh được việc đó.
+- **Kỹ thuật khi máy dựng không ra được mạng:** font tự host lấy từ npm (`@fontsource/<tên>`, chỉ subset
+  `latin` + `vietnamese` và các độ đậm dùng tới); ảnh tải bằng một workflow GitHub Actions tạm commit vào nhánh rồi
+  xoá workflow. Trang artifact không tải được ảnh từ host ngoài, nên ảnh phải nằm cùng trang.

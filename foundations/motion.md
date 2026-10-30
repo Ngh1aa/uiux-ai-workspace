@@ -39,6 +39,7 @@ Theo 9 trang chủ repo chọn ([`owner-picks.md`](owner-picks.md)). Hai nhịp,
   chiều cao màn. Hiệu ứng gắn với cuộn thì chạy theo vị trí cuộn, không theo thời gian.
 - **Nhịp thao tác:** rê chuột, nút, menu. Giữ bảng mục 2.
 
+Cuộn mượt cho chuột (R8) không tính là hiệu ứng kể chuyện; nên bật khi trang có hiệu ứng theo cuộn.
 Mỗi trang tối đa 3 loại hiệu ứng kể chuyện. Màn chờ có logo dưới 1,2 s, chỉ lần đầu trong phiên. Công thức dựng
 sẵn kèm bản tĩnh: [`motion-recipes/index.html`](motion-recipes/index.html).
 
