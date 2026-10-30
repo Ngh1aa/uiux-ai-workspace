@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Công thức chuyển động website</title>
 <style>
-/* Công thức rút từ 9 website chủ repo chọn (foundations/owner-picks.md).
+/* Công thức rút từ 9 website chủ repo chọn (foundations/owner-picks.md). R1–R8; R8 (cuộn mượt) chỉ có ở script.
    Không thư viện ngoài. Mỗi công thức có bản tĩnh khi bật giảm chuyển động. */
 :root{
   --ink:#1d1d1b; --paper:#f7f5f1; --muted:#6b6862; --accent:#0c62ed; --warm:#3a3028; --cream:#fffdf8;
@@ -160,6 +160,29 @@ h2{font-weight:600;letter-spacing:-.02em;line-height:1}
   let saved = null; try { saved = localStorage.getItem('mode'); } catch (e) {}
   const h = new Date().getHours(); set(saved || (h >= 18 || h < 6 ? 'night' : 'day'));
   t.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; set(b.dataset.m); try { localStorage.setItem('mode', b.dataset.m); } catch (er) {} });
+
+  // R8: cuộn mượt cho chuột có nấc (kiểu Lenis, 6/9 trang mẫu dùng). Chỉ khi có chuột và không giảm chuyển động;
+  // bàn phím, kéo thanh cuộn, cảm ứng, zoom (Ctrl), cuộn ngang, vùng cuộn riêng và hộp thoại đang mở giữ cuộn gốc.
+  if (!reduce && matchMedia('(pointer: fine)').matches) {
+    let target = scrollY, cur = scrollY, raf = 0;
+    const loop = () => {
+      cur += (target - cur) * 0.1;
+      if (Math.abs(target - cur) < 0.5) { cur = target; raf = 0; } else raf = requestAnimationFrame(loop);
+      scrollTo(0, cur);
+    };
+    const inner = el => { for (let n = el; n && n !== document.body; n = n.parentElement) { if (n.scrollHeight > n.clientHeight && /(auto|scroll)/.test(getComputedStyle(n).overflowY)) return true; } return false; };
+    addEventListener('wheel', e => {
+      if (e.ctrlKey || document.querySelector('dialog[open]') || Math.abs(e.deltaX) > Math.abs(e.deltaY) || inner(e.target)) return;
+      e.preventDefault();
+      if (!raf) target = cur = scrollY;
+      const d = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+      target = Math.min(document.documentElement.scrollHeight - innerHeight, Math.max(0, target + d));
+      if (!raf) raf = requestAnimationFrame(loop);
+    }, { passive: false });
+    addEventListener('scroll', () => { if (!raf) target = cur = scrollY; }, { passive: true });
+    const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+    addEventListener('keydown', stop); addEventListener('pointerdown', stop);
+  }
 })();
 </script>
 </body>
