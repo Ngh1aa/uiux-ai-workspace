@@ -101,12 +101,23 @@ chỗ trống thật, gửi xác nhận và thanh toán chưa làm.
    làm mờ chữ, thẻ xác nhận bị kéo dài trên desktop; lớp men phủ bị checker coi là card nổi bật ở trạng thái tĩnh
    (sửa đúng tầng: khi giảm chuyển động thì section tự mang nền men, ẩn lớp trượt).
 
+4. Theo góp ý của chủ repo về ba điểm yếu (agent điều phối sửa):
+   - **Cốc có khối và chất liệu:** bóng khối trụ nhiều tầng, vân đất (`feTurbulence`), chấm sắt kiểu gốm sành,
+     men đọng sẫm ở mép giọt, viền miệng bắt sáng, lòng cốc tối dần, bóng đổ mềm trên bàn xoay. Vệt bóng loáng
+     chỉ hiện theo lượng men (`opacity: calc(var(--g) * …)`), đất mộc giữ mờ.
+   - **"Một buổi học" ở desktop:** tiêu đề cột trái (5 cột), ba bước bậc thang **đi xuống** ở 7 cột phải, bước 01
+     ngang hàng tiêu đề, nên góc trên phải không còn trống. Tên bước 26 px, không xuống dòng.
+   - **Cuộn mượt:** tự viết trong `site.js` (~30 dòng, kiểu Lenis): nội suy 0,1 mỗi khung hình cho con lăn chuột.
+     Chỉ bật khi có chuột (`pointer: fine`) và không giảm chuyển động. Bỏ qua khi sheet đặt chỗ mở, khi zoom
+     (Ctrl), khi cuộn ngang hoặc trong vùng cuộn riêng; phím và kéo thanh cuộn giữ cuộn gốc.
+   - Thêm: nút "Đặt chỗ" ở 390 px không còn sát tiêu đề; câu trả lời Hỏi đáp dùng `text-wrap: pretty` để không còn
+     một chữ lẻ ở 1024 px.
+
 ## Điểm yếu còn lại
 
-- Hình cốc vẫn là minh hoạ phẳng có tô bóng đơn giản. Chưa đạt độ "nhân vật chính" của ảnh thật ở DOD/BCG; một hoạ sĩ
-  có thể làm men loang, vết ngón tay, độ bóng tốt hơn.
-- Ở 1280 phần đầu section "Một buổi học" bên phải khá trống; bậc thang 01/02/03 chỉ có tên bước vì brief không cho mô tả.
-- Không có cuộn mượt (Lenis), nên hiệu ứng theo cuộn hơi giật khi lăn chuột từng nấc so với các trang tham chiếu.
+- Cốc đã có khối và chất liệu nhưng vẫn là hình vẽ; ảnh thật (khi brief cho phép) sẽ mạnh hơn.
+- Ba bước chỉ có tên vì đề không cho mô tả; phần dưới cột tiêu đề "Một buổi học" ở desktop vẫn để thoáng.
+- Cuộn mượt tự viết chưa thử trên touchpad Mac và chuột của nhiều hãng; Lenis bản chính thức xử lý nhiều trường hợp hơn.
 - Lịch học: nhãn "Thứ Bảy" và "Chủ nhật" 17 px đặt cạnh giờ 56 px trông hơi lạc trên điện thoại.
 - Ngày trong sheet tính theo ngày máy và không biết lớp đã kín chỗ hay chưa (chưa có dữ liệu thật).
 - Chữ "Đất Nung" khổng lồ có men chỉ là trang trí (`aria-hidden`), dùng `background-clip: text`; có `@supports` lùi về

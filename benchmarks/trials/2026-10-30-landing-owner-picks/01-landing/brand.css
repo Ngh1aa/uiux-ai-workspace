@@ -176,11 +176,12 @@ button { font: inherit; color: inherit; }
 .step svg { grid-column: 1 / -1; width: 112px; height: 112px; margin-top: 20px; }
 @media (min-width: 840px) {
   .flood .wrap { padding-top: 140px; padding-bottom: 120px; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-  .flood .head { grid-column: 1 / span 6; }
-  .steps { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; margin-top: 56px; }
+  .flood .head { grid-column: 1 / span 5; grid-row: 1; align-self: start; }
+  .steps { grid-column: 6 / -1; grid-row: 1; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
   .step { grid-template-columns: 1fr; gap: 16px; }
-  .step:nth-child(1) { margin-top: 192px; }
-  .step:nth-child(2) { margin-top: 96px; }
+  .step h3 { font-size: 26px; white-space: nowrap; }
+  .step:nth-child(2) { margin-top: 72px; }
+  .step:nth-child(3) { margin-top: 144px; }
   .step svg { order: -1; grid-column: auto; margin: 0 0 8px; width: 120px; height: 120px; }
 }
 
@@ -194,6 +195,7 @@ button { font: inherit; color: inherit; }
 .day dd span { font-size: 13px; font-weight: 600; color: var(--muted); }
 .day time { font-family: var(--serif); font-size: clamp(36px, 4vw, 56px); line-height: 1; letter-spacing: -.02em; font-weight: 400; }
 .faq { display: grid; gap: 28px; align-content: start; }
+.faq p { text-wrap: pretty; }
 .qa { display: grid; gap: 12px; padding-top: 24px; border-top: 1.5px solid var(--ink); }
 .qa h3 { font-family: var(--serif); font-weight: 420; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; letter-spacing: -.015em; max-width: 22ch; }
 .qa p { color: var(--muted); max-width: 46ch; }

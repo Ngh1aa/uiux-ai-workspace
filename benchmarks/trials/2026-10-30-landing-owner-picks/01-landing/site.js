@@ -53,6 +53,37 @@
   }
   paint();
 
+  /* ---------- Cuộn mượt cho chuột có nấc (kiểu Lenis) ----------
+   * Chỉ khi có chuột (pointer: fine) và không bật giảm chuyển động. Bàn phím, thanh cuộn, cảm ứng
+   * và vùng cuộn bên trong (sheet đặt chỗ) giữ cuộn gốc của trình duyệt. */
+  if (!reduce && matchMedia('(pointer: fine)').matches) {
+    let target = scrollY, cur = scrollY, raf = 0;
+    const max = () => document.documentElement.scrollHeight - innerHeight;
+    const loop = () => {
+      cur += (target - cur) * 0.1;
+      if (Math.abs(target - cur) < 0.5) { cur = target; raf = 0; } else raf = requestAnimationFrame(loop);
+      scrollTo(0, cur);
+    };
+    const innerScroller = el => {
+      for (let n = el; n && n !== document.body; n = n.parentElement) {
+        if (n.scrollHeight > n.clientHeight && /(auto|scroll)/.test(getComputedStyle(n).overflowY)) return true;
+      }
+      return false;
+    };
+    addEventListener('wheel', e => {
+      if (e.ctrlKey || document.querySelector('dialog[open]') || Math.abs(e.deltaX) > Math.abs(e.deltaY) || innerScroller(e.target)) return;
+      e.preventDefault();
+      if (!raf) target = cur = scrollY;
+      const d = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+      target = clamp(target + d, 0, max());
+      if (!raf) raf = requestAnimationFrame(loop);
+    }, { passive: false });
+    // cuộn bằng cách khác (phím, kéo thanh cuộn, nhảy tới mục) thì đồng bộ lại điểm xuất phát
+    addEventListener('scroll', () => { if (!raf) target = cur = scrollY; }, { passive: true });
+    const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+    addEventListener('keydown', stop); addEventListener('pointerdown', stop);
+  }
+
   /* ---------- Đặt chỗ ---------- */
   const CLASSES = [
     { name: 'Bàn xoay cơ bản', dur: '3 giờ', price: 450000, seats: 8 },
