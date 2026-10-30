@@ -57,7 +57,7 @@ button { font: inherit; color: inherit; }
 .field-err { display: flex; gap: 6px; align-items: flex-start; margin: 0; color: var(--ds-feedback-danger-text); font-size: 14px; line-height: 20px; }
 .field-err .ds-icon { width: 18px; height: 18px; margin-top: 1px; }
 .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; border-radius: 10px; background: var(--ds-surface-sunken); }
-.seg button { min-height: 40px; border: 0; border-radius: 8px; background: none; font-size: 15px; cursor: pointer; }
+.seg button { min-height: 44px; border: 0; border-radius: 8px; background: none; font-size: 15px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ds-surface-raised); font-weight: var(--ds-font-weight-semibold); box-shadow: 0 1px 3px color-mix(in srgb, var(--ds-text-primary) 18%, transparent); }
 .seg-wrap { padding: 2px 0; }
 
@@ -236,7 +236,7 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
         <ul class="ios-group"><li class="ios-row"><span class="avatar" aria-hidden="true">GH</span><span class="ios-row__body"><span class="ios-row__title">Trần Gia Hân</span><span class="ios-row__sub">Lớp 2/3, Trường Tiểu học Minh hoạ</span><span class="ios-row__sub">Cô chủ nhiệm Lê Thu Hà</span></span></li></ul>
         <section class="ios-section">${heroCard(st)}${todo(st).length ? I.rowsHw(st, todo(st)) : ''}</section>
         <section class="ios-section" aria-labelledby="${st.uid}-tm"><h2 class="ios-head" id="${st.uid}-tm">Ngày mai, thứ Năm 23/10</h2>
-          <ul class="ios-group">${['Tiếng Việt', 'Toán', 'Tự nhiên và Xã hội', 'Âm nhạc'].map((s, i) => `<li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">${s}</span></span><span class="ios-row__value">Tiết ${i + 1}</span></li>`).join('')}
+          <ul class="ios-group">${['Tiếng Việt', 'Toán', 'Tự nhiên và Xã hội', 'Âm nhạc'].map(s => `<li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">${s}</span></span></li>`).join('')}
           <li class="ios-row"><span class="ios-row__body"><span class="ios-row__title">Tan học</span></span><span class="ios-row__value num">16:30</span></li></ul></section>
         <section class="ios-section" aria-labelledby="${st.uid}-nt"><h2 class="ios-head" id="${st.uid}-nt">Thông báo mới nhất</h2>
           <div class="ios-card"><p class="notice">Thứ Bảy 25/10 trường tổ chức ngày hội đọc sách, phụ huynh đăng ký tham gia trước thứ Năm.</p><span class="meta">Cô Hà, 19:12 hôm nay</span></div></section>
@@ -320,7 +320,7 @@ textarea.ios-input { min-height: 72px; padding: 11px 0; resize: none; line-heigh
         <div class="md-surface"><div class="md-item"><span class="avatar" aria-hidden="true">GH</span><span class="md-item__body"><span class="md-item__title">Trần Gia Hân</span><span class="md-item__sub">Lớp 2/3, Trường Tiểu học Minh hoạ</span><span class="md-item__sub">Cô chủ nhiệm Lê Thu Hà</span></span></div></div>
         ${heroCard(st)}${todo(st).length ? M.rowsHw(st, todo(st)) : ''}
         <h2 class="md-title-sm">Ngày mai, thứ Năm 23/10</h2>
-        <ul class="md-surface md-list">${['Tiếng Việt', 'Toán', 'Tự nhiên và Xã hội', 'Âm nhạc'].map((s, i) => `<li class="md-li"><span>${s}</span><span class="nt-muted">Tiết ${i + 1}</span></li>`).join('')}<li class="md-li"><span>Tan học</span><span class="nt-muted num">16:30</span></li></ul>
+        <ul class="md-surface md-list">${['Tiếng Việt', 'Toán', 'Tự nhiên và Xã hội', 'Âm nhạc'].map(s => `<li class="md-li"><span>${s}</span></li>`).join('')}<li class="md-li"><span>Tan học</span><span class="nt-muted num">16:30</span></li></ul>
         <h2 class="md-title-sm">Thông báo mới nhất</h2>
         <div class="md-card"><p class="notice">Thứ Bảy 25/10 trường tổ chức ngày hội đọc sách, phụ huynh đăng ký tham gia trước thứ Năm.</p><span class="meta">Cô Hà, 19:12 hôm nay</span></div>
         <h2 class="md-title-sm">Đơn xin nghỉ</h2>${M.rowsLeave(st)}`);
