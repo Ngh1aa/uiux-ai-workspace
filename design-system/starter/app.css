@@ -199,7 +199,8 @@
 .web-main { display: flex; flex-direction: column; gap: var(--ds-spacing-stack-lg); width: 100%; max-width: 1180px; padding: var(--ds-spacing-stack-xl) var(--ds-spacing-gutter-wide); box-sizing: border-box; }
 .web-top { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-spacing-inline-md); }
 .web-top h1 { margin: 0; }
-.web-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)); gap: var(--ds-spacing-stack-md); align-items: end; }
+/* Hàng số liệu nằm sát đáy và chạy tới mép phải: đẩy hoạ tiết lên trên để không đè chữ (TASTE). */
+.web-hero { --app-hero-motif-top: -112px; display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)); gap: var(--ds-spacing-stack-md); align-items: end; }
 .web-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--ds-spacing-stack-md); align-items: start; }
 .web-table { width: 100%; border-collapse: collapse; font-size: var(--ds-type-body-md-font-size); }
 .web-table th { padding: var(--ds-space-300) var(--ds-spacing-inset-md); color: var(--ds-text-secondary); text-align: left; white-space: nowrap; font: var(--ds-type-label-sm-font-weight) var(--ds-type-label-sm-font-size)/var(--ds-type-label-sm-line-height) var(--ds-font-family-sans); letter-spacing: var(--ds-type-label-sm-letter-spacing); text-transform: uppercase; }
