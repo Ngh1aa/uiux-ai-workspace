@@ -132,7 +132,7 @@ Chuyển động giữ lại: chữ trồi từng dòng; ảnh đầu trang nở
 đã xoá workflow sau khi tải. Mã ảnh: 1764507768733-667e135d8cb9 (đầu trang), 1590605095243-072811dbe64c,
 1771523350747-638a89667c8f, 1673339065013-f8411fb93848 (ba lớp), 1507022787381-b30170b5ebf4,
 1607556671927-78a6605e290b, 1771523351104-03d9c2cc347c (ba bước). Khi có ảnh thật của xưởng thì thay cùng tên file.
-Font: Plus Jakarta Sans và Cormorant Garamond (OFL), tự host trong `fonts/`, chỉ các cỡ dùng tới.
+Font: Plus Jakarta Sans (OFL), tự host trong `fonts/`, chỉ các cỡ dùng tới.
 
 Soát vòng 5: `taste-check` 390/1024/1280/1440 sáng/tối, reflow 320: 0 lỗi; 24 cảnh báo đều là `subtitle` cho
 câu trả lời Hỏi đáp và dòng "Giá đã gồm…" mà đề bắt buộc. `static-check` 0 lỗi. Luồng đặt chỗ chạy lại bằng kịch bản.
@@ -142,7 +142,16 @@ câu trả lời Hỏi đáp và dòng "Giá đã gồm…" mà đề bắt bu�
 - Lưới "Ba lớp" và "Một buổi học" cùng kiểu ảnh vòm so le, hai section liền nhau hơi giống nhau.
 - Chữ nghiêng Cormorant ở cỡ lớn có dấu tiếng Việt hơi mảnh; cần chủ repo xem có hợp không.
 
-## Điểm yếu còn lại (vòng 1–4)
+## Vòng 6: một họ chữ, chữ thường ngày (chủ repo: "sao font chữ lại khác nhau, cách dùng từ ngữ cũng AI quá")
+
+- Bỏ chữ nghiêng có chân chêm vào tiêu đề ("riêng bạn.", "học"): đó là mẫu chép máy móc từ Wedding và là kiểu
+  rất hay gặp ở trang do AI dựng. Cả trang giờ chỉ Plus Jakarta Sans; số bước 01/02/03 cũng cùng họ chữ.
+- Tiêu đề section dùng đúng chữ của menu: "Lớp học", "Buổi học", "Lịch học", "Hỏi đáp" (trước là "Ba lớp",
+  "Một buổi học", lệch với menu).
+- Nhãn đầu trang dùng từ thường ngày: "Ngày học", "Giờ học", "Học phí" (trước "Mở lớp", "Ca học", "Mỗi buổi").
+- Màn kết quả: dòng tóm tắt là địa chỉ, bỏ câu "Hẹn bạn ở…".
+- Câu tiêu đề "Ba tiếng, một khối đất, một chiếc cốc của riêng bạn." là câu định vị đề bài bắt buộc, giữ nguyên.
+
 
 - Cốc đã có khối và chất liệu nhưng vẫn là hình vẽ; ảnh thật (khi brief cho phép) sẽ mạnh hơn.
 - Ba bước chỉ có tên vì đề không cho mô tả; phần dưới cột tiêu đề "Một buổi học" ở desktop vẫn để thoáng.
