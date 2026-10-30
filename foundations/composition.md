@@ -1,67 +1,48 @@
 # Bố cục và nhịp
 
-Trang này trả lời: **làm sao một màn trông có chủ ý, không giống các khối xếp lần lượt từ trên xuống?**
-[`layout-and-density.md`](layout-and-density.md) lo phần đo đạc (lưới, mật độ, khoảng trống); trang này lo
-phần cảm nhận: cân bằng, nhịp, tương phản và sự khác biệt giữa các section.
+Làm sao màn trông có chủ ý, không phải các khối xếp lần lượt. Phần đo đạc ở
+[`layout-and-density.md`](layout-and-density.md); trang này lo cảm nhận.
 
-## 1. Năm công cụ bố cục
+## 1. Năm công cụ
 
-| Công cụ | Ý nghĩa | Cách làm cụ thể |
-|---|---|---|
-| **Điểm nhìn** | Một thứ thắng mọi thứ khác | Xem [`gestalt-and-hierarchy.md`](gestalt-and-hierarchy.md). Mỗi màn, mỗi section landing có đúng một điểm nhìn |
-| **Cân bằng** | Hai bên màn có "khối lượng thị giác" tương đương | Đối xứng cho trang trang trọng (đăng nhập, chứng nhận). Bất đối xứng cho hầu hết màn: khối nặng 7–8 cột bên này, khối nhẹ nhưng dày thông tin 4–5 cột bên kia |
-| **Nhịp** | Khoảng cách lặp lại có quy luật | Dùng thang khoảng cách của token (4, 8, 12, 16, 24, 32, 48…). Khoảng giữa section > khoảng giữa nhóm > khoảng trong nhóm |
-| **Tương phản tỉ lệ** | Thứ to cạnh thứ nhỏ, thứ đặc cạnh thứ thoáng | Một ảnh lớn cạnh danh sách gọn; số 40 px cạnh nhãn 13 px. Mọi thứ cỡ trung bình là màn nhạt |
-| **Căn lề** | Mọi mép thẳng hàng với một đường nào đó | Ít đường căn nhất có thể. Đếm số đường căn trái khác nhau: quá 3 trên một màn là lộn xộn |
+| Công cụ | Làm cụ thể |
+|---|---|
+| Điểm nhìn | Mỗi màn, mỗi section landing đúng một điểm nhìn |
+| Cân bằng | Đối xứng cho màn trang trọng; còn lại bất đối xứng: khối nặng 7–8 cột, khối nhẹ nhưng dày thông tin 4–5 cột |
+| Nhịp | Chỉ dùng thang token (4, 8, 12, 16, 24, 32, 48); giữa section > giữa nhóm > trong nhóm |
+| Tương phản tỉ lệ | Thứ to cạnh thứ nhỏ: số 40 px cạnh nhãn 13 px. Mọi thứ cỡ trung bình là màn nhạt |
+| Căn lề | Ít đường căn nhất; quá ba đường căn trái khác nhau trên một màn là lộn xộn |
 
-## 2. Khối lượng thị giác
+Khối lượng thị giác: nền đậm nặng hơn nền nhạt, ảnh nặng hơn chữ, thứ xa tâm nặng hơn. Card nổi bật nền đậm
+bên trái thì bên phải cần biểu đồ hoặc danh sách dày; không có thì cho card nổi bật chiếm cả hàng.
 
-Thứ có khối lượng lớn hơn kéo mắt mạnh hơn và cần đối trọng:
+## 2. Chữ ký thị giác: điều lượt benchmark 30/10 thiếu
 
-- Nền đậm nặng hơn nền nhạt; ảnh nặng hơn chữ; chữ đậm nặng hơn chữ thường.
-- Thứ ở xa tâm nặng hơn cùng thứ đó ở gần tâm (đòn bẩy).
-- Hình phức tạp nặng hơn hình đơn giản.
+Lượt 2026-10-30-fresh qua hết checker nhưng chủ repo nhận xét "xấu quá". Dấu hiệu chung: màu trầm an toàn,
+card viền mảnh, mọi thứ cỡ vừa, không có chỗ nào đáng nhớ. Trước khi dựng, chốt:
 
-Áp dụng: card nổi bật nền đậm ở cột trái thì cột phải cần một biểu đồ hoặc danh sách dày, không phải một
-câu chữ mỏng. Nếu không có gì đủ nặng, thu card nổi bật về toàn hàng thay vì để hụt một bên.
+1. **Một ý tưởng hình ảnh lấy từ ngành** (sổ hẹn của phòng khám, vạch sân cầu lông, men gốm) và cho nó
+   xuất hiện ở hình khối, không chỉ ở một hình minh hoạ.
+2. **Một chỗ thật to** và phần còn lại lùi hẳn về. Chênh lệch cỡ, không chênh lệch màu.
+3. **Bỏ bớt** viền, khung, nhãn phụ cho tới khi màn chỉ còn những thứ phải có.
+
+Khi chủ repo gửi màn đã duyệt, đối chiếu với các màn đó trước, không đối chiếu với starter.
 
 ## 3. Landing: mỗi section một hình
 
-Landing nhàm nhất là chuỗi section cùng một khuôn: tiêu đề giữa, ba card ngang, lặp lại. Hãy đổi **hình**
-của section theo nội dung nó mang:
-
-| Nội dung | Hình phù hợp |
+| Nội dung | Hình |
 |---|---|
-| Lời hứa chính | Lệch 7 + 5: chữ lớn bên trái, ảnh hoặc sản phẩm thật bên phải |
-| Ba lý do | Lưới 3 cột, nhưng mỗi ô có số hoặc ảnh riêng, không chỉ icon và hai dòng |
-| Quy trình | Dòng thời gian ngang hoặc bậc thang chéo |
-| Bằng chứng | Dải số liệu toàn bề ngang (P26), rồi một lời chứng thực lớn (P17) |
-| Bảng giá | Ba cột bằng nhau (P23), gói gợi ý nổi bằng viền |
-| Lời mời cuối | Dải màu thương hiệu (P25) |
+| Lời hứa | Lệch 7 + 5: chữ lớn và sản phẩm thật |
+| Ba lý do | Lưới 3 cột, mỗi ô một số hoặc ảnh riêng, không chỉ icon và hai dòng |
+| Quy trình | Dòng thời gian ngang hoặc bậc thang |
+| Bảng giá | Ba cột bằng nhau, gói gợi ý nổi bằng viền |
+| Lời mời cuối | Dải màu thương hiệu |
 
-Đổi nhịp nền: trắng, nhạt, trắng, đậm. Không quá một section nền đậm ngoài dải lời mời cuối.
+Đổi nhịp nền trắng, nhạt, trắng, đậm; không quá một section nền đậm ngoài dải lời mời.
 
-## 4. Màn app: bố cục theo nhiệm vụ
+## 4. Dấu hiệu bố cục "mặc định"
 
-- Hành động chính nằm trong vùng ngón cái chạm tới (nửa dưới màn điện thoại), hoặc góc trên phải trên desktop.
-- Thông tin đọc nhiều đặt trên, thông tin tra cứu đặt dưới hoặc trong vùng phụ.
-- Màn chi tiết: đầu trang toàn bề ngang rồi chia 8 + 4. Màn danh sách: bộ lọc rồi bảng.
+Mọi section cùng chiều cao và căn giữa; mọi card cùng cỡ dù khác tầm quan trọng; ảnh luôn bên phải; không có
+chỗ nào thật to hay thật nhỏ. Thấy một dấu hiệu thì quay lại kế hoạch thị giác trong [`CRAFT.md`](../CRAFT.md).
 
-## 5. Dấu hiệu bố cục "mặc định"
-
-Các dấu hiệu sau cho biết màn được xếp theo quán tính chứ không được thiết kế:
-
-- Mọi section cùng chiều cao, cùng khoảng cách, cùng căn giữa.
-- Mọi card cùng cỡ dù nội dung khác tầm quan trọng.
-- Ảnh luôn bên phải, chữ luôn bên trái, lặp mãi.
-- Không có chỗ nào thật to hoặc thật nhỏ.
-
-Khi thấy một trong số đó, quay lại khối kế hoạch thị giác trong [`CRAFT.md`](../CRAFT.md) và chọn lại
-"một điểm táo bạo".
-
-## Nguồn
-
-- Rudolf Arnheim, *Art and Visual Perception*, chương Cân bằng.
-- Josef Müller-Brockmann, *Grid Systems in Graphic Design*.
-- Robin Williams, *The Non-Designer's Design Book*: bốn nguyên tắc tương phản, lặp lại, căn lề, gần nhau.
-- Ellen Lupton, *Graphic Design: The New Basics*, phần nhịp và tỉ lệ.
+Nguồn chính: Arnheim *Art and Visual Perception*, Robin Williams *The Non-Designer's Design Book*.

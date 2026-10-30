@@ -21,19 +21,19 @@ và cách chọn nguồn trong
 
 | Loại màn | Tham khảo | Học gì | Pattern |
 |---|---|---|---|
-| Tổng quan, dashboard | IBM Carbon, *Data visualization* và *Dashboards*; Shopify Polaris, trang Home của admin | Một câu kết luận trên mỗi biểu đồ; KPI luôn kèm kỳ so sánh; màu nhấn chỉ cho điều cần nói | P01 hoặc P02, P06, P07, P08, P09, P10 |
+| Tổng quan, dashboard | IBM Carbon, *Data visualization* và *Dashboards*; Shopify Polaris, trang Home của admin | Tiêu đề biểu đồ nói luôn kết luận, không thêm dòng phụ; KPI kèm số so sánh kỳ trước; màu nhấn chỉ cho điều cần nói | P01 hoặc P02, P06, P07, P08, P09, P10 |
 | Danh sách, bảng quản trị | Carbon, *Data table*; Atlassian Design System, *Dynamic table* | Bộ lọc nằm trên bảng, hành động hàng loạt hiện khi chọn, trạng thái có chữ | P15, P11, P28 |
 | Master-detail | Material Design 3, *Canonical layouts: list-detail* | Vùng chi tiết không bao giờ trống; cách thu về một cột trên điện thoại | P15, P18, P19 |
 | Form nhiều bước | GOV.UK Design System, *Question pages* và *Check answers*; Material 3, *Steppers* (M2) | Một câu hỏi mỗi trang khi người dùng không quen; trang xem lại trước khi gửi | P20, P21, P29 |
 | Chi tiết một đối tượng | Polaris, *Resource details layout* | Cột chính 2/3 cho nội dung, cột phụ 1/3 cho trạng thái và người liên quan | P04, P19, P22 |
 | Cài đặt | Apple HIG, *Settings*; Atlassian, cài đặt dự án | Nhóm theo việc người dùng muốn làm, không theo cấu trúc dữ liệu | (khung `dk-settings` trong starter/desktop.html) |
-| Trạng thái rỗng, lỗi, đang tải | Polaris, *Empty state*; Carbon, *Empty states pattern* | Rỗng lần đầu khác rỗng do bộ lọc; lỗi một khối không chặn cả màn | P27, P28, P29 |
+| Trạng thái rỗng, lỗi, đang tải | Polaris, *Empty state*; Carbon, *Empty states pattern* | Rỗng lần đầu khác rỗng do bộ lọc; lỗi một khối không chặn cả màn; trạng thái rỗng gọn, không lấp bằng nội dung tự thêm | P27, P28, P29 |
 
 ## Màn điện thoại
 
 | Loại màn | Tham khảo | Học gì | Pattern |
 |---|---|---|---|
-| Trang chủ app | Apple HIG, *Layout* và *Tab bars*; Material 3, *Navigation bar* | Điểm nhìn ở nửa trên; tab bar tối đa 5 mục | P01–P05, P06 |
+| Trang chủ app | Apple HIG, *Layout* và *Tab bars*; Material 3, *Navigation bar* | Điểm nhìn ở nửa trên; tab bar tối đa 5 mục, kiểu viên theo TASTE | P01–P05, P06 |
 | Danh sách và tìm kiếm | Apple HIG, *Lists and tables*, *Search fields* | Dòng 44 pt trở lên, hành động vuốt có nút thay thế | P15 |
 | Thanh toán, xác nhận | Material 3, *Bottom sheets*; Apple HIG, *Sheets* | Tổng tiền luôn nhìn thấy cạnh nút chính | P13, P23 |
 
@@ -51,17 +51,12 @@ và cách chọn nguồn trong
 | Câu hỏi | Tham khảo | Học gì |
 |---|---|---|
 | Chọn loại biểu đồ | Financial Times, *Visual Vocabulary* | Chọn theo quan hệ dữ liệu (so sánh, xu hướng, phần của tổng), không theo độ đẹp |
-| Màu và nhãn | Carbon, *Color palettes* cho dataviz; skill [`data-visualization-and-dashboard-ux`](../skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Màu phân loại giới hạn 6; nhãn trực tiếp thay chú giải khi được |
+| Màu và nhãn | Carbon, *Color palettes* cho dataviz; skill [`data-visualization-and-dashboard-ux`](../skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Màu phân loại giới hạn 6; nhãn đặt trực tiếp trên dữ liệu, không chú giải (TASTE) |
 
-## Màn tham chiếu có ảnh trong repo
+## Màn tham chiếu trong repo
 
-[Sổ đơn hàng và hai hướng trang chủ giáo viên](../design-system/examples/data-table/README.md)
-có ảnh điện thoại/desktop sáng/tối, lý do, đánh đổi, giới hạn và browser receipt.
-Đây là ví dụ do agent dựng, `CHƯA DUYỆT` bởi chủ repo; không suy thành kết quả người dùng thật.
-Tái sử dụng cấu trúc và câu hỏi thiết kế, không sao chép tên, số liệu hoặc mặc định thương hiệu.
+Chưa có màn nào được chủ repo duyệt. Màn do agent dựng ([sổ đơn hàng](../design-system/examples/data-table/README.md),
+các lượt benchmark) là `CHƯA DUYỆT`: dùng để xem cấu trúc, không dùng làm chuẩn gu. Khi có màn đã duyệt,
+chúng nằm ở [`examples/`](examples/README.md) và được ưu tiên trên mọi tham khảo ngoài.
 
-## Sau khi tham khảo
-
-- Ghi nguồn đã xem vào ghi chú giao, kèm điều đã học. Không chép logo, ảnh, chữ của sản phẩm khác.
-- Tên trang và mục trong tài liệu hệ thống thiết kế có thể đổi theo phiên bản; tìm theo tên mục nếu
-  đường dẫn cũ không còn.
+Ghi nguồn đã xem vào phần bàn giao. Không chép logo, ảnh, chữ của sản phẩm khác.
