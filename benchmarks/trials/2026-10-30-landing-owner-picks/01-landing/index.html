@@ -57,20 +57,54 @@
             <ellipse cx="200" cy="148" rx="92" ry="20"/>
             <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z"/>
           </clipPath>
-          <linearGradient id="cup-shade" x1="0" x2="1">
-            <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
-            <stop offset=".22" stop-color="#fff" stop-opacity=".1"/>
-            <stop offset=".55" stop-color="#000" stop-opacity="0"/>
-            <stop offset="1" stop-color="#000" stop-opacity=".32"/>
+          <clipPath id="body-clip"><path d="M108 148 C104 250 112 352 140 396 Q200 412 260 396 C288 352 296 250 292 148 Z"/><ellipse cx="200" cy="148" rx="92" ry="20"/></clipPath>
+          <!-- khối trụ: sáng bên trái, tối dần sang phải, viền tối ở mép -->
+          <linearGradient id="cup-shade" x1="108" x2="292" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#000" stop-opacity=".28"/>
+            <stop offset=".1" stop-color="#fff" stop-opacity=".06"/>
+            <stop offset=".24" stop-color="#fff" stop-opacity=".3"/>
+            <stop offset=".38" stop-color="#fff" stop-opacity=".04"/>
+            <stop offset=".7" stop-color="#000" stop-opacity=".1"/>
+            <stop offset=".93" stop-color="#000" stop-opacity=".38"/>
+            <stop offset="1" stop-color="#000" stop-opacity=".2"/>
           </linearGradient>
+          <linearGradient id="handle-shade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".18"/>
+            <stop offset=".5" stop-color="#000" stop-opacity="0"/>
+            <stop offset="1" stop-color="#000" stop-opacity=".35"/>
+          </linearGradient>
+          <!-- men đọng dày, sẫm hơn ở mép giọt -->
+          <linearGradient id="glaze-pool" x1="0" y1="-700" x2="0" y2="80" gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:color-mix(in oklab, var(--glaze), #fff 8%)"/>
+            <stop offset=".86" style="stop-color:var(--glaze)"/>
+            <stop offset=".95" style="stop-color:color-mix(in oklab, var(--glaze), #000 38%)"/>
+            <stop offset="1" style="stop-color:color-mix(in oklab, var(--glaze), #000 45%)"/>
+          </linearGradient>
+          <radialGradient id="inside" cx=".5" cy=".85" r=".7">
+            <stop offset="0" style="stop-color:var(--cup-inside)"/>
+            <stop offset="1" style="stop-color:color-mix(in oklab, var(--cup-inside), #000 45%)"/>
+          </radialGradient>
+          <radialGradient id="wheel-light" cx=".42" cy=".4" r=".6">
+            <stop offset="0" stop-color="#fff" stop-opacity=".16"/>
+            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="grain" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="5"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 .2  0 0 0 0 .14  0 0 0 0 .08  0 0 0 -1.6 1.05"/>
+          </filter>
+          <filter id="blur6" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+          <filter id="blur3" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="3"/></filter>
         </defs>
-        <ellipse cx="200" cy="452" rx="196" ry="26" fill="#000" opacity=".12"/>
+        <ellipse cx="200" cy="456" rx="196" ry="24" fill="#000" opacity=".16" filter="url(#blur6)"/>
         <path d="M24 420 V436 A176 36 0 0 0 376 436 V420 Z" style="fill:var(--wheel)"/>
         <ellipse cx="200" cy="420" rx="176" ry="36" style="fill:var(--wheel-top)"/>
+        <ellipse cx="200" cy="420" rx="176" ry="36" fill="url(#wheel-light)"/>
+        <ellipse cx="200" cy="421" rx="175" ry="35" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="1.5"/>
         <g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2" stroke-linecap="round">
           <ellipse class="spin" cx="200" cy="420" rx="152" ry="30" stroke-dasharray="64 30"/>
           <ellipse class="spin" cx="200" cy="420" rx="118" ry="23" stroke-dasharray="40 22"/>
         </g>
+        <ellipse cx="214" cy="402" rx="96" ry="13" fill="#000" opacity=".45" filter="url(#blur6)"/>
         <g class="clay">
           <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z" style="fill:var(--clay-body)"/>
           <path d="M108 148 C104 250 112 352 140 396 Q200 412 260 396 C288 352 296 250 292 148 Z" style="fill:var(--clay-body)"/>
@@ -80,13 +114,18 @@
           </g>
         </g>
         <g clip-path="url(#cup-clip)">
+          <rect x="100" y="120" width="290" height="300" filter="url(#grain)" opacity=".55"/>
+          <g fill="#3b2a1e" opacity=".4"><circle cx="169.0" cy="195.0" r="0.9"/><circle cx="124.7" cy="284.3" r="1.3"/><circle cx="214.6" cy="371.1" r="1.1"/><circle cx="118.6" cy="260.6" r="0.9"/><circle cx="154.4" cy="287.8" r="0.9"/><circle cx="257.5" cy="188.7" r="1.1"/><circle cx="223.0" cy="295.3" r="0.9"/><circle cx="213.6" cy="252.0" r="1.1"/><circle cx="120.2" cy="359.2" r="1.3"/><circle cx="185.8" cy="285.4" r="2.1"/><circle cx="166.3" cy="349.3" r="1.1"/><circle cx="130.1" cy="292.5" r="1.1"/><circle cx="177.5" cy="287.1" r="0.9"/><circle cx="211.3" cy="303.6" r="1.6"/><circle cx="231.8" cy="259.2" r="1.3"/><circle cx="193.9" cy="374.2" r="1.3"/><circle cx="164.8" cy="344.3" r="1.1"/><circle cx="126.4" cy="229.7" r="1.6"/><circle cx="266.0" cy="329.2" r="1.3"/><circle cx="219.2" cy="177.0" r="2.1"/><circle cx="185.6" cy="335.7" r="1.1"/><circle cx="276.3" cy="257.8" r="0.9"/><circle cx="246.6" cy="292.9" r="1.3"/><circle cx="171.9" cy="241.2" r="1.6"/><circle cx="214.1" cy="265.8" r="0.9"/><circle cx="278.3" cy="270.0" r="0.9"/><circle cx="122.7" cy="322.7" r="2.1"/><circle cx="286.8" cy="350.7" r="1.3"/><circle cx="238.1" cy="365.8" r="1.3"/><circle cx="116.0" cy="267.1" r="1.1"/><circle cx="219.5" cy="274.5" r="1.1"/><circle cx="247.2" cy="190.0" r="1.1"/><circle cx="182.0" cy="372.7" r="1.6"/><circle cx="126.2" cy="264.2" r="2.1"/><circle cx="160.9" cy="191.8" r="1.6"/><circle cx="264.1" cy="224.6" r="1.6"/><circle cx="285.6" cy="318.4" r="1.6"/><circle cx="280.6" cy="195.0" r="1.1"/><circle cx="138.6" cy="312.8" r="0.9"/><circle cx="197.4" cy="296.7" r="1.3"/><circle cx="161.6" cy="193.8" r="2.1"/><circle cx="177.0" cy="291.4" r="1.1"/><circle cx="233.5" cy="279.6" r="2.1"/><circle cx="227.3" cy="331.6" r="1.6"/><circle cx="270.3" cy="341.0" r="2.1"/><circle cx="181.1" cy="252.6" r="0.9"/></g>
           <g id="glaze" transform="translate(0 300)">
-            <path d="M0 -700 H400 V0 Q386.5 4 373 0 C359.7 0 359 11 357.9 37 A7 7 0 0 1 346.1 37 C345 11 344.3 0 331 0 Q320.5 4 310 0 C294.8 0 294 20.5 292.8 74 A8 8 0 0 1 279.2 74 C278 20.5 277.2 0 262 0 Q246 4 230 0 C218.6 0 218 6 217.1 18 A6 6 0 0 1 206.9 18 C206 6 205.4 0 194 0 Q181.5 4 169 0 C151.9 0 151 16.5 149.7 57 A9 9 0 0 1 134.3 57 C133 16.5 132.1 0 115 0 Q103 4 91 0 C77.7 0 77 7.5 76 23 A7 7 0 0 1 64 23 C63 7.5 62.3 0 49 0 Q24.5 4 0 0 Z" style="fill:var(--glaze)"/>
+            <path d="M0 -700 H400 V0 Q386.5 4 373 0 C359.7 0 359 11 357.9 37 A7 7 0 0 1 346.1 37 C345 11 344.3 0 331 0 Q320.5 4 310 0 C294.8 0 294 20.5 292.8 74 A8 8 0 0 1 279.2 74 C278 20.5 277.2 0 262 0 Q246 4 230 0 C218.6 0 218 6 217.1 18 A6 6 0 0 1 206.9 18 C206 6 205.4 0 194 0 Q181.5 4 169 0 C151.9 0 151 16.5 149.7 57 A9 9 0 0 1 134.3 57 C133 16.5 132.1 0 115 0 Q103 4 91 0 C77.7 0 77 7.5 76 23 A7 7 0 0 1 64 23 C63 7.5 62.3 0 49 0 Q24.5 4 0 0 Z" fill="url(#glaze-pool)"/>
           </g>
-          <rect x="0" y="100" width="400" height="320" fill="url(#cup-shade)"/>
-          <rect x="132" y="150" width="10" height="230" rx="5" fill="#fff" opacity=".22"/>
+          <rect x="100" y="100" width="200" height="320" fill="url(#cup-shade)"/>
+          <path d="M286 192 C374 186 382 334 278 330 L280 304 C348 306 348 218 288 218 Z" fill="url(#handle-shade)"/>
+          <rect x="130" y="160" width="16" height="140" rx="8" fill="#fff" style="opacity:calc(var(--g) * .3)" filter="url(#blur3)"/>
+          <rect x="136" y="172" width="4" height="110" rx="2" fill="#fff" style="opacity:calc(var(--g) * .5)"/>
         </g>
-        <ellipse cx="200" cy="150" rx="78" ry="14" style="fill:var(--cup-inside)"/>
+        <ellipse cx="200" cy="148" rx="91" ry="19.5" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2.5"/>
+        <ellipse cx="200" cy="150" rx="78" ry="14" fill="url(#inside)"/>
       </svg>
     </div>
   </section>
