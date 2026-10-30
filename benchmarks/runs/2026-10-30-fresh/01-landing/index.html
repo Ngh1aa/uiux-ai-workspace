@@ -79,22 +79,22 @@
   .kv strong { display: block; font-weight: 600; }
 
   /* Steps as growing wheels */
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: end; }
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: end; }
   .step { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
-  .wheel { --s: 56px; width: var(--s); height: var(--s); display: grid; place-items: center; border-radius: 50%; border: 1.75px solid var(--ds-text-brand); color: var(--ds-text-brand); background: var(--ds-surface-raised); box-shadow: 0 0 0 6px var(--ds-surface-page), 0 0 0 7px var(--dn-ring), 0 0 0 13px var(--ds-surface-page), 0 0 0 14px var(--dn-ring); font: 600 22px/1 var(--app-font-display); margin: 16px; }
-  .step:nth-child(2) .wheel { --s: 68px; font-size: 26px; }
-  .step:nth-child(3) .wheel { --s: 80px; font-size: 30px; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); border-color: var(--ds-surface-brand-strong); }
-  .step h3 { font-size: 16px; font-weight: 600; line-height: 1.4; }
+  .wheel { --s: 56px; width: var(--s); height: var(--s); display: grid; place-items: center; border-radius: 50%; border: 1.75px solid var(--ds-text-brand); color: var(--ds-text-brand); background: var(--ds-surface-raised); box-shadow: 0 0 0 6px var(--ds-surface-page), 0 0 0 7px var(--dn-ring), 0 0 0 13px var(--ds-surface-page), 0 0 0 14px var(--dn-ring); font: 600 22px/1 var(--app-font-display); margin: 14px 0; }
+  .step:nth-child(2) .wheel { --s: 64px; font-size: 26px; }
+  .step:nth-child(3) .wheel { --s: 72px; font-size: 30px; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); border-color: var(--ds-surface-brand-strong); }
+  .step h3 { font-size: 16px; font-weight: 600; line-height: 1.4; text-wrap: balance; }
   @media (min-width: 840px) { .step h3 { font-size: 18px; } }
 
   /* FAQ */
   .faq details { border-top: 1px solid var(--ds-border-subtle); }
   .faq details:first-child { border-top: 0; }
-  .faq summary { display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 56px; padding-block: 12px; cursor: pointer; font-weight: 600; list-style: none; }
+  .faq summary { text-wrap: pretty; display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 56px; padding-block: 12px; cursor: pointer; font-weight: 600; list-style: none; }
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary .ds-icon { transition: transform 150ms ease; color: var(--ds-text-secondary); }
   .faq details[open] summary .ds-icon { transform: rotate(180deg); }
-  .faq details p { padding-bottom: 16px; color: var(--ds-text-secondary); }
+  .faq details p { padding-bottom: 16px; color: var(--ds-text-secondary); text-wrap: pretty; }
 
   /* Featured CTA card */
   .cta { position: relative; overflow: hidden; display: grid; gap: 24px; padding: 28px 24px; border-radius: 14px; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
@@ -196,7 +196,6 @@
   <section class="wrap hero" aria-labelledby="hero-title">
     <div>
       <h1 id="hero-title">Ba tiếng, một khối đất, một chiếc cốc của riêng bạn.</h1>
-      <p class="lead">Lớp làm gốm cuối tuần cho người mới ở 24 Hàng Chiếu, Hà Nội.</p>
       <ul class="facts">
         <li><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Thứ Bảy và Chủ nhật</li>
         <li><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg>9:00 và 14:00</li>
