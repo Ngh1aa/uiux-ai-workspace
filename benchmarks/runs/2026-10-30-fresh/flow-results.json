@@ -44,7 +44,7 @@
       "browser_status": "PASS",
       "scenarios": [
         {
-          "name": "Lịch của tôi: tab Đã qua hiện trạng thái rỗng gọn, bên dưới là sân còn khung tối nay",
+          "name": "Lịch của tôi: tab Đã qua hiện trạng thái rỗng có nút Tìm sân",
           "status": "PASS"
         },
         {
@@ -68,7 +68,7 @@
           "status": "PASS"
         },
         {
-          "name": "Chạm 21:00 trên thẻ Sân Kỳ Hoà (dưới trạng thái rỗng Đã qua) → Chi tiết đúng sân, khung chọn sẵn; Back về Lịch của tôi",
+          "name": "Chạm 21:00 trên thẻ Sân Kỳ Hoà ở Tìm sân → Chi tiết đúng sân, khung chọn sẵn; Back về Tìm sân",
           "status": "PASS"
         },
         {
