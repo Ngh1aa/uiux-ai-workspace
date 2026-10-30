@@ -69,6 +69,9 @@ file này, do chủ repo duyệt.
 - Một khái niệm một thuật ngữ. Nhãn nút tối đa 3 từ, động từ + đối tượng, cùng nhãn trên nút, tiêu đề sheet
   xác nhận và nút xác nhận; tên quen thuộc ("Hủy", không "Rút đề xuất"). Ngày luôn kèm thứ hoặc ngày tháng.
 - Không xuống dòng vô cớ; không thu nhỏ chữ để che lỗi layout.
+- **Một trang một họ chữ.** Không chêm một từ nghiêng khác họ hay chữ viết tay vào tiêu đề.
+- **Từ ngữ thường ngày:** tiêu đề section dùng đúng chữ ở menu; nhãn quen thuộc ("Ngày học", "Học phí");
+  không câu văn mẫu kiểu quảng cáo hay "Hẹn bạn ở…".
 
 ## Khi soát bản mẫu
 

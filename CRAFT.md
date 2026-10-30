@@ -27,7 +27,8 @@ Một điểm táo bạo là đủ. Cả trang cùng gào thì không chỗ nào
 
 ## 2. Danh sách cấm: các mặc định làm thiết kế trông như AI làm
 
-Mỗi dòng là mặc định cần tránh. Chỉ giữ khi brief, design system của khách hoặc nền tảng yêu cầu rõ;
+Mỗi dòng là mặc định cần tránh. Chỉ giữ khi brief, design system của khách, nền tảng yêu cầu rõ, hoặc chủ repo
+chọn một trang mẫu trong [owner-picks](foundations/owner-picks.md) có đúng kiểu đó;
 ghi lý do trong phần bàn giao. Dòng có đánh dấu **(TASTE)** là quy tắc của chủ repo, không có ngoại lệ
 ngoài brief. Không đổi font, màu hay cấu trúc chỉ để né checklist.
 

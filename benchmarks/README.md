@@ -10,6 +10,7 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 | [03 Dashboard kho shop len](briefs/03-dashboard.md) | Trang quản trị | M |
 | [04 Web app phòng khám, ba vai trò](briefs/04-multi-role.md) | Web app desktop 4 màn | L |
 | [05 App sổ liên lạc iOS và Android](briefs/05-native.md) | App native 4 màn × 2 nền tảng | L |
+| [06 Landing homestay có ảnh thật](briefs/06-landing-photo.md) | Website một trang, ảnh thật | M |
 
 ## Quy tắc
 
