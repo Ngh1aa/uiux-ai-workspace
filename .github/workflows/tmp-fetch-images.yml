@@ -1,0 +1,41 @@
+name: tmp-fetch-images
+on:
+  push:
+    branches: [claude/landing-theo-trang-mau]
+    paths: [.github/workflows/tmp-fetch-images.yml]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: claude/landing-theo-trang-mau }
+      - name: Tải ảnh Unsplash cho trial landing
+        run: |
+          set -e
+          D=benchmarks/trials/2026-10-30-landing-owner-picks/01-landing/img
+          mkdir -p $D
+          get() { curl -fsSL "https://images.unsplash.com/photo-$1?auto=format&fm=jpg&fit=crop&w=$2&h=$3&q=$4" -o "$D/$5"; }
+          get 1764507768733-667e135d8cb9 1920 1080 72 hero-1920.jpg
+          get 1764507768733-667e135d8cb9 960 540 72 hero-960.jpg
+          get 1590605095243-072811dbe64c 800 1000 72 ban-xoay-800.jpg
+          get 1590605095243-072811dbe64c 400 500 72 ban-xoay-400.jpg
+          get 1771523350747-638a89667c8f 800 1000 72 nan-tay-800.jpg
+          get 1771523350747-638a89667c8f 400 500 72 nan-tay-400.jpg
+          get 1673339065013-f8411fb93848 800 1000 72 trang-men-800.jpg
+          get 1673339065013-f8411fb93848 400 500 72 trang-men-400.jpg
+          get 1507022787381-b30170b5ebf4 720 960 72 lam-quen-720.jpg
+          get 1507022787381-b30170b5ebf4 360 480 72 lam-quen-360.jpg
+          get 1607556671927-78a6605e290b 720 960 72 tao-hinh-720.jpg
+          get 1607556671927-78a6605e290b 360 480 72 tao-hinh-360.jpg
+          get 1771523351104-03d9c2cc347c 720 960 72 chon-men-720.jpg
+          get 1771523351104-03d9c2cc347c 360 480 72 chon-men-360.jpg
+          ls -la $D
+      - name: Commit ảnh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add benchmarks/trials/2026-10-30-landing-owner-picks/01-landing/img
+          git commit -m "Thêm ảnh Unsplash cho trial landing (tải bằng workflow tạm)"
+          git push
