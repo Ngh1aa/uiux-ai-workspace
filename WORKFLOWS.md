@@ -66,6 +66,8 @@ ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rational
 Đường đọc trước khi dựng: START-HERE → AGENTS → TASTE → CRAFT → [FLOW](FLOW.md) → trang này →
 bốn SKILL.md dưới đây. Reference, pattern và nền tảng chỉ mở đúng phần cần khi quyết định phát sinh.
 Không đọc cả craft standards, PATTERNS hay thư viện pattern như điều kiện khởi đầu.
+Website hoặc landing: đọc thêm [`owner-picks.md`](foundations/owner-picks.md) mục 5–6 (hỏi chủ repo về ảnh và
+trang mẫu trước khi dựng) và lấy chuyển động từ [`motion-recipes`](foundations/motion-recipes/index.html).
 Đo cùng đơn vị tách whitespace bằng `python scripts/reading-paths.py`; số trước/sau kèm file thực đọc.
 
 
