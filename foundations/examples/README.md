@@ -1,6 +1,7 @@
 # Ví dụ Sai và Đúng
 
-Mỗi mục là một cặp màn nhỏ cho một nguyên tắc trong `foundations/` hoặc một quy tắc trong
+Mỗi mục là một cặp màn nhỏ, mỗi cặp một lĩnh vực khác nhau (bán hàng, giao hàng, bài viết, lịch hẹn, hoá đơn,
+hỗ trợ khách hàng, ngân hàng, phòng khám), cho một nguyên tắc trong `foundations/` hoặc một quy tắc trong
 [`TASTE.md`](../../TASTE.md). Nhìn ảnh trước, đọc chữ sau. Nguồn: [`index.html`](index.html); chụp lại bằng
 `NODE_PATH=<thư mục có playwright> node foundations/examples/capture.cjs`.
 
@@ -14,7 +15,7 @@ Màn bên "Sai" cố tình vi phạm, nên trang này không chạy qua `taste-c
 | C | Chữ tiếng Việt cần khoảng dòng | [typography-vietnamese](../typography-vietnamese.md) |
 | D | Khoảng trắng bị động; card danh sách sát đệm | [layout-and-density](../layout-and-density.md) |
 | E | Không dòng giải thích phụ | TASTE "Chữ trên màn" |
-| F | Trạng thái bằng chữ; học sinh có avatar, tên, mã | TASTE "Card" |
+| F | Trạng thái bằng chữ, không bằng thanh màu trái | TASTE "Card" |
 | G | Thanh điều hướng dạng viên | [illustration-and-imagery](../illustration-and-imagery.md), TASTE |
 | H | Màn kết quả dùng chung một khuôn | TASTE "Luồng và hành động" |
 | I | Ba nhóm màu là đủ | [color-oklch](../color-oklch.md) |
@@ -36,7 +37,7 @@ Nhãn sát ô của nó (6 px), giữa các ô trong nhóm 16 px, giữa hai nh�
 
 ![Khoảng dòng 1,2 và chữ in hoa so với khoảng dòng 1,6](img/c.png)
 
-Ở 1,2 dấu chồng ("Ữ", "Ể") chạm dòng trên; chữ in hoa làm tiêu đề cao và khó đọc. Thân 1,6, tiêu đề chữ thường 1,3.
+Ở 1,2 dấu chồng ("Ướ", "Ổ") chạm dòng trên; chữ in hoa làm tiêu đề cao và khó đọc. Thân 1,6, tiêu đề chữ thường 1,3.
 
 ## D. Khoảng trắng bị động
 
@@ -55,8 +56,7 @@ Bỏ "Cập nhật lúc…", "Bấm vào thẻ để…" và chú giải. Cả t
 
 ![Thanh màu trái so với chip trạng thái có chữ](img/f.png)
 
-Thanh màu trái bắt người dùng nhớ nghĩa từng màu. Chip có chữ ("Nghỉ 3 buổi") nói luôn. Học sinh luôn có avatar,
-tên và mã cùng nhau.
+Thanh màu trái bắt người dùng nhớ nghĩa từng màu. Chip có chữ ("Quá hạn 2 ngày") nói luôn.
 
 ## G. Thanh điều hướng dạng viên
 
