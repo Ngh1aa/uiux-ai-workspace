@@ -98,7 +98,8 @@ textarea.ios-input { min-height: 104px; padding: 11px 0; resize: none; line-heig
 .ios textarea.ios-input { height: auto; }
 .who { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
 .who__name { margin: 0; font: var(--ds-font-weight-bold) 24px/30px var(--app-font-display); letter-spacing: -0.01em; }
-.who .meta { margin: 0; }
+.who > div { min-width: 0; }
+.who__name, .who .meta { margin: 0; overflow-wrap: anywhere; }
 .work { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 12px 16px; border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
 .work__ic { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: var(--ds-shape-control); background: var(--ds-surface-sunken); color: var(--ds-text-secondary); }
 .work b { display: block; font-size: 16px; line-height: 22px; font-weight: var(--ds-font-weight-semibold); }

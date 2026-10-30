@@ -1,0 +1,444 @@
+{
+  "errorCount": 1,
+  "warningCount": 0,
+  "axe": "NOT_RUN",
+  "results": [
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 1024,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 1024,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/05-native/index.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "iOS Hôm nay (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Chi tiết bài tập (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "iOS Xin nghỉ (reflow 320 px)",
+          "errors": [
+            {
+              "rule": "reflow",
+              "message": "Nội dung tràn ngang 7px: div.ios-sheet \"HủyXin nghỉ GHTrần Gia HânLớp 2/3, gửi c\""
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "iOS Hủy đơn (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Chi tiết bài tập (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Xin nghỉ (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Android Hủy đơn (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "errorCount": 0,
+  "warningCount": 0,
+  "axe": "NOT_RUN",
+  "results": [
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 1024,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 1024,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Trang chủ",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "/home/claude/uiux-ai-workspace/benchmarks/runs/2026-10-30-fresh/02-app/index.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "Trang chủ (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Danh sách sân (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Chi tiết sân (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Đặt sân (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "Lịch của tôi (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}
