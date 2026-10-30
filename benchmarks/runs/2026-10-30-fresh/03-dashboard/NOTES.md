@@ -28,8 +28,8 @@ Lưới và mật độ:        390: 1 cột, bảng chuyển thành dòng xếp
                        biểu đồ trải hết hàng cuối để không có mảng trống
 Card nổi bật:          nhãn "Đơn chờ gửi"; số chính 14; ngữ cảnh: "Gửi trước: #2041 chị Hà" + 3 chỉ số
                        (quá hạn gửi, cần nhập gấp, sắp hết hàng)
-Một điểm táo bạo:      đường khâu nét đứt chạy quanh mép trong card nổi bật (outline dashed, cách mép 8px,
-                       chữ cách đường khâu 16px nên không đè chữ) + số 14 serif lớn
+Một điểm táo bạo:      đường khâu nét đứt quanh mép trong card nổi bật (outline dashed, outline-offset -8px,
+                       nằm ngoài vùng chữ) + số 14 serif lớn
 Ba điểm khác starter:  1. màu dâu tằm thay navy, nền trung tính hơi tím 2. tiêu đề và số serif (Source Serif 4)
                        3. bo 12px thay 24px, card có viền mảnh, hoạ tiết đường khâu
 Đã đối chiếu mục 2:    tránh nền kem + đất nung (dùng dâu tằm trên nền xám tím); không eyebrow IN HOA;
@@ -39,7 +39,7 @@ Ba điểm khác starter:  1. màu dâu tằm thay navy, nền trung tính hơi 
 
 ## Quyết định dataviz
 
-- Cột dọc, 7 kỳ rời rạc, trục giá trị bắt đầu từ 0 (chiều cao cột = giá trị / 4.500).
+- Cột dọc, 7 kỳ rời rạc, trục giá trị bắt đầu từ 0 (chiều cao cột = giá trị / 5.000 của vùng cột).
 - Một chuỗi, một màu, nhãn giá trị trên đầu cột nên không cần chú giải hay lưới (lưới bỏ để không đè chữ).
 - Đơn vị "nghìn đồng" trong tiêu đề; tổng 18.550 cạnh tiêu đề. Nhãn ngày kèm thứ và ngày tháng.
 - Biểu đồ là danh sách `<ol>` có chữ thật (thứ, ngày, giá trị) nên trình đọc màn hình đọc được, không cần bảng ẩn.
@@ -63,9 +63,15 @@ Ba điểm khác starter:  1. màu dâu tằm thay navy, nền trung tính hơi 
 Toàn bộ số liệu lấy đúng từ đề (dữ liệu minh hoạ, không phải shop thật). Ngày hôm nay giả định Thứ Sáu 30/10/2026;
 7 ngày qua là T6 23/10 đến T5 29/10. Đơn vị "bán mỗi ngày" (cuộn/cây) suy từ cột "Còn".
 
-## Kiểm
+## Kiểm (2026-10-30, Chromium headless có sẵn ở /opt/pw-browsers)
 
-- static-check, flow-check (prototype): xem báo cáo cuối.
-- scenarios.cjs: viết cho Playwright, máy này không có trình duyệt nên CHƯA CHẠY (UNKNOWN).
-- Render 390/1280, sáng/tối: UNKNOWN (không có trình duyệt). check-brand.py: xem báo cáo.
-- Icon: bộ `design-system/components/icons.svg`, nhúng bằng inline-icons.py.
+- static-check: ĐẠT, 0 lỗi 0 cảnh báo.
+- flow-check --mode prototype: tĩnh PASS, 0 FAIL, 0 WARN; còn UNKNOWN runtime (đã kiểm bằng scenarios).
+- check-brand.py brand.css: ĐẠT.
+- taste-check --layout strict (390/1280, sáng/tối): 0 lỗi, 2 cảnh báo giữ lại: tên "Len cotton màu hồng đất"
+  xuống dòng ở 390px cạnh chip đủ bán (tên sản phẩm dài thật, không cắt chữ).
+  Đã sửa trước đó: hoạ tiết ::after bị báo đè chữ → đổi thành outline; nhãn chỉ số trong card nổi bật xuống dòng ở 390 → xếp dọc.
+- scenarios.cjs: 9/9 PASS ở 1280×900 (chạy bằng script tạm ngoài repo), không lỗi JS.
+- Đã nhìn ảnh 1280 và 390, sáng và tối, hộp thoại Ghi nhập hàng, trạng thái sau khi gửi hết đơn. Không cuộn ngang ở cả hai cỡ.
+- Chưa kiểm: axe-core (không cài), trình đọc màn hình thật, thiết bị thật, người dùng thật.
+- Dashboard gate: FAIL có chủ ý ở "last-updated/nguồn" (TASTE cấm dòng cập nhật/nguồn) và trạng thái tải/lỗi từng panel (không backend).
