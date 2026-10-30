@@ -16,85 +16,85 @@
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 219,
+          "line": 222,
           "message": "“Tất cả”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 220,
+          "line": 223,
           "message": "“Phú Nhuận”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 221,
+          "line": 224,
           "message": "“Quận 10”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 222,
+          "line": 225,
           "message": "“Quận 1”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 228,
+          "line": 231,
           "message": "“Xóa tìm kiếm”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 246,
+          "line": 249,
           "message": "“Quay lại”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 266,
+          "line": 269,
           "message": "“Quay lại”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 289,
+          "line": 292,
           "message": "“Bớt một người”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 291,
+          "line": 294,
           "message": "“Thêm một người”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 321,
+          "line": 324,
           "message": "“Đóng”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 334,
+          "line": 337,
           "message": "“Hủy”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "no-result",
           "status": "UNKNOWN",
-          "line": 335,
+          "line": 338,
           "message": "Cần bấm xác nhận và kiểm tra phản hồi, dữ liệu cùng đường khôi phục."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 353,
+          "line": 356,
           "message": "“Sắp tới”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {
           "rule": "dead-link",
           "status": "UNKNOWN",
-          "line": 354,
+          "line": 357,
           "message": "“Đã qua”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
         },
         {

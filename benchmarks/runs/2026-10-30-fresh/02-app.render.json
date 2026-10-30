@@ -1,6 +1,6 @@
 {
   "errorCount": 0,
-  "warningCount": 0,
+  "warningCount": 8,
   "axe": "NOT_RUN",
   "results": [
     {
@@ -32,7 +32,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 489px cách đầu màn 323px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
@@ -65,7 +70,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 489px cách đầu màn 323px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
@@ -98,7 +108,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
@@ -131,7 +146,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
@@ -164,7 +184,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
@@ -197,7 +222,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
@@ -230,7 +260,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
@@ -263,7 +298,12 @@
         {
           "name": "Lịch của tôi",
           "errors": [],
-          "warnings": []
+          "warnings": [
+            {
+              "rule": "void",
+              "message": "Khoảng trống 431px cách đầu màn 324px (ngưỡng 160px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
+            }
+          ]
         }
       ]
     },
