@@ -11,6 +11,7 @@ Repo giúp thiết kế website/app đúng tác vụ, thương hiệu và chất
 5. Soát source, render và hành vi riêng. Mở ảnh mobile/desktop sáng/tối, sửa rồi kiểm lại.
 6. Giao ngắn: thay đổi, kiểm tra, bằng chứng, giới hạn. Chưa kiểm ghi `UNKNOWN`, không suy PASS.
 
+Chỉ dùng để thiết kế thì clone gọn theo lệnh trong [README](README.md) (bỏ ảnh benchmark).
 Checker, fallback khi thiếu trình duyệt và UTF-8 Windows nằm trong
 [README công cụ QA](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md).
 Chuẩn hành vi và mẫu ghi kết quả ở [FLOW.md](FLOW.md); rubric không thay thế kiểm luồng.
