@@ -8,7 +8,7 @@
   Agent điều phối soát lại ảnh, quay video, rồi sửa ba điểm yếu chủ repo chỉ ra: cốc có khối và chất liệu,
   bố cục "Một buổi học" không còn góc trống, cuộn mượt cho chuột (vòng 4 trong NOTES).
 - **Vòng 5:** chủ repo chê chữ, ảnh, màu; chọn cho dùng ảnh và hướng DOD / Wedding. Trang được làm lại phần chữ,
-  màu, ảnh; chuyển động giữ. Chi tiết ở NOTES, mục "Vòng 5".
+  màu, ảnh; chuyển động giữ. Vòng 6: một họ chữ, từ ngữ thường ngày. Chi tiết ở NOTES, mục "Vòng 5" và "Vòng 6".
 - Chấm: `agent-heuristic`, chưa có người duyệt độc lập. **Hướng thị giác: `CHƯA DUYỆT`** cho tới khi chủ repo xem.
 
 ## Thay đổi so với lượt trước (vòng 5)
@@ -17,7 +17,7 @@
 |---|---|---|
 | Tham chiếu | Starter kit | DOD và Wedding trong owner-picks (chủ repo chọn) |
 | Ảnh | Không (đề cấm) | 7 ảnh thật, ảnh rộng đầu trang và khung vòm như miệng lò nung |
-| Chữ | Có chân ~40 px | Không chân hình học 124 px; một từ nghiêng có chân mỗi tiêu đề lớn |
+| Chữ | Có chân ~40 px | Một họ không chân hình học cho cả trang, tiêu đề 124 px (vòng 6 bỏ chữ nghiêng chêm vào) |
 | Màu | Xanh men ngọc trầm, nhiều card viền | Trắng ngà, mực, một màu đất nung |
 | Chuyển động | Không | Chữ trồi từng dòng; ảnh đầu trang nở theo cuộn; ảnh vòm hiện từ dưới lên; cuộn mượt cho chuột |
 

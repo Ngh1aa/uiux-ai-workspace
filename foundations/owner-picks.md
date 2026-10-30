@@ -23,7 +23,8 @@ trang. Lấy nguyên tắc và con số. Bản dựng lại các chuyển độn
 
 1. **Ít màu.** Đen trắng hoặc trung tính ấm, cộng tối đa một màu nhấn. Màu đến từ ảnh.
 2. **Một họ chữ, chênh cỡ rất lớn.** Tiêu đề 56–120 px, khoảng dòng 0,85–1,0, giãn chữ âm nhẹ. Chữ thường 12–16 px.
-   Muốn thêm họ thứ hai thì chỉ cho một vai: chữ có chân cho câu tuyên bố, chữ viết tay cho một từ.
+   Cả trang một họ chữ. Không chêm một từ nghiêng có chân hay chữ viết tay vào tiêu đề: chủ repo thấy "font
+   khác nhau" và "AI" (vòng 6 của [thử lại đề 01](../benchmarks/trials/2026-10-30-landing-owner-picks/README.md)).
 3. **Ảnh thật là nhân vật chính.** Ảnh tràn màn hoặc đặt lệch, ít card, ít viền, bo góc 0–6 px hoặc nút viên.
 4. **Một ý tưởng của ngành thành tương tác:** đèn theo giờ, chữ logo tự xếp lại, chữ dọc kiểu in ấn, ảnh trại nở ra.
    Đây là "chữ ký thị giác" trong [`composition.md`](composition.md) §2, và là thứ các lượt benchmark còn thiếu.

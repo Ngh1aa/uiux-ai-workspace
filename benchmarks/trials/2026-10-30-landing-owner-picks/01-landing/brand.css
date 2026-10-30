@@ -1,6 +1,6 @@
 /* Đất Nung, vòng 5: theo DOD và Wedding (chủ repo chọn).
-   Trắng ngà, mực đen, một màu đất nung. Một họ chữ không chân hình học (Plus Jakarta Sans),
-   một chữ nghiêng có chân cho đúng một từ mỗi tiêu đề lớn (Cormorant Garamond). Ảnh thật là nhân vật chính;
+   Trắng ngà, mực đen, một màu đất nung. Cả trang một họ chữ (Plus Jakarta Sans), không chêm chữ nghiêng
+   hay chữ khác họ. Ảnh thật là nhân vật chính;
    ảnh trong khung vòm như miệng lò nung. */
 
 @font-face { font-family: "Jakarta"; font-weight: 400; font-display: swap; src: url(fonts/plus-jakarta-sans-vietnamese-400-normal.woff2) format("woff2"); unicode-range: U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB; }
@@ -11,13 +11,10 @@
 @font-face { font-family: "Jakarta"; font-weight: 600; font-display: swap; src: url(fonts/plus-jakarta-sans-latin-600-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 @font-face { font-family: "Jakarta"; font-weight: 700; font-display: swap; src: url(fonts/plus-jakarta-sans-vietnamese-700-normal.woff2) format("woff2"); unicode-range: U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB; }
 @font-face { font-family: "Jakarta"; font-weight: 700; font-display: swap; src: url(fonts/plus-jakarta-sans-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-@font-face { font-family: "Cormorant"; font-style: italic; font-weight: 500; font-display: swap; src: url(fonts/cormorant-garamond-vietnamese-500-italic.woff2) format("woff2"); unicode-range: U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB; }
-@font-face { font-family: "Cormorant"; font-style: italic; font-weight: 500; font-display: swap; src: url(fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 
 :root {
   color-scheme: light dark;
   --sans: "Jakarta", "Be Vietnam Pro", system-ui, sans-serif;
-  --accent-font: "Cormorant", Georgia, serif;
   /* Màu theo vai trò */
   --bg: #f8f6f2;          /* trắng ngà */
   --surface: #efebe4;     /* nền khối ảnh, ô chọn */
@@ -25,6 +22,7 @@
   --muted: #6b655e;
   --line: #ddd7ce;
   --accent: #b9441f;      /* đất nung */
+  --accent-ink: #b9441f;  /* chữ màu nhấn trên nền trang */
   --accent-hover: #a23a19;
   --on-accent: #fffaf5;
   --result: #c14a25;      /* thẻ kết quả: sáng hơn nút chính một chút */
@@ -37,7 +35,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #161412; --surface: #221f1c; --ink: #f2ede6; --muted: #a8a097; --line: #36312c;
-    --accent: #b5461f; --accent-hover: #c2502a; --on-accent: #fffaf5; --result: #bd4c26; --focus: #f2ede6;
+    --accent: #b5461f; --accent-ink: #ec8f68; --accent-hover: #c2502a; --on-accent: #fffaf5; --result: #bd4c26; --focus: #f2ede6;
   }
 }
 
@@ -51,16 +49,13 @@ button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .num { font-variant-numeric: tabular-nums; }
-em { font-family: var(--accent-font); font-style: italic; font-weight: 500; letter-spacing: -.01em; }
 
 .wrap { width: min(100% - 40px, 1280px); margin-inline: auto; }
 @media (min-width: 840px) { .wrap { width: min(100% - 80px, 1280px); } }
 
 .label { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .display { font-weight: 600; font-size: clamp(46px, 8.4vw, 124px); line-height: .98; letter-spacing: -.045em; }
-.display em { font-size: 1.08em; letter-spacing: -.02em; }
 .h2 { font-weight: 600; font-size: clamp(38px, 5.4vw, 76px); line-height: 1.02; letter-spacing: -.04em; }
-.h2 em { font-size: 1.1em; }
 
 /* Nút */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 52px; padding: 0 28px; border: 0; border-radius: 999px; font-weight: 600; font-size: 16px; text-decoration: none; cursor: pointer; transition: background-color 300ms var(--ease-ui), transform 300ms var(--ease-ui), box-shadow 300ms var(--ease-ui); }
@@ -94,7 +89,7 @@ em { font-family: var(--accent-font); font-style: italic; font-weight: 500; lett
 .facts { display: flex; flex-wrap: wrap; gap: 16px 28px; }
 .facts div { display: grid; gap: 2px; }
 .facts strong { font-weight: 600; font-size: 17px; line-height: 1.35; white-space: nowrap; }
-.booked { font-weight: 700; color: var(--accent); }
+.booked { font-weight: 700; color: var(--accent-ink); }
 .booked:empty { display: none; }
 @media (min-width: 900px) {
   .hero-text { grid-template-columns: 1fr auto; align-items: end; gap: 48px; }
@@ -138,7 +133,7 @@ section { scroll-margin-top: 24px; }
 .steps { list-style: none; padding: 0; display: grid; gap: 48px; }
 .step { display: grid; gap: 16px; }
 .step .arch { aspect-ratio: 3 / 4; }
-.step-n { font-family: var(--accent-font); font-style: italic; font-weight: 500; font-size: 30px; line-height: 1; color: var(--accent); }
+.step-n { font-weight: 600; font-size: 15px; letter-spacing: .04em; line-height: 1; color: var(--accent-ink); }
 .step h3 { font-weight: 600; font-size: clamp(24px, 2.2vw, 30px); line-height: 1.15; letter-spacing: -.03em; }
 @media (min-width: 760px) {
   .steps { grid-template-columns: repeat(3, 1fr); gap: 28px; }
