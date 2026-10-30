@@ -1,6 +1,6 @@
 {
-  "errorCount": 2,
-  "warningCount": 1,
+  "errorCount": 0,
+  "warningCount": 0,
   "axe": "RUN",
   "results": [
     {
@@ -11,18 +11,8 @@
       "screens": [
         {
           "name": "Trang chủ",
-          "errors": [
-            {
-              "rule": "overflow",
-              "message": "Nội dung tràn ngang 12px: a.app-tabbar__item \"Tìm sân\""
-            }
-          ],
-          "warnings": [
-            {
-              "rule": "void",
-              "message": "Khoảng trống 163px cách đầu màn 649px (ngưỡng 162px). Lấp bằng nội dung có ích, chia lại cột, hoặc thu khung; trống có chủ đích thì đánh dấu data-whitespace"
-            }
-          ]
+          "errors": [],
+          "warnings": []
         },
         {
           "name": "axe-core",
@@ -39,12 +29,7 @@
       "screens": [
         {
           "name": "Trang chủ",
-          "errors": [
-            {
-              "rule": "overflow",
-              "message": "Nội dung tràn ngang 12px: a.app-tabbar__item \"Tìm sân\""
-            }
-          ],
+          "errors": [],
           "warnings": []
         },
         {
