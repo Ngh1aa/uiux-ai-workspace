@@ -6,6 +6,8 @@ Repo giúp thiết kế website/app đúng tác vụ, thương hiệu và chất
 1. Đọc yêu cầu và [AGENTS.md](AGENTS.md). Dùng [brand brief](BRAND-BRIEF.template.md) hiện có;
    thiếu thì ghi giả định, chỉ hỏi khi chặn công việc. Design system khách hàng có ưu tiên.
 2. Chọn cỡ và track trong WORKFLOWS. Đọc TASTE; từ S thêm CRAFT; từ M thêm FLOW theo bảng đọc ở đó.
+   Website hoặc landing: thêm [owner-picks](foundations/owner-picks.md) mục 5–6 và
+   [motion-recipes](foundations/motion-recipes/index.html).
 3. Chỉ mở skill và reference theo điều kiện. Nội dung thật và bối cảnh người dùng có trước bố cục.
 4. Dựng tại nguồn, tái dùng component/token đang có. Qua cổng hướng trước khi nhân rộng.
 5. Soát source, render và hành vi riêng. Mở ảnh mobile/desktop sáng/tối, sửa rồi kiểm lại.
