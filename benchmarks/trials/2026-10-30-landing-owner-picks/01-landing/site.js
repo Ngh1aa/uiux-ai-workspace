@@ -2,60 +2,44 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
-  /* ---------- R1: chữ trồi lên từng dòng ---------- */
+  /* ---------- Chữ trồi lên từng dòng (BCG) ---------- */
   const reveals = [...document.querySelectorAll('[data-reveal]')];
   const split = el => {
-    const words = el.textContent.trim().split(/\s+/);
-    el.innerHTML = words.map(w => `<span class="w"><span>${w}</span></span>`).join(' ');
-    const ws = [...el.querySelectorAll('.w')];
+    const walk = node => [...node.childNodes].map(n => {
+      if (n.nodeType === 3) return n.textContent.split(/(\s+)/).map(t => /^\s+$/.test(t) ? ' ' : t ? `<span class="w"><span>${t}</span></span>` : '').join('');
+      return `<span class="w"><span>${n.outerHTML}</span></span>`;
+    }).join('');
+    el.innerHTML = walk(el);
     let top = null, line = -1;
-    ws.forEach(w => { if (w.offsetTop !== top) { top = w.offsetTop; line++; } w.style.setProperty('--line', line); });
+    el.querySelectorAll('.w').forEach(w => { if (w.offsetTop !== top) { top = w.offsetTop; line++; } w.style.setProperty('--line', line); });
   };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -12% 0px' });
   if (!reduce) {
-    const io = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    }), { rootMargin: '0px 0px -15% 0px' });
-    const start = () => reveals.forEach(el => { split(el); requestAnimationFrame(() => requestAnimationFrame(() => io.observe(el))); });
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start);
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => {
+      reveals.forEach(el => { split(el); requestAnimationFrame(() => requestAnimationFrame(() => io.observe(el))); });
+    });
+    /* Ảnh hiện từ dưới lên trong khung vòm */
+    document.querySelectorAll('[data-unveil]').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('[data-unveil]').forEach(el => el.classList.add('in'));
   }
 
-  /* ---------- Chữ ký: men lam chảy xuống thân cốc, bàn xoay quay theo cuộn ---------- */
-  const cup = document.getElementById('cup');
-  const glaze = document.getElementById('glaze');
-  const spins = [...document.querySelectorAll('#cup .spin')];
-  const hero = document.querySelector('.hero');
-  const flood = document.querySelector('[data-flood]');
-  let intro = reduce ? 1 : 0;
+  /* ---------- Ảnh đầu trang nở ra tràn màn theo cuộn (DOD) ---------- */
+  const grow = document.querySelector('[data-grow]');
   const paint = () => {
-    const vh = innerHeight;
-    const y = scrollY;
-    // men: 0 = đất mộc, 1 = men phủ hai phần ba thân cốc
-    const g = reduce ? 1 : clamp(intro * 0.3 + y / (hero.offsetHeight * 0.7));
-    cup.style.setProperty('--g', g.toFixed(3));
-    glaze.setAttribute('transform', `translate(0 ${(40 + g * 260).toFixed(1)})`);
-    spins.forEach((s, i) => s.setAttribute('stroke-dashoffset', reduce ? 0 : (-(y * (i ? 0.9 : 0.6)) - intro * 120).toFixed(1)));
-    // men phủ section "Một buổi học": bắt đầu khi mép trên qua 85% màn
-    if (!reduce) {
-      const r = flood.getBoundingClientRect();
-      flood.style.setProperty('--p', clamp((vh * 0.85 - r.top) / (vh * 0.8)).toFixed(3));
-    }
+    const r = grow.getBoundingClientRect();
+    const span = r.height - innerHeight;
+    grow.style.setProperty('--p', clamp(-r.top / (span * 0.75)).toFixed(3));
   };
   let ticking = false;
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; paint(); }); } };
-  if (!reduce) {
-    // rót men lần đầu: 1,2 s, đường cong mềm
-    const t0 = performance.now();
-    const ease = t => 1 - Math.pow(1 - t, 3);
-    const step = now => { intro = ease(clamp((now - t0) / 1200)); paint(); if (intro < 1) requestAnimationFrame(step); };
-    requestAnimationFrame(step);
-    addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('resize', onScroll);
-  }
-  paint();
+  if (!reduce) { addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); paint(); }
 
   /* ---------- Cuộn mượt cho chuột có nấc (kiểu Lenis) ----------
-   * Chỉ khi có chuột (pointer: fine) và không bật giảm chuyển động. Bàn phím, thanh cuộn, cảm ứng
-   * và vùng cuộn bên trong (sheet đặt chỗ) giữ cuộn gốc của trình duyệt. */
+   * Chỉ khi có chuột và không giảm chuyển động. Bàn phím, thanh cuộn, cảm ứng và vùng cuộn riêng
+   * (sheet đặt chỗ) giữ cuộn gốc của trình duyệt. */
   if (!reduce && matchMedia('(pointer: fine)').matches) {
     let target = scrollY, cur = scrollY, raf = 0;
     const max = () => document.documentElement.scrollHeight - innerHeight;
@@ -78,7 +62,6 @@
       target = clamp(target + d, 0, max());
       if (!raf) raf = requestAnimationFrame(loop);
     }, { passive: false });
-    // cuộn bằng cách khác (phím, kéo thanh cuộn, nhảy tới mục) thì đồng bộ lại điểm xuất phát
     addEventListener('scroll', () => { if (!raf) target = cur = scrollY; }, { passive: true });
     const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
     addEventListener('keydown', stop); addEventListener('pointerdown', stop);
