@@ -1,0 +1,135 @@
+/* Thương hiệu Len Nhỏ: dâu tằm trên nền xám tím nhạt, bo 12px, viền mảnh không bóng.
+ * Soát: python3 design-system/scripts/check-brand.py benchmarks/runs/2026-10-30-fresh/03-dashboard/brand.css */
+
+:root {
+  --brand-900: #3f1530;
+  --brand-800: #57203f;
+  --brand-700: #67284d;
+  --brand-600: #7a2f5c;
+  --brand-100: #f3e1ec;
+  --brand-50: #faf1f6;
+
+  --ds-surface-page: #f5f3f5;
+  --ds-surface-raised: #ffffff;
+  --ds-surface-sunken: #ece8ec;
+  --ds-surface-brand-subtle: var(--brand-50);
+  --ds-surface-brand-strong: var(--brand-600);
+  --ds-text-primary: #1e1a1d;
+  --ds-text-secondary: #5c535a;
+  --ds-text-tertiary: #645b62;
+  --ds-text-brand: var(--brand-600);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #e4dee3;
+  --ds-border-control: #857b83;
+  --ds-action-disabled-bg: #ece8ec;
+  --ds-action-disabled-text: #6a6168;
+  --ds-feedback-neutral-surface: #efebee;
+  --ds-feedback-neutral-border: #d8d1d6;
+  --ds-feedback-neutral-text: #3d363b;
+  --ds-feedback-neutral-icon: #5c535a;
+
+  --ds-action-primary-bg: var(--brand-600);
+  --ds-action-primary-bg-hover: var(--brand-700);
+  --ds-action-primary-bg-pressed: var(--brand-800);
+  --ds-action-primary-text: #ffffff;
+  --ds-action-secondary-bg: #ffffff;
+  --ds-action-secondary-bg-hover: #f4eff3;
+  --ds-action-secondary-bg-pressed: #e9e2e7;
+  --ds-action-secondary-text: #1e1a1d;
+  --ds-action-secondary-border: #8a7f88;
+  --ds-action-tertiary-bg-hover: var(--brand-50);
+  --ds-action-tertiary-bg-pressed: var(--brand-100);
+  --ds-action-tertiary-text: var(--brand-600);
+  --ds-action-selected-bg: var(--brand-100);
+  --ds-action-selected-text: var(--brand-900);
+  --ds-action-selected-indicator: var(--brand-600);
+  --ds-border-focus: var(--brand-600);
+
+  --ds-shape-card: 12px;
+  --ds-card-radius: 12px;
+  --ds-shape-control: 10px;
+  --ds-shape-sheet: 16px;
+  --ds-card-border: var(--ds-border-subtle);
+  --ds-elevation-raised: none;
+  --ds-size-control-sm: 44px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand-strong-dark: #6b2a51;
+    --brand-tint-dark: #e4a8ca;
+    --ds-surface-page: #161316;
+    --ds-surface-raised: #211c20;
+    --ds-surface-sunken: #2c262b;
+    --ds-surface-brand-subtle: #2e1d28;
+    --ds-surface-brand-strong: var(--brand-strong-dark);
+    --ds-text-primary: #f4eff2;
+    --ds-text-secondary: #c6bbc2;
+    --ds-text-tertiary: #ada2a9;
+    --ds-text-brand: var(--brand-tint-dark);
+    --ds-text-on-brand-strong: #ffffff;
+    --ds-border-subtle: #3a3238;
+    --ds-border-control: #948a92;
+    --ds-action-primary-bg: var(--brand-tint-dark);
+    --ds-action-primary-bg-hover: #ecbad6;
+    --ds-action-primary-bg-pressed: #f2cde2;
+    --ds-action-primary-text: #2b0f20;
+    --ds-action-secondary-bg: #211c20;
+    --ds-action-secondary-bg-hover: #2c262b;
+    --ds-action-secondary-bg-pressed: #3a3238;
+    --ds-action-secondary-text: #f4eff2;
+    --ds-action-secondary-border: #7d727a;
+    --ds-action-tertiary-bg-hover: #2e1d28;
+    --ds-action-tertiary-bg-pressed: #3d2634;
+    --ds-action-tertiary-text: var(--brand-tint-dark);
+    --ds-action-selected-bg: #3d2634;
+    --ds-action-selected-text: #f6e1ed;
+    --ds-action-selected-indicator: var(--brand-tint-dark);
+    --ds-border-focus: var(--brand-tint-dark);
+    --ds-action-disabled-bg: #2c262b;
+    --ds-action-disabled-text: #ada2a9;
+    --ds-feedback-neutral-surface: #2c262b;
+    --ds-feedback-neutral-border: #463d44;
+    --ds-feedback-neutral-text: #e2dadf;
+    --ds-feedback-neutral-icon: #c6bbc2;
+  }
+}
+
+:root[data-theme="dark"] {
+  --brand-strong-dark: #6b2a51;
+  --brand-tint-dark: #e4a8ca;
+  --ds-surface-page: #161316;
+  --ds-surface-raised: #211c20;
+  --ds-surface-sunken: #2c262b;
+  --ds-surface-brand-subtle: #2e1d28;
+  --ds-surface-brand-strong: var(--brand-strong-dark);
+  --ds-text-primary: #f4eff2;
+  --ds-text-secondary: #c6bbc2;
+  --ds-text-tertiary: #ada2a9;
+  --ds-text-brand: var(--brand-tint-dark);
+  --ds-text-on-brand-strong: #ffffff;
+  --ds-border-subtle: #3a3238;
+  --ds-border-control: #948a92;
+  --ds-action-primary-bg: var(--brand-tint-dark);
+  --ds-action-primary-bg-hover: #ecbad6;
+  --ds-action-primary-bg-pressed: #f2cde2;
+  --ds-action-primary-text: #2b0f20;
+  --ds-action-secondary-bg: #211c20;
+  --ds-action-secondary-bg-hover: #2c262b;
+  --ds-action-secondary-bg-pressed: #3a3238;
+  --ds-action-secondary-text: #f4eff2;
+  --ds-action-secondary-border: #7d727a;
+  --ds-action-tertiary-bg-hover: #2e1d28;
+  --ds-action-tertiary-bg-pressed: #3d2634;
+  --ds-action-tertiary-text: var(--brand-tint-dark);
+  --ds-action-selected-bg: #3d2634;
+  --ds-action-selected-text: #f6e1ed;
+  --ds-action-selected-indicator: var(--brand-tint-dark);
+  --ds-border-focus: var(--brand-tint-dark);
+  --ds-action-disabled-bg: #2c262b;
+  --ds-action-disabled-text: #ada2a9;
+  --ds-feedback-neutral-surface: #2c262b;
+  --ds-feedback-neutral-border: #463d44;
+  --ds-feedback-neutral-text: #e2dadf;
+  --ds-feedback-neutral-icon: #c6bbc2;
+}
