@@ -103,7 +103,18 @@ module.exports = async (page, pass, assert) => {
   assert.match(await q('[data-test="book-slot"]').innerText(), /21:00–22:00/);
   pass('Khung giờ trong form mở sheet riêng, khung đã đặt không chọn được, chọn xong về đúng form');
 
-  // 7. Tìm không ra → Xóa tìm kiếm khôi phục danh sách
+  // 7. Bấm khung trống ngay trên thẻ sân → Chi tiết đúng sân, khung đã chọn sẵn, Back về Lịch của tôi
+  await fresh();
+  await q('#past-courts [data-court="kh"][data-slot="21:00"]').click();
+  assert.ok(await active('#s-detail'));
+  assert.strictEqual((await q('#detail-title').innerText()).trim(), 'Sân Kỳ Hoà');
+  assert.strictEqual(await q('[data-test="pick-slot-21"]').getAttribute('aria-pressed'), 'true');
+  assert.strictEqual(await q('[data-test="continue"]').getAttribute('aria-disabled'), 'false');
+  await q('[data-test="detail-back"]').click();
+  assert.ok(await active('#s-schedule'));
+  pass('Chạm 21:00 trên thẻ Sân Kỳ Hoà (dưới trạng thái rỗng Đã qua) → Chi tiết đúng sân, khung chọn sẵn; Back về Lịch của tôi');
+
+  // 8. Tìm không ra → Xóa tìm kiếm khôi phục danh sách
   await q('[data-test="search"]').fill('Thủ Đức');
   assert.ok(await q('[data-test="list-empty"]').isVisible());
   await q('[data-test="clear-search"]').click();
