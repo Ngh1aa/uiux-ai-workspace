@@ -867,7 +867,7 @@ function auditInPage() {
     const cardList = all.filter(isCard);
     const cardSet = new Set(cardList);
     const contentRects = (card) => {
-      const rects = [];
+      const rects = [...textRects(card)];
       for (const n of card.querySelectorAll('*')) {
         if (!visible(n) || (n.closest('svg') && n.closest('svg') !== n)) continue;
         const sf = surfaceOf(n);
@@ -903,7 +903,9 @@ function auditInPage() {
         const saved = card.getAttribute('style');
         card.style.setProperty('height', 'auto', 'important');
         card.style.setProperty('min-height', '0', 'important');
-        card.style.setProperty('align-self', 'flex-start', 'important');
+        const pst = card.parentElement ? getComputedStyle(card.parentElement) : null;
+        // Chỉ bỏ kéo giãn theo trục dọc; trong flex dọc, align-self đổi bề ngang nên không đụng.
+        if (pst && (pst.display.includes('grid') || (pst.display.includes('flex') && !pst.flexDirection.startsWith('column')))) card.style.setProperty('align-self', 'flex-start', 'important');
         card.style.setProperty('flex-grow', '0', 'important');
         const natural = card.getBoundingClientRect();
         const naturalRects = contentRects(card);
