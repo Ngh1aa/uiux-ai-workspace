@@ -34,7 +34,9 @@ file này, do chủ repo duyệt.
 - Hoạ tiết trang trí không bao giờ đè lên chữ.
 - Card thường có tiêu đề, nội dung, chỗ cho hành động hoặc trạng thái; nội dung phủ phần lớn card.
 - **Không thanh màu bên trái card** hay dòng. Trạng thái dùng nhãn chữ, chip hoặc icon.
-- Card chứa danh sách dòng không có padding thừa: dòng đầu, dòng cuối sát padding thường của card.
+- **Padding card đều bốn cạnh**, kể cả card danh sách: dòng đầu, dòng cuối sát padding đó.
+- **Card không rộng quá nội dung**: thu card, ghép hàng hoặc xếp ngang.
+- **Không dấu hiệu "AI hoá"**: gradient, glow màu, ô icon mỗi ô một màu, overline trên mọi tiêu đề, emoji.
 - Cùng loại card trông giống hệt nhau trên mọi màn (ví dụ dòng nào cũng có chevron ">"), bất kể giới hạn
   của prototype.
 - Trước khi tự chế card, xem [`design-system/patterns/`](design-system/patterns/README.md).

@@ -70,7 +70,7 @@
 .dk-hero :focus-visible { outline-color: var(--ds-text-on-brand-strong); }
 
 /* KPI tile: nhãn, số, so sánh, sparkline */
-.dk-kpi { display: flex; flex-direction: column; gap: var(--ds-space-200); padding: var(--ds-space-500) var(--ds-space-600); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
+.dk-kpi { display: flex; flex-direction: column; gap: var(--ds-space-200); padding: var(--ds-space-600); border-radius: var(--ds-card-radius); background: var(--ds-surface-raised); }
 .dk-kpi__value { margin: 0; font: var(--ds-font-weight-bold) 32px/40px var(--app-font-display, var(--ds-font-family-sans)); font-variant-numeric: tabular-nums; }
 .dk-kpi__row { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-300); }
 .dk-delta { display: inline-flex; align-items: center; gap: 4px; font: var(--ds-font-weight-semibold) var(--ds-type-label-md-font-size)/1 var(--ds-font-family-sans); font-variant-numeric: tabular-nums; }
