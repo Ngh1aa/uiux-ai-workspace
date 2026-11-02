@@ -32,6 +32,11 @@ khi có lỗi, mã 2 khi không chạy được. Cần Playwright: script tự t
 gần đó và thư mục npm toàn cục; không thấy thì in cách xử lý (xem mục "Khi không chạy được taste-check" bên dưới).
 Test: `node --test skills_UIUX/ui-craft-and-visual-qa/scripts/taste-check.test.cjs`.
 
+`taste-check.cjs` chỉ lo tham số, phục vụ file và in kết quả. Luật chạy trong trang nằm ở
+[`taste-check/`](taste-check/), mỗi nhóm một file: `text.js` (chữ), `card.js` (card và dấu hiệu "AI hoá"),
+`layout.js` (bố cục, vùng chạm, panel), `chart.js` (biểu đồ); `shared.js` là hàm dùng chung, `audit.js` gọi
+các nhóm theo thứ tự cố định. Thêm luật thì sửa đúng file nhóm và thêm test.
+
 Script là tín hiệu tự động, không thay việc mở ảnh chụp ra nhìn.
 
 Luật theo [`TASTE.md`](../../../TASTE.md), là **lỗi**: `demo-note` (ghi chú bản mẫu trên màn), `template-var`
