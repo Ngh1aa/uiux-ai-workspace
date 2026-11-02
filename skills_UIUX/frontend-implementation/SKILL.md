@@ -17,3 +17,5 @@ Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, 
 Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 Tra đúng mẫu khi cần: [references theo tác vụ](references/implementation-patterns.md), [checklists theo tác vụ](checklists/frontend-gate.md), [examples theo tác vụ](examples/page-composition.md).
+
+Thêm khi cần: Dựng theo Figma, ảnh hay trang mẫu: [`reference-analysis-and-design-to-code`](references/reference-analysis-and-design-to-code/README.md); tốc độ tải, Core Web Vitals: [`web-quality-and-performance`](references/web-quality-and-performance/README.md).

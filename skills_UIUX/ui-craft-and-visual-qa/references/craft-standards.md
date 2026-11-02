@@ -5,8 +5,8 @@ A project's own tokens, brand guidelines and platform targets always win. Record
 value as a starting default (source: this file) rather than as project truth, and verify it in
 rendered output.
 
-Platform specifics live in the [iOS spec sheet](../../ios-app-design/references/ios-spec-sheet.md),
-[Android spec sheet](../../android-app-design/references/android-spec-sheet.md) and
+Platform specifics live in the [iOS spec sheet](../../mobile-app-design/references/ios-app-design/references/ios-spec-sheet.md),
+[Android spec sheet](../../mobile-app-design/references/android-app-design/references/android-spec-sheet.md) and
 [web app patterns](web-app-patterns.md). Checked against WCAG 2.2, Apple HIG and Material 3
 documentation as of 2026-10; re-check when a platform ships a major design update.
 
