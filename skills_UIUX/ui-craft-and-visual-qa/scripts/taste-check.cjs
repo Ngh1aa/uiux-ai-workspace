@@ -19,7 +19,7 @@
  *                         chỉ bắt tràn ngang. Dùng cho website, không dùng cho trang có khung điện thoại cố định
  *   --no-axe              bỏ axe-core dù có cài
  *   --layout strict       coi các cảnh báo bố cục (void, coverage, flat-scale, thin-highlight,
- *                         panel-void, panel-orphan) là lỗi;
+ *                         panel-void, panel-orphan, card-inset, card-wide) là lỗi;
  *                         dùng cho màn desktop và artboard canvas trước khi giao
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
@@ -47,6 +47,9 @@
  *     chart-donut    donut/pie quá 3 phần (conic-gradient hoặc vòng SVG stroke-dasharray)
  *     chart-name     biểu đồ (canvas, SVG có đường/cột, [role="img"] có vạch, [data-chart]) không có tên
  *                    cho trình đọc màn hình; SVG aria-hidden được coi là trang trí
+ *   - card (khối có nền, viền hoặc bóng, bo ≥ 8 px, cao ≥ 72 px; không phải nút, nav, figure, landmark):
+ *     card-padding   padding bốn cạnh lệch nhau quá 2 px (padding 0 để khối con lo lề thì bỏ qua)
+ *     emoji          emoji trong chữ
  * CẢNH BÁO:
  *   - card ngang hàng có bán kính bo góc khác nhau
  *   - hơn 3 nhóm màu sắc trong một màn
@@ -68,6 +71,10 @@
  *     overdue, unusual… hoặc role="alert", data-status) trên cùng màn
  *   - panel-void (bố cục): panel trong lưới trống đáy > 96 px và > 25% chiều cao vì hàng bị kéo giãn
  *   - panel-orphan (bố cục): panel lẻ một mình ở hàng cuối, rộng chưa tới 60% lưới
+ *   - card-inset (bố cục): khoảng từ mép card tới nội dung, trên và trái, lệch quá 8 px
+ *   - card-wide (bố cục): card ≥ 360 px mà nội dung chỉ chiếm dưới 55% bề ngang trong
+ *   - dấu hiệu "AI hoá": gradient-surface (nền hay chữ gradient có màu; data-artwork để miễn cho ảnh, mặt thẻ),
+ *     glow (bóng màu phát sáng), tile-rainbow (≥ 3 ô cùng loại tô ≥ 3 sắc), eyebrow (≥ 2 tiêu đề có nhãn nhỏ phía trên)
  *
  * Trang có thể kèm query hoặc hash để chọn màn của app nhiều màn: app.html?screen=home.
  *
@@ -582,7 +589,8 @@ function auditInPage() {
       const st = getComputedStyle(el);
       const text = ownText(el);
       // Chữ phụ dưới 12 px (làm tròn 11,5 để chừa sai số render).
-      if (text && parseFloat(st.fontSize) < 11.5) {
+      // Cỡ 0 là chữ ẩn có chủ đích (nhãn cho trình đọc màn hình trên vạch màu), không phải chữ nhỏ nhìn thấy.
+      if (text && parseFloat(st.fontSize) < 11.5 && parseFloat(st.fontSize) >= 1) {
         errors.push({ rule: 'small-text', message: `Chữ ${parseFloat(st.fontSize).toFixed(1)}px < 12px: ${describe(el)}` });
       }
       // Dòng giải thích phụ ngay dưới tiêu đề.
@@ -806,8 +814,12 @@ function auditInPage() {
         const parts = [...card.querySelectorAll('*')].filter((n) => visible(n) && !(n.closest('svg') && n.closest('svg') !== n) && (ownText(n) || n.matches(MEDIA) || massOf(n)));
         if (!parts.length) continue;
         const bottom = Math.max(...parts.flatMap((n) => (ownText(n) && !n.matches(MEDIA) ? textRects(n) : [n.getBoundingClientRect()])).map((r) => r.bottom));
-        const gap = cr.bottom - parseFloat(cs.paddingBottom || 0) - parseFloat(cs.borderBottomWidth || 0) - bottom;
-        if (gap > Math.max(96, cr.height * 0.25)) {
+        // Card ngắn hơn hàng (align-items: start) cũng để lại khoảng trống tới đáy hàng.
+        const rowmates = items.map((c) => c.getBoundingClientRect()).filter((o) => Math.abs(o.top - cr.top) < 6);
+        const below = items.map((c) => c.getBoundingClientRect()).filter((o) => o.top >= cr.bottom - 1 && Math.min(o.right, cr.right) - Math.max(o.left, cr.left) > 8);
+        const rowBottom = Math.max(cr.bottom, Math.min(Math.max(...rowmates.map((o) => o.bottom)), ...below.map((o) => o.top - parseFloat(bst.rowGap || 0) - 1)));
+        const gap = rowBottom - parseFloat(cs.paddingBottom || 0) - parseFloat(cs.borderBottomWidth || 0) - bottom;
+        if (gap > Math.max(96, (rowBottom - cr.top) * 0.25)) {
           warnings.push({ rule: 'panel-void', message: `Panel trống ${Math.round(gap)}px ở đáy (${Math.round((gap / cr.height) * 100)}% chiều cao): ${describe(card)}. Cân lại lưới (đổi span, ghép panel, thêm nội dung có ích) thay vì để hàng kéo giãn` });
         }
       }
@@ -821,9 +833,163 @@ function auditInPage() {
       rows.sort((a, b) => a.top - b.top);
       const last = rows[rows.length - 1];
       const inner = box.getBoundingClientRect().width - parseFloat(bst.paddingLeft || 0) - parseFloat(bst.paddingRight || 0);
-      if (rows.length >= 2 && last.items.length === 1 && last.items[0].width < inner * 0.6 && rows.slice(0, -1).some((x) => x.items.length >= 2)) {
+      // Panel trải nhiều hàng từ hàng trên xuống (grid-row: span 2) vẫn lấp chỗ ở hàng cuối.
+      const spanning = items.map((c) => c.getBoundingClientRect()).filter((r) => r.top < last.top - 6 && r.bottom > last.top + 6);
+      const used = last.items[0].width + spanning.reduce((sum, r) => sum + r.width, 0);
+      if (rows.length >= 2 && last.items.length === 1 && used < inner * 0.6 && rows.slice(0, -1).some((x) => x.items.length >= 2)) {
         warnings.push({ rule: 'panel-orphan', message: `Panel lẻ một mình ở hàng cuối, bỏ trống ${Math.round(inner - last.items[0].width)}px: ${describe(items.find((c) => Math.abs(c.getBoundingClientRect().top - last.top) < 6))}. Cho panel trải hết hàng hoặc chia lại lưới` });
       }
+      // Hàng giữa cũng không được thủng: một panel lẻ chiếm chưa tới 60% hàng.
+      for (const row of rows.slice(0, -1)) {
+        if (row.items.length !== 1 || !rows.some((x) => x !== row && x.items.length >= 2)) continue;
+        const over = items.map((c) => c.getBoundingClientRect()).filter((r) => r.top < row.top - 6 && r.bottom > row.top + 6);
+        if (row.items[0].width + over.reduce((sum, r) => sum + r.width, 0) < inner * 0.6) {
+          warnings.push({ rule: 'panel-orphan', message: `Panel lẻ một mình giữa lưới, bỏ trống ${Math.round(inner - row.items[0].width)}px bên cạnh: ${describe(items.find((c) => Math.abs(c.getBoundingClientRect().top - row.top) < 6))}. Xếp lại cột hoặc cho panel trải hết hàng` });
+        }
+      }
+    }
+
+    // Card: padding đều, rộng vừa nội dung; và các dấu hiệu "AI hoá" (gradient, glow, icon cầu vồng,
+    // overline trên mọi tiêu đề, emoji).
+    const LANDMARK = 'main, header, footer, nav, figure, [role="main"], [role="banner"], [role="contentinfo"], [role="navigation"], [role="tablist"]';
+    const isCard = (el) => {
+      if (el === root || el.matches(CONTROL) || el.matches(MEDIA) || el.matches(LANDMARK) || el.querySelector(LANDMARK) || annotated(el)) return false;
+      if (el.closest('svg') || el.closest('[data-artwork]')) return false;
+      const st = getComputedStyle(el);
+      if (st.display.startsWith('inline') && st.display !== 'inline-block' && st.display !== 'inline-flex' && st.display !== 'inline-grid') return false;
+      const r = el.getBoundingClientRect();
+      const radius = parseFloat(st.borderTopLeftRadius) || 0;
+      if (r.width < 120 || r.height < 72 || radius < 8 || radius >= Math.min(r.width, r.height) / 2 - 1 || r.width >= rootRect.width - 2) return false;
+      const { own, hasBg, hasEdge, hasShadow } = surfaceOf(el);
+      if (!(hasBg || hasEdge || hasShadow)) return false;
+      return !(own[3] >= 0.999 && ratio(own, backdrop(el.parentElement) || rootBg) < 1.02 && !hasEdge && !hasShadow);
+    };
+    const cardList = all.filter(isCard);
+    const cardSet = new Set(cardList);
+    const contentRects = (card) => {
+      const rects = [...textRects(card)];
+      for (const n of card.querySelectorAll('*')) {
+        if (!visible(n) || (n.closest('svg') && n.closest('svg') !== n)) continue;
+        const sf = surfaceOf(n);
+        if (n.matches(MEDIA) || n.matches(CONTROL) || (n.matches(INTERACTIVE) && getComputedStyle(n).display !== 'inline') || cardSet.has(n) || massOf(n) || sf.hasBg || sf.hasEdge) rects.push(n.getBoundingClientRect());
+        else if (ownText(n)) rects.push(...textRects(n));
+      }
+      return rects.filter((x) => x.width >= 1 && x.height >= 1);
+    };
+    for (const card of cardList) {
+      const st = getComputedStyle(card);
+      const r = card.getBoundingClientRect();
+      const pad = ['Top', 'Right', 'Bottom', 'Left'].map((s) => parseFloat(st[`padding${s}`]) || 0);
+      const bw = ['Top', 'Right', 'Bottom', 'Left'].map((s) => parseFloat(st[`border${s}Width`]) || 0);
+      if (Math.min(...pad) > 0 && Math.max(...pad) - Math.min(...pad) > 2) {
+        errors.push({ rule: 'card-padding', message: `Padding card không đều (${pad.map((p) => Math.round(p)).join(' ')} px): ${describe(card)}. Dùng một giá trị cho cả bốn cạnh` });
+      }
+      const rects = contentRects(card);
+      if (!rects.length) continue;
+      const left = Math.min(...rects.map((x) => x.left));
+      const right = Math.max(...rects.map((x) => x.right));
+      const top = Math.min(...rects.map((x) => x.top));
+      const bottom = Math.max(...rects.map((x) => x.bottom));
+      const insetTop = top - r.top - bw[0];
+      const insetLeft = left - r.left - bw[3];
+      const insetRight = r.right - bw[1] - right;
+      const insetBottom = r.bottom - bw[2] - bottom;
+      // Nội dung căn giữa (ngang hoặc dọc) là bố cục có chủ đích, không so lề trên với lề trái.
+      const centred = Math.abs(insetLeft - insetRight) < 8 || Math.abs(insetTop - insetBottom) < 8;
+      if (!centred && insetTop >= 0 && insetLeft >= 0 && Math.abs(insetTop - insetLeft) > 8) {
+        warnings.push({ rule: 'card-inset', message: `Lề trong card lệch: trên ${Math.round(insetTop)}px, trái ${Math.round(insetLeft)}px: ${describe(card)}. Khoảng từ mép card tới nội dung phải bằng nhau ở mọi cạnh` });
+      } else if (!centred && insetTop >= 0) {
+        // Lề đáy đo ở chiều cao tự nhiên của card (bỏ kéo giãn theo hàng lưới, đã có panel-void lo).
+        const saved = card.getAttribute('style');
+        card.style.setProperty('height', 'auto', 'important');
+        card.style.setProperty('min-height', '0', 'important');
+        const pst = card.parentElement ? getComputedStyle(card.parentElement) : null;
+        // Chỉ bỏ kéo giãn theo trục dọc; trong flex dọc, align-self đổi bề ngang nên không đụng.
+        if (pst && (pst.display.includes('grid') || (pst.display.includes('flex') && !pst.flexDirection.startsWith('column')))) card.style.setProperty('align-self', 'flex-start', 'important');
+        card.style.setProperty('flex-grow', '0', 'important');
+        const natural = card.getBoundingClientRect();
+        const naturalRects = contentRects(card);
+        const naturalBottom = naturalRects.length ? Math.max(...naturalRects.map((x) => x.bottom)) : natural.bottom;
+        const naturalInset = natural.bottom - bw[2] - naturalBottom;
+        if (saved === null) card.removeAttribute('style'); else card.setAttribute('style', saved);
+        if (naturalInset - insetTop > 8) {
+          warnings.push({ rule: 'card-inset', message: `Lề trong card lệch: trên ${Math.round(insetTop)}px, đáy ${Math.round(naturalInset)}px: ${describe(card)}. Dòng cuối sát padding như dòng đầu` });
+        }
+      }
+      const innerW = r.width - pad[1] - pad[3] - bw[1] - bw[3];
+      if (r.width >= 360 && innerW > 0 && Math.abs(insetLeft - insetRight) >= 8 && !card.hasAttribute('data-whitespace') && (right - left) / innerW < 0.55) {
+        warnings.push({ rule: 'card-wide', message: `Card rộng ${Math.round(r.width)}px mà nội dung chỉ chiếm ${Math.round(((right - left) / innerW) * 100)}% bề ngang: ${describe(card)}. Thu card về cỡ nội dung, ghép với card khác trên cùng hàng, hoặc xếp nội dung ngang` });
+      }
+    }
+    for (const el of all) {
+      if (el === root || el.matches(MEDIA) || el.closest('svg, [data-artwork], [role="img"], [data-chart]') || annotated(el)) continue;
+      const st = getComputedStyle(el);
+      const r = el.getBoundingClientRect();
+      const bgImage = st.backgroundImage || '';
+      const loading = el.closest('[aria-busy="true"]') || /skeleton|shimmer/i.test(typeof el.className === 'string' ? el.className : '');
+      if (!loading && /(linear|radial)-gradient/.test(bgImage) && r.width >= 120 && r.height >= 48) {
+        const stops = gradientColors(bgImage).map(toRgba).filter((c) => c[3] > 0.05);
+        const tinted = stops.some((c) => saturated(c)) && new Set(stops.map((c) => hex(c))).size > 1;
+        if (tinted) warnings.push({ rule: 'gradient-surface', message: `Nền gradient trên khối ${Math.round(r.width)}×${Math.round(r.height)}: ${describe(el)}. Dùng một màu phẳng theo vai trò; ảnh minh hoạ thật thì đánh dấu data-artwork` });
+      }
+      if (/text/.test(st.webkitBackgroundClip || st.backgroundClip || '') && /gradient/.test(bgImage) && ownText(el)) {
+        warnings.push({ rule: 'gradient-surface', message: `Chữ tô gradient: ${describe(el)}. Dùng màu chữ phẳng` });
+      }
+      if (st.boxShadow && st.boxShadow !== 'none') {
+        for (const layer of st.boxShadow.split(/,(?![^(]*\))/)) {
+          const color = (layer.match(/rgba?\([^)]*\)|#[0-9a-f]{3,8}/i) || [])[0];
+          const nums = layer.replace(/rgba?\([^)]*\)/g, '').match(/-?\d+(\.\d+)?px/g) || [];
+          const blur = nums.length >= 3 ? parseFloat(nums[2]) : 0;
+          const c = color ? toRgba(color) : null;
+          if (c && !/inset/.test(layer) && blur >= 12 && c[3] >= 0.2 && saturated(c) && hsl(c)[1] >= 0.4) {
+            warnings.push({ rule: 'glow', message: `Bóng phát sáng màu ${hex(c)}: ${describe(el)}. Bỏ glow, dùng bóng trung tính hoặc không bóng` });
+            break;
+          }
+        }
+      }
+    }
+    // Ô icon hay ô nhỏ cùng loại tô nhiều màu khác nhau (icon cầu vồng).
+    const tileGroups = new Map();
+    const parentIds = new Map();
+    for (const el of all) {
+      if (el === root || annotated(el) || el.closest('svg, [role="img"], [data-chart]')) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width < 20 || r.height < 20 || r.width > 160 || r.height > 160) continue;
+      const c = toRgba(getComputedStyle(el).backgroundColor);
+      if (c[3] < 0.05 || !saturated(c) || hsl(c)[1] < 0.25) continue;
+      const cls = typeof el.className === 'string' && el.className.trim() ? el.className.trim().split(/\s+/)[0] : '';
+      if (!parentIds.has(el.parentElement)) parentIds.set(el.parentElement, parentIds.size);
+      const key = cls ? `c:${cls}` : `p:${parentIds.get(el.parentElement)}`;
+      if (!tileGroups.has(key)) tileGroups.set(key, []);
+      tileGroups.get(key).push({ el, c });
+    }
+    for (const group of tileGroups.values()) {
+      if (group.length < 3) continue;
+      const hueList = [];
+      for (const { c } of group) if (!hueList.some((h) => hueGap(h, c) < 30)) hueList.push(c);
+      if (hueList.length >= 3) {
+        warnings.push({ rule: 'tile-rainbow', message: `${group.length} ô cùng loại tô ${hueList.length} màu khác nhau (${hueList.map(hex).join(', ')}): ${describe(group[0].el)}. Dùng một màu nền chung; màu chỉ để báo trạng thái` });
+      }
+    }
+    // Overline: nhãn ngắn, nhỏ đặt ngay trên tiêu đề, lặp lại ở nhiều khối.
+    const overlines = all.filter((el) => {
+      const text = ownText(el);
+      const next = el.nextElementSibling;
+      if (!text || el.children.length || annotated(el) || !next || !visible(next) || !next.matches('h1, h2, h3, h4, [role="heading"]')) return false;
+      if (text.split(/\s+/).length > 4 || /\d/.test(text)) return false;
+      const st = getComputedStyle(el);
+      return parseFloat(st.fontSize) <= parseFloat(getComputedStyle(next).fontSize) - 2;
+    });
+    if (overlines.length >= 2) {
+      warnings.push({ rule: 'eyebrow', message: `${overlines.length} tiêu đề có nhãn nhỏ phía trên (${overlines.slice(0, 4).map((el) => `"${ownText(el)}"`).join(', ')}). Bỏ overline, để tiêu đề tự nói` });
+    }
+    const EMOJI = /\p{Emoji_Presentation}|\p{Extended_Pictographic}️/u;
+    const emojiWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = emojiWalker.nextNode(); node; node = emojiWalker.nextNode()) {
+      const parent = node.parentElement;
+      if (!parent || !visible(parent) || annotated(parent) || parent.closest('script, style')) continue;
+      const m = node.textContent.match(EMOJI);
+      if (m) errors.push({ rule: 'emoji', message: `Emoji "${m[0]}" trong chữ: ${describe(parent)}. Dùng icon cùng bộ hoặc bỏ` });
     }
 
     const dedupe = (items) => {
@@ -945,7 +1111,7 @@ async function main() {
           await tab.evaluate(() => document.fonts && document.fonts.ready);
           let screens = await tab.evaluate(auditInPage);
           if (opts.layout === 'strict') {
-            const LAYOUT = ['void', 'coverage', 'flat-scale', 'thin-highlight', 'panel-void', 'panel-orphan'];
+            const LAYOUT = ['void', 'coverage', 'flat-scale', 'thin-highlight', 'panel-void', 'panel-orphan', 'card-inset', 'card-wide'];
             screens = screens.map((sc) => ({
               ...sc,
               errors: [...sc.errors, ...sc.warnings.filter((w) => LAYOUT.includes(w.rule))],

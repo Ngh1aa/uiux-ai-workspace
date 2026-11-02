@@ -226,7 +226,7 @@ a.ds-list-item:hover, button.ds-list-item:hover { background: var(--ds-action-se
 /* ---------- Banner and toast ---------- */
 .ds-banner {
   --_bg: var(--ds-feedback-info-surface); --_fg: var(--ds-feedback-info-text); --_bd: var(--ds-feedback-info-border); --_ic: var(--ds-feedback-info-icon);
-  display: flex; gap: var(--ds-spacing-inline-md); align-items: flex-start; padding: var(--ds-spacing-inset-sm) var(--ds-spacing-inset-md);
+  display: flex; gap: var(--ds-spacing-inline-md); align-items: flex-start; padding: var(--ds-spacing-inset-md);
   border: var(--ds-border-width-100) solid var(--_bd); border-radius: var(--ds-shape-control); background: var(--_bg); color: var(--_fg);
 }
 .ds-banner > .ds-icon { color: var(--_ic); margin-top: var(--ds-space-50); }

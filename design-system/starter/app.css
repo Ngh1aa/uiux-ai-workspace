@@ -105,6 +105,7 @@
 .app-note { display: flex; align-items: center; gap: var(--ds-space-200); color: var(--ds-text-secondary); font: var(--ds-type-body-sm-font-weight) var(--ds-type-body-sm-font-size)/var(--ds-type-body-sm-line-height) var(--ds-font-family-sans); }
 .app-timeline { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
 .app-timeline li { display: flex; align-items: baseline; gap: var(--ds-spacing-inline-md); padding: var(--ds-space-200) 0; }
+.app-timeline li:last-child { padding-bottom: 0; }
 .app-timeline time { flex: none; width: 44px; color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; font-size: var(--ds-type-body-sm-font-size); }
 
 /* ---------- Biểu mẫu ---------- */
@@ -283,7 +284,8 @@
 .lp-faq details { border-bottom: var(--ds-border-width-100) solid var(--ds-border-subtle); }
 .lp-faq summary { display: flex; align-items: center; min-height: 56px; padding: var(--ds-space-300) 0; cursor: pointer; font-weight: var(--ds-font-weight-semibold); }
 .lp-faq details p { margin: 0 0 var(--ds-space-400); max-width: 60ch; color: var(--ds-text-secondary); line-height: 1.6; }
-.lp-cta { align-items: flex-start; padding: var(--ds-spacing-stack-xl); border-radius: var(--ds-card-radius); background: var(--ds-surface-brand-subtle); }
+.lp-cta { flex-flow: row wrap; align-items: center; justify-content: space-between; padding: var(--ds-spacing-stack-xl); border-radius: var(--ds-card-radius); background: var(--ds-surface-brand-subtle); }
+.lp-cta .lp-h2 { flex: 1 1 18ch; max-width: none; }
 .lp-footer { display: flex; flex-wrap: wrap; gap: var(--ds-spacing-stack-md) var(--ds-spacing-stack-xl); align-items: baseline; max-width: var(--lp-max); margin: 0 auto; padding: var(--ds-spacing-stack-xl) var(--ds-spacing-gutter-wide); border-top: var(--ds-border-width-100) solid var(--ds-border-subtle); }
 .lp-footer address { font-style: normal; color: var(--ds-text-secondary); }
 
