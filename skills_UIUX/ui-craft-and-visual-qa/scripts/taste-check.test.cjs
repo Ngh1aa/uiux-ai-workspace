@@ -438,3 +438,10 @@ test('nhận trang có query string để soát đúng màn của app nhiều m�
   const rules = JSON.parse(fs.readFileSync(out, 'utf8')).results.flatMap((r) => r.screens).flatMap((s) => s.errors).map((e) => e.rule);
   assert.ok(!rules.includes('dot'), JSON.stringify(rules));
 });
+
+test('panel cạnh panel trải hai hàng không bị coi là lẻ; chữ cỡ 0 cố ý ẩn không bị báo chữ nhỏ', () => {
+  const span = runWide(`<section data-screen="Cạnh" class="wide" style="height:auto;display:grid;grid-template-columns:2fr 1fr;gap:24px">${panel(420, 'grid-row:span 2')}${panel(180)}${panel(180)}</section>`);
+  assert.ok(!span.rules('Cạnh', 'warnings').includes('panel-orphan'), JSON.stringify(span.rules('Cạnh', 'warnings')));
+  const hidden = run('<section data-screen="Ẩn"><div class="card"><div style="height:12px;background:#a9e5d2;font-size:0;border-radius:99px">Safe now</div></div></section>');
+  assert.ok(!hidden.rules('Ẩn', 'errors').includes('small-text'));
+});

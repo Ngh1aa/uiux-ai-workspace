@@ -582,7 +582,8 @@ function auditInPage() {
       const st = getComputedStyle(el);
       const text = ownText(el);
       // Chữ phụ dưới 12 px (làm tròn 11,5 để chừa sai số render).
-      if (text && parseFloat(st.fontSize) < 11.5) {
+      // Cỡ 0 là chữ ẩn có chủ đích (nhãn cho trình đọc màn hình trên vạch màu), không phải chữ nhỏ nhìn thấy.
+      if (text && parseFloat(st.fontSize) < 11.5 && parseFloat(st.fontSize) >= 1) {
         errors.push({ rule: 'small-text', message: `Chữ ${parseFloat(st.fontSize).toFixed(1)}px < 12px: ${describe(el)}` });
       }
       // Dòng giải thích phụ ngay dưới tiêu đề.
@@ -821,7 +822,10 @@ function auditInPage() {
       rows.sort((a, b) => a.top - b.top);
       const last = rows[rows.length - 1];
       const inner = box.getBoundingClientRect().width - parseFloat(bst.paddingLeft || 0) - parseFloat(bst.paddingRight || 0);
-      if (rows.length >= 2 && last.items.length === 1 && last.items[0].width < inner * 0.6 && rows.slice(0, -1).some((x) => x.items.length >= 2)) {
+      // Panel trải nhiều hàng từ hàng trên xuống (grid-row: span 2) vẫn lấp chỗ ở hàng cuối.
+      const spanning = items.map((c) => c.getBoundingClientRect()).filter((r) => r.top < last.top - 6 && r.bottom > last.top + 6);
+      const used = last.items[0].width + spanning.reduce((sum, r) => sum + r.width, 0);
+      if (rows.length >= 2 && last.items.length === 1 && used < inner * 0.6 && rows.slice(0, -1).some((x) => x.items.length >= 2)) {
         warnings.push({ rule: 'panel-orphan', message: `Panel lẻ một mình ở hàng cuối, bỏ trống ${Math.round(inner - last.items[0].width)}px: ${describe(items.find((c) => Math.abs(c.getBoundingClientRect().top - last.top) < 6))}. Cho panel trải hết hàng hoặc chia lại lưới` });
       }
     }
