@@ -138,6 +138,19 @@ def make(args: argparse.Namespace) -> int:
     return 0
 
 
+def archived(path: Path, digest: str) -> bool:
+    """Ảnh của lần chạy cũ có thể nằm trong bản lưu trữ ngoài git (benchmarks/archive.py).
+
+    Chỉ chấp nhận khi images-archive.json của lần chạy ghi đúng đường dẫn và đúng SHA-256 đó.
+    """
+    for run in path.parents:
+        index = run / "images-archive.json"
+        if index.is_file():
+            files = json.loads(index.read_text(encoding="utf-8")).get("files", {})
+            return files.get(path.relative_to(run).as_posix()) == digest
+    return False
+
+
 def verify(args: argparse.Namespace) -> int:
     packet = Path(args.packet)
     errors: list[str] = []
@@ -158,7 +171,12 @@ def verify(args: argparse.Namespace) -> int:
                 errors.append(f"{name} bị đổi hoặc mất sau khi tạo hồ sơ")
     for name, digest in images.items():
         path = packet / "images" / name
-        if not path.resolve().is_relative_to((packet / "images").resolve()) or not path.is_file() or sha256(path) != digest:
+        if not path.resolve().is_relative_to((packet / "images").resolve()):
+            errors.append(f"ảnh {name} bị đổi hoặc mất sau khi tạo hồ sơ")
+        elif path.is_file():
+            if sha256(path) != digest:
+                errors.append(f"ảnh {name} bị đổi hoặc mất sau khi tạo hồ sơ")
+        elif not archived(path, digest):
             errors.append(f"ảnh {name} bị đổi hoặc mất sau khi tạo hồ sơ")
 
     reviewer = review.get("reviewer", {})

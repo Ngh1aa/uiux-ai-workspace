@@ -1,0 +1,16 @@
+{
+  "note": "Ảnh của lần chạy này đã bỏ khỏi cây thư mục để repo nhẹ. Bản gốc còn trong lịch sử git ở commit ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46 (git show ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46:benchmarks/runs/2026-10-24-v1/<đường dẫn>). Hash từng ảnh giữ ở đây để report.py và review-packet.py vẫn kiểm được.",
+  "release": null,
+  "asset": "benchmark-images-2026-10-24-v1.zip",
+  "url": null,
+  "asset_sha256": "c263e71de7c71a90e556152440b1c048dcda91056377de474a202a75b3ef2791",
+  "files": {
+    "shots/01-landing-1280-light.jpg": "119ec0bd13993133f196769cbe816ef6620c6b5f0ae76df3cc32d35504d90695",
+    "shots/01-landing-390-light.jpg": "d05d05eafa994e5be9dc7848088d99f184f538e2fce624a5c2dabc33b5fa7717",
+    "shots/02-app-1280-light.jpg": "a4a279069ac92e5e0656a3a227a227449a0fceb8a9581f5ded868e446f6906da",
+    "shots/02-app-390-light.jpg": "27554e295f89c3c276b6a6f68e1f6a391060eb1b8035069e25ad43805cf72d26",
+    "shots/03-dashboard-1280-light.jpg": "4e6389fca7cc29160be4397ced5f86541aa77ac28e4da6c7df0169e21b4b8b16",
+    "shots/03-dashboard-390-light.jpg": "f6b0aea29e7db320d82cdfa4a9827fce00d0cfbd111a1a4783e3ebf53c0d98dd"
+  },
+  "source_commit": "ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46"
+}

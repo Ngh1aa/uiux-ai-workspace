@@ -131,14 +131,32 @@ def validate(run: Path, scores: dict, checks: dict) -> list[str]:
     return errors
 
 
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
+
+
+def archived_image(run: Path, raw: str, digest) -> Path | None:
+    """An image of an older run may live in the release archive instead of git.
+
+    Accepted only when the run's images-archive.json records the same path with the
+    same SHA-256 that the evidence claims; `archive.py verify` checks the archive bytes.
+    """
+    index = run / "images-archive.json"
+    if Path(raw).suffix.lower() not in IMAGE_SUFFIXES or not index.is_file():
+        return None
+    files = load(index).get("files", {})
+    return index if digest and files.get(Path(raw).as_posix()) == digest else None
+
+
 def checked_file(run: Path, record: dict, path_key="path") -> Path | None:
-    """No traversal or claimed hash without its actual evidence file."""
+    """No traversal or claimed hash without its actual evidence file (or its archived record)."""
     raw = record.get(path_key)
     if not isinstance(raw, str):
         return None
     file = (run / raw).resolve()
-    if not file.is_relative_to(run.resolve()) or not file.is_file():
+    if not file.is_relative_to(run.resolve()):
         return None
+    if not file.is_file():
+        return archived_image(run, raw, record.get("sha256"))
     return file if hashlib.sha256(file.read_bytes()).hexdigest() == record.get("sha256") else None
 
 
