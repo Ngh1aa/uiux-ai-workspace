@@ -403,6 +403,10 @@ test('cảnh báo màu series trùng màu trạng thái, không cảnh báo khi 
   assert.ok(bad.rules('Trùng', 'warnings').includes('status-series'));
   const ok = run(`<section data-screen="Khác"><section class="card"><h2 style="margin:0">Chi</h2>${barChart(true, '#3b6fd8')}</section>${alert}</section>`);
   assert.ok(!ok.rules('Khác', 'warnings').includes('status-series'));
+  // Chữ mực xanh đen trên dòng trạng thái không phải màu trạng thái (lỗi gặp trên Nova Home).
+  const inkAlert = '<a class="card risk" href="#x" style="display:block;background:#fdecf2;color:#16232b">Giao dịch bất thường cần xem</a>';
+  const ink = run(`<section data-screen="Mực"><section class="card"><h2 style="margin:0">Chi</h2>${barChart(true, '#3b6fd8')}</section>${inkAlert}</section>`);
+  assert.ok(!ink.rules('Mực', 'warnings').includes('status-series'));
 });
 
 const panel = (h, extra = '') => `<section class="card" style="box-sizing:border-box;${extra}"><h2 style="margin:0 0 8px">Panel</h2><div style="height:${h}px;background:#dfe5f5"></div></section>`;
