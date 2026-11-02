@@ -1,7 +1,7 @@
 # Kết quả bộ đề chuẩn
 
 Sinh tự động bởi `python3 benchmarks/report.py`. Không sửa tay.
-Generator SHA256: `f95f1e343e9cbee55006c3f636c6f1e6905ae532c46cf1f9700e280a7dd5bc35`.
+Generator SHA256: `d645e5610dff8abd8e908f38bff6b6338b669e2220fdb0aa586ba687cc67f34e`.
 
 Điểm rubric từ 1 tới 5 theo [quality-bar-rubric](../skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md).
 Cột *Soát* là lỗi/cảnh báo render; lượt mới kiểm 390/1024/1280/1440px sáng/tối và reflow 320px. Đề 04 thêm layout strict.
