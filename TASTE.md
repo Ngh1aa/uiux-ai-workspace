@@ -16,6 +16,7 @@ file này, do chủ repo duyệt.
 - Không để màn trống: không mảng trống lớn ở đáy, bên phải hay giữa các khối. Thiếu nội dung thì thu khung,
   chia lại cột hoặc thêm thông tin có ích; không kéo giãn khoảng cách hay card để lấp. Đổi nội dung xong thì
   đo lại chiều cao khung.
+- Một họ chữ mỗi trang; không chèn chữ nghiêng hay serif làm điểm nhấn trong tiêu đề.
 
 ## Bố cục desktop
 
@@ -45,6 +46,14 @@ file này, do chủ repo duyệt.
 - Nội dung và nút không bị thanh cố định (bottom nav, thanh hành động) che.
 - Màn con mở từ trang chủ có Back trên appbar, không tô sáng một tab.
 
+## Dashboard
+
+- Việc cần xử lý (cảnh báo, quá hạn) đứng trước số liệu tham khảo.
+- Kỳ và đơn vị nằm trong tiêu đề hoặc chip, khớp trục biểu đồ. Giờ cập nhật chỉ một chỗ ở panel chính;
+  dữ liệu cũ quá hạn thì thành chip trạng thái.
+- Nhãn trực tiếp trên vạch hoặc đầu dòng, không chú giải ô màu. Màu trạng thái không làm màu dữ liệu.
+- Donut tối đa 3 phần; một con số % dùng thanh ngang. Panel trong lưới cân hàng, không panel lẻ hay trống đáy.
+
 ## Luồng và hành động
 
 - Mọi nút, dòng bấm được dẫn tới màn thật; không `href="#"` cho hành động chính. Màn mới có ít nhất một đường vào.
@@ -61,7 +70,7 @@ file này, do chủ repo duyệt.
 ## Chữ trên màn
 
 - Ngắn gọn; không câu mô tả khi giao diện tự nói lên.
-- **Không dòng giải thích phụ** dưới tiêu đề, trên card hay màn (ghi chú kỳ, thời điểm cập nhật, "bấm để…",
+- **Không dòng giải thích phụ** dưới tiêu đề, trên card hay màn (ghi chú kỳ, thời điểm cập nhật ngoài chỗ ở mục Dashboard, "bấm để…",
   cách hệ thống hoạt động, chú giải biểu đồ, "đã thông báo X"). Chỉ giữ lý do lỗi, dữ liệu thật, trạng thái.
 - **Không ghi chú bản mẫu trên màn** ("dữ liệu mẫu", "minh hoạ", "bản mẫu…", công tắc vai trò để demo);
   ghi trong phần bàn giao. Không lộ `{{biến}}` hay ghi chú nội bộ.

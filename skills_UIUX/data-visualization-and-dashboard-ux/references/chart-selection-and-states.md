@@ -1,6 +1,6 @@
 # Chart Selection and Panel States Reference
 
-Read this when two chart types both seem plausible, when specifying the states of a panel, or when writing the panel inventory. The SKILL.md decision table is the default; this file covers the tie-breakers.
+Read this when two chart types both seem plausible, when specifying the states of a panel, or when writing the panel inventory. The decision table in [practice-detail.md](practice-detail.md) (Decision 3) is the default; this file covers the tie-breakers. Visual craft and grid rules: [dashboard-craft.md](dashboard-craft.md).
 
 ## Tie-breakers between plausible charts
 

@@ -44,7 +44,7 @@ function main(argv=process.argv.slice(2)) {
   for(const brief of requiredBriefs(name.slice(0,10))) {
     const page=path.join(runDir,brief,'index.html');
     if(!fs.existsSync(page)){summary.briefs[brief]={status:'MISSING'};continue;}
-    const render=runJson(CHECKERS.render,[page,'--root',REPO,'--locale','vi-VN','--width','390','--width','1024','--width','1280','--width','1440','--height','900',...(brief==='04-multi-role'?['--layout','strict']:[]),'--reflow','--screenshot',shots,'--format','jpeg','--name',brief],path.join(runDir,`${brief}.render.json`));
+    const render=runJson(CHECKERS.render,[page,'--root',REPO,'--locale','vi-VN','--width','390','--width','1024','--width','1280','--width','1440','--height','900',...(['03-dashboard','04-multi-role','06-analytics-dashboard'].includes(brief)?['--layout','strict']:[]),'--reflow','--screenshot',shots,'--format','jpeg','--name',brief],path.join(runDir,`${brief}.render.json`));
     const flow=runJson(CHECKERS.flow,[page],path.join(runDir,`${brief}.flow-static.json`));
     const data=render.data;
     const renderStatus=!data?'UNKNOWN':render.exit_code===0&&data.errorCount===0?'PASS':'FAIL';
