@@ -50,3 +50,30 @@ có cớ ghi "FAIL có chủ ý".
   lưới, mobile, trạng thái từng panel.
 
 Phần còn phải soát bằng mắt: panel có hành động hay không, chiều tốt/xấu của delta, kỳ có khớp biểu đồ.
+
+## Sau khi sửa Nova bằng bản repo mới
+
+Nhánh Nova `claude/home-dashboard-craft`, sửa tại nguồn `assets/nova-dashboard-v2.js` và
+`assets/nova-ui/screens.css`, bundle chạy lại bằng generator. Ảnh: [1440](nova-case/after-1440.jpg),
+[1024](nova-case/after-1024.jpg), [390](nova-case/after-390.jpg).
+
+| Lỗi trước | Cách sửa |
+|---|---|
+| Giao dịch bất thường ở hàng ba | Panel "Needs your attention" ngay cạnh hero (desktop), ngay dưới hero (mobile); giữ nguyên `aria-label` mà test khoá |
+| Donut 6 phần | Thanh ngang xếp theo giá trị, một màu trung tính, nhóm lớn nhất đậm, có số và % |
+| Vòng 64% | Hai mục tiêu (Emergency buffer, Holiday Fund), mỗi mục số % + thanh ngang + "còn …" |
+| Thu chi: chú giải, hồng trùng cảnh báo, "This month" trên Jan–Jun | Chip "Apr–Sep"; ô số "In/Out, September" có delta có cơ sở, chi tăng màu cảnh báo vàng; tháng hiện tại đậm, tháng trước nhạt; bỏ chú giải |
+| Dòng phụ dưới "Balance forecast" | Bỏ; thêm nhãn trực tiếp "€500 buffer" trên đường nét đứt và chấm ở điểm thấp nhất |
+| Lỗi nguồn dữ liệu làm trống cả trang | `?panel=forecast-error`: chỉ panel dự báo hiện lỗi và "Try again", các panel khác giữ số |
+| Panel trống đáy, panel lẻ | Lưới theo vùng: 1 cột dưới 768, 2 cột tới 1399, 3 cột từ 1400; ghép panel theo chiều cao nội dung |
+| Mobile 10 panel, dài 3.623px | 4 panel đầy đủ, 6 panel còn lại thành dòng tóm tắt mở đúng màn; dài 2.191px |
+
+Giữ: ADN pastel iOS, câu chữ đã kiểm chứng với người dùng (kể cả ghi chú buffer), mọi URL và luồng.
+
+Kiểm (02/11/2026, Chromium): `taste-check --layout strict` ở 390, 1024, 1280, 1440: 0 lỗi, không còn
+cảnh báo dashboard; trạng thái lỗi panel cũng 0 lỗi. 57/57 test Playwright của Nova, a11y và browser
+evidence trên các route Home đạt. `overlay-check`: 0 lỗi. Chưa kiểm: thiết bị thật, trình đọc màn hình
+thật, người dùng thật.
+
+Lần dựng lại này còn bắt được một lỗi của chính checker: chữ mực gần đen trên dòng cảnh báo bị nhận là
+màu trạng thái. Đã sửa `status-series` và thêm test.
