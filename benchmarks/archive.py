@@ -9,7 +9,7 @@ mặt khi hash của nó khớp bản ghi này; `verify` tải zip về và so t
 Dùng:
   python3 benchmarks/archive.py pack <run> --tag benchmark-images-<run>   # tạo zip + images-archive.json, xoá ảnh
   gh release create <tag> <zip> ...                                       # đăng zip (in ra lệnh cụ thể)
-  python3 benchmarks/archive.py verify <run> [--zip <file>]               # tải (hoặc dùng zip có sẵn) và so hash
+  python3 benchmarks/archive.py verify <run> [--zip <file>]               # so hash với zip, bản phát hành, hoặc lịch sử git
   python3 benchmarks/archive.py policy                                     # chỉ lần chạy mới nhất còn ảnh trong git
 """
 from __future__ import annotations
@@ -74,6 +74,8 @@ def verify(args: argparse.Namespace) -> int:
     index = json.loads((run / "images-archive.json").read_text(encoding="utf-8"))
     if args.zip:
         data = Path(args.zip).read_bytes()
+    elif not index.get("url"):
+        return verify_from_git(run, index)
     else:
         with urllib.request.urlopen(index["url"]) as resp:  # noqa: S310 (fixed GitHub release URL)
             data = resp.read()
@@ -90,6 +92,21 @@ def verify(args: argparse.Namespace) -> int:
     for e in errors:
         print("LỖI:", e, file=sys.stderr)
     print(f"{args.run}: {len(index['files'])} ảnh, {len(errors)} lỗi")
+    return 1 if errors else 0
+
+
+def verify_from_git(run: Path, index: dict) -> int:
+    """Chưa đăng bản phát hành: so hash với bản gốc trong lịch sử git (source_commit)."""
+    import subprocess
+    errors = []
+    for rel, digest in index["files"].items():
+        path = f"{run.relative_to(ROOT).as_posix()}/{rel}"
+        res = subprocess.run(["git", "-C", str(ROOT), "show", f"{index['source_commit']}:{path}"], capture_output=True)
+        if res.returncode or sha256(res.stdout) != digest:
+            errors.append(f"không lấy được hoặc lệch hash {rel}")
+    for e in errors:
+        print("LỖI:", e, file=sys.stderr)
+    print(f"{run.name}: {len(index['files'])} ảnh (từ git {index['source_commit'][:7]}), {len(errors)} lỗi")
     return 1 if errors else 0
 
 

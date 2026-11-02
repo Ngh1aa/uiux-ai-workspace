@@ -1,8 +1,8 @@
 {
-  "note": "Ảnh của lần chạy này nằm trong bản phát hành GitHub, không nằm trong git. Kiểm: python3 benchmarks/archive.py verify 2026-10-29-iterative-repair",
-  "release": "benchmark-images-2026-10-29-iterative-repair",
+  "note": "Ảnh của lần chạy này đã bỏ khỏi cây thư mục để repo nhẹ. Bản gốc còn trong lịch sử git ở commit ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46 (git show ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46:benchmarks/runs/2026-10-29-iterative-repair/<đường dẫn>). Hash từng ảnh giữ ở đây để report.py và review-packet.py vẫn kiểm được.",
+  "release": null,
   "asset": "benchmark-images-2026-10-29-iterative-repair.zip",
-  "url": "https://github.com/Ngh1aa/uiux-ai-workspace/releases/download/benchmark-images-2026-10-29-iterative-repair/benchmark-images-2026-10-29-iterative-repair.zip",
+  "url": null,
   "asset_sha256": "530c0aaf4cdc8b5dde65c9fc137d425df3faf37b4e6d8814b105b9bbd1ba8255",
   "files": {
     "review-history/02-app/images/02-app-1280-dark.jpg": "761997cbc753d87d804a899c2843cec8dbba705f4525ae6321a194d9fb19777b",
@@ -345,5 +345,6 @@
     "shots/reviewed/05-native-v2/05-native-390-light-05-iOS-cancel.png": "985c8123aecd6573543a1d76ec73854c9bf459e3ec699abdc25c664e36c52314",
     "shots/reviewed/05-native-v2/05-native-390-light-05-iOS-date-error.png": "46b6b111ba5c73de6475de3515fb58dcb9f8874356d8208e8c9495f53ea0ebcb",
     "shots/reviewed/05-native-v2/05-native-390-light.jpg": "d3b726f61fded4f12d2f1981b6f47edaf79b66a7f01735d8ff9600c0219f886f"
-  }
+  },
+  "source_commit": "ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46"
 }
