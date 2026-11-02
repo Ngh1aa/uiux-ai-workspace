@@ -1,0 +1,19 @@
+{
+  "_note": "Skill đã gộp: thư mục cũ skills_UIUX/<child>/ nay là skills_UIUX/<host>/references/<child>/, SKILL.md thành README.md.",
+  "merged": {
+    "visual-taste-calibration": "visual-design-direction",
+    "real-world-artifact-and-domain-metaphor-design": "brand-distinctiveness-and-visual-signature",
+    "research-lite": "design-thinking-lite",
+    "ios-app-design": "mobile-app-design",
+    "android-app-design": "mobile-app-design",
+    "content-design-and-question-design": "ux-writing-and-microcopy",
+    "trust-credibility-and-transparency": "conversion-and-content",
+    "ethical-ux-and-deceptive-patterns": "conversion-and-content",
+    "site-search-and-findability": "information-architecture",
+    "authentication-account-and-recovery-ux": "interaction-patterns-and-form-ux",
+    "media-crop-and-layout-integrity": "asset-media-and-art-direction",
+    "reference-analysis-and-design-to-code": "frontend-implementation",
+    "web-quality-and-performance": "frontend-implementation",
+    "ux-laws-and-heuristics": "design-critique-and-rationale"
+  }
+}

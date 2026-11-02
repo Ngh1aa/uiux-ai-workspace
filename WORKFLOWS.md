@@ -108,7 +108,7 @@ thị giác thử trên 3 màn khác bản chất, critique 3 vòng. Bước chi
   [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md),
   [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md),
   [`information-architecture`](skills_UIUX/information-architecture/SKILL.md),
-  [`research-lite`](skills_UIUX/research-lite/SKILL.md) khi thiếu hiểu biết người dùng.
+  [`research-lite`](skills_UIUX/design-thinking-lite/references/research-lite/README.md) khi thiếu hiểu biết người dùng.
 - Ngưỡng: trung bình ≥ 4, không chiều nào < 3.5, không hard-fail.
 
 ### XL — Sản phẩm mới / chưa có design system
@@ -127,10 +127,10 @@ Bảng chọn; cách làm và lưu ý của từng track ở [workflows/tracks.m
 
 | Khi | Đọc thêm |
 |---|---|
-| iOS, Android | [`ios-app-design`](skills_UIUX/ios-app-design/SKILL.md), [`android-app-design`](skills_UIUX/android-app-design/SKILL.md) và spec sheet của nền tảng |
+| iOS, Android | [`ios-app-design`](skills_UIUX/mobile-app-design/references/ios-app-design/README.md), [`android-app-design`](skills_UIUX/mobile-app-design/references/android-app-design/README.md) và spec sheet của nền tảng |
 | Web marketing | [`responsive-and-device-strategy`](skills_UIUX/responsive-and-device-strategy/SKILL.md) |
 | Web app, dashboard | [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md), [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) |
-| Chỉ review, audit | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md), [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
+| Chỉ review, audit | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md), [`ux-laws-and-heuristics`](skills_UIUX/design-critique-and-rationale/references/ux-laws-and-heuristics/README.md) |
 | Cải thiện UI đang có | [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có) |
 | Redesign sản phẩm có code | [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md) |
 | Soát prototype | [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#soát-prototype) |

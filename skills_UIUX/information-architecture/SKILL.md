@@ -17,3 +17,5 @@ Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, 
 Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 Tra đúng mẫu khi cần: [references theo tác vụ](references/ia-decision-framework.md), [checklists theo tác vụ](checklists/ia-quality-gate.md).
+
+Thêm khi cần: Ô tìm kiếm, kết quả, bộ lọc toàn site: [`site-search-and-findability`](references/site-search-and-findability/README.md).

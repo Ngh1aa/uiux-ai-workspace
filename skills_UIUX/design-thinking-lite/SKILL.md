@@ -14,7 +14,7 @@ description: |
 Ngăn hai lỗi đắt nhất: **giải đúng vấn đề sai** và **chỉ nghĩ ra một phương án**. Skill này không phải
 một buổi workshop; nó là năm bước có giới hạn thời gian, mỗi bước để lại một sản phẩm nhỏ đọc lại được.
 
-Đi cùng: [`research-lite`](../research-lite/SKILL.md) khi cần bằng chứng,
+Đi cùng: [`research-lite`](references/research-lite/README.md) khi cần bằng chứng,
 [`audience-intent-and-top-tasks`](../audience-intent-and-top-tasks/SKILL.md) khi cần xếp hạng việc chính,
 [`ux-structure-and-flow-design`](../ux-structure-and-flow-design/SKILL.md) sau khi chốt hướng.
 
@@ -36,7 +36,7 @@ Mục tiêu: biết **ai**, **đang ở hoàn cảnh nào**, **muốn đạt đi
 - Liệt kê điều đã biết, điều đoán, điều chưa biết. Mỗi dòng có nhãn: `ĐÃ CÓ BẰNG CHỨNG`, `GIẢ ĐỊNH`, `CHƯA BIẾT`.
 - Tìm cách người dùng đang giải quyết hôm nay (giấy, Zalo, Excel, gọi điện). Đối thủ thật thường là thói
   quen cũ, không phải sản phẩm khác.
-- Cần thêm bằng chứng thì chạy [`research-lite`](../research-lite/SKILL.md).
+- Cần thêm bằng chứng thì chạy [`research-lite`](references/research-lite/README.md).
 
 Sản phẩm: bảng ba cột trên, cùng [proto-persona](../templates/ux/proto-persona.md) nếu cỡ L trở lên.
 
