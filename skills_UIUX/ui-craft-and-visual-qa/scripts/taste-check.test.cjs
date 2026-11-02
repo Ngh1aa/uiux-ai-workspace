@@ -352,3 +352,85 @@ test('cảnh báo dòng giải thích phụ dưới tiêu đề, không cảnh b
   const ok = run('<section data-screen="Dữ liệu"><h2 style="font-size:24px;margin:0">Sân Phú Nhuận</h2><p style="margin:0">Thứ Sáu 24/10, sân số 3</p></section>');
   assert.ok(!ok.rules('Dữ liệu', 'warnings').includes('subtitle'));
 });
+
+// Dashboard và biểu đồ, thêm 2026-11-02 từ bài test thật trên Nova Home (xem
+// skills_UIUX/data-visualization-and-dashboard-ux/references/nova-dashboard-case.md).
+const donut = (stops, inner) => `<div role="img" aria-label="Chi tiêu tháng Mười 1.680 nghìn đồng" style="width:128px;height:128px;border-radius:50%;background:conic-gradient(${stops})">${inner || ''}</div>`;
+
+test('bắt donut quá 3 phần, không bắt donut 3 phần', () => {
+  const six = '#8ec2fb 0 37%,#f2a7c1 37% 55%,#f0d27a 55% 67%,#7fd3b6 67% 77%,#b3a6ee 77% 85%,#d7dae2 85% 100%';
+  const bad = run(`<section data-screen="Sáu phần"><div class="card">${donut(six)}</div></section>`);
+  assert.ok(bad.rules('Sáu phần', 'errors').includes('chart-donut'));
+  assert.equal(bad.code, 1);
+  const ok = run(`<section data-screen="Ba phần"><div class="card">${donut('#8ec2fb 0 50%,#7fd3b6 50% 80%,#d7dae2 80% 100%')}</div></section>`);
+  assert.ok(!ok.rules('Ba phần', 'errors').includes('chart-donut'));
+});
+
+test('cảnh báo vòng tiến độ cho một con số', () => {
+  const r = run(`<section data-screen="Vòng"><div class="card">${donut('#7fd3b6 0 64%,#e5e7eb 64% 100%', '<strong>64%</strong>')}</div></section>`);
+  assert.ok(r.rules('Vòng', 'warnings').includes('chart-gauge'));
+});
+
+test('bắt biểu đồ SVG không có tên cho trình đọc màn hình', () => {
+  const svg = (attrs) => `<svg ${attrs} width="320" height="120" viewBox="0 0 320 120"><polyline points="0,100 80,60 160,80 240,30 320,50" fill="none" stroke="#3b6fd8" stroke-width="3"/></svg>`;
+  const bad = run(`<section data-screen="Không tên"><div class="card">${svg('')}</div></section>`);
+  assert.ok(bad.rules('Không tên', 'errors').includes('chart-name'));
+  const ok = run(`<section data-screen="Có tên"><div class="card">${svg('role="img" aria-label="Số dư thấp nhất 1.050 ngày 27/9"')}</div></section>`);
+  assert.ok(!ok.rules('Có tên', 'errors').includes('chart-name'));
+  const decor = run(`<section data-screen="Trang trí"><div class="card">${svg('aria-hidden="true"')}</div></section>`);
+  assert.ok(!decor.rules('Trang trí', 'errors').includes('chart-name'));
+});
+
+const barChart = (labels, color) => `<div role="img" aria-label="${labels ? 'Doanh thu 6 tháng, cao nhất tháng Hai 3.480' : 'Thu và chi theo tháng'}" style="display:flex;align-items:flex-end;gap:16px;height:120px;width:320px">
+  ${[60, 80, 50, 70].map((h, i) => `<span style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">${labels ? `<b style="font-size:12px">${h * 40}</b>` : ''}<i style="display:block;width:24px;height:${h}%;background:${color || '#3b6fd8'}"></i></span>`).join('')}</div>`;
+
+test('cảnh báo cột không có giá trị đọc được, không cảnh báo khi có nhãn số', () => {
+  const bad = run(`<section data-screen="Không số"><section class="card"><h2 style="margin:0">Thu và chi</h2>${barChart(false)}</section></section>`);
+  assert.ok(bad.rules('Không số', 'warnings').includes('chart-values'));
+  const ok = run(`<section data-screen="Có số"><section class="card"><h2 style="margin:0">Doanh thu</h2>${barChart(true)}</section></section>`);
+  assert.ok(!ok.rules('Có số', 'warnings').includes('chart-values'));
+});
+
+test('cảnh báo chú giải ô màu tách khỏi biểu đồ', () => {
+  const legend = '<p style="margin:0;display:flex;gap:16px"><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#3b6fd8"></i> Thu</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#d98a2b"></i> Chi</span></p>';
+  const r = run(`<section data-screen="Chú giải"><section class="card"><h2 style="margin:0">Thu và chi</h2>${barChart(true)}${legend}</section></section>`);
+  assert.ok(r.rules('Chú giải', 'warnings').includes('chart-legend'));
+});
+
+test('cảnh báo màu series trùng màu trạng thái, không cảnh báo khi khác sắc', () => {
+  const alert = '<a class="card risk" href="#x" style="display:block;background:#fdecf2;color:#a3355f">Giao dịch bất thường cần xem</a>';
+  const bad = run(`<section data-screen="Trùng"><section class="card"><h2 style="margin:0">Chi</h2>${barChart(true, '#f2a7c1')}</section>${alert}</section>`);
+  assert.ok(bad.rules('Trùng', 'warnings').includes('status-series'));
+  const ok = run(`<section data-screen="Khác"><section class="card"><h2 style="margin:0">Chi</h2>${barChart(true, '#3b6fd8')}</section>${alert}</section>`);
+  assert.ok(!ok.rules('Khác', 'warnings').includes('status-series'));
+});
+
+const panel = (h, extra = '') => `<section class="card" style="box-sizing:border-box;${extra}"><h2 style="margin:0 0 8px">Panel</h2><div style="height:${h}px;background:#dfe5f5"></div></section>`;
+
+test('cảnh báo panel trống đáy do hàng lưới kéo giãn, strict thành lỗi', () => {
+  const body = `<section data-screen="Kéo giãn" class="wide" style="height:auto;display:grid;grid-template-columns:2fr 1fr;gap:24px;align-items:stretch">${panel(560)}${panel(160)}</section>`;
+  const r = runWide(body);
+  assert.ok(r.rules('Kéo giãn', 'warnings').includes('panel-void'), JSON.stringify(r.rules('Kéo giãn', 'warnings')));
+  const strict = runWide(body, ['--layout', 'strict']);
+  assert.ok(strict.rules('Kéo giãn', 'errors').includes('panel-void'));
+  const even = runWide(`<section data-screen="Cân" class="wide" style="height:auto;display:grid;grid-template-columns:2fr 1fr;gap:24px">${panel(560)}${panel(540)}</section>`);
+  assert.ok(!even.rules('Cân', 'warnings').includes('panel-void'));
+});
+
+test('cảnh báo panel lẻ ở hàng cuối, không cảnh báo khi panel trải hết hàng', () => {
+  const bad = runWide(`<section data-screen="Lẻ" class="wide" style="height:auto;display:grid;grid-template-columns:1fr 1fr;gap:24px">${panel(200)}${panel(200)}${panel(200)}</section>`);
+  assert.ok(bad.rules('Lẻ', 'warnings').includes('panel-orphan'));
+  const ok = runWide(`<section data-screen="Trải" class="wide" style="height:auto;display:grid;grid-template-columns:1fr 1fr;gap:24px">${panel(200)}${panel(200)}${panel(200, 'grid-column:1/-1')}</section>`);
+  assert.ok(!ok.rules('Trải', 'warnings').includes('panel-orphan'));
+});
+
+test('nhận trang có query string để soát đúng màn của app nhiều màn', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'taste-'));
+  fs.writeFileSync(path.join(dir, 'app.html'), `<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>App</title></head><body><main><h1 id="t">x</h1></main>
+    <script>document.getElementById('t').textContent = new URLSearchParams(location.search).get('screen') === 'home' ? 'Trang chủ' : 'Màn khác · lỗi';</script></body></html>`);
+  const out = path.join(dir, 'out.json');
+  const res = spawnSync(process.execPath, [SCRIPT, path.join(dir, 'app.html') + '?screen=home', '--root', dir, '--width', '390', '--theme', 'light', '--no-axe', '--json', out], { encoding: 'utf8' });
+  assert.equal(res.status, 0, res.stdout + res.stderr);
+  const rules = JSON.parse(fs.readFileSync(out, 'utf8')).results.flatMap((r) => r.screens).flatMap((s) => s.errors).map((e) => e.rule);
+  assert.ok(!rules.includes('dot'), JSON.stringify(rules));
+});

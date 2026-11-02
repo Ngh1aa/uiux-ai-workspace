@@ -18,7 +18,8 @@
  *   --reflow              soát thêm ở 320 px (tương đương phóng to 400% trên 1280 px, WCAG 1.4.10):
  *                         chỉ bắt tràn ngang. Dùng cho website, không dùng cho trang có khung điện thoại cố định
  *   --no-axe              bỏ axe-core dù có cài
- *   --layout strict       coi các cảnh báo bố cục (void, coverage, flat-scale, thin-highlight) là lỗi;
+ *   --layout strict       coi các cảnh báo bố cục (void, coverage, flat-scale, thin-highlight,
+ *                         panel-void, panel-orphan) là lỗi;
  *                         dùng cho màn desktop và artboard canvas trước khi giao
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
@@ -42,6 +43,10 @@
  *     decor-overlap  hoạ tiết ::before/::after chạy qua dòng chữ (vân nền phủ kín khối thì bỏ qua)
  *     fixed-overlap  nội dung bị thanh cố định ở đáy che khi đã cuộn hết
  *     Chữ trong phần tử có data-annotation (nhãn artboard, gallery) không bị soát các luật chữ trên.
+ *   - dashboard và biểu đồ (skill data-visualization-and-dashboard-ux):
+ *     chart-donut    donut/pie quá 3 phần (conic-gradient hoặc vòng SVG stroke-dasharray)
+ *     chart-name     biểu đồ (canvas, SVG có đường/cột, [role="img"] có vạch, [data-chart]) không có tên
+ *                    cho trình đọc màn hình; SVG aria-hidden được coi là trang trí
  * CẢNH BÁO:
  *   - card ngang hàng có bán kính bo góc khác nhau
  *   - hơn 3 nhóm màu sắc trong một màn
@@ -56,6 +61,15 @@
  *   - flat-scale: chữ lớn nhất chưa gấp 1,5 lần chữ thân (màn hẹp dưới 600 px: 1,3 lần)
  *   - thin-highlight: card nổi bật dưới 3 dòng chữ hoặc chỉ một cỡ chữ, hoặc nội dung phủ dưới nửa card
  *   - subtitle: dòng giải thích phụ ngay dưới tiêu đề (câu có dấu chấm, hoặc mở đầu "chọn", "bấm", "để"…)
+ *   - chart-gauge: vòng tiến độ chỉ để hiện một con số %; dùng số lớn kèm thanh ngang
+ *   - chart-values: từ 3 cột trở lên mà không có giá trị đọc được (nhãn số, số trong tên biểu đồ, hay bảng)
+ *   - chart-legend: chú giải ô màu tách khỏi biểu đồ; ghi nhãn trực tiếp
+ *   - status-series: màu dữ liệu cùng sắc với màu trạng thái (lớp risk, danger, error, alert, warning,
+ *     overdue, unusual… hoặc role="alert", data-status) trên cùng màn
+ *   - panel-void (bố cục): panel trong lưới trống đáy > 96 px và > 25% chiều cao vì hàng bị kéo giãn
+ *   - panel-orphan (bố cục): panel lẻ một mình ở hàng cuối, rộng chưa tới 60% lưới
+ *
+ * Trang có thể kèm query hoặc hash để chọn màn của app nhiều màn: app.html?screen=home.
  *
  * axe-core là tuỳ chọn: cài cùng chỗ với Playwright (npm install axe-core@4). Không có thì kết
  * quả ghi "axe: chưa chạy"; khi giao phải nói rõ phần khả năng tiếp cận chưa được soát tự động.
@@ -245,6 +259,8 @@ function auditInPage() {
   };
   const INTERACTIVE = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [role="tab"], [role="switch"], [role="checkbox"], [role="radio"], [role="link"]';
   const CONTROL = 'button, input, select, textarea, a.ds-button, [role="button"], [role="switch"], [role="tab"]';
+  // Lớp hoặc data-status báo trạng thái cần chú ý; màu của chúng được giữ riêng cho trạng thái.
+  const STATUS = /(^|[\s_-])(risk|danger|error|alert|critical|warning|overdue|negative|unusual|late)([\s_-]|$)/i;
 
   const roots = [...document.querySelectorAll('[data-screen]')].filter(visible);
   const screens = roots.length ? roots : [document.body];
@@ -675,6 +691,140 @@ function auditInPage() {
       for (const [sc, top] of saved) sc.scrollTop = top;
     }
 
+    // 10. Dashboard và biểu đồ (skill data-visualization-and-dashboard-ux, dashboard-gate).
+    // Nhận biểu đồ không cần quy ước riêng: canvas, [data-chart], [role="img"] có vạch, SVG có đường/cột/vòng,
+    // donut vẽ bằng conic-gradient. Panel là card có nền/viền/bóng nằm trong lưới.
+    const saturated = (c) => c[3] > 0.3 && hsl(c)[1] >= 0.2 && hsl(c)[2] < 0.97;
+    const hueGap = (a, b) => { const d = Math.abs(hsl(a)[0] - hsl(b)[0]); return Math.min(d, 360 - d); };
+    const gradientColors = (value) => [...new Set((value.match(/rgba?\([^)]*\)|#[0-9a-f]{3,8}\b/gi) || []).map((v) => hex(toRgba(v))))];
+    const leafMarks = (el) => [...el.querySelectorAll('*')].filter((m) => {
+      if (!visible(m) || m.children.length || m.textContent.trim()) return false;
+      const r = m.getBoundingClientRect();
+      if (m instanceof SVGElement) return m.matches('rect') && r.width <= 96 && r.height >= 4 && saturated(toRgba(getComputedStyle(m).fill));
+      return r.width <= 96 && r.height >= 8 && saturated(toRgba(getComputedStyle(m).backgroundColor));
+    });
+    const isDonut = (el) => {
+      const st = getComputedStyle(el);
+      const r = el.getBoundingClientRect();
+      const rad = st.borderTopLeftRadius.trim().endsWith('%') ? (parseFloat(st.borderTopLeftRadius) / 100) * r.width : parseFloat(st.borderTopLeftRadius);
+      return /conic-gradient/.test(st.backgroundImage) && r.width >= 48 && Math.abs(r.width - r.height) < 4 && rad >= r.width * 0.4;
+    };
+    const svgChartLike = (svg) => !!svg.querySelector('polyline') ||
+      [...svg.querySelectorAll('path, g')].some((p) => /line|area|grid|bar|series|chart|axis/i.test(p.getAttribute('class') || '')) ||
+      svg.querySelectorAll('rect').length >= 3 || [...svg.querySelectorAll('circle')].filter((c) => getComputedStyle(c).strokeDasharray !== 'none').length >= 2;
+    const charts = all.filter((el) => {
+      if (el === root || annotated(el)) return false;
+      if (el.matches('[data-chart]')) return true;
+      const r = el.getBoundingClientRect();
+      if (r.width < 96 || r.height < 48) return false;
+      if (el.matches('canvas')) return true;
+      if (el.matches('svg')) return el.getAttribute('aria-hidden') !== 'true' && svgChartLike(el) && !el.parentElement.closest('[role="img"], [data-chart]');
+      if (isDonut(el)) return !el.parentElement.closest('[role="img"], [data-chart]');
+      return el.getAttribute('role') === 'img' && !el.matches('img') && !el.parentElement.closest('[role="img"], [data-chart]') && leafMarks(el).length >= 3;
+    });
+    const accName = (el) => {
+      const ids = (el.getAttribute('aria-labelledby') || '').split(/\s+/).filter(Boolean);
+      const byId = ids.map((id) => (document.getElementById(id) || {}).textContent || '').join(' ');
+      const title = el.matches('svg') ? (el.querySelector(':scope > title') || {}).textContent || '' : '';
+      const caption = (el.closest('figure') && el.closest('figure').querySelector('figcaption')) ? el.closest('figure').querySelector('figcaption').textContent : '';
+      return `${el.getAttribute('aria-label') || ''} ${byId} ${title} ${caption}`.replace(/\s+/g, ' ').trim();
+    };
+    const panelOf = (el) => el.closest('[data-panel], section, article, figure') || el.parentElement;
+    const statusColors = [];
+    for (const el of all) {
+      const cls = `${typeof el.className === 'string' ? el.className : ''} ${el.getAttribute('data-status') || ''}`;
+      if (!(STATUS.test(cls) || el.getAttribute('role') === 'alert') || charts.some((c) => c.contains(el))) continue;
+      const st = getComputedStyle(el);
+      for (const v of [st.color, st.backgroundColor]) { const c = toRgba(v); if (saturated(c) && hsl(c)[1] >= 0.3) statusColors.push({ c, el }); }
+    }
+    const markColors = [];
+    for (const chart of charts) {
+      const name = accName(chart);
+      const label = describe(chart).split(' "')[0];
+      const donuts = [chart, ...chart.querySelectorAll('*')].filter((n) => visible(n) && isDonut(n));
+      const svgArcs = chart.matches('svg') ? [...chart.querySelectorAll('circle')].filter((c) => getComputedStyle(c).strokeDasharray !== 'none') : [];
+      const parts = donuts.length ? gradientColors(getComputedStyle(donuts[0]).backgroundImage).length : svgArcs.length;
+      const percentInside = /\d\s?%/.test(chart.textContent);
+      if (parts > 3) {
+        errors.push({ rule: 'chart-donut', message: `Donut/pie ${parts} phần (tối đa 3): ${label} "${name.slice(0, 40)}". Dùng thanh ngang xếp theo giá trị, ghi nhãn trực tiếp` });
+      } else if ((donuts.length || svgArcs.length) && parts <= 2 && percentInside) {
+        warnings.push({ rule: 'chart-gauge', message: `Vòng tiến độ cho một con số: ${label} "${name.slice(0, 40)}". Dùng số lớn kèm thanh tiến độ ngang` });
+      }
+      if (!name) errors.push({ rule: 'chart-name', message: `Biểu đồ không có tên cho trình đọc màn hình: ${label}. Thêm aria-label nêu kết luận, hoặc figure + figcaption` });
+      const bars = leafMarks(chart);
+      const panel = panelOf(chart);
+      const hasTable = !!(panel && panel.querySelector('table'));
+      if (bars.length >= 3 && !/\d/.test(chart.textContent) && !/\d/.test(name) && !hasTable) {
+        warnings.push({ rule: 'chart-values', message: `${bars.length} cột không có giá trị đọc được (không nhãn số, tên biểu đồ không có số, không có bảng): ${label} "${name.slice(0, 40)}". Ghi giá trị trên cột hoặc nêu số trong tóm tắt` });
+      }
+      if (panel && panel !== root) {
+        const swatches = [...panel.querySelectorAll('*')].filter((s) => {
+          if (chart.contains(s) || !visible(s) || s.children.length || s.textContent.trim()) return false;
+          const r = s.getBoundingClientRect();
+          return r.width >= 4 && r.width <= 16 && r.height >= 4 && r.height <= 16 && saturated(toRgba(getComputedStyle(s).backgroundColor)) &&
+            s.parentElement && s.parentElement.textContent.trim().length > 0;
+        });
+        if (swatches.length >= 2) {
+          warnings.push({ rule: 'chart-legend', message: `Chú giải ${swatches.length} ô màu tách khỏi biểu đồ ${label} "${name.slice(0, 40)}". Ghi nhãn trực tiếp lên vạch hoặc đầu dòng, bỏ chú giải` });
+        }
+        for (const s of swatches) markColors.push({ c: toRgba(getComputedStyle(s).backgroundColor), chart });
+      }
+      for (const m of bars) markColors.push({ c: toRgba(m instanceof SVGElement ? getComputedStyle(m).fill : getComputedStyle(m).backgroundColor), chart });
+      for (const d of donuts) for (const v of gradientColors(getComputedStyle(d).backgroundImage)) markColors.push({ c: toRgba(v), chart });
+    }
+    const clashed = new Set();
+    for (const mark of markColors) {
+      if (!saturated(mark.c) || clashed.has(mark.chart)) continue;
+      const hit = statusColors.find((s) => hueGap(s.c, mark.c) < 15);
+      if (hit) {
+        clashed.add(mark.chart);
+        warnings.push({ rule: 'status-series', message: `Màu dữ liệu ${hex(mark.c)} trùng sắc màu trạng thái ${hex(hit.c)} của ${describe(hit.el)}. Giữ màu trạng thái cho trạng thái, đổi màu series` });
+      }
+    }
+
+    // Panel trong lưới: khoảng trống đáy card bị kéo giãn theo hàng, và panel lẻ ở hàng cuối.
+    const panelSurface = (el) => {
+      // Ảnh/biểu đồ (role="img") và thanh điều hướng phụ (cột nav cao theo nội dung bên cạnh) không phải panel nội dung.
+      if (el === root || el.matches(CONTROL) || el.matches(MEDIA) || el.matches('nav, aside, [role="navigation"], [role="complementary"]') || annotated(el)) return false;
+      const r = el.getBoundingClientRect();
+      if (r.width < 180 || r.height < 120 || r.width >= rootRect.width - 2) return false;
+      const { own, hasBg, hasEdge, hasShadow } = surfaceOf(el);
+      if (!(hasBg || hasEdge || hasShadow)) return false;
+      return !(own[3] >= 0.999 && ratio(own, backdrop(el.parentElement) || rootBg) < 1.02 && !hasEdge && !hasShadow);
+    };
+    const containers = new Set(all.filter(panelSurface).map((p) => p.parentElement).filter(Boolean));
+    for (const box of containers) {
+      const bst = getComputedStyle(box);
+      const multi = bst.display.includes('grid') || (bst.display.includes('flex') && bst.flexWrap === 'wrap');
+      const items = [...box.children].filter((c) => visible(c) && panelSurface(c) && getComputedStyle(c).position !== 'absolute');
+      if (!multi || items.length < 2) continue;
+      for (const card of items) {
+        if (card.hasAttribute('data-whitespace') || card.querySelector('[data-whitespace]')) continue;
+        const cr = card.getBoundingClientRect();
+        const cs = getComputedStyle(card);
+        const parts = [...card.querySelectorAll('*')].filter((n) => visible(n) && !(n.closest('svg') && n.closest('svg') !== n) && (ownText(n) || n.matches(MEDIA) || massOf(n)));
+        if (!parts.length) continue;
+        const bottom = Math.max(...parts.flatMap((n) => (ownText(n) && !n.matches(MEDIA) ? textRects(n) : [n.getBoundingClientRect()])).map((r) => r.bottom));
+        const gap = cr.bottom - parseFloat(cs.paddingBottom || 0) - parseFloat(cs.borderBottomWidth || 0) - bottom;
+        if (gap > Math.max(96, cr.height * 0.25)) {
+          warnings.push({ rule: 'panel-void', message: `Panel trống ${Math.round(gap)}px ở đáy (${Math.round((gap / cr.height) * 100)}% chiều cao): ${describe(card)}. Cân lại lưới (đổi span, ghép panel, thêm nội dung có ích) thay vì để hàng kéo giãn` });
+        }
+      }
+      if (items.length < 3) continue;
+      const rows = [];
+      for (const card of items) {
+        const r = card.getBoundingClientRect();
+        const row = rows.find((x) => Math.abs(x.top - r.top) < 6);
+        if (row) row.items.push(r); else rows.push({ top: r.top, items: [r] });
+      }
+      rows.sort((a, b) => a.top - b.top);
+      const last = rows[rows.length - 1];
+      const inner = box.getBoundingClientRect().width - parseFloat(bst.paddingLeft || 0) - parseFloat(bst.paddingRight || 0);
+      if (rows.length >= 2 && last.items.length === 1 && last.items[0].width < inner * 0.6 && rows.slice(0, -1).some((x) => x.items.length >= 2)) {
+        warnings.push({ rule: 'panel-orphan', message: `Panel lẻ một mình ở hàng cuối, bỏ trống ${Math.round(inner - last.items[0].width)}px: ${describe(items.find((c) => Math.abs(c.getBoundingClientRect().top - last.top) < 6))}. Cho panel trải hết hàng hoặc chia lại lưới` });
+      }
+    }
+
     const dedupe = (items) => {
       const seen = new Set();
       return items.filter((item) => (seen.has(item.message) ? false : seen.add(item.message)));
@@ -763,10 +913,14 @@ async function main() {
     for (const page of opts.pages) {
       let url = page;
       if (!/^https?:\/\//.test(page)) {
-        const file = path.resolve(page);
+        // App nhiều màn chọn màn bằng query hoặc hash (app.html?screen=home): phục vụ file, giữ phần sau.
+        const cut = page.search(/[?#]/);
+        const filePart = cut >= 0 ? page.slice(0, cut) : page;
+        const suffix = cut >= 0 ? page.slice(cut) : '';
+        const file = path.resolve(filePart);
         if (!file.startsWith(opts.root + path.sep)) throw new Error(`${page} nằm ngoài --root ${opts.root}`);
-        if (!fs.existsSync(file)) throw new Error(`không có file ${page}`);
-        url = `${base}/${path.relative(opts.root, file).split(path.sep).map(encodeURIComponent).join('/')}`;
+        if (!fs.existsSync(file)) throw new Error(`không có file ${filePart}`);
+        url = `${base}/${path.relative(opts.root, file).split(path.sep).map(encodeURIComponent).join('/')}${suffix}`;
       }
       const passes = [];
       for (const width of opts.widths) for (const theme of themes) passes.push({ width, theme, reflow: false });
@@ -790,7 +944,7 @@ async function main() {
           await tab.evaluate(() => document.fonts && document.fonts.ready);
           let screens = await tab.evaluate(auditInPage);
           if (opts.layout === 'strict') {
-            const LAYOUT = ['void', 'coverage', 'flat-scale', 'thin-highlight'];
+            const LAYOUT = ['void', 'coverage', 'flat-scale', 'thin-highlight', 'panel-void', 'panel-orphan'];
             screens = screens.map((sc) => ({
               ...sc,
               errors: [...sc.errors, ...sc.warnings.filter((w) => LAYOUT.includes(w.rule))],
