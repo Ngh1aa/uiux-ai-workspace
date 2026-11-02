@@ -17,3 +17,5 @@ Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, 
 Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 Tra đúng mẫu khi cần: [references theo tác vụ](references/brand-recognition-and-consistency-qa.md).
+
+Thêm khi cần: Tìm vật gốc của ngành làm dấu ấn: [`real-world-artifact-and-domain-metaphor-design`](references/real-world-artifact-and-domain-metaphor-design/README.md).

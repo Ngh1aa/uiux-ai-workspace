@@ -44,6 +44,9 @@ jobs:
       - name: Benchmark report matches recorded runs
         working-directory: .
         run: python benchmarks/report.py --check
+      - name: Only the latest benchmark run keeps images in git
+        working-directory: .
+        run: python benchmarks/archive.py policy
       - name: Benchmark provenance and result validation tests
         working-directory: .
         run: python -m unittest discover -s benchmarks -p "test_*.py"

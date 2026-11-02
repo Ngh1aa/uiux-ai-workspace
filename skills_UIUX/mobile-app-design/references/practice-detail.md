@@ -20,8 +20,8 @@ Use [professional practice](../references/professional-practice.md) for the comp
 ## Pattern defaults
 Use the [mobile patterns playbook](../references/mobile-patterns-playbook.md) for structure, onboarding,
 auth, permissions, lists, search, forms, feedback, empty states, notifications, settings and
-platform divergence. Platform metrics: [iOS](../../ios-app-design/references/ios-spec-sheet.md),
-[Android](../../android-app-design/references/android-spec-sheet.md).
+platform divergence. Platform metrics: [iOS](ios-app-design/references/ios-spec-sheet.md),
+[Android](android-app-design/references/android-spec-sheet.md).
 
 ## Stage routing
 - UX before visual styling: use [mobile UX-first practice](../../visual-design-direction/references/mobile-ux-first.md). Walk through representative tasks and recovery before selecting composition, typography or imagery.
