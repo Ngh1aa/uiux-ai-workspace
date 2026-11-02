@@ -53,8 +53,8 @@ main{padding:28px 32px 32px;max-width:1360px;margin:0 auto}
 .btn.ghost{border-color:transparent;background:var(--brand-soft);color:var(--brand-ink)}
 
 .lanes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:28px;align-items:start}
-.lane{background:var(--surface);border-radius:var(--r);padding:20px;border:1px solid var(--line)}
-.lh{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line-soft)}
+.lane{display:flex;flex-direction:column;gap:12px}
+.lh{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:2px solid var(--ink);min-height:64px}
 .lh .w{flex:1;min-width:0}
 .lh h2{font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
 .lh .w span{font-size:14px;color:var(--muted)}
@@ -64,22 +64,22 @@ main{padding:28px 32px 32px;max-width:1360px;margin:0 auto}
 .chip.err{background:var(--err-bg);color:var(--err)}
 .chip svg{width:16px;height:16px}
 
-.v{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:16px 0;border-top:1px solid var(--line-soft)}
-.lh+.v{border-top:0}
+.v{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:16px;background:var(--surface);border-radius:var(--r);border:1px solid var(--line)}
+a.v:hover{border-color:#B9C8BE}
+.v.slot{background:none;border:1.5px dashed #AFC0B4;align-items:center}
 .v .t{font-size:17px;font-weight:500;line-height:1.4}
 .v .b{display:flex;flex-direction:column;gap:2px;min-width:0}
 .v .b b{font-size:16px}
-.v .b>span{font-size:14px;color:var(--muted)}
+.v .b .s{font-size:14px;color:var(--muted)}
 .v .chip{margin-top:6px;align-self:flex-start}
 .v.done .t,.v.done .b b{color:var(--muted)}
 .v .acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .nowline{display:flex;align-items:center;gap:10px;color:var(--brand);font-size:13px;font-weight:600;height:20px}
 .nowline::after{content:"";flex:1;height:2px;background:var(--brand);border-radius:2px}
-.nowline+.v{border-top:0}
-.free{margin-top:4px;border:1.5px dashed #B3C2B8;border-radius:10px;padding:8px 8px 8px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.free{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .free b{font-size:15px;color:var(--brand-ink)}
-.clash{margin-top:10px;border:1.5px dashed var(--err);background:var(--err-bg);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:4px}
-.clash .hd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.clash{margin-top:12px;border:1.5px dashed var(--err);background:var(--err-bg);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.clash .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .clash b{font-size:15px}
 .clash .msg{font-size:14px;color:var(--err);font-weight:400}
 .clash .acts{display:flex;gap:8px;margin-top:8px}
@@ -152,17 +152,17 @@ main{padding:28px 32px 32px;max-width:1360px;margin:0 auto}
     <div class="lanes">
       <section class="lane" aria-label="Ghế 1">
         <div class="lh"><div class="w"><h2>Ghế 1</h2><span>BS. Phan Minh Đức</span></div><span class="chip">Trống</span></div>
-        <a class="v done" href="#bn-vo-thi-hong"><span class="t">8:00</span><span class="b"><b>Võ Thị Hồng</b><span>Trám răng</span><span class="chip"><svg class="i"><use href="#check"/></svg>Đã đến</span></span></a>
+        <a class="v done" href="#bn-vo-thi-hong"><span class="t">8:00</span><span class="b"><b>Võ Thị Hồng</b><span class="s">Trám răng</span><span class="chip"><svg class="i"><use href="#check"/></svg>Đã đến</span></span></a>
         <div class="nowline">9:15</div>
-        <a class="v" href="#bn-lam-gia-bao"><span class="t">9:30</span><span class="b"><b>Lâm Gia Bảo</b><span>Nhổ răng sữa, 8 tuổi</span><span class="chip">Chưa đến</span></span></a>
-        <div class="v"><span class="t">10:30</span><span class="b"><span class="free"><b>Trống</b><a class="btn ghost" href="#dat-lich">Xếp khách</a></span></span></div>
+        <a class="v" href="#bn-lam-gia-bao"><span class="t">9:30</span><span class="b"><b>Lâm Gia Bảo</b><span class="s">Nhổ răng sữa, 8 tuổi</span><span class="chip">Chưa đến</span></span></a>
+        <div class="v slot"><span class="t">10:30</span><span class="b"><span class="free"><b>Trống</b><a class="btn ghost" href="#dat-lich">Xếp khách</a></span></span></div>
       </section>
 
       <section class="lane" aria-label="Ghế 2">
         <div class="lh"><div class="w"><h2>Ghế 2</h2><span>BS. Hoàng Lan</span></div><span class="chip busy">Đang khám</span></div>
-        <a class="v" href="#bn-dang-quoc-viet"><span class="t">8:30</span><span class="b"><b>Đặng Quốc Việt</b><span>Nhổ răng khôn</span><span class="chip busy">Đang khám</span></span></a>
+        <a class="v" href="#bn-dang-quoc-viet"><span class="t">8:30</span><span class="b"><b>Đặng Quốc Việt</b><span class="s">Nhổ răng khôn</span><span class="chip busy">Đang khám</span></span></a>
         <div class="nowline">9:15</div>
-        <div class="v" id="dat-lich"><span class="t">10:00</span><span class="b"><b>Trương Văn Nam</b><span>Tái khám niềng</span><span class="chip">Chưa đến</span>
+        <div class="v" id="dat-lich"><span class="t">10:00</span><span class="b"><b>Trương Văn Nam</b><span class="s">Tái khám niềng</span><span class="chip">Chưa đến</span>
           <span class="clash" role="alert">
             <span class="hd"><b>Ngô Thanh Tâm</b><span class="chip err"><svg class="i"><use href="#alert"/></svg>Trùng giờ</span></span>
             <span class="msg">Khách vãng lai, khám tổng quát</span>
@@ -172,10 +172,10 @@ main{padding:28px 32px 32px;max-width:1360px;margin:0 auto}
 
       <section class="lane" aria-label="Ghế 3">
         <div class="lh"><div class="w"><h2>Ghế 3</h2><span>KTV Trần Bảo</span></div><span class="chip late">Chờ khách</span></div>
-        <div class="v"><span class="t">9:00</span><span class="b"><a href="#bn-ho-ngoc-mai"><b>Hồ Ngọc Mai</b></a><span>Cạo vôi</span><span class="chip late">Muộn 15 phút</span>
+        <div class="v"><span class="t">9:00</span><span class="b"><b>Hồ Ngọc Mai</b><span class="s">Cạo vôi</span><span class="chip late">Muộn 15 phút</span>
           <span class="acts"><a class="btn" href="#goi-ho-ngoc-mai"><svg class="i"><use href="#phone"/></svg>Gọi điện</a></span></span></div>
         <div class="nowline">9:15</div>
-        <div class="v"><span class="t">9:30</span><span class="b"><span class="free"><b>Trống</b><a class="btn ghost" href="#dat-lich">Xếp khách</a></span></span></div>
+        <div class="v slot"><span class="t">9:30</span><span class="b"><span class="free"><b>Trống</b><a class="btn ghost" href="#dat-lich">Xếp khách</a></span></span></div>
       </section>
     </div>
   </main>
