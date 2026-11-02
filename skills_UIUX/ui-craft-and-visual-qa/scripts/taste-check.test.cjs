@@ -74,7 +74,7 @@ test('ảnh bị hủy mà vẫn là nguồn hiện tại phải báo lỗi', as
 
 const GOOD = `
   <section data-screen="Tốt">
-    <div class="hero"><p>Việc cần xử lý</p><p style="font-size:40px;line-height:44px;margin:0">35</p><p style="margin:0">12 việc hạn hôm nay</p></div>
+    <div class="hero"><p style="margin:0">Việc cần xử lý</p><p style="font-size:40px;line-height:44px;margin:0">35</p><p style="margin:0">12 việc hạn hôm nay</p></div>
     <div class="card"><p style="margin:0">Học phí chưa thu</p><p style="margin:0;color:#5f6370">Hạn 15/10</p></div>
     <div class="card"><button type="button">Xử lý</button></div>
   </section>`;
@@ -444,4 +444,42 @@ test('panel cạnh panel trải hai hàng không bị coi là lẻ; chữ cỡ 0
   assert.ok(!span.rules('Cạnh', 'warnings').includes('panel-orphan'), JSON.stringify(span.rules('Cạnh', 'warnings')));
   const hidden = run('<section data-screen="Ẩn"><div class="card"><div style="height:12px;background:#a9e5d2;font-size:0;border-radius:99px">Safe now</div></div></section>');
   assert.ok(!hidden.rules('Ẩn', 'errors').includes('small-text'));
+});
+
+test('bắt padding card không đều, nhận padding đều', () => {
+  const bad = run('<section data-screen="Lệch"><div class="card" style="padding:12px 24px"><h2 style="margin:0">Số dư</h2><p style="margin:0">€1,240</p></div></section>');
+  assert.ok(bad.rules('Lệch', 'errors').includes('card-padding'));
+  const ok = run('<section data-screen="Đều"><div class="card" style="padding:20px"><h2 style="margin:0">Số dư</h2><p style="margin:0">€1,240</p></div></section>');
+  assert.ok(!ok.rules('Đều', 'errors').includes('card-padding'));
+  assert.ok(!ok.rules('Đều', 'warnings').includes('card-inset'));
+});
+
+test('cảnh báo lề trong card lệch khi lề trên khác lề trái', () => {
+  const r = run('<section data-screen="Lề"><div class="card" style="padding:0"><div style="padding:40px 16px 16px"><h2 style="margin:0">Số dư</h2><p style="margin:0">€1,240</p></div></div></section>');
+  assert.ok(r.rules('Lề', 'warnings').includes('card-inset'), JSON.stringify(r.rules('Lề', 'warnings')));
+});
+
+test('cảnh báo card rộng hơn nhiều so với nội dung, strict thành lỗi', () => {
+  const body = '<section data-screen="Rộng" class="wide" style="height:auto"><div class="card" style="padding:24px"><h2 style="margin:0">Số dư</h2><p style="margin:0">€1,240</p></div></section>';
+  assert.ok(runWide(body).rules('Rộng', 'warnings').includes('card-wide'));
+  assert.ok(runWide(body, ['--layout', 'strict']).rules('Rộng', 'errors').includes('card-wide'));
+  const row = runWide('<section data-screen="Ngang" class="wide" style="height:auto"><div class="card" style="padding:24px;display:flex;justify-content:space-between"><h2 style="margin:0">Số dư</h2><p style="margin:0">€1,240</p></div></section>');
+  assert.ok(!row.rules('Ngang', 'warnings').includes('card-wide'));
+});
+
+test('cảnh báo dấu hiệu AI hoá: nền gradient, glow, icon cầu vồng, overline lặp; data-artwork được miễn', () => {
+  const tiles = ['#5b9cf0', '#5cc3a0', '#e0a35b'].map((c) => `<span class="ico" style="display:inline-block;width:40px;height:40px;border-radius:12px;background:${c}"></span>`).join('');
+  const r = run(`<section data-screen="AI"><div class="card" style="background:linear-gradient(135deg,#8f7fe0,#5b9cf0);min-height:120px;box-shadow:0 8px 32px rgba(91,156,240,.6)"><h2 style="margin:0">Tổng</h2></div>
+    <div class="card"><p style="margin:0;font-size:12px">Tổng quan</p><h2 style="margin:0">Chi tiêu</h2></div><div class="card"><p style="margin:0;font-size:12px">Mục tiêu</p><h2 style="margin:0">Tiết kiệm</h2></div><div>${tiles}</div></section>`);
+  const w = r.rules('AI', 'warnings');
+  for (const rule of ['gradient-surface', 'glow', 'tile-rainbow', 'eyebrow']) assert.ok(w.includes(rule), `${rule}: ${JSON.stringify(w)}`);
+  const art = run('<section data-screen="Thẻ"><div class="card" data-artwork style="background:linear-gradient(135deg,#8f7fe0,#5b9cf0);min-height:120px"><h2 style="margin:0">Thẻ ảo</h2></div></section>');
+  assert.ok(!art.rules('Thẻ', 'warnings').includes('gradient-surface'));
+});
+
+test('bắt emoji trong chữ, không bắt mũi tên chữ', () => {
+  const r = run('<section data-screen="Emoji"><div class="card"><h2 style="margin:0">Xong rồi 🎉</h2></div></section>');
+  assert.ok(r.rules('Emoji', 'errors').includes('emoji'));
+  const ok = run('<section data-screen="Mũi tên"><div class="card"><h2 style="margin:0">Xem thêm →</h2></div></section>');
+  assert.ok(!ok.rules('Mũi tên', 'errors').includes('emoji'));
 });
