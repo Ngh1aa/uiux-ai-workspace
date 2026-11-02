@@ -63,10 +63,10 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 5. Giữ nguyên ảnh và điểm các lượt lịch sử. Runner từ chối ghi đè v1/v2; lượt local chưa review
    có thể chạy lại với `--refresh`. Khi đã có review, tạo revision mới để giữ bằng chứng đã duyệt.
    Ảnh state chỉ tạo từ browser scenarios được ghi riêng trong `shots/behavior/`; ảnh initial không chứng minh coverage toàn bộ màn.
-6. Trong git chỉ giữ ảnh của lần chạy mới nhất. Thêm lần chạy mới thì đóng ảnh của lần trước bằng
-   `python3 benchmarks/archive.py pack <run> --tag benchmark-images-<run>` và đăng zip lên bản phát hành
-   GitHub (lệnh in ra). Lần chạy giữ `images-archive.json` (SHA-256 zip và từng ảnh) nên `report.py --check`
-   và `review-packet.py verify` vẫn kiểm được; `archive.py verify <run>` tải zip về so từng byte.
+6. Trong cây thư mục chỉ giữ ảnh của lần chạy mới nhất. Thêm lần chạy mới thì bỏ ảnh của lần trước bằng
+   `python3 benchmarks/archive.py pack <run> --tag benchmark-images-<run>`. Lần chạy giữ `images-archive.json`
+   (SHA-256 từng ảnh và commit còn bản gốc) nên `report.py --check` và `review-packet.py verify` vẫn kiểm được;
+   `archive.py verify <run>` lấy ảnh từ lịch sử git (hoặc zip) và so từng byte.
    CI chạy `archive.py policy` để chặn ảnh của lần chạy cũ quay lại git.
 
 ## Chấm lại theo gu chủ repo (2026-10-30)

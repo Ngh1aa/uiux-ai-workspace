@@ -1,8 +1,8 @@
 {
-  "note": "Ảnh của lần chạy này nằm trong bản phát hành GitHub, không nằm trong git. Kiểm: python3 benchmarks/archive.py verify 2026-10-29-fresh",
-  "release": "benchmark-images-2026-10-29-fresh",
+  "note": "Ảnh của lần chạy này đã bỏ khỏi cây thư mục để repo nhẹ. Bản gốc còn trong lịch sử git ở commit ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46 (git show ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46:benchmarks/runs/2026-10-29-fresh/<đường dẫn>). Hash từng ảnh giữ ở đây để report.py và review-packet.py vẫn kiểm được.",
+  "release": null,
   "asset": "benchmark-images-2026-10-29-fresh.zip",
-  "url": "https://github.com/Ngh1aa/uiux-ai-workspace/releases/download/benchmark-images-2026-10-29-fresh/benchmark-images-2026-10-29-fresh.zip",
+  "url": null,
   "asset_sha256": "dcfb36b3f015b35ef0e6637d3905454ee849ae506c94954f0fc23bfc4198b6f1",
   "files": {
     "review-history/01-landing/images/01-confirm.png": "da1d25a0ec154a129d158d8931ef0930afe8ef3eb912973b1474eba1f7efbf13",
@@ -462,5 +462,6 @@
     "shots/reviewed/05-native-v2/05-native-1280-light.jpg": "08777aa990446e79a341a8c371e1996fc7746d3c27f84ccd63ab1014374f8c71",
     "shots/reviewed/05-native-v2/05-native-390-dark.jpg": "65e715e2ed7c789feed3de0740bb613c38f6b78ae1ccee6950af8b4feef23b35",
     "shots/reviewed/05-native-v2/05-native-390-light.jpg": "d3b726f61fded4f12d2f1981b6f47edaf79b66a7f01735d8ff9600c0219f886f"
-  }
+  },
+  "source_commit": "ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46"
 }

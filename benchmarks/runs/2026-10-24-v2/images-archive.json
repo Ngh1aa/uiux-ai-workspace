@@ -1,8 +1,8 @@
 {
-  "note": "Ảnh của lần chạy này nằm trong bản phát hành GitHub, không nằm trong git. Kiểm: python3 benchmarks/archive.py verify 2026-10-24-v2",
-  "release": "benchmark-images-2026-10-24-v2",
+  "note": "Ảnh của lần chạy này đã bỏ khỏi cây thư mục để repo nhẹ. Bản gốc còn trong lịch sử git ở commit ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46 (git show ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46:benchmarks/runs/2026-10-24-v2/<đường dẫn>). Hash từng ảnh giữ ở đây để report.py và review-packet.py vẫn kiểm được.",
+  "release": null,
   "asset": "benchmark-images-2026-10-24-v2.zip",
-  "url": "https://github.com/Ngh1aa/uiux-ai-workspace/releases/download/benchmark-images-2026-10-24-v2/benchmark-images-2026-10-24-v2.zip",
+  "url": null,
   "asset_sha256": "662c1131f8a3a965019d706998da33acbcd4311812c7b715b377989ce677ef65",
   "files": {
     "shots/01-landing-1280-light.jpg": "7c074e08ff36a1f17c260ca01313ac68c8804af2945aa544b6ecbc4b98624522",
@@ -11,5 +11,6 @@
     "shots/02-app-390-light.jpg": "db59be2260723048cd2b57e9cecb6bbe99e4c37e9f633dbafd7bd24ab2dd27e2",
     "shots/03-dashboard-1280-light.jpg": "30c44c962e3da2d54705ff21e2796e92d429009f706a98374600d0dada07d02b",
     "shots/03-dashboard-390-light.jpg": "ddc7ee20dc36029344a2357a7cc74346555cae8f530dd4bdc314df21d2b15245"
-  }
+  },
+  "source_commit": "ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46"
 }
