@@ -65,7 +65,7 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
    Ảnh state chỉ tạo từ browser scenarios được ghi riêng trong `shots/behavior/`; ảnh initial không chứng minh coverage toàn bộ màn.
 6. Trong cây thư mục chỉ giữ ảnh của lần chạy mới nhất. Thêm lần chạy mới thì bỏ ảnh của lần trước bằng
    `python3 benchmarks/archive.py pack <run> --tag benchmark-images-<run>`. Lần chạy giữ `images-archive.json`
-   (SHA-256 từng ảnh và commit còn bản gốc) nên `report.py --check` và `review-packet.py verify` vẫn kiểm được;
+   (SHA-256 từng ảnh; ảnh các lần chạy đến 29/10 đã xoá hẳn khỏi lịch sử) nên `report.py --check` và `review-packet.py verify` vẫn kiểm được;
    `archive.py verify <run>` lấy ảnh từ lịch sử git (hoặc zip) và so từng byte.
    CI chạy `archive.py policy` để chặn ảnh của lần chạy cũ quay lại git.
 

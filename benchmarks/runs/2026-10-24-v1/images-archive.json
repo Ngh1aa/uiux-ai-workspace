@@ -1,5 +1,5 @@
 {
-  "note": "Ảnh của lần chạy này đã bỏ khỏi cây thư mục để repo nhẹ. Bản gốc còn trong lịch sử git ở commit ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46 (git show ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46:benchmarks/runs/2026-10-24-v1/<đường dẫn>). Hash từng ảnh giữ ở đây để report.py và review-packet.py vẫn kiểm được.",
+  "note": "Ảnh của lần chạy này đã xoá khỏi cây thư mục và khỏi lịch sử git ngày 02/11/2026 để repo nhẹ (chủ repo đồng ý). Chỉ còn SHA-256 từng ảnh ở đây; report.py và review-packet.py kiểm bằng các hash này.",
   "release": null,
   "asset": "benchmark-images-2026-10-24-v1.zip",
   "url": null,
@@ -12,5 +12,5 @@
     "shots/03-dashboard-1280-light.jpg": "4e6389fca7cc29160be4397ced5f86541aa77ac28e4da6c7df0169e21b4b8b16",
     "shots/03-dashboard-390-light.jpg": "f6b0aea29e7db320d82cdfa4a9827fce00d0cfbd111a1a4783e3ebf53c0d98dd"
   },
-  "source_commit": "ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46"
+  "source_commit": null
 }
