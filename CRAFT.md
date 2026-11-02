@@ -1,7 +1,6 @@
 # Chuẩn tay nghề
 
-Một trang, đọc ở mọi việc từ cỡ S trở lên, sau `TASTE.md` và trước khi dựng. Bốn phần: lên kế hoạch
-thị giác, danh sách cấm, số liệu cốt lõi, ảnh và icon. Chi tiết đầy đủ ở
+Đọc ở mọi việc từ cỡ S trở lên, sau `TASTE.md` và trước khi dựng. Chi tiết đầy đủ ở
 [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md).
 
 ## 1. Lên kế hoạch thị giác trước khi viết code
@@ -28,18 +27,16 @@ Một điểm táo bạo là đủ. Cả trang cùng gào thì không chỗ nào
 ## 2. Danh sách cấm: các mặc định làm thiết kế trông như AI làm
 
 Mỗi dòng là mặc định cần tránh. Chỉ giữ khi brief, design system của khách hoặc nền tảng yêu cầu rõ;
-ghi lý do trong phần bàn giao. Dòng có đánh dấu **(TASTE)** là quy tắc của chủ repo, không có ngoại lệ
-ngoài brief. Không đổi font, màu hay cấu trúc chỉ để né checklist.
+ghi lý do trong phần bàn giao. Các dòng cấm của `TASTE.md` (vạch trái, " · ", dòng giải thích phụ, hoạ tiết
+đè chữ, gradient, glow, ô icon nhiều màu, overline, emoji) không có ngoại lệ ngoài brief.
 
 **Chữ**
 - Inter, Roboto, Arial, Open Sans, Lato hay font hệ thống làm font duy nhất của trang.
 - Một font, một độ đậm cho mọi thứ; phân cấp chỉ bằng cỡ chữ.
-- Nhãn nhỏ IN HOA giãn chữ (eyebrow) phía trên mọi tiêu đề.
 - Font không có bộ chữ tiếng Việt cho nội dung tiếng Việt (DM Sans, Outfit, Instrument Sans...), hoặc
   thiếu ký tự ₫ mà vẫn dùng cho giá tiền.
 
 **Màu**
-- Gradient tím–xanh trên nền trắng; gradient làm nền mặc định cho hero.
 - Nền kem với điểm nhấn đất nung; nền gần đen với xanh chuối axit. Hai bảng màu "có gu" mặc định.
 - Màu thương hiệu rải đều khắp nơi thay vì để dành cho 5–10% diện tích.
 - Chấm trạng thái xanh/đỏ không gắn với trạng thái thật.
@@ -49,24 +46,16 @@ ngoài brief. Không đổi font, màu hay cấu trúc chỉ để né checklist
 - Ba card tính năng giống hệt nhau, mỗi card một icon trong vòng tròn.
 - Section nào cũng "tiêu đề + 3 card"; mọi khối đều là card bo tròn; card lồng card.
 - Mọi thứ căn giữa; mọi section cùng chiều cao và khoảng cách.
-- **(TASTE)** Thanh màu bên trái card hay khối, dù một màu hay mỗi khối một màu.
 - Màn desktop chỉ dùng một cột hẹp, nửa phải bỏ trống; mảng trống lớn ở đáy màn hoặc đáy card.
 - Card nổi bật chỉ có một con số trên nền màu; card nào cũng chỉ một tiêu đề và một dòng phụ.
 - Kéo giãn khoảng cách hoặc chiều cao khung để "lấp" màn thay vì sắp lại bố cục.
 
 **Chi tiết**
-- Emoji làm icon, bullet hay nút.
-- **(TASTE)** Nối cụm từ bằng " · ".
 - Mũi tên "→" sau mọi liên kết.
-- **(TASTE)** Dòng giải thích phụ dưới tiêu đề, ghi chú "dữ liệu mẫu", "minh hoạ", "bản mẫu…" hiện trên màn.
-- **(TASTE)** Hoạ tiết trang trí chạy đè lên chữ.
-- Glassmorphism, glow, bóng đổ dày dùng làm trang trí khắp nơi.
 - Số liệu, lời chứng thực, logo khách hàng bịa trông như thật mà không ghi chú "minh hoạ" trong phần bàn giao.
 - "Lorem ipsum", "John Doe", "Acme Inc".
 
-`static-check.cjs` bắt được một phần danh sách này (font mặc định, gradient tím, eyebrow, emoji,
-" · "). `taste-check.cjs` bắt màn trống, nội dung dồn một bên, thang chữ phẳng và card nổi bật mỏng
-(`void`, `coverage`, `flat-scale`, `thin-highlight`). Phần còn lại phải nhìn ảnh.
+`static-check.cjs` và `taste-check.cjs` bắt một phần danh sách này; phần còn lại phải nhìn ảnh.
 
 ## 3. Số liệu cốt lõi
 
@@ -94,24 +83,6 @@ trên render; tên họ font không đủ để kết luận có hoặc thiếu 
 
 ## 4. Ảnh và icon
 
-**Ảnh, theo thứ tự ưu tiên**
-1. Ảnh khách cung cấp. Hỏi trong brand brief (mục 8).
-2. Ảnh stock có giấy phép dùng thương mại (Unsplash, Pexels). Ghi nguồn và tên tác giả trong ghi
-   chú giao; không dùng ảnh có người nhận diện được trong ngữ cảnh nhạy cảm.
-3. Khung giữ chỗ có ghi chú: khối màu bề mặt, đúng tỉ lệ ảnh thật, chú thích "Ảnh: <mô tả cần
-   chụp>". Tốt hơn ảnh stock lạc tông.
-
-Không dùng: ảnh AI tạo người thật hoặc sản phẩm thật trông như ảnh chụp, ảnh lấy từ web khác không
-rõ giấy phép, ảnh chèn chữ không đọc được. Ảnh có chữ đè lên phải qua kiểm tra tương phản ở vùng chữ.
-Ảnh luôn có `alt` mô tả nội dung (ảnh trang trí: `alt=""`), có `width`/`height` để không nhảy bố cục.
-
-**Icon**
-1. Bộ icon của design system khi đủ: `design-system/components/icons.svg` (32 icon) và
-   `design-system/starter/icons-app.svg` (11 icon).
-2. Thiếu thì lấy từ **Lucide** (ISC) hoặc **Phosphor** (MIT), một bộ cho cả dự án, cùng độ dày nét
-   với bộ sẵn có (1,75 px ở 24 px, đầu nét tròn). Chép SVG vào dự án, ghi tên bộ và giấy phép trong ghi chú giao.
-   Không chép cả bộ vào repo này.
-3. App native: SF Symbols (iOS), Material Symbols (Android).
-
-Cỡ: 16 trong dòng chữ, 20 mặc định, 24 điều hướng. Icon đi kèm nhãn trong điều hướng; nút chỉ có
-icon phải có `aria-label`. Không trộn hai bộ icon, không dùng emoji thay icon.
+Ảnh: của khách trước, rồi stock có giấy phép, rồi khung giữ chỗ có ghi chú; luôn có `alt`, `width`, `height`.
+Icon: bộ của design system, thiếu thì một bộ Lucide hoặc Phosphor cùng nét; không trộn bộ, không emoji.
+Thứ tự ưu tiên, giấy phép và cỡ: [ảnh và icon](foundations/images-and-icons.md).

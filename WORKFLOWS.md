@@ -20,7 +20,7 @@ Mọi cỡ việc trên dự án khách hàng đều bắt đầu từ brand bri
 | Có đổi hơn ~5 màn hình hoặc cả một khu vực sản phẩm? | Ít nhất **L** |
 | Sản phẩm mới, hoặc chưa có design system? | **XL** |
 | Chỉ sửa một component, một trạng thái, một đoạn chữ? | **XS** hoặc **S** |
-| Sản phẩm đã có code, và được nhờ "thiết kế lại", "làm lại", "nâng cấp" giao diện? | Ít nhất **L**, cộng track **Redesign sản phẩm có code** (mục 4) |
+| Sản phẩm đã có code, và được nhờ "thiết kế lại", "làm lại", "nâng cấp" giao diện? | Ít nhất **L**, cộng track **Redesign sản phẩm có code** (mục 3) |
 
 | Cỡ | Ví dụ | Thời gian điển hình |
 |---|---|---|
@@ -37,37 +37,21 @@ Không chắc? Chọn cỡ lớn hơn một bậc cho phần **nghiên cứu và
 Mỗi workflow có: bước làm, skill cần đọc (chỉ đọc đúng những file này), sản phẩm phải giao và
 ngưỡng chất lượng theo [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md).
 
-### XS — Micro
+### XS — Micro và S — Component, trạng thái
 
-1. Tìm token/component đang dùng. Sửa ở **tầng token hoặc component**, không vá CSS cục bộ.
-2. Kiểm tra mọi nơi dùng chung component đó.
-3. Chụp trước và sau ở điện thoại và desktop (hoặc hai cỡ app), sáng và tối nếu có chế độ tối.
+XS: sửa ở tầng token hoặc component, kiểm mọi nơi dùng chung, chụp trước và sau. S: liệt kê đủ trạng thái,
+dựng từ token, viết chữ cho lỗi và trạng thái rỗng. Bước chi tiết: [workflows/XS-S.md](workflows/XS-S.md).
 
-- Skill: [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md)
-- Giao: ảnh trước/sau + một dòng lý do.
-- Ngưỡng: không có hard-fail nào trong rubric.
-
-### S — Component / trạng thái
-
-1. Liệt kê đủ trạng thái: mặc định, di chuột, đang nhấn, focus, vô hiệu, đang tải, rỗng, lỗi, nội dung dài.
-2. Thiết kế từ token có sẵn; nếu thiếu token thì thêm ở tầng ngữ nghĩa, không viết giá trị cứng.
-3. Viết chữ giao diện cho lỗi và trạng thái rỗng.
-4. Dựng tất cả trạng thái, kiểm tương phản và vùng chạm.
-
-- Skill: [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md) ·
-  [`state-feedback-and-error-recovery`](skills_UIUX/state-feedback-and-error-recovery/SKILL.md) ·
-  [`ux-writing-and-microcopy`](skills_UIUX/ux-writing-and-microcopy/SKILL.md)
-- Tham chiếu có điều kiện: [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md)
-- Giao: bảng trạng thái đã dựng và đặc tả component (cấu trúc, biến thể, trợ năng).
-- Ngưỡng: các chiều liên quan ≥ 3/5, không hard-fail.
+- Skill: [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md); S thêm
+  [`state-feedback-and-error-recovery`](skills_UIUX/state-feedback-and-error-recovery/SKILL.md),
+  [`ux-writing-and-microcopy`](skills_UIUX/ux-writing-and-microcopy/SKILL.md).
+- Ngưỡng: XS không hard-fail; S các chiều liên quan ≥ 3/5, không hard-fail.
 
 ### M — Màn hình / tính năng
 
-Đường đọc trước khi dựng: START-HERE → AGENTS → TASTE → CRAFT → [FLOW](FLOW.md) → trang này →
-bốn SKILL.md dưới đây. Reference, pattern và nền tảng chỉ mở đúng phần cần khi quyết định phát sinh.
-Không đọc cả craft standards, PATTERNS hay thư viện pattern như điều kiện khởi đầu.
-Đo cùng đơn vị tách whitespace bằng `python scripts/reading-paths.py`; số trước/sau kèm file thực đọc.
-
+Đường đọc trước khi dựng: START-HERE → AGENTS → TASTE → CRAFT → [FLOW](FLOW.md) → trang này → bốn
+SKILL.md dưới đây. Reference, pattern và nền tảng chỉ mở đúng phần cần khi quyết định phát sinh
+(`python scripts/reading-paths.py` đo độ dài đường đọc).
 
 1. **Khung vấn đề** (1 trang): người dùng là ai, việc chính, câu "Làm sao để", kết quả đo được.
    Brief chỉ nêu giải pháp, hoặc chưa ai biết người dùng là ai, thì chạy
@@ -92,7 +76,7 @@ Không đọc cả craft standards, PATTERNS hay thư viện pattern như điề
   [`design-critique-and-rationale`](skills_UIUX/design-critique-and-rationale/SKILL.md)
 - Bắt buộc: [`CRAFT.md`](CRAFT.md) và khối kế hoạch thị giác của nó trước bước 5. Cần chi tiết hơn
   thì mở [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md).
-- Mobile thêm: [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) + spec sheet nền tảng (mục 3).
+- Mobile thêm: [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) và dòng nền tảng ở mục 3.
 - Web thêm: dòng nền tảng tương ứng ở mục 3, và một playbook đúng ngành của khách trong
   [`industry-playbooks`](skills_UIUX/industry-playbooks/SKILL.md) (không có thì bỏ qua).
 - Mẫu tài liệu: [`templates/ux/`](skills_UIUX/templates/ux/README.md) (khung vấn đề, luồng việc, đặc tả khung dây,
@@ -116,90 +100,59 @@ Với L và XL, hướng được duyệt mới là đầu vào cho bước "Th�
 
 ### L — Khu vực sản phẩm, làm lại
 
-Như **M**, cộng thêm:
+Như **M**, cộng: đánh giá hiện trạng và 3–5 sản phẩm tham chiếu, kiến trúc thông tin cho cả khu vực, hướng
+thị giác thử trên 3 màn khác bản chất, critique 3 vòng. Bước chi tiết: [workflows/L-XL.md](workflows/L-XL.md).
 
-1. **Đánh giá hiện trạng** và so 3–5 sản phẩm tham chiếu (trích nguyên tắc, không sao chép bề mặt).
-   Thiếu hiểu biết về người dùng thì thêm [`research-lite`](skills_UIUX/research-lite/SKILL.md).
-2. **Kiến trúc thông tin** và mô hình điều hướng cho toàn khu vực.
-3. **Hướng thị giác**: 4–7 thuộc tính thị giác có biểu hiện cụ thể, ma trận vai trò trang, màn hình.
-   Nền tảng lý do nằm trong [`foundations/`](foundations/README.md).
-   Hướng chỉ được nhân rộng sau [cổng duyệt hướng](#cổng-duyệt-hướng-m-l-xl).
-4. **Thử trên 3 màn hình khác bản chất** trước khi nhân rộng.
-5. **Critique 3 vòng** (xem rubric): tự review → review chéo theo vai trò → review "người lạ" chỉ nhìn ảnh.
-6. Kiểm nhất quán xuyên màn hình (ảnh đặt cạnh nhau).
-
-- Sản phẩm đã có code: [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md) là bắt buộc;
-  bước "đánh giá hiện trạng" ở trên gồm cả kiểm kê code cũ và bảng ADN của skill đó.
+- Sản phẩm đã có code: [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md) là bắt buộc.
 - Skill thêm: [`website-audit-and-redesign`](skills_UIUX/website-audit-and-redesign/SKILL.md) hoặc
-  [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) ·
-  [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) ·
-  [`information-architecture`](skills_UIUX/information-architecture/SKILL.md)
-- Giao: tất cả của M, cộng bản đánh giá hiện trạng, hướng thị giác, ma trận màn hình, ảnh nhất quán xuyên màn hình.
+  [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md),
+  [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md),
+  [`information-architecture`](skills_UIUX/information-architecture/SKILL.md),
+  [`research-lite`](skills_UIUX/research-lite/SKILL.md) khi thiếu hiểu biết người dùng.
 - Ngưỡng: trung bình ≥ 4, không chiều nào < 3.5, không hard-fail.
 
 ### XL — Sản phẩm mới / chưa có design system
 
-Như **L**, cộng thêm:
+Như **L**, cộng khám phá, nguyên tắc trải nghiệm, track Design System chạy song song và kế hoạch kiểm chứng
+(chi tiết trong [workflows/L-XL.md](workflows/L-XL.md)).
 
-1. **Khám phá**: vấn đề, đối tượng, giả định rủi ro nhất, cách kiểm chứng, theo
-   [`design-thinking-lite`](skills_UIUX/design-thinking-lite/SKILL.md) mức XL và
-   [`research-lite`](skills_UIUX/research-lite/SKILL.md).
-2. **Nguyên tắc trải nghiệm** (3–5 câu, có đánh đổi rõ ràng).
-3. **Track Design System** (mục 4) chạy song song từ tuần đầu.
-4. **Kế hoạch kiểm chứng** với người dùng thật; khi chưa có người thật thì ghi `PLANNED_VALIDATION`.
+- Skill thêm: [`audience-intent-and-top-tasks`](skills_UIUX/audience-intent-and-top-tasks/SKILL.md),
+  [`experience-principles-and-signature-moments`](skills_UIUX/experience-principles-and-signature-moments/SKILL.md),
+  [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md).
+- Ngưỡng: như L, cộng design system qua `validate.py`.
 
-- Skill thêm: [`audience-intent-and-top-tasks`](skills_UIUX/audience-intent-and-top-tasks/SKILL.md) ·
-  [`experience-principles-and-signature-moments`](skills_UIUX/experience-principles-and-signature-moments/SKILL.md) ·
-  [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md)
-- Ngưỡng: như L, cộng design system qua `validate.py` (contrast, parity sáng/tối).
+## 3. Track theo nền tảng và track đặc thù
 
-## 3. Track theo nền tảng
+Bảng chọn; cách làm và lưu ý của từng track ở [workflows/tracks.md](workflows/tracks.md).
 
-| Nền tảng | Đọc thêm | Lưu ý quan trọng nhất |
-|---|---|---|
-| iOS | [iOS spec sheet](skills_UIUX/ios-app-design/references/ios-spec-sheet.md) · [`ios-app-design`](skills_UIUX/ios-app-design/SKILL.md) | Dùng control hệ thống trước; Dynamic Type; vuốt-lùi không bao giờ bị chặn |
-| Android | [Android spec sheet](skills_UIUX/android-app-design/references/android-spec-sheet.md) · [`android-app-design`](skills_UIUX/android-app-design/SKILL.md) | Edge-to-edge, predictive back, window size classes |
-| Cả hai | [Mobile patterns playbook](skills_UIUX/mobile-app-design/references/mobile-patterns-playbook.md) | Chung ý nghĩa, khác "chrome": không ép iOS và Android giống hệt nhau |
-| Web marketing | [`responsive-and-device-strategy`](skills_UIUX/responsive-and-device-strategy/SKILL.md) | Mobile không phải desktop thu nhỏ |
-| Web app / dashboard | [Web app patterns](skills_UIUX/ui-craft-and-visual-qa/references/web-app-patterns.md) · [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md) · [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) | Mật độ cao nhưng quét được; bàn phím là công dân hạng nhất |
-| Demo trên trình duyệt cho app | [`mobile-web-preview`](skills_UIUX/mobile-app-design/references/mobile-web-preview/README.md) | Bằng chứng trình duyệt không chứng minh app native |
+| Khi | Đọc thêm |
+|---|---|
+| iOS, Android | [`ios-app-design`](skills_UIUX/ios-app-design/SKILL.md), [`android-app-design`](skills_UIUX/android-app-design/SKILL.md) và spec sheet của nền tảng |
+| Web marketing | [`responsive-and-device-strategy`](skills_UIUX/responsive-and-device-strategy/SKILL.md) |
+| Web app, dashboard | [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md), [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) |
+| Chỉ review, audit | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md), [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
+| Cải thiện UI đang có | [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có) |
+| Redesign sản phẩm có code | [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md) |
+| Soát prototype | [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#soát-prototype) |
+| Design system | [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) |
+| Portfolio | [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) |
+| AI trong sản phẩm | [`human-ai-interaction-design`](skills_UIUX/human-ai-interaction-design/SKILL.md) |
 
-## 4. Track đặc thù
+## 4. Định nghĩa "xong" chung cho mọi cỡ
 
-| Track | Khi nào | Bắt đầu từ |
-|---|---|---|
-| **Chỉ review / audit** | Cần đánh giá, chưa sửa | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md) + [`ux-laws-and-heuristics`](skills_UIUX/ux-laws-and-heuristics/SKILL.md) |
-| **Cải thiện UI đang có** | Sửa và trau chuốt (Polish), giữ bố cục và hành vi | Chọn XS–S theo bảng cỡ việc, dùng [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có); sửa ở token và CSS component đang có, không thêm lớp đè |
-| **Redesign sản phẩm có code** | Thiết kế lại, làm mới, nâng cấp một sản phẩm đã có code chạy được | L (hoặc M nếu một khu vực nhỏ) + [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md): kiểm kê code cũ, ghi ADN, lưới test hành vi, thay tại nguồn và xoá code bị thay, soát bằng `overlay-check.py`. Website cần audit IA, SEO thì thêm `website-audit-and-redesign` |
-| **Soát prototype** | Bản HTML/CSS/JS cần demo được | Theo cỡ việc tương ứng + [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#soát-prototype); thử đường demo và ghi tác vụ mô phỏng |
-| **Design system** | Thêm token, component, hoặc dựng hệ thống mới | [`design-system/`](design-system/README.md) · [platform mapping](design-system/docs/platform-mapping.md) · [`design-system-and-components`](skills_UIUX/design-system-and-components/SKILL.md) |
-| **Portfolio** | Làm lại portfolio / định vị nghề | Như cỡ M, cộng [`design-reference-research-and-benchmark`](skills_UIUX/design-reference-research-and-benchmark/SKILL.md) |
-| **AI trong sản phẩm** | Tính năng có AI tạo nội dung/quyết định | [`human-ai-interaction-design`](skills_UIUX/human-ai-interaction-design/SKILL.md) |
-
-
-## 5. Định nghĩa "xong" chung cho mọi cỡ
-
-- Dự án khách hàng có brand brief; `brand.css` của dự án qua
-  `python3 design-system/scripts/check-brand.py` không còn lỗi.
-- Màn mới mượn cấu trúc từ [starter kit](design-system/starter/README.md) và theo
-  [mẫu theo loại màn](design-system/starter/PATTERNS.md), nhưng mang thương hiệu và dấu ấn của dự án.
-- [`taste-check.cjs`](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#soát-theo-gu-taste-checkcjs)
-  không còn lỗi ở cả 390 px và 1280 px (website thêm 768 và 1440). Không chạy được thì chạy
-  `static-check.cjs`, soát bằng mắt theo [README công cụ QA](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md)
-  và ghi rõ. Màn desktop
-  và artboard canvas đạt thêm `--layout strict` (không còn màn trống, nội dung dồn một bên, card mỏng).
-- Đã **nhìn ảnh chụp trang đã dựng**, không chỉ đọc code.
-- Đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
-- Kiểm luồng riêng theo [FLOW.md](FLOW.md): CTA đúng đích/đối tượng/vai trò, Back giữ ngữ cảnh,
-  sửa → kiểm tra hậu quả phù hợp → kết quả, dữ liệu/tổng tiền khớp, lỗi có khôi phục.
-  `flow-check` không có lỗi chắc chắn; cảnh báo được xét từng trường hợp. Luồng bắt buộc FAIL hoặc UNKNOWN
-  chặn kết luận Đạt dù render/rubric tốt. Demo ghi rõ phần mô phỏng và phạm vi gallery.
-- Contrast và vùng chạm đạt chuẩn trong [`CRAFT.md`](CRAFT.md); không chạm mặc định nào trong danh sách
-  cấm mà không có lý do từ brief.
-- Rubric đạt ngưỡng của cỡ việc, không hard-fail.
+- Dự án khách hàng có brand brief; `python3 design-system/scripts/check-brand.py` với `brand.css` không còn lỗi.
+- Màn mới mượn cấu trúc từ [starter kit](design-system/starter/README.md) và
+  [mẫu theo loại màn](design-system/starter/PATTERNS.md), nhưng mang thương hiệu của dự án.
+- [`taste-check.cjs`](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#soát-theo-gu-taste-checkcjs) không còn
+  lỗi ở 390 và 1280 px (website thêm 768 và 1440); desktop và artboard đạt thêm `--layout strict`. Không chạy
+  được thì chạy `static-check.cjs`, soát bằng mắt theo README công cụ QA và ghi rõ.
+- Đã **nhìn ảnh chụp trang đã dựng**; đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
+- Luồng đạt [FLOW.md](FLOW.md): CTA đúng đích, đối tượng, vai trò; Back giữ ngữ cảnh; dữ liệu khớp; lỗi có
+  khôi phục. `flow-check` không có lỗi chắc chắn; luồng bắt buộc FAIL hoặc UNKNOWN chặn kết luận Đạt.
+- Contrast và vùng chạm đạt [`CRAFT.md`](CRAFT.md); rubric đạt ngưỡng của cỡ việc, không hard-fail.
 - Ghi rõ điều gì **chưa** kiểm chứng (người dùng thật, thiết bị thật, trình đọc màn hình).
-- M trở lên: hướng thị giác đã qua cổng duyệt, hoặc ghi `CHƯA DUYỆT`. L và XL có duyệt độc lập theo
+- M trở lên: hướng thị giác đã qua cổng duyệt, hoặc ghi `CHƯA DUYỆT`. L, XL có duyệt độc lập theo
   [hồ sơ ảnh](skills_UIUX/design-critique-and-rationale/references/independent-review.md).
-- Lỗi mới mà checker và rubric đều không bắt được thì ghi một dòng vào [`TASTE-LOG.md`](TASTE-LOG.md).
-- Redesign sản phẩm có code: `overlay-check.py` không còn lỗi, test hành vi xanh trước và sau, ADN được
-  giữ hoặc người quyết định đã chọn bỏ (xem [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md)).
+- Lỗi mới checker và rubric đều không bắt được thì ghi vào [`TASTE-LOG.md`](TASTE-LOG.md).
+- Redesign sản phẩm có code: `overlay-check.py` không còn lỗi, test hành vi xanh trước và sau, ADN được giữ
+  hoặc người quyết định đã chọn bỏ.
