@@ -88,17 +88,21 @@ b,strong{font-weight:600}
   .top .iconbtn{display:none}
   .search{display:flex;align-items:center;gap:10px;width:320px;height:44px;padding:0 16px;border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:14px}
   .hello{grid-column:1 / -1;font-size:56px;line-height:1.05;font-weight:500;letter-spacing:-.035em;display:block!important}
-  .tonight{grid-column:1 / span 8}
-  .next{grid-column:9 / span 4;margin-top:56px}
-  .hero{padding:40px;gap:32px}
+  .tonight{display:contents}
+  .sec{grid-column:1 / -1;margin-bottom:-8px}
+  .hero{grid-column:1 / -1;padding:40px;display:grid;grid-template-columns:1fr minmax(0,500px);align-items:end;gap:32px}
   .hero h3{font-size:64px;margin-top:12px}
   .hero .meta{font-size:17px;margin-top:16px}
   .hero .slots{gap:12px}
   .hero .slot{height:72px;font-size:22px}
-  .list{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:20px;background:transparent;margin-top:24px;padding:0}
-  .item{background:var(--surface);border-radius:var(--r);padding:24px;border:0;gap:20px}
+  .list{grid-column:1 / span 8;margin-top:0;padding:24px}
+  .list .item{flex-direction:row;align-items:center;padding:20px 0}
+  .list .item:first-child{padding-top:0}
+  .list .item:last-child{padding-bottom:0}
   .item h3{font-size:20px}
-  .next{padding:24px}
+  .item .m{font-size:14px}
+  .chip{min-width:80px;height:48px}
+  .next{grid-column:9 / span 4;padding:24px;align-self:stretch;justify-content:space-between}
 }
 .hello{display:none}
 </style>
