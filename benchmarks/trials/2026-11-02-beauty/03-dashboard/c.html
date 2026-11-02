@@ -42,7 +42,8 @@ ul{list-style:none}
 .wrap{max-width:1216px;margin:0 auto;padding:8px 16px 32px}
 h1{font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-0.02em;margin-bottom:20px}
 h1 span{color:var(--muted);font-weight:600}
-.grid{display:grid;gap:16px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.rev .ph{flex-wrap:wrap;row-gap:4px}
 .panel{background:var(--panel);border-radius:var(--r);padding:20px}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
 h2{font-size:20px;line-height:1.3;font-weight:700;white-space:nowrap}
@@ -59,34 +60,43 @@ h2{font-size:20px;line-height:1.3;font-weight:700;white-space:nowrap}
 .yname{font-weight:700;line-height:1.3}
 .yname span{font-weight:400;color:var(--muted);font-size:14px;white-space:nowrap}
 .ydays{font-weight:700;font-size:18px;white-space:nowrap}
-.strand{grid-column:1 / -1;height:18px;border-radius:9px;background:var(--panel-2);position:relative;overflow:hidden}
-.strand i{position:absolute;inset:0 auto 0 0;border-radius:9px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.strand{grid-column:1 / -1;height:16px;border-radius:8px;background:var(--panel-2);position:relative;overflow:hidden}
+.strand i{position:absolute;inset:0 auto 0 0;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
 .ymeta{grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted)}
 .first .ydays{color:var(--due)}
-.tag{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:999px;background:var(--due-soft);color:var(--due);font-size:13px;font-weight:700;margin-left:8px;vertical-align:middle}
+.tag{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:var(--due-soft);color:var(--due);font-size:16px;font-weight:700}
 
 /* highlight */
 .hl{background:var(--brand);color:var(--brand-ink);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:16px}
 .hl .top-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .hl .lab{font-size:15px;font-weight:600;color:var(--soft-ink)}
-.hl .big{font-size:64px;line-height:1;font-weight:700;letter-spacing:-0.03em}
+.hl .big{font-size:72px;line-height:1;font-weight:700;letter-spacing:-0.03em}
 .hl .of{font-size:15px;color:var(--soft-ink);text-align:right}
 .hl .of b{display:block;font-size:22px;color:#FFFFFF}
-.olist li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.18)}
-.olist li:last-child{padding-bottom:0}
-.olist .who{font-weight:700}
+.olist li{border-top:1px solid rgba(255,255,255,.18)}
+.olist a{display:grid;grid-template-columns:1fr auto auto;gap:2px 8px;align-items:center;padding:16px 0;min-height:44px}
+.olist .who{grid-column:1;grid-row:1}
+.olist .city{grid-column:1;grid-row:2}
+.olist .late{grid-column:2;grid-row:1 / span 2}
+.olist .chev{grid-column:3;grid-row:1 / span 2}
+.olist li:last-child a{padding-bottom:0}
+.olist .chev{color:var(--soft-ink)}
+.split{display:flex;gap:3px;height:10px;border-radius:5px;overflow:hidden}
+.split i{display:block;height:100%}
+.split .s1{width:21.4%;background:#FFFFFF}
+.split .s2{flex:1;background:rgba(255,255,255,.3)}
+.olist .who{font-weight:700;font-size:17px}
 .olist .city{font-size:14px;color:var(--soft-ink)}
-.olist .late{grid-row:span 2;align-self:center;font-weight:700;font-size:15px;white-space:nowrap}
+.olist .late{align-self:center;font-weight:700;font-size:15px;white-space:nowrap}
 .hl .btn{align-self:stretch;margin-top:auto}
 
 /* revenue */
 .rev-body{display:grid;gap:20px}
-.sum b{display:block;font-size:44px;line-height:1.05;font-weight:700;letter-spacing:-0.02em}
-.sum span{color:var(--muted);font-size:15px}
-.chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;align-items:end;height:170px}
+.sum{font-size:30px;line-height:1.1;font-weight:700;letter-spacing:-0.02em}
+.chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;align-items:end;height:150px}
 .col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%}
 .col .v{font-size:12px;color:var(--muted);font-weight:600}
-.col .b{width:100%;max-width:48px;border-radius:12px 12px 4px 4px;background:var(--rev)}
+.col .b{width:100%;max-width:64px;border-radius:12px 12px 4px 4px;background:var(--rev)}
 .col.now .b{background:var(--rev-now)}
 .col.now .v{color:var(--ink);font-weight:700}
 .axis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;padding-top:8px;font-size:13px;color:var(--muted);text-align:center;font-weight:600}
@@ -100,10 +110,9 @@ h2{font-size:20px;line-height:1.3;font-weight:700;white-space:nowrap}
   .grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:24px}
   .stock{grid-column:span 7}
   .hl{grid-column:span 5;padding:28px}
+  .hl .big{font-size:96px}
   .stock{padding:28px}
   .rev{grid-column:span 12;padding:28px}
-  .rev-body{grid-template-columns:3fr 9fr;align-items:end;gap:40px}
-  .yarn{gap:22px}
 }
 </style>
 </head>
@@ -134,10 +143,11 @@ h2{font-size:20px;line-height:1.3;font-weight:700;white-space:nowrap}
         </div>
         <div class="of"><b>14</b>đơn chờ gửi</div>
       </div>
+      <div class="split" role="img" aria-label="3 đơn quá hạn trong 14 đơn chờ gửi"><i class="s1"></i><i class="s2"></i></div>
       <ul class="olist">
-        <li><span class="who">#2041 chị Hà</span><span class="late">Quá 2 ngày</span><span class="city">Đà Nẵng</span></li>
-        <li><span class="who">#2045 anh Tuấn</span><span class="late">Quá 1 ngày</span><span class="city">Hà Nội</span></li>
-        <li><span class="who">#2047 chị Mai</span><span class="late">Quá 1 ngày</span><span class="city">Cần Thơ</span></li>
+        <li><a href="don-hang/2041.html"><span class="who">#2041 chị Hà</span><span class="late">Quá 2 ngày</span><span class="city">Đà Nẵng</span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+        <li><a href="don-hang/2045.html"><span class="who">#2045 anh Tuấn</span><span class="late">Quá 1 ngày</span><span class="city">Hà Nội</span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+        <li><a href="don-hang/2047.html"><span class="who">#2047 chị Mai</span><span class="late">Quá 1 ngày</span><span class="city">Cần Thơ</span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
       </ul>
       <a class="btn btn-white" href="don-hang.html?loc=qua-han">Gửi đơn</a>
     </section>
@@ -150,36 +160,35 @@ h2{font-size:20px;line-height:1.3;font-weight:700;white-space:nowrap}
       <div class="scale" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7 ngày</span></div>
       <ul class="yarn">
         <li class="first">
-          <div class="yname">Len cotton màu kem <span>LC-012</span><span class="tag">Nhập gấp</span></div>
-          <div class="ydays">2 ngày</div>
+          <div class="yname">Len cotton màu kem <span>LC-012</span></div>
+          <div class="ydays"><span class="tag">2 ngày</span></div>
           <div class="strand" role="img" aria-label="Đủ bán 2 trên 7 ngày"><i style="width:28.6%;background:#E3D4AE"></i></div>
-          <div class="ymeta"><span>Còn 6 cuộn, bán 3 cuộn mỗi ngày</span><a class="btn btn-ink" href="nhap-hang.html?ma=LC-012">Nhập hàng</a></div>
+          <div class="ymeta"><span>Còn 6 cuộn, bán 3/ngày</span><a class="btn btn-ink" href="nhap-hang.html?ma=LC-012">Nhập hàng</a></div>
         </li>
         <li>
           <div class="yname">Kim móc 3,5 mm <span>KM-035</span></div>
           <div class="ydays">4 ngày</div>
           <div class="strand" role="img" aria-label="Đủ bán 4 trên 7 ngày"><i style="width:57.1%;background:#9A9690"></i></div>
-          <div class="ymeta"><span>Còn 4 cây, bán 1 cây mỗi ngày</span></div>
+          <div class="ymeta"><span>Còn 4 cây, bán 1/ngày</span></div>
         </li>
         <li>
           <div class="yname">Len lông cừu màu rêu <span>LW-207</span></div>
           <div class="ydays">4 ngày</div>
           <div class="strand" role="img" aria-label="Đủ bán 4 trên 7 ngày"><i style="width:57.1%;background:#6F7A4E"></i></div>
-          <div class="ymeta"><span>Còn 9 cuộn, bán 2 cuộn mỗi ngày</span></div>
+          <div class="ymeta"><span>Còn 9 cuộn, bán 2/ngày</span></div>
         </li>
         <li>
           <div class="yname">Len cotton màu hồng đất <span>LC-031</span></div>
           <div class="ydays">7 ngày</div>
           <div class="strand" role="img" aria-label="Đủ bán 7 trên 7 ngày"><i style="width:100%;background:#BE8B7E"></i></div>
-          <div class="ymeta"><span>Còn 15 cuộn, bán 2 cuộn mỗi ngày</span></div>
+          <div class="ymeta"><span>Còn 15 cuộn, bán 2/ngày</span></div>
         </li>
       </ul>
     </section>
 
     <section class="panel rev" aria-labelledby="t-rev">
-      <div class="ph"><h2 id="t-rev">Doanh thu 7 ngày (nghìn ₫)</h2></div>
+      <div class="ph"><h2 id="t-rev">Doanh thu 7 ngày (nghìn ₫)</h2><b class="sum">18.550</b></div>
       <div class="rev-body">
-        <div class="sum"><span>Tổng</span><b>18.550</b></div>
         <div>
           <div class="chart" role="img" aria-label="Doanh thu 7 ngày, nghìn đồng: T6 2.150, T7 3.480, CN 4.120, T2 1.890, T3 2.260, T4 2.010, T5 2.640" data-chart>
             <div class="col"><span class="v">2.150</span><span class="b" style="height:45%"></span></div>
