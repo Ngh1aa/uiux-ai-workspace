@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đất Nung</title>
+<style>
+@font-face{font-family:"Be Vietnam Pro";font-weight:400;font-display:swap;src:url("../../../../design-system/fonts/be-vietnam-pro-vietnamese-400-normal.woff2") format("woff2");unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:"Be Vietnam Pro";font-weight:400;font-display:swap;src:url("../../../../design-system/fonts/be-vietnam-pro-latin-400-normal.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2212,U+FEFF,U+FFFD}
+@font-face{font-family:"Be Vietnam Pro";font-weight:500;font-display:swap;src:url("../../../../design-system/fonts/be-vietnam-pro-vietnamese-500-normal.woff2") format("woff2");unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:"Be Vietnam Pro";font-weight:500;font-display:swap;src:url("../../../../design-system/fonts/be-vietnam-pro-latin-500-normal.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2212,U+FEFF,U+FFFD}
+@font-face{font-family:"Be Vietnam Pro";font-weight:600;font-display:swap;src:url("../../../../design-system/fonts/be-vietnam-pro-vietnamese-600-normal.woff2") format("woff2");unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:"Be Vietnam Pro";font-weight:600;font-display:swap;src:url("../../../../design-system/fonts/be-vietnam-pro-latin-600-normal.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2212,U+FEFF,U+FFFD}
+
+:root{
+  --bg:#F7F6F2; --ink:#16171A; --muted:#5A5C61; --line:#DAD8D0;
+  --brand:#2343A6; --brand-ink:#FFFFFF; --brand-deep:#162E7A; --ring:rgba(255,255,255,.28);
+  --wheel:#16171A; --wheel-2:#3A3C41; --clay:#CFC6B6; --clay-line:#BDB3A1; --shelf:#ECEAE3;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121316; --ink:#EDECE7; --muted:#A3A5AA; --line:#2E3036;
+    --brand:#9DB2F2; --brand-ink:#0F1A3D; --brand-deep:#6F88D8; --ring:rgba(15,26,61,.3);
+    --wheel:#E4E2DC; --wheel-2:#B9BAC0; --clay:#6E6659; --clay-line:#5E574B; --shelf:#1C1D21;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121316; --ink:#EDECE7; --muted:#A3A5AA; --line:#2E3036;
+  --brand:#9DB2F2; --brand-ink:#0F1A3D; --brand-deep:#6F88D8; --ring:rgba(15,26,61,.3);
+  --wheel:#E4E2DC; --wheel-2:#B9BAC0; --clay:#6E6659; --clay-line:#5E574B; --shelf:#1C1D21;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,sans-serif;font-size:17px;line-height:1.55;font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;letter-spacing:-.01em;min-height:44px}
+.menu{display:none;gap:4px}
+.menu a{display:flex;align-items:center;min-height:44px;padding:0 14px;font-size:15px;color:var(--muted);border-radius:4px;transition:color .2s}
+.menu a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 24px;border-radius:999px;background:var(--brand);color:var(--brand-ink);font-weight:600;font-size:16px;transition:background .25s cubic-bezier(.25,1,.5,1)}
+.btn:hover{background:var(--brand-deep)}
+.btn.sm{min-height:44px;padding:0 20px;font-size:15px}
+.link{display:inline-flex;align-items:center;min-height:48px;padding:0 4px;font-weight:500;border-bottom:1.5px solid var(--ink)}
+
+/* hero */
+.hero{display:grid;gap:32px;padding:24px 0 56px}
+.hero h1{font-size:44px;line-height:1.04;font-weight:600;letter-spacing:-.025em;max-width:13ch}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
+.facts dt{font-size:13px;color:var(--muted)}
+.facts dd{font-size:16px;font-weight:500}
+.actions{display:flex;align-items:center;gap:24px;margin-top:32px}
+.art{width:100%;max-width:360px;justify-self:center}
+.art svg{display:block;width:100%;height:auto}
+
+/* classes */
+.classes{display:grid;gap:24px;padding:48px 0 56px;border-top:1px solid var(--line)}
+.classes h2{font-size:32px;line-height:1.1;font-weight:600;letter-spacing:-.02em}
+.incl{display:flex;flex-wrap:wrap;gap:16px 32px;margin-top:24px}
+.incl dt{font-size:13px;color:var(--muted)}
+.incl dd{font-size:16px;font-weight:500}
+.rows{list-style:none}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.row:first-child{border-top:1px solid var(--ink)}
+.row .name{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.row .name{grid-row:1}
+.row .price{grid-row:1;grid-column:2;font-size:22px;font-weight:600;text-align:right}
+.row .meta{grid-row:2}
+.row .meta{grid-column:1 / -1;display:flex;gap:24px;color:var(--muted);font-size:15px}
+.row .meta span{display:inline-flex;align-items:center;gap:8px}
+.th{display:none}
+
+.end{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:32px 0 40px;border-top:1px solid var(--line)}
+.end p{font-size:15px;color:var(--muted)}
+.end strong{color:var(--ink);font-weight:500}
+
+@media (min-width:840px){
+  .wrap{padding:0 40px}
+  .menu{display:flex}
+  .hero{grid-template-columns:repeat(12,1fr);gap:24px;align-items:center;padding:24px 0 56px}
+  .hero .copy{grid-column:1 / span 7}
+  .hero h1{font-size:76px}
+  .facts{grid-template-columns:repeat(3,auto);justify-content:start;gap:40px}
+  .art{grid-column:8 / span 5;max-width:none;align-self:end;margin-bottom:12px}
+  .classes{grid-template-columns:repeat(12,1fr);gap:24px;padding:56px 0 64px}
+  .incl{flex-direction:column;margin-top:32px}
+  .classes .head{grid-column:1 / span 4}
+  .classes h2{font-size:44px}
+  .classes .table{grid-column:5 / span 8}
+  .th{display:grid;grid-template-columns:1fr 120px 120px 150px;padding:0 0 12px;font-size:13px;color:var(--muted)}
+  .th span:last-child{text-align:right}
+  .row{grid-template-columns:1fr 120px 120px 150px;align-items:baseline;padding:24px 0}
+  .row .meta{display:contents;color:var(--ink);font-size:17px}
+  .row .meta span svg{display:none}
+  .row .price{grid-column:4;grid-row:1}
+  .row .meta{grid-row:1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#top" aria-label="Đất Nung">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M7 7h14c0 9-2 14-4 15h-6c-2-1-4-6-4-15z" fill="var(--brand)"/><rect x="4" y="23" width="20" height="2.5" rx="1.25" fill="var(--ink)"/></svg>
+      Đất Nung
+    </a>
+    <nav class="menu" aria-label="Chính">
+      <a href="#lop-hoc">Lớp học</a>
+      <a href="#lich-hoc">Lịch học</a>
+      <a href="#lien-he">Liên hệ</a>
+    </nav>
+    <a class="btn sm" href="#lien-he">Đặt chỗ</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="copy">
+        <h1>Ba tiếng, một khối đất, một chiếc cốc của riêng bạn.</h1>
+        <dl class="facts" id="lich-hoc">
+          <div><dt>Ngày học</dt><dd>Thứ Bảy và Chủ nhật</dd></div>
+          <div><dt>Giờ học</dt><dd>9:00 và 14:00</dd></div>
+          <div><dt>Địa chỉ</dt><dd>24 Hàng Chiếu</dd></div>
+        </dl>
+        <div class="actions">
+          <a class="btn" href="#lien-he">Đặt chỗ</a>
+          <a class="link" href="#lop-hoc">Xem lớp học</a>
+        </div>
+      </div>
+      <div class="art" role="img" aria-label="Bình đất mộc, cốc men lam và bát men đen trên kệ">
+        <svg viewBox="20 60 440 304">
+          <rect x="0" y="358" width="480" height="6" fill="var(--wheel)"/>
+          <path d="M276 76 H324 V86 C320 96 318 118 320 140 C380 162 404 220 392 270 C384 310 362 342 344 360 H256 C238 342 216 310 208 270 C196 220 220 162 280 140 C282 118 280 96 276 86 Z" fill="var(--clay)"/>
+          <path d="M226 196 C270 188 330 188 374 196 M206 244 C268 236 332 236 394 244" fill="none" stroke="var(--clay-line)" stroke-width="2"/>
+          <path d="M316 272 C354 270 356 330 312 334" fill="none" stroke="var(--brand)" stroke-width="12" stroke-linecap="round"/>
+          <path d="M234 250 H318 C318 300 314 340 304 360 H248 C238 340 234 300 234 250 Z" fill="var(--brand)"/>
+          <ellipse cx="276" cy="250" rx="42" ry="8" fill="var(--brand-deep)"/>
+          <path d="M44 288 H256 C254 326 226 352 196 360 H104 C74 352 46 326 44 288 Z" fill="var(--wheel)"/>
+          <ellipse cx="150" cy="288" rx="106" ry="10" fill="var(--wheel-2)"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="classes" id="lop-hoc">
+      <div class="head">
+        <h2>Lớp học</h2>
+        <dl class="incl">
+          <div><dt>Học phí gồm</dt><dd>Đất, men, nung và trà</dd></div>
+          <div><dt>Nhận sản phẩm</dt><dd>Sau 2 tuần</dd></div>
+        </dl>
+      </div>
+      <div class="table">
+        <div class="th" aria-hidden="true"><span>Lớp</span><span>Thời lượng</span><span>Số chỗ</span><span>Học phí</span></div>
+        <ul class="rows">
+          <li class="row"><span class="name">Bàn xoay cơ bản</span><span class="meta"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>3 giờ</span><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.5 3.5 0 0 1 0 7M21 20c0-2.6-1.6-4.8-4-5.6"/></svg>8 người</span></span><span class="price">450.000 ₫</span></li>
+          <li class="row"><span class="name">Nặn tay</span><span class="meta"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>2,5 giờ</span><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.5 3.5 0 0 1 0 7M21 20c0-2.6-1.6-4.8-4-5.6"/></svg>10 người</span></span><span class="price">350.000 ₫</span></li>
+          <li class="row"><span class="name">Tráng men</span><span class="meta"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>2 giờ</span><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.5 3.5 0 0 1 0 7M21 20c0-2.6-1.6-4.8-4-5.6"/></svg>8 người</span></span><span class="price">300.000 ₫</span></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="end" id="lien-he">
+    <p><strong>24 Hàng Chiếu, Hoàn Kiếm, Hà Nội</strong><br>0912 345 678</p>
+    <a class="btn" href="tel:0912345678">Đặt chỗ</a>
+  </footer>
+</div>
+</body>
+</html>
