@@ -735,7 +735,8 @@ function auditInPage() {
       const cls = `${typeof el.className === 'string' ? el.className : ''} ${el.getAttribute('data-status') || ''}`;
       if (!(STATUS.test(cls) || el.getAttribute('role') === 'alert') || charts.some((c) => c.contains(el))) continue;
       const st = getComputedStyle(el);
-      for (const v of [st.color, st.backgroundColor]) { const c = toRgba(v); if (saturated(c) && hsl(c)[1] >= 0.3) statusColors.push({ c, el }); }
+      // Chữ mực gần đen hay nền gần trắng không phải màu trạng thái.
+      for (const v of [st.color, st.backgroundColor]) { const c = toRgba(v); if (saturated(c) && hsl(c)[1] >= 0.3 && hsl(c)[2] > 0.2) statusColors.push({ c, el }); }
     }
     const markColors = [];
     for (const chart of charts) {
