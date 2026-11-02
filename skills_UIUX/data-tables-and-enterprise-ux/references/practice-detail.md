@@ -11,7 +11,7 @@ Let expert users find, compare and act on many records quickly and safely. A goo
 **When not to use**
 
 - Charts, KPI tiles and trend monitoring: use [data-visualization-and-dashboard-ux](../../data-visualization-and-dashboard-ux/SKILL.md).
-- Global search across content types, autocomplete and result pages: use [site-search-and-findability](../../site-search-and-findability/SKILL.md). Table-scoped filtering stays here.
+- Global search across content types, autocomplete and result pages: use [site-search-and-findability](../../information-architecture/references/site-search-and-findability/README.md). Table-scoped filtering stays here.
 - Editing one record in a long form or wizard: use [complex-forms-and-wizards](../../interaction-patterns-and-form-ux/references/complex-forms-and-wizards.md).
 - Long-running bulk jobs after the user clicks the action (queues, partial failure, retries): use [complex-workflow-and-progress-ux](../../interaction-patterns-and-form-ux/references/complex-workflow-and-progress-ux/README.md).
 - Token and component API for the table component itself: use [design-system-and-components](../../design-system-and-components/SKILL.md).

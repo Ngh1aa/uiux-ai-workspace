@@ -1,5 +1,7 @@
 """Protect routing, read budget and lossless progressive disclosure."""
 import importlib.util
+import json
+import os
 import re
 import subprocess
 import unittest
@@ -9,6 +11,30 @@ ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location('reading_paths', ROOT / 'scripts/reading-paths.py')
 reading = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(reading)
+
+
+MERGED = json.loads((ROOT / 'skills_UIUX/merged-skills.json').read_text(encoding='utf8'))['merged']
+
+
+def remap_merged(body, base):
+    """Links into a skill that was later folded into a host skill point to its new home; text stays verbatim."""
+    def fix(m):
+        target, _, anchor = m[1].partition('#')
+        if '://' in target or not target:
+            return m[0]
+        resolved = Path(os.path.normpath(base / target))
+        try:
+            parts = resolved.relative_to(ROOT / 'skills_UIUX').parts
+        except ValueError:
+            return m[0]
+        if not parts or parts[0] not in MERGED:
+            return m[0]
+        rest = list(parts[1:]) or []
+        if rest == ['SKILL.md']:
+            rest = ['README.md']
+        new = ROOT / 'skills_UIUX' / MERGED[parts[0]] / 'references' / parts[0] / Path(*rest) if rest else ROOT / 'skills_UIUX' / MERGED[parts[0]] / 'references' / parts[0]
+        return '](' + os.path.relpath(new, base) + ('#' + anchor if anchor else '') + ')'
+    return re.sub(r'\]\(([^)\s]+)\)', fix, body)
 
 
 class ReadingPathsTests(unittest.TestCase):
@@ -35,5 +61,6 @@ class ReadingPathsTests(unittest.TestCase):
             baseline = subprocess.run(['git','-C',str(ROOT),'show',f'{reading.BASELINE}:{rel}'],capture_output=True,encoding='utf8',check=True).stdout
             body = baseline.split('---',2)[-1].lstrip()
             body = re.sub(r'\]\((?![a-z]+:|/|#)([^)]+)\)',lambda m:'](../'+m[1]+')',body)
+            body = remap_merged(body, reference.parent)
             self.assertIn(body.rstrip(), reference.read_text(encoding='utf8'), rel)
             self.assertIn('references/practice-detail.md', original.read_text(encoding='utf8'), rel)

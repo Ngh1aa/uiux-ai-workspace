@@ -7,7 +7,7 @@ Mở khi việc đã được xếp cỡ L hoặc XL theo [WORKFLOWS.md](../WORK
 Như **M**, cộng thêm:
 
 1. **Đánh giá hiện trạng** và so 3–5 sản phẩm tham chiếu (trích nguyên tắc, không sao chép bề mặt).
-   Thiếu hiểu biết về người dùng thì thêm [`research-lite`](../skills_UIUX/research-lite/SKILL.md).
+   Thiếu hiểu biết về người dùng thì thêm [`research-lite`](../skills_UIUX/design-thinking-lite/references/research-lite/README.md).
 2. **Kiến trúc thông tin** và mô hình điều hướng cho toàn khu vực.
 3. **Hướng thị giác**: 4–7 thuộc tính thị giác có biểu hiện cụ thể, ma trận vai trò trang, màn hình.
    Nền tảng lý do nằm trong [`foundations/`](../foundations/README.md).
@@ -31,7 +31,7 @@ Như **L**, cộng thêm:
 
 1. **Khám phá**: vấn đề, đối tượng, giả định rủi ro nhất, cách kiểm chứng, theo
    [`design-thinking-lite`](../skills_UIUX/design-thinking-lite/SKILL.md) mức XL và
-   [`research-lite`](../skills_UIUX/research-lite/SKILL.md).
+   [`research-lite`](../skills_UIUX/design-thinking-lite/references/research-lite/README.md).
 2. **Nguyên tắc trải nghiệm** (3–5 câu, có đánh đổi rõ ràng).
 3. **Track Design System** (xem [tracks](tracks.md)) chạy song song từ tuần đầu.
 4. **Kế hoạch kiểm chứng** với người dùng thật; khi chưa có người thật thì ghi `PLANNED_VALIDATION`.
