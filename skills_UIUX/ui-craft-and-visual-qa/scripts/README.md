@@ -39,6 +39,19 @@ Luật theo [`TASTE.md`](../../../TASTE.md), là **lỗi**: `demo-note` (ghi ch�
 `fixed-overlap` (thanh cố định ở đáy che nội dung khi đã cuộn hết). `subtitle` (dòng giải thích phụ dưới tiêu
 đề) là cảnh báo phải xem từng chỗ. Nhãn artboard hay gallery nằm ngoài màn thì đánh dấu `data-annotation`.
 
+Luật dashboard và biểu đồ, theo [`data-visualization-and-dashboard-ux`](../../data-visualization-and-dashboard-ux/SKILL.md).
+Không cần đánh dấu gì thêm: script tự nhận canvas, SVG có đường/cột/vòng, `[role="img"]` có vạch, donut
+`conic-gradient` và `[data-chart]`.
+
+- **Lỗi:** `chart-donut` donut/pie quá 3 phần; `chart-name` biểu đồ không có tên cho trình đọc màn hình.
+- **Cảnh báo:** `chart-gauge` vòng tiến độ cho một con số; `chart-values` cột không có giá trị đọc được;
+  `chart-legend` chú giải ô màu tách khỏi biểu đồ; `status-series` màu dữ liệu trùng sắc màu trạng thái.
+- **Cảnh báo bố cục** (thành lỗi với `--layout strict`): `panel-void` panel trong lưới trống đáy vì hàng kéo
+  giãn; `panel-orphan` panel lẻ ở hàng cuối.
+
+App nhiều màn chọn màn bằng query: `taste-check.cjs "app.html?screen=home" --layout strict`.
+Ca gốc: [Nova Home](../../data-visualization-and-dashboard-ux/references/nova-dashboard-case.md).
+
 ### Khi không chạy được taste-check
 
 Theo thứ tự:

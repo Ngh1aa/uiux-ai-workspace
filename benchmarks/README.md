@@ -10,6 +10,7 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 | [03 Dashboard kho shop len](briefs/03-dashboard.md) | Trang quản trị | M |
 | [04 Web app phòng khám, ba vai trò](briefs/04-multi-role.md) | Web app desktop 4 màn | L |
 | [05 App sổ liên lạc iOS và Android](briefs/05-native.md) | App native 4 màn × 2 nền tảng | L |
+| [06 Dashboard phân tích chuỗi trà sữa](briefs/06-analytics-dashboard.md) | Trang phân tích có bộ lọc, drill-down | M |
 
 ## Quy tắc
 
