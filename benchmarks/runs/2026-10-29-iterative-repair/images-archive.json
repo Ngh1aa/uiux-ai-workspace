@@ -1,5 +1,5 @@
 {
-  "note": "Ảnh của lần chạy này đã bỏ khỏi cây thư mục để repo nhẹ. Bản gốc còn trong lịch sử git ở commit ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46 (git show ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46:benchmarks/runs/2026-10-29-iterative-repair/<đường dẫn>). Hash từng ảnh giữ ở đây để report.py và review-packet.py vẫn kiểm được.",
+  "note": "Ảnh của lần chạy này đã xoá khỏi cây thư mục và khỏi lịch sử git ngày 02/11/2026 để repo nhẹ (chủ repo đồng ý). Chỉ còn SHA-256 từng ảnh ở đây; report.py và review-packet.py kiểm bằng các hash này.",
   "release": null,
   "asset": "benchmark-images-2026-10-29-iterative-repair.zip",
   "url": null,
@@ -346,5 +346,5 @@
     "shots/reviewed/05-native-v2/05-native-390-light-05-iOS-date-error.png": "46b6b111ba5c73de6475de3515fb58dcb9f8874356d8208e8c9495f53ea0ebcb",
     "shots/reviewed/05-native-v2/05-native-390-light.jpg": "d3b726f61fded4f12d2f1981b6f47edaf79b66a7f01735d8ff9600c0219f886f"
   },
-  "source_commit": "ddc16cdad8f1e0513b25da9e7d5b730cf8cd3d46"
+  "source_commit": null
 }

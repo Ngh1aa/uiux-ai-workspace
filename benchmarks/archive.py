@@ -74,6 +74,9 @@ def verify(args: argparse.Namespace) -> int:
     index = json.loads((run / "images-archive.json").read_text(encoding="utf-8"))
     if args.zip:
         data = Path(args.zip).read_bytes()
+    elif not index.get("url") and not index.get("source_commit"):
+        print(f"{args.run}: {len(index['files'])} ảnh đã xoá hẳn; chỉ còn bản ghi hash, không có bản gốc để so")
+        return 0
     elif not index.get("url"):
         return verify_from_git(run, index)
     else:
