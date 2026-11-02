@@ -15,3 +15,5 @@ description: Phản biện theo mục tiêu, bằng chứng, đánh đổi và q
 Sai: “chưa premium”. Đúng: “màn Review có hai CTA cùng mức nhấn, dễ xác nhận nhầm; hạ Sửa lịch thành nút phụ và thử lại”.
 Điểm agent là heuristic, không phải kết quả nghiên cứu hay phê duyệt của chủ repo.
 Mở [chi tiết](references/practice-detail.md) khi cần tổ chức critique và hồ sơ quyết định dài hạn.
+
+Thêm khi cần: heuristic: [`ux-laws-and-heuristics`](references/ux-laws-and-heuristics/README.md).

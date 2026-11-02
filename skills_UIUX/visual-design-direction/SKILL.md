@@ -22,3 +22,5 @@ Mở [chi tiết](references/practice-detail.md) khi làm nhiều page role, c�
 kiểm tính đơn điệu, chuyển đặc tính vật gốc hoặc tổng hợp nhiều tham khảo.
 Mở [decision provenance](references/decision-provenance.md) khi cần thí nghiệm kiểm soát;
 [mobile UX](references/mobile-ux-first.md) khi hành vi app chưa rõ.
+
+Thêm khi cần: chống "nhìn như template": [`visual-taste-calibration`](references/visual-taste-calibration/README.md).

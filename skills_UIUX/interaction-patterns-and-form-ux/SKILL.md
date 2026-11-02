@@ -17,3 +17,5 @@ Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, 
 Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 Tra đúng mẫu khi cần: [references theo tác vụ](references/complex-forms-and-wizards.md).
+
+Thêm khi cần: Đăng nhập, đăng ký, khôi phục tài khoản: [`authentication-account-and-recovery-ux`](references/authentication-account-and-recovery-ux/README.md).
