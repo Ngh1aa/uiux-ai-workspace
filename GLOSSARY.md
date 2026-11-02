@@ -38,7 +38,7 @@ Bảng này chốt **một cách gọi** cho mỗi khái niệm để tài liệ
 | Trượt cứng | hard-fail | Lỗi làm bài không đạt dù điểm trung bình cao |
 | Bàn giao | handoff | Gói tài liệu cho đội dựng: trạng thái, token, hành vi |
 | Đề chuẩn | benchmark | Bộ đề cố định để đo repo sau mỗi lần nâng cấp, trong `benchmarks/` |
-| Mức bằng chứng | evidence level | `QUAN_SÁT`, `SỐ_LIỆU`, `HEURISTIC_ONLY`, `PLANNED_VALIDATION`…, xem `research-lite` |
+| Mức bằng chứng | evidence level | `QUAN_SÁT`, `SỐ_LIỆU`, `HEURISTIC_ONLY`, `PLANNED_VALIDATION`…, xem `research-lite` trong `design-thinking-lite` |
 
 ### Bố cục và thị giác
 
