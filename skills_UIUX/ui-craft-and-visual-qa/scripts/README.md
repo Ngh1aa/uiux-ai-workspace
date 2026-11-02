@@ -49,6 +49,17 @@ Không cần đánh dấu gì thêm: script tự nhận canvas, SVG có đườn
 - **Cảnh báo bố cục** (thành lỗi với `--layout strict`): `panel-void` panel trong lưới trống đáy vì hàng kéo
   giãn; `panel-orphan` panel lẻ ở hàng cuối.
 
+Luật card và dấu hiệu "AI hoá", theo mục Card của [`TASTE.md`](../../../TASTE.md). Card là khối có nền, viền hoặc
+bóng, bo ≥ 8 px, cao ≥ 72 px, không phải nút, nav, figure hay landmark.
+
+- **Lỗi:** `card-padding` padding bốn cạnh lệch nhau quá 2 px (padding 0 để khối con lo lề thì bỏ qua);
+  `emoji` emoji trong chữ.
+- **Cảnh báo bố cục** (thành lỗi với `--layout strict`): `card-inset` khoảng từ mép card tới nội dung, trên và
+  trái, lệch quá 8 px (nội dung căn giữa thì bỏ qua); `card-wide` card ≥ 360 px mà nội dung chiếm dưới 55% bề ngang.
+- **Cảnh báo:** `gradient-surface` nền hay chữ gradient có màu (ảnh thật, mặt thẻ ngân hàng thì gắn `data-artwork`);
+  `glow` bóng màu phát sáng; `tile-rainbow` ≥ 3 ô cùng loại tô ≥ 3 sắc khác nhau; `eyebrow` từ hai tiêu đề trở
+  lên có nhãn nhỏ phía trên.
+
 App nhiều màn chọn màn bằng query: `taste-check.cjs "app.html?screen=home" --layout strict`.
 Ca gốc: [Nova Home](../../data-visualization-and-dashboard-ux/references/nova-dashboard-case.md).
 
