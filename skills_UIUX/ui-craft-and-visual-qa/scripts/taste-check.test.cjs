@@ -483,3 +483,21 @@ test('bắt emoji trong chữ, không bắt mũi tên chữ', () => {
   const ok = run('<section data-screen="Mũi tên"><div class="card"><h2 style="margin:0">Xem thêm →</h2></div></section>');
   assert.ok(!ok.rules('Mũi tên', 'errors').includes('emoji'));
 });
+
+test('các file luật chạy trong trang ghép lại thành một biểu thức hợp lệ, mỗi luật nằm đúng nhóm', () => {
+  const vm = require('node:vm');
+  const dir = path.join(__dirname, 'taste-check');
+  const files = ['shared.js', 'text.js', 'card.js', 'layout.js', 'chart.js', 'audit.js'];
+  const body = files.map((f) => fs.readFileSync(path.join(dir, f), 'utf8')).join('\n');
+  assert.doesNotThrow(() => new vm.Script(`(() => {\n${body}\nreturn auditScreens();\n})`));
+  const groups = {
+    'text.js': ['dot', 'contrast', 'wrap', 'widow', 'clipped', 'edge', 'ellipsis', 'small-text', 'subtitle', 'template-var', 'demo-note', 'emoji'],
+    'card.js': ['highlight', 'radius', 'left-bar', 'decor-overlap', 'card-padding', 'card-inset', 'card-wide', 'gradient-surface', 'glow', 'tile-rainbow', 'eyebrow'],
+    'layout.js': ['overflow', 'target', 'fixed-overlap', 'void', 'coverage', 'flat-scale', 'thin-highlight', 'colors', 'panel-void', 'panel-orphan'],
+    'chart.js': ['chart-donut', 'chart-gauge', 'chart-name', 'chart-values', 'chart-legend', 'status-series'],
+  };
+  for (const [file, rules] of Object.entries(groups)) {
+    const src = fs.readFileSync(path.join(dir, file), 'utf8');
+    for (const rule of rules) assert.ok(src.includes(`rule: '${rule}'`), `${rule} không nằm trong ${file}`);
+  }
+});

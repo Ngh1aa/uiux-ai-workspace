@@ -16,6 +16,7 @@ số liệu, đặc thù tiếng Việt và gu chủ repo.
 | [`color-oklch.md`](color-oklch.md) | Màu theo vai trò, thang OKLCH, tương phản, chế độ tối, ba nhóm màu |
 | [`motion.md`](motion.md) | Khi nào có chuyển động, thời lượng, giảm chuyển động, chuyển động theo cuộn cho website |
 | [`illustration-and-imagery.md`](illustration-and-imagery.md) | Ảnh hay minh hoạ, ảnh còn thiếu, icon, thanh điều hướng |
+| [`images-and-icons.md`](images-and-icons.md) | Thứ tự nguồn ảnh, giấy phép, bộ icon và cỡ icon (tách từ CRAFT.md) |
 | [`reference-gallery.md`](reference-gallery.md) | Tham khảo ngoài theo loại màn và pattern nên ghép |
 
 Thuật ngữ được chốt trong [`GLOSSARY.md`](../GLOSSARY.md).
