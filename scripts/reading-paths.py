@@ -6,7 +6,7 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-BASELINE = 'd7000758c2e2aa273785455ae91d255fe3be04e0'
+BASELINE = '85e915f56424d5aa7b7ab2f58aa7ec53cfe21db3'
 CORE = ['START-HERE.md', 'AGENTS.md', 'TASTE.md', 'CRAFT.md', 'FLOW.md', 'WORKFLOWS.md']
 SKILLS = ['ux-structure-and-flow-design', 'visual-design-direction', 'ui-craft-and-visual-qa', 'design-critique-and-rationale']
 COMMON = CORE + [f'skills_UIUX/{name}/SKILL.md' for name in SKILLS]
