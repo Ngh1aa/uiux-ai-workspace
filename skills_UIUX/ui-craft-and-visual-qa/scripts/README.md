@@ -6,13 +6,15 @@ Soát trang đã render theo [`TASTE.md`](../../../TASTE.md) trong Chromium, c�
 Mỗi phần tử có `data-screen="Tên màn"` được soát như một màn riêng.
 
 - **Lỗi:** dấu " · " nối cụm từ, chữ dưới ngưỡng tương phản AA, nhãn điều khiển ngắn bị gãy dòng, nội dung
-  tràn ngang hoặc bị khung cha cắt mất, hơn một card nổi bật trong một màn, ảnh/font/CSS tải lỗi,
+  tràn ngang hoặc bị khung cha cắt mất, chữ hay nút tràn ra ngoài card (`card-spill`), icon trỏ tới
+  symbol không có trong trang (`icon-missing`), hơn một card nổi bật trong một màn, ảnh/font/CSS tải lỗi,
   vi phạm axe-core mức serious/critical (khi có cài axe-core), tràn ngang ở 320 px (với `--reflow`).
 - **Cảnh báo:** card có nhiều bán kính bo góc, hơn 3 nhóm màu, vùng chạm dưới 44×44 px, chữ bị cắt
-  bằng "…", dòng cuối chỉ còn một chữ, chữ sát mép màn hẹp, heading/nội dung ngắn xuống dòng cần review.
+  bằng "…", dòng cuối chỉ còn một chữ, chữ sát mép màn hẹp, heading/nội dung ngắn xuống dòng cần review,
+  vân nền phủ kín card chạy qua chữ cỡ lớn (`decor-texture`).
 - **Cảnh báo bố cục** (thành lỗi khi thêm `--layout strict`): `void` khoảng trống dọc lớn, `coverage`
   nội dung dồn một bên trên màn rộng, `flat-scale` thang chữ phẳng, `thin-highlight` card nổi bật quá
-  mỏng. Ngưỡng và cách sửa: [`layout-and-density.md`](../../../foundations/layout-and-density.md).
+  mỏng, `table-scroll` bảng phải cuộn ngang ở màn ≥ 1024 px (cột cuối bị khuất). Ngưỡng và cách sửa: [`layout-and-density.md`](../../../foundations/layout-and-density.md).
   Vùng trống có chủ đích đánh dấu `data-whitespace`.
 
 ```bash

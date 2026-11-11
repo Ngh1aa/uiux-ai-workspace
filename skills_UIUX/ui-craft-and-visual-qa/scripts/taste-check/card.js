@@ -1,4 +1,4 @@
-/* taste-check: luật card (highlight, radius, left-bar, decor-overlap, card-padding, card-inset, card-wide, gradient-surface, glow, tile-rainbow, eyebrow).
+/* taste-check: luật card (highlight, radius, left-bar, decor-overlap, decor-texture, card-spill, card-padding, card-inset, card-wide, gradient-surface, glow, tile-rainbow, eyebrow).
  * Chạy trong trang (Playwright evaluate), không phải module Node. taste-check.cjs ghép các file trong
  * thư mục này theo thứ tự shared, text, card, layout, chart, audit vào một hàm rồi chạy một lần mỗi trang.
  * Mỗi luật nhận ctx = { root, all, isPart, rootRect, rootBg, errors, warnings, massOf, highlights }. */
@@ -38,6 +38,7 @@ const cardRules = {
 
   // Thanh màu bên trái và hoạ tiết ::before/::after đè chữ
   decor(ctx, el, st) {
+    const { warnings } = ctx;
     const { root, errors } = ctx;
     if (el === root || el.matches(CONTROL) || el.closest('nav, [role="navigation"], [role="tablist"]') || el.matches('blockquote') || el.querySelector(':scope > blockquote')) return;
     // Thanh màu bên trái card hay dòng: viền trái dày có màu, hoặc ::before/::after dạng vạch dọc sát mép trái.
@@ -78,7 +79,14 @@ const cardRules = {
         const py = r.top + bt + (Number.isFinite(parseFloat(ps.top)) ? parseFloat(ps.top) : (r.height - bt - (parseFloat(st.borderBottomWidth) || 0)) - h - (parseFloat(ps.bottom) || 0));
         // Vân nền phủ kín cả khối (background-image, không viền) là bề mặt, không phải hoạ tiết đặt lên chữ.
         const noBorder = ['Top', 'Right', 'Bottom', 'Left'].every((s) => !(parseFloat(ps[`border${s}Width`]) > 0) || ps[`border${s}Style`] === 'none');
-        if (noBorder && ps.backgroundImage !== 'none' && w * h >= r.width * r.height * 0.9) continue;
+        if (noBorder && ps.backgroundImage !== 'none' && w * h >= r.width * r.height * 0.9) {
+          // Vân nền là bề mặt, nhưng vân có nét (gradient lặp, sọc) chạy qua chữ cỡ lớn làm số khó đọc.
+          const big = [...el.querySelectorAll('*')].find((c) => visible(c) && ownText(c) && !annotated(c) && parseFloat(getComputedStyle(c).fontSize) >= 24);
+          if (big && /repeating-|linear-gradient/.test(ps.backgroundImage)) {
+            warnings.push({ rule: 'decor-texture', message: `Vân nền ${pseudo} của ${describe(el)} chạy qua chữ lớn ${describe(big)}. Mở ảnh kiểm độ đọc, hoặc để vân tránh vùng số` });
+          }
+          continue;
+        }
         const hit = lines.find((t) => Math.min(t.right, px + w) - Math.max(t.left, px) > 4 && Math.min(t.bottom, py + h) - Math.max(t.top, py) > 2);
         if (hit) errors.push({ rule: 'decor-overlap', message: `Hoạ tiết ${pseudo} của ${describe(el)} đè lên chữ. Dời hoạ tiết ra vùng không có chữ` });
       }
@@ -112,6 +120,28 @@ const cardRules = {
       }
       return rects.filter((x) => x.width >= 1 && x.height >= 1);
     };
+    // Nội dung tràn khỏi card (card không cắt): chữ hay nút nằm ngoài khung nhìn thấy được.
+    for (const card of cardList) {
+      const cs = getComputedStyle(card);
+      if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') continue; // card tự cắt hoặc cuộn
+      const r = card.getBoundingClientRect();
+      for (const n of card.querySelectorAll('*')) {
+        if (!visible(n) || !(ownText(n) || n.matches(CONTROL))) continue;
+        let clipped = false;
+        for (let a = n.parentElement; a && a !== card; a = a.parentElement) {
+          const as = getComputedStyle(a);
+          if (as.overflowX !== 'visible' || as.overflowY !== 'visible' || ['absolute', 'fixed'].includes(as.position)) { clipped = true; break; }
+        }
+        if (clipped || ['absolute', 'fixed'].includes(getComputedStyle(n).position)) continue;
+        const nr = n.getBoundingClientRect();
+        const out = Math.max(nr.bottom - r.bottom, nr.right - r.right);
+        // Hộp chữ inline nhô vài px khỏi dòng là bình thường; tràn thật thì lệch cả dòng chữ trở lên.
+        if (out > 4) {
+          errors.push({ rule: 'card-spill', message: `Nội dung tràn ra ngoài card ${Math.round(out)}px: ${describe(n)} trong ${describe(card)}. Thu nội dung, cho card cao hơn hoặc cho phép cuộn` });
+          break;
+        }
+      }
+    }
     for (const card of cardList) {
       const st = getComputedStyle(card);
       const r = card.getBoundingClientRect();

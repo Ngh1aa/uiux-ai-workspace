@@ -24,6 +24,7 @@ function auditScreens() {
       layoutRules.element(ctx, el, st);
     }
     layoutRules.rootOverflow(ctx);
+    layoutRules.iconRefs(ctx);
     ctx.highlights = cardRules.highlightAndRadius(ctx);
     layoutRules.space(ctx);
     layoutRules.flatScale(ctx);
