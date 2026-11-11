@@ -7,7 +7,7 @@ Choose the smallest meaningful matrix from platform scope, critical tasks and ri
 
 Review primary tasks and failure/recovery. Large text, dark appearance, reduced motion and assistive technology require annotated behavior; a static prototype cannot prove runtime compliance. Without real participants, label expert scenarios separately and keep user validation UNKNOWN.
 
-For a coded browser prototype, use [mobile-web-preview](mobile-web-preview/README.md) and the existing browser/state QA owners. Test tasks, recovery and hosted subpaths; record browser observations separately from the native plan below.
+For a coded browser prototype, use [mobile-web-preview](web-preview/README.md) and the existing browser/state QA owners. Test tasks, recovery and hosted subpaths; record browser observations separately from the native plan below.
 
 ## Native verification plan
 Bind planned checks to source SHA, app/build identity, OS/device, locale, theme, text scale, scenario, expected outcome and artifact/capture hash. Current design flows do not install a native runner or emit trusted native evidence.

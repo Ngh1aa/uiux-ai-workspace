@@ -41,6 +41,9 @@ jobs:
       - name: Internal Markdown links resolve
         working-directory: .
         run: python scripts/check-links.py
+      - name: Paths stay short enough for Windows clones
+        working-directory: .
+        run: python scripts/check-path-length.py
       - name: Benchmark report matches recorded runs
         working-directory: .
         run: python benchmarks/report.py --check

@@ -2,7 +2,7 @@
 
 Dùng ảnh hay minh hoạ, giữ đồng bộ thế nào, làm gì khi chưa có ảnh thật. Hướng nghệ thuật ở skill
 [`asset-media-and-art-direction`](../skills_UIUX/asset-media-and-art-direction/SKILL.md); cắt ảnh ở
-[`media-crop-and-layout-integrity`](../skills_UIUX/asset-media-and-art-direction/references/media-crop-and-layout-integrity/README.md).
+[`media-crop-and-layout-integrity`](../skills_UIUX/asset-media-and-art-direction/references/media-crop/README.md).
 
 ## 1. Ảnh hay minh hoạ
 

@@ -4,7 +4,7 @@
   "boundary": "Authored workflow candidates derived from local skill owners; not research findings, clinical rules, compliance advice or approved operating policy. Replace actors, states, rights and metrics with project truth. No outcome uplift has been measured.",
   "profiles": {
     "industrial-service-operations": {
-      "source_refs": ["skills_UIUX/brand-distinctiveness-and-visual-signature/references/real-world-artifact-and-domain-metaphor-design/README.md", "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"],
+      "source_refs": ["skills_UIUX/brand-distinctiveness-and-visual-signature/references/domain-metaphor/README.md", "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"],
       "actors": [{"role": "Plant engineer", "decision": "Describe installed system and required scope"}, {"role": "Service owner", "decision": "Confirm feasibility, exclusions and handover"}, {"role": "Approver", "decision": "Authorize documented scope within verified authority"}],
       "objects": ["installed-base record", "scope revision", "interface boundary", "acceptance evidence"],
       "state_model": ["draft need", "scope clarification", "reviewable proposal", "authorized work", "acceptance review", "closed with evidence"],
@@ -40,7 +40,7 @@
       "do_not_infer": ["Participant count", "conversion uplift", "client endorsement", "employment dates", "native Figma delivery"]
     },
     "enterprise-software-governance": {
-      "source_refs": ["skills_UIUX/interaction-patterns-and-form-ux/references/authentication-account-and-recovery-ux/README.md", "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"],
+      "source_refs": ["skills_UIUX/interaction-patterns-and-form-ux/references/auth-and-recovery/README.md", "skills_UIUX/complex-workflow-and-progress-ux/SKILL.md"],
       "actors": [{"role": "Requester", "decision": "Specify resource, role, reason and duration"}, {"role": "Approver", "decision": "Approve/deny within verified authority"}, {"role": "Provisioning owner/system", "decision": "Report actual execution and reconcile failures"}, {"role": "Reviewer", "decision": "Inspect scope, expiry and event evidence"}],
       "objects": ["permission request", "approval decision", "provisioning job", "effective entitlement", "revocation event"],
       "state_model": ["draft", "submitted", "review required", "approved or denied", "provisioning pending", "active or execution failed", "revocation pending", "revoked when verified"],

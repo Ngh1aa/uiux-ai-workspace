@@ -90,4 +90,4 @@ Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướn
 | Hướng dẫn | Mở khi |
 |---|---|
 | [`complex-forms-and-wizards`](../references/complex-forms-and-wizards.md) | Design multi-step, conditional or high-stakes forms with progress, validation, review, save/resume and recovery. Use for admissions, applications, checkout, booking, CRM, onboarding or document-heavy forms. |
-| [`complex-workflow-and-progress-ux`](../references/complex-workflow-and-progress-ux/README.md) | Design long-running, multi-stage or interruptible workflows with ownership, progress, resumability and safe completion. Use for approvals, processing queues, applications, publishing flows or multi-actor enterprise… |
+| [`complex-workflow-and-progress-ux`](complex-workflow/README.md) | Design long-running, multi-stage or interruptible workflows with ownership, progress, resumability and safe completion. Use for approvals, processing queues, applications, publishing flows or multi-actor enterprise… |

@@ -23,4 +23,4 @@ kiểm tính đơn điệu, chuyển đặc tính vật gốc hoặc tổng hợ
 Mở [decision provenance](references/decision-provenance.md) khi cần thí nghiệm kiểm soát;
 [mobile UX](references/mobile-ux-first.md) khi hành vi app chưa rõ.
 
-Thêm khi cần: chống "nhìn như template": [`visual-taste-calibration`](references/visual-taste-calibration/README.md).
+Thêm khi cần: chống "nhìn như template": [`visual-taste-calibration`](references/taste-calibration/README.md).

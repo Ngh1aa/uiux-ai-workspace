@@ -59,4 +59,4 @@ Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướn
 
 | Hướng dẫn | Mở khi |
 |---|---|
-| [`brand-recognition-and-consistency-qa`](../references/brand-recognition-and-consistency-qa.md) | Performs cross-page visual identity QA to verify that screens, sections and responsive states remain recognizably part of one brand/service without sacrificing usability. Use before release, after large redesigns or… |
+| [`brand-recognition-and-consistency-qa`](brand-recognition-qa.md) | Performs cross-page visual identity QA to verify that screens, sections and responsive states remain recognizably part of one brand/service without sacrificing usability. Use before release, after large redesigns or… |

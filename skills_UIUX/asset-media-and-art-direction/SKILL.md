@@ -17,4 +17,4 @@ Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, 
 Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 
-Thêm khi cần: Ảnh bị cắt sai, vỡ tỉ lệ: [`media-crop-and-layout-integrity`](references/media-crop-and-layout-integrity/README.md).
+Thêm khi cần: Ảnh bị cắt sai, vỡ tỉ lệ: [`media-crop-and-layout-integrity`](references/media-crop/README.md).

@@ -127,10 +127,10 @@ Bảng chọn; cách làm và lưu ý của từng track ở [workflows/tracks.m
 
 | Khi | Đọc thêm |
 |---|---|
-| iOS, Android | [`ios-app-design`](skills_UIUX/mobile-app-design/references/ios-app-design/README.md), [`android-app-design`](skills_UIUX/mobile-app-design/references/android-app-design/README.md) và spec sheet của nền tảng |
+| iOS, Android | [`ios-app-design`](skills_UIUX/mobile-app-design/references/ios/README.md), [`android-app-design`](skills_UIUX/mobile-app-design/references/android/README.md) và spec sheet của nền tảng |
 | Web marketing | [`responsive-and-device-strategy`](skills_UIUX/responsive-and-device-strategy/SKILL.md) |
 | Web app, dashboard | [`data-tables-and-enterprise-ux`](skills_UIUX/data-tables-and-enterprise-ux/SKILL.md), [`data-visualization-and-dashboard-ux`](skills_UIUX/data-visualization-and-dashboard-ux/SKILL.md) |
-| Chỉ review, audit | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md), [`ux-laws-and-heuristics`](skills_UIUX/design-critique-and-rationale/references/ux-laws-and-heuristics/README.md) |
+| Chỉ review, audit | [rubric](skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md), [`ux-laws-and-heuristics`](skills_UIUX/design-critique-and-rationale/references/ux-laws/README.md) |
 | Cải thiện UI đang có | [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#cải-thiện-giao-diện-hiện-có) |
 | Redesign sản phẩm có code | [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md) |
 | Soát prototype | [`ui-craft-and-visual-qa`](skills_UIUX/ui-craft-and-visual-qa/SKILL.md#soát-prototype) |

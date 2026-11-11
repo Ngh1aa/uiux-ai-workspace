@@ -35,12 +35,12 @@ nghiên cứu.
 
 | Cần biết | Phương pháp | Chi phí | Chi tiết |
 |---|---|---|---|
-| Ngành, đối thủ, thói quen chung | Nghiên cứu bàn giấy | 1–3 giờ | [desk-research.md](references/desk-research.md) |
-| Vì sao họ làm vậy, hoàn cảnh, nỗi lo | Phỏng vấn ngắn 20–30 phút, 5–8 người | 2–4 ngày | [interviews-and-tests.md](references/interviews-and-tests.md) |
-| Họ có dùng được không | Thử nghiệm 5 người mỗi nhóm trên mẫu thử | 2–3 ngày | [interviews-and-tests.md](references/interviews-and-tests.md) |
-| Bao nhiêu người như vậy | Khảo sát ngắn hoặc số liệu có sẵn | 1 tuần | [surveys-and-synthesis.md](references/surveys-and-synthesis.md) |
+| Ngành, đối thủ, thói quen chung | Nghiên cứu bàn giấy | 1–3 giờ | [desk-research.md](desk-research.md) |
+| Vì sao họ làm vậy, hoàn cảnh, nỗi lo | Phỏng vấn ngắn 20–30 phút, 5–8 người | 2–4 ngày | [interviews-and-tests.md](interviews-and-tests.md) |
+| Họ có dùng được không | Thử nghiệm 5 người mỗi nhóm trên mẫu thử | 2–3 ngày | [interviews-and-tests.md](interviews-and-tests.md) |
+| Bao nhiêu người như vậy | Khảo sát ngắn hoặc số liệu có sẵn | 1 tuần | [surveys-and-synthesis.md](surveys-and-synthesis.md) |
 | Nhãn, điều hướng có hiểu không | Phân loại thẻ, thử cây | 1–2 ngày | skill [`information-architecture`](../../../information-architecture/SKILL.md) |
-| Phương án nào dễ hiểu hơn | Thử 5 giây, so sánh hai bản | 1 ngày | [interviews-and-tests.md](references/interviews-and-tests.md) |
+| Phương án nào dễ hiểu hơn | Thử 5 giây, so sánh hai bản | 1 ngày | [interviews-and-tests.md](interviews-and-tests.md) |
 
 Phỏng vấn cho biết **vì sao**; thử nghiệm cho biết **dùng được không**; khảo sát cho biết **bao nhiêu**.
 Đừng dùng khảo sát để hỏi "bạn có thích tính năng X không".
@@ -63,7 +63,7 @@ Phỏng vấn cho biết **vì sao**; thử nghiệm cho biết **dùng được
 3. Mỗi nhóm thành một phát hiện có: số người gặp, mức nghiêm trọng, nhãn bằng chứng, trích dẫn tiêu biểu.
 4. Mỗi phát hiện dẫn tới một **đề xuất thiết kế** hoặc một **câu hỏi mới**.
 
-Chi tiết và mẫu bảng: [surveys-and-synthesis.md](references/surveys-and-synthesis.md).
+Chi tiết và mẫu bảng: [surveys-and-synthesis.md](surveys-and-synthesis.md).
 
 ## Sản phẩm giao
 

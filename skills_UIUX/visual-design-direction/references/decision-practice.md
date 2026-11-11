@@ -67,7 +67,7 @@ mastery status in this package.
 
 The lab's original cases and comments are authored teaching material. Domain workflow
 candidates come from `data/domain-workflows.json`; primary standard sources live in
-`ux-laws-and-heuristics/references/principle-sources.md`. Read one relevant source,
+`design-critique-and-rationale/references/ux-laws/principle-sources.md`. Read one relevant source,
 not every skill. For model/skill outcome trials use the existing eval harness and
 controlled comparison protocol. A teaching
 pair changes multiple axes and cannot isolate the effect of a font, layout or skill.
