@@ -7,15 +7,18 @@ Bộ não thiết kế cá nhân để Claude thiết kế website và app đẹ
 Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thiết kế …"*. Claude clone repo,
 đọc [`START-HERE.md`](START-HERE.md) rồi làm theo.
 
-Khi chỉ dùng repo để thiết kế, clone gọn, bỏ ảnh và bằng chứng benchmark (khoảng 8 MB thay vì gần 90 MB):
+Khi chỉ dùng repo để thiết kế, clone nông là đủ:
 
 ```sh
-git clone --depth 1 --filter=blob:none --sparse https://github.com/Ngh1aa/uiux-ai-workspace
-cd uiux-ai-workspace
-git sparse-checkout set --no-cone '/*' '!/benchmarks/runs/' '!/benchmarks/evidence/' '!/benchmarks/trials/' '!/design-system/examples/*/review/'
+git clone --depth 1 https://github.com/Ngh1aa/uiux-ai-workspace
 ```
 
-Sửa chính repo, chạy benchmark hay chạy CI thì clone đầy đủ.
+Ảnh, điểm và bằng chứng của các lần chạy benchmark nằm ở nhánh `benchmarks-data`, không nằm trong
+`main`. Sửa chính repo, chạy benchmark hay chạy CI thì clone đầy đủ rồi lấy dữ liệu về bằng
+`python scripts/fetch-benchmark-data.py` (xem [`benchmarks/README.md`](benchmarks/README.md)).
+
+Trên Windows, đường dẫn trong repo được giữ không quá 100 ký tự (CI kiểm). Clone vào thư mục quá sâu
+mà vẫn gặp `Filename too long`, bật long paths: `git config --global core.longpaths true`.
 
 ## Bên trong có gì
 

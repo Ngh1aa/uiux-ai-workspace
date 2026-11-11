@@ -32,6 +32,9 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: "22"
+      - name: Fetch benchmark data pinned in benchmarks/data-ref.txt
+        working-directory: .
+        run: python scripts/fetch-benchmark-data.py
       - name: Validate SKILL.md structure
         run: python scripts/validate-skills.py
       - name: Static page checker tests (no Playwright needed)
@@ -110,6 +113,8 @@ jobs:
         run: node --test design-system/tests/gom-moc-flow.test.cjs
       - name: Booking flow source contract (runtime verified separately above)
         run: node skills_UIUX/ui-craft-and-visual-qa/scripts/flow-check.cjs design-system/examples/gom-moc/app.html --mode prototype
+      - name: Fetch benchmark data pinned in benchmarks/data-ref.txt
+        run: python scripts/fetch-benchmark-data.py
       - name: Benchmark browser flow regressions (five briefs per run)
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules

@@ -3,6 +3,22 @@
 Các đề cố định để biết repo có thật sự giúp ra thiết kế tốt hơn sau mỗi lần nâng cấp hay không,
 chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPORT.md`](REPORT.md).
 
+## Dữ liệu các lần chạy nằm ở nhánh riêng
+
+`main` chỉ giữ code, đề và `REPORT.md`. Mẫu, ảnh, điểm và bằng chứng (`runs/`, `evidence/`, `trials/`)
+nằm ở nhánh [`benchmarks-data`](https://github.com/Ngh1aa/uiux-ai-workspace/tree/benchmarks-data), để
+người chỉ dùng repo thiết kế không phải tải chúng. [`data-ref.txt`](data-ref.txt) ghi đúng commit dữ liệu
+mà `main` dùng; CI và máy cá nhân kiểm cùng một bộ.
+
+Lấy dữ liệu về trước khi chạy `report.py`, `archive.py`, test benchmark hay `flow.browser.cjs`:
+
+```sh
+python3 scripts/fetch-benchmark-data.py
+```
+
+Script giải nén đúng từng byte vào `benchmarks/runs/`, `evidence/`, `trials/` (đã có trong `.gitignore`),
+kể cả trên Windows có `core.autocrlf`, vì các file được ràng bằng SHA-256.
+
 | Đề | Loại | Cỡ |
 |---|---|---|
 | [01 Landing xưởng gốm](briefs/01-landing.md) | Website một trang | M |
@@ -32,7 +48,7 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
 
 ## Chạy một lần mới
 
-1. Tạo thư mục `runs/<ngày>-v<n>/` và làm từng đề vào `<đề>/index.html`.
+1. Lấy dữ liệu về (mục trên), tạo thư mục `runs/<ngày>-v<n>/` và làm từng đề vào `<đề>/index.html`.
 2. Soát và chụp ảnh (cần Playwright):
 
    ```sh
@@ -47,7 +63,7 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
    `python3 scripts/review-packet.py make` và để người duyệt độc lập chấm theo
    [hướng dẫn duyệt độc lập](../skills_UIUX/design-critique-and-rationale/references/independent-review.md).
    Mở ảnh ra xem, chấm theo [rubric](../skills_UIUX/design-critique-and-rationale/references/quality-bar-rubric.md)
-   và ghi `scores.json` (mẫu: [lần chạy đầu](runs/2026-10-24-v1/scores.json)). Ghi thêm `NOTES.md`:
+   và ghi `scores.json` (mẫu: [lần chạy đầu](https://github.com/Ngh1aa/uiux-ai-workspace/blob/benchmarks-data/benchmarks/runs/2026-10-24-v1/scores.json)). Ghi thêm `NOTES.md`:
    lỗi bắt được trong lúc làm, repo được sửa gì, việc nên làm tiếp.
    `checks.json` phiên bản 2 tách render, flow tĩnh và browser; flow tĩnh không chứng minh runtime.
    Độc lập cần từng đề có `review: {path, sha256}` trỏ review.json, reviewer/điểm khớp kết quả thật,
@@ -68,12 +84,24 @@ chứ không chỉ dày thêm. Kết quả mọi lần chạy nằm trong [`REPO
    (SHA-256 từng ảnh; ảnh các lần chạy đến 29/10 đã xoá hẳn khỏi lịch sử) nên `report.py --check` và `review-packet.py verify` vẫn kiểm được;
    `archive.py verify <run>` lấy ảnh từ lịch sử git (hoặc zip) và so từng byte.
    CI chạy `archive.py policy` để chặn ảnh của lần chạy cũ quay lại git.
+7. Đưa lần chạy lên nhánh dữ liệu rồi trỏ `main` vào commit mới:
+
+   ```sh
+   git worktree add ../uiux-benchmarks-data benchmarks-data
+   cp -r benchmarks/runs/<ngày>-v<n> ../uiux-benchmarks-data/benchmarks/runs/
+   git -C ../uiux-benchmarks-data add benchmarks && git -C ../uiux-benchmarks-data commit -m "Run <ngày>-v<n>"
+   git -C ../uiux-benchmarks-data push origin benchmarks-data
+   git -C ../uiux-benchmarks-data rev-parse HEAD   # ghi SHA này vào benchmarks/data-ref.txt
+   ```
+
+   Pull request vào `main` đổi `data-ref.txt` cùng `REPORT.md` và phần code liên quan. Không force-push
+   nhánh `benchmarks-data`: commit cũ phải còn để `data-ref.txt` của các bản trước vẫn lấy được dữ liệu.
 
 ## Chấm lại theo gu chủ repo (2026-10-30)
 
 Sau khi TASTE được bổ sung và checker có luật mới, hai lượt 2026-10-29 được soát và chấm lại:
 **0/10 bài đạt theo TASTE** (bảng cũ ghi 8/10 Đạt). Chi tiết, bằng chứng và các chỗ checker còn bỏ sót ở
-[evidence/2026-10-30](evidence/2026-10-30/README.md). Điểm cũ trong `REPORT.md` giữ nguyên làm lịch sử; lượt
+[evidence/2026-10-30](https://github.com/Ngh1aa/uiux-ai-workspace/blob/benchmarks-data/benchmarks/evidence/2026-10-30/README.md). Điểm cũ trong `REPORT.md` giữ nguyên làm lịch sử; lượt
 mới phải đạt theo TASTE hiện tại.
 
 ## Đọc kết quả thế nào
