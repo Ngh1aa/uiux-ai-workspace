@@ -53,7 +53,7 @@ là một thư mục có `SKILL.md`. Cột "Dùng khi" nói lúc nào mở; cộ
 |---|---|---|
 | `mobile-app-design` | Mọi việc thiết kế app; quy ước iOS và Android là hướng dẫn con bên trong | Website trên điện thoại: `responsive-and-device-strategy` |
 | `responsive-and-device-strategy` | Website: breakpoint, bố cục theo cỡ màn | App native: `mobile-app-design` |
-| `industry-playbooks` | Đã biết ngành của khách: 13 playbook | Ngành không có playbook: bỏ qua |
+| `industry-playbooks` | Đã biết ngành của khách: 14 playbook (13 website, 1 fintech) | Ngành không có playbook: bỏ qua |
 
 ## Dựng, soát, phê bình
 

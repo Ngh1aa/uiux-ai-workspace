@@ -2,7 +2,8 @@
 name: industry-playbooks
 description: |
   Playbook theo ngành cho website: landing page, SaaS, doanh nghiệp, thương mại điện tử, giáo dục,
-  cơ quan nhà nước, khách sạn nhà hàng, báo chí, phi lợi nhuận, portfolio, bất động sản, startup.
+  cơ quan nhà nước, khách sạn nhà hàng, báo chí, phi lợi nhuận, portfolio, bất động sản, startup;
+  và cho sản phẩm tài chính (cho vay, trả góp, chuyển tiền).
   Dùng khi đã biết ngành của khách để lấy mục tiêu trang, nội dung bắt buộc và lỗi hay gặp của ngành đó.
 ---
 
@@ -28,4 +29,5 @@ Không có playbook khớp thì bỏ qua bước này, không mượn playbook c
 | [`portfolio-website`](references/portfolio-website.md) | Domain playbook cho agency, studio, designer, architect và individual portfolio. Dùng khi website cần biến work samples thành bằng chứng năng lực, giải thích process/services và tạo enquiry/job opportunity thay vì… |
 | [`portfolio-career-positioning`](references/portfolio-career-positioning.md) | Audit and shape a design/product portfolio as a recruiter-facing product: target-role positioning, identity consistency, case-study evidence, AI-assisted workflow proof, CV/link/repository hygiene, technical claims… |
 | [`real-estate-and-building-website`](references/real-estate-and-building-website.md) | Domain playbook cho office building, commercial property, real estate project và leasing site. Dùng khi mục tiêu là giới thiệu tài sản, vị trí, tiện ích, thông số, ESG, mặt bằng/availability và tạo qualified lead cho… |
+| [`fintech-lending-and-payments`](references/fintech-lending-and-payments.md) | App hoặc web app cho vay, trả góp, chuyển tiền, ký cam kết tài chính, kể cả màn người duyệt. Cách trình bày chi phí cộng khớp từng đồng, kỳ cuối làm tròn, phí trừ trước, xác nhận và lỗi khi gửi tiền |
 | [`startup-and-incubator-website`](references/startup-and-incubator-website.md) | Domain playbook cho accelerator, incubator, innovation hub và startup ecosystem website. Dùng khi site cần thu hút founders/startups, mentors, investors, corporate partners và programme applicants; giải thích… |

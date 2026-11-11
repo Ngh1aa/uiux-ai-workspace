@@ -15,7 +15,7 @@ Mọi cỡ việc trên dự án khách hàng đều bắt đầu từ brand bri
 |---|---|
 | Có đổi luồng người dùng, điều hướng hoặc thêm màn hình mới? | Ít nhất **M** |
 | Có đổi hơn ~5 màn hình hoặc cả một khu vực sản phẩm? | Ít nhất **L** |
-| Sản phẩm mới, hoặc chưa có design system? | **XL** |
+| Sản phẩm mới mà chưa có design system nào (của khách hay của repo này)? | **XL**. Dùng design system của repo thì sản phẩm mới tính **L** |
 | Chỉ sửa một component, một trạng thái, một đoạn chữ? | **XS** hoặc **S** |
 | Sản phẩm đã có code, và được nhờ "thiết kế lại", "làm lại", "nâng cấp" giao diện? | Ít nhất **L**, cộng track **Redesign sản phẩm có code** (mục 3) |
 
@@ -60,7 +60,8 @@ SKILL.md dưới đây. Reference, pattern và nền tảng chỉ mở đúng ph
 4. **Khung dây** (wireframe) và đi thử 5 kịch bản. Sửa lỗi trải nghiệm trước khi tô màu.
 5. **Thị giác**: áp design system và [thư viện pattern](design-system/patterns/README.md); dựng 2–3
    hướng cho màn quyết định chính rồi qua **cổng duyệt hướng** (dưới đây) trước khi làm các màn còn lại.
-6. **Dựng và phản biện** theo rubric, sửa, dựng lại. Bấm thử luồng theo mục *Kiểm trước khi giao* của
+6. **Dựng và phản biện** theo rubric, sửa, dựng lại. Mỗi trạng thái đã kiểm kê ở bước 3 (đang tải, rỗng,
+   lỗi) được dựng và chụp cùng lúc với màn mặc định, không để tới lúc review. Bấm thử luồng theo mục *Kiểm trước khi giao* của
    [FLOW.md](FLOW.md) và ghi riêng với soát giao diện; `taste-check` không chứng minh luồng đúng.
 7. **Bàn giao**: đặc tả trạng thái, token, hành vi tương tác.
 
@@ -71,7 +72,7 @@ SKILL.md dưới đây. Reference, pattern và nền tảng chỉ mở đúng ph
 - Bắt buộc: [`CRAFT.md`](CRAFT.md) và khối kế hoạch thị giác của nó trước bước 5. Cần chi tiết hơn
   thì mở [craft standards](skills_UIUX/ui-craft-and-visual-qa/references/craft-standards.md).
 - Mobile thêm: [`mobile-app-design`](skills_UIUX/mobile-app-design/SKILL.md) và dòng nền tảng ở mục 3.
-- Web thêm: dòng nền tảng tương ứng ở mục 3, và một playbook đúng ngành của khách trong
+- Web, hoặc sản phẩm tài chính trên mọi nền tảng, thêm: dòng nền tảng tương ứng ở mục 3, và một playbook đúng ngành của khách trong
   [`industry-playbooks`](skills_UIUX/industry-playbooks/SKILL.md) (không có thì bỏ qua).
 - Mẫu tài liệu: [`templates/ux/`](skills_UIUX/templates/ux/README.md) (khung vấn đề, luồng việc, đặc tả khung dây,
   [duyệt hướng](skills_UIUX/templates/ux/direction-approval.md)).
