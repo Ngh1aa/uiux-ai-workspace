@@ -1,0 +1,136 @@
+{
+  "reviewer": {
+    "id": "blind-review-fresh-2026-10-29",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "cold": {
+    "05-Android-alert-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xác nhận hủy đơn xin nghỉ cho học sinh.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn nếu chưa chắc muốn hủy.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Microcopy đã nói rõ chỉ cập nhật trên máy này, chưa gửi cô."
+    },
+    "05-Android-assignment-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: xem bài tập, chọn ảnh và kiểm tra ảnh trong bản mẫu chưa gửi cô.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: CTA đổi thành Kiểm tra ảnh, giới hạn mẫu nói rõ; iOS nút vẫn sát/che đáy ở viewport."
+    },
+    "05-Android-date-error.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Hiển thị lỗi ngày nghỉ đã qua, hướng dẫn chọn lại và giữ dữ liệu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ để sửa ngày quá khứ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Lỗi ngày quá khứ có hướng dẫn và giữ nội dung; date input vẫn khác định dạng Việt."
+    },
+    "05-Android-draft-bottom.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem nội dung nháp đơn xin nghỉ đã điền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ để sửa ngày quá khứ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Ngày 21/10 đã qua nhưng ảnh nháp này chưa hiện lỗi; ghi chú giữ nguyên và có disclaimer gửi mẫu."
+    },
+    "05-Android-request-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Điền và gửi đơn xin nghỉ cho con.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Giới hạn chưa gửi cô rõ hơn; date kiểu Mỹ và textarea resize vẫn còn."
+    },
+    "05-iOS-alert-dark.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Hỏi lại trước khi hủy đơn nghỉ đã có.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Microcopy đã nói rõ chỉ cập nhật trên máy này, chưa gửi cô."
+    },
+    "05-iOS-assignment-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: xem bài tập, chọn ảnh và kiểm tra ảnh trong bản mẫu chưa gửi cô.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: CTA đổi thành Kiểm tra ảnh, giới hạn mẫu nói rõ; iOS nút vẫn sát/che đáy ở viewport."
+    },
+    "05-iOS-date-error.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Hiển thị lỗi ngày nghỉ đã qua, hướng dẫn chọn lại và giữ dữ liệu.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ để sửa ngày quá khứ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Lỗi ngày quá khứ có hướng dẫn và giữ nội dung; date input vẫn khác định dạng Việt."
+    },
+    "05-iOS-draft-bottom.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem nội dung nháp đơn xin nghỉ đã điền.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ để sửa ngày quá khứ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Ngày 21/10 đã qua nhưng ảnh nháp này chưa hiện lỗi; ghi chú giữ nguyên và có disclaimer gửi mẫu."
+    },
+    "05-iOS-request-light.png": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Mở sheet xin nghỉ cho học sinh.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Giới hạn chưa gửi cô rõ hơn; date kiểu Mỹ và textarea resize vẫn còn."
+    },
+    "05-native-1280-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Đối chiếu màn tổng quan phụ huynh ở iOS và Android.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Phân cấp thông tin rõ, iOS/Android có chrome khác nhau; tin cô vẫn một phần dưới tab bar."
+    },
+    "05-native-1280-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Xem việc cần làm, lịch ngày mai và tin của giáo viên.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài cần nộp đầu tiên.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Phân cấp thông tin rõ, iOS/Android có chrome khác nhau; tin cô vẫn một phần dưới tab bar."
+    },
+    "05-native-390-dark.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Tổng quan việc học của con trong ngày.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Phân cấp thông tin rõ, iOS/Android có chrome khác nhau; tin cô vẫn một phần dưới tab bar."
+    },
+    "05-native-390-light.jpg": {
+      "Màn này để làm gì?": "Đánh giá lại, đã biết brief: Giúp phụ huynh mở bài cần nộp, xem lịch học và xin nghỉ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Đánh giá lại: Phân cấp thông tin rõ, iOS/Android có chrome khác nhau; tin cô vẫn một phần dưới tab bar."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 3.5,
+    "7": 4,
+    "8": 4,
+    "9": 3.5,
+    "10": 3.5
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "05-iOS-assignment-light.png",
+      "element": "Nút Kiểm tra ảnh phía cuối nội dung",
+      "fix": "Phần dưới nút bị tabbar phủ trong ảnh; cung cấp ảnh cuộn cuối để xác nhận nút/ghi chú có đủ không gian. Không kết luận clipping vĩnh viễn chỉ từ vị trí viewport hiện tại."
+    },
+    {
+      "dimension": "6",
+      "image": "05-Android-date-error.png",
+      "element": "Date 10/21/2025 so với hướng dẫn 22/10/2025",
+      "fix": "Cách đọc ngày vẫn khác ngay trong cùng form. Hiển thị giá trị ngày/tháng nhất quán theo tiếng Việt, hoặc thêm giá trị diễn giải rõ tránh phụ huynh đọc nhầm."
+    },
+    {
+      "dimension": "9",
+      "image": "05-iOS-request-light.png",
+      "element": "Dateinput calendar icon và textarea resize grip",
+      "fix": "Form vẫn mang affordance browser thay vì date row/ghi chú quen thuộc nền tảng. Nếu mục tiêu là mô phỏng native sát, điều chỉnh trình bày nhưng giữ control accessible; kiểm thêm Dynamic Type/font scale và bàn phím thật."
+    },
+    {
+      "dimension": "10",
+      "image": "05-native-1280-light.jpg",
+      "element": "Nhận diện Nhà Trường",
+      "fix": "Đã có cấu trúc iOS/Android khác nhau và bố cục sạch, nhưng nhận diện giáo dục tiểu học còn chung qua màu xanh và khối bo. Một chi tiết thương hiệu phù hợp lịch học/bài tập có thể làm sản phẩm dễ nhận diện hơn mà không thêm nhiễu."
+    }
+  ],
+  "not_checked": [
+    "HF-1: chưa đo tỷ lệ tương phản số học; điểm màu chỉ là heuristic thị giác, không xác nhận WCAG AA.",
+    "HF-2: hit area và vùng chạm thực UNKNOWN từ ảnh.",
+    "HF-3: không kết luận nội dung ở dưới viewport là clipping vĩnh viễn khi chưa kiểm cuộn; text 200% chưa kiểm.",
+    "HF-4: keyboard path, screen reader và focus đầy đủ UNKNOWN; vài ảnh có focus không chứng minh toàn bộ luồng.",
+    "HF-6/HF-8/HF-9/HF-10: đã soát ảnh, trạng thái có chữ; không thấy cạnh tranh primary khác nhiệm vụ, deceptive pattern hoặc bằng chứng bịa không nhãn.",
+    "HF-7: browser/system back, dismiss, giữ state và điều hướng runtime UNKNOWN.",
+    "Interaction, persistence, native runtime, thiết bị thật và backend UNKNOWN; điểm 7/9 đánh giá biểu hiện nhìn thấy, không chứng nhận hành vi.",
+    "Đây là re-review đã biết brief, không phải first-read mù. independent=true nghĩa độc lập với người làm; không phải human research hay human approval.",
+    "HF-5: đã có ảnh lỗi ngày quá khứ ở cả iOS/Android; lỗi nói rõ chọn từ 22/10 trởđi và giữ nội dung. Không còn finding thiếu bằng chứng error này. Empty/loading chưa có ảnh.",
+    "Microcopy alert đã hết gây hiểu nhầm gửi cô: chỉ cập nhật bản mẫu trên máy này/chưa gửi thông báo. Assignment đã đổi CTA Kiểm tra ảnh và nói rõ không gửi bài cô.",
+    "Ảnh draft 21/10 không hiện lỗi còn ảnh date-error có lỗi; không suy lỗi validation vì có thể chưa submit ở draft. Trình tự thực/guard chưa kiểm.",
+    "Tin cô và phần cuối sheet vẫn không thấy đầy đủ trong ảnh; cần kiểm cuộn cuối và safe area.",
+    "Bài tập/form chỉlight, alert chỉdark trong packet nên chưa đủ theme coverage từng màn.",
+    "Native SDK, Dynamic Type, font scale 200%, VoiceOver, TalkBack, vùng chạm 44 pt/48 dp, thiết bị thật và keyboard UNKNOWN; browserpreview không chứng nhận native."
+  ],
+  "review_stage": "re-review",
+  "assessment_scope": "Re-review ảnh mới; đã biết brief từ lượt trước. Không đọc source, rationale hoặc điểm của người làm. Không dùng điểm heuristic để chứng nhận runtime/accessibility/backend."
+}

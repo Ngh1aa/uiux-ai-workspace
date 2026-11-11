@@ -1,0 +1,140 @@
+{
+  "completion_local_date": "2026-10-30",
+  "timezone": "Asia/Bangkok",
+  "baseline_head": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+  "github_main_verified": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+  "state": "LOCAL_UNCOMMITTED",
+  "history_v1_v2": "unchanged; historical flow/provenance/review UNKNOWN",
+  "gates": {
+    "skills": {
+      "status": "PASS",
+      "output": "Validated 43 skills\n\nAll required skill structure checks passed"
+    },
+    "links": {
+      "status": "PASS",
+      "output": "Đã kiểm tra 353 file Markdown, 0 link hỏng."
+    },
+    "report": {
+      "status": "PASS",
+      "output": "REPORT.md khớp dữ liệu các lần chạy"
+    },
+    "diff": {
+      "status": "PASS",
+      "output": ""
+    }
+  },
+  "tests": {
+    "node_static_flow_browser_gate_booking_runner": 48,
+    "taste_checker": 34,
+    "design_system_pytest": 46,
+    "benchmark_schema_evidence": 27,
+    "scripts_and_review_packet": 18,
+    "brownfield_checker": 6,
+    "total_passed": 179,
+    "failed": 0
+  },
+  "additional_browser_cases": {
+    "table_and_directions_chromium": 18,
+    "decision_lab_chromium_webkit": 72
+  },
+  "benchmark": {
+    "fresh": {
+      "01-landing": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 0,
+        "recorded_scenarios": 4
+      },
+      "02-app": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 0,
+        "recorded_scenarios": 5
+      },
+      "03-dashboard": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 2,
+        "recorded_scenarios": 5
+      },
+      "04-multi-role": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 18,
+        "recorded_scenarios": 6
+      },
+      "05-native": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 0,
+        "recorded_scenarios": 8
+      }
+    },
+    "iterative-repair": {
+      "01-landing": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 0,
+        "recorded_scenarios": 16
+      },
+      "02-app": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 2,
+        "recorded_scenarios": 24
+      },
+      "03-dashboard": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 0,
+        "recorded_scenarios": 16
+      },
+      "04-multi-role": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 18,
+        "recorded_scenarios": 20
+      },
+      "05-native": {
+        "render": "PASS",
+        "flow": "PASS",
+        "errors": 0,
+        "warnings": 0,
+        "recorded_scenarios": 28
+      }
+    }
+  },
+  "evidence_scopes": {
+    "attachments": "analysis input, not overriding user request; old 28 placeholder-anchor claim not assumed current",
+    "verified_source": "31 placeholder anchors in historical v2 app; five visible artboards",
+    "executed_runtime": "historical CTA did not change task state; new scenarios assert behavior separately from render",
+    "render_observations": "phone/desktop light/dark opened; independent packets include only reviewed image subsets, not all states",
+    "reading_paths": "13456→7179;16442→7528;14759→7326 whitespace units using same algorithm; full migrated bodies retained",
+    "brownfield": "overlay-scoped.json PASS for gom-moc product scope; initial whole-toolkit overlay-check.json has 5 errors on mixed greenfield/checker files and is retained as diagnostic, not a product PASS",
+    "source_freeze": "Benchmark manifests identify exact evaluated local toolkit, samples and checkers at checked_at. After evaluation only link snapshot-context handling/tests and evidence/report packaging changed; the three checker hashes and evaluated UI sources remain bound to recorded evidence."
+  },
+  "remaining": {
+    "visual_rubric_FAIL": "05-native: fresh3.75 and reused repair3.85 below L4.0; independent comments retained, no definite screenshot hard-fails",
+    "heuristics": "20 render warnings per run (app/dashboard wrapped labels and calendar density); not suppressed",
+    "native": "UNKNOWN: browser prototype only, no native build/device/VoiceOver/TalkBack/Dynamic Type",
+    "ci": "UNKNOWN for local patch: source inspected, no push/no CI run on this patch",
+    "human_approval_and_research": "UNKNOWN/CHƯA DUYỆT; agents are heuristic reviewers, some re-reviews/first impressions after brief, not valid new cold reads",
+    "backend_and_real_transactions": "UNKNOWN: synthetic browser state only"
+  },
+  "publication": {
+    "commit": false,
+    "push": false,
+    "pull_request": false,
+    "merge": false,
+    "deploy": false
+  }
+}

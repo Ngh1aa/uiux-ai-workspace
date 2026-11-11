@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "created": "2026-10-29T09:54:13Z",
+  "size": "M",
+  "images": {
+    "01-landing-1280-dark.jpg": "7bcfe2b703c9529d2229be856b57405794d287aaf047543e6d4bf5476ab29372",
+    "01-landing-1280-light.jpg": "a8b6e53f9345ab9c402708af26abc9f65b4b6649d152f2a3eb120e5c027e7e62",
+    "01-landing-390-dark.jpg": "a4b72ff7df5489a80f68c6eb73673d9e32fa689a4dd26bc5c080972849f1084e",
+    "01-landing-390-light-result.png": "b65f1facb0459fef3adee274ca5d66fc8bbb0ec840ffb15c2cbc152913bad30b",
+    "01-landing-390-light-review-edited.png": "d29786ef73546bdb12a63037a997edeaa6d1c04aacdc652585b78fcbd54a4efe",
+    "01-landing-390-light.jpg": "b3d7d67b83f341fde4df9d9f4dc43a8a73d61bec6503761e6d758a845f8f6cca"
+  },
+  "inputs": {
+    "brief.md": "02808e646f5ec270fde908c521634959794ca26c30e392daf57add64c9a66062",
+    "rubric.md": "a5225922533d6c8bd1a16a86b2959af82f973f44b91f53a21f2d982d5238d580"
+  }
+}

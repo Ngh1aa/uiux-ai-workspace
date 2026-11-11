@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "evidence_type": "actual_playwright_browser_assertions",
+  "native_status": "UNKNOWN",
+  "independent_review": false,
+  "briefs": {
+    "01-landing": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Nút khoá kèm lý do: Chọn lớp → Chọn ngày → Chọn ca; ngày hiện thứ + ngày tháng",
+          "status": "PASS"
+        },
+        {
+          "name": "Bàn xoay cơ bản, ngày đầu, ca sáng hết chỗ: ô ca bị khoá, nhãn \"Hết chỗ\"",
+          "status": "PASS"
+        },
+        {
+          "name": "Lỗi vượt chỗ và số điện thoại sai → sửa → nút mở khoá, tổng 2 × 450.000 ₫ = 900.000 ₫",
+          "status": "PASS"
+        },
+        {
+          "name": "Xác nhận có Hủy: Hủy quay về form, giữ nguyên lớp, ngày, ca, số người, liên hệ",
+          "status": "PASS"
+        },
+        {
+          "name": "Đổi sang Nặn tay → xác nhận 700.000 ₫ → kết quả có mã; thẻ trạng thái hiện ở đầu và cuối trang; số chỗ còn giảm 2",
+          "status": "PASS"
+        },
+        {
+          "name": "Đóng hộp giữa chừng rồi mở lại: bản nháp còn nguyên",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "02-app": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Lịch của tôi: tab Đã qua hiện trạng thái rỗng có nút Tìm sân",
+          "status": "PASS"
+        },
+        {
+          "name": "Chi tiết sân: Tiếp tục khoá kèm lý do khi chưa chọn khung",
+          "status": "PASS"
+        },
+        {
+          "name": "Back: Chi tiết về Trang chủ hoặc Tìm sân tuỳ nơi vào; Đặt sân về Chi tiết đúng sân, giữ khung đã chọn",
+          "status": "PASS"
+        },
+        {
+          "name": "Đặt Sân Phú Nhuận 20:00: Hủy giữ form, xác nhận → Đã đặt sân → Lịch của tôi có lượt mới, trang chủ và số khung cập nhật",
+          "status": "PASS"
+        },
+        {
+          "name": "Kỳ Hoà 19:00 vừa bị đặt: báo lỗi, nút Đặt sân khoá kèm lý do, chọn 21:00 từ gợi ý → đặt thành công",
+          "status": "PASS"
+        },
+        {
+          "name": "Khung giờ trong form mở sheet riêng, khung đã đặt không chọn được, chọn xong về đúng form",
+          "status": "PASS"
+        },
+        {
+          "name": "Chạm 21:00 trên thẻ Sân Kỳ Hoà ở Tìm sân → Chi tiết đúng sân, khung chọn sẵn; Back về Tìm sân",
+          "status": "PASS"
+        },
+        {
+          "name": "Tìm sân: không có kết quả → Xóa tìm kiếm; lọc Quận 10 còn Sân Kỳ Hoà",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "03-dashboard": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Mở trang: 14 đơn chờ gửi, 3 quá hạn, 1 cần nhập gấp (LC-012), biểu đồ 7 cột, tổng 18.550, gửi trước #2041",
+          "status": "PASS"
+        },
+        {
+          "name": "Gửi đơn #2041 → Hủy: hộp thoại đóng, số không đổi, focus về đúng nút vừa bấm",
+          "status": "PASS"
+        },
+        {
+          "name": "Gửi đơn #2041 → xác nhận → thẻ kết quả; đơn chờ gửi 13, quá hạn 2, gửi trước chuyển sang #2045",
+          "status": "PASS"
+        },
+        {
+          "name": "Hoàn tác gửi đơn: #2041 trở lại, 14 và 3 như cũ",
+          "status": "PASS"
+        },
+        {
+          "name": "Ghi nhập hàng LC-012: nút xác nhận khoá khi chưa nhập, lý do hiện và gắn aria-describedby",
+          "status": "PASS"
+        },
+        {
+          "name": "Nhập 0 → lỗi, nút khoá; sửa thành 30 → xác nhận → kết quả; LC-012 còn 36 cuộn, đủ bán 12 ngày, cần nhập gấp 0, sắp hết hàng 3",
+          "status": "PASS"
+        },
+        {
+          "name": "Ghi nhập hàng KM-035 → Esc: không ghi, còn 4 cây",
+          "status": "PASS"
+        },
+        {
+          "name": "Gửi cả 3 đơn quá hạn: danh sách rỗng có thông báo, quá hạn 0, đơn chờ gửi 11",
+          "status": "PASS"
+        },
+        {
+          "name": "390px: không cuộn ngang",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "04-multi-role": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "Xếp khách vãng lai vào Ghế 1 9:30 đã có người: hiện xung đột, nút Đặt lịch khoá có lý do",
+          "status": "PASS"
+        },
+        {
+          "name": "Chọn khung trống gợi ý → Đặt lịch → thẻ kết quả, lưới lịch và số Chưa đến cập nhật",
+          "status": "PASS"
+        },
+        {
+          "name": "Form trống: Đặt lịch khoá với lý do \"Nhập họ tên bệnh nhân\"; Hủy về danh sách Sắp đến",
+          "status": "PASS"
+        },
+        {
+          "name": "Chỉ bàn phím: Tab tới Đặt lịch, Enter, gõ tên, Enter đặt; Esc đóng thẻ kết quả",
+          "status": "PASS"
+        },
+        {
+          "name": "Dòng Hồ Ngọc Mai mở đúng lượt → Xác nhận đến → Quay lại về Sắp đến, danh sách cập nhật",
+          "status": "PASS"
+        },
+        {
+          "name": "Bác sĩ: dị ứng Penicillin riêng khối; Bắt đầu khám khoá có lý do → Gọi bệnh nhân → Bắt đầu khám → Lưu ghi chú",
+          "status": "PASS"
+        },
+        {
+          "name": "Chủ phòng khám: doanh thu tháng, Ghế 3 trạng thái rỗng, điều hướng ẩn mục của bác sĩ",
+          "status": "PASS"
+        },
+        {
+          "name": "Lễ tân mở Doanh thu: trạng thái không có quyền → Quay lại về Lịch hôm nay",
+          "status": "PASS"
+        },
+        {
+          "name": "Đổi vai trò bằng menu tài khoản (bàn phím): sang Chủ phòng khám mở Doanh thu, ẩn Đặt lịch; Esc đóng menu",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": []
+    },
+    "05-native": {
+      "status": "PASS",
+      "browser_status": "PASS",
+      "scenarios": [
+        {
+          "name": "iOS: Hôm nay → Tập đọc: Cây dừa → Nộp ảnh (Hủy, rồi Chụp ảnh) → kết quả Đã nộp → Back về Hôm nay, bài chưa nộp 2 → 1",
+          "status": "PASS"
+        },
+        {
+          "name": "iOS: dòng Bài 14 mở đúng bài Toán, Back về Hôm nay giữ số đã cập nhật",
+          "status": "PASS"
+        },
+        {
+          "name": "iOS: Xin nghỉ chọn thứ Ba 21/10 → lỗi tại trường ngày, Gửi đơn khoá kèm lý do → chọn thứ Sáu 24/10 → gửi → kết quả và đơn mới trong danh sách",
+          "status": "PASS"
+        },
+        {
+          "name": "iOS: form trống khoá Gửi đơn với lý do Chưa chọn ngày nghỉ, rồi Chưa nhập lý do; đóng form về Hôm nay",
+          "status": "PASS"
+        },
+        {
+          "name": "iOS: Hủy đơn → hộp xác nhận, bấm Hủy giữ đơn Đã gửi → Hủy đơn lần nữa → xác nhận → kết quả, đơn chuyển Đã hủy, Back về Hôm nay",
+          "status": "PASS"
+        },
+        {
+          "name": "iOS: Chi tiết bài tập Back về Hôm nay; tab Đơn nghỉ và Bài tập chuyển viên đang chọn và hiện đúng danh sách",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: Hôm nay → Tập đọc: Cây dừa → Nộp ảnh (Hủy, rồi Chụp ảnh) → kết quả Đã nộp → Back về Hôm nay, bài chưa nộp 2 → 1",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: dòng Bài 14 mở đúng bài Toán, Back về Hôm nay giữ số đã cập nhật",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: Xin nghỉ chọn thứ Ba 21/10 → lỗi tại trường ngày, Gửi đơn khoá kèm lý do → chọn thứ Sáu 24/10 → gửi → kết quả và đơn mới trong danh sách",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: form trống khoá Gửi đơn với lý do Chưa chọn ngày nghỉ, rồi Chưa nhập lý do; đóng form về Hôm nay",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: Hủy đơn → hộp xác nhận, bấm Hủy giữ đơn Đã gửi → Hủy đơn lần nữa → xác nhận → kết quả, đơn chuyển Đã hủy, Back về Hôm nay",
+          "status": "PASS"
+        },
+        {
+          "name": "Android: Chi tiết bài tập Back về Hôm nay; tab Đơn nghỉ và Bài tập chuyển viên đang chọn và hiện đúng danh sách",
+          "status": "PASS"
+        },
+        {
+          "name": "Không có lỗi JavaScript trên các luồng đã thực thi",
+          "status": "PASS"
+        }
+      ],
+      "console_errors": [],
+      "native_status": "UNKNOWN"
+    }
+  }
+}

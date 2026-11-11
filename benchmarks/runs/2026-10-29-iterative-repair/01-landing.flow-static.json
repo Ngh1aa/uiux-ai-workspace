@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "layer": "source-static",
+  "errorCount": 0,
+  "warningCount": 3,
+  "flow_status": "UNKNOWN",
+  "results": [
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-iterative-repair\\01-landing\\index.html",
+      "mode": "prototype",
+      "static_status": "PASS",
+      "flow_status": "UNKNOWN",
+      "errors": [],
+      "warnings": [
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 225,
+          "message": "Nhãn “Bàn xoay cơ bản 450.000 ₫” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 226,
+          "message": "Nhãn “Nặn tay 350.000 ₫” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        },
+        {
+          "rule": "label-long",
+          "status": "WARN",
+          "line": 227,
+          "message": "Nhãn “Tráng men 300.000 ₫” dài hơn khuyến nghị 3 từ; giữ đầy đủ đối tượng khi cần hiểu hậu quả."
+        }
+      ],
+      "unknown": [
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 225,
+          "message": "“Bàn xoay cơ bản 450.000 ₫”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 226,
+          "message": "“Nặn tay 350.000 ₫”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 227,
+          "message": "“Tráng men 300.000 ₫”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 233,
+          "message": "“Thứ Bảy 9:00”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 234,
+          "message": "“Thứ Bảy 14:00”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 235,
+          "message": "“Chủ nhật 9:00”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 236,
+          "message": "“Chủ nhật 14:00”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 250,
+          "message": "“Xem yêu cầu”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 254,
+          "message": "“Sửa lựa chọn”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "dead-link",
+          "status": "UNKNOWN",
+          "line": 255,
+          "message": "“Gửi yêu cầu”: submit, thao tác tại chỗ hoặc event handler phải kiểm trên trình duyệt; thiếu data-to không chứng minh nút chết."
+        },
+        {
+          "rule": "runtime",
+          "status": "UNKNOWN",
+          "line": 1,
+          "message": "HTML nguồn không chứng minh luồng, Back, tổng tiền, đúng đối tượng/vai trò, khôi phục lỗi hoặc navigation động. Chạy Playwright của dự án."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "errorCount": 2,
+  "warningCount": 0,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-iterative-repair/03-dashboard/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Sắp hết hàng; dữ liệu minh hoạ. Số lượng theo cuộn hoặc cây.\". Chuyển vào phần bàn giao"
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-iterative-repair/03-dashboard/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Len Nhỏ, tổng quan kho",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Sắp hết hàng; dữ liệu minh hoạ. Số lượng theo cuộn hoặc cây.\". Chuyển vào phần bàn giao"
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

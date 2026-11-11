@@ -1,0 +1,250 @@
+{
+ "checker": "static-check.cjs",
+ "checked_at": "2026-10-30",
+ "results": {
+  "2026-10-29-fresh/01-landing": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Bản minh hoạ tương tác theo brief.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 10px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-fresh/02-app": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Mẫu tương tác, dữ liệu từ đề bài\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Bản minh hoạ không thu tiền và chưa gửi đặt sân thật.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 10px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-fresh/03-dashboard": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Số liệu minh hoạ theo đề bài\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Dữ liệu mẫu, 7 ngày qua\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Nguồn: dữ liệu đề bài. Không có kết nối bán hàng trực tiếp.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Cách tính: tồn kho ÷ bán mỗi ngày, làm tròn xuống. Đây là ướ\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 10px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-fresh/04-multi-role": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Đổi vai chỉ mô phỏng quyền UI.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Chưa có backend xác thực.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Ngữ cảnh mẫu lúc 9:15\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Lịch theo dữ liệu đề bài. Mọi cập nhật trong phiên là minh h\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Bộ chọn vai chỉ dùng để xem luồng minh hoạ. Quyền dữ liệu th\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Xác nhận lịch mẫu\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "aria-prohibited",
+     "message": "<div> có aria-label nhưng không có role: thêm role (group, region, status...) hoặc bỏ aria-label"
+    },
+    {
+     "rule": "name-mismatch",
+     "message": "<button> hiện \"Trống Đặt lịch\" nhưng aria-label là \"10:30 Ghế 1 trống, đặt lịch\" (WCAG 2.5.3: tên phải chứa chữ đang hiện)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 10px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-fresh/05-native": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Browser preview cho iOS và Android. Dữ liệu minh hoạ, ngày 2\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "aria-prohibited",
+     "message": "<div> có aria-label nhưng không có role: thêm role (group, region, status...) hoặc bỏ aria-label"
+    },
+    {
+     "rule": "name-mismatch",
+     "message": "<button> hiện \"${icon('chevron-left')}\" nhưng aria-label là \"Quay lại Hôm nay\" (WCAG 2.5.3: tên phải chứa chữ đang hiện)"
+    },
+    {
+     "rule": "name-mismatch",
+     "message": "<button> hiện \"'+icon('chevron-left')+'\" nhưng aria-label là \"Quay lại Hôm nay\" (WCAG 2.5.3: tên phải chứa chữ đang hiện)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 10px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-iterative-repair/01-landing": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Dữ liệu minh hoạ. Gửi yêu cầu bên dưới chỉ mô phỏng; gọi xưở\" (chuyển vào phần bàn giao)"
+    }
+   ]
+  },
+  "2026-10-29-iterative-repair/02-app": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Mốc dữ liệu minh họa 23/10, độc lập ngày hệ thống. Năm màn c\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Vai trò: người chơi. Dữ liệu minh họa.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Chưa có thông báo mới trong bản minh họa.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-iterative-repair/03-dashboard": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Sắp hết hàng; dữ liệu minh hoạ. Số lượng theo cuộn hoặc cây.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-iterative-repair/04-multi-role": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Đổi vai chỉ mô phỏng quyền UI.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Chưa có backend xác thực.\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Ngữ cảnh mẫu lúc 9:15\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Lịch theo dữ liệu đề bài. Mọi cập nhật trong phiên là minh h\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Bộ chọn vai chỉ dùng để xem luồng minh hoạ. Quyền dữ liệu th\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Xác nhận lịch mẫu\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "aria-prohibited",
+     "message": "<div> có aria-label nhưng không có role: thêm role (group, region, status...) hoặc bỏ aria-label"
+    },
+    {
+     "rule": "name-mismatch",
+     "message": "<button> hiện \"Trống Đặt lịch\" nhưng aria-label là \"10:30 Ghế 1 trống, đặt lịch\" (WCAG 2.5.3: tên phải chứa chữ đang hiện)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 10px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  },
+  "2026-10-29-iterative-repair/05-native": {
+   "errors": [
+    {
+     "rule": "demo-note",
+     "message": "ghi chú bản mẫu trên màn: \"Browser preview cho iOS và Android. Dữ liệu minh hoạ, ngày 2\" (chuyển vào phần bàn giao)"
+    },
+    {
+     "rule": "aria-prohibited",
+     "message": "<div> có aria-label nhưng không có role: thêm role (group, region, status...) hoặc bỏ aria-label"
+    },
+    {
+     "rule": "name-mismatch",
+     "message": "<button> hiện \"${icon('chevron-left')}\" nhưng aria-label là \"Quay lại Hôm nay\" (WCAG 2.5.3: tên phải chứa chữ đang hiện)"
+    },
+    {
+     "rule": "name-mismatch",
+     "message": "<button> hiện \"'+icon('chevron-left')+'\" nhưng aria-label là \"Quay lại Hôm nay\" (WCAG 2.5.3: tên phải chứa chữ đang hiện)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 10px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    },
+    {
+     "rule": "small",
+     "message": "cỡ chữ 11px dưới 12px (TASTE: chữ phụ ≥ 12px)"
+    }
+   ]
+  }
+ }
+}

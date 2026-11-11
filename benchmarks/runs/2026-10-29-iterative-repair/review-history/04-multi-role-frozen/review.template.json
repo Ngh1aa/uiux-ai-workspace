@@ -1,0 +1,91 @@
+{
+  "reviewer": {
+    "id": "",
+    "kind": "agent-heuristic | expert-review",
+    "independent": true
+  },
+  "cold": {
+    "04-multi-role-1280-dark.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-1280-light.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-1440-dark.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-1440-light.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-390-dark.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-390-light-04-conflict.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-390-light-04-doctor.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-390-light-04-no-permission.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-390-light-04-owner.png": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    },
+    "04-multi-role-390-light.jpg": {
+      "Màn này để làm gì?": "",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "",
+      "Điều gì trông sai, rối hoặc thiếu?": ""
+    }
+  },
+  "hard_fails": [
+    {
+      "code": "HF-n",
+      "image": "",
+      "observation": ""
+    }
+  ],
+  "scores": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0
+  },
+  "observations": [
+    {
+      "dimension": "1-10",
+      "image": "",
+      "element": "",
+      "fix": ""
+    }
+  ],
+  "not_checked": [
+    "bàn phím",
+    "trình đọc màn hình",
+    "chữ phóng 200%"
+  ]
+}

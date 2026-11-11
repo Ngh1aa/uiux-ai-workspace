@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đất Nung – lớp làm gốm cuối tuần ở Hàng Chiếu</title>
+<meta name="description" content="Ba tiếng, một khối đất, một chiếc cốc của riêng bạn. Lớp làm gốm cuối tuần cho người mới tại 24 Hàng Chiếu, Hà Nội.">
+<link rel="stylesheet" href="../../../../design-system/fonts/fonts.css">
+<link rel="stylesheet" href="../../../../design-system/fonts/pairs.css">
+<link rel="stylesheet" href="../../../../design-system/generated/tokens.css">
+<link rel="stylesheet" href="../../../../design-system/components/components.css">
+<link rel="stylesheet" href="brand.css">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: var(--app-font-body); font-size: 17px; line-height: 1.6; }
+  h1, h2, h3, p, ol, ul, dl, dd, figure { margin: 0; }
+  ol, ul { padding: 0; list-style: none; }
+  .wrap { width: 100%; max-width: 1168px; margin-inline: auto; padding-inline: 20px; }
+  @media (min-width: 1024px) { .wrap { padding-inline: 24px; } }
+  .serif { font-family: var(--app-font-display); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* Header */
+  .top { display: flex; align-items: center; justify-content: space-between; min-height: 72px; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; font: 600 22px/1.2 var(--app-font-display); color: var(--ds-text-primary); text-decoration: none; min-height: 44px; }
+  .logo svg { width: 28px; height: 28px; color: var(--ds-text-brand); }
+  .tel { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding-inline: 12px; color: var(--ds-text-brand); font-weight: 600; font-size: 15px; text-decoration: none; border-radius: 999px; }
+  .tel:hover { background: var(--ds-action-tertiary-bg-hover); }
+
+  /* Hero */
+  .hero { display: grid; gap: 32px; padding-block: 16px 24px; align-items: center; }
+  .hero h1 { font: 600 34px/1.15 var(--app-font-display); letter-spacing: -0.015em; max-width: 15ch; text-wrap: balance; }
+  .lead { margin-top: 16px; font-size: 18px; color: var(--ds-text-secondary); max-width: 36ch; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .facts li { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding-inline: 14px; border: 1px solid var(--ds-border-subtle); border-radius: 999px; background: var(--ds-surface-raised); font-size: 15px; font-weight: 500; }
+  .facts .ds-icon { width: 18px; height: 18px; color: var(--ds-text-brand); }
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 28px; }
+  .btn-book { min-width: 160px; font-size: 17px; }
+  .art { justify-self: center; width: 100%; max-width: 300px; }
+  .art svg { display: block; width: 100%; height: auto; }
+  @media (min-width: 840px) {
+    .hero { grid-template-columns: 7fr 5fr; gap: 48px; padding-block: 24px 24px; }
+    .hero h1 { font-size: 56px; line-height: 1.08; }
+    .art { max-width: 440px; }
+  }
+
+  /* Booked status card */
+  .booked { display: flex; gap: 12px; align-items: flex-start; margin-top: 16px; padding: 14px 16px; border: 1px solid var(--ds-border-subtle); border-radius: 14px; background: var(--ds-surface-brand-subtle); max-width: 480px; }
+  .booked[hidden] { display: none; }
+  .booked .ds-icon { color: var(--ds-text-brand); margin-top: 2px; }
+  .booked strong { display: block; font-size: 16px; }
+  .booked span { display: block; font-size: 15px; color: var(--ds-text-secondary); }
+  .cta .booked { background: var(--ds-surface-raised); color: var(--ds-text-primary); }
+
+  /* Sections */
+  section.block { padding-block: 40px; }
+  .h2 { font: 600 28px/1.2 var(--app-font-display); letter-spacing: -0.01em; margin-bottom: 20px; }
+  @media (min-width: 840px) { .h2 { font-size: 36px; } section.block { padding-block: 56px; } }
+  .grid { display: grid; gap: 24px; }
+  @media (min-width: 1024px) {
+    .grid { grid-template-columns: repeat(12, 1fr); gap: 24px; }
+    .span-7 { grid-column: span 7; } .span-5 { grid-column: span 5; }
+  }
+  .card { background: var(--ds-surface-raised); border: 1px solid var(--ds-border-subtle); border-radius: 14px; padding: 8px 20px; }
+
+  /* Class rows */
+  .rows li { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: baseline; padding-block: 16px; border-top: 1px solid var(--ds-border-subtle); }
+  .rows li:first-child { border-top: 0; }
+  .rows h3 { font: 600 20px/1.3 var(--app-font-display); }
+  .rows .price { font: 600 20px/1.3 var(--app-font-display); font-variant-numeric: tabular-nums; text-align: right; }
+  .rows .meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 20px; color: var(--ds-text-secondary); font-size: 15px; }
+  .rows .meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .rows .ds-icon { width: 16px; height: 16px; }
+
+  /* Schedule card rows */
+  .kv li { display: flex; gap: 12px; align-items: flex-start; padding-block: 14px; border-top: 1px solid var(--ds-border-subtle); }
+  .kv li:first-child { border-top: 0; }
+  .kv .ds-icon { color: var(--ds-text-brand); margin-top: 3px; }
+  .kv strong { display: block; font-weight: 600; }
+
+  /* Steps as growing wheels */
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: end; }
+  .step { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+  .wheel { --s: 56px; width: var(--s); height: var(--s); display: grid; place-items: center; border-radius: 50%; border: 1.75px solid var(--ds-text-brand); color: var(--ds-text-brand); background: var(--ds-surface-raised); box-shadow: 0 0 0 6px var(--ds-surface-page), 0 0 0 7px var(--dn-ring), 0 0 0 13px var(--ds-surface-page), 0 0 0 14px var(--dn-ring); font: 600 22px/1 var(--app-font-display); margin: 14px 0; }
+  .step:nth-child(2) .wheel { --s: 64px; font-size: 26px; }
+  .step:nth-child(3) .wheel { --s: 72px; font-size: 30px; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); border-color: var(--ds-surface-brand-strong); }
+  .step h3 { font-size: 16px; font-weight: 600; line-height: 1.4; text-wrap: balance; }
+  @media (max-width: 599px) {
+    .steps { grid-template-columns: 1fr; gap: 0; }
+    .step { display: grid; grid-template-columns: 104px 1fr; align-items: center; text-align: left; gap: 8px; }
+    .step .wheel { margin: 14px 0; justify-self: center; }
+    .step h3 { font-size: 18px; }
+  }
+  @media (min-width: 840px) { .step h3 { font-size: 18px; } }
+
+  /* FAQ */
+  .faq details { border-top: 1px solid var(--ds-border-subtle); }
+  .faq details:first-child { border-top: 0; }
+  .faq summary { text-wrap: pretty; display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 56px; padding-block: 12px; cursor: pointer; font-weight: 600; list-style: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary .ds-icon { transition: transform 150ms ease; color: var(--ds-text-secondary); }
+  .faq details[open] summary .ds-icon { transform: rotate(180deg); }
+  .faq details p { padding-bottom: 16px; color: var(--ds-text-secondary); text-wrap: pretty; }
+
+  /* Featured CTA card */
+  .cta { position: relative; overflow: hidden; display: grid; gap: 24px; padding: 28px 24px; border-radius: 14px; background: var(--ds-surface-brand-strong); color: var(--ds-text-on-brand-strong); }
+  .cta .label { font-size: 15px; font-weight: 500; opacity: 0.9; }
+  .cta .big { font: 600 36px/1.15 var(--app-font-display); font-variant-numeric: tabular-nums; margin-top: 4px; }
+  .cta .ctx { margin-top: 8px; font-size: 17px; }
+  .cta .btn-white { margin-top: 24px; --_bg: var(--ds-color-neutral-0, #ffffff); --_bg-hover: var(--brand-50); --_bg-pressed: var(--brand-100); --_fg: var(--brand-800); --_border: transparent; }
+  .cta-rings { display: none; }
+  @media (min-width: 840px) {
+    .cta { grid-template-columns: 1fr 240px; padding: 40px; align-items: center; }
+    .cta .big { font-size: 48px; }
+    .cta-rings { display: block; width: 240px; height: 240px; color: var(--ds-text-on-brand-strong); opacity: 0.22; }
+  }
+
+  /* Footer */
+  .foot { padding-block: 32px 40px; border-top: 1px solid var(--ds-border-subtle); margin-top: 16px; display: grid; gap: 8px; }
+  .foot .logo { font-size: 20px; }
+  .foot a.line, .foot .line { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ds-text-primary); text-decoration: none; }
+  .foot a.line { color: var(--ds-text-brand); font-weight: 600; }
+  .foot .ds-icon { color: var(--ds-text-brand); }
+  @media (min-width: 840px) { .foot { grid-template-columns: 1fr auto auto; align-items: center; gap: 32px; } }
+
+  /* Booking dialog */
+  dialog.bk { padding: 0; border: 0; width: 100%; max-width: 100%; max-height: 94dvh; margin: auto 0 0; border-radius: 14px 14px 0 0; background: var(--ds-surface-raised); color: var(--ds-text-primary); }
+  dialog.bk::backdrop { background: color-mix(in srgb, var(--ds-surface-scrim) 55%, transparent); }
+  @media (min-width: 640px) { dialog.bk { max-width: 600px; margin: auto; border-radius: 14px; max-height: 90dvh; } }
+  .bk-view { display: flex; flex-direction: column; max-height: inherit; }
+  .bk-view[hidden] { display: none; }
+  .bk-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 12px 12px 20px; border-bottom: 1px solid var(--ds-border-subtle); }
+  .bk-head h2 { font: 600 22px/1.3 var(--app-font-display); }
+  .icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--ds-text-primary); cursor: pointer; }
+  .icon-btn:hover { background: var(--ds-action-secondary-bg-hover); }
+  .bk-body { overflow-y: auto; padding: 8px 20px 20px; display: grid; gap: 24px; }
+  .bk-foot { border-top: 1px solid var(--ds-border-subtle); padding: 12px 20px 16px; display: grid; gap: 8px; background: var(--ds-surface-raised); }
+  .bk fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .bk legend { font-weight: 600; font-size: 16px; padding: 0; margin-bottom: 10px; }
+  .opts { display: grid; gap: 8px; }
+  .opts--2 { grid-template-columns: 1fr 1fr; }
+  .opt { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 10px 16px; border: 1px solid var(--ds-border-control); border-radius: 14px; cursor: pointer; background: var(--ds-surface-raised); }
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .opt:has(input:checked) { border: 2px solid var(--ds-action-selected-indicator); background: var(--ds-action-selected-bg); color: var(--ds-action-selected-text); padding: 9px 15px; }
+  .opt:has(input:focus-visible) { outline: 3px solid var(--ds-border-focus); outline-offset: 2px; }
+  .opt:has(input:disabled) { cursor: not-allowed; background: var(--ds-action-disabled-bg); color: var(--ds-action-disabled-text); border-color: var(--ds-border-subtle); }
+  .opt b { font-weight: 600; }
+  .opt .sub { font-size: 14px; color: var(--ds-text-secondary); }
+  .opt:has(input:checked) .sub { color: inherit; }
+  .opt .price { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+  .opt-col { display: flex; flex-direction: column; line-height: 1.35; }
+  .stepper { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--ds-border-control); border-radius: 999px; padding: 2px; }
+  .stepper button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--ds-text-primary); display: grid; place-items: center; cursor: pointer; font-size: 22px; line-height: 1; }
+  .stepper button:hover:not(:disabled) { background: var(--ds-action-secondary-bg-hover); }
+  .stepper button:disabled { color: var(--ds-action-disabled-text); cursor: not-allowed; }
+  .stepper output { min-width: 32px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; font-size: 18px; }
+  .ppl { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .ppl .lbl { font-weight: 600; }
+  .fields { display: grid; gap: 16px; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .total span { color: var(--ds-text-secondary); font-size: 15px; }
+  .total strong { font: 600 24px/1.2 var(--app-font-display); font-variant-numeric: tabular-nums; }
+  .reason { font-size: 14px; color: var(--ds-text-secondary); text-align: center; min-height: 20px; }
+  .reason[hidden] { display: none; }
+  .summary { border: 1px solid var(--ds-border-subtle); border-radius: 14px; padding: 4px 16px; }
+  .summary div { display: flex; justify-content: space-between; gap: 16px; padding-block: 12px; border-top: 1px solid var(--ds-border-subtle); }
+  .summary div:first-child { border-top: 0; }
+  .summary dt { color: var(--ds-text-secondary); }
+  .summary dd { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .summary .sum dd { font: 600 22px/1.3 var(--app-font-display); }
+  .actions-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .done-mark { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding-top: 12px; }
+  .done-mark .ds-icon { width: 48px; height: 48px; color: var(--ds-text-brand); stroke-width: 1.5; }
+  .done-mark h2 { font: 600 26px/1.25 var(--app-font-display); }
+  .done-mark p { color: var(--ds-text-secondary); }
+  .done-mark .code { font-weight: 600; color: var(--ds-text-primary); font-variant-numeric: tabular-nums; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body class="ds-root">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="ds-i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="ds-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.75"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+  <symbol id="ds-i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="m8.5 12.25 2.4 2.4 4.6-4.9"/></symbol>
+  <symbol id="ds-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.75V12l2.75 1.75"/></symbol>
+  <symbol id="ds-i-pin" viewBox="0 0 24 24"><path d="M12 20.5s6-5.4 6-10.5a6 6 0 1 0-12 0c0 5.1 6 10.5 6 10.5Z"/><circle cx="12" cy="10" r="2.25"/></symbol>
+  <symbol id="ds-i-phone" viewBox="0 0 24 24"><rect x="7" y="3.5" width="10" height="17" rx="2.25"/><path d="M11 17.5h2"/></symbol>
+  <symbol id="ds-i-coffee" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v3M12 3.5v3"/></symbol>
+  <symbol id="ds-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ds-i-check" viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></symbol>
+  <symbol id="ds-i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="ds-i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="dn-mark" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M9 9h14l-1.5 15a3 3 0 0 1-3 2.6h-5a3 3 0 0 1-3-2.6z"/><path d="M5 28.5h22"/><path d="M10.5 14c2 1.2 3.4-.6 5.5.4s3.6.6 5.5-.4"/></g></symbol>
+</svg>
+
+<header class="wrap top">
+  <a class="logo" href="#top" aria-label="Đất Nung"><svg aria-hidden="true"><use href="#dn-mark"/></svg>Đất Nung</a>
+  <a class="tel" href="tel:0912345678"><svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#ds-i-phone"/></svg>0912 345 678</a>
+</header>
+
+<main id="top">
+  <section class="wrap hero" aria-labelledby="hero-title">
+    <div>
+      <h1 id="hero-title">Ba tiếng, một khối đất, một chiếc cốc của riêng bạn.</h1>
+      <ul class="facts">
+        <li><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Thứ Bảy và Chủ nhật</li>
+        <li><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg>9:00 và 14:00</li>
+        <li class="num">Từ 300.000 ₫</li>
+      </ul>
+      <div class="cta-row">
+        <button class="ds-button ds-button--primary ds-button--lg btn-book" type="button" data-open-booking data-test="book-top">Đặt chỗ</button>
+      </div>
+      <div class="booked" data-booked role="status" hidden data-test="booked-top"></div>
+    </div>
+    <figure class="art" aria-hidden="true">
+      <svg viewBox="0 0 400 400">
+        <g fill="none" stroke="var(--dn-ring)" stroke-width="1.5">
+          <circle cx="200" cy="200" r="190"/><circle cx="200" cy="200" r="160"/><circle cx="200" cy="200" r="130"/>
+        </g>
+        <ellipse cx="200" cy="318" rx="150" ry="34" fill="var(--dn-wheel)"/>
+        <ellipse cx="200" cy="306" rx="150" ry="34" fill="var(--ds-surface-raised)" stroke="var(--ds-border-control)" stroke-width="1.5"/>
+        <g fill="none" stroke="var(--dn-ring)" stroke-width="1.5">
+          <ellipse cx="200" cy="306" rx="118" ry="26"/><ellipse cx="200" cy="306" rx="88" ry="19"/>
+        </g>
+        <path d="M128 130h144l-10 150a22 22 0 0 1-22 20h-80a22 22 0 0 1-22-20z" fill="var(--dn-clay)"/>
+        <path d="M128 130h144l-3.5 52c-12 10-22-4-34 6s-20 22-32 10-18-20-30-10-18 12-24 4l-17-4z" fill="var(--dn-glaze)"/>
+        <g fill="none" stroke="var(--dn-clay-deep)" stroke-width="1.5" stroke-linecap="round" opacity="0.6">
+          <path d="M140 222c40 6 80 6 120 0"/><path d="M143 248c38 6 76 6 114 0"/><path d="M146 272c36 5 72 5 108 0"/>
+        </g>
+        <path d="M272 160c34 0 44 22 40 44s-22 34-46 32" fill="none" stroke="var(--dn-clay)" stroke-width="14" stroke-linecap="round"/>
+        <ellipse cx="200" cy="130" rx="72" ry="12" fill="var(--dn-glaze)" stroke="var(--brand-700)" stroke-width="1.5" opacity="0.95"/>
+      </svg>
+    </figure>
+  </section>
+
+  <section class="wrap block" aria-labelledby="classes-title">
+    <div class="grid">
+      <div class="span-7">
+        <h2 class="h2" id="classes-title">Ba lớp</h2>
+        <ul class="card rows">
+          <li><h3>Bàn xoay cơ bản</h3><span class="price">450.000 ₫</span>
+            <p class="meta"><span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg>3 giờ</span><span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>8 người</span></p></li>
+          <li><h3>Nặn tay</h3><span class="price">350.000 ₫</span>
+            <p class="meta"><span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg>2,5 giờ</span><span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>10 người</span></p></li>
+          <li><h3>Tráng men</h3><span class="price">300.000 ₫</span>
+            <p class="meta"><span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-clock"/></svg>2 giờ</span><span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg>8 người</span></p></li>
+        </ul>
+      </div>
+      <div class="span-5">
+        <h2 class="h2">Lịch học</h2>
+        <ul class="card kv">
+          <li><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><div><strong>Thứ Bảy và Chủ nhật</strong>Ca sáng 9:00, ca chiều 14:00</div></li>
+          <li><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-coffee"/></svg><div><strong>Giá đã gồm</strong>Đất, men, nung và trà</div></li>
+          <li><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg><div><strong>Nhận sản phẩm</strong>Nung xong sau 2 tuần</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block" aria-labelledby="steps-title">
+    <div class="grid">
+      <div class="span-7">
+        <h2 class="h2" id="steps-title">Một buổi học</h2>
+        <ol class="steps">
+          <li class="step"><span class="wheel" aria-hidden="true">1</span><h3>Làm quen với đất</h3></li>
+          <li class="step"><span class="wheel" aria-hidden="true">2</span><h3>Tạo hình</h3></li>
+          <li class="step"><span class="wheel" aria-hidden="true">3</span><h3>Chọn men</h3></li>
+        </ol>
+      </div>
+      <div class="span-5">
+        <h2 class="h2" id="faq-title">Câu hỏi thường gặp</h2>
+        <div class="card faq">
+          <details><summary>Chưa từng làm gốm có học được không?<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+            <p>Được, lớp dành cho người mới, mỗi bàn có người hướng dẫn.</p></details>
+          <details><summary>Có được mang con nhỏ theo không?<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+            <p>Trẻ từ 8 tuổi tham gia lớp Nặn tay cùng bố mẹ.</p></details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block" aria-labelledby="cta-title">
+    <div class="cta">
+      <div>
+        <p class="label" id="cta-title">Lớp cuối tuần</p>
+        <p class="big">Từ 300.000 ₫</p>
+        <p class="ctx">Thứ Bảy và Chủ nhật, 9:00 và 14:00</p>
+        <button class="ds-button ds-button--lg btn-book btn-white" type="button" data-open-booking data-test="book-bottom">Đặt chỗ</button>
+        <div class="booked" data-booked role="status" hidden data-test="booked-bottom"></div>
+      </div>
+      <svg class="cta-rings" viewBox="0 0 240 240" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="120" cy="120" r="116"/><circle cx="120" cy="120" r="90"/><circle cx="120" cy="120" r="64"/><circle cx="120" cy="120" r="38"/><circle cx="120" cy="120" r="12"/></g></svg>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span class="logo"><svg aria-hidden="true"><use href="#dn-mark"/></svg>Đất Nung</span>
+  <span class="line"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-pin"/></svg>24 Hàng Chiếu, Hoàn Kiếm, Hà Nội</span>
+  <a class="line" href="tel:0912345678"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-phone"/></svg>0912 345 678</a>
+</footer>
+
+<dialog class="bk" id="booking" aria-labelledby="bk-title" data-test="booking">
+  <!-- Bước 1: form -->
+  <form class="bk-view" id="bk-form" data-view="form" novalidate>
+    <div class="bk-head">
+      <h2 id="bk-title">Chọn buổi học</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Đóng" data-test="close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-x"/></svg></button>
+    </div>
+    <div class="bk-body">
+      <fieldset>
+        <legend>Lớp</legend>
+        <div class="opts" id="opt-class"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Ngày</legend>
+        <div class="opts opts--2" id="opt-date"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Ca</legend>
+        <div class="opts opts--2" id="opt-slot"></div>
+      </fieldset>
+      <div class="ppl">
+        <span class="lbl" id="ppl-label">Số người</span>
+        <div class="stepper" role="group" aria-labelledby="ppl-label">
+          <button type="button" data-ppl="-1" aria-label="Bớt một người" data-test="ppl-minus"><svg class="ds-icon" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+          <output id="ppl" aria-live="polite" data-test="ppl">1</output>
+          <button type="button" data-ppl="1" aria-label="Thêm một người" data-test="ppl-plus"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="ds-field">
+          <label class="ds-field__label" for="f-name">Họ tên</label>
+          <input class="ds-field__control" id="f-name" name="name" autocomplete="name" data-test="name">
+        </div>
+        <div class="ds-field">
+          <label class="ds-field__label" for="f-phone">Điện thoại</label>
+          <input class="ds-field__control" id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="f-phone-err" data-test="phone">
+          <p class="ds-field__error" id="f-phone-err" hidden data-test="phone-error">Số điện thoại gồm 10 chữ số, bắt đầu bằng 0</p>
+        </div>
+      </div>
+    </div>
+    <div class="bk-foot">
+      <div class="total"><span>Tổng</span><strong id="f-total" data-test="form-total">0 ₫</strong></div>
+      <button class="ds-button ds-button--primary ds-button--lg ds-button--block" type="submit" id="f-submit" disabled aria-describedby="f-reason" data-test="submit">Đặt chỗ</button>
+      <p class="reason" id="f-reason" data-reason data-test="reason">Chọn lớp</p>
+    </div>
+  </form>
+
+  <!-- Bước 2: xác nhận -->
+  <section class="bk-view" data-view="confirm" hidden aria-labelledby="cf-title" data-test="confirm">
+    <div class="bk-head">
+      <h2 id="cf-title">Đặt chỗ</h2>
+    </div>
+    <div class="bk-body">
+      <dl class="summary" id="cf-summary"></dl>
+    </div>
+    <div class="bk-foot actions-2">
+      <button class="ds-button ds-button--secondary ds-button--lg" type="button" data-back data-test="cancel">Hủy</button>
+      <button class="ds-button ds-button--primary ds-button--lg" type="button" id="cf-ok" data-to="bk-result" data-confirm-action data-test="confirm-ok">Đặt chỗ</button>
+    </div>
+  </section>
+
+  <!-- Bước 3: kết quả -->
+  <section class="bk-view" id="bk-result" data-view="result" hidden aria-labelledby="rs-title" data-result data-test="result">
+    <div class="bk-body">
+      <div class="done-mark" role="status">
+        <svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg>
+        <h2 id="rs-title">Đã đặt chỗ</h2>
+        <p>Mã đặt chỗ <span class="code" id="rs-code" data-test="code"></span></p>
+      </div>
+      <dl class="summary" id="rs-summary"></dl>
+    </div>
+    <div class="bk-foot">
+      <button class="ds-button ds-button--primary ds-button--lg ds-button--block" type="button" data-done data-test="done">Xong</button>
+    </div>
+  </section>
+</dialog>
+
+<script>
+(() => {
+  const CLASSES = [
+    { name: 'Bàn xoay cơ bản', dur: '3 giờ', price: 450000, cap: 8 },
+    { name: 'Nặn tay', dur: '2,5 giờ', price: 350000, cap: 10 },
+    { name: 'Tráng men', dur: '2 giờ', price: 300000, cap: 8 }
+  ];
+  const SLOTS = [{ name: 'Sáng', time: '9:00' }, { name: 'Chiều', time: '14:00' }];
+  const money = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
+
+  // 4 ngày thứ Bảy/Chủ nhật kế tiếp, không tính hôm nay
+  const DATES = [];
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  while (DATES.length < 4) {
+    d.setDate(d.getDate() + 1);
+    const w = d.getDay();
+    if (w === 6 || w === 0) DATES.push({ label: (w === 6 ? 'Thứ Bảy ' : 'Chủ nhật ') + d.getDate() + '/' + (d.getMonth() + 1), dd: String(d.getDate()).padStart(2, '0') + String(d.getMonth() + 1).padStart(2, '0') });
+  }
+
+  // Số chỗ đã có người đặt cho mỗi lớp/ngày/ca (cố định, xem NOTES.md)
+  const taken = {};
+  const key = (c, dt, s) => c + '-' + dt + '-' + s;
+  CLASSES.forEach((cl, c) => DATES.forEach((_, dt) => SLOTS.forEach((_, s) => {
+    taken[key(c, dt, s)] = (c === 0 && dt === 0 && s === 0) ? cl.cap : (c * 3 + dt * 2 + s * 5) % (cl.cap - 2) + 1;
+  })));
+  const left = (c, dt, s) => CLASSES[c].cap - taken[key(c, dt, s)];
+
+  const state = { c: null, dt: null, s: null, ppl: 1 };
+  let count = 0;
+  const dlg = document.getElementById('booking');
+  const form = document.getElementById('bk-form');
+  const $ = id => document.getElementById(id);
+
+  function radio(group, i, html, disabled, test) {
+    return `<label class="opt" data-test="${test}"><input type="radio" name="${group}" value="${i}"${disabled ? ' disabled' : ''}>${html}</label>`;
+  }
+  $('opt-class').innerHTML = CLASSES.map((cl, i) => radio('c', i,
+    `<span class="opt-col"><b>${cl.name}</b><span class="sub">${cl.dur}</span></span><span class="price">${money(cl.price)}</span>`, false, 'class-' + i)).join('');
+  $('opt-date').innerHTML = DATES.map((dt, i) => radio('dt', i, `<b>${dt.label}</b>`, false, 'date-' + i)).join('');
+
+  function renderSlots() {
+    const ready = state.c !== null && state.dt !== null;
+    $('opt-slot').innerHTML = SLOTS.map((sl, i) => {
+      const n = ready ? left(state.c, state.dt, i) : null;
+      const sub = n === null ? '' : `<span class="sub" data-test="slot-left-${i}">${n > 0 ? 'Còn ' + n + ' chỗ' : 'Hết chỗ'}</span>`;
+      return radio('s', i, `<span class="opt-col"><b>${sl.name} ${sl.time}</b>${sub}</span>`, n === 0, 'slot-' + i);
+    }).join('');
+    if (state.s !== null) {
+      const inp = $('opt-slot').querySelector(`input[value="${state.s}"]`);
+      if (inp && !inp.disabled) inp.checked = true; else state.s = null;
+    }
+  }
+
+  const phoneOk = v => /^0\d{9}$/.test(v.replace(/[\s.]/g, ''));
+  function reason() {
+    if (state.c === null) return 'Chọn lớp';
+    if (state.dt === null) return 'Chọn ngày';
+    if (state.s === null) return 'Chọn ca';
+    const n = left(state.c, state.dt, state.s);
+    if (state.ppl > n) return 'Ca này còn ' + n + ' chỗ';
+    if (!$('f-name').value.trim()) return 'Nhập họ tên';
+    const p = $('f-phone').value.trim();
+    if (!p) return 'Nhập số điện thoại';
+    if (!phoneOk(p)) return 'Kiểm tra số điện thoại';
+    return '';
+  }
+  function update() {
+    const max = state.c === null ? 10 : CLASSES[state.c].cap;
+    if (state.ppl > max) state.ppl = max;
+    $('ppl').textContent = state.ppl;
+    form.querySelector('[data-ppl="-1"]').disabled = state.ppl <= 1;
+    form.querySelector('[data-ppl="1"]').disabled = state.ppl >= max;
+    $('f-total').textContent = money(state.c === null ? 0 : CLASSES[state.c].price * state.ppl);
+    const r = reason();
+    $('f-submit').disabled = !!r;
+    $('f-reason').textContent = r;
+    $('f-reason').hidden = !r;
+  }
+  function phoneCheck(strict) {
+    const v = $('f-phone').value.trim();
+    const bad = v && (strict || v.replace(/\D/g, '').length >= 10) && !phoneOk(v);
+    $('f-phone-err').hidden = !bad;
+    $('f-phone').setAttribute('aria-invalid', bad ? 'true' : 'false');
+  }
+
+  form.addEventListener('change', e => {
+    const t = e.target;
+    if (t.name === 'c') { state.c = +t.value; renderSlots(); }
+    if (t.name === 'dt') { state.dt = +t.value; renderSlots(); }
+    if (t.name === 's') state.s = +t.value;
+    update();
+  });
+  form.addEventListener('input', e => { if (e.target.id === 'f-phone') phoneCheck(false); update(); });
+  $('f-phone').addEventListener('blur', () => phoneCheck(true));
+  form.querySelectorAll('[data-ppl]').forEach(b => b.addEventListener('click', () => { state.ppl += +b.dataset.ppl; if (state.ppl < 1) state.ppl = 1; update(); }));
+
+  function rows() {
+    const cl = CLASSES[state.c], sl = SLOTS[state.s];
+    const items = [
+      ['Lớp', cl.name], ['Ngày', DATES[state.dt].label], ['Ca', sl.name + ' ' + sl.time],
+      ['Số người', state.ppl + ' × ' + money(cl.price)],
+      ['Liên hệ', esc($('f-name').value.trim()) + '<br>' + esc($('f-phone').value.trim())]
+    ];
+    return items.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('') +
+      `<div class="sum"><dt>Tổng</dt><dd data-test="total">${money(cl.price * state.ppl)}</dd></div>`;
+  }
+  const esc = s => s.replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+  let view = 'form';
+  function show(v) {
+    view = v;
+    dlg.querySelectorAll('.bk-view').forEach(el => { el.hidden = el.dataset.view !== v; });
+    dlg.setAttribute('aria-labelledby', { form: 'bk-title', confirm: 'cf-title', result: 'rs-title' }[v]);
+    const focus = { form: '#bk-title', confirm: '#cf-ok', result: '[data-done]' }[v];
+    const el = dlg.querySelector(focus); if (el) { if (v === 'form') el.tabIndex = -1; el.focus(); }
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    phoneCheck(true); update();
+    if (reason()) return;
+    $('cf-summary').innerHTML = rows();
+    show('confirm');
+  });
+  dlg.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => show('form')));
+
+  let last = null;
+  $('cf-ok').addEventListener('click', () => {
+    const btn = $('cf-ok');
+    if (btn.getAttribute('aria-busy') === 'true') return;
+    btn.setAttribute('aria-busy', 'true');
+    taken[key(state.c, state.dt, state.s)] += state.ppl;
+    count += 1;
+    const code = 'DN-' + DATES[state.dt].dd + '-' + String(count).padStart(2, '0');
+    $('rs-code').textContent = code;
+    $('rs-summary').innerHTML = rows();
+    last = { code, cl: CLASSES[state.c].name, date: DATES[state.dt].label, time: SLOTS[state.s].time, ppl: state.ppl, total: money(CLASSES[state.c].price * state.ppl) };
+    btn.removeAttribute('aria-busy');
+    show('result');
+  });
+
+  function resetDraft() {
+    form.reset();
+    Object.assign(state, { c: null, dt: null, s: null, ppl: 1 });
+    $('f-phone-err').hidden = true;
+    $('f-phone').setAttribute('aria-invalid', 'false');
+    renderSlots(); update();
+  }
+  function finish() {
+    document.querySelectorAll('[data-booked]').forEach(el => {
+      el.innerHTML = `<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check-circle"/></svg><div><strong>Đã đặt chỗ ${last.code}</strong>` +
+        `<span>${last.cl}, ${last.date}, ${last.time}</span><span>${last.ppl} người, ${last.total}</span></div>`;
+      el.hidden = false;
+    });
+    resetDraft();
+    show('form');
+    dlg.close();
+  }
+  dlg.querySelector('[data-done]').addEventListener('click', finish);
+  dlg.querySelector('[data-close]').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('cancel', e => {
+    if (view === 'confirm') { e.preventDefault(); show('form'); }
+    else if (view === 'result') { e.preventDefault(); finish(); }
+  });
+
+  let opener = null;
+  document.querySelectorAll('[data-open-booking]').forEach(b => b.addEventListener('click', () => {
+    opener = b;
+    show('form');
+    dlg.showModal();
+    dlg.querySelector('#bk-title').focus();
+  }));
+  dlg.addEventListener('close', () => { if (opener) opener.focus(); });
+
+  renderSlots(); update();
+})();
+</script>
+</body>
+</html>

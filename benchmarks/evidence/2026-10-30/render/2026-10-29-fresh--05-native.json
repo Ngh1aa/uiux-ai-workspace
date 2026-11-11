@@ -1,0 +1,131 @@
+{
+  "errorCount": 20,
+  "warningCount": 0,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/05-native/index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Đã gửi trong dữ liệu mẫu\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span \"Trường Tiểu học Minh hoạ\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Tiếng Việt, hạn thứ Năm 23/10, 20:00\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span.due-label \"Chưa nộp\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Toán, hạn thứ Sáu 24/10, 20:00\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span.meta \"19:12 hôm nay\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Đã gửi trong dữ liệu mẫu\""
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "benchmarks/runs/2026-10-29-fresh/05-native/index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "iOS Hôm nay",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Đã gửi trong dữ liệu mẫu\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span \"Trường Tiểu học Minh hoạ\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Tiếng Việt, hạn thứ Năm 23/10, 20:00\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span.due-label \"Chưa nộp\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Toán, hạn thứ Sáu 24/10, 20:00\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span.meta \"19:12 hôm nay\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Đã gửi trong dữ liệu mẫu\""
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "Android Hôm nay",
+          "errors": [
+            {
+              "rule": "demo-note",
+              "message": "Ghi chú bản mẫu hiện trên màn: \"Đã gửi trong dữ liệu mẫu\". Chuyển vào phần bàn giao"
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Tiếng Việt, hạn thứ Năm 23/10, 20:00\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span.due-label \"Chưa nộp\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Toán, hạn thứ Sáu 24/10, 20:00\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: span.meta \"19:12 hôm nay\""
+            },
+            {
+              "rule": "small-text",
+              "message": "Chữ 11.0px < 12px: small \"Đã gửi trong dữ liệu mẫu\""
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

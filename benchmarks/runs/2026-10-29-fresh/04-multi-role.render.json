@@ -1,0 +1,240 @@
+{
+  "errorCount": 0,
+  "warningCount": 18,
+  "axe": "RUN",
+  "results": [
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 390,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.muted \"Nguyễn Thảo, lễ tân\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Lịch hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.meta \"Ai đang đến, ghế nào còn trống?\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.badge \"1 lượt muộn 15 phút\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 1px (nên ≥ 16px): p.calendar-legend \"Trạng thái có nhãn chữ. Chọn lượt để xem\""
+            },
+            {
+              "rule": "widow",
+              "message": "Dòng cuối chỉ còn một chữ: p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\""
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 390,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.muted \"Nguyễn Thảo, lễ tân\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): h1 \"Lịch hôm nay\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.meta \"Ai đang đến, ghế nào còn trống?\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): button.ds-button \"Đặt lịch\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): span.badge \"1 lượt muộn 15 phút\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 1px (nên ≥ 16px): p.calendar-legend \"Trạng thái có nhãn chữ. Chọn lượt để xem\""
+            },
+            {
+              "rule": "widow",
+              "message": "Dòng cuối chỉ còn một chữ: p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\""
+            },
+            {
+              "rule": "edge",
+              "message": "Chữ cách mép màn 0px (nên ≥ 16px): p.demo-label \"Lịch theo dữ liệu đề bài. Mọi cập nhật t\""
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 1024,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lâm Gia Bảo, 8 tuổi\""
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 1024,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": [
+            {
+              "rule": "wrap-review",
+              "message": "Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: strong \"Lâm Gia Bảo, 8 tuổi\""
+            }
+          ]
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 1280,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 1280,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 1440,
+      "theme": "light",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 1440,
+      "theme": "dark",
+      "reflow": false,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay",
+          "errors": [],
+          "warnings": []
+        },
+        {
+          "name": "axe-core",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "page": "C:\\Users\\LENOVO\\Documents\\Codex\\2026-10-29\\b-n-l-m-vi-c\\work\\uiux-ai-workspace\\benchmarks\\runs\\2026-10-29-fresh\\04-multi-role\\index.html",
+      "width": 320,
+      "theme": "light",
+      "reflow": true,
+      "screens": [
+        {
+          "name": "Lễ tân lịch hôm nay (reflow 320 px)",
+          "errors": [],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

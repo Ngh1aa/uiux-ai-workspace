@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-29",
+  "baseline_sha": "d7000758c2e2aa273785455ae91d255fe3be04e0",
+  "working_tree": "DIRTY local uncommitted patch",
+  "source_sha256": {
+    "skills_UIUX/ui-craft-and-visual-qa/scripts/flow-check.cjs": "112ac0157772f2a379f9564eeec3113c0e9867be8c7c334ba91956dae78a15ca",
+    "skills_UIUX/ui-craft-and-visual-qa/scripts/flow-check.test.cjs": "8606a61b074c12f8adb5b613e25949a5d99565c841cd5be998ab9e0eacef8125",
+    "skills_UIUX/ui-craft-and-visual-qa/scripts/static-check.cjs": "f6a2899454d87d76161514c44e41a59ebb83944c597fa31aef3b756e8b6d4e30",
+    "design-system/examples/gom-moc/app.html": "983b82dd1a0b778639c0c73833ddd82dbab88013b81ecf5e932a49acc4839bd2",
+    "design-system/tests/gom-moc-flow.test.cjs": "055844c8f4c80ac9a440c612d159f307214b3b518645f0be7f208ff6856f96f3",
+    ".github/workflows/checks.yml": "9d002d4ad612eceb9edcddb108c4a301fcf712fec93b4cc1805859a165a6280d"
+  },
+  "tests": {
+    "static-check": {
+      "status": "PASS",
+      "passed": 10
+    },
+    "flow-check": {
+      "status": "PASS",
+      "passed": 14
+    },
+    "browser-gate": {
+      "status": "PASS",
+      "passed": 11,
+      "evidence_type": "runner contract doubles; not rendered evidence"
+    },
+    "taste-check": {
+      "status": "PASS",
+      "passed": 32
+    },
+    "booking": {
+      "status": "PASS",
+      "passed": 8,
+      "matrix": "Chromium 390/1280 light/dark",
+      "scenarios": [
+        "root-review-result",
+        "back-edit-reconfirm",
+        "count-price consistency",
+        "correct court/session and customer role",
+        "unavailable-recovery",
+        "modal cancel Escape focus",
+        "calendar download fixture"
+      ]
+    }
+  },
+  "render": {
+    "status": "PASS",
+    "errorCount": 0,
+    "warningCount": 0,
+    "axe": "RUN",
+    "matrix": "Chromium 390/1280 light/dark",
+    "evidence": "design-system/examples/gom-moc/review/2026-10-29",
+    "visual_inspection": "Opened all four screenshots; readable complete metadata, no field occluded by footer, customer summary matches source."
+  },
+  "unknown": [
+    "native devices",
+    "backend bookings/payment/SMS",
+    "human user research",
+    "screen reader manual session",
+    "CI for local patch"
+  ],
+  "ci_source": "foundation/release-candidate names retained; flow fixtures, source check and booking browser tests wired; no remote run for unpushed patch",
+  "followup": {
+    "flow_checker_tests": 15,
+    "taste_checker_tests": 34,
+    "note": "Parent bổ sung hidden/template UNKNOWN và rich-record wrapping regression; test gốc không bị xoá hoặc giảm ngưỡng."
+  }
+}

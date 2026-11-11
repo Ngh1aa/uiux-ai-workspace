@@ -1,0 +1,139 @@
+{
+  "reviewer": {
+    "id": "fresh-gate-review-2026-10-30",
+    "kind": "agent-heuristic",
+    "independent": true
+  },
+  "review_stage": "first-review",
+  "cold_protocol": "first-impression-after-brief; brief was read before images, so this is not a valid blind cold read",
+  "cold": {
+    "05-Android-alert-dark.png": {
+      "Màn này để làm gì?": "Xác nhận hủy đơn xin nghỉ đã có.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn nếu mở nhầm, Hủy đơn nếu chắc chắn.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Khối xác nhận dài do chứa giải thích bản mẫu; hai quyết định vẫn phân biệt rõ."
+    },
+    "05-Android-assignment-light.png": {
+      "Màn này để làm gì?": "Xem bài tập chưa nộp và chọn ảnh bài làm.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút Kiểm tra ảnh đang nổi bật dù chưa chọn ảnh; cần xem phản hồi khi bấm."
+    },
+    "05-Android-date-error.png": {
+      "Màn này để làm gì?": "Sửa ngày nghỉ đã qua trong đơn đang nhập.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô Ngày nghỉ đang focus.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông báo lỗi rõ và giữ nội dung; phần cuối form nằm ngoài khung thấy."
+    },
+    "05-Android-draft-bottom.png": {
+      "Màn này để làm gì?": "Tiếp tục đơn xin nghỉ với lý do và ghi chú đã nhập.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ngày nghỉ vì đang ở 21/10 trước ngày mẫu 22/10.",
+      "Điều gì trông sai, rối hoặc thiếu?": "CTA Gửi đơn sát đáy vùng home indicator; không biết có cuộn thêm được hay không."
+    },
+    "05-Android-request-light.png": {
+      "Màn này để làm gì?": "Nhập đơn xin nghỉ cho Gia Hân.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ngày nghỉ rồi điền lý do.",
+      "Điều gì trông sai, rối hoặc thiếu?": "CTA Gửi đơn trong khi chú thích nói chỉ lưu đơn trên máy; tên hành động dễ gợi kỳ vọng gửi thật."
+    },
+    "05-iOS-alert-dark.png": {
+      "Màn này để làm gì?": "Xác nhận hủy đơn nghỉ trong giao diện iOS.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Giữ đơn hoặc Hủy đơn theo ý định.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Giải thích chỉ cập nhật bản mẫu khá dài trong alert; nên đặt thông tin này trước alert."
+    },
+    "05-iOS-assignment-light.png": {
+      "Màn này để làm gì?": "Xem hạn bài tập và chọn ảnh bài làm.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Chọn ảnh bài làm.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nút cuối mới thấy phần đầu sát tab bar; cần kiểm cuộn thay vì kết luận bị mất."
+    },
+    "05-iOS-date-error.png": {
+      "Màn này để làm gì?": "Sửa ngày xin nghỉ không hợp lệ và giữ dữ liệu đã nhập.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Cuộn lên ô ngày để đổi ngày.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông báo lỗi ở trên, ô ngày hiện ngoài vùng thấy; nên có lối đưa về trường sai."
+    },
+    "05-iOS-draft-bottom.png": {
+      "Màn này để làm gì?": "Nhập tiếp đơn nghỉ trong sheet.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô ngày nghỉ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Sheet dài, nút tiếp tục ngoài phần đang thấy; chưa biết cuộn tới cuối có thuận tiện."
+    },
+    "05-iOS-request-light.png": {
+      "Màn này để làm gì?": "Nhập ngày, buổi và lý do nghỉ trong sheet.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Ô Ngày nghỉ.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Sheet mở dưới nhiều nội dung preview; nếu đây là trang review thì cần tách chrome preview khỏi phạm vi app."
+    },
+    "05-native-1280-dark.jpg": {
+      "Màn này để làm gì?": "So sánh trang hôm nay trên iOS và Android.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Hai nền tảng gần nhau về bố cục danh sách; khác biệt chính là bề mặt, tiêu đề và tab indicator."
+    },
+    "05-native-1280-light.jpg": {
+      "Màn này để làm gì?": "Xem việc học của con hôm nay trên hai nền tảng.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài chưa nộp đầu tiên.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Thông báo cô nằm thấp, chỉ thấy đầu trong khung app; không đủ ảnh để kết luận khả năng đọc hết."
+    },
+    "05-native-390-dark.jpg": {
+      "Màn này để làm gì?": "Xem con, bài chưa nộp và lịch ngày mai.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Phần tin cô ở sát tab bar; cần cuộn để đọc tiếp."
+    },
+    "05-native-390-light.jpg": {
+      "Màn này để làm gì?": "Tóm tắt hôm nay và mở tác vụ bài tập hoặc xin nghỉ.",
+      "Bạn sẽ bấm vào đâu đầu tiên?": "Bài Tập đọc: Cây dừa.",
+      "Điều gì trông sai, rối hoặc thiếu?": "Nhiều vùng danh sách giống nhau; thông báo mới nhất chưa được nhấn mạnh hơn thông tin lịch."
+    }
+  },
+  "hard_fails": [],
+  "scores": {
+    "1": 4,
+    "2": 4,
+    "3": 3.5,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 3.5,
+    "8": 3.5,
+    "9": 3.5,
+    "10": 3.5
+  },
+  "observations": [
+    {
+      "dimension": "3",
+      "image": "05-Android-request-light.png",
+      "element": "CTA Gửi đơn xin nghỉ sát mép đáy và home indicator",
+      "fix": "Kiểm tra insets cuối vùng cuộn và thêm khoảng trống đủ để CTA nằm trọn bên trên home indicator khi cuộn cuối; không coi ảnh này là bằng chứng CTA không thể tiếp cận."
+    },
+    {
+      "dimension": "7",
+      "image": "05-iOS-date-error.png",
+      "element": "Thông báo Ngày nghỉ đã qua trong khi ô ngày ở ngoài vùng thấy",
+      "fix": "Đưa focus/scroll về ô ngày lỗi hoặc có hành động Chọn lại ngày; xác minh cả bàn phím và VoiceOver ở runtime."
+    },
+    {
+      "dimension": "8",
+      "image": "05-Android-request-light.png",
+      "element": "Gửi đơn xin nghỉ và chú thích Chỉ lưu đơn minh hoạ trên máy này, chưa gửi cho cô",
+      "fix": "Đổi CTA thành Lưu đơn minh hoạ hoặc mô phỏng hành động gửi với nhãn minh hoạ nhất quán; tránh hai nghĩa khác nhau trong cùng một thao tác."
+    },
+    {
+      "dimension": "9",
+      "image": "05-native-1280-light.jpg",
+      "element": "Danh sách bài và lịch của hai nền tảng có cấu trúc gần như nhau",
+      "fix": "Tinh chỉnh tỷ lệ tiêu đề, nhóm list và khoảng cách theo iOS/Material 3; kiểm native controls, back và text scaling trên thiết bị trước khi gọi native-ready."
+    },
+    {
+      "dimension": "10",
+      "image": "05-native-390-light.jpg",
+      "element": "Bề mặt tím xám, danh sách hộp và avatar ký tự",
+      "fix": "Tạo chi tiết nhận diện giáo dục có mục đích, chẳng hạn cấu trúc thông báo cô và thông tin học sinh rõ hơn; giữ hệ token nhất quán và tránh thêm trang trí ngẫu nhiên."
+    }
+  ],
+  "not_checked": [
+    "Bàn phím, thứ tự Tab và focus qua toàn bộ luồng; ảnh focus riêng lẻ không chứng minh toàn luồng.",
+    "VoiceOver, TalkBack, tên và vai trò accessible, thứ tự đọc.",
+    "Phóng chữ 200%, Dynamic Type và cỡ chữ hệ thống lớn.",
+    "Vùng hit target thực tế; kích thước hình vẽ không xác nhận vùng chạm.",
+    "Đo contrast AA bằng pixel/token đầy đủ, gồm mọi trạng thái.",
+    "Điều hướng back, cuộn tới cuối, click, loading, lưu và khôi phục dữ liệu ở runtime.",
+    "Tính đầy đủ của các màn/trạng thái/theme không có ảnh trong packet; không suy ra là source thiếu.",
+    "Cold review đúng thứ tự: brief đã được đọc trước ảnh; cold bên dưới là ấn tượng đầu sau brief và không phải đọc lạnh hợp lệ.",
+    "Native runtime, safe area, edge swipe, Android back và rendering bằng framework native chưa được kiểm chứng; packet tự ghi browser preview.",
+    "Mọi màn ở cả hai theme chưa có đủ ảnh trạng thái tương ứng."
+  ],
+  "summary": "Các tác vụ đọc bài, xin nghỉ, lỗi ngày và hủy đơn hiểu được; iOS sheet và Android toàn màn đã khác nhau. Tuy nhiên copy gửi/lưu chưa thống nhất, nhịp cuối form cần xác minh, cá tính giáo dục và mức khác biệt nền tảng còn ở mức khá cơ bản. Không ghi hard fail chắc chắn từ tập ảnh."
+}
