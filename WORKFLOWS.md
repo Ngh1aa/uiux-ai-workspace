@@ -1,9 +1,6 @@
 # Chọn workflow theo cỡ việc
 
-Trang này trả lời một câu: **"Việc này lớn cỡ nào, và tôi cần làm những bước gì?"**
-Dành cho designer, PM, kỹ sư và AI agent.
-
-**Đây là nguồn định tuyến duy nhất.** Danh sách skill của mỗi cỡ dưới đây là đủ; nếu một skill
+**Đây là nguồn định tuyến duy nhất:** việc lớn cỡ nào và cần làm những bước gì. Danh sách skill của mỗi cỡ dưới đây là đủ; nếu một skill
 gợi ý đọc thêm skill khác thì chỉ đọc khi việc thật sự cần.
 
 Mọi cỡ việc trên dự án khách hàng đều bắt đầu từ brand brief
@@ -63,11 +60,8 @@ SKILL.md dưới đây. Reference, pattern và nền tảng chỉ mở đúng ph
 4. **Khung dây** (wireframe) và đi thử 5 kịch bản. Sửa lỗi trải nghiệm trước khi tô màu.
 5. **Thị giác**: áp design system và [thư viện pattern](design-system/patterns/README.md); dựng 2–3
    hướng cho màn quyết định chính rồi qua **cổng duyệt hướng** (dưới đây) trước khi làm các màn còn lại.
-6. **Dựng và phản biện** theo rubric, sửa, dựng lại.
-   Với luồng có dữ liệu, bấm thử từ chọn/nhập → xác nhận → quay lại sửa → xác nhận lại. Đối chiếu
-   cùng dữ liệu trên mọi màn (số lượng, biến thể, tổng tiền, ngày giờ); kiểm tra giữ lựa chọn và
-   ít nhất một nhánh lỗi/khôi phục. Ghi kết quả riêng với soát giao diện; `taste-check` không
-   chứng minh luồng đúng.
+6. **Dựng và phản biện** theo rubric, sửa, dựng lại. Bấm thử luồng theo mục *Kiểm trước khi giao* của
+   [FLOW.md](FLOW.md) và ghi riêng với soát giao diện; `taste-check` không chứng minh luồng đúng.
 7. **Bàn giao**: đặc tả trạng thái, token, hành vi tương tác.
 
 - Skill: [`ux-structure-and-flow-design`](skills_UIUX/ux-structure-and-flow-design/SKILL.md) ·
@@ -147,8 +141,8 @@ Bảng chọn; cách làm và lưu ý của từng track ở [workflows/tracks.m
   lỗi ở 390 và 1280 px (website thêm 768 và 1440); desktop và artboard đạt thêm `--layout strict`. Không chạy
   được thì chạy `static-check.cjs`, soát bằng mắt theo README công cụ QA và ghi rõ.
 - Đã **nhìn ảnh chụp trang đã dựng**; đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
-- Luồng đạt [FLOW.md](FLOW.md): CTA đúng đích, đối tượng, vai trò; Back giữ ngữ cảnh; dữ liệu khớp; lỗi có
-  khôi phục. `flow-check` không có lỗi chắc chắn; luồng bắt buộc FAIL hoặc UNKNOWN chặn kết luận Đạt.
+- Luồng đạt [FLOW.md](FLOW.md), `flow-check` không có lỗi chắc chắn; luồng bắt buộc FAIL hoặc UNKNOWN chặn
+  kết luận Đạt.
 - Contrast và vùng chạm đạt [`CRAFT.md`](CRAFT.md); rubric đạt ngưỡng của cỡ việc, không hard-fail.
 - Ghi rõ điều gì **chưa** kiểm chứng (người dùng thật, thiết bị thật, trình đọc màn hình).
 - M trở lên: hướng thị giác đã qua cổng duyệt, hoặc ghi `CHƯA DUYỆT`. L, XL có duyệt độc lập theo

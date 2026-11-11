@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASELINE = '85e915f56424d5aa7b7ab2f58aa7ec53cfe21db3'
 CORE = ['START-HERE.md', 'AGENTS.md', 'TASTE.md', 'CRAFT.md', 'FLOW.md', 'WORKFLOWS.md']
 SKILLS = ['ux-structure-and-flow-design', 'visual-design-direction', 'ui-craft-and-visual-qa', 'design-critique-and-rationale']
+BUDGET = 7000  # đơn vị whitespace cho mỗi đường đọc M; hạ khi gọt thêm, không nâng để chứa thêm chữ
 COMMON = CORE + [f'skills_UIUX/{name}/SKILL.md' for name in SKILLS]
 PATHS = {
     'M-feature-existing-system': COMMON,
@@ -38,7 +39,7 @@ def build():
     paths = {name: {'before': measure(files, BASELINE), 'after': measure(files)} for name, files in PATHS.items()}
     return {'baseline': BASELINE, 'unit': 'Unicode whitespace split; full file including code/frontmatter; no token estimate',
             'scope': 'Đường khởi đầu M phổ biến; reference mở theo quyết định chưa tính là đã đọc. Native/redesign lớn có đường đọc riêng, không gán mục tiêu M cho mọi tác vụ.',
-            'paths': paths, 'status': 'PASS' if all(item['after']['total'] < 8000 for item in paths.values()) else 'FAIL'}
+            'paths': paths, 'status': 'PASS' if all(item['after']['total'] < BUDGET for item in paths.values()) else 'FAIL'}
 
 
 if __name__ == '__main__':

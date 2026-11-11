@@ -55,7 +55,7 @@ class ReadingPathsTests(unittest.TestCase):
     def test_representative_m_paths_below_budget(self):
         for name, item in reading.build()['paths'].items():
             with self.subTest(path=name):
-                self.assertLess(item['after']['total'], 8000)
+                self.assertLess(item['after']['total'], reading.BUDGET)
                 self.assertLess(item['after']['total'], item['before']['total'])
 
     def test_workflow_skill_routes_resolve_and_catalog_covers_skills(self):

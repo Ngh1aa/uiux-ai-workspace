@@ -33,12 +33,10 @@ cho chủ repo duyệt.
 
 ## 4. Thiết kế
 
-- Áp dụng `TASTE.md` ngay từ bản đầu; từ cỡ S, lên kế hoạch thị giác theo `CRAFT.md` trước khi dựng.
-- Đọc đúng skill mà cỡ việc hoặc flow chỉ định, không đọc tràn cả thư viện.
-- Dựng từ token và component có sẵn. Thiếu thì thêm ở tầng token theo vai trò, không gán cứng màu.
-- Đủ các trạng thái liên quan: mặc định, đang tải, rỗng, lỗi, nội dung dài.
-- Nhìn ảnh render thật ở cỡ điện thoại và máy tính trước khi giao. Build chạy được không có nghĩa
-  là giao diện đẹp.
+Thứ tự đọc, dựng và soát ở [`START-HERE.md`](START-HERE.md) và định nghĩa "xong" trong
+[`WORKFLOWS.md`](WORKFLOWS.md). Thêm hai quy tắc:
+
+- Thiếu token thì thêm ở tầng token theo vai trò, không gán cứng màu.
 - Sửa ở đúng tầng gây lỗi: lỗi hướng thiết kế thì sửa hướng, không vá CSS từng chỗ.
 
 ## 5. Sửa repo này
@@ -52,22 +50,12 @@ Mục này nói về việc sửa chính repo `uiux-ai-workspace`. Làm trên co
 
 ## 6. Làm trên dự án đã có code
 
-- Yêu cầu "thiết kế lại", "làm lại", "nâng cấp giao diện" là sự cho phép sửa và **xoá** code giao diện
-  cũ của dự án trên một nhánh riêng: token, CSS, template, renderer, test đang khoá giao diện cũ. Không
-  hỏi lại từng file.
-- Thay tại nguồn, không phủ đè: không thêm file CSS nạp sau cùng, không dùng `!important` để thắng
-  cascade cũ, không vá DOM bằng JS sau render, không sửa tay file sinh tự động.
-- Giữ hành vi, dữ liệu, URL và câu chữ đã kiểm chứng; bảo vệ chúng bằng test trước khi xoá code.
-- Giữ ADN thị giác của sản phẩm trừ khi người quyết định chọn bỏ.
-- Quy trình đầy đủ: [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md).
+Yêu cầu "thiết kế lại", "làm lại", "nâng cấp giao diện" cho phép sửa và **xoá** code giao diện cũ trên
+nhánh riêng, không hỏi lại từng file; thay tại nguồn, không phủ đè (CSS nạp sau cùng, `!important`, vá DOM
+bằng JS). Quyền, giới hạn và quy trình: [`brownfield-redesign`](skills_UIUX/brownfield-redesign/SKILL.md).
 
 ## 7. Nội dung của bên thứ ba
 
-Trước khi chép file không phải của mình, xem license và
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Không chép hoặc chỉnh sửa nội dung có điều
-khoản cấm phân phối lại (ví dụ các skill `docx`, `pdf`, `pptx`, `xlsx` của Anthropic) vào repo.
-Không đưa code hay thư viện skill của bên thứ ba vào `main`; dẫn link thay vì chép.
-
-## 8. Khi giao
-
-Báo ngắn gọn: kết quả là gì, đã kiểm tra bằng cách nào, điều gì còn chưa kiểm chứng.
+Xem license và [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) trước khi chép. Không chép nội dung cấm
+phân phối lại (ví dụ skill `docx`, `pdf`, `pptx`, `xlsx` của Anthropic); không đưa thư viện bên thứ ba vào
+`main`, dẫn link thay vì chép.
