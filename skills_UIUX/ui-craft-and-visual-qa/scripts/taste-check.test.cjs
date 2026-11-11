@@ -501,3 +501,40 @@ test('các file luật chạy trong trang ghép lại thành một biểu thức
     for (const rule of rules) assert.ok(src.includes(`rule: '${rule}'`), `${rule} không nằm trong ${file}`);
   }
 });
+
+test('bắt icon trỏ tới symbol không có trong trang, không bắt icon có symbol', () => {
+  const sprite = '<svg style="display:none"><symbol id="ok-icon" viewBox="0 0 24 24"><path d="M4 12h16"/></symbol></svg>';
+  const bad = run(`${sprite}<section data-screen="Thiếu icon"><div class="card"><svg width="24" height="24" aria-hidden="true"><use href="#missing-icon"/></svg>Đã nhận</div></section>`);
+  assert.ok(bad.rules('Thiếu icon', 'errors').includes('icon-missing'));
+  const ok = run(`${sprite}<section data-screen="Đủ icon"><div class="card"><svg width="24" height="24" aria-hidden="true"><use href="#ok-icon"/></svg>Đã nhận</div></section>`);
+  assert.ok(!ok.rules('Đủ icon', 'errors').includes('icon-missing'));
+});
+
+test('bắt chữ tràn ra ngoài card không cắt, không bắt card đủ cao', () => {
+  const rows = '<p style="margin:0">Hạn xử lý</p><p style="margin:0">Đề nghị vay</p><p style="margin:0">Trả mỗi tháng</p><p style="margin:0">Duyệt khi đủ giấy tờ</p>';
+  const bad = run(`<section data-screen="Tràn card"><div class="card" style="height:40px">${rows}</div></section>`);
+  assert.ok(bad.rules('Tràn card', 'errors').includes('card-spill'));
+  const ok = run(`<section data-screen="Card đủ cao"><div class="card">${rows}</div></section>`);
+  assert.ok(!ok.rules('Card đủ cao', 'errors').includes('card-spill'));
+  const scroll = run(`<section data-screen="Card cuộn"><div class="card" style="height:40px;overflow:auto">${rows}</div></section>`);
+  assert.ok(!scroll.rules('Card cuộn', 'errors').includes('card-spill'));
+});
+
+test('cảnh báo vân nền phủ kín chạy qua số lớn, không cảnh báo khi chỉ có chữ nhỏ', () => {
+  const css = '.ruled{position:relative}.ruled::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 31px,rgba(255,255,255,.2) 31px 32px)}';
+  const bad = run('<section data-screen="Vân số"><div class="hero ruled"><p style="margin:0">Trả mỗi tháng</p><p style="margin:0;font-size:40px;line-height:44px">13.468.068 ₫</p><p style="margin:0">Kỳ đầu 15/12</p></div></section>', css);
+  assert.ok(bad.rules('Vân số', 'warnings').includes('decor-texture'));
+  assert.ok(!bad.rules('Vân số', 'errors').includes('decor-overlap'));
+  const ok = run('<section data-screen="Vân nhỏ"><div class="hero ruled"><p style="margin:0">Trả mỗi tháng</p><p style="margin:0">Kỳ đầu 15/12</p><p style="margin:0">12 kỳ</p></div></section>', css);
+  assert.ok(!ok.rules('Vân nhỏ', 'warnings').includes('decor-texture'));
+});
+
+test('cảnh báo bảng cuộn ngang trên màn rộng, strict thành lỗi; bảng vừa khung thì không', () => {
+  const cells = (n) => `<tr>${Array.from({ length: n }, (_, i) => `<td style="white-space:nowrap;padding:0 24px">Cột số ${i + 1} dài</td>`).join('')}</tr>`;
+  const wide = `<section data-screen="Bảng rộng" class="wide"><main><h1>Hồ sơ</h1><div class="card" style="width:600px"><div style="overflow-x:auto"><table>${cells(8)}</table></div></div></main></section>`;
+  const w = runWide(wide);
+  assert.ok(w.rules('Bảng rộng', 'warnings').includes('table-scroll'));
+  assert.ok(runWide(wide, ['--layout', 'strict']).rules('Bảng rộng', 'errors').includes('table-scroll'));
+  const fit = runWide(`<section data-screen="Bảng vừa" class="wide"><main><h1>Hồ sơ</h1><div class="card" style="width:600px"><div style="overflow-x:auto"><table>${cells(2)}</table></div></div></main></section>`);
+  assert.ok(!fit.rules('Bảng vừa', 'warnings').includes('table-scroll'));
+});

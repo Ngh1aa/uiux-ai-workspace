@@ -1,4 +1,4 @@
-/* taste-check: luật bố cục (overflow, target, fixed-overlap, void, coverage, flat-scale, thin-highlight, colors, panel-void, panel-orphan).
+/* taste-check: luật bố cục (overflow, table-scroll, icon-missing, target, fixed-overlap, void, coverage, flat-scale, thin-highlight, colors, panel-void, panel-orphan).
  * Chạy trong trang (Playwright evaluate), không phải module Node. taste-check.cjs ghép các file trong
  * thư mục này theo thứ tự shared, text, card, layout, chart, audit vào một hàm rồi chạy một lần mỗi trang.
  * Mỗi luật nhận ctx = { root, all, isPart, rootRect, rootBg, errors, warnings, massOf, highlights }. */
@@ -13,6 +13,13 @@ const layoutRules = {
       if (!inner) errors.push({ rule: 'overflow', message: `Nội dung tràn ngang ${el.scrollWidth - el.clientWidth}px: ${describe(el)}` });
     }
 
+    // Bảng cuộn ngang trên màn rộng: luật "clipped" bỏ qua khung cuộn vì người dùng cuộn được,
+    // nhưng ở desktop cột cuối (thường là trạng thái hay hành động) bị khuất là lỗi bố cục.
+    if (['auto', 'scroll'].includes(st.overflowX) && ctx.rootRect.width >= 1024 && el.querySelector('table') &&
+        el.scrollWidth > el.clientWidth + 8 && el.clientWidth > 0) {
+      warnings.push({ rule: 'table-scroll', message: `Bảng phải cuộn ngang ${el.scrollWidth - el.clientWidth}px ở màn rộng: ${describe(el)}. Bớt hoặc gộp cột, hoặc cho bảng thêm chỗ` });
+    }
+
     // Vùng chạm
     if (el.matches(INTERACTIVE)) {
       const host = el.matches('input, select, textarea') && el.closest('label');
@@ -22,6 +29,17 @@ const layoutRules = {
         warnings.push({ rule: 'target', message: `Vùng chạm ${Math.round(r.width)}×${Math.round(r.height)}px < 44×44: ${describe(el)}` });
       }
     }
+  },
+
+  // Icon trỏ tới symbol không có trong trang: trình duyệt vẽ ô trống, không báo lỗi.
+  iconRefs(ctx) {
+    const { root, errors } = ctx;
+    const missing = new Set();
+    for (const use of root.querySelectorAll('use')) {
+      const ref = use.getAttribute('href') || use.getAttribute('xlink:href') || '';
+      if (ref.startsWith('#') && !document.getElementById(ref.slice(1))) missing.add(ref);
+    }
+    for (const ref of missing) errors.push({ rule: 'icon-missing', message: `Icon ${ref} không có trong trang (thiếu <symbol id="${ref.slice(1)}">)` });
   },
 
   // Cả màn tràn ngang

@@ -52,6 +52,13 @@ So câu trả lời đọc lạnh với ý định trong brief. Lệch ở câu 
 dung, nặng hơn mọi điểm số. Ghi cả hai điểm (tự chấm và độc lập) vào ghi chú giao; khi chênh nhau từ 0,5
 trở lên ở một chiều, chiều đó được sửa trước.
 
+## Chi phí
+
+Một vòng agent ở phiên mới đo trên dự án thử cỡ L (14 rồi 26 ảnh): khoảng 3–4 phút và 80–95 nghìn token mỗi vòng.
+Đáng chi cho M trở lên: cả hai vòng đều bắt lỗi mà người làm và checker bỏ sót (một hard fail về tổng tiền,
+rồi 14 lỗi nhất quán giữa các màn). XS, S thì không cần. Một vòng sửa thường cần thêm một vòng duyệt;
+gom các sửa nhỏ lại rồi duyệt một lần.
+
 ## Giới hạn
 
 - Agent ở phiên mới vẫn là `agent-heuristic`: nó độc lập với người làm nhưng không thay người dùng thật.

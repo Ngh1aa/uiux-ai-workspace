@@ -19,7 +19,7 @@
  *                         chỉ bắt tràn ngang. Dùng cho website, không dùng cho trang có khung điện thoại cố định
  *   --no-axe              bỏ axe-core dù có cài
  *   --layout strict       coi các cảnh báo bố cục (void, coverage, flat-scale, thin-highlight,
- *                         panel-void, panel-orphan, card-inset, card-wide) là lỗi;
+ *                         panel-void, panel-orphan, card-inset, card-wide, table-scroll) là lỗi;
  *                         dùng cho màn desktop và artboard canvas trước khi giao
  *
  * Mỗi phần tử có thuộc tính data-screen="Tên màn" được soát như một màn riêng; trang không có
@@ -268,7 +268,7 @@ async function main() {
           await tab.evaluate(() => document.fonts && document.fonts.ready);
           let screens = await tab.evaluate(auditSource);
           if (opts.layout === 'strict') {
-            const LAYOUT = ['void', 'coverage', 'flat-scale', 'thin-highlight', 'panel-void', 'panel-orphan', 'card-inset', 'card-wide'];
+            const LAYOUT = ['void', 'coverage', 'flat-scale', 'thin-highlight', 'panel-void', 'panel-orphan', 'card-inset', 'card-wide', 'table-scroll'];
             screens = screens.map((sc) => ({
               ...sc,
               errors: [...sc.errors, ...sc.warnings.filter((w) => LAYOUT.includes(w.rule))],

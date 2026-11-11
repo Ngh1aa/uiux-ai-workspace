@@ -7,6 +7,10 @@ trong components/icons.svg và starter/icons-app.svg, rồi ghi một sprite ẩ
 
 Nhúng thẳng vào trang để icon vẫn hiện khi mở file trực tiếp hoặc chép trang sang nơi khác.
 
+Icon dựng bằng JavaScript (ví dụ `'#ds-i-clock'` trong một chuỗi) không có thẻ <use> trong HTML gốc.
+Script cũng tìm các tên `ds-i-*`, `app-i-*` xuất hiện ở chỗ khác trong trang và nhúng luôn nếu có trong
+sprite; tên không có trong sprite thì in cảnh báo thay vì bỏ qua im lặng.
+
 Dùng:  python3 design-system/starter/inline-icons.py <trang.html> [...]
        python3 design-system/starter/inline-icons.py --check <trang.html> [...]
 """
@@ -20,6 +24,7 @@ HERE = Path(__file__).resolve().parent
 SOURCES = [HERE.parent / "components" / "icons.svg", HERE / "icons-app.svg"]
 SYMBOL_RE = re.compile(r'<symbol id="([^"]+)".*?</symbol>', re.S)
 USE_RE = re.compile(r'<use href="#([a-z0-9-]+)"')
+NAME_RE = re.compile(r'(?<![\w-])((?:ds|app)-i-[a-z0-9]+(?:-[a-z0-9]+)*)(?![\w-])')
 BLOCK_RE = re.compile(r"<!-- icons:start -->.*?<!-- icons:end -->", re.S)
 
 
@@ -31,11 +36,19 @@ def load_symbols() -> dict[str, str]:
     return symbols
 
 
+def scripted_names(html: str, symbols: dict[str, str]) -> tuple[set[str], set[str]]:
+    """Tên icon nằm ngoài thẻ <use> (thường trong chuỗi JS): (có trong sprite, không có)."""
+    outside = set(NAME_RE.findall(BLOCK_RE.sub("", html))) - set(USE_RE.findall(html))
+    return {n for n in outside if n in symbols}, {n for n in outside if n not in symbols}
+
+
 def render(html: str, symbols: dict[str, str]) -> str:
-    used = sorted(set(USE_RE.findall(html)))
-    missing = [name for name in used if name not in symbols]
+    direct = set(USE_RE.findall(html))
+    missing = [name for name in sorted(direct) if name not in symbols]
     if missing:
         raise SystemExit(f"không có icon: {', '.join(missing)}")
+    scripted, _ = scripted_names(html, symbols)
+    used = sorted(direct | scripted)
     body = "\n".join(f"  {symbols[name]}" for name in used)
     block = (
         "<!-- icons:start -->\n"
@@ -59,6 +72,11 @@ def main(argv: list[str]) -> int:
     stale = []
     for page in pages:
         html = page.read_text(encoding="utf-8")
+        scripted, unknown = scripted_names(html, symbols)
+        if scripted:
+            print(f"{page}: nhúng thêm icon chỉ thấy trong chuỗi (JS?): {', '.join(sorted(scripted))}")
+        if unknown:
+            print(f"cảnh báo {page}: không có trong sprite, icon sẽ trống nếu được dùng: {', '.join(sorted(unknown))}")
         new = render(html, symbols)
         if new != html:
             if check:
