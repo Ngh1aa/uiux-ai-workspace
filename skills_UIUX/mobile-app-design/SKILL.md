@@ -18,4 +18,4 @@ Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ ho�
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 Tra đúng mẫu khi cần: [references theo tác vụ](references/mobile-design-system-and-handoff.md), [checklists theo tác vụ](checklists/design-handoff.md).
 
-Thêm khi cần: Quy ước riêng nền tảng: [`ios-app-design`](references/ios-app-design/README.md), [`android-app-design`](references/android-app-design/README.md).
+Thêm khi cần: Quy ước riêng nền tảng: [`ios-app-design`](references/ios/README.md), [`android-app-design`](references/android/README.md).

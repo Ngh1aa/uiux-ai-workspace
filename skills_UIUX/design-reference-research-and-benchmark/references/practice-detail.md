@@ -264,4 +264,4 @@ Các skill trước đây tách riêng, nay gộp vào đây. Chỉ mở hướn
 
 | Hướng dẫn | Mở khi |
 |---|---|
-| [`reference-extraction-and-design-audit`](../references/reference-extraction-and-design-audit/README.md) | Extracts source-attributed visual-system evidence from a reference website or an existing project's styles, then audits tokens, components, responsive behavior and inconsistencies. Use when reference research needs… |
+| [`reference-extraction-and-design-audit`](extraction/README.md) | Extracts source-attributed visual-system evidence from a reference website or an existing project's styles, then audits tokens, components, responsive behavior and inconsistencies. Use when reference research needs… |

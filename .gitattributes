@@ -11,15 +11,9 @@ docs/evidence/ux-knowledge-practice/pilot/** -text -diff
 skills_UIUX/visual-design-direction/examples/mobile-care/index.html text eol=lf
 skills_UIUX/visual-design-direction/examples/mobile-care/capture.cjs text eol=lf
 
-# Frozen benchmark evidence and binary/license manifests bind exact source bytes.
+# Binary/license manifests and reviewed examples bind exact source bytes.
 # Preserve the reviewed Windows bytes on Linux CI as well as fresh checkouts.
-benchmarks/runs/2026-10-29-*/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-# Unified diff context prefixes include a required space on otherwise blank lines.
-benchmarks/runs/2026-10-29-*/provenance/*.patch -whitespace
-# These immutable reviewed/upstream copies retain their original whitespace.
-benchmarks/runs/2026-10-29-iterative-repair/03-dashboard/index.html -whitespace
 design-system/fonts/*/OFL.txt -whitespace
-benchmarks/evidence/2026-10-29/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 benchmarks/report.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 design-system/fonts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 design-system/examples/data-table/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

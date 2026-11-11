@@ -1,8 +1,8 @@
 # Mobile patterns playbook
 
 Opinionated, cross-platform guidance for the patterns that decide whether an app feels
-professional. Use with the [iOS spec sheet](ios-app-design/references/ios-spec-sheet.md) and
-[Android spec sheet](android-app-design/references/android-spec-sheet.md): **shared meaning,
+professional. Use with the [iOS spec sheet](ios/ios-spec-sheet.md) and
+[Android spec sheet](android/android-spec-sheet.md): **shared meaning,
 platform-native chrome.** Each pattern lists the default, the common failure, and the check.
 
 ## 1. App structure

@@ -16,4 +16,4 @@ Từ cỡ M, áp dụng [FLOW.md](../../FLOW.md) cho đối tượng, vai trò, 
 
 Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ hoặc handoff chuyên môn,
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
-Tra đúng mẫu khi cần: [references theo tác vụ](references/reference-extraction-and-design-audit/README.md), [checklists theo tác vụ](checklists/reference-benchmark-gate.md), [examples theo tác vụ](examples/reference-benchmark-example.md).
+Tra đúng mẫu khi cần: [references theo tác vụ](references/extraction/README.md), [checklists theo tác vụ](checklists/reference-benchmark-gate.md), [examples theo tác vụ](examples/reference-benchmark-example.md).

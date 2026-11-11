@@ -18,4 +18,4 @@ Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ ho�
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 Tra đúng mẫu khi cần: [references theo tác vụ](references/content-architecture.md), [checklists theo tác vụ](checklists/content-gate.md), [examples theo tác vụ](examples/homepage-narrative.md).
 
-Thêm khi cần: Uy tín, minh bạch: [`trust-credibility-and-transparency`](references/trust-credibility-and-transparency/README.md); soát mẫu lừa người dùng: [`ethical-ux-and-deceptive-patterns`](references/ethical-ux-and-deceptive-patterns/README.md).
+Thêm khi cần: Uy tín, minh bạch: [`trust-credibility-and-transparency`](references/trust-and-transparency/README.md); soát mẫu lừa người dùng: [`ethical-ux-and-deceptive-patterns`](references/deceptive-patterns/README.md).

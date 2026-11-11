@@ -7,15 +7,18 @@ Bộ não thiết kế cá nhân để Claude thiết kế website và app đẹ
 Cách dùng: trong chat, bảo Claude *"dùng repo uiux-ai-workspace để thiết kế …"*. Claude clone repo,
 đọc [`START-HERE.md`](START-HERE.md) rồi làm theo.
 
-Khi chỉ dùng repo để thiết kế, clone gọn, bỏ ảnh và bằng chứng benchmark (khoảng 8 MB thay vì gần 90 MB):
+Khi chỉ dùng repo để thiết kế, clone nông là đủ:
 
 ```sh
-git clone --depth 1 --filter=blob:none --sparse https://github.com/Ngh1aa/uiux-ai-workspace
-cd uiux-ai-workspace
-git sparse-checkout set --no-cone '/*' '!/benchmarks/runs/' '!/benchmarks/evidence/' '!/benchmarks/trials/' '!/design-system/examples/*/review/'
+git clone --depth 1 https://github.com/Ngh1aa/uiux-ai-workspace
 ```
 
-Sửa chính repo, chạy benchmark hay chạy CI thì clone đầy đủ.
+Ảnh, điểm và bằng chứng của các lần chạy benchmark nằm ở nhánh `benchmarks-data`, không nằm trong
+`main`. Sửa chính repo, chạy benchmark hay chạy CI thì clone đầy đủ rồi lấy dữ liệu về bằng
+`python scripts/fetch-benchmark-data.py` (xem [`benchmarks/README.md`](benchmarks/README.md)).
+
+Trên Windows, đường dẫn trong repo được giữ không quá 100 ký tự (CI kiểm). Clone vào thư mục quá sâu
+mà vẫn gặp `Filename too long`, bật long paths: `git config --global core.longpaths true`.
 
 ## Bên trong có gì
 
@@ -31,7 +34,7 @@ Sửa chính repo, chạy benchmark hay chạy CI thì clone đầy đủ.
 | [`WORKFLOWS.md`](WORKFLOWS.md) | Quy trình theo cỡ việc, từ sửa nhỏ tới sản phẩm mới |
 | [`skills_UIUX/`](skills_UIUX/README.md) | Các skill UI/UX và script soát trang đã dựng |
 | [`design-system/`](design-system/README.md) | Design system có test: token DTCG, 25 component, 30 pattern, font tiếng Việt, ví dụ app, `check-brand.py`, `oklch-scale.py` |
-| [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (5 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
+| [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (6 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
 
 ## Kiểm tra tự động
 

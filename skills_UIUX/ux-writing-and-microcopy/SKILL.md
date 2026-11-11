@@ -18,4 +18,4 @@ Khi có ngoại lệ, nhiều trạng thái, cần đặc tả đầy đủ ho�
 mở [thực hành chuyên sâu](references/practice-detail.md); file này giữ toàn bộ hướng dẫn trước khi rút gọn.
 Tra đúng mẫu khi cần: [references theo tác vụ](references/ux-writing-and-microcopy.md).
 
-Thêm khi cần: Cấu trúc nội dung và câu hỏi trong form: [`content-design-and-question-design`](references/content-design-and-question-design/README.md).
+Thêm khi cần: Cấu trúc nội dung và câu hỏi trong form: [`content-design-and-question-design`](references/content-design/README.md).

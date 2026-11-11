@@ -1,19 +1,73 @@
 {
-  "_note": "Skill đã gộp: thư mục cũ skills_UIUX/<child>/ nay là skills_UIUX/<host>/references/<child>/, SKILL.md thành README.md.",
+  "_note": "Skill đã gộp: thư mục cũ skills_UIUX/<child>/ nay là skills_UIUX/<host>/references/<dir>/, SKILL.md thành README.md. File trong references/, checklists/, examples/, assets/, templates/ của thư mục con nằm thẳng trong <dir>/ để đường dẫn ngắn (Windows giới hạn 260 ký tự). folded_dirs: thư mục con không phải skill cũ nhưng cũng được đổi tên. renamed_files: tên file được rút ngắn.",
   "merged": {
-    "visual-taste-calibration": "visual-design-direction",
-    "real-world-artifact-and-domain-metaphor-design": "brand-distinctiveness-and-visual-signature",
-    "research-lite": "design-thinking-lite",
-    "ios-app-design": "mobile-app-design",
-    "android-app-design": "mobile-app-design",
-    "content-design-and-question-design": "ux-writing-and-microcopy",
-    "trust-credibility-and-transparency": "conversion-and-content",
-    "ethical-ux-and-deceptive-patterns": "conversion-and-content",
-    "site-search-and-findability": "information-architecture",
-    "authentication-account-and-recovery-ux": "interaction-patterns-and-form-ux",
-    "media-crop-and-layout-integrity": "asset-media-and-art-direction",
-    "reference-analysis-and-design-to-code": "frontend-implementation",
-    "web-quality-and-performance": "frontend-implementation",
-    "ux-laws-and-heuristics": "design-critique-and-rationale"
+    "visual-taste-calibration": {
+      "host": "visual-design-direction",
+      "dir": "taste-calibration"
+    },
+    "real-world-artifact-and-domain-metaphor-design": {
+      "host": "brand-distinctiveness-and-visual-signature",
+      "dir": "domain-metaphor"
+    },
+    "research-lite": {
+      "host": "design-thinking-lite",
+      "dir": "research-lite"
+    },
+    "ios-app-design": {
+      "host": "mobile-app-design",
+      "dir": "ios"
+    },
+    "android-app-design": {
+      "host": "mobile-app-design",
+      "dir": "android"
+    },
+    "content-design-and-question-design": {
+      "host": "ux-writing-and-microcopy",
+      "dir": "content-design"
+    },
+    "trust-credibility-and-transparency": {
+      "host": "conversion-and-content",
+      "dir": "trust-and-transparency"
+    },
+    "ethical-ux-and-deceptive-patterns": {
+      "host": "conversion-and-content",
+      "dir": "deceptive-patterns"
+    },
+    "site-search-and-findability": {
+      "host": "information-architecture",
+      "dir": "site-search"
+    },
+    "authentication-account-and-recovery-ux": {
+      "host": "interaction-patterns-and-form-ux",
+      "dir": "auth-and-recovery"
+    },
+    "media-crop-and-layout-integrity": {
+      "host": "asset-media-and-art-direction",
+      "dir": "media-crop"
+    },
+    "reference-analysis-and-design-to-code": {
+      "host": "frontend-implementation",
+      "dir": "design-to-code"
+    },
+    "web-quality-and-performance": {
+      "host": "frontend-implementation",
+      "dir": "web-quality"
+    },
+    "ux-laws-and-heuristics": {
+      "host": "design-critique-and-rationale",
+      "dir": "ux-laws"
+    }
+  },
+  "renamed_files": {
+    "brand-recognition-and-consistency-qa.md": "brand-recognition-qa.md",
+    "banking-artifact-example.md": "banking-example.md",
+    "artifact-metaphor-gate.md": "metaphor-gate.md",
+    "research-foundations.md": "research.md",
+    "workflow-states-and-progress.md": "workflow-states.md"
+  },
+  "folded_dirs": {
+    "interaction-patterns-and-form-ux/references/complex-workflow-and-progress-ux": "complex-workflow",
+    "mobile-app-design/references/mobile-web-preview": "web-preview",
+    "design-reference-research-and-benchmark/references/reference-extraction-and-design-audit": "extraction"
   }
 }
