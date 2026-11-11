@@ -115,13 +115,20 @@ jobs:
         run: node skills_UIUX/ui-craft-and-visual-qa/scripts/flow-check.cjs design-system/examples/gom-moc/app.html --mode prototype
       - name: Fetch benchmark data pinned in benchmarks/data-ref.txt
         run: python scripts/fetch-benchmark-data.py
-      - name: Benchmark browser flow regressions (five briefs per run)
+      - name: Benchmark browser flow regressions (every run that ships flow.browser.cjs)
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules
           BENCHMARK_SHOTS: ${{ runner.temp }}/benchmark-flow-shots
         run: |
-          node benchmarks/runs/2026-10-29-iterative-repair/flow.browser.cjs --json "$RUNNER_TEMP/repair-flow.json"
-          node benchmarks/runs/2026-10-29-fresh/flow.browser.cjs --json "$RUNNER_TEMP/fresh-flow.json"
+          shopt -s nullglob
+          scripts=(benchmarks/runs/*/flow.browser.cjs)
+          if [ ${#scripts[@]} -eq 0 ]; then echo "::error::Không có flow.browser.cjs nào trong benchmarks/runs"; exit 1; fi
+          for script in "${scripts[@]}"; do
+            run=$(basename "$(dirname "$script")")
+            echo "::group::$run"
+            node "$script" --json "$RUNNER_TEMP/$run-flow.json"
+            echo "::endgroup::"
+          done
       - name: Starter kit passes the taste check
         env:
           NODE_PATH: ${{ runner.temp }}/tools/node_modules

@@ -34,7 +34,7 @@ mà vẫn gặp `Filename too long`, bật long paths: `git config --global core
 | [`WORKFLOWS.md`](WORKFLOWS.md) | Quy trình theo cỡ việc, từ sửa nhỏ tới sản phẩm mới |
 | [`skills_UIUX/`](skills_UIUX/README.md) | Các skill UI/UX và script soát trang đã dựng |
 | [`design-system/`](design-system/README.md) | Design system có test: token DTCG, 25 component, 30 pattern, font tiếng Việt, ví dụ app, `check-brand.py`, `oklch-scale.py` |
-| [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (5 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
+| [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (6 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
 
 ## Kiểm tra tự động
 
