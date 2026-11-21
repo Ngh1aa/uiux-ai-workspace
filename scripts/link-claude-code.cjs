@@ -22,7 +22,7 @@ const MARKER = '<!-- uiux-workspace: sinh bởi scripts/link-claude-code.cjs';
 
 function render(repo = REPO) {
   const template = fs.readFileSync(path.join(REPO, 'integrations', 'claude-code', 'SKILL.template.md'), 'utf8');
-  return template.split('{{REPO}}').join(repo.split(path.sep).join('/'));
+  return template.replace(/\r\n/g, '\n').split('{{REPO}}').join(repo.split(path.sep).join('/'));
 }
 
 function target(dir) {
