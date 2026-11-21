@@ -82,7 +82,8 @@
  * quả ghi "axe: chưa chạy"; khi giao phải nói rõ phần khả năng tiếp cận chưa được soát tự động.
  *
  * Đây là tín hiệu tự động, không thay việc nhìn ảnh chụp và không phải bằng chứng đạt WCAG.
- * Cần Playwright. Script tự tìm: NODE_PATH, node_modules gần đó, rồi thư mục npm toàn cục.
+ * Cần Playwright. Script tự tìm: NODE_PATH, node_modules gần đó, thư mục công cụ (~/.uiux-tools, do
+ * `node scripts/doctor.cjs --install` tạo), rồi thư mục npm toàn cục.
  * Không có thì xem mục "Khi không chạy được taste-check" trong scripts/README.md.
  */
 'use strict';
@@ -156,8 +157,10 @@ function pageAuditSource() {
   return `(() => {\n${body}\nreturn auditScreens();\n})()`;
 }
 
+/* Nơi tìm Playwright và axe-core ngoài node_modules gần đó: thư mục công cụ do
+ * `node scripts/doctor.cjs --install` tạo (UIUX_TOOLS, mặc định ~/.uiux-tools), rồi npm toàn cục. */
 function searchRoots() {
-  const roots = [];
+  const roots = [path.join(path.resolve(process.env.UIUX_TOOLS || path.join(require('node:os').homedir(), '.uiux-tools')), 'node_modules')];
   try {
     const { execSync } = require('node:child_process');
     const globalRoot = execSync('npm root -g', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
@@ -191,11 +194,7 @@ async function runAxe(tab, source) {
 
 function loadPlaywright() {
   const tries = ['playwright', 'playwright-core'];
-  try {
-    const { execSync } = require('node:child_process');
-    const globalRoot = execSync('npm root -g', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-    if (globalRoot) tries.push(path.join(globalRoot, 'playwright'), path.join(globalRoot, 'playwright-core'));
-  } catch { /* không có npm */ }
+  for (const root of searchRoots()) tries.push(path.join(root, 'playwright'), path.join(root, 'playwright-core'));
   for (const name of tries) {
     try {
       const mod = require(name);

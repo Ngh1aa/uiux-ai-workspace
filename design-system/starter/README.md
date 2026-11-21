@@ -23,6 +23,10 @@ brief ([`BRAND-BRIEF.template.md`](../../BRAND-BRIEF.template.md)).
 
 ## Bắt đầu một dự án
 
+Cách nhanh: `node scripts/new-project.cjs <thư mục dự án> --kind mobile|web|landing|desktop|ios|android` làm
+bước 1 và phần chép của bước 2 (design system vào `ds/`, đường dẫn CSS đã đổi), kèm brand brief và ghi chú
+giao để điền. Làm tay thì theo các bước dưới.
+
 1. Chép `mobile.html`, `web.html` hoặc `desktop.html` sang dự án, giữ thứ tự nạp CSS:
    `fonts.css` → `tokens.css` → `components.css` → `brand.css` → `app.css` (→ `desktop.css`).
 2. Chép `brand.css` vào dự án và điền theo brand brief, cả khối sáng lẫn hai khối tối (giống hệt

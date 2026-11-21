@@ -35,6 +35,20 @@ mà vẫn gặp `Filename too long`, bật long paths: `git config --global core
 | [`skills_UIUX/`](skills_UIUX/README.md) | Các skill UI/UX và script soát trang đã dựng |
 | [`design-system/`](design-system/README.md) | Design system có test: token DTCG, 25 component, 30 pattern, font tiếng Việt, ví dụ app, `check-brand.py`, `oklch-scale.py` |
 | [`benchmarks/`](benchmarks/README.md) | Bộ đề chuẩn (6 đề) và [kết quả các lần chạy](benchmarks/REPORT.md) |
+| `scripts/doctor.cjs`, `new-project.cjs`, `design-check.cjs` | Kiểm máy, tạo khung dự án, chạy mọi checker bằng một lệnh ([README công cụ QA](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#ba-lệnh-ở-gốc-repo)) |
+
+## Dùng với Claude Code trên máy
+
+Clone repo một lần, rồi:
+
+```sh
+node scripts/doctor.cjs --install     # Playwright, Chromium, axe-core vào ~/.uiux-tools
+node scripts/link-claude-code.cjs     # skill uiux-workspace ở ~/.claude/skills
+```
+
+Từ đó, ở bất kỳ dự án nào, nhờ Claude thiết kế giao diện là nó mở repo này và làm theo
+[`START-HERE.md`](START-HERE.md). Skill chỉ ghi đường dẫn tới repo, không chép nội dung; dời repo thì chạy
+lại lệnh thứ hai, gỡ bằng `--remove`.
 
 ## Kiểm tra tự động
 
