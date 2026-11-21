@@ -12,7 +12,9 @@ Repo giúp thiết kế website/app đúng tác vụ, thương hiệu và chất
 6. Giao ngắn: thay đổi, kiểm tra, bằng chứng, giới hạn. Chưa kiểm ghi `UNKNOWN`, không suy PASS.
 
 Chỉ dùng để thiết kế thì clone nông theo lệnh trong [README](README.md).
-Checker, fallback khi thiếu trình duyệt và UTF-8 Windows nằm trong
+Ba lệnh dùng ở mọi dự án: `node scripts/doctor.cjs` kiểm máy trước khi làm;
+`node scripts/new-project.cjs <thư mục> --kind <loại>` tạo khung dự án; `node scripts/design-check.cjs <trang.html>`
+chạy mọi checker ở bước 5 (`CHECKER_PASS` chưa phải Đạt). Chi tiết và fallback:
 [README công cụ QA](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md).
 Chuẩn hành vi và mẫu ghi kết quả ở [FLOW.md](FLOW.md); rubric không thay thế kiểm luồng.
 M trở lên dùng [review packet](skills_UIUX/design-critique-and-rationale/references/independent-review.md);

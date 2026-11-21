@@ -1,5 +1,22 @@
 # Scripts
 
+## Ba lệnh ở gốc repo
+
+Chạy từ gốc repo; cả ba chỉ cần Node.
+
+| Lệnh | Việc |
+|---|---|
+| `node scripts/doctor.cjs` | Kiểm Node, Python, Playwright, Chromium, axe-core, git và in lệnh Python chạy được trên máy này. `--install` cài Playwright, Chromium, axe-core vào thư mục công cụ ngoài repo (`UIUX_TOOLS`, mặc định `~/.uiux-tools`); các checker tự tìm ở đó |
+| `node scripts/new-project.cjs <thư mục> --kind mobile|web|landing|desktop|ios|android` | Tạo khung dự án: trang starter, `brand.css`, design system chép vào `ds/`, `BRAND-BRIEF.md` và `DESIGN-NOTES.md` (kế hoạch thị giác, màn × trạng thái, cổng duyệt hướng, mẫu ghi luồng) |
+| `node scripts/design-check.cjs <trang.html> [--kind app|web|desktop]` | Chạy `static-check`, `flow-check`, `taste-check` (đúng cỡ màn của loại sản phẩm, có chụp ảnh) và `check-brand` khi có `brand.css` cạnh trang; ghi `qa/design-check.json` |
+
+`design-check` kết luận `FAIL` (có lỗi), `UNKNOWN` (lớp render hoặc brand chưa chạy được) hoặc `CHECKER_PASS`.
+`CHECKER_PASS` chưa phải "Đạt": lớp hành vi luôn `UNKNOWN` ở lệnh này, và vẫn phải mở ảnh, bấm thử luồng
+theo [`FLOW.md`](../../../FLOW.md), chấm rubric. Các mục dưới đây mô tả từng checker khi cần chạy riêng.
+
+Tài liệu ghi `python3`; máy nào lệnh đó bị chặn hoặc không có (thường gặp trên Windows) thì dùng lệnh
+`doctor` in ra, ví dụ `py -3 -X utf8 <script.py>`, hoặc đặt `UIUX_PYTHON`.
+
 ## Soát theo gu (`taste-check.cjs`)
 
 Soát trang đã render theo [`TASTE.md`](../../../TASTE.md) trong Chromium, cả chế độ sáng và tối.
@@ -74,9 +91,8 @@ Ca gốc: [Nova Home](../../data-visualization-and-dashboard-ux/references/nova-
 
 Theo thứ tự:
 
-1. Cài Playwright ngoài repo rồi chạy lại:
-   `npm install --prefix /tmp/pw playwright@1 && npx --prefix /tmp/pw playwright install chromium`,
-   sau đó đặt `NODE_PATH=/tmp/pw/node_modules`.
+1. Cài Playwright ngoài repo, một lần cho cả máy, rồi chạy lại: `node scripts/doctor.cjs --install`
+   (vào `~/.uiux-tools`; không cần đặt `NODE_PATH`).
 2. Mạng chặn, không cài được: mở trang bằng trình duyệt có sẵn trong phiên, chụp 390 px và 1280 px ở
    cả sáng và tối, soát bằng mắt theo checklist "Trước khi giao" trong [`TASTE.md`](../../../TASTE.md).
 3. Luôn chạy thêm `static-check.cjs` (không cần cài gì).

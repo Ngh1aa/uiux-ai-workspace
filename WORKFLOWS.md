@@ -141,6 +141,7 @@ Bảng chọn; cách làm và lưu ý của từng track ở [workflows/tracks.m
 - [`taste-check.cjs`](skills_UIUX/ui-craft-and-visual-qa/scripts/README.md#soát-theo-gu-taste-checkcjs) không còn
   lỗi ở 390 và 1280 px (website thêm 768 và 1440); desktop và artboard đạt thêm `--layout strict`. Không chạy
   được thì chạy `static-check.cjs`, soát bằng mắt theo README công cụ QA và ghi rõ.
+  `node scripts/design-check.cjs <trang.html> --kind app|web|desktop` chạy các checker này với đúng cỡ màn.
 - Đã **nhìn ảnh chụp trang đã dựng**; đủ trạng thái liên quan (rỗng, đang tải, lỗi, nội dung dài, chữ lớn, tối).
 - Luồng đạt [FLOW.md](FLOW.md), `flow-check` không có lỗi chắc chắn; luồng bắt buộc FAIL hoặc UNKNOWN chặn
   kết luận Đạt.
@@ -151,3 +152,11 @@ Bảng chọn; cách làm và lưu ý của từng track ở [workflows/tracks.m
 - Lỗi mới checker và rubric đều không bắt được thì ghi vào [`TASTE-LOG.md`](TASTE-LOG.md).
 - Redesign sản phẩm có code: `overlay-check.py` không còn lỗi, test hành vi xanh trước và sau, ADN được giữ
   hoặc người quyết định đã chọn bỏ.
+
+## 5. Khi agent có agent con
+
+- Phiên chính giữ brief, TASTE và mọi quyết định: chọn hướng, kết luận Đạt, lời giao.
+- Cổng duyệt hướng: mỗi hướng một agent con, cùng file nội dung và cùng khung, khác luận điểm cấu trúc. Tối đa
+  3 agent cùng lúc. Phiên chính chụp, mở ảnh, điền mẫu duyệt hướng rồi hỏi người quyết định kèm ảnh.
+- Duyệt độc lập: agent mới, chỉ nhận hồ sơ ảnh; không dùng lại agent đã dựng màn.
+- Agent con trả về đường dẫn file và kết quả lệnh. Phiên chính tự mở ảnh, không nhận lời "đã đạt".

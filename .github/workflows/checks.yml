@@ -41,6 +41,9 @@ jobs:
         run: node --test ui-craft-and-visual-qa/scripts/static-check.test.cjs
       - name: Flow source checker fixtures (no browser needed)
         run: node --test ui-craft-and-visual-qa/scripts/flow-check.test.cjs
+      - name: Doctor, project scaffold and one-command gate tests (no browser needed)
+        working-directory: .
+        run: node --test scripts/tests/tools.test.cjs
       - name: Internal Markdown links resolve
         working-directory: .
         run: python scripts/check-links.py
