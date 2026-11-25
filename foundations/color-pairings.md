@@ -1,7 +1,7 @@
 # Bộ màu chủ repo thích
 
-Chủ repo gửi 11 cặp màu này ngày 25/11/2026. Dùng khi brand brief chưa có màu, hoặc khi chủ repo bảo chọn màu.
-Brief hay design system của dự án đã có màu thì theo dự án. Cách dựng thang màu và tương phản: [`color-oklch.md`](color-oklch.md).
+Chủ repo gửi 11 cặp màu ngày 25/11/2026 và duyệt thêm 5 cặp agent đề xuất cùng ngày. Dùng khi brand brief chưa
+có màu, hoặc khi chủ repo bảo chọn màu. Brief hay design system của dự án đã có màu thì theo dự án. Cách dựng thang màu và tương phản: [`color-oklch.md`](color-oklch.md).
 
 ## 1. Cách dùng
 
@@ -17,7 +17,7 @@ Brief hay design system của dự án đã có màu thì theo dự án. Cách d
   nghĩa hay viền ô nhập, vì chỉ đạt 1–2,6:1 trên nền trang.
 - **Vàng không làm màu nhấn trên nền trắng** (1,6:1). Đặt vàng trên nền tối, hoặc dùng vàng làm nền khối với chữ đen.
 
-## 2. 11 cặp chủ repo chọn
+## 2. 16 cặp chủ repo chọn
 
 Hai cột cuối là tỉ lệ tương phản của chữ trên nền trang và chữ trên nút nhấn. Số tính bằng công thức WCAG, chưa phải kết quả
 đo trên màn đã render.
@@ -35,18 +35,12 @@ Hai cột cuối là tỉ lệ tương phản của chữ trên nền trang và 
 | 9 | Tím nhạt + be | `#F4EFE7` | `#FFFFFF` | `#2A2433` | `#6E58A8` / trắng | `#E4DDF2` | Spa, cưới, nội thất | 13,1 | 5,8 |
 | 10 | Nâu choco + blue sky | `#F7F2EC` | `#FFFFFF` | `#3B2418` | `#4A2C1D` / trắng | `#CFE6F7` | Bánh, café, đồ da, thời trang | 13,0 | 12,6 |
 | 11 | Tím + đen + be | `#EFE8DC` | `#F8F4EC` | `#141414` | `#5B2A86` / trắng | `#141414` (khối đen, chữ be) | Thời trang, nghệ thuật, âm nhạc | 15,1 | 9,9 |
+| 12 | Xanh rêu + kem | `#F7F3EA` | `#FFFFFF` | `#1E2419` | `#4D5B2C` / trắng | `#E6E6D2` | Nội thất, du lịch sinh thái | 14,4 | 7,4 |
+| 13 | Đất nung + kem | `#FAF5EE` | `#FFFFFF` | `#2A1A14` | `#A2452A` / trắng | `#F0DCCF` | Gốm, thủ công, ẩm thực | 15,4 | 6,1 |
+| 14 | Xám than + cam cháy | `#F4F4F2` | `#FFFFFF` | `#1F2124` | `#B4441A` / trắng | `#E4E4E0` | Dashboard kỹ thuật, ô tô, công cụ | 14,7 | 5,6 |
+| 15 | Xanh teal + cát | `#F6F1E7` | `#FFFFFF` | `#14272A` | `#0F5E63` / trắng | `#E9DCC3` | Y tế, du lịch biển, fintech | 13,8 | 7,5 |
+| 16 | Navy + hồng đất | `#F8F1EE` | `#FFFFFF` | `#16213A` | `#16213A` / trắng | `#E8C4B8` | Thời trang nữ, studio, portfolio | 14,3 | 16,0 |
+
+Cặp 1–11 chủ repo gửi; cặp 12–16 agent đề xuất, chủ repo duyệt ngày 25/11/2026.
 
 Ở cặp 7, màu xanh lá (`#2F6B4F`, 5,9:1) có thể làm màu trạng thái "thành công" thay cho xanh mặc định.
-
-## 3. Đề xuất bổ sung (agent đề xuất, chủ repo chưa duyệt)
-
-Năm cặp cùng tinh thần: nền ấm hoặc trung tính, một màu nhấn trầm. Dùng sau khi chủ repo đồng ý. Chủ repo duyệt
-cặp nào thì chuyển cặp đó lên mục 2.
-
-| # | Cặp | Nền trang | Mặt card | Chữ | Nhấn / chữ trên nút | Mảng phụ | Hợp với | Chữ / nền | Chữ / nút |
-|---|---|---|---|---|---|---|---|---|---|
-| A | Xanh rêu + kem | `#F7F3EA` | `#FFFFFF` | `#1E2419` | `#4D5B2C` / trắng | `#E6E6D2` | Nội thất, du lịch sinh thái | 14,4 | 7,4 |
-| B | Đất nung + kem | `#FAF5EE` | `#FFFFFF` | `#2A1A14` | `#A2452A` / trắng | `#F0DCCF` | Gốm, thủ công, ẩm thực | 15,4 | 6,1 |
-| C | Xám than + cam cháy | `#F4F4F2` | `#FFFFFF` | `#1F2124` | `#B4441A` / trắng | `#E4E4E0` | Dashboard kỹ thuật, ô tô, công cụ | 14,7 | 5,6 |
-| D | Xanh teal + cát | `#F6F1E7` | `#FFFFFF` | `#14272A` | `#0F5E63` / trắng | `#E9DCC3` | Y tế, du lịch biển, fintech | 13,8 | 7,5 |
-| E | Navy + hồng đất | `#F8F1EE` | `#FFFFFF` | `#16213A` | `#16213A` / trắng | `#E8C4B8` | Thời trang nữ, studio, portfolio | 14,3 | 16,0 |

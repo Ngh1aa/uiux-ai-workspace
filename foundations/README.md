@@ -14,7 +14,7 @@ số liệu, đặc thù tiếng Việt và gu chủ repo.
 | [`composition.md`](composition.md) | Cân bằng, nhịp, chữ ký thị giác, landing mỗi section một hình |
 | [`typography-vietnamese.md`](typography-vietnamese.md) | Font có dấu tốt, khoảng dòng, ngắt dòng, số và tiền tệ |
 | [`color-oklch.md`](color-oklch.md) | Màu theo vai trò, thang OKLCH, tương phản, chế độ tối, ba nhóm màu |
-| [`color-pairings.md`](color-pairings.md) | **Chọn màu khi brief chưa có:** 11 cặp chủ repo thích, mã màu theo vai trò, ngành hợp |
+| [`color-pairings.md`](color-pairings.md) | **Chọn màu khi brief chưa có:** 16 cặp chủ repo thích, mã màu theo vai trò, ngành hợp |
 | [`motion.md`](motion.md) | Khi nào có chuyển động, thời lượng, giảm chuyển động, chuyển động theo cuộn cho website |
 | [`illustration-and-imagery.md`](illustration-and-imagery.md) | Ảnh hay minh hoạ, ảnh còn thiếu, icon, thanh điều hướng |
 | [`images-and-icons.md`](images-and-icons.md) | Thứ tự nguồn ảnh, giấy phép, bộ icon và cỡ icon (tách từ CRAFT.md) |
