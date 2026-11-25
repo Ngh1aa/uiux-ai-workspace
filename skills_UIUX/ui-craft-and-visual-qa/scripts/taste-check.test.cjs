@@ -105,13 +105,37 @@ test('bắt nhãn ngắn bị gãy dòng', () => {
 test('heading xuống dòng được yêu cầu review, không bị nhận nhầm nhãn điều khiển', () => {
   const r = run('<section data-screen="Heading"><h1 style="width:8ch;font:32px/40px system-ui">Pure electric motion.</h1></section>');
   assert.ok(!r.rules('Heading', 'errors').includes('wrap'));
-  assert.ok(r.rules('Heading', 'warnings').includes('wrap-review'));
+  // Màn 390 px còn đủ chỗ cho một dòng nên đây là xuống dòng vô duyên, không chỉ cần review.
+  assert.ok(r.rules('Heading', 'warnings').includes('wrap-room'));
+});
+
+test('cảnh báo chữ xuống dòng dù còn chỗ, không cảnh báo khi thật sự hết chỗ', () => {
+  const r = run(`<section data-screen="Còn chỗ"><div class="card"><h2 style="margin:0;max-width:7ch;font-size:20px">Lịch học tuần này</h2></div></section>
+    <section data-screen="Hết chỗ"><div class="card" style="display:flex;gap:12px;align-items:center"><h2 style="margin:0;font-size:20px">Lịch học tuần này của lớp mười hai</h2><button type="button" style="flex:none;width:220px">Xem lịch</button></div></section>
+    <section data-screen="Trong đoạn"><p style="margin:0;width:200px">Học phí tháng mười <strong>đã thu đủ cho cả lớp</strong> của cô.</p></section>`);
+  assert.ok(r.rules('Còn chỗ', 'warnings').includes('wrap-room'));
+  assert.ok(!r.rules('Hết chỗ', 'warnings').includes('wrap-room'));
+  assert.ok(!r.rules('Trong đoạn', 'warnings').includes('wrap-room'));
+});
+
+test('cảnh báo hơn một họ chữ trên màn, bỏ qua chữ mono', () => {
+  const r = run(`<section data-screen="Hai họ"><div class="card"><h2 style="margin:0;font-family:Georgia,serif">Lớp học</h2><p style="margin:0">Mười hai bạn</p></div></section>
+    <section data-screen="Một họ"><div class="card"><h2 style="margin:0">Lớp học</h2><p style="margin:0">Mã <code>A12</code></p></div></section>`);
+  assert.ok(r.rules('Hai họ', 'warnings').includes('font-mix'));
+  assert.ok(!r.rules('Một họ', 'warnings').includes('font-mix'));
+});
+
+test('cảnh báo cùng cấp tiêu đề khác cỡ giữa các màn, không cảnh báo khi đồng bộ', () => {
+  const two = (a, b) => run(`<section data-screen="A"><div class="card"><h2 style="margin:0;font-size:${a}px">Lớp học</h2></div></section>
+    <section data-screen="B"><div class="card"><h2 style="margin:0;font-size:${b}px">Học phí</h2></div></section>`);
+  assert.ok(two(20, 24).rules('Thang chữ giữa các màn', 'warnings').includes('type-drift'));
+  assert.deepEqual(two(20, 20).rules('Thang chữ giữa các màn', 'warnings'), []);
 });
 
 test('tên đối tượng nhiều dòng trong rich record không bị coi là CTA ngắn', () => {
   const r = run('<section data-screen="Hồ sơ"><button style="width:150px;white-space:normal"><strong style="display:block;width:7ch">Đặng Quốc Việt</strong><span>Nhổ răng khôn, 8:30, đang khám</span></button></section>');
   assert.ok(!r.rules('Hồ sơ', 'errors').includes('wrap'));
-  assert.ok(r.rules('Hồ sơ', 'warnings').includes('wrap-review'));
+  assert.ok(r.rules('Hồ sơ', 'warnings').some((rule) => rule === 'wrap-review' || rule === 'wrap-room'));
 });
 
 test('nút ngắn bọc icon và span vẫn bắt lỗi gãy nhãn', () => {
@@ -491,7 +515,7 @@ test('các file luật chạy trong trang ghép lại thành một biểu thức
   const body = files.map((f) => fs.readFileSync(path.join(dir, f), 'utf8')).join('\n');
   assert.doesNotThrow(() => new vm.Script(`(() => {\n${body}\nreturn auditScreens();\n})`));
   const groups = {
-    'text.js': ['dot', 'contrast', 'wrap', 'widow', 'clipped', 'edge', 'ellipsis', 'small-text', 'subtitle', 'template-var', 'demo-note', 'emoji'],
+    'text.js': ['dot', 'contrast', 'wrap', 'widow', 'clipped', 'edge', 'ellipsis', 'small-text', 'subtitle', 'template-var', 'demo-note', 'emoji', 'wrap-room', 'font-mix'],
     'card.js': ['highlight', 'radius', 'left-bar', 'decor-overlap', 'card-padding', 'card-inset', 'card-wide', 'gradient-surface', 'glow', 'tile-rainbow', 'eyebrow'],
     'layout.js': ['overflow', 'target', 'fixed-overlap', 'void', 'coverage', 'flat-scale', 'thin-highlight', 'colors', 'panel-void', 'panel-orphan'],
     'chart.js': ['chart-donut', 'chart-gauge', 'chart-name', 'chart-values', 'chart-legend', 'status-series'],

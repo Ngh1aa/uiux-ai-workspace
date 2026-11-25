@@ -7,6 +7,11 @@ thì làm theo dự án và ghi lý do. File do chủ repo sở hữu; mỗi dò
 hơn hoặc nói cách làm; không được nới một dòng ở đây thành "gợi ý" hay thêm ngoại lệ. Muốn đổi thì sửa
 file này, do chủ repo duyệt.
 
+## UX trước, UI sau
+
+- Chốt luồng và hành động chính trước, rồi mới làm đẹp.
+- Mỗi nút, mỗi chữ: người dùng có cần, thấy, hiểu ngay không? Không thì bỏ hoặc dời.
+
 ## Phong cách chung
 
 - Minimalism, hiện đại, **khoảng thở có chủ đích**: bớt nhiễu (màu, viền, bóng, chữ thừa), không bớt thông
@@ -17,6 +22,7 @@ file này, do chủ repo duyệt.
   chia lại cột hoặc thêm thông tin có ích; không kéo giãn khoảng cách hay card để lấp. Đổi nội dung xong thì
   đo lại chiều cao khung.
 - Một họ chữ mỗi trang; không chèn chữ nghiêng hay serif làm điểm nhấn trong tiêu đề.
+- Cùng vai trò chữ cùng cỡ, độ đậm trên mọi màn, lấy từ token.
 
 ## Bố cục desktop
 
@@ -79,7 +85,7 @@ file này, do chủ repo duyệt.
 - **Không nối cụm từ bằng " · "**; viết lại bằng khoảng trắng, xuống dòng có chủ đích, từ nối hoặc câu.
 - Một khái niệm một thuật ngữ. Nhãn nút tối đa 3 từ, động từ + đối tượng, cùng nhãn trên nút, tiêu đề sheet
   xác nhận và nút xác nhận; tên quen thuộc ("Hủy", không "Rút đề xuất"). Ngày luôn kèm thứ hoặc ngày tháng.
-- Không xuống dòng vô cớ; không thu nhỏ chữ để che lỗi layout.
+- Còn chỗ thì không xuống dòng; không thu nhỏ chữ để che lỗi layout.
 
 ## Khi soát bản mẫu
 

@@ -56,6 +56,10 @@
  *   - vùng chạm nhỏ hơn 44 × 44 px
  *   - chữ bị cắt bằng dấu "…"
  *   - dòng cuối của một đoạn chỉ còn một chữ
+ *   - wrap-room: chữ ngắn (≤ 60 ký tự) xuống dòng trong khi khung cha còn đủ chỗ cho một dòng
+ *   - font-mix: hơn một họ chữ trên một màn (bỏ qua chữ mono, icon font, code)
+ *   - type-drift: cùng cấp tiêu đề (h1, h2… hoặc role="heading") khác cỡ hay độ đậm giữa các màn của cùng
+ *     một file trang (kể cả các màn chọn bằng ?screen=), ở cùng bề rộng
  *   - chữ cách mép màn dưới 12 px trên màn hẹp (≤ 600 px)
  *   - axe-core: vi phạm mức moderate hoặc minor
  *   - void: khoảng trống dọc lớn (màn: > 160 px hoặc 18% chiều cao; trang: > 320 px hoặc nửa khung nhìn).
@@ -204,6 +208,39 @@ function loadPlaywright() {
   return null;
 }
 
+/* Cùng cấp tiêu đề (h1, h2…) phải cùng cỡ và độ đậm trên mọi màn của cùng một file trang, ở cùng bề rộng
+ * (TASTE "Phong cách chung": đồng bộ thang chữ). App nhiều màn chọn bằng query (app.html?screen=home) tính là
+ * một file. Các file khác nhau có thể là sản phẩm khác nhau nên không so chéo. Chỉ so một chế độ màu. */
+function typeDrift(results) {
+  const firstTheme = results.length ? results[0].theme : '';
+  const byPage = new Map();
+  for (const run of results) {
+    for (const screen of run.screens) {
+      const type = screen.type;
+      delete screen.type;
+      if (run.reflow || run.theme !== firstTheme || !type) continue;
+      const key = `${run.width} ${run.page.replace(/[?#].*$/, '')}`;
+      if (!byPage.has(key)) byPage.set(key, { run, roles: new Map() });
+      const bucket = byPage.get(key);
+      bucket.run = run;
+      for (const h of type) {
+        if (!bucket.roles.has(h.role)) bucket.roles.set(h.role, new Map());
+        const styles = bucket.roles.get(h.role);
+        if (!styles.has(h.style)) styles.set(h.style, `${screen.name}: ${h.where}`);
+      }
+    }
+  }
+  for (const { run, roles } of byPage.values()) {
+    const warnings = [];
+    for (const [role, styles] of roles) {
+      if (styles.size < 2) continue;
+      const list = [...styles].map(([style, where]) => `${style} (${where})`).join('; ');
+      warnings.push({ rule: 'type-drift', message: `${role} có ${styles.size} kiểu chữ: ${list}. Cùng cấp tiêu đề dùng cùng cỡ, cùng độ đậm, lấy từ token` });
+    }
+    if (warnings.length) run.screens.push({ name: 'Thang chữ giữa các màn', errors: [], warnings });
+  }
+}
+
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   if (opts.help || !opts.pages.length) {
@@ -305,6 +342,8 @@ async function main() {
     await browser.close();
     server.close();
   }
+
+  typeDrift(results);
 
   let errorCount = 0;
   let warningCount = 0;

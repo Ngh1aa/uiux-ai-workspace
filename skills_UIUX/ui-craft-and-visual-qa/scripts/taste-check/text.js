@@ -1,10 +1,41 @@
-/* taste-check: luật chữ (dot, contrast, wrap, widow, clipped, edge, ellipsis, small-text, subtitle, template-var, demo-note, emoji).
+/* taste-check: luật chữ (dot, contrast, wrap, wrap-room, widow, clipped, edge, ellipsis, small-text, subtitle, template-var, demo-note, emoji, font-mix).
  * Chạy trong trang (Playwright evaluate), không phải module Node. taste-check.cjs ghép các file trong
  * thư mục này theo thứ tự shared, text, card, layout, chart, audit vào một hàm rồi chạy một lần mỗi trang.
  * Mỗi luật nhận ctx = { root, all, isPart, rootRect, rootBg, errors, warnings, massOf, highlights }. */
 const DEMO = /\b(?:dữ liệu|số liệu|lời|lịch|ngữ cảnh|nội dung|mẫu tương tác)\s+(?:mẫu|minh ho[aạ]|minh họa|từ đề|theo đề)|\b(?:bản|là) minh (?:ho[aạ]|họa)(?![\p{L}])|\bminh (?:ho[aạ]|họa) theo\b|\bbản mẫu (?:này|không|chưa)|\btrong bản mẫu\b|\bbrowser preview\b|\bdữ liệu (?:từ |theo )?đề bài\b|\bmô phỏng quyền\b|\btheo brief\b|\bbackend\b/iu;
 const SUBTITLE = /[.?…]$|^(?:bấm|chạm|chọn|xem|nhấn|kéo|để|giúp|theo|mỗi|đây là|tất cả)\b/i;
 const EMOJI = /\p{Emoji_Presentation}|\p{Extended_Pictographic}️/u;
+// Chữ xuống dòng dù còn chỗ: bề rộng một dòng (đo trên bản sao không xuống dòng) vừa phần khung cha
+// còn trống trên hàng của nó (trừ padding cha và khối anh em cùng hàng). Khối inline nằm giữa đoạn văn,
+// có <br>, white-space pre hoặc định vị tuyệt đối thì bỏ qua. Trả về null nếu không còn chỗ thật.
+const wrapRoom = (el, st) => {
+  const parent = el.parentElement;
+  if (!parent || st.display === 'inline' || /^(absolute|fixed)$/.test(st.position) || /^pre/.test(st.whiteSpace) ||
+      el.querySelector('br') || el.matches('td, th')) return null;
+  const ps = getComputedStyle(parent);
+  const pr = parent.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
+  const gap = /flex|grid/.test(ps.display) ? (parseFloat(ps.columnGap) || 0) : 0;
+  let left = pr.left + parseFloat(ps.borderLeftWidth) + parseFloat(ps.paddingLeft);
+  let right = pr.right - parseFloat(ps.borderRightWidth) - parseFloat(ps.paddingRight);
+  for (const sib of parent.children) {
+    if (sib === el || !visible(sib) || /^(absolute|fixed)$/.test(getComputedStyle(sib).position)) continue;
+    const sr = sib.getBoundingClientRect();
+    if (sr.bottom <= er.top + 1 || sr.top >= er.bottom - 1) continue;
+    if (sr.left >= er.right - 1) right = Math.min(right, sr.left - gap);
+    else if (sr.right <= er.left + 1) left = Math.max(left, sr.right + gap);
+  }
+  const free = right - left - (parseFloat(st.marginLeft) || 0) - (parseFloat(st.marginRight) || 0);
+  const clone = el.cloneNode(true);
+  clone.removeAttribute('id');
+  clone.setAttribute('aria-hidden', 'true');
+  Object.assign(clone.style, { position: 'absolute', visibility: 'hidden', left: '0', top: '0', whiteSpace: 'nowrap',
+    width: 'max-content', minWidth: '0', maxWidth: 'none', flex: 'none' });
+  parent.appendChild(clone);
+  const need = clone.getBoundingClientRect().width;
+  clone.remove();
+  return need > 0 && need <= free - 1 ? { need: Math.ceil(need), free: Math.floor(free) } : null;
+};
 const textRules = {
   // 1. Dấu chấm giữa nối cụm từ
   dots(ctx) {
@@ -39,17 +70,25 @@ const textRules = {
           errors.push({ rule: 'contrast', message: `Tương phản ${got.toFixed(2)}:1 < ${need}:1 ở ${describe(el)} (${hex(shown)} trên ${hex(bg)})` });
         }
       }
-      // 3. Nhãn ngắn bị gãy dòng
+      // 3. Nhãn ngắn bị gãy dòng; chữ ngắn (≤ 60 ký tự) xuống dòng dù khung cha còn đủ chỗ (TASTE "Chữ trên màn")
       const full = (el.textContent || '').replace(/\s+/g, ' ').trim();
-      if (full.length <= 24 && text.length >= 2 && lineCount(el) > 1) {
+      const wraps = text.length >= 2 && lineCount(el) > 1;
+      let shortLabel = false;
+      if (full.length <= 24 && wraps) {
         const label = el.matches(INTERACTIVE) || el.closest('label, button, [role="button"], [role="tab"]');
         const control = el.closest('button, [role="button"], [role="tab"]');
         // A rich record button can contain a wrapping patient/object name plus
         // separate time/status fields. That content is not a short CTA label.
         const richRecord = control && control !== el && control.children.length > 1 &&
           control.textContent.replace(/\s+/g, ' ').trim().length > 24;
-        if (label && !richRecord) errors.push({ rule: 'wrap', message: `Nhãn điều khiển ngắn bị gãy dòng: ${describe(el)}` });
-        else warnings.push({ rule: 'wrap-review', message: `Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: ${describe(el)}` });
+        shortLabel = label && !richRecord;
+        if (shortLabel) errors.push({ rule: 'wrap', message: `Nhãn điều khiển ngắn bị gãy dòng: ${describe(el)}` });
+      }
+      const room = wraps && !shortLabel && full.length <= 60 ? wrapRoom(el, st) : null;
+      if (room) {
+        warnings.push({ rule: 'wrap-room', message: `Xuống dòng dù còn chỗ: một dòng cần ${room.need}px, khung còn ${room.free}px: ${describe(el)}. Bỏ giới hạn bề rộng hoặc cho khối rộng ra` });
+      } else if (full.length <= 24 && wraps && !shortLabel) {
+        warnings.push({ rule: 'wrap-review', message: `Nội dung ngắn xuống dòng; kiểm tra chủ đích theo brief: ${describe(el)}` });
       }
       // Dòng cuối chỉ còn một chữ
       if (full.length > 24 && el.children.length === 0) {
@@ -133,6 +172,34 @@ const textRules = {
         warnings.push({ rule: 'subtitle', message: `Dòng giải thích phụ dưới tiêu đề: "${nt.slice(0, 60)}". Bỏ nếu không phải dữ liệu, lỗi hay trạng thái` });
       }
     }
+  },
+
+  // Thang chữ (TASTE "Phong cách chung"): cảnh báo nhiều họ chữ trên một màn; trả về kiểu của từng cấp
+  // tiêu đề để taste-check.cjs so giữa các màn và các trang (type-drift).
+  typeScale(ctx) {
+    const { all, warnings } = ctx;
+    const families = new Map();
+    const headings = [];
+    for (const el of all) {
+      if (annotated(el) || el.closest('svg, code, pre, kbd, samp, [aria-hidden="true"]')) continue;
+      const st = getComputedStyle(el);
+      const text = ownText(el);
+      const family = st.fontFamily.split(',')[0].replace(/["']/g, '').trim();
+      if (text && family && !/mono|icon|symbol|awesome/i.test(family)) {
+        const seen = families.get(family.toLowerCase());
+        families.set(family.toLowerCase(), seen || { family, where: describe(el) });
+      }
+      const tag = /^H([1-6])$/.exec(el.tagName);
+      const level = tag ? tag[1] : el.getAttribute('role') === 'heading' ? (el.getAttribute('aria-level') || '2') : '';
+      if (level && (el.textContent || '').trim()) {
+        headings.push({ role: `h${level}`, style: `${Math.round(parseFloat(st.fontSize))}px ${st.fontWeight}`, where: describe(el) });
+      }
+    }
+    if (families.size > 1) {
+      const list = [...families.values()].map((f) => `${f.family} (${f.where})`).join(', ');
+      warnings.push({ rule: 'font-mix', message: `${families.size} họ chữ trên một màn: ${list}. Dùng một họ chữ, phân cấp bằng cỡ và độ đậm` });
+    }
+    return headings;
   },
 
   // Emoji trong chữ
