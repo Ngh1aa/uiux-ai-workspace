@@ -45,11 +45,12 @@ function auditScreens() {
     cardRules.tileRainbow(ctx);
     cardRules.eyebrow(ctx);
     textRules.emoji(ctx);
+    const type = textRules.typeScale(ctx);
 
     const dedupe = (items) => {
       const seen = new Set();
       return items.filter((item) => (seen.has(item.message) ? false : seen.add(item.message)));
     };
-    return { name, errors: dedupe(errors), warnings: dedupe(warnings) };
+    return { name, errors: dedupe(errors), warnings: dedupe(warnings), type };
   });
 }

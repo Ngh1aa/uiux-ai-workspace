@@ -9,11 +9,8 @@ file này, do chủ repo duyệt.
 
 ## UX trước, UI sau
 
-- Chốt luồng, thứ tự thông tin và hành động chính trước; chỉ chỉnh màu, bóng, chi tiết khi luồng đã ổn.
-- Trước khi đặt một nút, nhãn hay dòng chữ, tự hỏi: người dùng có cần nó ở đây không, có thấy và bấm
-  ngay không, có hiểu mà không cần đọc giải thích không. Không trả lời được thì bỏ hoặc dời chỗ.
-- Hành động chính nằm nơi mắt và ngón tay tới trước; hành động phụ lùi lại, hành động nguy hiểm tách xa.
-- Xúc tích: ít chữ, dễ hiểu. Mỗi chữ trên màn phải có việc; bớt được mà không mất nghĩa thì bớt.
+- Chốt luồng và hành động chính trước, rồi mới làm đẹp.
+- Mỗi nút, mỗi chữ: người dùng có cần, thấy, hiểu ngay không? Không thì bỏ hoặc dời.
 
 ## Phong cách chung
 
@@ -25,8 +22,7 @@ file này, do chủ repo duyệt.
   chia lại cột hoặc thêm thông tin có ích; không kéo giãn khoảng cách hay card để lấp. Đổi nội dung xong thì
   đo lại chiều cao khung.
 - Một họ chữ mỗi trang; không chèn chữ nghiêng hay serif làm điểm nhấn trong tiêu đề.
-- **Đồng bộ thang chữ**: cùng vai trò (tiêu đề màn, tiêu đề card, nội dung, chữ phụ, nhãn nút) thì cùng cỡ,
-  cùng độ đậm trên mọi màn. Lấy cỡ từ token, không đặt cỡ riêng từng chỗ.
+- Cùng vai trò chữ cùng cỡ, độ đậm trên mọi màn, lấy từ token.
 
 ## Bố cục desktop
 
@@ -89,8 +85,7 @@ file này, do chủ repo duyệt.
 - **Không nối cụm từ bằng " · "**; viết lại bằng khoảng trắng, xuống dòng có chủ đích, từ nối hoặc câu.
 - Một khái niệm một thuật ngữ. Nhãn nút tối đa 3 từ, động từ + đối tượng, cùng nhãn trên nút, tiêu đề sheet
   xác nhận và nút xác nhận; tên quen thuộc ("Hủy", không "Rút đề xuất"). Ngày luôn kèm thứ hoặc ngày tháng.
-- **Không xuống dòng vô duyên**: còn đủ chỗ thì tiêu đề, nhãn nút, chip, số liệu nằm trên một dòng; không
-  để một chữ lẻ rơi xuống dòng cuối. Thiếu chỗ thì rút chữ hoặc nới khung, không thu nhỏ chữ để che lỗi layout.
+- Còn chỗ thì không xuống dòng; không thu nhỏ chữ để che lỗi layout.
 
 ## Khi soát bản mẫu
 

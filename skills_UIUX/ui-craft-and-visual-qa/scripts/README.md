@@ -29,6 +29,10 @@ Mỗi phần tử có `data-screen="Tên màn"` được soát như một màn r
 - **Cảnh báo:** card có nhiều bán kính bo góc, hơn 3 nhóm màu, vùng chạm dưới 44×44 px, chữ bị cắt
   bằng "…", dòng cuối chỉ còn một chữ, chữ sát mép màn hẹp, heading/nội dung ngắn xuống dòng cần review,
   vân nền phủ kín card chạy qua chữ cỡ lớn (`decor-texture`).
+- **Cảnh báo thang chữ và xuống dòng** (theo [`TASTE.md`](../../../TASTE.md)): `wrap-room` chữ ngắn (≤ 60 ký tự)
+  xuống dòng trong khi khung cha còn đủ chỗ cho một dòng; `font-mix` hơn một họ chữ trên một màn (bỏ qua mono,
+  icon font, code); `type-drift` cùng cấp tiêu đề (`h1`, `h2`…) khác cỡ hay độ đậm giữa các màn của cùng một
+  file trang, kể cả các màn chọn bằng `?screen=`. Sửa ở token chữ, không đặt cỡ riêng từng chỗ.
 - **Cảnh báo bố cục** (thành lỗi khi thêm `--layout strict`): `void` khoảng trống dọc lớn, `coverage`
   nội dung dồn một bên trên màn rộng, `flat-scale` thang chữ phẳng, `thin-highlight` card nổi bật quá
   mỏng, `table-scroll` bảng phải cuộn ngang ở màn ≥ 1024 px (cột cuối bị khuất). Ngưỡng và cách sửa: [`layout-and-density.md`](../../../foundations/layout-and-density.md).

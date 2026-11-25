@@ -30,7 +30,8 @@ python3 design-system/scripts/oklch-scale.py --hue 165 --chroma 0.14 [--json bra
 | Nền nhạt thương hiệu | 50–100 |
 | Chế độ tối, nút chính | 300, chữ tối trên nó |
 
-Rồi chạy `check-brand.py <dự án>/brand.css` để kiểm mọi cặp ở cả hai chế độ.
+Rồi chạy `check-brand.py <dự án>/brand.css` để kiểm mọi cặp ở cả hai chế độ. Brief chưa có màu thì bắt đầu từ
+một cặp trong [`color-pairings.md`](color-pairings.md).
 
 ## 3. Tương phản tối thiểu
 
